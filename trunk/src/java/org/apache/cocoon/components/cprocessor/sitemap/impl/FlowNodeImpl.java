@@ -42,39 +42,61 @@
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
- Software Foundation, please see <http://www.apache.org/>.
-
 */
-package org.apache.cocoon.components.cprocessor;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
-import java.util.Collection;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.components.cprocessor.AbstractNode;
+import org.apache.cocoon.components.cprocessor.sitemap.FlowNode;
+import org.apache.cocoon.components.flow.AbstractInterpreter;
+import org.apache.cocoon.components.flow.Interpreter;
 
 /**
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
+ * Handler for &lt;map:flow&gt; element in the sitemap.
+ *
+ * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @since September 13, 2002
+ * @version CVS $Id: FlowNodeImpl.java,v 1.1 2004/02/22 19:08:14 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=FlowNode
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=flow-node
  */
-public interface ComponentNode {
+public class FlowNodeImpl extends AbstractNode implements FlowNode {
 
-    public static final String ROLE = ComponentNode.class.getName();
+    private String m_language;
+    private Interpreter m_interpreter;
+    
+    public FlowNodeImpl() {
+    }
+    
+    public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
+        m_language = config.getAttribute("language", "javascript");
 
-    /**
-     * Return the labels associated with this sitemap 
-     * component declaration statement. Only relevant if
-     * this represents a generator, transformer or serializer.
-     */
-    public Collection getLabels();
+        try {
+            m_interpreter = (Interpreter) lookup(Interpreter.ROLE + "/" + m_language);
+        }
+        catch (ServiceException e) {
+            String msg = "Couldn't obtain a flow interpreter for " + m_language + ": " + e;
+            throw new ConfigurationException(msg);
+        }
+        
+        Configuration[] children = config.getChildren("script");
+        for (int i = 0; i < children.length; i++) {
+            String src = children[i].getAttribute("src");
+            if (m_interpreter instanceof AbstractInterpreter) {
+                ((AbstractInterpreter) m_interpreter).register(src);
+            }
+        }
+    }
     
-    /**
-     * Return the hint of the sitemap component this node represents.
-     */
-    public String getComponentHint();
-    
-    /**
-     * Return the mime-type attribute of this sitemap
-     * component declaration statement. Only relevant if
-     * this represents a reader or serializer.
-     */
-    public String getMimeType();
+    public final Interpreter getInterpreter() {
+        return m_interpreter;
+    }
+
 }

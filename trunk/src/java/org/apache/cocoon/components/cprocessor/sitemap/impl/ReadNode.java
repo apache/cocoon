@@ -48,18 +48,18 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.components.cprocessor.*;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
+import org.apache.cocoon.components.cprocessor.sitemap.AbstractPipelineComponentNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -67,74 +67,77 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: GenerateNode.java,v 1.7 2004/02/22 17:36:34 cziegeler Exp $
+ * @version CVS $Id: ReadNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=generate-node
+ * @x-avalon.info name=read-node
  */
-public class GenerateNode extends ViewablePipelineComponentNode 
-implements ProcessingNode {
+public class ReadNode extends AbstractPipelineComponentNode implements ProcessingNode {
 
+    private String m_type;
     private VariableResolver m_src;
+    private VariableResolver m_mimeType;
+    private int m_statusCode;
 
-    public GenerateNode() {
+    public ReadNode() {
     }
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
         try {
             m_src = VariableResolverFactory.getResolver(
-                config.getAttribute("src", null), super.m_manager);
+                config.getAttribute("src", null), m_manager);
+            m_mimeType = VariableResolverFactory.getResolver(
+                config.getAttribute("mime-type", null), m_manager);
         }
         catch (PatternException e) {
             throw new ConfigurationException(e.toString());
         }
-        super.m_labels.add(ViewNode.FIRST_POS_LABEL);
+        m_statusCode = config.getAttributeAsInteger("status-code",-1);
+        m_type = config.getAttribute("type",null);
     }
-    
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        
+
+    public final boolean invoke(Environment env,  InvokeContext context) throws Exception {
+
         Map objectModel = env.getObjectModel();
+
+        ProcessingPipeline pipeline = context.getProcessingPipeline();
+
+        String mimeType = m_mimeType.resolve(context, objectModel);
+
+        if (mimeType == null) {
+            mimeType = m_component.getMimeType();
+        }
         
-        context.getProcessingPipeline().setGenerator(
-            super.m_component.getComponentHint(),
+        pipeline.setReader(
+            m_type,
             m_src.resolve(context, objectModel),
-            VariableResolver.buildParameters(super.m_parameters, context, objectModel),
-            super.m_pipelineHints == null
-                ? Parameters.EMPTY_PARAMETERS
-                : VariableResolver.buildParameters(super.m_pipelineHints, context, objectModel)
+            VariableResolver.buildParameters(m_parameters, context, objectModel),
+            mimeType
         );
-        
-        //inform the pipeline that we have a branch point
-        context.getProcessingPipeline().informBranchPoint();
-        
-        String cocoonView = env.getView();
-        if (cocoonView != null) {
 
-            // Get view node
-            ProcessingNode viewNode = (ProcessingNode) getViewNode(cocoonView);
-
-            if (viewNode != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Jumping to view " + cocoonView + 
-                        " from generator at " + getLocation());
-                }
-                return viewNode.invoke(env, context);
-            }
+        // Set status code if there is one
+        if (m_statusCode >= 0) {
+            env.setStatus(m_statusCode);
         }
 
-        // Return false to continue sitemap invocation
-        return false;
+        if (!context.isBuildingPipelineOnly()) {
+            // Process pipeline
+            return pipeline.process(env);
+        } else {
+            // Return true : pipeline is finished.
+            return true;
+        }
     }
     
     protected String getComponentNodeRole() {
-        return GeneratorNode.ROLE;
+        return ReaderNode.ROLE;
     }
     
     /**
-     * @return  <code>true</code>.
+     * @return <code>true</code>
      */
     protected boolean hasParameters() {
         return true;

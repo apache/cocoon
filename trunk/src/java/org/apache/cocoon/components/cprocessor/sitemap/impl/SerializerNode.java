@@ -48,75 +48,23 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
-import org.apache.cocoon.components.cprocessor.InvokeContext;
-import org.apache.cocoon.components.cprocessor.ProcessingNode;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.PermanentRedirector;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.components.cprocessor.sitemap.AbstractComponentNode;
 
 /**
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.6 2004/02/20 19:06:21 cziegeler Exp $
  * 
  * @avalon.component
- * @avalon.service type=ProcessingNode
+ * @avalon.service type=SerializerNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=redirect-node
+ * @x-avalon.info name=serializer-node
  */
-public class RedirectToURINode extends AbstractProcessingNode implements ProcessingNode {
-
-    // The 'uri' attribute
-    private VariableResolver m_uri;
-    private boolean m_createSession;
-    private boolean m_global;
-    private boolean m_permanent;
-
-    public RedirectToURINode() {
+public class SerializerNode extends AbstractComponentNode {
+    
+    public static final String ROLE = SerializerNode.class.getName();
+    
+    public SerializerNode() {
     }
     
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        try {
-            m_uri = VariableResolverFactory.getResolver(config.getAttribute("uri"), m_manager);
-        }
-        catch (PatternException e) {
-            throw new ConfigurationException(e.toString());
-        }
-        m_createSession = config.getAttributeAsBoolean("session", false);
-        m_global = config.getAttributeAsBoolean("global", false);
-        m_permanent = config.getAttributeAsBoolean("permanent", false);
-    }
-
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        String resolvedURI = m_uri.resolve(context, env.getObjectModel());
-
-        if (getLogger().isInfoEnabled()) {
-            getLogger().info("Redirecting to '" + resolvedURI + "' at " + getLocation());
-        }
-
-        final Redirector redirector = context.getRedirector();
-
-        if (m_global) {
-            redirector.globalRedirect(m_createSession, resolvedURI);
-        } 
-        else if (m_permanent && redirector instanceof PermanentRedirector) {
-            ((PermanentRedirector) redirector).permanentRedirect(m_createSession,resolvedURI);
-        } 
-        else {
-            redirector.redirect(m_createSession,resolvedURI);
-        }
-
-        return true;
-    }
-
 }

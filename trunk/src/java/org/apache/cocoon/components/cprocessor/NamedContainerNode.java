@@ -58,14 +58,14 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: NamedContainerNode.java,v 1.2 2004/01/27 10:33:03 unico Exp $
+ * @version CVS $Id: NamedContainerNode.java,v 1.3 2004/02/22 19:08:15 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=named-container-node
  */
-public class NamedContainerNode extends ContainerNode implements NamedProcessingNode {
+public class NamedContainerNode extends ContainerNode implements NamedNode {
 
     private static final String NAME_ATTR = "name";
     

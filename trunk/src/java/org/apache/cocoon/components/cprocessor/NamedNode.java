@@ -51,26 +51,15 @@
 package org.apache.cocoon.components.cprocessor;
 
 /**
- * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
+ * A <code>Node</code> that has a name.
+ *
+ * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
+ * @version CVS $Id: NamedNode.java,v 1.1 2004/02/22 19:08:15 unico Exp $
  */
-public interface ViewNode extends NamedProcessingNode {
-    
-    public static final String ROLE = ViewNode.class.getName();
+public interface NamedNode extends Node {
     
     /**
-     * Pseudo-label for views <code>from-position="first"</code> (i.e. generator).
+     * Return this node's name.
      */
-    public static final String FIRST_POS_LABEL = "!first!";
-
-    /**
-     * Pseudo-label for views <code>from-position="last"</code> (i.e. serializer).
-     */
-    public static final String LAST_POS_LABEL = "!last!";
-
-    /**
-     * Return this view's label.
-     */
-    public String getLabel();
-    
+    String getName();
 }

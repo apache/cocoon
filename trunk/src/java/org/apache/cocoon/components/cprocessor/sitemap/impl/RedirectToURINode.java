@@ -48,104 +48,75 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
-
-import java.util.HashMap;
-import java.util.Map;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
-import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
+import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
+import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.PermanentRedirector;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActionSetNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: RedirectToURINode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
- * @x-avalon.lifestyle type=action-set-node
- * @x-avalon.info name=action-set-node
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=redirect-node
  */
-public class ActionSetNode extends SimpleParentProcessingNode {
-      
-    public static final String CALLER_PARAMETERS = ActionSetNode.class.getName() + "/CallerParameters";
-    public static final String ACTION_RESULTS = ActionSetNode.class.getName() + "/ActionResults";
+public class RedirectToURINode extends AbstractProcessingNode implements ProcessingNode {
 
-    private String[] m_actionNames;
-    
-    public ActionSetNode() {
+    // The 'uri' attribute
+    private VariableResolver m_uri;
+    private boolean m_createSession;
+    private boolean m_global;
+    private boolean m_permanent;
+
+    public RedirectToURINode() {
     }
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        Configuration[] actions = config.getChildren("act");
-        m_actionNames = new String[actions.length];
-        for (int i = 0; i < actions.length; i++) {
-            m_actionNames[i] = actions[i].getAttribute("action");
+        try {
+            m_uri = VariableResolverFactory.getResolver(config.getAttribute("uri"), m_manager);
         }
-    }
-    
-    public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
-	
-        // Perform any common invoke functionalty 
-        // super.invoke(env, context);
-        String msg = "An action-set cannot be invoked, at " + this.getLocation();
-        throw new UnsupportedOperationException(msg);
+        catch (PatternException e) {
+            throw new ConfigurationException(e.toString());
+        }
+        m_createSession = config.getAttributeAsBoolean("session", false);
+        m_global = config.getAttributeAsBoolean("global", false);
+        m_permanent = config.getAttributeAsBoolean("permanent", false);
     }
 
-    /**
-     * Call the actions composing the action-set and return the combined result of
-     * these actions.
-     */
-    public final Map call(Environment env, InvokeContext context, Parameters params) throws Exception {
+    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
+        String resolvedURI = m_uri.resolve(context, env.getObjectModel());
 
-        String cocoonAction = env.getAction();
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Redirecting to '" + resolvedURI + "' at " + getLocation());
+        }
 
-        // Store the parameters from the caller into the environment so that they can be merged with
-        // each action's parameters.
-        
+        final Redirector redirector = context.getRedirector();
 
-        Map result = null;
+        if (m_global) {
+            redirector.globalRedirect(m_createSession, resolvedURI);
+        } 
+        else if (m_permanent && redirector instanceof PermanentRedirector) {
+            ((PermanentRedirector) redirector).permanentRedirect(m_createSession,resolvedURI);
+        } 
+        else {
+            redirector.redirect(m_createSession,resolvedURI);
+        }
 
-        // Call each action that either has no cocoonAction, or whose cocoonAction equals
-        // the one from the environment.
-        env.setAttribute(CALLER_PARAMETERS, params);
-        
-        ProcessingNode[] children = getChildNodes();
-        for (int i = 0; i < children.length; i++) {
-
-
-            String actionName = m_actionNames[i];
-            if (actionName == null || actionName.equals(cocoonAction)) {
-                
-                children[i].invoke(env, context);
-                
-                // Get action results. They're passed back through the environment since action-sets
-                // "violate" the tree hierarchy (the returned Map is visible outside of the node)
-                Map actionResult = (Map) env.getAttribute(ACTION_RESULTS);
-                // Don't forget to clear it
-                env.removeAttribute(ACTION_RESULTS);
-                
-                if (actionResult != null) {
-                    // Merge the result in the global result, creating it if necessary.
-                    if (result == null) {
-                        result = new HashMap(actionResult);
-                    } else {
-                        result.putAll(actionResult);
-                    }
-                }
-                
-            } // if (actionName...
-        } // for (int i...
-
-        return result;
+        return true;
     }
 
 }

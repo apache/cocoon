@@ -48,51 +48,104 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
+import java.util.Map;
+
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.cprocessor.NamedContainerNode;
-import org.apache.cocoon.components.cprocessor.ViewNode;
+import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
+import org.apache.cocoon.components.cprocessor.InvokeContext;
+import org.apache.cocoon.components.cprocessor.ProcessingNode;
+import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
+import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.environment.Environment;
 
 /**
+ * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $Id: CallResourceNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type=ViewNode
+ * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=view-node
+ * @x-avalon.info name=call-resource
  */
-public class ViewNodeImpl extends NamedContainerNode implements ViewNode {
+public class CallResourceNode extends AbstractProcessingNode implements Initializable {
+
+    /** The 'resource' attribute */
+    private String m_resourceName;
+
+    private VariableResolver m_resourceResolver;
+
+    private ProcessingNode m_resourceNode;
     
-    private static final String FROM_LABEL_ATTR = "from-label";
-    private static final String FROM_POSITION_ATTR = "from-position";
     
-    private String m_label;
-    
-    public ViewNodeImpl() {
+    public CallResourceNode() {
     }
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        // Get the label or position (pseudo-label) of this view.
-        m_label = config.getAttribute(FROM_LABEL_ATTR, null);
+        m_resourceName = config.getAttribute("resource");
+    }
+    
+    public void initialize() throws Exception {
         
-        if (m_label == null) {
-            String position = config.getAttribute(FROM_POSITION_ATTR);
-            if ("first".equals(position)) {
-                m_label = FIRST_POS_LABEL;
-            } else if ("last".equals(position)) {
-                m_label = LAST_POS_LABEL;
-            } else {
-                String msg = "Bad value for 'from-position' at " + getLocation();
-                throw new ConfigurationException(msg);
+        if (VariableResolverFactory.needsResolve(m_resourceName)) {
+            // Will always be resolved at invoke time
+            m_resourceResolver = VariableResolverFactory.getResolver(m_resourceName, super.m_manager);
+        } else {
+            // Static name : get it now
+            String name = VariableResolverFactory.unescape(m_resourceName);
+            m_resourceNode = (ProcessingNode) super.m_manager.lookup(
+                ProcessingNode.ROLE + "/" + name);
+        }
+    }
+    
+    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
+        
+        Map objectModel = env.getObjectModel();
+        // Resolve parameters, but push them only once the resource name has been
+        // resolved, otherwise it adds an unwanted nesting level
+        Map params = VariableResolver.buildMap(super.m_parameters, context, objectModel);
+
+        if (m_resourceNode != null) {
+            // Static resource name
+            context.pushMap(null,params);
+            
+            try {
+                return m_resourceNode.invoke(env, context);
+            } finally {
+                context.popMap();
+            }
+    
+        } else {
+            // Resolved resource name
+            String name = m_resourceResolver.resolve(context, objectModel);
+            ProcessingNode resourceNode = (ProcessingNode) super.m_manager.lookup(
+                ProcessingNode.ROLE + "/" + name);
+            
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Calling resource " + name);
+            }
+            
+            // and only now push the parameters
+            context.pushMap(null,params);
+            
+            try {
+                return resourceNode.invoke(env,context);
+            } finally {
+                context.popMap();
             }
         }
     }
     
-    public String getLabel() {
-        return m_label;
+    /**
+     * @return <code>true</code>.
+     */
+    protected boolean hasParameters() {
+        return true;
     }
-    
+
 }

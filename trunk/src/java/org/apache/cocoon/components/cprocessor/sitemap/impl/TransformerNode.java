@@ -48,21 +48,23 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
+
+import org.apache.cocoon.components.cprocessor.sitemap.AbstractComponentNode;
 
 /**
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @avalon.component
- * @avalon.service type=GeneratorNode
+ * @avalon.service type=TransformerNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=generator-node
+ * @x-avalon.info name=transformer-node
  */
-public class GeneratorNode extends AbstractComponentNode {
+public class TransformerNode extends AbstractComponentNode {
     
-    public static final String ROLE = GeneratorNode.class.getName();
+    public static final String ROLE = TransformerNode.class.getName();
     
-    public GeneratorNode() {
+    public TransformerNode() {
     }
     
 }

@@ -48,18 +48,37 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor;
+package org.apache.cocoon.components.cprocessor.sitemap;
+
+import java.util.Collection;
+
+import org.apache.cocoon.components.cprocessor.Node;
 
 /**
- * A <code>ProcessingNode</code> that has a name.
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NamedProcessingNode.java,v 1.2 2004/01/28 17:25:31 unico Exp $
+ * Represents a component declaration within the map:components section.
+ * 
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
-public interface NamedProcessingNode extends ProcessingNode {
+public interface ComponentNode extends Node {
+
+    public static final String ROLE = ComponentNode.class.getName();
+
+    /**
+     * Return the labels associated with this sitemap 
+     * component declaration statement. Only relevant if
+     * this represents a generator, transformer or serializer.
+     */
+    public Collection getLabels();
     
     /**
-     * Return this node's name.
+     * Return the hint of the sitemap component this node represents.
      */
-    String getName();
+    public String getComponentHint();
+    
+    /**
+     * Return the mime-type attribute of this sitemap
+     * component declaration statement. Only relevant if
+     * this represents a reader or serializer.
+     */
+    public String getMimeType();
 }

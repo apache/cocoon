@@ -48,7 +48,9 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
+
+import org.apache.cocoon.components.cprocessor.sitemap.AbstractComponentNode;
 
 /**
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>

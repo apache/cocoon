@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
 import java.util.Map;
 
@@ -58,6 +58,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
+import org.apache.cocoon.components.cprocessor.sitemap.ViewablePipelineComponentNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -69,7 +70,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SerializeNode.java,v 1.6 2004/02/22 17:36:34 cziegeler Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

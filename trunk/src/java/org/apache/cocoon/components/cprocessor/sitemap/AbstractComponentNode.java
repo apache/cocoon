@@ -60,25 +60,19 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.cprocessor.ComponentNode;
+import org.apache.cocoon.components.cprocessor.AbstractNode;
 import org.apache.cocoon.util.StringUtils;
 
 /**
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
-public abstract class AbstractComponentNode implements ComponentNode, Serviceable, Configurable {
-    
-    private ServiceManager m_manager;
+public abstract class AbstractComponentNode extends AbstractNode implements ComponentNode, Configurable {
     
     private Collection m_labels;
     private String m_componentHint;
     private String m_mimeType;
     
     public AbstractComponentNode() {
-    }
-    
-    public void service(ServiceManager manager) throws ServiceException {
-        m_manager = manager;
     }
     
     public void configure(Configuration config) throws ConfigurationException {

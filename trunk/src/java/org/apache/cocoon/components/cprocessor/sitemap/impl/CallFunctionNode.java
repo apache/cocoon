@@ -43,7 +43,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +59,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
+import org.apache.cocoon.components.cprocessor.sitemap.FlowNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.flow.Interpreter;
@@ -74,14 +75,14 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.7 2004/02/20 19:06:21 cziegeler Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=call-function
  */
-public class CallFunctionNode extends AbstractProcessingNode {
+public class CallFunctionNode extends AbstractProcessingNode implements ProcessingNode {
     
     private static final String FUNCTION_ATTR = "function";
     private static final String CONTINUATION_ATTR = "continuation";
@@ -109,7 +110,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
         String continuationId = config.getAttribute(CONTINUATION_ATTR, null);
         
         if (functionName == null && continuationId == null) {
-            String msg = "<map:call> must have either a 'resource', a 'function' " + "or a 'continuation' attribute!";
+            String msg = "<map:call> must have either a 'resource', a 'function' or a 'continuation' attribute!";
             throw new ConfigurationException(msg);
         }
         
@@ -139,7 +140,7 @@ public class CallFunctionNode extends AbstractProcessingNode {
         }
         
         try {
-            FlowNode flowNode = (FlowNode) super.m_manager.lookup(ProcessingNode.ROLE + "/flow");
+            FlowNode flowNode = (FlowNode) lookup(FlowNode.ROLE);
             m_interpreter = flowNode.getInterpreter();
         }
         catch (ServiceException e) {

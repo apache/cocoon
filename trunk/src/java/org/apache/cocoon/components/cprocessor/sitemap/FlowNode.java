@@ -42,81 +42,23 @@
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
+
 */
 package org.apache.cocoon.components.cprocessor.sitemap;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
-import org.apache.cocoon.components.cprocessor.InvokeContext;
-import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
-import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.Environment;
 
-/**
- * Handler for &lt;map:flow&gt; element in the sitemap.
- *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
- */
-public class FlowNode extends AbstractProcessingNode implements Contextualizable {
-
-    private String m_language;
-    private Context m_context;
-    private Interpreter m_interpreter;
+public interface FlowNode {
     
-    public FlowNode() {
-    }
-    
-    public void contextualize(org.apache.avalon.framework.context.Context context) 
-    throws ContextException {
-        m_context = (Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-    }
-    
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        m_language = config.getAttribute("language", "JavaScript");
-
-        try {
-            m_interpreter = (Interpreter) super.m_manager.lookup(Interpreter.ROLE + "/" + m_language);
-        }
-        catch (ServiceException e) {
-            String msg = "Couldn't obtain a flow interpreter for " + m_language + ": " + e;
-            throw new ConfigurationException(msg);
-        }
-        
-        Configuration[] children = config.getChildren("script");
-        for (int i = 0; i < children.length; i++) {
-            String src = children[i].getAttribute("src");
-            if (m_interpreter instanceof AbstractInterpreter) {
-                ((AbstractInterpreter) m_interpreter).register(src);
-            }
-        }
-    }
+    public static final String ROLE = FlowNode.class.getName();
     
     /**
-     * This method should never be called by the TreeProcessor, since a
-     * <code>&lt;map:flow&gt;</code> element should not be in an
-     * "executable" sitemap node.
-     *
-     * @param env an <code>Environment</code> value
-     * @param context an <code>InvokeContext</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
+     * Return the flow Interpeter.
      */
-    public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        return true;
-    }
-    
-    public Interpreter getInterpreter() {
-        return m_interpreter;
-    }
+    public Interpreter getInterpreter();
 
 }

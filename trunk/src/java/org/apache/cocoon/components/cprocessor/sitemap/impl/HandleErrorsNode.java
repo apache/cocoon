@@ -48,104 +48,85 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.environment.Environment;
 
 /**
+ * Handles &lt;map:handle-errors&gt;
+ *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: CallResourceNode.java,v 1.2 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: HandleErrorsNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=call-resource
+ * @x-avalon.info name=handle-errors-node
  */
-public class CallResourceNode extends AbstractProcessingNode implements Initializable {
+public final class HandleErrorsNode extends SimpleParentProcessingNode 
+implements ProcessingNode {
 
-    /** The 'resource' attribute */
-    private String m_resourceName;
+    private int statusCode;
 
-    private VariableResolver m_resourceResolver;
-
-    private ProcessingNode m_resourceNode;
-    
-    
-    public CallResourceNode() {
+    public HandleErrorsNode() {
     }
-    
+
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        m_resourceName = config.getAttribute("resource");
+        this.statusCode = config.getAttributeAsInteger("type", -1);
     }
     
-    public void initialize() throws Exception {
-        
-        if (VariableResolverFactory.needsResolve(m_resourceName)) {
-            // Will always be resolved at invoke time
-            m_resourceResolver = VariableResolverFactory.getResolver(m_resourceName, super.m_manager);
-        } else {
-            // Static name : get it now
-            String name = VariableResolverFactory.unescape(m_resourceName);
-            m_resourceNode = (ProcessingNode) super.m_manager.lookup(
-                ProcessingNode.ROLE + "/" + name);
-        }
+    public int getStatusCode() {
+        return this.statusCode;
     }
-    
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-        
-        Map objectModel = env.getObjectModel();
-        // Resolve parameters, but push them only once the resource name has been
-        // resolved, otherwise it adds an unwanted nesting level
-        Map params = VariableResolver.buildMap(super.m_parameters, context, objectModel);
 
-        if (m_resourceNode != null) {
-            // Static resource name
-            context.pushMap(null,params);
-            
-            try {
-                return m_resourceNode.invoke(env, context);
-            } finally {
-                context.popMap();
-            }
-    
-        } else {
-            // Resolved resource name
-            String name = m_resourceResolver.resolve(context, objectModel);
-            ProcessingNode resourceNode = (ProcessingNode) super.m_manager.lookup(
-                ProcessingNode.ROLE + "/" + name);
-            
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Calling resource " + name);
-            }
-            
-            // and only now push the parameters
-            context.pushMap(null,params);
-            
-            try {
-                return resourceNode.invoke(env,context);
-            } finally {
-                context.popMap();
-            }
+    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
+
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Processing handle-errors at " + getLocation());
         }
-    }
-    
-    /**
-     * @return <code>true</code>.
-     */
-    protected boolean hasParameters() {
-        return true;
+
+		if (statusCode == -1) {
+            // No 'type' attribute : new Cocoon 2.1 behaviour, no implicit generator
+            try {
+                return invokeNodes(getChildNodes(), env, context);
+                
+            } catch(ProcessingException pe) {
+                // Handle the various cases related to the transition from implicit generators in handle-errors to
+                // explicit ones, in order to provide meaningful messages that will ease the migration
+                if (statusCode == - 1 &&
+                    pe.getMessage().indexOf("must set a generator first before you can use a transformer") != -1) {
+
+                    throw new ProcessingException(
+                        "Incomplete pipeline : 'handle-error' without a 'type' must include a generator, at " +
+                        this.getLocation() + System.getProperty("line.separator") +
+                        "Either add a generator (preferred) or a type='500' attribute (deprecated) on 'handle-errors'");
+                        
+                } else if (statusCode != -1 &&
+                    pe.getMessage().indexOf("Generator already set") != -1){
+
+                    throw new ProcessingException(
+                        "Error : 'handle-error' with a 'type' attribute has an implicit generator, at " +
+                        this.getLocation() + System.getProperty("line.separator") +
+                        "Please remove the 'type' attribute on 'handle-error'");
+
+                } else {
+                    // Rethrow the exception
+                    throw pe;
+                }
+            }
+		} else {
+		    // A 'type' attribute is present : add the implicit generator
+            context.getProcessingPipeline().setGenerator("<notifier>", "", Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
+            return invokeNodes(getChildNodes(), env, context);
+		}
     }
 
 }

@@ -63,7 +63,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.2 2004/01/26 15:44:59 unico Exp $
+ * @version CVS $Id: AbstractParentProcessingNode.java,v 1.3 2004/02/22 19:08:15 unico Exp $
  */
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
     
@@ -122,9 +122,13 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
     
     /**
      * Create the <code>ProcessingNode</code>s for the children of a given node.
-     * Child nodes are controlled to be actually allowed in this node.
      */
-    protected final List getChildNodesList(Configuration config) throws ConfigurationException {
+    protected final ProcessingNode[] getChildNodes(Configuration config) throws ConfigurationException {
+        List children = getChildNodesList(config);
+        return (ProcessingNode[]) children.toArray(new ProcessingNode[children.size()]);
+    }
+    
+    private final List getChildNodesList(Configuration config) throws ConfigurationException {
 
         Configuration[] children = config.getChildren();
         List result = new ArrayList(children.length);
@@ -144,30 +148,6 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
         }
 
         return result;
-    }
-    
-    protected final ProcessingNode[] getChildNodes(Configuration config) throws ConfigurationException {
-        List children = getChildNodesList(config);
-        return (ProcessingNode[]) children.toArray(new ProcessingNode[children.size()]);
-    }
-    
-    /**
-     * Check if the current config element is a parameter.
-     * 
-     * @throws ConfigurationException  if this config element is a parameter
-     * and this node does not allow parameters.
-     */
-    private final boolean isParameter(Configuration config) throws ConfigurationException {
-        String name = config.getName();
-        if (name.equals(PARAMETER_ELEMENT)) {
-            if (this.hasParameters()) {
-                return true;
-            } else {
-                String msg = "Element '" + name + "' has no parameters at " + getConfigLocation(config);
-                throw new ConfigurationException(msg);
-            }
-        }
-        return false;
     }
 
 }

@@ -48,98 +48,104 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ReadNode.java,v 1.5 2004/02/22 17:36:34 cziegeler Exp $
+ * @version CVS $Id: ActionSetNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
- * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=read-node
+ * @x-avalon.lifestyle type=action-set-node
+ * @x-avalon.info name=action-set-node
  */
-public class ReadNode extends AbstractPipelineComponentNode implements ProcessingNode {
+public class ActionSetNode extends SimpleParentProcessingNode {
+      
+    public static final String CALLER_PARAMETERS = ActionSetNode.class.getName() + "/CallerParameters";
+    public static final String ACTION_RESULTS = ActionSetNode.class.getName() + "/ActionResults";
 
-    private String m_type;
-    private VariableResolver m_src;
-    private VariableResolver m_mimeType;
-    private int m_statusCode;
-
-    public ReadNode() {
+    private String[] m_actionNames;
+    
+    public ActionSetNode() {
     }
     
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        try {
-            m_src = VariableResolverFactory.getResolver(
-                config.getAttribute("src", null), m_manager);
-            m_mimeType = VariableResolverFactory.getResolver(
-                config.getAttribute("mime-type", null), m_manager);
-        }
-        catch (PatternException e) {
-            throw new ConfigurationException(e.toString());
-        }
-        m_statusCode = config.getAttributeAsInteger("status-code",-1);
-        m_type = config.getAttribute("type",null);
-    }
-
-    public final boolean invoke(Environment env,  InvokeContext context) throws Exception {
-
-        Map objectModel = env.getObjectModel();
-
-        ProcessingPipeline pipeline = context.getProcessingPipeline();
-
-        String mimeType = m_mimeType.resolve(context, objectModel);
-
-        if (mimeType == null) {
-            mimeType = m_component.getMimeType();
-        }
-        
-        pipeline.setReader(
-            m_type,
-            m_src.resolve(context, objectModel),
-            VariableResolver.buildParameters(m_parameters, context, objectModel),
-            mimeType
-        );
-
-        // Set status code if there is one
-        if (m_statusCode >= 0) {
-            env.setStatus(m_statusCode);
-        }
-
-        if (!context.isBuildingPipelineOnly()) {
-            // Process pipeline
-            return pipeline.process(env);
-        } else {
-            // Return true : pipeline is finished.
-            return true;
+        Configuration[] actions = config.getChildren("act");
+        m_actionNames = new String[actions.length];
+        for (int i = 0; i < actions.length; i++) {
+            m_actionNames[i] = actions[i].getAttribute("action");
         }
     }
     
-    protected String getComponentNodeRole() {
-        return ReaderNode.ROLE;
+    public final boolean invoke(Environment env, InvokeContext context)
+      throws Exception {
+	
+        // Perform any common invoke functionalty 
+        // super.invoke(env, context);
+        String msg = "An action-set cannot be invoked, at " + this.getLocation();
+        throw new UnsupportedOperationException(msg);
     }
-    
+
     /**
-     * @return <code>true</code>
+     * Call the actions composing the action-set and return the combined result of
+     * these actions.
      */
-    protected boolean hasParameters() {
-        return true;
+    public final Map call(Environment env, InvokeContext context, Parameters params) throws Exception {
+
+        String cocoonAction = env.getAction();
+
+        // Store the parameters from the caller into the environment so that they can be merged with
+        // each action's parameters.
+        
+
+        Map result = null;
+
+        // Call each action that either has no cocoonAction, or whose cocoonAction equals
+        // the one from the environment.
+        env.setAttribute(CALLER_PARAMETERS, params);
+        
+        ProcessingNode[] children = getChildNodes();
+        for (int i = 0; i < children.length; i++) {
+
+
+            String actionName = m_actionNames[i];
+            if (actionName == null || actionName.equals(cocoonAction)) {
+                
+                children[i].invoke(env, context);
+                
+                // Get action results. They're passed back through the environment since action-sets
+                // "violate" the tree hierarchy (the returned Map is visible outside of the node)
+                Map actionResult = (Map) env.getAttribute(ACTION_RESULTS);
+                // Don't forget to clear it
+                env.removeAttribute(ACTION_RESULTS);
+                
+                if (actionResult != null) {
+                    // Merge the result in the global result, creating it if necessary.
+                    if (result == null) {
+                        result = new HashMap(actionResult);
+                    } else {
+                        result.putAll(actionResult);
+                    }
+                }
+                
+            } // if (actionName...
+        } // for (int i...
+
+        return result;
     }
 
 }

@@ -48,92 +48,92 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
+ * Helps to call error handlers from PipelineNode and PipelinesNode.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: TransformNode.java,v 1.5 2004/02/22 17:36:34 cziegeler Exp $
- * 
- * @avalon.component
- * @avalon.service type=ProcessingNode
- * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=transform-node
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  */
-public class TransformNode extends ViewablePipelineComponentNode {
+public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceable {
 
-    private VariableResolver m_src;
+    private ServiceManager m_manager;
 
-    public TransformNode() {
+    /**
+     * The service manager is used to lookup notifying builders.
+     */
+    public void service(ServiceManager manager) {
+        m_manager = manager;
     }
 
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure(config);
-        try {
-            m_src = VariableResolverFactory.getResolver(
-                config.getAttribute("src", null), super.m_manager);
-        }
-        catch (PatternException e) {
-            throw new ConfigurationException(e.toString());
-        }
-    }
-    
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-
-        Map objectModel = env.getObjectModel();
+    public boolean invokeErrorHandler(ProcessingNode node, Exception ex, Environment env)
+    throws Exception {
+		Map objectModel = env.getObjectModel();
         
-        context.getProcessingPipeline().addTransformer(
-            m_component.getComponentHint(),
-            m_src.resolve(context, objectModel),
-            VariableResolver.buildParameters(super.m_parameters, context, objectModel),
-            super.m_pipelineHints == null
-                ? Parameters.EMPTY_PARAMETERS
-                : VariableResolver.buildParameters(super.m_pipelineHints, context, objectModel)
-        );
-	   
-        //inform the pipeline that we have a branch point
-        context.getProcessingPipeline().informBranchPoint();
-    
-        String cocoonView = env.getView();
-        if (cocoonView != null) {
+        InvokeContext errorContext = null;
+		boolean nodeSuccessful = false;
+		
+        try {
+        	if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
+				// error has not been processed by another handler before
+				
+	            // Try to reset the response to avoid mixing already produced output
+	            // and error page.
+	            env.tryResetResponse();
+	
+	            // Create a Notifying
+	            NotifyingBuilder notifyingBuilder= (NotifyingBuilder) 
+                    m_manager.lookup(NotifyingBuilder.ROLE);
+	            Notifying currentNotifying = null;
+	            try {
+	                currentNotifying = notifyingBuilder.build(this, ex);
+	            } finally {
+	                m_manager.release(notifyingBuilder);
+	            }
+	
+	            // Add it to the object model
+	            objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
+	            
+	            // Also add the exception
+	            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
+        	}
 
-            // Get view node
-            ProcessingNode viewNode = (ProcessingNode) getViewNode(cocoonView);
-
-            if (viewNode != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Jumping to view " + cocoonView + " from transformer at " 
-                        + getLocation());
-                }
-                return viewNode.invoke(env, context);
+			// Build a new context
+			errorContext = new InvokeContext();
+			errorContext.enableLogging(getLogger());
+			errorContext.service(m_manager);
+			
+			nodeSuccessful = node.invoke(env, errorContext);
+        } catch (Exception subEx) {
+            getLogger().error("An exception occured in while handling errors at " + node.getLocation(), subEx);
+            // Rethrow it : it will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
+            throw subEx;
+        } finally {
+            if (errorContext != null) {
+                errorContext.dispose();
             }
         }
-
-        // Return false to contine sitemap invocation
-        return false;
-    }
-    
-    protected String getComponentNodeRole() {
-        return TransformerNode.ROLE;
-    }
-    
-    /**
-     * @return  <code>true</code>.
-     */
-    protected boolean hasParameters() {
-        return true;
+        
+        if (nodeSuccessful) {
+        	return true;
+        } else {
+			throw ex;
+        }
     }
 }
+

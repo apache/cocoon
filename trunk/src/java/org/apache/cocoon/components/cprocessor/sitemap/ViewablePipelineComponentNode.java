@@ -59,7 +59,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.components.cprocessor.ViewNode;
 import org.apache.cocoon.util.StringUtils;
 
 /**
@@ -101,13 +100,14 @@ public abstract class ViewablePipelineComponentNode extends AbstractPipelineComp
         ViewNode view = (ViewNode) m_views.get(name);
         if (view == null) {
             try {
-                view = (ViewNode) super.m_manager.lookup(ViewNode.ROLE + "/v-" + name);
+                view = (ViewNode) lookup(ViewNode.ROLE + "/v-" + name);
                 if (m_labels.contains(view.getLabel())) {
                     m_views.put(name,view);
                 }
                 else {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("view '" + name + "' not applicable " +                            "to statement at '" + getLocation() + "'");
+                        getLogger().debug("view '" + name + "' not applicable " 
+                            + "to statement at '" + getLocation() + "'");
                     }
                     view = null;
                 }

@@ -48,85 +48,93 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.cprocessor.sitemap;
+package org.apache.cocoon.components.cprocessor.sitemap.impl;
+
+import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
-import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
+import org.apache.cocoon.components.cprocessor.sitemap.ViewablePipelineComponentNode;
+import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
+import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.PatternException;
 
 /**
- * Handles &lt;map:handle-errors&gt;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: HandleErrorsNode.java,v 1.3 2004/01/26 16:07:18 unico Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $Id: TransformNode.java,v 1.1 2004/02/22 19:08:14 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=handle-errors-node
+ * @x-avalon.info name=transform-node
  */
-public final class HandleErrorsNode extends SimpleParentProcessingNode 
-implements ProcessingNode {
+public class TransformNode extends ViewablePipelineComponentNode {
 
-    private int statusCode;
+    private VariableResolver m_src;
 
-    public HandleErrorsNode() {
+    public TransformNode() {
     }
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        this.statusCode = config.getAttributeAsInteger("type", -1);
+        try {
+            m_src = VariableResolverFactory.getResolver(
+                config.getAttribute("src", null), super.m_manager);
+        }
+        catch (PatternException e) {
+            throw new ConfigurationException(e.toString());
+        }
     }
     
-    public int getStatusCode() {
-        return this.statusCode;
-    }
-
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
 
-        if (getLogger().isInfoEnabled()) {
-            getLogger().info("Processing handle-errors at " + getLocation());
+        Map objectModel = env.getObjectModel();
+        
+        context.getProcessingPipeline().addTransformer(
+            m_component.getComponentHint(),
+            m_src.resolve(context, objectModel),
+            VariableResolver.buildParameters(super.m_parameters, context, objectModel),
+            super.m_pipelineHints == null
+                ? Parameters.EMPTY_PARAMETERS
+                : VariableResolver.buildParameters(super.m_pipelineHints, context, objectModel)
+        );
+	   
+        //inform the pipeline that we have a branch point
+        context.getProcessingPipeline().informBranchPoint();
+    
+        String cocoonView = env.getView();
+        if (cocoonView != null) {
+
+            // Get view node
+            ProcessingNode viewNode = (ProcessingNode) getViewNode(cocoonView);
+
+            if (viewNode != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Jumping to view " + cocoonView + " from transformer at " 
+                        + getLocation());
+                }
+                return viewNode.invoke(env, context);
+            }
         }
 
-		if (statusCode == -1) {
-            // No 'type' attribute : new Cocoon 2.1 behaviour, no implicit generator
-            try {
-                return invokeNodes(getChildNodes(), env, context);
-                
-            } catch(ProcessingException pe) {
-                // Handle the various cases related to the transition from implicit generators in handle-errors to
-                // explicit ones, in order to provide meaningful messages that will ease the migration
-                if (statusCode == - 1 &&
-                    pe.getMessage().indexOf("must set a generator first before you can use a transformer") != -1) {
-
-                    throw new ProcessingException(
-                        "Incomplete pipeline : 'handle-error' without a 'type' must include a generator, at " +
-                        this.getLocation() + System.getProperty("line.separator") +
-                        "Either add a generator (preferred) or a type='500' attribute (deprecated) on 'handle-errors'");
-                        
-                } else if (statusCode != -1 &&
-                    pe.getMessage().indexOf("Generator already set") != -1){
-
-                    throw new ProcessingException(
-                        "Error : 'handle-error' with a 'type' attribute has an implicit generator, at " +
-                        this.getLocation() + System.getProperty("line.separator") +
-                        "Please remove the 'type' attribute on 'handle-error'");
-
-                } else {
-                    // Rethrow the exception
-                    throw pe;
-                }
-            }
-		} else {
-		    // A 'type' attribute is present : add the implicit generator
-            context.getProcessingPipeline().setGenerator("<notifier>", "", Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
-            return invokeNodes(getChildNodes(), env, context);
-		}
+        // Return false to contine sitemap invocation
+        return false;
     }
-
+    
+    protected String getComponentNodeRole() {
+        return TransformerNode.ROLE;
+    }
+    
+    /**
+     * @return  <code>true</code>.
+     */
+    protected boolean hasParameters() {
+        return true;
+    }
 }

@@ -58,9 +58,9 @@ import org.apache.cocoon.environment.Environment;
  * executed for the particular request.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.4 2004/01/28 17:25:31 unico Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.5 2004/02/22 19:08:15 unico Exp $
  */
-public interface ProcessingNode {
+public interface ProcessingNode extends Node {
 
     public static final String ROLE = ProcessingNode.class.getName();
 
@@ -75,10 +75,4 @@ public interface ProcessingNode {
      */
     boolean invoke(Environment env, InvokeContext context) throws Exception;
 
-    /**
-     * Get the location of this node.
-     *
-     * @return  xml locator text.
-     */
-    String getLocation();
 }

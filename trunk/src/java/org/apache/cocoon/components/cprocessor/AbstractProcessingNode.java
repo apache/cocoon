@@ -56,51 +56,33 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.xml.LocationAugmentationPipe;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.2 2004/01/27 13:27:47 unico Exp $
+ * @version CVS $Id: AbstractProcessingNode.java,v 1.3 2004/02/22 19:08:15 unico Exp $
  */
-public abstract class AbstractProcessingNode extends AbstractLogEnabled 
-implements ProcessingNode, Serviceable, Configurable {
+public abstract class AbstractProcessingNode extends AbstractNode 
+implements ProcessingNode, Configurable {
 
-    protected static final String PARAMETER_ELEMENT = "parameter";
+    private static final String PARAMETER_ELEMENT = "parameter";
     private static final String PARAMETER_NAME_ATTR = "name";
     private static final String PARAMETER_VALUE_ATTR = "value";
     
-    private String m_location;
     protected Map m_parameters;
-    
-    protected ServiceManager m_manager;
     
     public AbstractProcessingNode() {
     }
     
     public void configure(final Configuration config) throws ConfigurationException {
-        m_location = getConfigLocation(config);
+        super.configure(config);
         if (hasParameters()) {
             setParameters(config);
         }
-    }
-    
-    public void service(final ServiceManager manager) throws ServiceException {
-        m_manager = manager;
-    }
-    
-    /**
-     * Get the location of this node.
-     */
-    public final String getLocation() {
-        return m_location;
     }
     
     /**
@@ -149,18 +131,6 @@ implements ProcessingNode, Serviceable, Configurable {
             String msg = "Invalid namespace '" + config.getNamespace() + "' at " + getConfigLocation(config);
             throw new ConfigurationException(msg);
         }
-    }
-    
-    /**
-     * Get the location information that is encoded as a location attribute
-     * on the current configuration element.
-     * 
-     * @param config  the configuration element to read the location from.
-     * @return  the location if the location attribute exists, else <code>Unknown</code>.
-     */
-    protected final String getConfigLocation(Configuration config) {
-        return config.getAttribute(LocationAugmentationPipe.LOCATION_ATTR,
-            LocationAugmentationPipe.UNKNOWN_LOCATION);
     }
 
 }
