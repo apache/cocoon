@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.4 2003/03/10 18:22:18 cziegeler Exp $:
+       CVS: $Id: build.xml,v 1.5 2003/03/11 00:02:18 huber Exp $:
 
 ============================================================================ -->
 
@@ -53,6 +53,28 @@
 
     <!-- Get the block properties from an external file -->
     <property file="blocks.properties"/>
+
+    <!-- Use unless.exclude.XXX shadow props used in the
+      unless target attributes -->
+    <condition property="unless.exclude.webapp.documentation">
+      <istrue value="${exclude.webapp.documentation}"/>
+    </condition>
+    <condition property="unless.exclude.webapp.javadocs">
+      <istrue value="${exclude.webapp.javadocs}"/>
+    </condition>
+    <condition property="unless.exclude.webapp.scratchpad">
+      <istrue value="${exclude.webapp.scratchpad}"/>
+    </condition>
+    <condition property="unless.exclude.webapp.samples">
+      <istrue value="${exclude.webapp.samples}"/>
+    </condition>
+    
+    <condition property="unless.exclude.scratchpad">
+      <istrue value="${exclude.scratchpad}"/>
+    </condition>
+    <condition property="unless.exclude.deprecated">
+      <istrue value="${exclude.deprecated}"/>
+    </condition>
 
     <filter token="Name"                value="${fullname}"/>
     <filter token="name"                value="${fullname}"/>
@@ -210,7 +232,7 @@
   </target>
 
   <!-- compiles the scratchpad -->
-  <target name="compile-scratchpad" depends="prepare" unless="exclude.scratchpad">
+  <target name="compile-scratchpad" depends="prepare" unless="unless.exclude.scratchpad">
     <mkdir dir="${build.scratchpad.src}"/>
     <mkdir dir="${build.scratchpad.dest}"/>
    
@@ -245,7 +267,7 @@
   </target>
 
   <!-- compiles deprecated code -->
-  <target name="compile-deprecated" depends="prepare,init-xpatch" unless="exclude.deprecated">
+  <target name="compile-deprecated" depends="prepare,init-xpatch" unless="unless.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
     <xpatch configuration="${build.dest}/org/apache/cocoon/cocoon.roles" 
@@ -281,14 +303,14 @@
   </target>
 
   <!-- package the scratchpad -->
-  <target name="package-scratchpad" depends="compile-scratchpad" unless="exclude.scratchpad">
+  <target name="package-scratchpad" depends="compile-scratchpad" unless="unless.exclude.scratchpad">
     <jar jarfile="${build}/${name}-scratchpad.jar">
       <fileset dir="${build.scratchpad}"/>
     </jar>
   </target>
 
   <!-- package deprecated code -->
-  <target name="package-deprecated" depends="compile-deprecated" unless="exclude.deprecated">
+  <target name="package-deprecated" depends="compile-deprecated" unless="unless.exclude.deprecated">
     <jar jarfile="${build}/${name}-deprecated.jar">
       <fileset dir="${build.deprecated}"/>
     </jar>
@@ -524,7 +546,7 @@
 
 <!-- Samples Targets ======================================================= -->
 
-  <target name="samples" depends="prepare, init-xpatch" unless="exclude.webapp.samples">
+  <target name="samples" depends="prepare, init-xpatch" unless="unless.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
     <javac srcdir="${samples}"
@@ -567,7 +589,7 @@
 
   </target>
   
-  <target name="block-samples" depends="prepare" unless="exclude.webapp.samples">
+  <target name="block-samples" depends="prepare" unless="unless.exclude.webapp.samples">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
@@ -637,15 +659,15 @@
          target="patch"/>
   </target>
 
-  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="exclude.webapp.samples">
+  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="unless.exclude.webapp.samples">
   </target>
 
-  <target name="prepare-webapp-deprecated" depends="prepare-webapp,init-xpatch" unless="exclude.deprecated">
+  <target name="prepare-webapp-deprecated" depends="prepare-webapp,init-xpatch" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch directory="${deprecated.conf}" extension="xconf" configuration="${build.webapp}/WEB-INF/cocoon.xconf"/>
   </target>
   
-  <target name="prepare-webapp-docs" depends="init" unless="exclude.webapp.documentation">
+  <target name="prepare-webapp-docs" depends="init" unless="unless.exclude.webapp.documentation">
     <copy todir="${build.webapp}/documentation">
       <fileset dir="${src}/documentation"/>
     </copy>
