@@ -67,7 +67,7 @@
    </p>
    
    <dl>
-    <dt>&lt;property key="propertyKey" value="propertyValue"/&gt;
+    <dt>&lt;property name="propertyName" value="propertyValue"/&gt;
      (optional; 0..n)</dt>
     <dd>
      An additional property to pass along to the Velocity template
@@ -116,14 +116,7 @@
     <dt>parameters (org.apache.avalon.framework.parameters.Parameters)</dt>
     <dd>Any parameters passed to the generator in the pipeline</dd>
    </dl>
- 
-   <p>
-    Additional Java objects can be exported from the Cocoon object
-    map to the Velocity context by adding one or more &lt;export-object
-    key="objectMapKey" name="velocityContextName"/&gt; child elements
-    to the generator configuration in the sitemap.
-   </p>
- 
+
   </s2>
  </s1>
  </body>
