@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.woody;
 
-import org.apache.cocoon.woody.formmodel.FormDefinition;
 import org.apache.cocoon.woody.formmodel.WidgetDefinition;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.excalibur.source.Source;

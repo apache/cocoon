@@ -125,7 +125,7 @@ import java.util.*;
  * <br>
  *
  * @author Felix Knecht
- * @version CVS $Id: LDAPTransformer.java,v 1.3 2003/05/15 10:09:41 stephan Exp $
+ * @version CVS $Id: LDAPTransformer.java,v 1.4 2003/05/16 07:20:41 cziegeler Exp $
  */
 public class LDAPTransformer extends AbstractTransformer {
 
@@ -1365,8 +1365,8 @@ public class LDAPTransformer extends AbstractTransformer {
                         ? true : false;
             }
             if (null!=
-                transformer.default_properties.getProperty(transformer.MAGIC_ENCODING_ELEMENT)) {
-                encoding = transformer.default_properties.getProperty(transformer.MAGIC_ENCODING_ELEMENT);
+                transformer.default_properties.getProperty(MAGIC_ENCODING_ELEMENT)) {
+                encoding = transformer.default_properties.getProperty(MAGIC_ENCODING_ELEMENT);
             }
 
         }
