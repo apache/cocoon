@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.218 2001-03-08 11:04:07 greenrd Exp $ 
+  $Id: changes.xml,v 1.219 2001-03-08 11:13:55 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -130,8 +130,7 @@
 
  <release version="1.8.1" date="January 19 2001">
   <action dev="RDG" type="fix" due-to="Wayne Bayever" due-to-email="wbayever@yahoo.com">
-   *** NOTE: This was a mistaken change that was later reversed in 1.8.3 - see above. ***
-   XSLTProcessor caching now ignores query string.
+   XSLTProcessor caching now ignores query string, as it should.
   </action>
   <action dev="RDG" type="update">
    Removed headers from cache key because this was breaking caching in 90% of static cases.
