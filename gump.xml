@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.87 2003/09/29 08:27:55 bdelacretaz Exp $
+    | CVS $Id: gump.xml,v 1.88 2003/09/29 09:22:44 bdelacretaz Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -56,7 +56,7 @@
 
     <depend project="rhino-cocoondev"/>
     <depend project="jisp"/>
-    
+
     <depend project="jing"/>
     <depend project="jstyle"/>
     <depend project="pizza"/>
@@ -104,12 +104,12 @@
     <depend project="commons-jexl" inherit="all"/>
     <depend project="commons-betwixt" inherit="all"/>
     <depend project="commons-beanutils" inherit="all"/>
-    <depend project="commons-digester" inherit="all"/>        
+    <depend project="commons-digester" inherit="all"/>
     <depend project="jakarta-velocity" inherit="all"/>
     <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-cron"/>
-    
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -310,7 +310,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="excalibur-datasource"/>
-    
+
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -429,7 +429,7 @@
     <option project="phpservlt"/>
 
     <work nested="tools/anttasks"/>
-    <work nested="build/cocoon-@@DATE@@/blocks/php/mocks"/>    
+    <work nested="build/cocoon-@@DATE@@/blocks/php/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/php-block.jar"/>
@@ -552,42 +552,42 @@
 
   <project name="cocoon-block-linkrewriter">
     <package>org.apache.cocoon</package>
-    
+
     <ant target="gump-block">
       <property name="block-name" value="linkrewriter"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
-    
+
     <depend project="cocoon" inherit="all"/>
-    
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
-    
+
     <jar name="blocks/linkrewriter-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-    
+
   <project name="cocoon-block-web3">
     <package>org.apache.cocoon</package>
-    
+
     <ant target="gump-block">
       <property name="block-name" value="web3"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
-    
+
     <depend project="cocoon" inherit="all"/>
     <depend project="jta"/>
     <depend project="concurrent"/>
-    
+
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/web3/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
-    
+
     <jar name="blocks/web3-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>  
+  </project>
 
   <project name="cocoon-block-slide">
     <package>org.apache.cocoon</package>
@@ -610,7 +610,7 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-      
+
   <project name="cocoon-block-proxy" status="unstable">
     <package>org.apache.cocoon</package>
 
@@ -669,7 +669,7 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-      
+
   <project name="cocoon-block-asciiart" status="unstable">
     <package>org.apache.cocoon</package>
 
@@ -710,7 +710,7 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-    
+
   <project name="cocoon-block-axis" status="unstable">
     <package>org.apache.cocoon</package>
 
@@ -869,7 +869,7 @@
     <jar name="blocks/petstore-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>    
+  </project>
 
   <project name="cocoon-block-stx" status="unstable">
     <package>org.apache.cocoon</package>
@@ -1004,7 +1004,7 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-    
+
   <project name="cocoon-block-cron" status="unstable">
     <package>org.apache.cocoon</package>
 
@@ -1023,7 +1023,7 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-  
+
     <project name="cocoon-block-ojb" status="unstable">
     <package>org.apache.cocoon</package>
 
@@ -1104,7 +1104,7 @@
       Chaperon is a project that helps to convert structured text to XML
     </description>
     <home nested="src/blocks/chaperon/lib"/>
-    <jar name="chaperon-20030407.jar"/>
+    <jar name="chaperon-2.1.jar"/>
   </project>
 
   <project name="itext">
@@ -1113,7 +1113,7 @@
       iText is a library that allows you to generate PDF files on the fly
     </description>
     <home nested="src/blocks/itext/lib"/>
-    <jar name="itext-0.93b.jar"/>
+    <jar name="itext-1.00.jar"/>
   </project>
 
   <project name="itext-xml">
@@ -1122,7 +1122,7 @@
       iText is a library that allows you to generate PDF files on the fly
     </description>
     <home nested="src/blocks/itext/lib"/>
-    <jar name="itext-xml-0.93.jar"/>
+    <jar name="itext-xml-1.00.jar"/>
   </project>
 
   <project name="eclipse-jtd">
@@ -1133,14 +1133,14 @@
     <home nested="lib/optional"/>
     <jar name="jdtcore-2.1.0.jar"/>
   </project>
-  
+
   <project name="spark">
     <url href="http://www.tivano.de/software/spark/index.shtml"/>
     <description>
       Spark is a library for converting XML to Flash (swf)
     </description>
     <home nested="src/blocks/swf/lib"/>
-    <jar name="spark.jar"/>
+    <jar name="spark-0.2.jar"/>
   </project>
 
   <project name="xreporter-expression">
@@ -1149,13 +1149,13 @@
       An expression language interpreter.
     </description>
     <home nested="src/blocks/woody/lib"/>
-    <jar name="xreporter-expression-20030428.jar"/>
+    <jar name="xreporter-expression-20030725.jar"/>
   </project>
 
   <project name="qdox">
     <url href="http://qdox.codehaus.org/"/>
     <description>
-      Small footprint parser for extracting class/interface/method 
+      Small footprint parser for extracting class/interface/method
       definitions from java source files.
     </description>
     <home nested="src/blocks/qdox/lib"/>
@@ -1168,7 +1168,7 @@
       Streaming Transformation for XML (STX) library
     </description>
     <home nested="src/blocks/stx/lib"/>
-    <jar name="joost-20030502.jar"/>
+    <jar name="joost-20030914.jar"/>
   </project>
 
 </module>
