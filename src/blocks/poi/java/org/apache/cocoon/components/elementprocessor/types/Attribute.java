@@ -15,12 +15,14 @@
  */
 package org.apache.cocoon.components.elementprocessor.types;
 
+import org.apache.commons.lang.BooleanUtils;
+
 /**
  * Encapsulation of a single XML element attribute in a way that
  * shields the consumer from the data's XML origins.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Attribute.java,v 1.4 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id: Attribute.java,v 1.5 2004/03/28 20:51:24 antonio Exp $
  */
 public class Attribute
 {
@@ -118,6 +120,7 @@ public class Attribute
      *     <li>true/false
      *     <li>y/n
      *     <li>yes/no
+     *      <li>on/off
      * </ul>
      *
      * @return the value of the Attribute as a boolean
@@ -127,20 +130,23 @@ public class Attribute
      */
 
     public boolean getValueAsBoolean() {
-        boolean rvalue = false;
-
-        if (_value.equalsIgnoreCase("t") || _value.equalsIgnoreCase("y")
-                || _value.equalsIgnoreCase("yes")
-                || _value.equalsIgnoreCase("true")) {
-            rvalue = true;
-        } else if (_value.equalsIgnoreCase("f") || _value.equalsIgnoreCase("n")
-                 || _value.equalsIgnoreCase("no")
-                 || _value.equalsIgnoreCase("false")) {
-            rvalue = false;
+        // Match case for: true, false, yes, no, on, off.
+        Boolean rvalue = BooleanUtils.toBooleanObject(_value);
+        if (rvalue != null) {
+            return rvalue.booleanValue();
+        }
+        // Lets try with "t", "f"
+        rvalue = BooleanUtils.toBooleanObject(_value, "t", "f", null);
+        if (rvalue != null) {
+            return rvalue.booleanValue();
+        }
+        // Try now "y", "n"
+        rvalue = BooleanUtils.toBooleanObject(_value, "y", "n", null);
+        if (rvalue != null) {
+            return rvalue.booleanValue();
         } else {
             throw new IllegalArgumentException(
                 "Value [" + _value + "] does not represent a boolean value");
         }
-        return rvalue;
     }
 }   // end public class Attribute

@@ -41,7 +41,7 @@ import java.math.BigInteger;
  * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
  * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
- * @version CVS $Id: FormattingDecimalConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: FormattingDecimalConvertor.java,v 1.2 2004/03/28 20:51:23 antonio Exp $
  */
 public class FormattingDecimalConvertor implements Convertor {
     private int variant;
@@ -124,11 +124,11 @@ public class FormattingDecimalConvertor implements Convertor {
 
         String pattern = (String)localizedPatterns.get(locale);
 
-        if (pattern != null)
+        if (pattern != null) {
             decimalFormat.applyLocalizedPattern(pattern);
-        else if (nonLocalizedPattern != null)
+        } else if (nonLocalizedPattern != null) {
             decimalFormat.applyPattern(nonLocalizedPattern);
-
+        }
         return decimalFormat;
     }
 

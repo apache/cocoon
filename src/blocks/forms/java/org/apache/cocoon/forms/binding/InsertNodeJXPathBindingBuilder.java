@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * &lt;/wb:insert-node&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.2 2004/03/28 20:51:24 antonio Exp $
  */
 public class InsertNodeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
@@ -84,8 +84,9 @@ public class InsertNodeJXPathBindingBuilder
                     domTemplate = document.createDocumentFragment();
                     domTemplate.appendChild(element);
                 } finally {
-                    if (source != null)
+                    if (source != null) {
                         sourceResolver.release(source);
+                    }
                     manager.release(sourceResolver);
                 }
             } else {

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.bean.helpers.OutputStreamListener;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -32,7 +33,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.7 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.8 2004/03/28 20:51:24 antonio Exp $
  */
 public class BeanConfigurator {
 
@@ -449,8 +450,7 @@ public class BeanConfigurator {
 
             if (attribute != null) {
                 String value = attribute.getNodeValue();
-                return "yes".equals(value)
-                        || "true".equals(value);
+                return BooleanUtils.toBoolean(value);
             }
         }
         return false;

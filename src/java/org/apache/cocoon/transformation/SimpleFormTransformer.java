@@ -30,6 +30,7 @@ import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
@@ -139,7 +140,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.13 2004/03/10 15:19:32 unico Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.14 2004/03/28 20:51:24 antonio Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -959,7 +960,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * @return true if string is one of "yes", true"
      */
     private static boolean parseBoolean(String aBoolean) {
-        return "true".equalsIgnoreCase(aBoolean) || "yes".equalsIgnoreCase(aBoolean);
+        return BooleanUtils.toBoolean(aBoolean);
     }
 
     /**

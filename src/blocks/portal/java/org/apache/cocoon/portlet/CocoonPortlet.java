@@ -31,6 +31,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
@@ -85,7 +86,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.3 2004/03/11 09:56:47 cziegeler Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -440,8 +441,7 @@ public class CocoonPortlet extends GenericPortlet {
         this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
         value = conf.getInitParameter("show-time");
-        this.showTime = "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)
-                || (this.hiddenShowTime = "hide".equals(value));
+        this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
         if (value == null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("show-time was not set - defaulting to false");
@@ -1657,7 +1657,7 @@ public class CocoonPortlet extends GenericPortlet {
             }
             return defaultValue;
         } else {
-            return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
+            return BooleanUtils.toBoolean(value);
         }
     }
 

@@ -22,6 +22,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.components.language.markup.xsp.XSPModuleHelper;
+import org.apache.commons.lang.BooleanUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.2 2004/03/28 20:51:24 antonio Exp $
  */
 public class InputModuleAction extends ConfigurableServiceableAction {
 
@@ -121,7 +122,7 @@ public class InputModuleAction extends ConfigurableServiceableAction {
         super.configure(conf);
         boolean result = false;
         String tmp = (String) this.settings.get("single-value", "false");
-        result = tmp.equalsIgnoreCase("true") || tmp.equalsIgnoreCase("yes");
+        result = BooleanUtils.toBoolean(tmp);
         this.settings.put("single-value", new Boolean(result));
     }
 

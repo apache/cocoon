@@ -45,7 +45,7 @@ import java.util.Locale;
  *  <li><strong>attribute-name</strong>: name of the request attribute in which the form instance should be stored
  * </ul>
  * 
- * @version $Id: HandleFormSubmitAction.java,v 1.3 2004/03/18 21:04:39 joerg Exp $
+ * @version $Id: HandleFormSubmitAction.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
  */
 public class HandleFormSubmitAction extends AbstractFormsAction implements Action, ThreadSafe {
 
@@ -57,8 +57,9 @@ public class HandleFormSubmitAction extends AbstractFormsAction implements Actio
 
         Locale locale = Locale.getDefault();
         String localeStr = parameters.getParameter("locale", null);
-        if (localeStr != null)
+        if (localeStr != null) {
             locale = I18nUtils.parseLocale(localeStr, locale);
+        }
 
         Source source = resolver.resolveURI(formSource);
         try {
@@ -80,10 +81,11 @@ public class HandleFormSubmitAction extends AbstractFormsAction implements Actio
             boolean finished = form.process(formContext);
             request.setAttribute(formAttribute, form);
 
-            if (finished)
+            if (finished) {
                 return Collections.EMPTY_MAP;
-            else
+            } else {
                 return null;
+            }
         } finally {
             resolver.release(source);
         }

@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.commons.lang.BooleanUtils;
 
 import java.sql.Connection;
 import java.util.Properties;
@@ -24,7 +25,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.7 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.8 2004/03/28 20:51:23 antonio Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -47,7 +48,7 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
      * Hence we disable it per default.
      **/
     public void setMultipleResults(String value) {
-        this.multipleResults = ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value));
+        this.multipleResults = BooleanUtils.toBoolean(value);
     }
 
     public boolean getMultipleResults() {

@@ -41,6 +41,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
 import org.apache.cocoon.util.JDBCTypeConversions;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * Abstract action for common function needed by database actions.
@@ -84,7 +85,7 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.6 2004/03/05 13:01:52 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseAction.java,v 1.7 2004/03/28 20:51:24 antonio Exp $
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
@@ -213,7 +214,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                 }
             }
             tmp = (String) this.settings.get("fail-on-empty",String.valueOf(this.failOnEmpty));
-            this.failOnEmpty = tmp.equalsIgnoreCase("true") || tmp.equalsIgnoreCase("yes");
+            this.failOnEmpty = BooleanUtils.toBoolean(tmp);
         }
     }
 
@@ -766,8 +767,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
 
             String throwException = (String) this.settings.get( "throw-exception",
                                                                 param.getParameter( "throw-exception", null ) );
-            if ( throwException != null &&
-                 ( throwException.equalsIgnoreCase( "true" ) || throwException.equalsIgnoreCase( "yes" ) ) ) {
+            if ( throwException != null && BooleanUtils.toBoolean(throwException)) {
                 throw new ProcessingException("Cannot process the requested SQL statement ",e);
             }
         } finally {

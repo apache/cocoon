@@ -25,6 +25,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -69,7 +70,7 @@ import java.util.Map;
  * not verified.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.5 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.6 2004/03/28 20:51:23 antonio Exp $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe
 {
@@ -198,7 +199,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
                     String nullstr = columns[i].getAttribute("nullable", null);
                     if (nullstr != null) {
                         nullstr = nullstr.trim();
-                        nullable = "yes".equals(nullstr) || "true".equals(nullstr);
+                        nullable = BooleanUtils.toBoolean(nullstr);
                     }
 
                     String constraintValue = req.getParameter(requestParameter);

@@ -57,6 +57,7 @@ import org.apache.axis.transport.http.ServletEndpointContextImpl;
 import org.apache.axis.utils.XMLUtils;
 import org.apache.cocoon.components.axis.providers.AvalonProvider;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.dom.DOMParser;
@@ -87,7 +88,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  * 
- * @version CVS $Id: SoapServerImpl.java,v 1.3 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id: SoapServerImpl.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
  */
 public class SoapServerImpl extends AbstractLogEnabled
     implements SoapServer, Composable, Configurable, Contextualizable, Initializable,
@@ -307,8 +308,7 @@ public class SoapServerImpl extends AbstractLogEnabled
         if (secProvider != null)
         {
             final String attr = secProvider.getAttribute("enabled");
-            final boolean providerIsEnabled =
-                "true".equalsIgnoreCase(attr) || "yes".equalsIgnoreCase(attr);
+            final boolean providerIsEnabled = BooleanUtils.toBoolean(attr);
 
             if (providerIsEnabled)
                 m_securityProvider = new ServletSecurityProvider();

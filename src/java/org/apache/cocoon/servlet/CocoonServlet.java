@@ -73,6 +73,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
@@ -94,7 +95,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.24 2004/03/13 15:01:24 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.25 2004/03/28 20:51:24 antonio Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -443,8 +444,7 @@ public class CocoonServlet extends HttpServlet {
 		this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
         value = conf.getInitParameter("show-time");
-        this.showTime = "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)
-            || (this.hiddenShowTime = "hide".equals(value));
+        this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
         if (value == null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("show-time was not set - defaulting to false");
@@ -701,8 +701,7 @@ public class CocoonServlet extends HttpServlet {
      *
      * @throws ServletException
      */
-     protected String getExtraClassPath()
-     throws ServletException {
+     protected String getExtraClassPath() throws ServletException {
          String extraClassPath = this.getInitParameter("extra-classpath");
          if (extraClassPath != null) {
              StringBuffer sb = new StringBuffer();
@@ -1498,14 +1497,13 @@ public class CocoonServlet extends HttpServlet {
     /** Convenience method to access boolean servlet parameters */
     protected boolean getInitParameterAsBoolean(String name, boolean defaultValue) {
     	String value = getInitParameter(name);
-    	if (value == null) {
-			if (getLogger() != null && getLogger().isDebugEnabled()) {
-				getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-			}
-    		return defaultValue;
-    	} else {
-    		return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
-    	}
+    	if (value != null) {
+            return BooleanUtils.toBoolean(value);
+        }
+		if (getLogger() != null && getLogger().isDebugEnabled()) {
+			getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+		}
+		return defaultValue;
     }
 
     protected int getInitParameterAsInteger(String name, int defaultValue) {
