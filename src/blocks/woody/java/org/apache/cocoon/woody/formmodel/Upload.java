@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.4 2004/02/09 11:28:34 sylvain Exp $
+ * @version CVS $Id: Upload.java,v 1.5 2004/02/19 22:13:27 joerg Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private UploadDefinition uploadDefinition;
@@ -154,7 +154,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
 
     /**
      * Returns the validation error, if any. There will always be a validation error in case the
-     * {@link #validate} method returned false.
+     * {@link #validate(FormContext)} method returned false.
      */
     public ValidationError getValidationError() {
         return validationError;

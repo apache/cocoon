@@ -63,14 +63,14 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Abstraction layer to encapsulate different DBMS behaviour for autoincrement columns.
  *
- * Here: {@link <a href="http://www.mckoi.org">McKoi</a>}
- * sequences. The default sequence name is constructed from the table
- * name, a "_", the column name, and the suffix "_seq". To use a
- * different sequence name, set an attribute "sequence" for the
- * modeConf e.g. &lt;mode name="auto" type="auto" sequence="my_sequence"/&gt;.
+ * Here: <a href="http://www.mckoi.org">McKoi</a> sequences. The default
+ * sequence name is constructed from the table name, a "_", the column name, and
+ * the suffix "_seq". To use a different sequence name, set an attribute
+ * "sequence" for the modeConf e.g. &lt;mode name="auto" type="auto"
+ * sequence="my_sequence"/&gt;.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: McKoiSequenceModule.java,v 1.1 2003/10/18 18:26:14 haul Exp $
+ * @version CVS $Id: McKoiSequenceModule.java,v 1.2 2004/02/19 22:13:28 joerg Exp $
  */
 public class McKoiSequenceModule implements AutoIncrementModule, ThreadSafe {
 

@@ -64,7 +64,7 @@ import javax.xml.transform.sax.TransformerHandler;
  * This is the interface of the XSLT processor in Cocoon.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XSLTProcessor.java,v 1.1 2003/03/09 00:07:12 pier Exp $
+ * @version CVS $Id: XSLTProcessor.java,v 1.2 2004/02/19 22:13:28 joerg Exp $
  * @version 1.0
  * @since   July 11, 2001
  */
@@ -107,8 +107,8 @@ public interface XSLTProcessor extends Component
    * <p>Return a <code>TransformerHandler</code> for a given
    * stylesheet <code>Source</code>. This can be used in a pipeline to
    * handle the transformation of a stream of SAX events. See {@link
-   * org.apache.cocoon.transformation.TraxTransformer#setConsumer} for
-   * an example of how to use this method.
+   * org.apache.cocoon.transformation.TraxTransformer#setConsumer(org.apache.cocoon.xml.XMLConsumer)}
+   * for an example of how to use this method.
    *
    * <p>The additional <code>filter</code> argument, if it's not
    * <code>null</code>, is inserted in the chain SAX events as an XML
@@ -134,7 +134,7 @@ public interface XSLTProcessor extends Component
    * @param stylesheet a <code>Source</code> value
    * @return a <code>TransformerHandler</code> value
    * @exception ProcessingException if an error occurs
-   * @see org.apache.cocoon.transformation.TraxTransformer#setConsumer
+   * @see org.apache.cocoon.transformation.TraxTransformer#setConsumer(org.apache.cocoon.xml.XMLConsumer)
    */
   TransformerHandler getTransformerHandler(Source stylesheet)
     throws ProcessingException;

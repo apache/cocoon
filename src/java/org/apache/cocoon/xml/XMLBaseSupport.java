@@ -65,10 +65,10 @@ import java.io.IOException;
  *
  * <p>Usage:
  * <ul>
- *  <li>set location of the containing document by calling {@link #setDocumentLocation}.
+ *  <li>set location of the containing document by calling {@link #setDocumentLocation(String)}.
  *      This is usually done when getting setDocumentLocator SAX event.
  *  <li>forward each startElement and endElement event to this object.
- *  <li>to resolve a relative URL against the current base, call {@link #makeAbsolute}.
+ *  <li>to resolve a relative URL against the current base, call {@link #makeAbsolute(String)}.
  * </ul>
  *
  * <p>External entities are not yet taken into account when determing the current base.

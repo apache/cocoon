@@ -65,14 +65,14 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Abstraction layer to encapsulate different DBMS behaviour for autoincrement columns.
  *
- * Here: {@link <a href="http://www.postgres.org">PostgreSQL</a>}
+ * Here: <a href="http://www.postgres.org">PostgreSQL</a>
  * sequences. The default sequence name is constructed from the table
  * name, a "_", the column name, and the suffix "_seq". To use a
  * different sequence name, set an attribute "sequence" for the
  * modeConf e.g. &lt;mode name="auto" type="auto" sequence="my_sequence"/&gt;.
  *
  * @author <a href="mailto:pmhahn@titan.lahn.de">Philipp Hahn</a>
- * @version CVS $Id: PgsqlAutoIncrementModule.java,v 1.2 2003/09/24 21:54:48 cziegeler Exp $
+ * @version CVS $Id: PgsqlAutoIncrementModule.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
  */
 public class PgsqlAutoIncrementModule implements AutoIncrementModule, ThreadSafe {
 

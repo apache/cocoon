@@ -62,10 +62,10 @@ import org.w3c.dom.Element;
  *
  * Common supported configurations:
  * <ul>
- * <li>Attribute direction="load|save|both": {@link #getDirectionAttributes(Element)}</li>
+ * <li>Attribute direction="load|save|both": {@link #getCommonAttributes(Element)}</li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.2 2004/02/06 16:06:32 tim Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.3 2004/02/19 22:13:27 joerg Exp $
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 

@@ -59,7 +59,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.commons.collections.ReferenceMap;
+import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
@@ -119,7 +119,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.12 2004/02/15 19:12:44 haul Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.13 2004/02/19 22:13:28 joerg Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -257,7 +257,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
      * &lt;/...>
      * Each &lt;file> pre-loads an XML DOM for querying. Typically only one
      * &lt;file> is specified, and its <i>src</i> is used as a default if not
-     * overridden in the {@link #getContextObject dynamic configuration}
+     * overridden in the {@link #getContextObject(Configuration, Map)}
      *
      * @param config a <code>Configuration</code> value, as described above.
      * @exception ConfigurationException if an error occurs
@@ -300,8 +300,8 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
     /**
      * Get the DOM object that JXPath will operate on when evaluating
      * attributes.  This DOM is loaded from a Source, specified in the
-     * modeConf, or (if modeConf is null) from the {@link #configure static
-     * configuration}.
+     * modeConf, or (if modeConf is null) from the
+     * {@link #configure(Configuration)}.
      * @param modeConf The dynamic configuration for the current operation. May
      * be <code>null</code>, in which case static (cocoon.xconf) configuration
      * is used.  Configuration is expected to have a &lt;file> child node, and

@@ -83,7 +83,7 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.8 2004/01/06 13:39:11 joerg Exp $
+ * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.9 2004/02/19 22:13:28 joerg Exp $
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          implements LuceneCocoonIndexer, Configurable, Serviceable, Disposable
@@ -115,9 +115,8 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
     public final static String MERGE_FACTOR_CONFIG = "merge-factor";
 
     /**
-     * configuration default value for lucene's merge factor.
-     * 
-     * @link http://www.mail-archive.com/lucene-user@jakarta.apache.org/msg00373.html
+     * configuration default value for
+     * <a href="http://www.mail-archive.com/lucene-user@jakarta.apache.org/msg00373.html">lucene's merge factor</a>.
      */
     public final static int MERGE_FACTOR_DEFAULT = 10;
 

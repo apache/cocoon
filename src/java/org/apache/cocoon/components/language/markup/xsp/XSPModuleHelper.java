@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * accessed and kept until the page is completely displayed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XSPModuleHelper.java,v 1.6 2003/10/21 13:23:27 cziegeler Exp $
+ * @version CVS $Id: XSPModuleHelper.java,v 1.7 2004/02/19 22:13:27 joerg Exp $
  */
 public class XSPModuleHelper {
 
@@ -200,7 +200,7 @@ public class XSPModuleHelper {
     /**
      * Initializes the instance for first use. Stores references to
      * service manager and service selector in instance 
-     *
+     * 
      * @param manager a <code>ServiceManager</code> value
      * @exception RuntimeException if an error occurs
      */
@@ -264,9 +264,10 @@ public class XSPModuleHelper {
         return result;
     }
 
-    /**  Get an array of values from a module. Same as {@link
-     * #getAttributeValues(Map, Configuration, String, String, Object[])} with a
-     * <code>null</code> configuration.
+    /**
+     * Get an array of values from a module. Same as
+     * {@link #getAttributeValues(Map, Configuration, String, String, Object[])}
+     * with a <code>null</code> configuration.
      */
     public Object[] getAttributeValues(Map objectModel, String module, String name, Object[] deflt) throws RuntimeException {
         return getAttributeValues(objectModel, null, module, name, deflt);

@@ -64,7 +64,7 @@ import org.apache.avalon.framework.configuration.Configuration;
  * the transaction completes successfully.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: OutputModule.java,v 1.1 2003/03/09 00:09:05 pier Exp $
+ * @version CVS $Id: OutputModule.java,v 1.2 2004/02/19 22:13:28 joerg Exp $
  */
 public interface OutputModule extends Component {
 
@@ -100,7 +100,7 @@ public interface OutputModule extends Component {
 
     /**
      * Signal that the database transaction completed
-     * successfully. See notes on {@link #rollback rollback}.
+     * successfully. See notes on {@link #rollback(Configuration, Map, Exception)}.
      * */
     void commit( Configuration modeConf, Map objectModel );
 

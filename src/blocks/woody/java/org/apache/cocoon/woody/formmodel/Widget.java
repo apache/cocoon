@@ -62,12 +62,12 @@ import java.util.Locale;
  * of widgets. Each widget:
  *
  * <ul>
- *  <li>has an id, unique within its parent context widget. See {@link #getId}.</li>
- *  <li>can have children (see {@link #getWidget}, and can have a parent (see {@link #getParent}.</li>
- *  <li>can hold a value (which can be any kind of object). See {@link #getValue}.</li>
+ *  <li>has an id, unique within its parent context widget. See {@link #getId()}.</li>
+ *  <li>can have children (see {@link #getWidget(String)}, and can have a parent (see {@link #getParent()}.</li>
+ *  <li>can hold a value (which can be any kind of object). See {@link #getValue()}.</li>
  *  <li>can read its value from a request object (and convert it from a string to its native type).
- *  See {@link #readFromRequest}.</li>
- *  <li>can validate itself. See {@link #validate}.</li>
+ *  See {@link #readFromRequest(FormContext)}.</li>
+ *  <li>can validate itself. See {@link #validate(FormContext)}.</li>
  *  <li>can generate an XML representation of itself.</li>
  * </ul>
  *
@@ -77,10 +77,10 @@ import java.util.Locale;
  * <p>A widget can have only a value, or only child widgets, or can have both a value and child
  * widgets, or can have neither. This all depends on the widget implementation.</p>
  *
- * <p>When a request is submitted, first the {@link #readFromRequest} method of all widgets
- * will be called so that they can read their value(s). Next, the {@link #validate} method will
+ * <p>When a request is submitted, first the {@link #readFromRequest(FormContext)} method of all widgets
+ * will be called so that they can read their value(s). Next, the {@link #validate(FormContext)} method will
  * be called. Doing this in two steps allows the validation to compare values between widgets.
- * See also the method {@link Form#process}.</p>
+ * See also the method {@link Form#process(FormContext)}.</p>
  *
  * <p>A Widget is created by calling the createInstance method on the a
  * {@link WidgetDefinition}. A Widget holds all the data that is specific for
@@ -89,7 +89,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.7 2003/12/31 11:41:41 antonio Exp $
+ * @version CVS $Id: Widget.java,v 1.8 2004/02/19 22:13:27 joerg Exp $
  */
 public interface Widget {
 
@@ -124,7 +124,7 @@ public interface Widget {
 
     /**
      * Gets the namespace of this widget. The combination of a widget's namespace
-     * with its id (see {@link #getId} gives the widget a form-wide unique name.
+     * with its id (see {@link #getId()} gives the widget a form-wide unique name.
      * In practice, the namespace consists of the id's of the widget's parent widgets,
      * separated by dots.
      */
@@ -146,7 +146,7 @@ public interface Widget {
     /**
      * Validates this widget and returns the outcome. Possible error messages are
      * remembered by the widget itself and will be part of the XML produced by
-     * this widget in its {@link #generateSaxFragment} method.
+     * this widget in its {@link #generateSaxFragment(ContentHandler, Locale)} method.
      */
     public boolean validate(FormContext formContext);
 
@@ -164,11 +164,8 @@ public interface Widget {
     public void generateLabel(ContentHandler contentHandler) throws SAXException;
 
     /**
-     * Returns the value of the widget. For some widgets (notably ContainerWidgets) this may not make sense, those
-     * should then simply return null here.
-     * <p>
-     * Object having a value, but whose value is invalid, will return 
-     * {@link org.apache.cocoon.woody.Constants#INVALID_VALUE}.
+     * Returns the value of the widget. For some widgets (notably ContainerWidgets)
+     * this may not make sense, those should then simply return null here.
      */
     public Object getValue();
     
@@ -179,7 +176,7 @@ public interface Widget {
     public void setValue(Object object);
 
     /**
-     * Returns wether this widget is required to be filled in. As with {@link #getValue}, for some
+     * Returns wether this widget is required to be filled in. As with {@link #getValue()}, for some
      * widgets this may not make sense, those should return false here.
      */
     public boolean isRequired();

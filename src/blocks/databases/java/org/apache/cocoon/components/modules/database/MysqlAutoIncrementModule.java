@@ -65,10 +65,10 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Abstraction layer to encapsulate different DBMS behaviour for autoincrement columns.
  *
- * Here: {@link <a href="http://www.mysql.com">MYSQL</a>} AUTO_INCREMENT columns
+ * Here: <a href="http://www.mysql.com">MYSQL</a> AUTO_INCREMENT columns
  *
  * @author <a href="mailto:phantom@stserv.hcf.jhu.edu">Tim Myers</a>
- * @version CVS $Id: MysqlAutoIncrementModule.java,v 1.1 2003/03/09 00:03:09 pier Exp $
+ * @version CVS $Id: MysqlAutoIncrementModule.java,v 1.2 2004/02/19 22:13:28 joerg Exp $
  */
 public class MysqlAutoIncrementModule implements AutoIncrementModule, ThreadSafe {
 

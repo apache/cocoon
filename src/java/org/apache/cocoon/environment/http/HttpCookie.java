@@ -66,7 +66,7 @@ import org.apache.cocoon.environment.Cookie;
  * of your servlets.
  *
  * <p>The servlet sends cookies to the browser by using the
- * {@link HttpResponse#addCookie} method, which adds
+ * {@link HttpResponse#addCookie(Cookie)} method, which adds
  * fields to HTTP response headers to send cookies to the
  * browser, one at a time. The browser is expected to
  * support 20 cookies for each Web server, 300 cookies total, and
@@ -74,7 +74,7 @@ import org.apache.cocoon.environment.Cookie;
  *
  * <p>The browser returns cookies to the servlet by adding
  * fields to HTTP request headers. Cookies can be retrieved
- * from a request by using the {@link HttpRequest#getCookies} method.
+ * from a request by using the {@link HttpRequest#getCookies()} method.
  * Several cookies might have the same name but different path attributes.
  *
  * <p>Cookies affect the caching of the Web pages that use them.
@@ -88,7 +88,7 @@ import org.apache.cocoon.environment.Cookie;
  *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HttpCookie.java,v 1.2 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: HttpCookie.java,v 1.3 2004/02/19 22:13:27 joerg Exp $
  *
  */
 

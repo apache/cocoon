@@ -67,23 +67,23 @@ import java.util.Locale;
  * </ul>
  *
  * <p>Each datatype can be marked as an "arraytype". Currently, this only has an
- * influence on the {@link #validate} method, which should in that case be passed
- * an array of objects. See also {@link #isArrayType}.
+ * influence on the {@link #validate(Object, ExpressionContext)} method, which should in that case be passed
+ * an array of objects. See also {@link #isArrayType()}.
  * 
- * @version $Id: Datatype.java,v 1.5 2004/02/11 09:53:43 antonio Exp $
+ * @version $Id: Datatype.java,v 1.6 2004/02/19 22:13:28 joerg Exp $
  */
 public interface Datatype {
     /**
      * Converts a string to an object of this datatype. Returns null if this
      * fails. This method uses the same {@link Convertor} as returned by the
-     * {@link #getConvertor} method.
+     * {@link #getConvertor()} method.
      */
     Object convertFromString(String value, Locale locale);
 
     /**
      * Converts an object of this datatype to a string representation.
      * This method uses the same {@link Convertor} as returned by the
-     * {@link #getConvertor} method.
+     * {@link #getConvertor()} method.
      */
     String convertToString(Object value, Locale locale);
 
@@ -91,8 +91,9 @@ public interface Datatype {
      * Returns null if validation is successful, otherwise returns a
      * {@link ValidationError} instance.
      *
-     * @param value an Object of the correct type for this datatype (see {@link #getTypeClass}, or
-     * if {@link #isArrayType} returns true, an array of objects of that type.
+     * @param value  an Object of the correct type for this datatype (see
+     *               {@link #getTypeClass()}, or if {@link #isArrayType()}
+     *               returns true, an array of objects of that type.
      */
     ValidationError validate(Object value, ExpressionContext expressionContext);
 

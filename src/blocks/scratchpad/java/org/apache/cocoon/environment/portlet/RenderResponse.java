@@ -59,11 +59,12 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 /**
- * Implements the {@link Response} interface for the JSR-168 (Portlet) environment.
+ * Implements the {@link org.apache.cocoon.environment.Response} interface for
+ * the JSR-168 (Portlet) environment.
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RenderResponse.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
+ * @version CVS $Id: RenderResponse.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
  */
 public final class RenderResponse extends PortletResponse {
 

@@ -289,8 +289,6 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     }
 
     public Source getParent() throws SourceException {
-        String eventName = null;
-        
         return new RepositorySource(
             m_prefix,
             (ModifiableTraversableSource) m_delegate.getParent(),

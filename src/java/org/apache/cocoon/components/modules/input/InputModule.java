@@ -64,7 +64,7 @@ import java.util.Map;
  * attributes, session attributes &c.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: InputModule.java,v 1.2 2004/02/19 22:13:28 joerg Exp $
  */
 public interface InputModule extends Component {
 
@@ -74,10 +74,10 @@ public interface InputModule extends Component {
     /**
      * Standard access to an attribute's value. If more than one value
      * exists, the first is returned. If the value does not exist,
-     * null is returned. To get all values, use {@link
-     * #getAttributeValues getAttributeSet} or {@link
-     * #getAttributeNames getAttributeNames} and {@link #getAttribute
-     * getAttribute} to get them one by one.
+     * null is returned. To get all values, use
+     * {@link #getAttributeValues(String, Configuration, Map)} or
+     * {@link #getAttributeNames(Configuration, Map)} and
+     * {@link #getAttribute(String, Configuration, Map)} to get them one by one.
      * @param name a String that specifies what the caller thinks
      * would identify an attribute. This is mainly a fallback if no
      * modeConf is present.
@@ -102,9 +102,10 @@ public interface InputModule extends Component {
     /**
      * Returns an array of String objects containing all of the values
      * the given attribute has, or null if the attribute does not
-     * exist. As an alternative, {@link #getAttributeNames
-     * getAttributeNames} together with {@link #getAttribute
-     * getAttribute} can be used to get the values one by one.
+     * exist. As an alternative,
+     * {@link #getAttributeNames(Configuration, Map)} together with
+     * {@link #getAttribute(String, Configuration, Map)} can be used to get the
+     * values one by one.
      * @param name a String that specifies what the caller thinks
      * would identify an attributes. This is mainly a fallback
      * if no modeConf is present.

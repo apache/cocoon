@@ -74,7 +74,7 @@ import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
  * to provide request information in the HTTP servlets environment.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.6 2003/10/31 21:38:36 vgritsenko Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.7 2004/02/19 22:13:27 joerg Exp $
  */
 
 public final class HttpRequest implements Request {
@@ -280,9 +280,8 @@ public final class HttpRequest implements Request {
     }
 
     /**
-     * @deprecated                As of Version 2.1 of the Java Servlet
-     * API, use {@link #isRequestedSessionIdFromURL}
-     *instead.
+     * @deprecated As of Version 2.1 of the Java Servlet API, use
+     *             {@link #isRequestedSessionIdFromURL()} instead.
      */
     public boolean isRequestedSessionIdFromUrl() {
         return this.req.isRequestedSessionIdFromURL();
@@ -420,8 +419,8 @@ public final class HttpRequest implements Request {
     }
 
     /**
-     * @deprecated         As of Version 2.1 of the Java Servlet API,
-     * use {@link javax.servlet.ServletContext#getRealPath} instead.
+     * @deprecated As of Version 2.1 of the Java Servlet API, use
+     * {@link javax.servlet.ServletContext#getRealPath(java.lang.String)}instead.
      */
     public String getRealPath(String path) {
         return this.req.getRealPath(path);

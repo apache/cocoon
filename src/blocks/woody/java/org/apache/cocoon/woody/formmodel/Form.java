@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.16 2004/02/04 17:25:57 sylvain Exp $
+ * @version CVS $Id: Form.java,v 1.17 2004/02/19 22:13:27 joerg Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -204,7 +204,8 @@ public class Form extends AbstractContainerWidget {
      * <p>
      * Form processing consists in multiple steps:
      * <ul>
-     *  <li>all widgets read their value from the request (i.e. {@link #readFromRequest} is called recursively on
+     *  <li>all widgets read their value from the request (i.e.
+     *      {@link #readFromRequest(FormContext)} is called recursively on
      *       the whole widget tree)
      *  <li>if there is an action event, call the FormHandler
      *  <li>perform validation.

@@ -63,7 +63,7 @@ import java.util.Iterator;
  * http://www.w3.org/TR/2003/REC-xptr-framework-20030325</a>.
  *
  * <p>To create an instance of this class, call
- * {@link org.apache.cocoon.components.xpointer.parser.XPointerFrameworkParser#parse XPointerFrameworkParser.parse}.
+ * {@link org.apache.cocoon.components.xpointer.parser.XPointerFrameworkParser#parse(String)}.
  */
 public class XPointer {
     private List pointerParts = new LinkedList();

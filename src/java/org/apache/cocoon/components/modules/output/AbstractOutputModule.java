@@ -69,7 +69,7 @@ import org.apache.cocoon.util.HashMap;
  * Logger, use getLogger().
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractOutputModule.java,v 1.2 2003/03/12 13:27:34 haul Exp $
+ * @version CVS $Id: AbstractOutputModule.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
  */
 public abstract class AbstractOutputModule extends AbstractLogEnabled
     implements OutputModule, Configurable, Disposable {
@@ -110,7 +110,7 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
 
     /**
      * Utility method to store parameters in a map as request attribute until 
-     * either {@link #rollback rollback} or {@link #prepareCommit prepareCommit}
+     * either {@link #rollback(Map, String)} or {@link #prepareCommit(Map, String)}
      * is called.
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
@@ -146,8 +146,8 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
 
     /**
      * Returns a whether an transient attribute already exists.
-     * {@link #transientSetAttribute transientSetAttribute} since the last call to 
-     * {@link #rollback rollback} or {@link #prepareCommit prepareCommit}
+     * {@link #transientSetAttribute(Map, String, String, Object)} since the last call to 
+     * {@link #rollback(Map, String)} or {@link #prepareCommit(Map, String)}
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
      */    
@@ -164,8 +164,8 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
 
     /**
      * Returns a map containing all transient attributes and remove them i.e. attributes set with 
-     * {@link #transientSetAttribute transientSetAttribute} since the last call to 
-     * {@link #rollback rollback} or {@link #prepareCommit prepareCommit}
+     * {@link #transientSetAttribute(Map, String, String, Object)} since the last call to 
+     * {@link #rollback(Map, String)} or {@link #prepareCommit(Map, String)}
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
      */    

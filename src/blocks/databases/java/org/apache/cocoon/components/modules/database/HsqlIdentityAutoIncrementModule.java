@@ -65,10 +65,10 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Abstraction layer to encapsulate different DBMS behaviour for autoincrement columns.
  *
- * Here: {@link <a href="http://hsqldb.sourceforge.net">HSQLDB</a>} 1.6 IDENTITY columns
+ * Here: <a href="http://hsqldb.sourceforge.net">HSQLDB</a> 1.6 IDENTITY columns
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: HsqlIdentityAutoIncrementModule.java,v 1.1 2003/03/09 00:03:08 pier Exp $
+ * @version CVS $Id: HsqlIdentityAutoIncrementModule.java,v 1.2 2004/02/19 22:13:28 joerg Exp $
  */
 public class HsqlIdentityAutoIncrementModule implements AutoIncrementModule, ThreadSafe {
 
