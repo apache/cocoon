@@ -429,6 +429,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="VG" type="update">
+     OJB Block: Marked as stable.
+   </action>
    <action dev="all" type="update">
     Make Cocoon compilable and buildable using JDK 5.0.
    </action>

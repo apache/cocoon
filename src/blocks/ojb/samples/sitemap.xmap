@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,123 +17,111 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
- <map:components>
+  <map:components>
+    <map:transformers default="xslt">
+      <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="other">
+          <catalogue id="other" name="OtherMessages" location="context://samples/blocks/forms/messages"/>
+          <catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages"/>
+        </catalogues>
+        <cache-at-startup>true</cache-at-startup>
+      </map:transformer>
+    </map:transformers>
+  </map:components>
 
-  <map:transformers default="xslt">
-    <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-      <catalogues default="other">
-        <catalogue id="other" name="OtherMessages" location="context://samples/blocks/forms/messages"/>
-        <catalogue id="forms" name="FormsMessages" location="context://samples/blocks/forms/messages"/>
-      </catalogues>
-      <cache-at-startup>true</cache-at-startup>
-    </map:transformer>
-  </map:transformers>
 
- </map:components>
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
 
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
 
-  <map:view from-label="content" name="pretty-content">
-   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-   <map:serialize type="html"/>
-  </map:view>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
 
-  <map:view name="links" from-position="last">
-   <map:serialize type="links"/>
-  </map:view>
- </map:views>
 
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="javascript">
-  <map:script src="forms/employee.js"/>
+    <map:script src="forms/employee.js"/>
   </map:flow>
 
- <map:pipelines>
-   <map:pipeline>
 
-     <map:match pattern="">
-      <map:generate src="welcome.xml"/>
-      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-         <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize/>
-     </map:match>
+  <map:pipelines>
+    <map:pipeline>
 
-     <map:match pattern="jdo/xspdemo">
-        <map:generate src="jdo/xsp/demo1.xsp" type="serverpages"/>
-        <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-            <map:parameter name="servletPath" value="{request:servletPath}"/>
-            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="contextPath" value="{request:contextPath}"/>
-            <map:parameter name="file" value="jdo/xsp/xspdemo.xsp"/>
-            <map:parameter name="remove" value="{0}"/>
+      <map:match pattern="">
+        <map:generate src="welcome.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
         <map:serialize/>
-     </map:match>
+      </map:match>
 
-     <!--
-        | "Form1" example, demonstrates usage of flow and forms
-        -->
+      <map:match pattern="*/xspdemo">
+        <map:generate src="{1}/xsp/demo1.xsp" type="serverpages"/>
+        <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+          <map:parameter name="file" value="jdo/xsp/xspdemo.xsp"/>
+          <map:parameter name="remove" value="{0}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
 
-    <map:match pattern="jdo/forms/employee">
+      <!--
+         - "Form1" example, demonstrates usage of flow and forms
+         -->
+
+      <map:match pattern="jdo/forms/employee">
         <map:call function="handleForm">
-            <map:parameter name="function" value="employeeform_jdo"/>
-            <map:parameter name="form-definition" value="forms/employee.xml"/>
-            <map:parameter name="bindingURI" value="forms/employee_bind.xml"/>            
+          <map:parameter name="function" value="employeeform_jdo"/>
+          <map:parameter name="form-definition" value="forms/employee.xml"/>
+          <map:parameter name="bindingURI" value="forms/employee_bind.xml"/>
         </map:call>
-    </map:match>
+      </map:match>
 
-    <map:match pattern="jdo/forms/employee-form-display">
+      <map:match pattern="jdo/forms/employee-form-display">
         <map:generate src="forms/employee_template.xml"/>
         <map:transform type="forms"/>
         <map:transform type="i18n">
-            <map:parameter name="locale" value="en-US"/>
+          <map:parameter name="locale" value="en-US"/>
         </map:transform>
         <map:transform src="context://samples/blocks/forms/resources/forms-samples-styling.xsl"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-            <map:parameter name="contextPath" value="{request:contextPath}"/>
-            <map:parameter name="servletPath" value="{request:servletPath}"/>
-            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="file" value="forms/employee.xml"/>
-            <map:parameter name="remove" value="{0}"/>
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="file" value="forms/employee.xml"/>
+          <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>
-    </map:match>
+      </map:match>
 
-    <map:match pattern="jdo/forms/employee-form-success">
+      <map:match pattern="jdo/forms/employee-form-success">
         <map:generate type="serverpages" src="forms/success.xsp"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-            <map:parameter name="contextPath" value="{request:contextPath}"/>
-            <map:parameter name="servletPath" value="{request:servletPath}"/>
-            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="file" value="forms/success.xsp"/>
-            <map:parameter name="remove" value="{0}"/>
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="file" value="forms/success.xsp"/>
+          <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>
-    </map:match>
+      </map:match>
 
-     <!-- Manages continuations -->
-     <map:match pattern="jdo/forms/*.continue">
-       <map:call continuation="{1}"/>
-     </map:match>
+      <!-- Manages continuations -->
+      <map:match pattern="jdo/forms/*.continue">
+        <map:call continuation="{1}"/>
+      </map:match>
 
-     <!-- odmg samples -->    
-     <map:match pattern="odmg/xspdemo">
-        <map:generate src="odmg/xsp/demo1.xsp" type="serverpages"/>
-        <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-            <map:parameter name="servletPath" value="{request:servletPath}"/>
-            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-            <map:parameter name="contextPath" value="{request:contextPath}"/>
-            <map:parameter name="file" value="odmg/xsp/xspdemo.xsp"/>
-            <map:parameter name="remove" value="{0}"/>
-        </map:transform>
-        <map:serialize/>
-     </map:match>
-
-   </map:pipeline>
- </map:pipelines>
+    </map:pipeline>
+  </map:pipelines>
 
 </map:sitemap>
