@@ -21,8 +21,8 @@ function employeeform_jdo(form) {
     // Update the Bean based on user input
 	form.save(bean);
 
-    // Insert Bean in Database
-	ojbEmployee.remove(bean, factory);
+    // Update Bean in Database
+	ojbEmployee.update(bean, factory);
 	// Clean up the operation
 	cocoon.releaseComponent(factory);
 
