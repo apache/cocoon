@@ -64,7 +64,7 @@ import org.apache.excalibur.source.SourceValidity;
 /**
  * This object encapsulates a "caching session". A caching session has the
  * duration of one single request.
- * This object is used by the {@link CacheManager} and holds all required
+ * This object is used by the {@link IncludeCacheManager} and holds all required
  * configuration for performing the caching of this request.
  * 
  * The session can be configured during construction with the following parameters:
@@ -74,7 +74,7 @@ import org.apache.excalibur.source.SourceValidity;
  * - expires (long/0) : The lifetime of the cached content
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: IncludeCacheManagerSession.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: IncludeCacheManagerSession.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
  *  @since   2.1
  */
 public final class IncludeCacheManagerSession {
@@ -91,7 +91,7 @@ public final class IncludeCacheManagerSession {
     /** Should we process everything in parallel */
     private boolean parallel;
 
-    /** The used {@link CacheStorageProxy} */
+    /** The used {@link IncludeCacheStorageProxy} */
     private IncludeCacheStorageProxy storage;
     
     /** The list of all threads */
@@ -125,7 +125,7 @@ public final class IncludeCacheManagerSession {
     }
 
     /**
-     * @see de.sundn.prod.sunshine.transformation.CacheManagerSession#expires()
+     * @see IncludeCacheManagerSession#expires
      */
     public long getExpires() {
         return this.expires;
