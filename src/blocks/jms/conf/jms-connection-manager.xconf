@@ -22,7 +22,7 @@
     | - <topic-connection>s: created by a call to TopicConnectionFactory.createTopicConnection()
     | - <queue-connection>s: created by a call to QeueuConnectionFactory.createQueueConnection()
     | 
-    | Each connection must have a unique name to retrieve it. This is the name other components
+    | Each connection must have a unique name. This is the name other components
     | use to retrieve it.
     | 
     | All connection types support the same set of parameters:
