@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.55 2001-01-26 22:20:16 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.56 2001-01-30 07:19:20 balld Exp $-->
 <!--
 
  ============================================================================
@@ -700,7 +700,18 @@
   </xsl:variable>
   <xsl:choose>
     <xsl:when test="$environment = 'cocoon1'">
-      <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+      <xsl:choose>
+        <xsl:when test="../esql:row-results">
+          <xsp:logic>
+            xspParentNode = xspCurrentNode;
+            xspNodeStack.push(xspParentNode);
+            xspCurrentNode = this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement();
+          </xsp:logic>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:when>
     <xsl:when test="$environment = 'cocoon2'">
       <xsp:logic>
