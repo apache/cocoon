@@ -1,6 +1,10 @@
 <!-- === Forrest Targets ================================================= -->
 
   <target name="forrest" depends="prepare, prepare-docs, forrest.init" description="Generates static HTML documentation">
+    <!-- Add some other documents -->
+    <copy file="${build.temp}/jars.xml"
+      tofile="${build.context}/xdocs/installing/jars.xml" filtering="off"/>
+
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
   </target>
 
