@@ -131,16 +131,21 @@
 
     <xsp:logic> {
       String __name = String.valueOf(<xsl:copy-of select="$href"/>);
+      {
+          org.apache.cocoon.components.parser.Parser newParser = null;
 
-      try {
-          URL __url = ((org.apache.cocoon.components.url.URLFactory)manager.lookup(org.apache.cocoon.Roles.URL_FACTORY)).getURL(__name);
-          InputSource __is = new InputSource(__url.openStream());
-          __is.setSystemId(__url.toString());
-          org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+          try {
+              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+              URL __url = ((org.apache.cocoon.components.url.URLFactory)manager.lookup(org.apache.cocoon.Roles.URL_FACTORY)).getURL(__name);
+              InputSource __is = new InputSource(__url.openStream());
+              __is.setSystemId(__url.toString());
 
-          XSPUtil.include(__is, this.contentHandler, newParser);
-      } catch (Exception e) {
-          this.cocoonLogger.error("Could not include page", e);
+              XSPUtil.include(__is, this.contentHandler, newParser);
+          } catch (Exception e) {
+              this.cocoonLogger.error("Could not include page", e);
+          } finally {
+              this.manager.release((Component) newParser);
+          }
       }
     } </xsp:logic>
   </xsl:template>
@@ -158,23 +163,29 @@
        </xsl:choose>
      </xsl:variable>
      <xsp:logic>
-      try {
-          InputSource __is = new InputSource(
-                  new FileReader(
-                     XSPUtil.relativeFilename(
-                       <xsl:copy-of select="$name"/>,
-                       this.request,
-                       this.context
-                     )
-                  )
-              );
+       {
+          org.apache.cocoon.components.parser.Parser newParser = null;
 
-          org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+          try {
+              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+              InputSource __is = new InputSource(
+                      new FileReader(
+                         XSPUtil.relativeFilename(
+                           <xsl:copy-of select="$name"/>,
+                           this.request,
+                           this.context
+                         )
+                      )
+                  );
 
-          XSPUtil.include(__is, this.contentHandler, newParser);
-      } catch (Exception e) {
-          this.cocoonLogger.error("Could not include page", e);
-      }
+
+              XSPUtil.include(__is, this.contentHandler, newParser);
+            } catch (Exception e) {
+              this.cocoonLogger.error("Could not include page", e);
+            } finally {
+              this.manager.release((Component) newParser);
+            }
+       }
      </xsp:logic>
    </xsl:template>
 
@@ -190,18 +201,24 @@
     </xsl:variable>
 
     <xsp:logic>
-      try {
-          InputSource __is = new InputSource(
-                  new StringReader(
-                      String.valueOf(<xsl:copy-of select="$expr"/>)
-                  )
-              );
+      {
+          org.apache.cocoon.components.parser.Parser newParser = null;
 
-          org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+          try {
+              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+              InputSource __is = new InputSource(
+                      new StringReader(
+                          String.valueOf(<xsl:copy-of select="$expr"/>)
+                      )
+                  );
 
-          XSPUtil.include(__is, this.contentHandler, newParser);
-      } catch (Exception e) {
-          this.cocoonLogger.error("Could not include page", e);
+
+              XSPUtil.include(__is, this.contentHandler, newParser);
+          } catch (Exception e) {
+              this.cocoonLogger.error("Could not include page", e);
+          } finally {
+              this.manager.release((Component) newParser);
+          }
       }
     </xsp:logic>
   </xsl:template>

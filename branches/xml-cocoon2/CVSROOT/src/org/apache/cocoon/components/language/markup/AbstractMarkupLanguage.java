@@ -48,7 +48,7 @@ import org.apache.cocoon.util.IOUtils;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-02-12 13:30:43 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-02-22 19:07:48 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -166,8 +166,11 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             logicsheet.setLogger(getLogger());
         }
 
-        URLFactory urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
+        URLFactory urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
+
         logicsheetURL = urlFactory.getURL(logicsheetLocation);
+
+        this.manager.release((Component) urlFactory);
 
         logicsheet.setInputSource(new InputSource(logicsheetURL.openStream()));
 
@@ -279,7 +282,9 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
 
             URL url = null;
             try {
-                url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(logicsheetLocation);
+                Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
+                url = ((URLFactory) urlFactory).getURL(logicsheetLocation);
+                this.manager.release(urlFactory);
             } catch (Exception e) {
                 getLogger().error("cannot get logicsheet at " + logicsheetLocation);
                 new SAXException ("cannot get logicsheet at " + logicsheetLocation, e);

@@ -29,7 +29,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-22 17:10:33 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-22 19:08:04 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
 
@@ -46,7 +46,9 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
             tidy.setXHTML(true);
 
             // Extract the document using JTidy and stream it.
-            URL url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(this.source);
+            Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
+            URL url = ((URLFactory) urlFactory).getURL(this.source);
+            this.manager.release(urlFactory);
             org.w3c.dom.Document doc = tidy.parseDOM(new BufferedInputStream(url.openStream()), null);
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
             streamer.stream(doc);

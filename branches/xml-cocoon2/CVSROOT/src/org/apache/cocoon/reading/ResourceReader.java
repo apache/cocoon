@@ -30,13 +30,14 @@ import org.apache.cocoon.components.url.URLFactory;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-20 20:34:18 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-22 19:08:07 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -69,16 +70,18 @@ public class ResourceReader extends AbstractReader implements Composer {
         URLFactory urlFactory = null;
 
         try {
-            urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
+            urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
         } catch (Exception e) {
             getLogger().error("cannot obtain the URLFactory", e);
             throw new ProcessingException ("cannot obtain the URLFactory");
         }
 
         if (res == null) {
+           this.manager.release((Component) urlFactory);
            throw new ProcessingException ("Missing a Response object in the objectModel");
         }
         if (req == null) {
+           this.manager.release((Component) urlFactory);
            throw new ProcessingException ("Missing a Request object in the objectModel");
         }
         String src = null;
@@ -115,6 +118,8 @@ public class ResourceReader extends AbstractReader implements Composer {
             getLogger().error("ResourceReader: malformed source \"" + source + "\"", mue);
             throw new ResourceNotFoundException ("ResourceReader: malformed source \""
                 +src+"\". ", mue);
+        } finally {
+            this.manager.release((Component) urlFactory);
         }
         byte[] buffer = new byte[(int)len];
         is.read(buffer);

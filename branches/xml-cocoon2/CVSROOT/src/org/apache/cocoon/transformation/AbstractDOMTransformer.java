@@ -18,6 +18,7 @@ import org.apache.cocoon.Roles;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Recyclable;
 
 /**
  * An Abstract DOM Transformer, for use when a transformer needs a DOM-based
@@ -25,89 +26,89 @@ import org.apache.avalon.Parameters;
  * Subclass this interface and implement <code>transform(Document doc)</code>.
  * If you need a ComponentManager there is an instance variable
  * <code>manager</code> for use.
- * 
+ *
  * @author <A HREF="rossb@apache.org">Ross Burton</A>
  * @author <A HREF="brobertson@mta.ca">Bruce G. Robertson</A>
  * @version CVS $Revision $Date
  */
 public abstract class AbstractDOMTransformer extends DOMBuilder
-	implements Transformer, DOMBuilder.Listener, Composer {
+    implements Transformer, DOMBuilder.Listener, Composer {
 
-	/** The SAX entity resolver */
-	protected EntityResolver resolver;
-	/** The request object model */
-	protected Map objectModel;
-	/** The URI requested */
-	protected String source;
-	/** Parameters in the sitemap */
-	protected Parameters parameters;
+    /** The SAX entity resolver */
+    protected EntityResolver resolver;
+    /** The request object model */
+    protected Map objectModel;
+    /** The URI requested */
+    protected String source;
+    /** Parameters in the sitemap */
+    protected Parameters parameters;
 
-	/**
-	 * A <code>ComponentManager</code> which is available for use.
-	 */
-	protected ComponentManager manager;
+    /**
+     * A <code>ComponentManager</code> which is available for use.
+     */
+    protected ComponentManager manager;
 
-	public AbstractDOMTransformer() {
-		// Set the factory later, when we have a Component Manager to get a
-		// Parser from
-		super();
-		super.listener = this;
-	}
+    public AbstractDOMTransformer() {
+        // Set the factory later, when we have a Component Manager to get a
+        // Parser from
+        super();
+        super.listener = this;
+    }
 
-	/**
-	 * Set the component manager.
-	 */
-	public void compose(ComponentManager manager) {
-		this.manager = manager;
-		// Get a parser and use it as a DOM factory
-		try {
-		    log.debug("Looking up " + Roles.PARSER);
-		    Parser p = (Parser)manager.lookup(Roles.PARSER);
-		    super.factory = (DOMFactory)p;
-		} catch (Exception e) {
-		    log.error("Could not find component", e);
-		}
-	}
+    /**
+     * Set the component manager.
+     */
+    public void compose(ComponentManager manager) {
+        this.manager = manager;
+        // Get a parser and use it as a DOM factory
+        try {
+            log.debug("Looking up " + Roles.PARSER);
+            Parser p = (Parser)manager.lookup(Roles.PARSER);
+            super.factory = (DOMFactory)p;
+        } catch (Exception e) {
+            log.error("Could not find component", e);
+        }
+    }
 
     /**
      * Set the <code>EntityResolver</code>, objectModel <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
-	 *
-	 * If you wish to process the parameters, override this method, call
-	 * <code>super()</code> and then add your code.
+     *
+     * If you wish to process the parameters, override this method, call
+     * <code>super()</code> and then add your code.
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
-		throws ProcessingException, SAXException, IOException {
-		this.resolver = resolver;
-		this.objectModel = objectModel;
-		this.source = src;
-		this.parameters = par;
-	}
+        throws ProcessingException, SAXException, IOException {
+        this.resolver = resolver;
+        this.objectModel = objectModel;
+        this.source = src;
+        this.parameters = par;
+    }
 
-	/**
-	 * This method is called when the Document is finished.
-	 * @param doc The DOM Document object representing this SAX stream
-	 * @see org.apache.cocoon.xml.dom.DOMBuilder.Listener
-	 */
-	public void notify(Document doc) throws SAXException {
-		// Call the user's transform method
-		Document newdoc = transform(doc);
-		// Now we stream the DOM tree out
-		DOMStreamer s = new DOMStreamer(contentHandler, lexicalHandler);
-		s.stream(newdoc);
-	}
+    /**
+     * This method is called when the Document is finished.
+     * @param doc The DOM Document object representing this SAX stream
+     * @see org.apache.cocoon.xml.dom.DOMBuilder.Listener
+     */
+    public void notify(Document doc) throws SAXException {
+        // Call the user's transform method
+        Document newdoc = transform(doc);
+        // Now we stream the DOM tree out
+        DOMStreamer s = new DOMStreamer(contentHandler, lexicalHandler);
+        s.stream(newdoc);
+    }
 
-	/**
-	 * Transform the specified DOM, returning a new DOM to stream down the pipeline.
-	 * @param doc The DOM Document representing the SAX stream
-	 * @returns A DOM Document to stream down the pipeline
-	 */
-	protected abstract Document transform(Document doc) ;
+    /**
+     * Transform the specified DOM, returning a new DOM to stream down the pipeline.
+     * @param doc The DOM Document representing the SAX stream
+     * @returns A DOM Document to stream down the pipeline
+     */
+    protected abstract Document transform(Document doc) ;
 
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     protected ContentHandler contentHandler;
-    
+
     /** The <code>LexicalHandler</code> receiving SAX events. */
     protected LexicalHandler lexicalHandler;
 

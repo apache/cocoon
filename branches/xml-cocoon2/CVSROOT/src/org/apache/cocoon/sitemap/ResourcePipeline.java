@@ -35,7 +35,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-22 17:10:52 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-22 19:08:12 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;
@@ -130,69 +130,86 @@ public class ResourcePipeline implements Composer {
 
         if (this.generator == null) {
             if (this.reader != null) {
-                this.reader.setup ((EntityResolver) environment, environment.getObjectModel(), readerSource, readerParam);
-                mime_type = this.reader.getMimeType();
-                if (mime_type != null) {
-                    // we have a mimeType freom the component itself
-                    environment.setContentType (mime_type);
-                } else if (readerMimeType != null) {
-                    // there was a mimeType specified in the sitemap pipeline
-                    environment.setContentType (this.readerMimeType);
-                } else {
-                    // use the mimeType specified in the sitemap component declaration
-                    environment.setContentType (this.sitemapReaderMimeType);
+                try {
+                    this.reader.setup ((EntityResolver) environment, environment.getObjectModel(), readerSource, readerParam);
+                    mime_type = this.reader.getMimeType();
+                    if (mime_type != null) {
+                        // we have a mimeType freom the component itself
+                        environment.setContentType (mime_type);
+                    } else if (readerMimeType != null) {
+                        // there was a mimeType specified in the sitemap pipeline
+                        environment.setContentType (this.readerMimeType);
+                    } else {
+                        // use the mimeType specified in the sitemap component declaration
+                        environment.setContentType (this.sitemapReaderMimeType);
+                    }
+                    reader.setOutputStream (environment.getOutputStream());
+                    reader.generate();
+                } catch (Exception e) {
+                    throw new ProcessingException("There was an error with the reader", e);
+                } finally {
+                    ((ComponentSelector) this.manager.lookup(Roles.READERS)).release((Component) reader);
                 }
-                reader.setOutputStream (environment.getOutputStream());
-                reader.generate();
-
-                ((ComponentSelector) this.manager.lookup(Roles.READERS)).release((Component) reader);
             } else {
                 throw new ProcessingException ("Generator or Reader not specified");
             }
         } else {
-            if (this.serializer == null) {
-                throw new ProcessingException ("Serializer not specified");
-            }
-
-            if (generatorException != null) {
-                ((ErrorNotifier)this.generator).setException (generatorException);
-            }
-
             Transformer myTransformer[] = (Transformer []) transformers.toArray(new Transformer[] {});
 
-            this.generator.setup ((EntityResolver) environment, environment.getObjectModel(), generatorSource, generatorParam);
-            Transformer transformer = null;
-            XMLProducer producer = this.generator;
-            for (int i = 0; i < myTransformer.length; i++) {
-                myTransformer[i].setup ((EntityResolver) environment, environment.getObjectModel(),
-                        (String)transformerSources.get (i),
-                        (Parameters)transformerParams.get (i));
-                producer.setConsumer (myTransformer[i]);
-                producer = myTransformer[i];
+            try {
+                if (this.serializer == null) {
+                    if (this.generator != null) {
+                        ((ComponentSelector) this.manager.lookup(Roles.GENERATORS)).release((Component) generator);
+                    }
+
+                    if (this.transformers.isEmpty() == false) {
+                        for (int i = 0; i < myTransformer.length; i++) {
+                            ((ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS)).release((Component) myTransformer[i]);
+                        }
+                    }
+                    throw new ProcessingException ("Serializer not specified");
+                }
+
+                if (generatorException != null) {
+                    ((ErrorNotifier)this.generator).setException (generatorException);
+                }
+
+                this.generator.setup ((EntityResolver) environment, environment.getObjectModel(), generatorSource, generatorParam);
+                Transformer transformer = null;
+                XMLProducer producer = this.generator;
+                for (int i = 0; i < myTransformer.length; i++) {
+                    myTransformer[i].setup ((EntityResolver) environment, environment.getObjectModel(),
+                            (String)transformerSources.get (i),
+                            (Parameters)transformerParams.get (i));
+                    producer.setConsumer (myTransformer[i]);
+                    producer = myTransformer[i];
+                }
+
+                mime_type = this.serializer.getMimeType();
+                if (mime_type != null) {
+                    // we have a mimeType freom the component itself
+                    environment.setContentType (mime_type);
+                } else if (serializerMimeType != null) {
+                    // there was a mimeType specified in the sitemap pipeline
+                    environment.setContentType (serializerMimeType);
+                } else {
+                    // use the mimeType specified in the sitemap component declaration
+                    environment.setContentType (this.sitemapSerializerMimeType);
+                }
+                this.serializer.setOutputStream (environment.getOutputStream());
+                producer.setConsumer (this.serializer);
+                this.generator.generate();
+            } catch (Exception e) {
+                throw new ProcessingException("Error generating the resource");
+            } finally {
+                ((ComponentSelector) this.manager.lookup(Roles.GENERATORS)).release((Component) generator);
+
+                for (int i = 0; i < myTransformer.length; i++) {
+                    ((ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS)).release((Component) myTransformer[i]);
+                }
+
+                ((ComponentSelector) this.manager.lookup(Roles.SERIALIZERS)).release((Component) serializer);
             }
-
-            mime_type = this.serializer.getMimeType();
-            if (mime_type != null) {
-                // we have a mimeType freom the component itself
-                environment.setContentType (mime_type);
-            } else if (serializerMimeType != null) {
-                // there was a mimeType specified in the sitemap pipeline
-                environment.setContentType (serializerMimeType);
-            } else {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType (this.sitemapSerializerMimeType);
-            }
-            this.serializer.setOutputStream (environment.getOutputStream());
-            producer.setConsumer (this.serializer);
-            this.generator.generate();
-
-            ((ComponentSelector) this.manager.lookup(Roles.GENERATORS)).release((Component) generator);
-
-            for (int i = 0; i < myTransformer.length; i++) {
-                ((ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS)).release((Component) myTransformer[i]);
-            }
-
-            ((ComponentSelector) this.manager.lookup(Roles.SERIALIZERS)).release((Component) serializer);
         }
         return true;
     }

@@ -23,11 +23,9 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-22 17:10:28 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-22 19:07:53 $
  */
-public abstract class XSPGenerator extends AbstractServerPage implements Loggable, Poolable, CompiledComponent {
-
-  protected Parser parser;
+public abstract class XSPGenerator extends AbstractServerPage implements Loggable, CompiledComponent {
   protected Logger log;
 
     public void setLogger(Logger logger) {
@@ -44,12 +42,5 @@ public abstract class XSPGenerator extends AbstractServerPage implements Loggabl
    */
   public void compose(ComponentManager manager) {
     super.compose(manager);
-
-    try {
-        log.debug("Looking up " + Roles.PARSER);
-        this.parser = (Parser) this.manager.lookup(Roles.PARSER);
-    } catch (Exception e) {
-        log.error("Can't find component", e);
-    }
   }
 }

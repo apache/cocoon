@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-02-22 17:10:26 $
+ * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-02-22 19:07:41 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -171,7 +171,11 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             }
         }
 
-        if (this.autoReload == false) return programInstance;
+        if (this.autoReload == false) {
+            this.markupSelector.release((Component) markupLanguage);
+            this.languageSelector.release((Component) programmingLanguage);
+            return programInstance;
+        }
 
         /*
          * FIXME: It's the program (not the instance) that must
@@ -189,6 +193,10 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         if (programInstance == null) {
             program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
         }
+
+        this.markupSelector.release((Component) markupLanguage);
+        this.languageSelector.release((Component) programmingLanguage);
+
         // Instantiate
         return (CompiledComponent) this.cache.select(normalizedName);
     }

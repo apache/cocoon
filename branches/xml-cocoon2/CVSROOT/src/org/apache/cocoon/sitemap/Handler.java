@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.Roles;
@@ -31,7 +32,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Context;
-
+import org.apache.avalon.Component;
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Loggable;
 
@@ -40,7 +41,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-19 21:57:50 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-22 19:08:10 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
     private Context context;
@@ -171,9 +172,10 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
         try {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
-            smap.contextualize(this.context);
-            smap.compose(this.manager);
-            smap.configure(this.conf);
+
+            if (this.sitemap != null) {
+               programGenerator.release((CompiledComponent) this.sitemap);
+            }
 
             this.sitemap = smap;
             getLogger().debug("Sitemap regeneration complete");
@@ -183,6 +185,8 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
             } else {
                 getLogger().debug("No errors, but the sitemap has not been set.");
             }
+
+            this.manager.release((Component) programGenerator);
         } catch (Throwable t) {
             getLogger().error("Error compiling sitemap", t);
 

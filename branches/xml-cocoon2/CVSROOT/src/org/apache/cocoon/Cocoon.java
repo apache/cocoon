@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.57 $ $Date: 2001-02-19 21:57:45 $
+ * @version CVS $Revision: 1.4.2.58 $ $Date: 2001-02-22 19:07:34 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -137,6 +137,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
             is.setSystemId(this.configurationFile.toExternalForm());
             p.parse(is);
             this.configuration = b.getConfiguration();
+            this.componentManager.release((Component) p);
         } catch (Exception e) {
             getLogger().error("Could not configure Cocoon environment", e);
             throw new ConfigurationException("Error trying to load configurations");

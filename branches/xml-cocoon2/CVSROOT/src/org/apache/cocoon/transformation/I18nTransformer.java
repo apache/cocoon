@@ -18,6 +18,7 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Loggable;
 
@@ -145,8 +146,10 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
 
         URL tr = null;
         try {
-            tr = ((URLFactory)manager.lookup(Roles.URL_FACTORY))
+            Component urlFactory = this.manager.lookup(Roles.URL_FACTORY);
+            tr = ((URLFactory) urlFactory)
                 .getURL(resolver.resolveEntity(null, translations_file).getSystemId());
+            this.manager.release(urlFactory);
         } catch (Exception e) {
             getLogger().error("cannot obtain the URLFactory", e);
             throw new SAXException("cannot obtain the URLFactory", e);
@@ -328,5 +331,6 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
         parser.setContentHandler(i18n_handler);
         parser.parse(input);
 
+        this.manager.release((Component) parser);
     }
 }

@@ -32,6 +32,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Component;
 
 /**
  *
@@ -58,7 +59,7 @@ import org.apache.avalon.Poolable;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 17:10:31 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-22 19:08:02 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -139,6 +140,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
 
             if(cxml == null)
             {
+                Parser parser = (Parser)this.manager.lookup(Roles.PARSER);
                 // use the xmlcompiler for local files if storing is on
                 if (this.useStore == true && systemID.startsWith("file:") == true)
                 {
@@ -147,9 +149,6 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
                     compiler.setOutputStream(baos);
                     XMLMulticaster multicaster = new XMLMulticaster(compiler, null,
                               this.contentHandler, this.lexicalHandler);
-
-                    getLogger().debug("Looking up " + Roles.PARSER);
-                    Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
 
                     parser.setContentHandler(multicaster);
                     parser.setLexicalHandler(multicaster);
@@ -161,13 +160,11 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
                     cxmlAndTime[1] = new Long(System.currentTimeMillis());
                     store.hold(systemID, cxmlAndTime);
                 } else {
-                    getLogger().debug("Looking up " + Roles.PARSER);
-                    Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
-
                     parser.setContentHandler(this.contentHandler);
                     parser.setLexicalHandler(this.lexicalHandler);
                     parser.parse(src);
                 }
+                this.manager.release((Component) parser);
             } else {
                 // use the stored cxml
                 ByteArrayInputStream bais = new ByteArrayInputStream(cxml);

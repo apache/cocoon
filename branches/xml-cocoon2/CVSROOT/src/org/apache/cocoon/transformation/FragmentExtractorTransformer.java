@@ -10,6 +10,7 @@ import org.apache.avalon.Parameters;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.Component;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
@@ -32,39 +33,33 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-20 14:46:41 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-22 19:08:17 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer implements Composer {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
     private static String EXTRACT_ELEMENT="svg";
-    
+
     private static String FE_URI="http://apache.org/cocoon/fragmentextractor";
     private static String XLINK_URI="http://www.w3c.org/1999/xlink";
-    
+
     private static String generatorClass = "org.apache.cocoon.generation.FragmentExtractorGenerator";
-    
+
     private DOMBuilder currentBuilder;
-    
+
     private Map prefixMap;
-    
+
     private int extractLevel;
-    
+
     private int imageID;
-    
+
     protected ComponentManager manager;
-    
+
     private DOMFactory documentFactory;
-    
+
     public void compose(ComponentManager manager) {
         this.manager = manager;
-        try {
-            documentFactory = (DOMFactory) manager.lookup(Roles.PARSER);
-        } catch ( ComponentManagerException cme ) {
-            documentFactory = null;
-            getLogger().error("FragmentExtractorTransformer could not lookup parser.");
-        }
     }
-    
+
     /** Setup the transformer.
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
@@ -72,21 +67,21 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         extractLevel = 0;
         imageID = 0;
         prefixMap = new HashMap();
-        
-        if ( documentFactory == null ) {
-            throw new ProcessingException(
-                "FragmentExtractorTransformer has no document factory. "
-                + "This is likely to be because a parser could not be "
-                + "Retrived."
-            );
-        }
     }
-     
+
     /**
      * Receive notification of the beginning of a document.
      */
     public void startDocument()
     throws SAXException {
+        try {
+            documentFactory = (DOMFactory) manager.lookup(Roles.PARSER);
+        } catch ( ComponentManagerException cme ) {
+            documentFactory = null;
+            getLogger().error("FragmentExtractorTransformer could not lookup parser.");
+            throw new SAXException("Could not get documentFactory", cme);
+        }
+
         super.startDocument();
     }
 
@@ -96,6 +91,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
     public void endDocument()
     throws SAXException {
         super.endDocument();
+
+        this.manager.release((Component) this.documentFactory);
+        this.documentFactory = null;
     }
 
     /**
@@ -149,7 +147,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
             imageID++;
             getLogger().debug("FragmentExtractorTransformer extractLevel now " + extractLevel + ".");
 
-            
             // Start the DOM document
             this.currentBuilder = new DOMBuilder(documentFactory);
             this.currentBuilder.startDocument();
@@ -162,7 +159,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
                 );
             }
         }
-        
+
         if ( extractLevel == 0 ) {
             super.startElement(uri,loc,raw,a);
         } else {
@@ -191,7 +188,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
             if ( uri.equals(this.EXTRACT_URI) && loc.equals(this.EXTRACT_ELEMENT) ) {
                 extractLevel--;
                 getLogger().debug("FragmentExtractorTransformer extractLevel now " + extractLevel + ".");
-                
+
                 if ( extractLevel == 0 ) {
                     // finish building the DOM. remove existing prefix mappings.
                     Iterator itt = prefixMap.entrySet().iterator();
@@ -202,11 +199,11 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
                         );
                     }
                     this.currentBuilder.endDocument();
-                    
+
                     Document doc = this.currentBuilder.getDocument();
                     String id = FragmentExtractorGenerator.store(doc);
-					getLogger().debug("FragmentExtractorTransformer stored document " + id + ".");
-                    
+                    getLogger().debug("FragmentExtractorTransformer stored document " + id + ".");
+
                     // Insert ref.
                     super.startPrefixMapping("fe",FE_URI);
                     AttributesImpl atts = new AttributesImpl();
@@ -278,7 +275,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         if ( extractLevel == 0 ) {
             super.skippedEntity(name);
         } else {
-            this.currentBuilder.skippedEntity(name);    
+            this.currentBuilder.skippedEntity(name);
         }
     }
 
@@ -298,7 +295,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         } else {
             throw new SAXException(
                 "Recieved startDTD after beginning SVG extraction process."
-            );  
+            );
         }
     }
 
@@ -384,7 +381,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
             this.currentBuilder.comment(ch,start,len);
         }
     }
-    
+
     public void processDocument(Document doc) {
         getLogger().debug("FragmentExtractorTransformer recieved document.");
     }

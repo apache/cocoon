@@ -31,6 +31,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Component;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
@@ -48,7 +49,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-22 17:10:56 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 19:08:19 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
 
@@ -265,6 +266,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 parser.setLexicalHandler(xinclude_handler);
                 parser.parse(input);
             }
+
+            this.manager.release((Component) parser);
         }
     }
 
