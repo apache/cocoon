@@ -65,7 +65,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-13 18:19:32 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-14 21:08:24 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -303,7 +303,9 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
             org.w3c.dom.Document uaCapabilities = browser.getUACapabilities(map);
             transformerHandler.getTransformer().setParameter("ua-capabilities", uaCapabilities);
         } catch (Exception e) {
+            /** FIXME - i don't have a logger
             getLogger().error("Error setting Browser info", e);
+            **/
         }    
 
         super.setContentHandler(transformerHandler);
