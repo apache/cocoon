@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.125 2003/08/18 13:00:46 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.126 2003/08/19 01:36:30 joerg Exp $:-->
 <status>
 
  <developers>
@@ -189,10 +189,13 @@
   <changes>
 
  <release version="@version@" date="@date@">
-  <action dev="CZ" type="fix" fixes-bug="12173">
-    Applying patch from Renaud Bruyeron (bruyeron@fullsix.com) that fixes 
-    the prematurely closing of the connection causing in the SQL Transformer.
-  </action>
+   <action dev="JH" type="fix" fixes-bug="22498" due-to="Conal Tuohy" due-to-email="conal@nzetc.org">
+     Lucene block: LuceneIndexTransformer configuration fixed.
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="12173">
+     Applying patch from Renaud Bruyeron (bruyeron@fullsix.com) that fixes 
+     the prematurely closing of the connection causing in the SQL Transformer.
+   </action>
    <action dev="JH" type="update" fixes-bug="22479"
      due-to="Mark Leicester" due-to-email="mark.leicester@energyintellect.com">
      Midi block: added transposition and inversion stylesheets and samples.

@@ -93,11 +93,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * A lucene index creation transformer.
  * <p>See <a href="http://wiki.cocoondev.org/Wiki.jsp?page=LuceneIndexTransformer">LuceneIndexTransformer</a>
  * documentation on the Cocoon Wiki.</p>
- * <p>FIXME: Write more documentation.</p>
+ * <p>TODO: Write more documentation.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.6 2003/08/04 03:12:16 joerg Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.7 2003/08/19 01:34:20 joerg Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
@@ -134,16 +134,12 @@ public class LuceneIndexTransformer extends AbstractTransformer
     protected ComponentManager manager = null;
     protected File workDir = null;
 
-    // Declaration time parameters values
-    private String analyzerClassnameDefault;
-    private String directoryDefault;
-    private int mergeFactorDefault;
-
-    // Invocation time parameters values
-    private String analyzerClassname;
-    private String directoryName;
-    private int mergeFactor;
-
+    // Declaration time parameters values (specified in sitemap component config)
+    private IndexerConfiguration configureConfiguration;
+    // Invocation time parameters values (specified in sitemap transform parameters)
+    private IndexerConfiguration setupConfiguration;
+    // Parameters specified in the input document
+    private IndexerConfiguration queryConfiguration;
 
     // Runtime variables
     private int processing;
@@ -167,24 +163,34 @@ public class LuceneIndexTransformer extends AbstractTransformer
     }
 
 
+    /**
+     * Configure the transformer. The configuration parameters are stored as
+     * general defaults, which may be over-ridden by parameters specified as
+     * parameters in the sitemap pipeline, or by attributes of the query
+     * element(s) in the XML input document.
+     */
     public void configure(Configuration conf) throws ConfigurationException {
-        this.analyzerClassnameDefault = conf.getChild(ANALYZER_CLASSNAME_CONFIG)
-            .getValue(ANALYZER_CLASSNAME_DEFAULT);
-        this.mergeFactorDefault = conf.getChild(MERGE_FACTOR_CONFIG)
-            .getValueAsInteger(MERGE_FACTOR_DEFAULT);
-        this.directoryDefault = conf.getChild(DIRECTORY_CONFIG)
-            .getValue(DIRECTORY_DEFAULT);
+        this.configureConfiguration = new IndexerConfiguration(
+            conf.getChild(ANALYZER_CLASSNAME_CONFIG).getValue(ANALYZER_CLASSNAME_DEFAULT), 
+            conf.getChild(DIRECTORY_CONFIG).getValue(DIRECTORY_DEFAULT), 
+            conf.getChild(MERGE_FACTOR_CONFIG).getValueAsInteger(MERGE_FACTOR_DEFAULT)
+        );
     }
 
     /**
      * Setup the transformer.
+     * Called when the pipeline is assembled.
+     * The parameters are those specified as child elements of the
+     * <code>&lt;map:transform&gt;</code> element in the sitemap.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-        // We don't need all this stuff
-        this.analyzerClassname = parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, analyzerClassnameDefault);
-        this.directoryName = parameters.getParameter(DIRECTORY_PARAMETER, directoryDefault);
-        this.mergeFactor = parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, mergeFactorDefault);
+        // TODO: We don't need all this stuff
+        setupConfiguration = new IndexerConfiguration(
+            parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, configureConfiguration.analyzerClassname),
+            parameters.getParameter(DIRECTORY_PARAMETER, configureConfiguration.indexDirectory),
+            parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.mergeFactor)
+        );
     }
 
     public void compose(ComponentManager manager) throws ComponentException {
@@ -234,7 +240,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
     }
 
 
-
     public void startDocument() throws SAXException {
         super.startDocument();
     }
@@ -275,20 +280,16 @@ public class LuceneIndexTransformer extends AbstractTransformer
                 createIndex = sCreate != null &&
                     (sCreate.equalsIgnoreCase("yes") || sCreate.equalsIgnoreCase("true"));
 
-                analyzerClassname =
-                    atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
+                String analyzerClassname = atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
+                String indexDirectory  = atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);
+                String mergeFactor = atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
 
-                String sMergeFactor =
-                    atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
-                if (sMergeFactor != null)
-                    mergeFactor = Integer.parseInt(sMergeFactor);
+                queryConfiguration = new IndexerConfiguration(
+                    analyzerClassname != null ? analyzerClassname : setupConfiguration.analyzerClassname,
+                    indexDirectory != null ? indexDirectory : setupConfiguration.indexDirectory,
+                    mergeFactor != null ? Integer.parseInt(mergeFactor) : setupConfiguration.mergeFactor
+                );
 
-                String attributeDirectoryName =
-                    atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);
-                if (attributeDirectoryName != null)
-                    this.directoryName = attributeDirectoryName;
-
-                // System.out.println("QUERY Create=" + bCreate + ", Directory=" + directoryName + ", Analyzer=" + analyzerClassname);
                 if (!createIndex) {
                     // Not asked to create the index - but check if this is necessary anyway:
                     try {
@@ -309,16 +310,14 @@ public class LuceneIndexTransformer extends AbstractTransformer
             // processing a lucene:index - expecting a lucene:document
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)){
                 this.bodyDocumentURL = atts.getValue(LUCENE_DOCUMENT_URL_ATTRIBUTE);
-                if (this.bodyDocumentURL == null)
+                if (this.bodyDocumentURL == null) {
                     throw new SAXException("<lucene:document> must have @url attribute");
+                }
 
-                // System.out.println("  DOCUMENT URL=" + bodyDocumentURL);
-                
                 // Remember the time the document indexing began
                 this.documentStartTime = System.currentTimeMillis();
                 // remember these attributes so they can be passed on to the next stage in the pipeline,
                 // when this document element is ended.
-                //System.out.println("lucene:document startElement: " + namespaceURI + ", " + localName + ", " + qName);
                 this.documentAttributes = new AttributesImpl(atts);
                 this.bodyText = new StringBuffer();
                 this.bodyDocument = new Document();
@@ -338,10 +337,10 @@ public class LuceneIndexTransformer extends AbstractTransformer
         if (processing == STATE_QUERY) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
                 // End query processing
-                // System.out.println("QUERY END!");
                 try {
-                    if (this.writer == null)
+                    if (this.writer == null) {
                         openWriter();
+                    }
                     this.writer.optimize();
                     this.writer.close();
                     this.writer = null;
@@ -357,15 +356,12 @@ public class LuceneIndexTransformer extends AbstractTransformer
         } else if (processing == STATE_DOCUMENT) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)) {
                 // End document processing
-                // System.out.println("  DOCUMENT END!");
                 this.bodyDocument.add(Field.UnStored(LuceneXMLIndexer.BODY_FIELD, this.bodyText.toString()));
-                //System.out.println("    DOCUMENT BODY=" + this.bodyText);
                 this.bodyText = null;
 
                 this.bodyDocument.add(Field.UnIndexed(LuceneXMLIndexer.URL_FIELD, this.bodyDocumentURL));
                 // store: false, index: true, tokenize: false
                 this.bodyDocument.add(new Field(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL), false, true, false));
-                // System.out.println("    DOCUMENT UID=" + uid(this.bodyDocumentURL));
                 try {
                     reindexDocument();
                 } catch (IOException e) {
@@ -374,7 +370,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
                 this.bodyDocumentURL = null;
 
                 // propagate the lucene:document element to the next stage in the pipeline
-                //System.out.println("lucene:document endElement: " + namespaceURI + ", " + localName + ", " + qName);
                 long elapsedTime = System.currentTimeMillis() - this.documentStartTime;
                 //documentAttributes = new AttributesImpl();
                 this.documentAttributes.addAttribute(
@@ -401,7 +396,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
                     String atts_lname = atts.getLocalName(i);
                     String atts_value = atts.getValue(i);
-                    // System.out.println("        ATTRIBUTE " + localName + "@" + atts_lname + "=" + atts_value);
                     bodyDocument.add(Field.UnStored(localName + "@" + atts_lname, atts_value));
                     if (attributesToText) {
                         text.append(atts_value);
@@ -413,7 +407,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
                 boolean store = atts.getIndex(LUCENE_URI, LUCENE_ELEMENT_ATTR_STORE_VALUE) != -1;
                 if (text != null && text.length() > 0) {
-                    // System.out.println("      ELEMENT " + localName + "=" + text);
                     if (store) {
                         bodyDocument.add(Field.Text(localName, text.toString()));
                     } else {
@@ -441,7 +434,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
     }
 
     private void openWriter() throws IOException {
-        File indexDirectory = new File(workDir, directoryName);
+        File indexDirectory = new File(workDir, queryConfiguration.indexDirectory);
         // If the index directory doesn't exist, then always create it.
         boolean indexExists = IndexReader.indexExists(indexDirectory);
         if (!indexExists) {
@@ -451,14 +444,14 @@ public class LuceneIndexTransformer extends AbstractTransformer
         // Get the index directory, creating it if necessary
         Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory,
                                                               createIndex);
-        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(analyzerClassname);
+        Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(queryConfiguration.analyzerClassname);
         this.writer = new IndexWriter(directory, analyzer, createIndex);
-        this.writer.mergeFactor = mergeFactor; 
+        this.writer.mergeFactor = queryConfiguration.mergeFactor; 
     }    
     
     private IndexReader openReader() throws IOException {
         Directory directory = LuceneCocoonHelper.getDirectory(
-                                            new File(workDir, directoryName),
+                                            new File(workDir, queryConfiguration.indexDirectory),
                                             createIndex);
         IndexReader reader = IndexReader.open(directory);
         return reader;
@@ -513,5 +506,21 @@ public class LuceneIndexTransformer extends AbstractTransformer
         public void append(char[] str, int offset, int length) {
             this.text.append(str, offset, length);
         }
-    }   
+    }
+
+    class IndexerConfiguration {
+        String analyzerClassname;
+        String indexDirectory;
+        int mergeFactor;
+
+        public IndexerConfiguration(String analyzerClassname,
+                                    String indexDirectory,
+                                    int mergeFactor) 
+        {
+            this.analyzerClassname = analyzerClassname;
+            this.indexDirectory = indexDirectory;
+            this.mergeFactor = mergeFactor;
+        }
+    }
+
 }
