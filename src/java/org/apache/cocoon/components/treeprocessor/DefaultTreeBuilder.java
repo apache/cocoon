@@ -89,7 +89,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.5 2004/01/18 22:19:58 sylvain Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.6 2004/02/06 15:39:57 sylvain Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
@@ -213,7 +213,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
      */
     protected RoleManager createRoleManager() throws Exception
     {
-        RoleManager roles = new DefaultRoleManager();
+        RoleManager roles = new DefaultRoleManager(this.parentRoleManager);
 
         LifecycleHelper.setupComponent(roles,
             getLogger(),
