@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultCopletAspect.java,v 1.2 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletAspect.java,v 1.3 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class DefaultCopletAspect extends AbstractAspect {
 
@@ -87,12 +87,12 @@ public class DefaultCopletAspect extends AbstractAspect {
 
         final String adapterName = cid.getCopletData().getCopletBaseData().getCopletAdapterName();
         CopletAdapter copletAdapter = null;
-        ComponentSelector adapterSelector = null;
+        ServiceSelector adapterSelector = null;
         try {
-            adapterSelector = (ComponentSelector) this.manager.lookup(CopletAdapter.ROLE + "Selector");
+            adapterSelector = (ServiceSelector) this.manager.lookup(CopletAdapter.ROLE + "Selector");
             copletAdapter = (CopletAdapter) adapterSelector.select(adapterName);
             copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup component.", ce);
         } finally {
             if (null != copletAdapter) {

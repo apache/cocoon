@@ -53,14 +53,14 @@ package org.apache.cocoon.portal.layout.renderer.impl;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
@@ -77,18 +77,26 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectRenderer.java,v 1.2 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: AspectRenderer.java,v 1.3 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class AspectRenderer
     extends AbstractLogEnabled
-    implements Renderer, Composable, Configurable, Disposable, ThreadSafe {
+    implements Renderer, Serviceable, Configurable, Disposable, ThreadSafe {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     protected RendererAspectChain chain;
     
-    protected ComponentSelector aspectSelector;
+    protected ServiceSelector aspectSelector;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.aspectSelector = (ServiceSelector) this.manager.lookup( RendererAspect.ROLE+"Selector");
+    }
+
     /**
      * Stream out raw layout 
      */
@@ -103,14 +111,6 @@ public class AspectRenderer
 	public void configure(Configuration conf) throws ConfigurationException {
         this.chain = new RendererAspectChain();
         this.chain.configure(this.aspectSelector, conf.getChild("aspects"));
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-	 */
-	public void compose(ComponentManager manager) throws ComponentException {
-		this.manager = manager;
-        this.aspectSelector = (ComponentSelector) this.manager.lookup( RendererAspect.ROLE+"Selector");
 	}
 
 	/* (non-Javadoc)

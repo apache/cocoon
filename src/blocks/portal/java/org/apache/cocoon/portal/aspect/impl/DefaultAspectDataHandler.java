@@ -55,9 +55,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.AspectDescription;
@@ -68,20 +67,20 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDataHandler.java,v 1.2 2003/05/21 13:06:02 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDataHandler.java,v 1.3 2003/10/20 13:36:41 cziegeler Exp $
  */
 public class DefaultAspectDataHandler 
     implements AspectDataHandler {
 
     protected AspectalizableDescription description;
     
-    protected ComponentSelector storeSelector;
+    protected ServiceSelector storeSelector;
     
     /**
      * Constructor
      */
     public DefaultAspectDataHandler(AspectalizableDescription desc,
-                                    ComponentSelector storeSelector) {
+                                    ServiceSelector storeSelector) {
         this.description = desc;
         this.storeSelector = storeSelector;
     }
@@ -106,10 +105,10 @@ public class DefaultAspectDataHandler
                 store.setAspectData( owner, aspectName, data );
             }
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup aspect data store " + aspectDesc.getStoreName(), ce);
         } finally {
-            this.storeSelector.release( (Component)store );
+            this.storeSelector.release( store );
         }        
 
         return data;
@@ -158,10 +157,10 @@ public class DefaultAspectDataHandler
                     }
                 }
 
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new CascadingRuntimeException("Unable to lookup aspect data store " + current.getStoreName(), ce);
             } finally {
-                this.storeSelector.release( (Component)store );
+                this.storeSelector.release( store );
             }        
 
         }
@@ -183,10 +182,10 @@ public class DefaultAspectDataHandler
         try {
             store = (AspectDataStore)this.storeSelector.select(aspectDesc.getStoreName());
             store.setAspectData(owner, aspectName, data);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup aspect data store " + aspectDesc.getStoreName(), ce);
         } finally {
-            this.storeSelector.release( (Component)store );
+            this.storeSelector.release( store );
         }        
     }
 

@@ -55,9 +55,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -65,6 +62,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
@@ -80,18 +80,25 @@ import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestAspectDataStore.java,v 1.4 2003/05/28 13:47:29 cziegeler Exp $
+ * @version CVS $Id: RequestAspectDataStore.java,v 1.5 2003/10/20 13:36:41 cziegeler Exp $
  */
 public class RequestAspectDataStore 
     extends AbstractLogEnabled
-    implements Component, Composable, ThreadSafe, AspectDataStore, Contextualizable, Parameterizable {
+    implements Component, Serviceable, ThreadSafe, AspectDataStore, Contextualizable, Parameterizable {
     
     protected Context context;
     
     protected String requestParameterName;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
     protected Map getMap(Aspectalizable owner) {
         final Request request = ContextHelper.getRequest(this.context);
         Map componentMap = (Map)request.getAttribute(this.getClass().getName());
@@ -127,7 +134,7 @@ public class RequestAspectDataStore
         try {
             service = (LinkService)this.manager.lookup(LinkService.ROLE);
             service.addEventToLink( e );
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup link service.", ce);
         } finally {
             this.manager.release( service );
@@ -152,13 +159,6 @@ public class RequestAspectDataStore
      */
     public void parameterize(Parameters pars) throws ParameterException {
         requestParameterName = pars.getParameter("parameter-name", null);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
 }

@@ -54,11 +54,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -93,20 +93,20 @@ import org.apache.commons.jxpath.JXPathContext;
  * &lt;/map:action&gt;</pre>
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.4 2003/07/18 14:41:46 cziegeler Exp $
+ * @version CVS $Id: CopletModule.java,v 1.5 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class CopletModule 
-implements InputModule, Composable, ThreadSafe {
+implements InputModule, Serviceable, ThreadSafe {
     
     /**
      * The component manager.
      */
-    private ComponentManager manager;
+    private ServiceManager manager;
     
-    /**
-     * Obtains the component manager.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -145,7 +145,7 @@ implements InputModule, Composable, ThreadSafe {
                 
             return value.toString();
             
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new ConfigurationException("ComponentException ", e);
         } finally {
             this.manager.release(portalService);

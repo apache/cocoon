@@ -58,10 +58,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.persistence.CastorSourceConverter;
 import org.apache.cocoon.portal.profile.ProfileLS;
@@ -77,15 +77,22 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MapProfileLS.java,v 1.3 2003/08/21 06:41:19 cziegeler Exp $
+ * @version CVS $Id: MapProfileLS.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class MapProfileLS
     extends AbstractLogEnabled
-    implements Component, Composable, ProfileLS, ThreadSafe {
+    implements Component, Serviceable, ProfileLS, ThreadSafe {
 
     /** The component manager */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
 
     protected String getURI(Map keyMap, Map parameters) 
     throws Exception {
@@ -223,7 +230,7 @@ public class MapProfileLS
             if ( resolver != null ) {
                 resolver.release(source);
             }
-			manager.release((Component)parser);
+			manager.release(parser);
 			manager.release(converter);
 			manager.release(resolver);
 		}
@@ -252,14 +259,6 @@ public class MapProfileLS
 			}
 			manager.release(resolver);
 		}
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
-        this.manager = manager;
     }
 
 }

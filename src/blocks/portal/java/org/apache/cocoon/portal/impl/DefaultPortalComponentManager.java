@@ -56,15 +56,14 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalComponentManager;
@@ -82,13 +81,13 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultPortalComponentManager.java,v 1.2 2003/10/06 15:22:36 vgritsenko Exp $
+ * @version CVS $Id: DefaultPortalComponentManager.java,v 1.3 2003/10/20 13:36:56 cziegeler Exp $
  */
 public class DefaultPortalComponentManager
     extends AbstractLogEnabled
-    implements PortalComponentManager, Composable, Disposable, ThreadSafe, Configurable {
+    implements PortalComponentManager, Serviceable, Disposable, ThreadSafe, Configurable {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     protected LinkService linkService;
 
@@ -100,7 +99,7 @@ public class DefaultPortalComponentManager
     
     protected String rendererSelectorRole;
     
-    protected ComponentSelector rendererSelector;
+    protected ServiceSelector rendererSelector;
     
     protected Map renderers;
     
@@ -113,9 +112,9 @@ public class DefaultPortalComponentManager
     protected LayoutFactory layoutFactory;
     
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -126,7 +125,7 @@ public class DefaultPortalComponentManager
         if ( null == this.linkService ) {
             try {
                 this.linkService = (LinkService)this.manager.lookup( this.linkServiceRole );
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup link service with role " + this.linkServiceRole, e);
             }
         }
@@ -140,7 +139,7 @@ public class DefaultPortalComponentManager
         if ( null == this.profileManager ) {
             try {
                 this.profileManager = (ProfileManager)this.manager.lookup( this.profileManagerRole );
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup profile manager with role " + this.profileManagerRole, e);
             }
         }
@@ -155,7 +154,7 @@ public class DefaultPortalComponentManager
             if ( this.rendererSelector != null) {
                 Iterator i = this.renderers.values().iterator();
                 while (i.hasNext()) {
-                    this.rendererSelector.release((Component) i.next());
+                    this.rendererSelector.release(i.next());
                 }
                 this.manager.release( this.rendererSelector );
                 this.rendererSelector = null;
@@ -165,8 +164,8 @@ public class DefaultPortalComponentManager
             this.manager.release( this.linkService );
             this.profileManager = null;
             this.linkService = null;
-            this.manager.release((Component)this.copletFactory);
-            this.manager.release((Component)this.layoutFactory);
+            this.manager.release(this.copletFactory);
+            this.manager.release(this.layoutFactory);
             this.copletFactory = null;
             this.layoutFactory = null;
             this.manager = null;
@@ -190,8 +189,8 @@ public class DefaultPortalComponentManager
     public Renderer getRenderer(String hint) {
         if ( rendererSelector == null ) {
             try {
-                this.rendererSelector = (ComponentSelector)this.manager.lookup( this.rendererSelectorRole );
-            } catch (ComponentException e) {
+                this.rendererSelector = (ServiceSelector)this.manager.lookup( this.rendererSelectorRole );
+            } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup renderer selector with role " + this.rendererSelectorRole, e);
             }
             this.renderers = new HashMap();
@@ -201,7 +200,7 @@ public class DefaultPortalComponentManager
             try {
                 o = (Renderer) this.rendererSelector.select( hint );
                 this.renderers.put( hint, o );
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup renderer with hint " + hint, e);
             }
         }
@@ -215,7 +214,7 @@ public class DefaultPortalComponentManager
         if ( null == this.copletFactory ) {
             try {
                 this.copletFactory = (CopletFactory)this.manager.lookup( this.copletFactoryRole);
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup coplet factory with role " + this.copletFactoryRole, e);
             }
         }
@@ -229,7 +228,7 @@ public class DefaultPortalComponentManager
         if ( null == this.layoutFactory ) {
             try {
                 this.layoutFactory = (LayoutFactory)this.manager.lookup( this.layoutFactoryRole);
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new CascadingRuntimeException("Unable to lookup layout factory with role " + this.copletFactoryRole, e);
             }
         }

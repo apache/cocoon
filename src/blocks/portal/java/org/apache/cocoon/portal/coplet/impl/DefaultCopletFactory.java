@@ -57,14 +57,14 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
@@ -83,19 +83,19 @@ import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.7 2003/07/18 14:41:46 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.8 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
-    implements Component, ThreadSafe, CopletFactory, Composable, Disposable, Configurable {
+    implements Component, ThreadSafe, CopletFactory, Serviceable, Disposable, Configurable {
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
     protected Map coplets = new HashMap();
     
     protected List descriptions = new ArrayList();
     
-    protected ComponentSelector storeSelector;
+    protected ServiceSelector storeSelector;
 
     public void prepare(CopletData copletData)
     throws ProcessingException {
@@ -166,13 +166,13 @@ public class DefaultCopletFactory
         // now lookup the adapter
         final String adapterName = copletData.getCopletBaseData().getCopletAdapterName();
         CopletAdapter adapter = null;
-        ComponentSelector adapterSelector = null;
+        ServiceSelector adapterSelector = null;
         try {
-            adapterSelector = (ComponentSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
+            adapterSelector = (ServiceSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
             adapter = (CopletAdapter)adapterSelector.select( adapterName );
             adapter.init( instance );
             adapter.login( instance );
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup coplet adapter selector or adaptor.", ce);
         } finally {
             if ( adapterSelector != null) {
@@ -185,7 +185,7 @@ public class DefaultCopletFactory
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.getComponentManager().getProfileManager().register(instance);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup profile manager.", ce);
         } finally {
             this.manager.release( service );
@@ -194,12 +194,11 @@ public class DefaultCopletFactory
     }
     
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.storeSelector = (ComponentSelector)this.manager.lookup( AspectDataStore.ROLE+"Selector" );
+        this.storeSelector = (ServiceSelector)this.manager.lookup( AspectDataStore.ROLE+"Selector" );
     }
 
     /* (non-Javadoc)
@@ -268,13 +267,13 @@ public class DefaultCopletFactory
             // now lookup the adapter
             final String adapterName = copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName();
             CopletAdapter adapter = null;
-            ComponentSelector adapterSelector = null;
+            ServiceSelector adapterSelector = null;
             try {
-                adapterSelector = (ComponentSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
+                adapterSelector = (ServiceSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
                 adapter = (CopletAdapter)adapterSelector.select( adapterName );
                 adapter.logout( copletInstanceData );
                 adapter.destroy( copletInstanceData );
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Unable to lookup coplet adapter selector or adaptor.", ce);
             } finally {
                 if ( adapterSelector != null) {
@@ -287,7 +286,7 @@ public class DefaultCopletFactory
             try {
                 service = (PortalService)this.manager.lookup(PortalService.ROLE);
                 service.getComponentManager().getProfileManager().unregister(copletInstanceData);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Unable to lookup portal service.", ce);
             } finally {
                 this.manager.release( service );

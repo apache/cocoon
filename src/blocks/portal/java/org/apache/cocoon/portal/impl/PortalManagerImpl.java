@@ -50,11 +50,11 @@
 */
 package org.apache.cocoon.portal.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalManager;
@@ -70,13 +70,13 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManagerImpl.java,v 1.5 2003/07/18 14:41:46 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.6 2003/10/20 13:36:56 cziegeler Exp $
  */
-public final class PortalManagerImpl
+public class PortalManagerImpl
 	extends AbstractLogEnabled
-	implements PortalManager, Composable, ThreadSafe {
+	implements PortalManager, Serviceable, ThreadSafe {
 
-    private ComponentManager manager;
+    protected ServiceManager manager;
         
     public void process()
     throws ProcessingException {
@@ -84,7 +84,7 @@ public final class PortalManagerImpl
         try {
             eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
             eventManager.processEvents();
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
             this.manager.release(eventManager);
@@ -109,7 +109,7 @@ public final class PortalManagerImpl
             contentHandler.startDocument();
             portalLayoutRenderer.toSAX(portalLayout, service, contentHandler);
             contentHandler.endDocument();
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup portal service.", ce);
         } finally {
             this.manager.release(service);
@@ -117,11 +117,11 @@ public final class PortalManagerImpl
 	}
 
 	/**
-	 * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+	 * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
 	 */
-	public void compose(ComponentManager componentManager)
-		throws ComponentException {
-        this.manager = componentManager;
+	public void service(ServiceManager serviceManager)
+    throws ServiceException {
+        this.manager = serviceManager;
 	}
 
 }

@@ -58,9 +58,6 @@ import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -69,7 +66,7 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
-import org.apache.cocoon.reading.AbstractReader;
+import org.apache.cocoon.reading.ServiceableReader;
 import org.xml.sax.SAXException;
 
 /**
@@ -83,13 +80,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.3 2003/09/09 18:52:33 joerg Exp $
+ * @version CVS $Id: ProxyReader.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
  */
-public class ProxyReader extends AbstractReader implements Composable {
-    /**
-     * The Avalon component manager
-     */
-    protected ComponentManager componentManager;
+public class ProxyReader extends ServiceableReader {
 
     /**
      * The coplet instance data
@@ -125,19 +118,11 @@ public class ProxyReader extends AbstractReader implements Composable {
 
         copletInstanceData =
             ProxyTransformer.getInstanceData(
-                this.componentManager,
+                this.manager,
                 objectModel,
                 copletID,
                 portalName);
 
-    }
-
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
-     */
-    public void compose(ComponentManager componentManager)
-        throws ComponentException {
-        this.componentManager = componentManager;
     }
 
     /**
@@ -146,6 +131,7 @@ public class ProxyReader extends AbstractReader implements Composable {
     public void recycle() {
         this.response = null;
         this.request = null;
+        super.recycle();
     }
 
     /**

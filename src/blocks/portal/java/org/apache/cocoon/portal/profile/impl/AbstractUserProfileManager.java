@@ -57,8 +57,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
@@ -76,7 +76,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AbstractUserProfileManager.java,v 1.3 2003/08/04 03:06:30 joerg Exp $
+ * @version CVS $Id: AbstractUserProfileManager.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
  */
 public abstract class AbstractUserProfileManager 
     extends AbstractProfileManager { 
@@ -91,9 +91,9 @@ public abstract class AbstractUserProfileManager
     public void logout() {
         final String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
-        ComponentSelector adapterSelector = null;
+        ServiceSelector adapterSelector = null;
         try {
-            adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
+            adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute("CopletInstanceData:"+layoutKey);
@@ -112,7 +112,7 @@ public abstract class AbstractUserProfileManager
             service.removeAttribute("CopletData:"+layoutKey);
             service.removeAttribute("CopletInstanceData:"+layoutKey);
             service.removeAttribute("Layout:"+layoutKey);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -179,7 +179,7 @@ public abstract class AbstractUserProfileManager
 			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
 
             return copletInstanceDataManager.getCopletInstanceData(copletID);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -205,7 +205,7 @@ public abstract class AbstractUserProfileManager
                 }
             }
             return coplets;
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -224,7 +224,7 @@ public abstract class AbstractUserProfileManager
             
             copletInstanceDataManager.putCopletInstanceData( coplet );
             
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -243,7 +243,7 @@ public abstract class AbstractUserProfileManager
             
             copletInstanceDataManager.getCopletInstanceData().remove(coplet.getId());
             
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -270,7 +270,7 @@ public abstract class AbstractUserProfileManager
                 layoutMap.put(layout.getId(), layout);
             }
             
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -289,7 +289,7 @@ public abstract class AbstractUserProfileManager
                 layoutMap.remove(layout.getId());
             }
             
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
@@ -301,14 +301,14 @@ public abstract class AbstractUserProfileManager
      */
     public Layout getPortalLayout(String layoutKey, String layoutID) {
         PortalService service = null;
-        ComponentSelector adapterSelector = null;
+        ServiceSelector adapterSelector = null;
         
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
             LayoutFactory factory = service.getComponentManager().getLayoutFactory();
             CopletFactory copletFactory = service.getComponentManager().getCopletFactory();
             
-            adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
+            adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             
             if ( null == layoutKey ) {
                 layoutKey = this.getDefaultLayoutKey();
@@ -356,7 +356,7 @@ public abstract class AbstractUserProfileManager
                                             PortalService service,
                                             CopletFactory copletFactory,
                                             LayoutFactory layoutFactory,
-                                            ComponentSelector adapterSelector) 
+                                            ServiceSelector adapterSelector) 
     throws Exception;
     
 }

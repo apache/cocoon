@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.portal.event.subscriber.impl;
 
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Filter;
@@ -61,12 +61,12 @@ import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultChangeAspectDataEventSubscriber.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: DefaultChangeAspectDataEventSubscriber.java,v 1.4 2003/10/20 13:36:42 cziegeler Exp $
  */
 public final class DefaultChangeAspectDataEventSubscriber 
     implements Subscriber {
 
-    public DefaultChangeAspectDataEventSubscriber(ComponentManager manager) {
+    public DefaultChangeAspectDataEventSubscriber(ServiceManager manager) {
     }
 
     /* (non-Javadoc)

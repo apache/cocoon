@@ -50,16 +50,20 @@
 */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.util.List;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
@@ -68,21 +72,85 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProfileManager.java,v 1.3 2003/07/29 06:30:07 cziegeler Exp $
+ * @version CVS $Id: AbstractProfileManager.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
-    implements Composable, Configurable, ProfileManager, ThreadSafe {
+    implements Serviceable, Configurable, ProfileManager, ThreadSafe {
 
     protected String defaultLayoutKey;
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.manager = componentManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
+     */
+    public List getCopletInstanceData(CopletData data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
+     */
+    public CopletInstanceData getCopletInstanceData(String copletID) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(java.lang.String, java.lang.String)
+     */
+    public Layout getPortalLayout(String layoutKey, String layoutID) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
+    public void register(CopletInstanceData coplet) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
+     */
+    public void register(Layout layout) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
+     */
+    public void saveUserProfiles() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
+    public void unregister(CopletInstanceData coplet) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
+     */
+    public void unregister(Layout layout) {
+        // TODO Auto-generated method stub
+
     }
 
     /**
@@ -97,7 +165,7 @@ public abstract class AbstractProfileManager
             } else {
                 service.setAttribute("default-layout-key", layoutKey);
             }
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             // this should never happen
             throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
         } finally {
@@ -117,7 +185,7 @@ public abstract class AbstractProfileManager
                 return this.defaultLayoutKey;
             }
             return defaultLayoutKey;
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             // this should never happen
             throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
         } finally {
@@ -138,7 +206,7 @@ public abstract class AbstractProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
             service.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup service manager.", e);
         } finally {
             this.manager.release(service);
@@ -151,7 +219,7 @@ public abstract class AbstractProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
             return (Layout)service.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup service manager.", e);
         } finally {
             this.manager.release(service);

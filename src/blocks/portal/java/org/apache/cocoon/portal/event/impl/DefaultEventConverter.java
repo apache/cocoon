@@ -54,10 +54,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
@@ -68,17 +68,24 @@ import org.apache.cocoon.portal.event.EventConverter;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventConverter.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: DefaultEventConverter.java,v 1.2 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class DefaultEventConverter
     extends AbstractLogEnabled
-    implements EventConverter, Composable, ThreadSafe {
+    implements EventConverter, Serviceable, ThreadSafe {
 
     protected static final String DECODE_LIST = DefaultEventConverter.class.getName() + "D";
     protected static final String ENCODE_LIST = DefaultEventConverter.class.getName() + "E";
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
     public String encode(Event event) {
         PortalService service = null;
         try {
@@ -90,7 +97,7 @@ public class DefaultEventConverter
             }
             list.add(event);
             return String.valueOf(list.size()-1);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup component.", ce);            
         } finally {
             this.manager.release(service);
@@ -110,7 +117,7 @@ public class DefaultEventConverter
                         return (Event)list.get(index);
                     }
                 }
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new CascadingRuntimeException("Unable to lookup component.", ce);            
             } finally {
                 this.manager.release(service);
@@ -128,7 +135,7 @@ public class DefaultEventConverter
                 service.setAttribute(DECODE_LIST, list);
                 service.removeAttribute(ENCODE_LIST);
             }
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup component.", ce);            
         } finally {
             this.manager.release(service);
@@ -140,19 +147,10 @@ public class DefaultEventConverter
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.removeAttribute(DECODE_LIST);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup component.", ce);            
         } finally {
             this.manager.release(service);
         }
     }
-    
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
-        this.manager = manager;
-    }
-
 }

@@ -57,10 +57,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -68,6 +64,10 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -86,12 +86,12 @@ import org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEve
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.9 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.10 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
     implements EventManager, 
-                Composable, 
+                Serviceable, 
                 Initializable, 
                 ThreadSafe,
                 Configurable,
@@ -102,15 +102,22 @@ public class DefaultEventManager
     private final String rootEventType = Event.class.getName();
     private Class eventClass;
     private List subscribers = new ArrayList();
-    private ComponentManager manager;
+    private ServiceManager manager;
     private Configuration configuration;
     
     protected EventAspectChain chain;
     
-    protected ComponentSelector aspectSelector;
+    protected ServiceSelector aspectSelector;
 
     protected Context context;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
     public Publisher getPublisher() {
         return this;
     }
@@ -210,14 +217,6 @@ public class DefaultEventManager
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
-        this.manager = manager;
-    }
-
     /**
      * Process the events
      */
@@ -225,12 +224,12 @@ public class DefaultEventManager
     throws ProcessingException {
         if ( this.configuration != null ) {
             try {
-                this.aspectSelector = (ComponentSelector) this.manager.lookup( EventAspect.ROLE+"Selector");
+                this.aspectSelector = (ServiceSelector) this.manager.lookup( EventAspect.ROLE+"Selector");
                 this.chain = new EventAspectChain();
                 this.chain.configure(this.aspectSelector, this.configuration.getChild("event-aspects"));
             } catch (ConfigurationException ce) {
                 throw new ProcessingException("Unable configure component.", ce);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Unable to lookup component.", ce);
             }
             this.configuration = null;
@@ -253,7 +252,7 @@ public class DefaultEventManager
 
             converter.finish();
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup component.", ce);
         } finally {
             this.manager.release(converter);

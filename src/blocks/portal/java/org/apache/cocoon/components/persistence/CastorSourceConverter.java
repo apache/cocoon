@@ -61,13 +61,13 @@ import java.util.Map.Entry;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.util.ReferenceFieldHandler;
@@ -92,16 +92,16 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.1 2003/08/21 06:41:19 cziegeler Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.2 2003/10/20 13:36:41 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
-    implements Component, Composable, Configurable, Initializable, ThreadSafe {
+    implements Component, Serviceable, Configurable, Initializable, ThreadSafe {
         
     public static final String ROLE = CastorSourceConverter.class.getName();
 
     private Map mappingSources = new HashMap();
-    private ComponentManager manager;
+    private ServiceManager manager;
     private Map mappings = new HashMap();
 
     public Object getObject(InputStream stream, Map parameters) throws ConverterException {
@@ -133,9 +133,9 @@ public class CastorSourceConverter
 	}
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 

@@ -59,11 +59,10 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.variables.VariableResolver;
 import org.apache.cocoon.components.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalService;
@@ -84,7 +83,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.7 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.8 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class XSLTAspect 
     extends AbstractAspect
@@ -94,6 +93,14 @@ public class XSLTAspect
     
     protected VariableResolverFactory variableFactory;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.variableFactory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
+    }
+
     /* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
@@ -125,7 +132,7 @@ public class XSLTAspect
             throw new SAXException("XSLT Exception.", xpe);
         } catch (IOException io) {
             throw new SAXException("Error in resolving.", io);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup component.", ce);
         } finally {
             if (null != resolver) {
@@ -184,19 +191,10 @@ public class XSLTAspect
                 this.variableFactory.release( (VariableResolver) vars.next() );
             }
             this.variables.clear();
-            this.manager.release((Component) this.variableFactory);
+            this.manager.release( this.variableFactory);
             this.manager = null;
             this.variableFactory = null;
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager componentManager)
-    throws ComponentException {
-        super.compose(componentManager);
-        this.variableFactory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
     }
 
 }

@@ -52,10 +52,10 @@ package org.apache.cocoon.portal.event.aspect.impl;
 
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -71,13 +71,20 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractContentEventAspect.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: AbstractContentEventAspect.java,v 1.3 2003/10/20 13:36:42 cziegeler Exp $
  */
 public abstract class AbstractContentEventAspect
     extends AbstractLogEnabled
-    implements EventAspect, ThreadSafe, Composable {
+    implements EventAspect, ThreadSafe, Serviceable {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
 
     protected abstract String getRequestParameterName();
     
@@ -156,13 +163,6 @@ public abstract class AbstractContentEventAspect
         }
         // and invoke next one
         context.invokeNext(service);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
 }

@@ -57,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -80,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.7 2003/07/29 06:30:07 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.8 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class StaticProfileManager extends AbstractProfileManager implements Configurable
 {
@@ -176,7 +175,7 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
         finally
         {
             this.manager.release(service);
-            this.manager.release((Component) adapter);
+            this.manager.release(adapter);
         }
     }
 
@@ -276,7 +275,7 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
         finally
         {
             this.manager.release(service);
-            this.manager.release((Component) adapter);
+            this.manager.release(adapter);
         }
     }
 

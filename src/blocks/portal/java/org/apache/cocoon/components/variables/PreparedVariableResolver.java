@@ -53,11 +53,11 @@ package org.apache.cocoon.components.variables;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.modules.input.InputModule;
@@ -69,13 +69,13 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.2 2003/08/04 03:06:30 joerg Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.3 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class PreparedVariableResolver 
     extends NOPVariableResolver {
     
-    protected ComponentManager  manager;
-    protected ComponentSelector selector;
+    protected ServiceManager  manager;
+    protected ServiceSelector selector;
     protected Context           context;
         
     protected List items = new ArrayList();
@@ -89,7 +89,7 @@ public class PreparedVariableResolver
     private static final Integer THREADSAFE_MODULE_OBJ = new Integer(THREADSAFE_MODULE);
     private static final Integer STATEFUL_MODULE_OBJ = new Integer(STATEFUL_MODULE);
     
-    public PreparedVariableResolver(String expr, ComponentManager manager, Context context) 
+    public PreparedVariableResolver(String expr, ServiceManager manager, Context context) 
     throws PatternException {
         
         super(null);
@@ -156,8 +156,8 @@ public class PreparedVariableResolver
         if (this.selector == null) {
             try {
                 // First access to a module : lookup selector
-                this.selector = (ComponentSelector)this.manager.lookup(InputModule.ROLE + "Selector");
-            } catch(ComponentException ce) {
+                this.selector = (ServiceSelector)this.manager.lookup(InputModule.ROLE + "Selector");
+            } catch(ServiceException ce) {
                 throw new PatternException("Cannot access input modules selector", ce);
             }
         }
@@ -166,7 +166,7 @@ public class PreparedVariableResolver
         InputModule module;
         try {
             module = (InputModule)this.selector.select(moduleName);
-        } catch(ComponentException ce) {
+        } catch(ServiceException ce) {
             throw new PatternException("Cannot get InputModule named '" + moduleName +
                 "' in expression '" + this.expression + "'", ce);
         }
@@ -231,7 +231,7 @@ public class PreparedVariableResolver
                             result.append(value);
                         }
                         
-                    } catch(ComponentException compEx) {
+                    } catch(ServiceException compEx) {
                         throw new PatternException("Cannot get module '" + moduleName +
                             "' in expression '" + this.expression + "'", compEx);
                             
@@ -264,7 +264,7 @@ public class PreparedVariableResolver
 
                     case THREADSAFE_MODULE:
                         i++; // module
-                        this.selector.release((InputModule) this.items.get(i));
+                        this.selector.release(this.items.get(i));
                         i++; // variable
                         break;
 

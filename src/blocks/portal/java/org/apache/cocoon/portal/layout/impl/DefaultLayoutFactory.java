@@ -60,14 +60,14 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalComponentManager;
@@ -96,7 +96,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.13 2003/07/18 14:41:44 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.14 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -105,7 +105,7 @@ public class DefaultLayoutFactory
                  LayoutFactory, 
                  Configurable, 
                  Disposable, 
-                 Composable,
+                 Serviceable,
                  Initializable,
                  Subscriber {
 
@@ -113,12 +113,20 @@ public class DefaultLayoutFactory
     
     protected List descriptions = new ArrayList();
     
-    protected ComponentSelector storeSelector;
+    protected ServiceSelector storeSelector;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
     protected Configuration[] layoutsConf;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.storeSelector = (ServiceSelector)this.manager.lookup( AspectDataStore.ROLE+"Selector" );
+    }
+
     /** 
      * Configure a layout
      */
@@ -181,7 +189,7 @@ public class DefaultLayoutFactory
                     desc.addAspectDescription( adesc );
                 }
             }
-        } catch (ComponentException ce ) {
+        } catch (ServiceException ce ) {
             throw new ConfigurationException("Unable to lookup renderer selector.", ce);
         } finally {
             this.manager.release( service );
@@ -284,7 +292,7 @@ public class DefaultLayoutFactory
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
             service.getComponentManager().getProfileManager().register(layout);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup profile manager.", ce);
         } finally {
             this.manager.release( service );
@@ -316,14 +324,6 @@ public class DefaultLayoutFactory
             this.manager = null;
         }
 
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        this.storeSelector = (ComponentSelector)this.manager.lookup( AspectDataStore.ROLE+"Selector" );
     }
 
     /* (non-Javadoc)
@@ -392,7 +392,7 @@ public class DefaultLayoutFactory
                     factory.remove( ((CopletLayout)layout).getCopletInstanceData());
                 }
                 service.getComponentManager().getProfileManager().unregister(layout);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Unable to lookup portal service.", ce);
             } finally {
                 this.manager.release( service );
