@@ -67,6 +67,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
@@ -88,7 +89,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.30 2004/02/11 15:59:02 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.31 2004/02/13 16:03:14 sylvain Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -221,15 +222,17 @@ public abstract class AbstractProcessingPipeline
     public void setGenerator (String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.generator != null) {
-            throw new ProcessingException ("Generator already set. You can only select one Generator (" + role + ")");
+            throw new ProcessingException ("Generator already set. Cannot set generator '" + role +
+                "' at " + getLocation(param));
         }
         if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. You cannot use a reader and a generator for one pipeline.");
+            throw new ProcessingException ("Reader already set. Cannot set generator '" + role +
+                "' at " + getLocation(param));
         }
         try {
             this.generator = (Generator) newManager.lookup(role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of generator for role '"+role+"' failed.", ce);
+            throw new ProcessingException("Lookup of generator selector failed at " +getLocation(param), ce);
         }
         this.generatorSource = source;
         this.generatorParam = param;
@@ -250,15 +253,18 @@ public abstract class AbstractProcessingPipeline
     public void addTransformer (String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. You cannot use a transformer with a reader.");
+            // Should normally never happen as setting a reader starts pipeline processing
+            throw new ProcessingException ("Reader already set. Cannot add transformer '" + role +
+                "' at " + getLocation(param));
         }
         if (this.generator == null) {
-            throw new ProcessingException ("You must set a generator first before you can use a transformer.");
+            throw new ProcessingException ("Must set a generator before adding transformer '" + role +
+                "' at " + getLocation(param));   
         }
         try {
             this.transformers.add(newManager.lookup(role));
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of transformer for role '"+role+"' failed.", ce);
+            throw new ProcessingException("Lookup of transformer '"+role+"' failed at " + getLocation(param), ce);
         }
         this.transformerSources.add(source);
         this.transformerParams.add(param);
@@ -271,19 +277,24 @@ public abstract class AbstractProcessingPipeline
     public void setSerializer (String role, String source, Parameters param, Parameters hintParam, String mimeType)
     throws ProcessingException {
         if (this.serializer != null) {
-            throw new ProcessingException ("Serializer already set. You can only select one Serializer (" + role + ")");
+            // Should normally not happen as adding a serializer starts pipeline processing
+            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role +
+                "' at " + getLocation(param));
         }
         if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. You cannot use a serializer with a reader.");
+            // Should normally never happen as setting a reader starts pipeline processing
+            throw new ProcessingException ("Reader already set. Cannot set serializer '" + role +
+                "' at " + getLocation(param));
         }
         if (this.generator == null) {
-            throw new ProcessingException ("You must set a generator first before you can use a serializer.");
+            throw new ProcessingException ("Must set a generator before setting serializer '" + role +
+                "' at " + getLocation(param));
         }
 
         try {
             this.serializer = (Serializer) newManager.lookup(role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of serializer for role '"+role+"' failed.", ce);
+            throw new ProcessingException("Lookup of serializer '" + role + "' failed at " + getLocation(param), ce);
         }
         this.serializerSource = source;
         this.serializerParam = param;
@@ -298,16 +309,20 @@ public abstract class AbstractProcessingPipeline
     public void setReader (String role, String source, Parameters param, String mimeType)
     throws ProcessingException {
         if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. You can only select one Reader (" + role + ")");
+            // Should normally never happen as setting a reader starts pipeline processing
+            throw new ProcessingException ("Reader already set. Cannot set reader '" + role +
+                "' at " + getLocation(param));
         }
         if (this.generator != null) {
-            throw new ProcessingException ("Generator already set. You cannot use a reader and a generator for one pipeline.");
+            // Should normally never happen as setting a reader starts pipeline processing
+            throw new ProcessingException ("Generator already set. Cannot use reader '" + role +
+                "' at " + getLocation(param));
         }
 
         try {
             this.reader = (Reader) newManager.lookup(role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of reader for role '"+role+"' failed.", ce);
+            throw new ProcessingException("Lookup of reader '"+role+"' failed at " + getLocation(param), ce);
         }
         this.readerSource = source;
         this.readerParam = param;
@@ -745,4 +760,7 @@ public abstract class AbstractProcessingPipeline
         return null;
     }
 
+    protected String getLocation(Parameters param) {
+        return param.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "[unknown location]");
+    }
 }

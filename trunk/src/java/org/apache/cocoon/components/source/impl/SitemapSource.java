@@ -86,7 +86,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.26 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.27 2004/02/13 16:03:14 sylvain Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -216,7 +216,7 @@ implements Source, XMLizable {
         }
         // VG: Why exception is not thrown in constructor?
         if (this.exception != null) {
-            throw new IOException("SAXException: " + this.exception);
+            throw new SourceException("Cannot get input stream for " + getURI(), this.exception);
         }
 
         if (this.redirectSource != null) {

@@ -60,8 +60,6 @@ public class UnsupportedPart implements PointerPart {
     }
 
     public boolean process(XPointerContext xpointerContext) throws SAXException {
-        if (xpointerContext.getLogger().isDebugEnabled())
-            xpointerContext.getLogger().debug("Scheme " + schemeName + " not supported by this XPointer implementation, as used in the fragment identifier " + xpointerContext.getXPointer());
-        return false;
+        throw new SAXException("Scheme " + schemeName + " not supported by this XPointer implementation, as used in the fragment identifier " + xpointerContext.getXPointer());
     }
 }
