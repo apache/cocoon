@@ -28,6 +28,7 @@
   <components>
     <expression-compilers>
       <component-instance class="org.apache.cocoon.components.expression.jexl.JexlCompiler" name="jexl"/>
+      <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="jxpath"/>
     </expression-compilers>
   </components>
  
