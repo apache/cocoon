@@ -271,7 +271,7 @@
           Caching on many levels
         </li>
         <li>
-          Integrated search engine (using <fork href="http://jakarta.apche.org/lucene">Lucene</fork>)
+          Integrated search engine (using <fork href="http://jakarta.apache.org/lucene">Lucene</fork>)
         </li>
         <li>
           <link href="http://cocoon.apache.org/2.1/developing/deli.html">DELI</link> (detect client configuration)
