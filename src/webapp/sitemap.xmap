@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.40 2003/11/13 18:10:03 sylvain Exp $
+    | CVS $Id: sitemap.xmap,v 1.41 2003/11/17 15:40:33 upayavira Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -556,14 +556,6 @@
         +-->
     <map:match pattern="api/**">
       <map:read src="api/{1}"/>
-    </map:match>
-
-    <!--+
-        | Find a match in the "mount-table.xml" file, if present. It allows to mount other
-        | directories without touching this main sitemap (and thus loosing changes on rebuild).
-        +-->
-    <map:match type="mount-table" pattern="../../mount-table.xml">
-      <map:mount src="{src}" uri-prefix="{uri-prefix}"/>
     </map:match>
 
     <!--+
