@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.7 2000-01-09 02:47:24 ricardo Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.8 2000-01-12 19:24:30 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.7 $ $Date: 2000-01-09 02:47:24 $
+ * @version $Revision: 1.8 $ $Date: 2000-01-12 19:24:30 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -233,17 +233,11 @@ public class XSPUtil {
 
   public static String toMarkup(Node node) {
     StringBuffer buffer = new StringBuffer();
-
-    doMarkup(node, buffer, 0);
-
+    doMarkup(node, buffer);
     return buffer.toString();
   }
 
-  protected static void doMarkup(Node node, StringBuffer buffer, int level) {
-    for (int i = 0; i < level; i++) {
-      buffer.append(' ');
-    }
-
+  protected static void doMarkup(Node node, StringBuffer buffer) {
     switch (node.getNodeType()) {
       case Node.CDATA_SECTION_NODE:
         buffer.append("<![CDATA[\n");
@@ -256,7 +250,7 @@ public class XSPUtil {
         int childCount = nodeList.getLength();
 
         for (int i = 0; i < childCount; i++) {
-          doMarkup(nodeList.item(i), buffer, level + 1);
+          doMarkup(nodeList.item(i), buffer);
         }
 
         break;
@@ -287,11 +281,7 @@ public class XSPUtil {
         } else {
           buffer.append(">");
           for (int i = 0; i < childCount; i++) {
-            doMarkup(nodeList.item(i), buffer, level + 1);
-          }
-
-          for (int i = 0; i < level; i++) {
-            buffer.append(' ');
+            doMarkup(nodeList.item(i), buffer);
           }
 
           buffer.append("</");
