@@ -59,7 +59,8 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.components.modules.input.InputModule;
 
@@ -74,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * accessed and kept until the page is completely displayed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XSPModuleHelper.java,v 1.5 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: XSPModuleHelper.java,v 1.6 2003/10/21 13:23:27 cziegeler Exp $
  */
 public class XSPModuleHelper {
 
@@ -88,11 +89,44 @@ public class XSPModuleHelper {
     private final static int OP_VALUES = 1;
     private final static int OP_NAMES = 2;
 
-    Map inputModules = null;
-    ComponentManager manager = null;
-    ComponentSelector inputSelector = null;
+    private Map inputModules;
+    private ComponentManager componentManager;
+    private ComponentSelector componentInputSelector;
+    private ServiceManager serviceManager;
+    private ServiceSelector serviceInputSelector;
     
 
+    /**
+     * Get the input module
+     */
+    private InputModule getInputModule(String name)
+    throws CascadingRuntimeException {
+        if ( this.inputModules == null ) {
+            throw new RuntimeException("ModuleHelper is not setup correctly.");
+        }
+        InputModule module = (InputModule) this.inputModules.get(name);
+        if ( module == null ) {
+            try {
+                if ( this.componentManager != null ) {
+                    if (this.componentInputSelector.hasComponent(name)) {
+                        module = (InputModule) this.componentInputSelector.select(name);
+                    }                
+                } else {
+                    if (this.serviceInputSelector.isSelectable(name)) {
+                        module = (InputModule) this.serviceInputSelector.select(name);
+                    }                            
+                }
+            } catch (Exception e) {
+                throw new CascadingRuntimeException("Unable to lookup input module " + name, e);
+            }
+            if ( module == null ) {
+                throw new RuntimeException("No such InputModule: "+name);
+            }
+            this.inputModules.put(name, module);
+        }
+        return module;
+    }
+    
     /**
      * Capsules use of an InputModule. Does all the lookups and so
      * on. Returns either an Object, an Object[], or an Iterator,
@@ -115,27 +149,9 @@ public class XSPModuleHelper {
     private Object get(int op, String name, String attr, Map objectModel, Configuration conf) throws CascadingRuntimeException {
 
         Object value = null;
-        InputModule input = null;
-
-        if (this.inputModules == null) 
-            this.inputModules = new HashMap();
-        else
-            if (this.inputModules.containsKey(name))
-                input = (InputModule) this.inputModules.get(name);
+        final InputModule input = this.getInputModule(name);
 
         try {
-
-            if (this.inputSelector == null)
-                this.inputSelector = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
-        
-            if (input == null) {
-                if (this.inputSelector.hasComponent(name)) {
-                    input = (InputModule) this.inputSelector.select(name);
-                    this.inputModules.put(name, input);
-                } else {
-                    throw new RuntimeException("No such InputModule: "+name);
-                }
-            }
 
             switch (op) {
             case OP_GET:    
@@ -164,27 +180,40 @@ public class XSPModuleHelper {
 
     /**
      * Initializes the instance for first use. Stores references to
-     * component manager and component selector in instance if
-     * ThreadSafe.
+     * component manager and component selector in instance 
      *
      * @param manager a <code>ComponentManager</code> value
      * @exception RuntimeException if an error occurs
+     * @deprecated Use the {@link #setup(ServiceManager)} method instead
      */
     public void setup(ComponentManager manager) throws RuntimeException {
 
         this.inputModules = new HashMap();
-        this.manager = manager;
+        this.componentManager = manager;
         try {
-            this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (!(this.inputSelector instanceof ThreadSafe)) {
-                this.manager.release(this.inputSelector);
-                this.inputSelector = null;
-            }
+            this.componentInputSelector = (ComponentSelector) this.componentManager.lookup(INPUT_MODULE_SELECTOR); 
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not obtain selector for InputModule.",e);
         }
     }
 
+    /**
+     * Initializes the instance for first use. Stores references to
+     * service manager and service selector in instance 
+     *
+     * @param manager a <code>ServiceManager</code> value
+     * @exception RuntimeException if an error occurs
+     */
+    public void setup(ServiceManager manager) throws RuntimeException {
+
+        this.inputModules = new HashMap();
+        this.serviceManager = manager;
+        try {
+            this.serviceInputSelector = (ServiceSelector) this.serviceManager.lookup(INPUT_MODULE_SELECTOR); 
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("Could not obtain selector for InputModule.",e);
+        }
+    }
 
 
     /**
@@ -330,19 +359,37 @@ public class XSPModuleHelper {
      */
     public void releaseAll() throws RuntimeException {
 
-        if (this.manager != null && this.inputModules != null) {
-            try {
-                if (this.inputSelector == null) {
-                    this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+        if ( this.inputModules != null ) {
+            // test for component manager
+            if ( this.componentManager != null ) {
+                try {
+                    Iterator iter = this.inputModules.keySet().iterator();
+                    while (iter.hasNext()) {
+                        this.componentInputSelector.release((InputModule) this.inputModules.get(iter.next()));
+                    }
+                    this.inputModules = null;
+                    this.componentManager.release(this.componentInputSelector);
+                    this.componentManager = null;
+                    this.inputModules = null;
+                } catch (Exception e) {
+                    throw new CascadingRuntimeException("Could not release InputModules.",e);
                 }
-                Iterator iter = this.inputModules.keySet().iterator();
-                while (iter.hasNext()) {
-                    this.inputSelector.release((InputModule) this.inputModules.get(iter.next()));
+                
+            }
+            if ( this.serviceManager != null ) {
+                try {
+                    Iterator iter = this.inputModules.keySet().iterator();
+                    while (iter.hasNext()) {
+                        this.serviceInputSelector.release(this.inputModules.get(iter.next()));
+                    }
+                    this.inputModules = null;
+                    this.serviceManager.release(this.serviceInputSelector);
+                    this.serviceManager = null;
+                    this.inputModules = null;
+                } catch (Exception e) {
+                    throw new CascadingRuntimeException("Could not release InputModules.",e);
                 }
-                this.inputModules = null;
-                this.manager.release(this.inputSelector);
-            } catch (Exception e) {
-                throw new CascadingRuntimeException("Could not release InputModules.",e);
+                
             }
         }
     }

@@ -57,11 +57,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -182,10 +179,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.9 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.10 2003/10/21 13:23:27 cziegeler Exp $
  */
 public class LinkRewriterTransformer
-    extends AbstractSAXTransformer implements Composable, Initializable, Configurable
+    extends AbstractSAXTransformer implements Initializable, Disposable
 {
 
     private static String NAMESPACE="";
@@ -208,15 +205,13 @@ public class LinkRewriterTransformer
 
     private String badLinkStr;
 
-    private ComponentManager componentManager;
-    
     /**
      * Configure this component from the map:transformer block.  Called before
      * initialization and setup.
      */
     public void configure(Configuration conf)
-        throws ConfigurationException {
-        if (conf == null) throw new NullPointerException("No static configuration passed to LinkRewriter");
+    throws ConfigurationException {
+        super.configure(conf);
         this.origConf = conf;
     }
  
@@ -226,7 +221,7 @@ public class LinkRewriterTransformer
     public void initialize() throws Exception {
         this.namespaceURI = NAMESPACE;
         this.modHelper = new XSPModuleHelper();
-        modHelper.setup(this.componentManager);
+        modHelper.setup(this.manager);
     }
 
     /**
@@ -400,10 +395,13 @@ public class LinkRewriterTransformer
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.componentManager = manager;
+    public void dispose() {
+        if ( this.modHelper != null ) {
+            this.modHelper.releaseAll();
+            this.modHelper = null;
+        }
     }
 
 }
