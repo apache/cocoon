@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: sunlet-administration.xml,v 1.3 2004/03/06 02:26:01 antonio Exp $ 
+<!-- $Id: sunlet-administration.xml,v 1.4 2004/05/04 07:19:15 cziegeler Exp $ 
 
 -->
 <table><tbody>
@@ -44,7 +44,7 @@
 		<td>
 			<link><target>_new</target>
                         <text>Documentation</text>
-                        <url>../../docs/index.html</url>
+                        <url>../../../docs/index.html</url>
 			</link>
 		</td>
 	</tr>
