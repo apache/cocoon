@@ -454,6 +454,26 @@
 &lt;/table&gt;
 </source>
 
+	<p>
+	  Note, however, that it is <em>not</em> allowed to nest 
+          <code>&lt;xsp:expr&gt;</code> tags directly inside
+          <code>&lt;xsp:logic&gt;</code>. For an expression
+	  to be inlined inside an <code>&lt;xsp:logic&gt;</code>
+	  element, it must be escaped by surrounding it with an
+          <code>&lt;xsp:content&gt;</code> tag. Example:
+	</p>
+
+	<source>
+&lt;xsp:logic&gt;
+  for (int i = 0; i &amp;lt; parameterValues.length; i++) {
+    &lt;xsp:content&gt;
+      &lt;xsp:expr&gt;parameterValues[i]&lt;/xsp:expr&gt;
+    &lt;/xsp:content&gt;
+    &lt;br/&gt;
+  }
+&lt;/xsp:logic&gt;
+</source>
+
         <p>
           The observant reader may have noticed a rather
           unpleasant feature in the above code: the
@@ -826,10 +846,15 @@ xspCurrentNode.appendChild(
             <code>&lt;xsp:expr&gt;</code><br/>
             This element inlines a program
             expression as a <code>Text</code> node,
-            except when used inside an
-            <code>&lt;xsp:attribute&gt;</code>
-            element, where it is substituted as a
-            <code>String</code> attribute value.
+            except when used directly inside another
+            <code>&lt;xsp:&gt;</code> element,
+	    where it is substituted as an
+	    expression, not a node. If you
+	    want to substitute an
+            <code>&lt;xsp:expr&gt;</code> tag
+	    as a node inside another XSP
+	    tag, you must enclose it in an
+            <code>&lt;xsp:content&gt;</code> element.
           </li>
           <li>
             <code>&lt;xsp:element&gt;</code><br/>
@@ -845,7 +870,9 @@ xspCurrentNode.appendChild(
             dynamically by means of
             <code>&lt;xsp:element&gt;</code>).
             This tag is typically used in conjunction
-            with <code>&lt;xsp:expr&gt;</code>
+            with <code>&lt;xsp:expr&gt;</code>,
+	    where the substituted expression is
+	    always cast to <code>String</code>
           </li>
           <li>
             <code>&lt;xsp:pi&gt;</code><br/>
@@ -1032,7 +1059,9 @@ xspCurrentNode.appendChild(
   
         &lt;xsp:logic&gt;
           for (int i = 0; i &amp;lt; parameterValues.length; i++) {
-            &lt;xsp:expr&gt;parameterValues[i]&lt;/xsp:expr&gt;
+            &lt;xsp:content&gt;
+              &lt;xsp:expr&gt;parameterValues[i]&lt;/xsp:expr&gt;
+            &lt;/xsp:content&gt;
             &lt;br/&gt;
           }
         &lt;/xsp:logic&gt;
