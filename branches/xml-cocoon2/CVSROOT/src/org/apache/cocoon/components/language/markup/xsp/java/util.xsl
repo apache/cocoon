@@ -133,10 +133,12 @@
       String __name = String.valueOf(<xsl:copy-of select="$href"/>);
       {
           org.apache.cocoon.components.parser.Parser newParser = null;
+          org.apache.cocoon.components.url.URLFactory factory = null;
 
           try {
               newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
-              URL __url = ((org.apache.cocoon.components.url.URLFactory)manager.lookup(org.apache.cocoon.Roles.URL_FACTORY)).getURL(__name);
+              factory = (org.apache.cocoon.components.url.URLFactory) this.manager.lookup(org.apache.cocoon.Roles.URL_FACTORY);
+              URL __url = factory.getURL(__name);
               InputSource __is = new InputSource(__url.openStream());
               __is.setSystemId(__url.toString());
 
@@ -144,6 +146,7 @@
           } catch (Exception e) {
               this.log.error("Could not include page", e);
           } finally {
+              this.manager.release((Component) factory);
               this.manager.release((Component) newParser);
           }
       }
