@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.4 1999-12-02 11:49:24 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.5 1999-12-12 11:12:36 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-12-02 11:49:24 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-12 11:12:36 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -76,6 +76,7 @@ public class Cocoon extends HttpServlet implements Defaults {
     String confsName = null;
     String server = null;
     String statusURL = null;
+    boolean errorsInternally = false;
     boolean showStatus = false;
 
     /**
@@ -112,6 +113,7 @@ public class Cocoon extends HttpServlet implements Defaults {
             // Save servlet configurations
             showStatus = ((String) confs.get(SHOW_STATUS, "false")).toLowerCase().equals("true");
             statusURL = (String) confs.get(STATUS_URL, STATUS_URL_DEFAULT);
+            errorsInternally = ((String) confs.get(ERROR_INTERNALLY, "false")).toLowerCase().equals("true");
 
             // create the engine
             engine = new Engine(confs);
@@ -141,8 +143,14 @@ public class Cocoon extends HttpServlet implements Defaults {
             } else {
                 try {
                     engine.handle(request, response);
+                } catch (FileNotFoundException e) {
+                    response.sendError(404);
                 } catch (Exception e) {
-                    Frontend.error(response, "Error found handling the request.", e);
+                    if (errorsInternally) {
+                        Frontend.error(response, "Error found handling the request.", e);
+                    } else {
+                        response.sendError(500);
+                    }
                 }
             }
         }

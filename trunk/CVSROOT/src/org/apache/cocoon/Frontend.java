@@ -1,4 +1,4 @@
-/*-- $Id: Frontend.java,v 1.4 1999-11-30 16:30:03 stefano Exp $ -- 
+/*-- $Id: Frontend.java,v 1.5 1999-12-12 11:12:36 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,12 +64,11 @@ import org.apache.cocoon.framework.*;
  * smart publishing behavior. (ECS may be used instead).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:03 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-12 11:12:36 $
  */
 
-public class Frontend {
+public class Frontend implements Defaults {
 
-    public static final String YEAR = "1999";
     public static final String[] colors = { "#f0f0f0", "#e0e0e0" };
     public static final String SINGLE_COLUMN = "***";
 
