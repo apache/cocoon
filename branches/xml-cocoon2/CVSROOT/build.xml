@@ -113,7 +113,7 @@ These are the meaningful targets for this build file:
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="2.0alpha1"/>
+    <property name="version" value="2.0a1"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
