@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.40 2001-02-05 20:01:55 balld Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.41 2001-03-22 19:58:27 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.40 $ $Date: 2001-02-05 20:01:55 $
+ * @version $Revision: 1.41 $ $Date: 2001-03-22 19:58:27 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -606,10 +606,10 @@ public class XSPProcessor extends AbstractActor
     input.setSystemId(resource.toString());
 
     if (resource instanceof File) {
-      input.setCharacterStream(new FileReader(((File) resource)));
+      input.setByteStream(new FileInputStream (((File) resource)));
     } else if (resource instanceof URL) {
-      input.setCharacterStream(
-        new InputStreamReader(((URL) resource).openStream())
+      input.setByteStream(
+        ((URL) resource).openStream()
       );
     } else {
       // should never happen
@@ -617,7 +617,7 @@ public class XSPProcessor extends AbstractActor
         "Fatal error: Could not elaborate given resource: " + resource
       );
     }
-
+ 
     // do not validate stylesheets
     return this.parser.parse(input, false);
   }

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.221 2001-03-08 23:05:07 greenrd Exp $ 
+  $Id: changes.xml,v 1.222 2001-03-22 19:58:26 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,7 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="RDG" type="update" due-to="Eric A. Sirois" due-to-email="easirois@hotmail.com">
+  <action dev="RDG" type="fix" due-to="Krzysztof Zielinski" 
+   due-to-email="kzielinski@supermedia.pl">
+   Non-default encodings in logicsheets should now work.
+  </action>
+  <action dev="RDG" type="fix" due-to="Eric A. Sirois" due-to-email="easirois@hotmail.com">
    XSLTProcessor now recognises text/xml and application/xml mime-types in <?xml-stylesheet?> PIs
    as stylesheets, not just text/xsl.
   </action>
