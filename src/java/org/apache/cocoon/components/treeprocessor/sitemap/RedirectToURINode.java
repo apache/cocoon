@@ -61,7 +61,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.2 2003/06/24 15:20:27 upayavira Exp $
+ * @version CVS $Id: RedirectToURINode.java,v 1.3 2003/09/01 12:32:07 cziegeler Exp $
  */
 
 public class RedirectToURINode extends AbstractProcessingNode {
@@ -76,8 +76,7 @@ public class RedirectToURINode extends AbstractProcessingNode {
     private boolean permanent;
 
     public RedirectToURINode(VariableResolver uri, boolean createSession, boolean global, boolean permanent )
-        throws PatternException
-    {
+    throws PatternException {
         this.global = global;
         this.uri = uri;
         this.createSession = createSession;
@@ -94,16 +93,11 @@ public class RedirectToURINode extends AbstractProcessingNode {
 
         final Redirector redirector = PipelinesNode.getRedirector(env);
 
-        if( this.global )
-        {
+        if( this.global ) {
             redirector.globalRedirect(this.createSession, resolvedURI);
-        }
-        else if (this.permanent && redirector instanceof PermanentRedirector)
-        {
+        } else if (this.permanent && redirector instanceof PermanentRedirector) {
             ((PermanentRedirector)redirector).permanentRedirect(this.createSession, resolvedURI);
-        }
-        else
-        {
+        } else {
             redirector.redirect(this.createSession, resolvedURI);
         }
 
