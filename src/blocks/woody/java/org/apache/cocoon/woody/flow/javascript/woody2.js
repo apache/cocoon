@@ -18,7 +18,7 @@
  * Implementation of the Woody/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.13 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: woody2.js,v 1.14 2004/06/02 01:11:48 antonio Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -109,7 +109,7 @@ Form.prototype.showForm = function(uri, bizData) {
         // Prematurely add the bizData as a request attribute so that event listeners can use it
         // (the same is done by cocoon.sendPage())
         // FIXME: hack because object model isn't available in flowscript.
-        var objectModel = org.apache.cocoon.components.CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        var objectModel = org.apache.cocoon.environment.internal.EnvironmentHelper.getCurrentEnvironment().getObjectModel();
         org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData);
 
         finished = this.form.process(formContext);
