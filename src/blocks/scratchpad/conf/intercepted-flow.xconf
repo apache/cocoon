@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xconf xpath="/cocoon/flow-interpreters" unless="scratchpad">
+<xconf xpath="/cocoon/flow-interpreters" unless="component-instance[@name='intercepted-javascript']">
 
     <!-- Intercepted, FOM-aware JavaScript Interpreter -->
     <component-instance class="org.apache.cocoon.components.flow.javascript.fom.AO_FOM_JavaScriptInterpreter" name="intercepted-javascript">
