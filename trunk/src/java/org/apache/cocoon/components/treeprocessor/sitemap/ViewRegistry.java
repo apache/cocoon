@@ -65,10 +65,10 @@ public interface ViewRegistry {
      * Get the names of views for a given statement. If the cocoon view exists in the returned
      * collection, the statement can directly branch to the view-handling node.
      *
-     * @param role the component role (e.g. <code>Generator.ROLE</code>)
-     * @param componenId the component hint, i.e. the 'type' attribute (e.g. <code>file</code>).
-     * @param statement the sitemap statement
-     * @return the view names for this statement
+     * @param role  the component role (e.g. <code>Generator.ROLE</code>)
+     * @param hint  the component hint, i.e. the 'type' attribute (e.g. <code>file</code>)
+     * @param statement  the sitemap statement
+     * @return  the view names for this statement
      */
     Collection getViewsForStatement(String role, String hint, Configuration statement);
     
