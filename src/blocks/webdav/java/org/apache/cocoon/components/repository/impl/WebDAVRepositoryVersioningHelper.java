@@ -138,18 +138,29 @@ implements RepositoryVersioningHelper, Serviceable, Disposable, Component {
      */
     public boolean setVersioned(final String uri, final boolean versioned) {            
         try {
-            if(!versioned) // FIXME: Implement this via delete and create
-                throw new UnsupportedOperationException();                                        
+            if(!versioned)
+                return unsetVersioned(uri);                                                                                   
             else      
                 return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri)).versionControlMethod(this.repo.getAbsoluteURI(uri));                           
         } catch (HttpException he) {
             this.getLogger().error("HTTP Error while versioncontrol " + uri, he);
         } catch (IOException ioe) {
             this.getLogger().error("IO Error while versioncontrol " + uri, ioe);
+        } catch (ProcessingException pe) {
+            this.getLogger().error("Processing Error while versioncontrol " + uri, pe);
         }
         
         return false;
     }
+
+    private boolean unsetVersioned(final String uri)
+         throws ProcessingException 
+     {
+         //TODO: Also copy props
+         final String content = this.repo.getContentString(uri);
+         final List props = this.repo.getPropertyHelper().getAllProperties(uri);
+         return this.repo.remove(uri) && this.repo.createResource(uri, content);    
+     }
     
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper#getVersions(java.lang.String)
