@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.31 2000-02-16 01:06:28 stefano Exp $
+  $Id: changes.xml,v 1.32 2000-02-23 00:37:10 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -15,6 +15,24 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+    Cocoon2 docs update. Talks a little about the sitemap, it also gives
+    a sneak preview of the new Cocoon logo.
+  </action>
+  <action dev="SM" type="update">
+    Updated Xalan to 0.19.3DO3 and FOP to 0.12.1. Xalan is much faster and less
+    memory consuming. Great job guys!
+  </action>
+  <action dev="SM" type="fix">
+    Improved memory management and OutOfMemory handling. Now should work
+    out of the box on all systems with no problems.
+  </action>
+  <action dev="SM" type="fix">
+    Improved cache system and fixed bugs in previous stylesheet updating patch.
+  </action>
+  <action dev="SM" type="fix" due-to="Mike Engelhart" due-to-email="mengelhart@earthtrip.com">
+    Fixed problem with XSP initializing new sessions every time.
+  </action>
   <action dev="SM" type="fix" due-to="Sean Timm" due-to-email="STimm@mailgo.com">
     Fixed problems in stylesheet updating.
   </action>
@@ -90,7 +108,7 @@
   <action dev="RR" type="fix">
     Removed dependencies on Java 1.2 from XSP engine.
   </action>
-  <action dev="SM" type="update">
+  <action dev="SM" type="remove">
     Removed encoding from WML formatter since some WAP browsers don't like it.
   </action>
  </release>
