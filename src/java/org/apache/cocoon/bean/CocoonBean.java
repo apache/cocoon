@@ -309,11 +309,11 @@ public class CocoonBean extends CocoonWrapper {
         }
     }
 
-    public void sendBrokenLinkWarning(String uri, List referrers, String warning, Throwable t) {
+    public void sendBrokenLinkWarning(Target target, Throwable t) {
         Iterator i = listeners.iterator();
         while (i.hasNext()) {
             BeanListener l = (BeanListener) i.next();
-            l.brokenLinkFound(uri, referrers, warning, t);
+            l.brokenLinkFound(target, t);
         }
     }
 
@@ -468,7 +468,7 @@ public class CocoonBean extends CocoonWrapper {
                             newLinkCount++;
                         }
                     } catch (ProcessingException pe) {
-                        this.sendBrokenLinkWarning(linkTarget.getSourceURI(), linkTarget.getReferringURIs(), pe.getMessage(), pe);
+                        this.sendBrokenLinkWarning(linkTarget, pe);
                         if (this.brokenLinkGenerate) {
                            if (crawler.addTarget(linkTarget)) {
                                newLinkCount++;
@@ -537,9 +537,7 @@ public class CocoonBean extends CocoonWrapper {
                 output.close();
                 output = null;
                 this.resourceUnavailable(target);
-                this.sendBrokenLinkWarning(target.getSourceURI(),
-                    target.getReferringURIs(),
-                    DefaultNotifyingBuilder.getRootCause(pe).getMessage(),
+                this.sendBrokenLinkWarning(target,
                     DefaultNotifyingBuilder.getRootCause(pe));
             } finally {
                 if (output != null && status != -1) {

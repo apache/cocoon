@@ -21,13 +21,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.cocoon.bean.BeanListener;
+import org.apache.cocoon.bean.Target;
 
 /**
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
@@ -107,14 +106,13 @@ public class OutputStreamListener implements BeanListener {
      * @deprecated use brokenLinkFound(String, List, String, Throwable) instead
      */
     public void brokenLinkFound(String uri, String parentURI, String message, Throwable t) {
-        List parents = new ArrayList(1);
-        parents.add(parentURI);
-        brokenLinkFound(uri, parents, message, t);
+        this.print(pad(42,"X [0] ")+uri+"\tBROKEN: "+message);
+        brokenLinks.put(uri + "\t" + message, "");
     }
 
-    public void brokenLinkFound(String uri, List parentURIs, String message, Throwable t) {
-        this.print(pad(42,"X [0] ")+uri+"\tBROKEN: "+message);
-        brokenLinks.put(uri + "\t" + message, parentURIs);
+    public void brokenLinkFound(Target target, Throwable t) {
+        this.print(pad(42,"X [0] ")+target.getSourceURI()+"\tBROKEN: "+t.getMessage());
+        brokenLinks.put(target.getSourceURI() + "\t" + t.getMessage(), target);
 
     }
 
@@ -181,10 +179,13 @@ public class OutputStreamListener implements BeanListener {
                     writer.println("  <link message=\"" + msg + "\">" + uri + "</link>");
                 } else {
                     writer.println("  <link message=\"" + msg + "\" uri=\"" + uri + "\">");
-                    List referrers = (List)brokenLinks.get(linkMsg);
-                    for (Iterator j = referrers.iterator(); j.hasNext();) {
-                        String referrer=(String) j.next();
-                        writer.println("    <referrer uri=\"" + referrer + "\"/>");
+                    Object t = brokenLinks.get(linkMsg);
+                    if (t instanceof Target) {
+                        Target target = (Target)t;
+                        for (Iterator j = target.getReferringURIs().iterator(); j.hasNext();) {
+                            String referrer=(String) j.next();
+                            writer.println("    <referrer uri=\"" + referrer + "\"/>");
+                        }
                     }
                     writer.println("  </link>");
                 }
