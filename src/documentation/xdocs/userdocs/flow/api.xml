@@ -129,6 +129,14 @@ function processPage() {
      Sends an empty response with the provided HTTP status code.
      </p>
     </s3>
+    <s3 title = "createPageLocal"><anchor id="createPageLocal"/>
+      <p>
+      <em>Function</em> <code>[Object] createPageLocal()</code>
+      </p>
+      <p>
+      Creates a <em>Page Local</em> object. The returned object behaves like a normal JavaScript object, but restores the property values it had when <link href="#sendPageAndWait">sendPageAndWait</link> was originally called, each time a page is resubmitted (e.g. after hitting the back button). Such objects can be used to associate state with one particular page sent to the browser.
+      </p>
+    </s3>
     <s3 title="processPipelineTo">
     <p>
     <em>Function</em> <code>processPipelineTo([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
@@ -146,6 +154,28 @@ function processPage() {
     <p>
       Send a client-side redirect to the browser. The <code>uri</code> argument is the URI to which the browser should be redirected.
     </p>
+    </s3>
+    <s3 title = "createWebContinuation"><anchor id="createWebContinuation"/>
+      <p>
+      <em>Function</em> <code>[WebContinuation] createWebContinuation()</code>
+      </p>
+      <p>
+Creates a new "bookmark" <link href="#WebContinuation">WebContinuation</link> object. When invoked it will cause the script to resume right after the call. By calling this function prior to sendPageAndWait() you can be create a "bookmark" which will cause the page to be redisplayed in the browser. Note: the WebContinuation associated with sendPageAndWait() doesn't do this. Rather it resumes execution after the the page is submitted.
+</p>
+
+<p>For example:</p>
+<source>
+
+function processPage() {
+
+  var bkm = cocoon.createWebContinuation();
+  var biz = getBizData();
+  cocoon.sendPageAndWait("uri", 
+                         {bookmark: bkm, biz: biz}, 
+                         function() { releaseData(biz); });
+}
+</source>
+<p></p>
     </s3>
     <s3 title="load">
     <p><em>Function</em> <code>load([String] uri)</code></p>
@@ -713,6 +743,14 @@ function processPage() {
     <s3 title="continuation">
     <p><em>Property</em> <code>[Continuation] continuation</code></p>
     <p>Returns the JavaScript continuation associated with this Web Continuation.</p>
+    </s3>
+    <s3 title="previousBookmark">
+    <p><em>Property</em> <code>[WebContinuation] previousBookmark</code></p>
+    <p>Returns a reference to the first bookmark continuation among the pages preceding the one associated with this object, or null if no such bookmark continuation exists. The returned object is the continuation you would invoke to implement a "Back" button.</p>
+    </s3>
+    <s3 title="isBookmark">
+    <p><em>Function</em> <code>[Boolean] isBookmark()</code></p>
+    <p>Returns <code>true</code> if this continuation was <em>not</em> created by <link href="#sendPageAndWait">sendPageAndWait</link>.</p>
     </s3>
     <s3 title="getParent">
     <p>
