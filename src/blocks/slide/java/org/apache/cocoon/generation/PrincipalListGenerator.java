@@ -75,14 +75,14 @@ import org.xml.sax.helpers.AttributesImpl;
  * principals from a PrincipalProvider.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalListGenerator.java,v 1.1 2003/03/09 00:06:22 pier Exp $
+ * @version CVS $Id: PrincipalListGenerator.java,v 1.2 2003/05/19 10:02:05 stephan Exp $
  */
 public class PrincipalListGenerator extends ComposerGenerator 
         implements Recyclable {
 
     /** Namespace of the generated list. */
     private static final String PL_NS =
-      "http://xml.apache.org/cocoon/PrincipalListGenerator";
+      "http://apache.org/cocoon/principal/1.0";
 
     /** The namespace prefix of the resource description framework. */
     //private static final String PL_PREFIX                   = "pl";

@@ -88,13 +88,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * for retrieving SourceProperties, SourcePermission etc.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.3 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.4 2003/05/19 10:02:06 stephan Exp $
  */
 public class SourceDescriptionGenerator extends ComposerGenerator
   implements CacheableProcessingComponent, Recyclable {
 
     /** Namespace of the source description. */
-    private static final String SOURCE_NS = "http://xml.apache.org/cocoon/source/2.0";
+    private static final String SOURCE_NS = "http://apache.org/cocoon/description/2.0";
 
     /** The namespace prefix of the source description. */
     private static final String SOURCE_PREFIX = "source";
