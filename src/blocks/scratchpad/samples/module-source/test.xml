@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<page>
+  <header>
+    <title>test</title>
+  </header>
+  <body>
+    <header>test1</header>
+    <p>Some text</p>
+  </body>
+</page>

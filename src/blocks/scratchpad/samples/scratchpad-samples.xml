@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.8 2003/12/29 16:24:44 reinhard Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.9 2004/01/08 16:04:57 danielf Exp $ -->
 
 <samples>
 
@@ -64,5 +64,43 @@
         Use again the ZIP source getting a zipped file as OpenOffice files are ZIP archives
     </sample>
   </group>  
+
+  <group name="XModule Source">
+    <sample name="Create"
+            href="xmodule-source/insert?file=test.xml&amp;url=xmodule:session-attr:test">
+        Populate a session attribute "test" with a dom tree created from the file "test.xml".
+    </sample>
+    <sample name="Read"
+            href="xmodule-source/test-view?url=xmodule:session-attr:test&amp;xPathIn=page/body">
+      Read xml from the session attribute "test" at the XPath position "page/body".
+    </sample>
+    <sample name="Insert"
+            href="xmodule-source/insert?file=insert.xml&amp;url=xmodule:session-attr:test&amp;xPathOut=page/body/p">
+        Insert a dom tree created from the file "insert.xml", at the
+        XPath position "page/body/p" in the session attribute "test".
+    </sample>
+    <sample name="Delete"
+            href="xmodule-source/delete?url=xmodule:session-attr:test&amp;xPath=page/body/p">
+        Delete the content at theXPath position "page/body/p" in the
+        session attribute "test".
+    </sample>
+  </group>
+
+  <group name="Module Source">
+    <sample name="Request URI"
+            href="module-source/test1">
+      Use a source that reads from a request URI.
+    </sample>
+    <sample name="Text field"
+            href="module-source/test2">
+      Use a source that reads from a input text field.
+    </sample>
+    <sample name="XML text field"
+            href="module-source/test4">
+      Read XML data from a text field. Also demonstrates the use of
+      input from multi part mime posts and require that uploads are
+      enabled in web.xml.
+    </sample>
+  </group>
 
 </samples>
