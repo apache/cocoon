@@ -10,7 +10,7 @@
    <body bgcolor="#ffffff" link="#0086b2" vlink="#00698c" alink="#743e75">
     <p align="center"><font size="+0" face="arial,helvetica,sanserif" color="#000000">The Apache Software Foundation is proud to present...</font></p>
 
-    <p align="center"><img border="0" src="images/cocoon.png"/></p>
+    <p align="center"><img border="0" src="images/cocoon.gif"/></p>
 
     <p align="center"><font size="+0" face="arial,helvetica,sanserif" color="#000000"><b>version @version@</b></font></p>
 
