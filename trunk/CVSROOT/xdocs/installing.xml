@@ -415,13 +415,13 @@ AddHandler cocoon xml</source>
      </p>
  
   <source><![CDATA[
- cp -R $COCOON_HOME/samples $TOMCAT_HOME/webapps/cocoon/servlets
+ cp -R $COCOON_HOME/samples $TOMCAT_HOME/webapps/cocoon/samples
   ]]></source>
  
       <p>
       Finally, you need to stop Tomcat, stop Apache, then restart the two in order to make
       all of the new settings load. You should be able to access pages like 
-      http://localhost/cocoon/Cocoon.xml and http://localhost/cocoon/servlets/index.xml
+      http://localhost/cocoon/Cocoon.xml and http://localhost/cocoon/samples/index.xml
      </p>
  
  
@@ -489,7 +489,11 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
     <ol>
      <li>Add all the required jar files 
       <jump anchor="jars">(see top of page)</jump>
-      to your CLASSPATH (but see the CLASSPATH section below!).</li>
+      to your CLASSPATH (but see the CLASSPATH section below!).
+      You can do this through <code>wlconfig</code> in the <code>weblogic\bin</code> directory,
+      or on Windows through <code>regedit32</code> (Software -> BEA Systems -> 
+      Weblogic -> 5.10 -> classpath), or the <code>startweblogic.cmd</code> file.
+     </li>
      <li>Create a new subdirectory tree of your WLS run time directory
       "cocoonwar/WEB-INF" and copy the default web.xml file (from the
       src/WEB-INF directory of the distribution) there.</li>
@@ -497,7 +501,7 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
       distribution to cocoonwar/WEB-INF and update the web.xml file to 
       refer to it. You should use a relative path:
       <code>/WEB-INF/cocoon.properties</code></li>
-     <li>Copy the samples directory from the distribution to cocoonwar</li>
+     <li>Copy the samples directory from the distribution to <code>cocoonwar</code></li>
      <li>Map the web application into the WLS URI name space by adding the
       following line to your weblogic.properties file:
       <code>weblogic.httpd.webApp.cocoon=cocoonwar</code>
