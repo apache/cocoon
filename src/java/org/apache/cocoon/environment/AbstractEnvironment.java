@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.7 2003/04/26 14:06:50 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.8 2003/04/28 12:37:37 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -568,10 +568,12 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * This gets the source resolver and the xmlizer component
      */
     protected void initComponents() {
+        this.initializedComponents = true;
         try {
             this.manager = CocoonComponentManager.getSitemapComponentManager();
             this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
             this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
+
         } catch (ComponentException ce) {
             // this should never happen!
             throw new CascadingRuntimeException("Unable to lookup component.", ce);
