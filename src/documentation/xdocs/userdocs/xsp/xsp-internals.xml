@@ -1601,7 +1601,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
 
    <p>
      A default implementation is provided for this interface:
-       <code>org.apche.arch.named.NamedComponentManagerImpl</code>.
+       <code>org.apache.arch.named.NamedComponentManagerImpl</code>.
    </p>
 
    <p>
