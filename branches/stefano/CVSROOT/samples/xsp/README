@@ -1,0 +1,10 @@
+This directory shows an example of the proposed XSP specification (see
+the documentation for more information).
+
+This is just to show its power and _WON'T_ work on currently distributed Cocoon
+no matter how hard you try, unless you implement the XSP engine alone.
+
+But since we are already doing that, we'll be happy if you want to give us
+a hand.
+
+                                           The Cocoon Development Team

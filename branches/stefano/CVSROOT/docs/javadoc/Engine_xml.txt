@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE javadoc SYSTEM "http://testing.oseda.missouri.edu/cocoon/javadoc.dtd">
+<javadoc> 
+  <package name="org"> 
+	 <package name="apache"> 
+		<package name="cocoon"> 
+		  <class name="Engine" access="public"> 
+                   <doc>The Cocoon publishing engine. This class implements the engine that does all the
+		       document processing. 
+                      <authortag> <A href="mailto:stefano@apache.org">Stefano Mazzocchi</A></authortag> 
+                      <versiontag>$Revision: 1.1.1.1 $ $Date: 1999-11-09 01:51:33 $</versiontag></doc> 
+			 <extends><classref name="Object"/> 
+			 </extends> 
+			 <implements><classref name="Defaults"/> 
+			 </implements> 
+			 <field name="configurations" access="package"><classref name="Configurations"/> 
+			 </field> 
+			 <field name="producers" access="package"><classref name="ProducerFactory"/> 
+			 </field> 
+			 <field name="processors" access="package"><classref name="ProcessorFactory"/> 
+			 </field> 
+			 <field name="formatters" access="package"><classref name="FormatterFactory"/> 
+			 </field> 
+			 <field name="manager" access="package"><classref name="Manager"/> 
+			 </field> 
+			 <field name="browsers" access="package"><classref name="Browsers"/> 
+			 </field> 
+			 <field name="parser" access="package"><classref name="Parser"/> 
+			 </field> 
+			 <field name="cache" access="package"><classref name="Cache"/> 
+			 </field> 
+			 <field name="store" access="package"><classref name="Store"/> 
+			 </field> 
+			 <constructor name="Engine" access="public"> 
+                        <doc>This method initializes the engine.</doc>
+				<parameter name="configurationFile"><classref name="String"/> 
+				</parameter> 
+				<throws><classref name="Exception"/> 
+				</throws>
+			 </constructor> 
+			 <method name="handle" access="public">
+                        <doc>This method is called to start the processing when calling the engine from the
+				  Cocoon servlet.</doc> 
+				<returns><primitive type="void"/> 
+				</returns> 
+				<parameter name="request"><classref name="HttpServletRequest"/> 
+				</parameter> 
+				<parameter name="response"><classref name="HttpServletResponse"/> 
+				</parameter> 
+				<throws><classref name="Exception"/> 
+				</throws> 
+			 </method> 
+			 <method name="getFlag" access="private"> 
+				<doc>Returns the value of the request flag</doc>  
+				<returns><primitive type="boolean"/> 
+				</returns> 
+				<parameter name="request"><classref name="HttpServletRequest"/> 
+				</parameter> 
+				<parameter name="name"><classref name="String"/> 
+				</parameter> 
+				<parameter name="normal"><primitive type="boolean"/> 
+				</parameter>
+			 </method> 
+			 <method name="getStatus" access="public">  
+				<doc>Returns an hashtable of parameters used to report the internal status.</doc> 
+				<returns><classref name="Hashtable"/> 
+				</returns>
+			 </method> 
+		  </class> 
+		</package> 
+	 </package> 
+  </package>
+</javadoc>
