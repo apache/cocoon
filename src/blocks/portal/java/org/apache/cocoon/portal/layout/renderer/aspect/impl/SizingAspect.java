@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingAspect.java,v 1.7 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: SizingAspect.java,v 1.8 2004/03/10 12:28:29 cziegeler Exp $
  */
 public class SizingAspect extends AbstractAspect {
 
@@ -72,7 +72,7 @@ public class SizingAspect extends AbstractAspect {
                 XMLUtils.createElement(handler, "maximize-uri", service.getComponentManager().getLinkService().getLinkURI(event));
             }
             
-            if (size == SizingStatus.STATUS_MINIMIZED) {
+            if (size.equals(SizingStatus.STATUS_MINIMIZED)) {
                 showContent = false;
             }
         } 
