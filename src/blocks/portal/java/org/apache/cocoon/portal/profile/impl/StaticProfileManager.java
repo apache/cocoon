@@ -69,8 +69,8 @@ import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.profile.ProfileLS;
-import org.apache.commons.collections.SequencedHashMap;
-import org.apache.commons.collections.StaticBucketMap;
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.8 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.9 2004/01/27 14:58:05 cziegeler Exp $
  */
 public class StaticProfileManager extends AbstractProfileManager implements Configurable
 {
@@ -133,7 +133,7 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
             parameters.put("profiletype", "layout");
             parameters.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
 
-            Map map = new SequencedHashMap();
+            Map map = new LinkedMap();
             map.put("base", this.profilesPath);
             map.put("portalname", service.getPortalName());
             map.put("profile", "layout");
@@ -224,7 +224,7 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
             parameters.put("profiletype", "copletbasedata");
             parameters.put("objectmap", null);
 
-            Map map = new SequencedHashMap();
+            Map map = new LinkedMap();
             map.put("base", this.profilesPath);
             map.put("portalname", service.getPortalName());
             map.put("profile", "coplet");

@@ -73,7 +73,7 @@ import org.apache.cocoon.portal.util.ProfileException;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.15 2004/01/08 13:57:59 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.16 2004/01/27 14:58:05 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -448,7 +448,7 @@ public class AuthenticationProfileManager
             uri = config.getChild(profileType + "-user-" + postFix).getAttribute("uri");
         }
 
-        Map key = new SequencedHashMap();
+        Map key = new LinkedMap();
         key.put("baseuri", uri);
         key.put("separator", "?");
         key.put("portal", service.getPortalName());
