@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  * This class should help you to manage paging of hits.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: LuceneCocoonPager.java,v 1.4 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LuceneCocoonPager implements ListIterator
 {
@@ -176,7 +176,7 @@ public class LuceneCocoonPager implements ListIterator
      * @return    Description of the Returned Value
      */
     public boolean hasNext() {
-        return hitsIndex < hits.length();
+        return hitsIndex + countOfHitsPerPage < hits.length();
     }
 
     /**
@@ -197,19 +197,16 @@ public class LuceneCocoonPager implements ListIterator
     public Object next() {
         ArrayList hitsPerPageList = new ArrayList();
         int endIndex = Math.min(hits.length(), hitsIndex + countOfHitsPerPage);
-        if (hitsIndex < endIndex) {
-            while (hitsIndex < endIndex) {
-                try {
-                    HitWrapper hit = new HitWrapper(hits.score(hitsIndex),
-                                                    hits.doc(hitsIndex));
-                    hitsPerPageList.add(hit);
-                } catch (IOException ioe) {
-                    throw new NoSuchElementException("no more hits: " + ioe.getMessage());
-                }
-                hitsIndex++;
+        //do not increment the actual hitsindex
+        int hits_copy = hitsIndex;
+        while (hits_copy < endIndex) {
+            try {
+                HitWrapper hit = new HitWrapper(hits.score(hits_copy), hits.doc(hits_copy));
+                hitsPerPageList.add(hit);
+            } catch (IOException ioe) {
+                throw new NoSuchElementException("no more hits: " + ioe.getMessage());
             }
-        } else {
-            throw new NoSuchElementException();
+            hits_copy++;
         }
         return hitsPerPageList;
     }
@@ -221,7 +218,7 @@ public class LuceneCocoonPager implements ListIterator
      * @return    Description of the Returned Value
      */
     public int nextIndex() {
-        return Math.min(hitsIndex, hits.length());
+        return Math.min(hitsIndex + countOfHitsPerPage, hits.length() - 1);
     }
 
     /**
@@ -232,7 +229,7 @@ public class LuceneCocoonPager implements ListIterator
     public Object previous() {
         ArrayList hitsPerPageList = new ArrayList();
 
-        int startIndex = Math.max(0, hitsIndex - 2 * countOfHitsPerPage);
+        int startIndex = Math.max(0, hitsIndex - countOfHitsPerPage);
         int endIndex = Math.min(hits.length() - 1, hitsIndex - countOfHitsPerPage);
 
         if (startIndex < endIndex) {
@@ -260,7 +257,7 @@ public class LuceneCocoonPager implements ListIterator
      * @return    Description of the Returned Value
      */
     public int previousIndex() {
-        return Math.max(0, hitsIndex - 2 * countOfHitsPerPage);
+        return Math.max(0, hitsIndex - countOfHitsPerPage);
     }
 
     /**
@@ -275,7 +272,7 @@ public class LuceneCocoonPager implements ListIterator
      * A helper class encapsulating found document, and its score
      *
      * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    CVS $Id: LuceneCocoonPager.java,v 1.4 2004/03/05 13:01:59 bdelacretaz Exp $
+     * @version    CVS $Id$
      */
     public static class HitWrapper {
         float score;

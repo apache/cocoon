@@ -368,6 +368,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="fix" fixes-bug="23118" due-to="Jorg Heymans" due-to-email="jh@domek.be">
+     Lucene: SearchGenerator incorrectly counts previous-index. Reported by: Tomasz Nowak (tnowak-p@netventure.pl)
+   </action>
    <action dev="AG" type="update">
      Updated iText to 1.1.
    </action>
