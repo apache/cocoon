@@ -32,6 +32,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.components.language.LanguageException;
+import org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage;
 import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
@@ -45,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-02-20 20:34:15 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-02-20 20:46:34 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -205,6 +206,15 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         Class program = programmingLanguage.load(normalizedName, this.workDir, markupLanguage.getEncoding());
         // Store generated program in cache
         this.cache.addGenerator(normalizedName, program);
+
+        if (markupLanguage.getClass().getName().equals(SitemapMarkupLanguage.class.getName())) {
+            try {
+                this.cache.select("sitemap");
+            } catch (Exception e) {
+                // If the root sitemap has not been compiled, add an alias here.
+                this.cache.addGenerator("sitemap", program);
+            }
+        }
 
         return program;
     }
