@@ -204,7 +204,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
-<action dev="AG" type="fix" fixes-bug="31407" due-to="Mark H. Butler" due-to-email=" mark-h.butler@hp.com">
+   <action dev="AG" type="fix" fixes-bug="30372" due-to="Johnson Hsu" due-to-email="johnson@soho.club.tw">
+      The daylight time cause error when timezone is CST. Updated icu4j to 3.0.
+   </action>
+   <action dev="AG" type="fix" fixes-bug="31407" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
      Upgrading DELI block from version 0.9.8 to x020904.
    </action>
    <action dev="AG" type="fix" fixes-bug="31134" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
