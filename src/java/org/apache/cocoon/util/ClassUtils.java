@@ -42,7 +42,7 @@ public class ClassUtils {
 
     /**
      * Load a class given its name.
-     * BL: We wan't to use a known ClassLoader--hopefully the heirarchy
+     * BL: We wan't to use a known ClassLoader--hopefully the hierarchy
      *     is set correctly.
      *
      * @param className A class name
