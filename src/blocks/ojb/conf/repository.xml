@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+
+  $Id$
 -->
 <!DOCTYPE descriptor-repository PUBLIC 
-	"-//Apache Software Foundation//DTD OJB Repository//EN" 
-	"repository.dtd"
+          "-//Apache Software Foundation//DTD OJB Repository//EN" 
+          "repository.dtd"
 [
-	<!ENTITY database SYSTEM "repository_database.xml">
-	<!ENTITY internal SYSTEM "repository_internal.xml">
-	<!ENTITY user SYSTEM "repository_user.xml">
+  <!ENTITY database SYSTEM "repository_database.xml">
+  <!ENTITY internal SYSTEM "repository_internal.xml">
+  <!ENTITY user SYSTEM "repository_user.xml">
 ]>
 
 <descriptor-repository version="1.0" isolation-level="read-uncommitted">
@@ -32,5 +34,4 @@
 
     <!-- include user defined mappings here -->
     &user;
-
 </descriptor-repository>
