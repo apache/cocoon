@@ -75,6 +75,7 @@ import org.apache.cocoon.environment.mock.MockRedirector;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.WhitespaceFilter;
@@ -93,7 +94,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.2 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.3 2004/02/02 11:25:57 stephan Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -149,6 +150,50 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         redirector.reset();
     }
 
+    /**
+     * Match with a pattern.
+     *
+     * @param type Hint of the matcher. 
+     * @param pattern Pattern for the matcher.
+     * @param parameters Matcher parameters.
+     */
+    public final Map match(String type, String pattern, Parameters parameters) {
+
+        ComponentSelector selector = null;
+        Matcher matcher = null;
+        SourceResolver resolver = null;
+
+        Map result = null;
+        try {
+            selector = (ComponentSelector) this.manager.lookup(Matcher.ROLE +
+                "Selector");
+            assertNotNull("Test lookup of matcher selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if matcher name is not null", type);
+            matcher = (Matcher) selector.select(type);
+            assertNotNull("Test lookup of matcher", matcher);
+
+            result = matcher.match(pattern, objectmodel, parameters);
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve generator", ce);
+            fail("Could not retrieve generator: " + ce.toString());
+        } catch (Exception e) {
+            getLogger().error("Could not execute test", e);
+            fail("Could not execute test: " + e);
+        } finally {
+            if (matcher != null) {
+                selector.release(matcher);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return result;
+    }
+    
     /**
      * Perform the action component.
      *
