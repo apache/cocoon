@@ -44,7 +44,7 @@
        <th>Close</th>
        <th>Volume</th>
       </tr>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="st:rows"/>
      </table>
     </section>
    </body>
@@ -60,9 +60,6 @@
    <td><xsl:number/></td>
    <xsl:apply-templates select="st:Value"/>
   </tr>
- </xsl:template>
-
- <xsl:template match="st:Comma | st:SoftBreak">
  </xsl:template>
 
  <xsl:template match="st:Value">
