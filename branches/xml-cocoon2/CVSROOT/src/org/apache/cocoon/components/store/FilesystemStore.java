@@ -89,7 +89,7 @@ public class FilesystemStore implements Store {
       if (value == null) { /* Directory */
         if (file.exists()) {
           if (!file.delete()) { /* FAILURE */
-           System.err.println("File cannot be deleted: " + file.toString());
+           // System.err.println("File cannot be deleted: " + file.toString());
            return;
           }
         }
@@ -101,7 +101,7 @@ public class FilesystemStore implements Store {
         IOUtils.serializeObject(file, value);
       }
     } catch (Exception e) { /* FAILURE */
-      e.printStackTrace();
+      throw new RuntimeException(e.getMessage());
     }
   }
 
