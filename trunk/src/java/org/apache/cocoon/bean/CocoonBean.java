@@ -94,7 +94,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.34 2003/10/07 09:59:17 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.35 2003/10/11 01:32:53 joerg Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -102,7 +102,6 @@ public class CocoonBean extends CocoonWrapper {
     private boolean followLinks = true;
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
-    private boolean checksumCompare = false;
     private String defaultFilename = Constants.INDEX_URI;
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";

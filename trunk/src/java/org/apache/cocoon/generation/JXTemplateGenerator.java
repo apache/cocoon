@@ -860,18 +860,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return res;
     }
 
-    // Compile an numeric expression (returns either a Compiled Expression
-    // or an Number literal)
-    private static Expression compileNumber(String val, String msg, Locator location) 
-        throws SAXException {
-        Expression res = compileExpr(val, msg, location);
-        if (res == null) return null;
-        if (res.compiledExpression == null) {
-            res.compiledExpression = Integer.valueOf(res.raw);
-        }
-        return res;
-    }
-
     private static Expression compileBoolean(String val, String msg, Locator location) 
         throws SAXException {
         Expression res = compileExpr(val, msg, location);
