@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.244 2004/02/16 04:42:18 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.245 2004/02/22 18:17:16 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update" fixes-bug="25093" due-to-email="Alfred.Nathaniel@swx.com " due-to="Alfred.Nathaniel">
+     Patch for allowing empty values in configuration of defaults input module.
+   </action>
+   <action dev="CZ" type="update" fixes-bug="26896" due-to-email="m_rolappe@web.de " due-to="Marco Rolappe">
+     Patch for disposing components in the properties in xml file module.
+   </action>
    <action dev="AG" type="update">
      Updated commons-httpclient to 2.0-final
    </action>
