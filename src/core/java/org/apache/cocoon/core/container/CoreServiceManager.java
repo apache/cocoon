@@ -43,6 +43,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.AliasComponentHandler;
 import org.apache.cocoon.core.container.handler.ComponentHandler;

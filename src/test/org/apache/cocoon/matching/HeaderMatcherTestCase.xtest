@@ -18,7 +18,7 @@
  <roles>
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
 
   <role name="org.apache.excalibur.source.SourceResolver"
         shorthand="source-resolver"
@@ -26,7 +26,7 @@
 
   <role name="org.apache.cocoon.matching.MatcherSelector"
         shorthand="matchers"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
  </roles>
 
  <components>

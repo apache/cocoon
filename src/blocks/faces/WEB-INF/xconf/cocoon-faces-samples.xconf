@@ -20,7 +20,7 @@
     <!--
       - CarStore Demo taglib: Custom components
       -->
-    <taglib name="http://java.sun.com/jsf/demo/components" logger="sitemap.taglib.jsf.demo" class="org.apache.cocoon.core.container.CocoonServiceSelector">
+    <taglib name="http://java.sun.com/jsf/demo/components" logger="sitemap.taglib.jsf.demo" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
       <tag name="area" class="org.apache.cocoon.faces.samples.components.taglib.AreaTag" logger="sitemap.taglib.jsf.demo"/>
       <tag name="map" class="org.apache.cocoon.faces.samples.components.taglib.MapTag" logger="sitemap.taglib.jsf.demo"/>
     </taglib>
@@ -28,7 +28,7 @@
     <!--
       - CarStore Demo taglib: Custom validator
       -->
-    <taglib name="urn:carstoretaglibrary_1.1" logger="sitemap.taglib.jsf.carstore" class="org.apache.cocoon.core.container.CocoonServiceSelector">
+    <taglib name="urn:carstoretaglibrary_1.1" logger="sitemap.taglib.jsf.carstore" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
       <tag name="format_validator" class="org.apache.cocoon.faces.samples.carstore.FormatValidatorTag" logger="sitemap.taglib.jsf.carstore"/>
     </taglib>
 
