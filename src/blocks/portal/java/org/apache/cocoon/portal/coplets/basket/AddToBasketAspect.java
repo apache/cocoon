@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 2004 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -42,87 +42,55 @@
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
- Software Foundation, please see <http://www.apache.org/>.
-
 */
-package org.apache.cocoon.portal.profile;
+package org.apache.cocoon.portal.coplets.basket;
 
-import java.util.List;
-
-import org.apache.avalon.framework.component.Component;
-import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect;
+import org.apache.cocoon.xml.XMLUtils;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * The profile manager.
- * Via this component you can get the profile (or parts of it) of the
- * current 'user'.
+ * This renderer adds a link to add this coplet to the basket.
+ * It checks the coplet data for the attributes
+ * basket-content and basket-link (boolean values) to stream
+ * out the elements.
  * 
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.9 2004/02/23 14:52:50 cziegeler Exp $
+ * @version CVS $Id: AddToBasketAspect.java,v 1.1 2004/02/23 14:52:49 cziegeler Exp $
  */
-public interface ProfileManager extends Component {
-    
-    String ROLE = ProfileManager.class.getName();
-    
-    /**
-     * Get the portal layout defined by the layout key. This
-     * usually addresses the layout profile.
-     * With the optional subKey it's possible to retrieve
-     * a specific layout object in the profile defined by
-     * the layout key.
-     * @param layoutKey A key describing the layout or null for the default
-     * @param layoutID    The id of a layout object or null for the root object
-     * @return The layout
-     */
-	Layout getPortalLayout(String layoutKey, String layoutID);
-    
-    /**
-     * FIXME this is for the full-screen function
-     */
-    void setEntryLayout(Layout object);
-    Layout getEntryLayout();
-    
-    /**
-     * Change the default layout key for most functions
-     */
-    void setDefaultLayoutKey(String layoutKey);
-    
-    /**
-     * Get the default layout key
-     */
-    String getDefaultLayoutKey();
-    
-    CopletInstanceData getCopletInstanceData(String copletID);
-    
-    List getCopletInstanceData(CopletData data);
-    
-    /**
-     * Return the coplet data object
-     */
-    CopletData getCopletData(String copletDataId);
-    
-    void login();
-    
-    void logout();
-    
-    void register(CopletInstanceData coplet);
-    
-    void unregister(CopletInstanceData coplet);
+public final class AddToBasketAspect extends AbstractAspect {
 
-    void register(Layout layout);
-    
-    void unregister(Layout layout);
-
-    /**
-     * Save the profile
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    void saveUserProfiles();
-    
+    public void toSAX(RendererAspectContext context,
+                        Layout layout,
+                        PortalService service,
+                        ContentHandler contenthandler)
+    throws SAXException {
+        CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+        Boolean b = (Boolean)cid.getCopletData().getAttribute("basket-content");
+        if ( b != null && b.equals(Boolean.TRUE) ) {
+            Object item = new ContentItem(cid, true);
+            Event event = new AddItemEvent(item);
+            XMLUtils.createElement(contenthandler, "basket-add-content", service.getComponentManager().getLinkService().getLinkURI(event));
+        }
+        b = (Boolean)cid.getCopletData().getAttribute("basket-link");
+        if ( b != null && b.equals(Boolean.TRUE) ) {
+            Object item = new ContentItem(cid, false);
+            Event event = new AddItemEvent(item);
+            XMLUtils.createElement(contenthandler, "basket-add-link", service.getComponentManager().getLinkService().getLinkURI(event));            
+        }
+        
+        context.invokeNext( layout, service, contenthandler );
+    }
+
 }

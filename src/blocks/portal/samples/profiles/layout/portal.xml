@@ -91,21 +91,21 @@
     </named-item>
     <named-item name="TabDemo1">
         <composite-layout name="tab">
-		    <named-item name="One">
+            <named-item name="One">
                 <coplet-layout name="coplet">
                     <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
                 </coplet-layout>
-		    </named-item>
-		    <named-item name="Two">
+            </named-item>
+            <named-item name="Two">
                 <coplet-layout name="coplet">
                     <coplet-instance-data>ML Weblog-1</coplet-instance-data>
                 </coplet-layout>
-		    </named-item>
-		    <named-item name="Three">
+            </named-item>
+            <named-item name="Three">
 	            <coplet-layout name="coplet">
 	                <coplet-instance-data>Weblog-1</coplet-instance-data>
 	            </coplet-layout>
-		    </named-item>
+            </named-item>
         </composite-layout>
     </named-item>
     <named-item name="TabDemo2">
@@ -162,6 +162,65 @@
                     </item>
                 </composite-layout>
             </item>
+        </composite-layout>
+    </named-item>
+    <named-item name="Basket">
+        <!-- This is the basket demo. Usually you would only have the user
+             tab for users and the admin tab for the admin and not both at
+             the same time (But this is a demo...) -->
+        <composite-layout name="tab">
+            <named-item name="User">
+
+                <composite-layout name="row">
+                    <item>
+                        <composite-layout name="column">  
+                            <item>
+                                <coplet-layout name="coplet">
+                                    <coplet-instance-data>BasketSample</coplet-instance-data>
+                                </coplet-layout>
+                            </item>
+                            <item>
+                                <coplet-layout name="coplet" >
+                                    <coplet-instance-data>BasketUploadSample</coplet-instance-data>
+                                </coplet-layout>
+                            </item>
+                        </composite-layout>
+                    </item>
+                    <item>
+                        <composite-layout name="column">  
+                            <item>
+                                <coplet-layout name="coplet">
+                                    <coplet-instance-data>Basket</coplet-instance-data>
+                                </coplet-layout>
+                            </item>
+                            <item>
+                                <coplet-layout name="coplet" id="basket-content">
+                                    <coplet-instance-data>BasketContent</coplet-instance-data>
+                                </coplet-layout>
+                            </item>
+                        </composite-layout>
+                    </item>
+                </composite-layout>
+            </named-item>
+            <named-item name="Admin">
+                <composite-layout name="column">  
+                    <item>
+                        <coplet-layout name="coplet" >
+                            <coplet-instance-data>BasketAdmin</coplet-instance-data>
+                        </coplet-layout>
+                    </item> 
+                    <item>
+                        <coplet-layout name="coplet">
+                            <coplet-instance-data>Basket.admin</coplet-instance-data>
+                        </coplet-layout>
+                    </item>
+                    <item>
+                        <coplet-layout name="coplet" id="basket-content-admin">
+                            <coplet-instance-data>BasketContent</coplet-instance-data>
+                        </coplet-layout>
+                    </item>
+                </composite-layout>
+            </named-item>
         </composite-layout>
     </named-item>
     <named-item name="Apps">

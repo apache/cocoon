@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 2004 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -42,87 +42,60 @@
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
- Software Foundation, please see <http://www.apache.org/>.
-
 */
-package org.apache.cocoon.portal.profile;
+package org.apache.cocoon.portal.coplets.basket;
 
-import java.util.List;
-
-import org.apache.avalon.framework.component.Component;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 
+
 /**
- * The profile manager.
- * Via this component you can get the profile (or parts of it) of the
- * current 'user'.
+ * Show one item of the basket
+ *
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
- * @version CVS $Id: ProfileManager.java,v 1.9 2004/02/23 14:52:50 cziegeler Exp $
+ * @version CVS $Id: ShowItemEvent.java,v 1.1 2004/02/23 14:52:49 cziegeler Exp $
  */
-public interface ProfileManager extends Component {
+public class ShowItemEvent extends BasketEvent {
     
-    String ROLE = ProfileManager.class.getName();
+    /** The item to show */
+    protected Object item;
     
-    /**
-     * Get the portal layout defined by the layout key. This
-     * usually addresses the layout profile.
-     * With the optional subKey it's possible to retrieve
-     * a specific layout object in the profile defined by
-     * the layout key.
-     * @param layoutKey A key describing the layout or null for the default
-     * @param layoutID    The id of a layout object or null for the root object
-     * @return The layout
-     */
-	Layout getPortalLayout(String layoutKey, String layoutID);
+    /** The layout object to use */
+    protected Layout layout;
+    
+    /** The id of the coplet data used to display the content */
+    protected String copletData;
     
     /**
-     * FIXME this is for the full-screen function
+     * Constructor
+     * @param item       The item to show
+     * @param layout     The layout object where the item is displayed
+     * @param copletData The coplet data id of a content coplet
      */
-    void setEntryLayout(Layout object);
-    Layout getEntryLayout();
+    public ShowItemEvent(Object item, Layout layout, String copletData) {        
+        this.item = item;
+        this.layout = layout;
+        this.copletData = copletData;
+    }
     
     /**
-     * Change the default layout key for most functions
+     * Return the basket id
      */
-    void setDefaultLayoutKey(String layoutKey);
+    public Object getItem() {
+        return this.item;
+    }
     
     /**
-     * Get the default layout key
+     * Return the layout
      */
-    String getDefaultLayoutKey();
-    
-    CopletInstanceData getCopletInstanceData(String copletID);
-    
-    List getCopletInstanceData(CopletData data);
+    public Layout getLayout() {
+        return this.layout;
+    }
     
     /**
-     * Return the coplet data object
+     * Return the coplet data id
      */
-    CopletData getCopletData(String copletDataId);
-    
-    void login();
-    
-    void logout();
-    
-    void register(CopletInstanceData coplet);
-    
-    void unregister(CopletInstanceData coplet);
-
-    void register(Layout layout);
-    
-    void unregister(Layout layout);
-
-    /**
-     * Save the profile
-     */
-    void saveUserProfiles();
-    
+    public String getCopletDataId() {
+        return this.copletData;
+    }
 }

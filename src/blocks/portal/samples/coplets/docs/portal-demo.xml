@@ -10,7 +10,7 @@
 		<p>This is a demo of the Cocoon Portal Engine.</p>
         <p>The Cocoon portal page you currently view displays some so called
           <em>Coplets</em> (= Cocoon Portlets). Each coplet displays
-          a select content.</p> 
+          a different content.</p> 
         <p>The different tabs display/demonstrate different aspects of the portal.</p>
         <ul>
           <li>The TabDemo1 shows a tab inside a tab, which is useful for structuring content.</li>

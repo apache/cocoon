@@ -75,6 +75,24 @@
       <coplet-data>Portlet2</coplet-data>
    </coplet-instance-data>
 
+   <coplet-instance-data id="Basket" name="standard">
+      <coplet-data>Basket</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Basket.admin" name="standard">
+      <coplet-data>Basket.admin</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="BasketContent" name="standard">
+      <coplet-data>BasketContent</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="BasketAdmin" name="standard">
+      <coplet-data>BasketAdmin</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="BasketSample" name="standard">
+      <coplet-data>BasketSample</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="BasketUploadSample" name="standard">
+      <coplet-data>BasketUploadSample</coplet-data>
+   </coplet-instance-data>
 
    <coplet-instance-data id="TestPortlet-1" name="standard">
       <coplet-data>TestPortlet1</coplet-data>

@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.5 2004/02/02 08:39:09 cziegeler Exp $
+ * @version CVS $Id: CopletSource.java,v 1.6 2004/02/23 14:52:49 cziegeler Exp $
  */
 public class CopletSource 
     implements Source, XMLizable, Serviceable {
@@ -118,7 +118,7 @@ public class CopletSource
         Serializer serializer = null;
         try {
             serializerSelector = (ComponentSelector) sitemapManager.lookup(Serializer.ROLE+"Selector");
-            serializer = (Serializer) serializerSelector.select("html");
+            serializer = (Serializer) serializerSelector.select("xml");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             serializer.setOutputStream(os);
             this.toSAX(serializer);
