@@ -59,8 +59,8 @@ QueryHistory.prototype.list = function() {
 }
 
 // get a Query from the QueryHistory, using it's ID, always returns a copy
-QueryHistory.prototype.get = function(id) {
-	var clone, item;
+QueryHistory.prototype.get = function(id, clone) {
+	var item;
 	try {
 		item = this._history.get(parseInt(id));
 	} catch (e1) {
@@ -68,12 +68,15 @@ QueryHistory.prototype.get = function(id) {
 		throw("error.no.history");
 	}
 	try {
-		clone = item.clone();
+		if (clone) {
+			return item.clone();
+		} else {
+			return item;
+		}
 	} catch (e2) {
 		cocoon.log.error(e2);
 		throw("items stored in history need to be Cloneable");
 	}
-	return clone;
 }
 
 // move a Query to the top of the QueryHistory list

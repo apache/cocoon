@@ -40,13 +40,14 @@
 		<p>You can view, reuse, and re-edit your previous queries:</p>
 		<ul>
 			<li><a href="history.html">History</a>: your search history.</li>
+			<li><a href="favourites.html">Favourites</a>: your saved searches.</li>
 		</ul>
 		
 		<h3>What it does.</h3>
 		<p>Allows you to assemble complex Lucene Queries without having to use the Lucene Query Language. Keeps a list of the queries you have performed in it's history (for as long as your Session lasts). Allows you to re-use and edit them.</p>
 		
 		<h3>How does it work?</h3>
-		<p>Through a combination of FlowScript (controller), CForms and JXTemplate (view), Beans (model), i18n and the CocoonLuceneSearcher component.</p>
+		<p>Through a combination of FlowScript (controller), CForms and JXTemplate (view), Beans and OJB (model), i18n and the CocoonLuceneSearcher component.</p>
 		<h4>FlowScript</h4>
 		The FlowScript controls the flow of the application, it instansiates Beans, manages the History, chooses which Forms and Screens to display, controls the CocoonLuceneSearcher.
 		<h4>CForms</h4>
@@ -60,7 +61,7 @@
 			The history is in the form of a <code>List</code> of Query Beans.
 		</p>
 		<h4>Beans</h4>
-		<p>The Beans represent an abstract (and potentially persistable) representation of your Query.</p>
+		<p>The Beans represent an abstract (and persistable) representation of your Query.</p>
 		<h4>i18n</h4>
 		<p>i18n is used to hold all of the display strings used by the Application. Form labels and hints, Query descriptions, Screen labels and hints, Error messages etc.</p>
 		<h4>CocoonLuceneSearcher</h4>
@@ -81,7 +82,7 @@
 			</p><p>
 				Once your CForms selection-lists are setup, you will want to edit the existing i18n message keys in <a href="i18n/messages_en.xml?cocoon-view=pretty-content">i18n/messages_en.xml</a> and/or provide new message files in your own language.
 			</p><p>
-				The last thing you may choose to do, is to supply some CSS for the screens. The <a href="screens/history.xml?cocoon-view=pretty-content">history</a> and <a href="screens/results.xml?cocoon-view=pretty-content">results</a> screens supply what is hopefully a rich enough
+				The last thing you may choose to do, is to supply some CSS for the screens. The <a href="screens/history.xml?cocoon-view=pretty-content">history</a>, <a href="screens/favourites.xml?cocoon-view=pretty-content">favourites</a> and <a href="screens/results.xml?cocoon-view=pretty-content">results</a> screens supply what is hopefully a rich enough
 collection of CSS Classes, have a look at the HTML output to see what there is.</p>
 
 			<h4>New Forms</h4>
@@ -97,7 +98,7 @@ collection of CSS Classes, have a look at the HTML output to see what there is.<
 				The <code>bool</code> property of the QueryBean specifies how the multiple criteria are combined. The <code>field</code> property of the CriterionBean specifies which Index Field to search, the <code>match</code> property specifies how to match that field and the <code>value</code> property, is the string from which Terms are extracted. All the rest is candy.
 			</p>
 			<h4>Persistance</h4>
-			<p>Both the Query and Criterion Beans were designed to be Persistable using one of the Object-Relational mapping tools like Hibernate, JDO, ORO etc. (This is why they have the unused <code>id</code> property).</p>
+			<p>Both the Query and Criterion Beans were designed to be Persistable using one of the Object-Relational mapping tools like Hibernate, OJB etc. This sample currently uses the HSQLDB instance built in to Cocoon.</p>
 	</content>
 </page>
 

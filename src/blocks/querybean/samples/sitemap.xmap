@@ -154,6 +154,10 @@
     		<map:redirect-to uri="cocoon:/screen/index"/>
       </map:match>
 
+    	<map:match pattern="images/**">
+    		<map:read src="resources/images/{1}"/>
+      </map:match>
+
 
 			<!-- create the index -->
 			<map:match pattern="create.html">
@@ -183,37 +187,43 @@
 			<!-- clear history -->
 			<map:match pattern="clear-history.html">
 				<map:call function="clearHistory">
-					<map:parameter name="screen" value="screen/clear-history"/>
+					<map:parameter name="screen" value="screen/history"/>
 					<map:parameter name="history" value="{global:history}"/>
 				</map:call>
 			</map:match>
 
-			<!-- list favourites
+			<!-- list favourites -->
 			<map:match pattern="favourites.html">
 				<map:call function="showFavourites">
 					<map:parameter name="screen" value="screen/favourites"/>
-					<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>
+					<map:parameter name="user-id" value="anon"/>
+					<!-- NB. this value is for testing .... it is more likely you would use a value like the commented out one below -->
+					<!--<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>-->
 				</map:call>
-			</map:match> -->
+			</map:match>
 
-			<!-- add a history item to the favourites, using the history ID
+			<!-- add a history item to the favourites, using the history ID -->
 			<map:match pattern="add-favourite.html">
 				<map:call function="addFavourite">
 					<map:parameter name="screen" value="screen/favourites"/>
-					<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>
+					<map:parameter name="user-id" value="anon"/>
+					<!-- NB. this value is for testing .... it is more likely you would use a value like the commented out one below -->
+					<!--<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>-->
 					<map:parameter name="hid" value="{request-param:hid}"/>
 					<map:parameter name="history" value="{global:history}"/>
 				</map:call>
-			</map:match> -->
+			</map:match>
 
-			<!-- remove an item from the favourites, using the favourite ID
+			<!-- remove an item from the favourites, using the favourite ID -->
 			<map:match pattern="remove-favourite.html">
 				<map:call function="removeFavourite">
 					<map:parameter name="screen" value="screen/favourites"/>
-					<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>
+					<map:parameter name="user-id" value="anon"/>
+					<!-- NB. this value is for testing .... it is more likely you would use a value like the commented out one below -->
+					<!--<map:parameter name="user-id" value="{session-context:authentication/authentication/ID}"/>-->
 					<map:parameter name="fid" value="{request-param:fid}"/>
 				</map:call>
-			</map:match> -->
+			</map:match>
 
 			<!-- do the searches -->
 			<map:match pattern="*.html">

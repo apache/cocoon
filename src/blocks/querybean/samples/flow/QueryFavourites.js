@@ -14,36 +14,97 @@
   limitations under the License.
 */
 
+importClass(Packages.org.apache.cocoon.ojb.broker.components.PBFactory);
+importClass(Packages.org.apache.ojb.broker.query.Criteria);
+importClass(Packages.org.apache.ojb.broker.query.QueryByCriteria);
+importPackage(Packages.org.apache.cocoon.bean.query);
+
 
 // QueryFavourites constructor
 function QueryFavourites(user) {
 	this._user = user;
-	// to be implemented using Apache OJB
+	this._factory = cocoon.getComponent(PBFactory.ROLE);
 }
 
 // add a Query to the QueryFavourites
 QueryFavourites.prototype.add = function(query) {
-	// to be implemented using Apache OJB
+	query.user = this._user;
+	query.date = new java.util.Date();
+	var broker = null;
+	try {
+		broker = this._factory.defaultPersistenceBroker();
+		broker.beginTransaction();
+		broker.store(query);
+		broker.commitTransaction();
+	} catch (e) {
+		cocoon.log.error(e);
+		if(broker != null) broker.abortTransaction();
+	} finally {
+		if (broker != null) broker.close();
+	}
 }
 
 // remove a Query from the QueryFavourites
 QueryFavourites.prototype.remove = function(id) {
-	// to be implemented using Apache OJB
+	var broker = null;
+	var result = null;
+	try {
+		broker = this._factory.defaultPersistenceBroker();
+		var criteria = criteria = new Criteria();
+		criteria.addEqualTo("id", new java.lang.Long(id));
+		//criteria.addEqualTo("user", new String(this._user));
+    var query = new QueryByCriteria(SimpleLuceneQueryBean, criteria);
+		result = broker.getObjectByQuery(query);
+		broker.beginTransaction();
+		broker["delete"](result);
+		broker.commitTransaction();
+	} catch (e) {
+		cocoon.log.error(e);
+		throw("error.no.favourite");
+	} finally {
+		if (broker != null) broker.close();
+	}
+	return result;	
 }
 
 // get a Query from the QueryFavourites using it's ID
 QueryFavourites.prototype.get = function(id) {
-	// to be implemented using Apache OJB
-	throw("error.no.favourite");
+	var broker = null;
+	var result = null;
+	try {
+		broker = this._factory.defaultPersistenceBroker();
+		var criteria = criteria = new Criteria();
+		criteria.addEqualTo("id", new java.lang.Long(id));
+		//criteria.addEqualTo("user", new String(this._user));
+    var query = new QueryByCriteria(SimpleLuceneQueryBean, criteria);
+		result = broker.getObjectByQuery(query);
+	} catch (e) {
+		cocoon.log.error(e);
+		throw("error.no.favourite");
+	} finally {
+		if (broker != null) broker.close();
+	}
+	return result;	
 }
 
 // get a list of Queries from the QueryFavourites
 QueryFavourites.prototype.list = function() {
-	// to be implemented using Apache OJB
-	return new java.util.ArrayList(1);	
+	var broker = null;
+	var result = null;
+	try {
+		broker = this._factory.defaultPersistenceBroker();
+		var criteria = criteria = new Criteria();
+		criteria.addEqualTo("user", new String(this._user));
+    var query = new QueryByCriteria(SimpleLuceneQueryBean, criteria);
+    query.addOrderByAscending("date");
+		result = broker.getCollectionByQuery(query);
+	} finally {
+		if (broker != null) broker.close();
+	}
+	return result;	
 }
 
 // close the QueryFavourites
 QueryFavourites.prototype.close = function() {
-	// to be implemented using Apache OJB
+	cocoon.releaseComponent(this._factory);
 }

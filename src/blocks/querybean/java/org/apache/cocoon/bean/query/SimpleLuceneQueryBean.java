@@ -17,6 +17,7 @@
 package org.apache.cocoon.bean.query;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
@@ -43,7 +44,7 @@ import org.apache.cocoon.ProcessingException;
  *
  * @version CVS $Id: SimpleLuceneQueryBean.java,v 1.1 2004/10/22 12:14:22 jeremy Exp $
  */
-public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
+public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable, Serializable {
 
 	/**
 	 * The DEFAULT_PAGE_SIZE of this bean.
@@ -74,52 +75,52 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	/**
 	 * The date this Query was created.
 	 */
-	private Date mDate; 
+	private Date date; 
 
 	/**
 	 * The Bean's list of Criteria.
 	 */
-	private List mCriteria;
+	private List criteria;
 
 	/**
 	 * The Bean's ID.
 	 */
-	private Long mId;
+	private Long id;
 
 	/**
 	 * The Bean's current page.
 	 */
-	private Long mPage; 
+	private Long page; 
 
 	/**
 	 * The Bean's page isze.
 	 */
-	private Long mSize; 
+	private Long size; 
 
 	/**
 	 * The Bean's hit count.
 	 */
-	private Long mTotal; 
+	private Long total; 
 
 	/**
 	 * The Bean's query boolean.
 	 */
-	private String mBool;
+	private String bool;
 
 	/**
 	 * The Bean's query name.
 	 */
-	private String mName;
+	private String name;
 
 	/**
 	 * The Bean's query type.
 	 */
-	private String mType;
+	private String type;
 
 	/**
 	 * The Bean's owner.
 	 */
-	private String mUser;
+	private String user;
 
 	/**
 	 * Default constructor.
@@ -137,22 +138,22 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param query the terms to search for the generated <code>Criterion</code>
 	 */
 	public SimpleLuceneQueryBean(String type, String bool, String match, String field, String query) {
-		mName = "My Query";
-		mType = type;
-		mBool = bool;
-		mSize = DEFAULT_PAGE_SIZE;
-		mPage = DEFAULT_PAGE;
-		mTotal = null;
-		mUser = null;
-		mId = null;
-		this.addCriterion (new SimpleLuceneCriterionBean (field, match, query));
+		this.name = "My Query";
+		this.type = type;
+		this.bool = bool;
+		this.size = DEFAULT_PAGE_SIZE;
+		this.page = DEFAULT_PAGE;
+		this.total = null;
+		this.user = null;
+		this.id = null;
+		this.addCriterion(new SimpleLuceneCriterionBean(field, match, query));
 	}
 	
 	public Object clone() throws CloneNotSupportedException {
 		SimpleLuceneQueryBean query = (SimpleLuceneQueryBean)super.clone();
-		query.setCriteria(new ArrayList(mCriteria.size()));
-		Iterator i = this.getCriteria().iterator ();
-		while (i.hasNext()) query.addCriterion((SimpleLuceneCriterionBean)((SimpleLuceneCriterionBean)i.next()).clone ());
+		query.setCriteria(new ArrayList(this.criteria.size()));
+		Iterator it = this.getCriteria().iterator();
+		while (it.hasNext()) query.addCriterion((SimpleLuceneCriterionBean)((SimpleLuceneCriterionBean)it.next()).clone());
 		return query;
 	}
 		
@@ -175,19 +176,19 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @exception  IOException thrown when the searcher's directory cannot be found
 	 */
 	public List search (LuceneCocoonSearcher searcher) throws IOException, ProcessingException {
-		BooleanQuery query = new BooleanQuery ();
-		Iterator criteria = mCriteria.iterator ();
+		BooleanQuery query = new BooleanQuery();
+		Iterator it = criteria.iterator();
 		boolean required = false;
-		if (AND_BOOL.equals (mBool)) required = true;
-		while (criteria.hasNext ()) {
-			SimpleLuceneCriterion criterion = (SimpleLuceneCriterion)criteria.next ();
-			Query subquery = criterion.getQuery (searcher.getAnalyzer ());
-			query.add (subquery, required, criterion.isProhibited ());
+		if (AND_BOOL.equals(this.bool)) required = true;
+		while (it.hasNext()) {
+			SimpleLuceneCriterion criterion = (SimpleLuceneCriterion)it.next();
+			Query subquery = criterion.getQuery (searcher.getAnalyzer());
+			query.add(subquery, required, criterion.isProhibited());
 		}
-		Hits hits = searcher.search (query);
-		mTotal = new Long (hits.length ());
-		mDate = new Date ();
-		return page (hits);
+		Hits hits = searcher.search(query);
+		this.total = new Long (hits.length());
+		this.date = new Date();
+		return page(hits);
 	}
 
 	/**
@@ -198,23 +199,23 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @exception  IOException thrown when the searcher's directory cannot be found
 	 */
 	private List page (Hits hits)  throws java.io.IOException {
-		ArrayList results = new ArrayList ();
-		int start = getPage().intValue () * getSize().intValue ();
-		if (start > mTotal.intValue ()) start = mTotal.intValue (); 
-		int end = start + getSize().intValue ();
-		if (end > mTotal.intValue ()) end = mTotal.intValue (); 
+		ArrayList results = new ArrayList();
+		int start = getPage().intValue() * getSize().intValue();
+		if (start > this.total.intValue()) start = this.total.intValue(); 
+		int end = start + getSize().intValue();
+		if (end > this.total.intValue()) end = this.total.intValue(); 
 		for (int i = start; i < end; i++) {
-			HashMap hit = new HashMap ();
-			hit.put (SCORE_FIELD, new Float (hits.score (i)));
-			hit.put (INDEX_FIELD, new Long (i));
-			Document doc = hits.doc (i);
-			for (Enumeration e = doc.fields (); e.hasMoreElements (); ) {
-				Field field = (Field)e.nextElement ();
-				if (field.name ().equals (SCORE_FIELD)) continue;
-				if (field.name ().equals (INDEX_FIELD)) continue;
-				hit.put (field.name (), field.stringValue ());
+			HashMap hit = new HashMap();
+			hit.put(SCORE_FIELD, new Float(hits.score (i)));
+			hit.put(INDEX_FIELD, new Long(i));
+			Document doc = hits.doc(i);
+			for (Enumeration e = doc.fields(); e.hasMoreElements(); ) {
+				Field field = (Field)e.nextElement();
+				if (field.name().equals(SCORE_FIELD)) continue;
+				if (field.name().equals(INDEX_FIELD)) continue;
+				hit.put(field.name(), field.stringValue());
       }
-			results.add (hit);
+			results.add(hit);
 		}
 		return (results);
 	}
@@ -225,7 +226,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>Long</code> ID of the Bean. 
 	 */
 	public Long getId() {
-		return mId;
+		return this.id;
 	}
 	
 	/**
@@ -234,7 +235,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param id the <code>Long</code> ID of the Bean. 
 	 */
 	public void setId(Long id) {
-		mId = id;
+		this.id = id;
 	}
 	
 	/**
@@ -243,7 +244,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>String</code> name of the Bean. 
 	 */
 	public String getName() {
-		return mName;
+		return this.name;
 	}
 	
 	/**
@@ -252,7 +253,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param name the <code>String</code> name of the Bean. 
 	 */
 	public void setName(String name) {
-		mName = name;
+		this.name = name;
 	}
 
 	/**
@@ -261,7 +262,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>String</code> type of the Bean. 
 	 */
 	public String getType() {
-		return mType;
+		return this.type;
 	}
 	
 	/**
@@ -270,7 +271,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param type the <code>String</code> type of the Bean. 
 	 */
 	public void setType(String type) {
-		mType = type;
+		this.type = type;
 	}
 
 	/**
@@ -279,7 +280,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>String</code> boolean of the Bean. 
 	 */
 	public String getBool() {
-		return mBool;
+		return this.bool;
 	}
 	
 	/**
@@ -289,7 +290,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param bool the <code>String</code> boolean of the Bean. 
 	 */
 	public void setBool(String bool) {
-		mBool = bool;
+		this.bool = bool;
 	}
 
 	/**
@@ -298,7 +299,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>String</code> owner of the Bean. 
 	 */
 	public String getUser() {
-		return mUser;
+		return this.user;
 	}
 	
 	/**
@@ -307,7 +308,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param user the <code>String</code> owner of the Bean. 
 	 */
 	public void setUser(String user) {
-		mUser = user;
+		this.user = user;
 	}
 	
 	/**
@@ -316,10 +317,10 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>Long</code> page size of the Bean. 
 	 */
 	public Long getSize() {
-		if (mSize == null) {
+		if (this.size == null) {
 			return DEFAULT_PAGE_SIZE;
 		} else {
-			return mSize;
+			return this.size;
 		}
 	}
 	
@@ -330,7 +331,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param size the <code>Long</code> page size of the Bean. 
 	 */
 	public void setSize(Long size) {
-		mSize = size;
+		this.size = size;
 	}
 	
 	/**
@@ -339,10 +340,10 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>Long</code> page index of the Bean. 
 	 */
 	public Long getPage() {
-		if (mPage == null) {
+		if (this.page == null) {
 			return DEFAULT_PAGE;
 		} else {
-			return mPage;
+			return this.page;
 		}
 	}
 	
@@ -353,7 +354,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param page the <code>Long</code> page index of the Bean. 
 	 */
 	public void setPage(Long page) {
-		mPage = page;
+		this.page = page;
 	}
 
 	/**
@@ -362,7 +363,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>Long</code> hit count of the Bean. 
 	 */
 	public Long getTotal() {
-		return mTotal;
+		return this.total;
 	}
 	
 	/**
@@ -371,7 +372,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param total the <code>Long</code> hit count of the Bean. 
 	 */
 	public void setTotal(Long total) {
-		mTotal = total;
+		this.total = total;
 	}
 
 	/**
@@ -380,7 +381,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>Date</code> of the Bean. 
 	 */
 	public Date getDate() {
-		return mDate;
+		return this.date;
 	}
 	
 	/**
@@ -389,7 +390,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param date the <code>Date</code> inception date of the Bean. 
 	 */
 	public void setDate(Date date) {
-		mDate = date;
+		this.date = date;
 	}
 
 	/**
@@ -398,7 +399,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @return the <code>List</code> of Bean Query criteria. 
 	 */
 	public List getCriteria() {
-		return mCriteria;
+		return this.criteria;
 	}
 	
 	/**
@@ -407,7 +408,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param criteria the <code>List</code> of Bean Query criteria. 
 	 */
 	public void setCriteria(List criteria) {
-		mCriteria = criteria;
+		this.criteria = criteria;
 	}
 
 	/**
@@ -416,8 +417,8 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param criterion the <code>SimpleLuceneCriterionBean</code> to add to the Bean. 
 	 */
 	public void addCriterion(SimpleLuceneCriterionBean criterion) {
-		if (mCriteria == null) mCriteria = new ArrayList ();
-		mCriteria.add (criterion);
+		if (this.criteria == null) this.criteria = new ArrayList();
+		this.criteria.add(criterion);
 	}
 
 	/**
@@ -426,7 +427,7 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable {
 	 * @param criterion the <code>SimpleLuceneCriterionBean</code> to remove from the Bean. 
 	 */
 	public void removeCriterion(SimpleLuceneCriterionBean criterion) {
-		if (mCriteria != null) mCriteria.remove (criterion);
+		if (this.criteria != null) this.criteria.remove(criterion);
 	}
 	
 }

@@ -69,10 +69,10 @@ QuerySearcher.prototype.search = function(query, history) {
 	}
 }
 
-// perform a page using a Query
+// perform a page using a Query from history
 QuerySearcher.prototype.page = function(page, id, history) {
 	var p;
-	var query = history.get(id);
+	var query = history.get(id, true);
 	if (query != null) {
 		try {
 			p = new java.lang.Long(page);

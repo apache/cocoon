@@ -27,7 +27,7 @@
   <message key="field.link.label">Document Link</message>
   <message key="field.p.label">Document Paragraph</message>
   <message key="field.person@name.label">Author Name</message>
-  <message key="field.question.label">FAQ Question </message>
+  <message key="field.question.label">FAQ</message>
   <message key="field.s1@title.label">Level 1 Section Title</message>
   <message key="field.s2@title.label">Level 2 Section Title</message>
   <message key="field.source.label">Sample Source Code</message>
@@ -80,6 +80,21 @@
   <message key="history.search.label">Search</message>
   <message key="history.title.label">Title</message>
   <message key="history.cleared.note">Your query history has been cleared.</message>
+  <message key="history.save.label">Save</message>
+  <message key="history.save.hint">save this query in your favourites</message>
+  <!-- displaying favourites -->
+  <message key="favourites.page.title">Search Favourites</message>
+  <message key="favourites.queries.title">Queries</message>
+  <message key="favourites.date.label">Date</message>
+  <message key="favourites.query.label">Query</message>
+  <message key="favourites.title.label">Title</message>
+  <message key="favourites.search.label">Search</message>
+  <message key="favourites.search.hint">perform a search using this favourite</message>
+  <message key="favourites.delete.label">Delete</message>
+  <message key="favourites.delete.hint">permanently delete this favourite</message>
+  <message key="cancel.save.note">you cancelled your save</message>
+  <message key="history.title.label">Title</message>
+  <message key="search.fave.hint">one of your favourite searches</message>  
 	<!-- linking -->
   <message key="link.home.hint">the query bean samples home page</message>
   <message key="link.home.label">Home</message>

@@ -17,6 +17,7 @@
 package org.apache.cocoon.bean.query;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.Vector;
 import org.apache.cocoon.components.search.LuceneXMLIndexer;
@@ -39,29 +40,28 @@ import org.apache.lucene.search.TermQuery;
  *   This Bean is designed to be persistable.
  * </p>
  *
- * @version CVS $Id: SimpleLuceneCriterionBean.java,v 1.1 2004/10/22 12:14:22 jeremy Exp $
  */
-public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneable {
+public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneable, Serializable {
 
 	/**
 	 * The Bean's ID.
 	 */
-	private Long mId;
+	protected Long id;
 
 	/**
 	 * The Bean's index field to seach in.
 	 */
-	private String mField;
+	protected String field;
 
 	/**
 	 * The Bean's match value.
 	 */
-	private String mMatch;
+	protected String match;
 
 	/**
 	 * The Bean's search term.
 	 */
-	private String mTerm;
+	protected String term;
 	
 	/**
 	 * Default constructor.
@@ -78,9 +78,9 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @param term the terms to search for
 	 */
 	public SimpleLuceneCriterionBean(String field, String match, String term) {
-		mField = field;
-		mMatch = match;
-		mTerm = term;
+		this.field = field;
+		this.match = match;
+		this.term = term;
 	}
 
 	public Object clone() throws CloneNotSupportedException {
@@ -97,81 +97,81 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @param  analyzer  The <code>org.apache.lucene.analysis.Analyzer</code> to use to extract the Terms from this Criterion
 	 */
 	public Query getQuery (Analyzer analyzer) {
-		String field = mField;
+		String f = this.field;
 		Query query = null;
-		if (ANY_FIELD.equals (mField)) field = LuceneXMLIndexer.BODY_FIELD;
+		if (ANY_FIELD.equals(this.field)) f = LuceneXMLIndexer.BODY_FIELD;
 		// extract Terms from the query string
-    TokenStream tokens = analyzer.tokenStream (field, new StringReader (mTerm));
-    Vector words = new Vector ();
+    TokenStream tokens = analyzer.tokenStream(f, new StringReader (this.term));
+    Vector words = new Vector();
     Token token;
     while (true) {
       try {
-        token = tokens.next ();
+        token = tokens.next();
       } catch (IOException e) {
         token = null;
       }
       if (token == null) break;
-      words.addElement (token.termText ());
+      words.addElement(token.termText ());
     }
     try {
-      tokens.close ();
+      tokens.close();
     } catch (IOException e) {} // ignore 
 		
 		// assemble the different matches
 		
-		if (ANY_MATCH.equals (mMatch)) {
-			if (words.size () > 1) {
-				query = new BooleanQuery ();
-				for (int i = 0; i < words.size (); i++) {
-					((BooleanQuery)query).add (new TermQuery (new Term (field, (String)words.elementAt(i))), false, false);
+		if (ANY_MATCH.equals(this.match)) {
+			if (words.size() > 1) {
+				query = new BooleanQuery();
+				for (int i = 0; i < words.size(); i++) {
+					((BooleanQuery)query).add(new TermQuery(new Term(f, (String)words.elementAt(i))), false, false);
 				}
-			} else if (words.size () == 1) {
-				query = new TermQuery (new Term (field, (String)words.elementAt(0)));
+			} else if (words.size() == 1) {
+				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
 			}
 		} 
 		
-		if (ALL_MATCH.equals (mMatch)) {
-			if (words.size () > 1) {
-				query = new BooleanQuery ();
-				for (int i = 0; i < words.size (); i++) {
-					((BooleanQuery)query).add (new TermQuery (new Term (field, (String)words.elementAt(i))), true, false);
+		if (ALL_MATCH.equals(this.match)) {
+			if (words.size() > 1) {
+				query = new BooleanQuery();
+				for (int i = 0; i < words.size(); i++) {
+					((BooleanQuery)query).add(new TermQuery(new Term (f, (String)words.elementAt(i))), true, false);
 				}
-			} else if (words.size () == 1) {
-				query = new TermQuery (new Term (field, (String)words.elementAt(0)));
+			} else if (words.size() == 1) {
+				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
 			}
 		} 
 		
-		if (NOT_MATCH.equals (mMatch)) {
-			if (words.size () > 1) {
-				query = new BooleanQuery ();
-				for (int i = 0; i < words.size (); i++) {
-					((BooleanQuery)query).add (new TermQuery (new Term (field, (String)words.elementAt(i))), true, true);
+		if (NOT_MATCH.equals(this.match)) {
+			if (words.size() > 1) {
+				query = new BooleanQuery();
+				for (int i = 0; i < words.size(); i++) {
+					((BooleanQuery)query).add(new TermQuery(new Term(f, (String)words.elementAt(i))), true, true);
 				}
-			} else if (words.size () == 1) {
-				query = new TermQuery (new Term (field, (String)words.elementAt(0)));
+			} else if (words.size() == 1) {
+				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
 			}
 		} 
 		
-		if (LIKE_MATCH.equals (mMatch)) {
-			if (words.size () > 1) {
-				query = new BooleanQuery ();
-				for (int i = 0; i < words.size (); i++) {
-					((BooleanQuery)query).add (new FuzzyQuery (new Term (field, (String)words.elementAt(i))), false, false);
+		if (LIKE_MATCH.equals(this.match)) {
+			if (words.size() > 1) {
+				query = new BooleanQuery();
+				for (int i = 0; i < words.size(); i++) {
+					((BooleanQuery)query).add(new FuzzyQuery(new Term(f, (String)words.elementAt(i))), false, false);
 				}
-			} else if (words.size () == 1) {
-				query = new FuzzyQuery (new Term (field, (String)words.elementAt(0)));
+			} else if (words.size() == 1) {
+				query = new FuzzyQuery(new Term(f, (String)words.elementAt(0)));
 			}
 		}
 		
-		if (PHRASE_MATCH.equals (mMatch)) {
-			if (words.size () > 1) {
-				query = new PhraseQuery ();
-				((PhraseQuery)query).setSlop (0);
-				for (int i = 0; i < words.size (); i++) {
-					((PhraseQuery)query).add (new Term (field, (String)words.elementAt(i)));
+		if (PHRASE_MATCH.equals (this.match)) {
+			if (words.size() > 1) {
+				query = new PhraseQuery();
+				((PhraseQuery)query).setSlop(0);
+				for (int i = 0; i < words.size(); i++) {
+					((PhraseQuery)query).add(new Term(f, (String)words.elementAt(i)));
 				}
-			} else if (words.size () == 1) {
-				query = new TermQuery (new Term (field, (String)words.elementAt(0)));
+			} else if (words.size() == 1) {
+				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
 			}
 		}
 		return query;
@@ -181,7 +181,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * Gets the prohibited status from the Criterion
 	 */
 	public boolean isProhibited () {
-		if (NOT_MATCH.equals (mMatch)) return true;
+		if (NOT_MATCH.equals(this.match)) return true;
 		return false;
 	}
 	
@@ -194,7 +194,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @return the <code>Long</code> ID of the Bean. 
 	 */
 	public Long getId() {
-		return mId;
+		return this.id;
 	}
 	
 	/**
@@ -203,7 +203,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @param id the <code>Long</code> ID of the Bean. 
 	 */
 	public void setId(Long id) {
-		mId = id;
+		this.id = id;
 	}
 	
 	/**
@@ -212,7 +212,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @return the <code>String</code> field of the Bean. 
 	 */
 	public String getField() {
-		return mField;
+		return this.field;
 	}
 	
 	/**
@@ -222,7 +222,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @param field the <code>String</code> field of the Bean. 
 	 */
 	public void setField(String field) {
-		mField = field;
+		this.field = field;
 	}
 	
 	/**
@@ -231,7 +231,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @return the <code>String</code> match of the Bean. 
 	 */
 	public String getMatch() {
-		return mMatch;
+		return this.match;
 	}
 	
 	/**
@@ -241,7 +241,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @param match the <code>String</code> match of the Bean. 
 	 */
 	public void setMatch(String match) {
-		mMatch = match;
+		this.match = match;
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @return the <code>String</code> term of the Bean. 
 	 */
 	public String getTerm() {
-		return mTerm;
+		return this.term;
 	}
 	
 	/**
@@ -260,7 +260,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 	 * @param term the <code>String</code> term of the Bean. 
 	 */
 	public void setTerm(String term) {
-		mTerm = term;
+		this.term = term;
 	}
 
 }
