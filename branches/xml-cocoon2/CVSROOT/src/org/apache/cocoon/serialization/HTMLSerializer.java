@@ -14,15 +14,16 @@ import org.apache.xml.serialize.SerializerFactory;
 import org.apache.xml.serialize.Method;
 import org.apache.xml.serialize.OutputFormat;
 
+import org.apache.avalon.Poolable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-27 16:15:39 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-08 21:08:06 $
  */
 
-public class HTMLSerializer extends AbstractTextSerializer {
+public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
 
     private SerializerFactory factory;
     
