@@ -578,11 +578,11 @@
   </file>
 
   <file>
-    <title>Continuations-based JavaScript engine</title>
+    <title>JavaScript engine</title>
     <description>Rhino is an implementation of JavaScript in Java.</description>
     <used-by>Control flow</used-by>
-    <lib>core/rhino1.5r4-continuations-20040629T1232.jar</lib>
-    <homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
+    <lib>core/rhino1_6R1pre_20041102T2302.jar</lib>
+    <homepage>http://www.mozilla.org/rhino</homepage>
   </file>
 
   <file>
