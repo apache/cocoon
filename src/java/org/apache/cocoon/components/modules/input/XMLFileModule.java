@@ -119,7 +119,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.14 2004/02/22 18:07:16 cziegeler Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.15 2004/03/04 22:12:57 haul Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -328,16 +328,18 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
         boolean reload = this.reloadAll;
         boolean cache = this.cacheAll;
         boolean hasDynamicConf = false; // whether we have a <file src="..."> dynamic configuration
-        Configuration fileConf = null; // the nested <file>, if any
-        if (modeConf != null) {
-            fileConf = modeConf.getChild("file", false);
-            if (fileConf == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Missing 'file' child element at "+modeConf.getLocation());
-                }
-            } else {
-                hasDynamicConf = true;
-            }
+        Configuration fileConf = null;  // the nested <file>, if any
+
+        if (modeConf != null && modeConf.getChildren().length > 0) {
+        	fileConf = modeConf.getChild("file", false);
+        	if (fileConf == null) {
+        		if (this.getLogger().isDebugEnabled()) {
+        			this.getLogger().debug("Missing 'file' child element at " + modeConf.getLocation());
+        		}
+        		
+        	} else {
+        		hasDynamicConf = true;
+        	}
         }
 
         if (hasDynamicConf) {
