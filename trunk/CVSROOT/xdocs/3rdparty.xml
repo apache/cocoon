@@ -59,7 +59,7 @@
     <th>Name and Link</th>
     <th>Type</th>
     <th>Description</th>
-    <th>Limitations?</th>
+    <th>Status</th>
     <th>Licensing</th>
     <th>Contact</th>
    </tr>
@@ -82,16 +82,23 @@
    <tr>
     <td><link href="http://ulim.cocoonhost.com/">Auth Taglib</link></td>
     <td>Logicsheet</td>
-    <td>Performs authentication. More than one "auth set" can be logged in to simultaneously.</td>
-    <td>?</td>
-    <td>Freeware</td>
+    <td>Protects XML/XSP pages, so that they can only be viewed/executed by 
+     authenticated users. Supports several authentication schemes using a
+     database or encrypted files.</td>
+    <td>"Suitable for production use. Syntax/Concept finalized, i.e. future
+     versions will be backwards-compatible"</td>
+    <td>Open Source</td>
     <td><link href="mailto:ulim@denic.de">Ulrich Mayring</link></td>
    </tr>
    <tr>
     <td><link href="http://ulim.cocoonhost.com/">SOAP Taglib</link></td>
     <td>Logicsheet</td>
-    <td>Implements the SOAP protocol for network transmission of XML.</td>
-    <td>Freeware</td>
+    <td>Implements a generic SOAP client. Any SOAP server wanting to present its
+     services to the world over a uniform HTTP-based interface can do so via
+     an XML page using the SOAP taglib.</td>
+    <td>"Suitable for production use. Syntax/Concept <strong>not</strong> finalized."
+     Currently not Cocoon 2 compatible.</td>
+    <td>Open Source</td>
     <td><link href="mailto:ulim@denic.de">Ulrich Mayring</link></td>
    </tr>
 
@@ -99,7 +106,8 @@
     <td><link href="http://www.life.be/~bavo/projects/gpl/cocoon/imapprocessor.tgz">IMAP Processor</link></td>
     <td>Processor</td>
     <td>Sends emails via an IMAP server.</td>
-    <td>Not fully functional. Mail taglib in Cocoon distribution is probably better.</td>
+    <td>Not fully functional. Mail taglib(s) in Cocoon distribution are probably 
+     better.</td>
     <td><link href="http://www.fsf.org/">GPL</link></td>
     <td><link href="mailto:bavo@life.be">Bavo De Ridder</link></td>
    </tr>
