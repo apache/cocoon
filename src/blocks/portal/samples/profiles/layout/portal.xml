@@ -193,7 +193,7 @@
         </composite-layout>
     </named-item>
     <named-item name="TabDemo2">
-        <composite-layout static="true" name="linktab">
+        <composite-layout name="linktab">
             <named-item name="One">
 	            <coplet-layout name="coplet">
 	                <parameter name="title" value="ML's Weblog" />
