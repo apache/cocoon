@@ -1,11 +1,11 @@
-/***************************************************************************** 
- * Copyright (C) The Apache Software Foundation. All rights reserved.        * 
- * ------------------------------------------------------------------------- * 
- * This software is published under the terms of the Apache Software License * 
- * version 1.1, a copy of which has been included  with this distribution in * 
- * the LICENSE file.                                                         * 
- *****************************************************************************/ 
-package org.apache.cocoon.matching; 
+/*****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
+package org.apache.cocoon.matching;
 
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
@@ -14,15 +14,15 @@ import org.apache.regexp.RESyntaxException;
 import org.apache.avalon.ConfigurationException;
 
 import org.w3c.dom.traversal.NodeIterator;
- 
-/** 
+
+/**
  * This class generates source code which represents a specific pattern matcher
  * for request URIs
- * 
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
+ *
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-30 23:02:44 $ 
- */ 
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-11-15 16:49:39 $
+ */
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
     public String generateParameterSource (NodeIterator conf)
@@ -30,7 +30,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         return "RE";
     }
 
-    public String generateClassSource (String prefix, String pattern, 
+    public String generateClassSource (String prefix, String pattern,
                                        NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
@@ -57,7 +57,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
                 sb.append("0x").append(hex).append(", ");
             }
             sb.append("\n    };")
-              .append("\n    static RE ") 
+              .append("\n    static RE ")
               .append(name)
               .append("_expr = new RE(new REProgram(")
               .append(instructions)
@@ -72,7 +72,9 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("ArrayList list = new ArrayList ();")
-          .append("if(pattern.match(((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI())) {");
+          .append("String uri = ((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();")
+          .append("if(uri.startsWith(\"/\")) uri = uri.substring(1);")
+          .append("if(pattern.match(uri)) {");
         // Count number of parens
 /*        int i = 0;
         int j = -1;

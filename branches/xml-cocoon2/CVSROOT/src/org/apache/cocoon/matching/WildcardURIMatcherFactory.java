@@ -1,26 +1,26 @@
-/***************************************************************************** 
- * Copyright (C) The Apache Software Foundation. All rights reserved.        * 
- * ------------------------------------------------------------------------- * 
- * This software is published under the terms of the Apache Software License * 
- * version 1.1, a copy of which has been included  with this distribution in * 
- * the LICENSE file.                                                         * 
+/*****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
  *****************************************************************************/
- 
-package org.apache.cocoon.matching; 
+
+package org.apache.cocoon.matching;
 
 import org.apache.avalon.ConfigurationException;
 
 import org.w3c.dom.traversal.NodeIterator;
- 
-/** 
+
+/**
  * This class generates source code which represents a specific pattern matcher
  * for request URIs
- * 
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
+ *
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-11-05 10:11:07 $ 
- */ 
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-11-15 16:49:39 $
+ */
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
 
@@ -51,19 +51,25 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
      */
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
-        return "          ArrayList list = new ArrayList();\n   if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT))\n					.getRequestURI(), pattern)) {\n	      return list;\n	  } else {\n	      return null;\n	  }\n";
+        return "ArrayList list = new ArrayList();" +
+               "String uri = ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();" +
+               "if (uri.startsWith(\"/\")) uri = uri.substring(1);" +
+               "if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list, uri, pattern)) {" +
+               "return list;" +
+               "} else {" +
+               "return null;}";
     }
 
     /**
      * Generates the matcher class level source code
      */
-    public String generateClassSource (String prefix, String pattern, 
+    public String generateClassSource (String prefix, String pattern,
                                        NodeIterator conf)
     throws ConfigurationException {
         StringBuffer result = new StringBuffer();
         try {
             this.setPattern (pattern);
-   
+
             result.append ("\n// wildcard pattern = \"" + pattern + "\"\n\t")
                   .append ("static int[] ").append(prefix).append("_expr = {");
 
@@ -124,18 +130,18 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
      */
     protected int[] convertPattern(String data)
     throws NullPointerException {
-        
+
         // Prepare the arrays
         int expr[] = new int[data.length() + 2];
         char buff[] = data.toCharArray();
-        
+
         // Prepare variables for the translation loop
         int y = 0;
         boolean slash = false;
 
         // Must start from beginning
         expr[y++] = MATCH_BEGIN;
-        
+
         if (buff.length > 0) {
             if (buff[0]=='\\') {
                 slash = true;
@@ -144,7 +150,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
             }  else {
                 expr[y++] = buff[0];
             }
-        
+
             // Main translation loop
             for (int x = 1; x < buff.length; x++) {
                 // If the previous char was '\' simply copy this char.
@@ -175,5 +181,5 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
         // Must match end at the end
         expr[y] = MATCH_THEEND;
         return expr;
-    }        
+    }
 }
