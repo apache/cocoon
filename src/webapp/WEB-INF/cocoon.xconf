@@ -253,6 +253,7 @@
     <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
     <component-instance class="org.apache.cocoon.components.source.impl.PartSourceFactory" name="upload"/>
     <component-instance class="org.apache.cocoon.components.source.impl.ModuleSourceFactory" name="module"/>
+    <component-instance class="org.apache.cocoon.components.source.impl.XModuleSourceFactory" name="xmodule"/>
 
     <!--+
         | The "*" protocol handles all uri schemes that are not explicitely
