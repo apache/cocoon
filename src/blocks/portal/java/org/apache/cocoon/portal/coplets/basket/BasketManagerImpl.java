@@ -97,7 +97,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: BasketManagerImpl.java,v 1.1 2004/02/23 14:52:50 cziegeler Exp $
+ * @version CVS $Id: BasketManagerImpl.java,v 1.2 2004/02/24 10:34:54 joerg Exp $
  */
 public class BasketManagerImpl
 extends AbstractLogEnabled
@@ -211,7 +211,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      */
     protected void processUploadItemEvent(UploadItemEvent event, Basket basket) {
         Request req = ContextHelper.getRequest(this.context);
-        List paramNames = ((UploadItemEvent)event).getItemNames();
+        List paramNames = event.getItemNames();
         Iterator i = paramNames.iterator();
         while ( i.hasNext() ) {
             String name = (String)i.next();
