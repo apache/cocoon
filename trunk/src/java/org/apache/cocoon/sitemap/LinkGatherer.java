@@ -65,7 +65,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: LinkGatherer.java,v 1.1 2003/03/18 15:23:49 nicolaken Exp $
+ * @version CVS $Id: LinkGatherer.java,v 1.2 2003/03/28 12:55:42 nicolaken Exp $
  */
 public class LinkGatherer extends ExtendedXLinkPipe implements Transformer {
     private List links;
@@ -82,13 +82,17 @@ public class LinkGatherer extends ExtendedXLinkPipe implements Transformer {
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri,
         String name, String raw, Attributes attr) throws SAXException {
-            this.addLink(href);
+            if (!this.links.contains(href)){
+                this.addLink(href);
+            }
             super.simpleLink(href, role, arcrole, title, show, actuate, uri, name, raw, attr);
     }
 
     public void startLocator(String href, String role, String title, String label, String uri, String name, String raw,
         Attributes attr) throws SAXException {
-            this.addLink(href);
+            if (!this.links.contains(href)){
+                this.addLink(href);
+            }
             super.startLocator(href, role, title, label, uri, name, raw, attr);
     }
     private void addLink(String href) {
@@ -98,6 +102,12 @@ public class LinkGatherer extends ExtendedXLinkPipe implements Transformer {
         if (href.startsWith("mailto:")) return;
         if (href.startsWith("news:")) return;
         if (href.startsWith("javascript:")) return;
-        this.links.add(href);
+
+        int anchorPos = href.indexOf('#');
+        if (anchorPos == -1) {
+            this.links.add(href);
+        } else {
+            this.links.add(href.substring(0, anchorPos));
+        }
     }
 }
