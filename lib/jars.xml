@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.56 2003/07/03 20:51:14 vgritsenko Exp $
+    | CVS $Id: jars.xml,v 1.57 2003/07/04 04:21:07 crossley Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -612,13 +612,15 @@
   <homepage>http://castor.exolab.org</homepage>
  </file>
 
+<!-- Currently only used by the build
  <file>
   <title>Jing</title>
-  <description>RELAX NG validator in Java</description>
-  <used-by>core</used-by>
-  <lib>optional/jing-20020724.jar</lib>
+  <description>RELAX NG validator</description>
+  <used-by>build</used-by>
+  <lib>tools/lib/jing-20020724.jar</lib>
   <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
  </file>
+-->
  
  <file>
   <title>Jaxen</title>
