@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.24 $ $Date: 2004/04/30 07:20:34 $
+ * @version CVS $Revision: 1.25 $ $Date: 2004/05/01 16:12:05 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -93,8 +93,8 @@ public final class XConfToolTask extends MatchingTask {
      *
      * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
      */
-    public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog) {
-      this.xmlCatalog.addConfiguredXMLCatalog(xmlCatalog);
+    public void addConfiguredXMLCatalog(XMLCatalog newXMLCatalog) {
+        this.xmlCatalog.addConfiguredXMLCatalog(newXMLCatalog);
     }
 
     /**
@@ -121,8 +121,7 @@ public final class XConfToolTask extends MatchingTask {
             throw new BuildException("file attribute is required", this.getLocation());
         }
         try {
-            final String fileName = this.file.toURL().toExternalForm();
-            Document document = DocumentCache.getDocument(fileName, this);
+            Document document = DocumentCache.getDocument(this.file, this);
             
             if (this.srcdir == null) {
                 this.srcdir = this.getProject().resolveFile(".");
@@ -186,7 +185,7 @@ public final class XConfToolTask extends MatchingTask {
             } else {
                 log("No Changes: " + this.file, Project.MSG_DEBUG);
             }
-            DocumentCache.storeDocument(fileName, document, this);
+            DocumentCache.storeDocument(this.file, document, this);
         } catch (TransformerException e) {
             throw new BuildException("TransformerException: "+e);
         } catch (SAXException e) {
@@ -208,16 +207,16 @@ public final class XConfToolTask extends MatchingTask {
      * 
      * @param configuration Orginal document
      * @param component Patch document
-     * @param file Patch file
+     * @param patchFile Patch file
      *
      * @return True, if the document was successfully patched
      */
     private boolean patch(final Document configuration,
-                          final File file)
-                          throws TransformerException, IOException, DOMException, SAXException {
+                           final File patchFile)
+                           throws TransformerException, IOException, DOMException, SAXException {
 
-        Document component = DocumentCache.getDocument(file.toURL().toExternalForm(), this);
-        String filename = file.toString();
+        Document component = DocumentCache.getDocument(patchFile, this);
+        String filename = patchFile.toString();
                             
         // Check to see if Document is an xconf-tool document
         Element elem = component.getDocumentElement();
@@ -391,13 +390,13 @@ public final class XConfToolTask extends MatchingTask {
     }
 
     /** Returns the file name (excluding directories and extension). */
-    private String basename(String file) {
-        int start = file.lastIndexOf(FSEP)+1; // last '/'
-        int end = file.lastIndexOf(".");  // last '.'
+    private String basename(String fileName) {
+        int start = fileName.lastIndexOf(FSEP)+1; // last '/'
+        int end = fileName.lastIndexOf(".");  // last '.'
 
         if (end == 0) {
-            end = file.length();
+            end = fileName.length();
         }
-        return file.substring(start, end);
+        return fileName.substring(start, end);
     }
 }

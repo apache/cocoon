@@ -37,7 +37,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 /**
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/05/01 10:49:41 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/05/01 16:12:05 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -61,19 +61,13 @@ public final class SitemapTask extends AbstractQdoxTask {
     /** Pooling grow (optional) */
     public static final String POOL_GROW_TAG = "cocoon.sitemap.component.pooling.grow";
     
-    private static final String LINE_SEPARATOR = "\n";//System.getProperty("line.separator");
-    
-    /** The sitemap namespace. TODO - this has to be configurable for newer versions! */
-    private static final String SITEMAP_NS = "http://apache.org/cocoon/sitemap/1.0";
+    private static final String LINE_SEPARATOR = "\n";
     
     /** The sitemap */
     private File sitemap;
     
     /** The doc dir */
     private File docDir;
-    
-    /** The components */
-    private List components = new ArrayList();
     
     public void setSitemap( final File sitemap ) {
         this.sitemap = sitemap;
@@ -94,16 +88,16 @@ public final class SitemapTask extends AbstractQdoxTask {
         validate();
 
         // this does the hard work :)
-        super.execute();
+        super.execute();        
 
         try {
             
-            this.collectInfo();
+            final List components = this.collectInfo();
             if ( this.sitemap != null ) {
-                this.processSitemap();
+                this.processSitemap(components);
             }
             if ( this.docDir != null ) {
-                this.processDocDir();
+                this.processDocDir(components);
             }
             
         } catch ( final BuildException e ) {
@@ -132,8 +126,10 @@ public final class SitemapTask extends AbstractQdoxTask {
     /**
      * Collect the component infos
      */
-    private void collectInfo() {
+    private List collectInfo() {
         log("Collection sitemap components info");
+        final List components = new ArrayList();
+        
         final Iterator it = super.allClasses.iterator();
         
         while ( it.hasNext() ) {
@@ -145,25 +141,25 @@ public final class SitemapTask extends AbstractQdoxTask {
                 final SitemapComponent comp = new SitemapComponent( javaClass );
 
                 log("Found component: " + comp, Project.MSG_DEBUG);
-                this.components.add(comp);
+                components.add(comp);
             }
         }
+        return components;
     }
 
     /**
      * Add components to sitemap
     */
-    private void processSitemap() 
+    private void processSitemap(List components) 
     throws Exception {
         log("Adding sitemap components");
-        final String fileName = this.sitemap.toURL().toExternalForm();
         Document document;
         
-        document = DocumentCache.getDocument(fileName, this);
+        document = DocumentCache.getDocument(this.sitemap, this);
         
         boolean changed = false;
 
-        Iterator iter = this.components.iterator();
+        Iterator iter = components.iterator();
         while ( iter.hasNext() ) {
             SitemapComponent component = (SitemapComponent)iter.next();
             final String type = component.getType();
@@ -192,17 +188,17 @@ public final class SitemapTask extends AbstractQdoxTask {
         if ( changed ) {
             DocumentCache.writeDocument(this.sitemap, document, this);
         }
-        DocumentCache.storeDocument(fileName, document, this);
+        DocumentCache.storeDocument(this.sitemap, document, this);
     }
     
     /**
      * Add components to sitemap
     */
-    private void processDocDir() 
+    private void processDocDir(List components) 
     throws Exception {
         log("Generating documentation");
 
-        Iterator iter = this.components.iterator();
+        Iterator iter = components.iterator();
         while ( iter.hasNext() ) {
             final SitemapComponent component = (SitemapComponent)iter.next();
             
@@ -261,7 +257,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                 buffer = new StringBuffer();
             }
             indent(parent, 3);
-            node = doc.createElementNS(SITEMAP_NS, "map:" + this.type);
+            node = doc.createElement("map:" + this.type);
             ((Element)node).setAttribute("name", this.name);
             ((Element)node).setAttribute("src", this.javaClass.getFullyQualifiedName());
             

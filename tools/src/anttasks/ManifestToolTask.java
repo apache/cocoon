@@ -26,7 +26,7 @@ import org.apache.tools.ant.Task;
  * in the specified directory.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Revision: 1.4 $ $Date: 2004/04/30 07:20:33 $
+ * @version CVS $Revision: 1.5 $ $Date: 2004/05/01 16:12:05 $
  */
 
 public final class ManifestToolTask extends Task {
@@ -52,7 +52,7 @@ public final class ManifestToolTask extends Task {
 
         try {
             // process recursive
-            this.process(this.getProject().resolveFile(this.directory), this.manifest);
+            this.process(this.getProject().resolveFile(this.directory));
         } catch (IOException ioe) {
             throw new BuildException("IOException: " + ioe);
         }
@@ -61,8 +61,7 @@ public final class ManifestToolTask extends Task {
     /**
      * Scan recursive
      */
-    private void process(final File directoryFile,
-                         final String manifest)
+    private void process(final File directoryFile)
     throws IOException, BuildException {
 
         System.out.println("Writing: " + manifest);
