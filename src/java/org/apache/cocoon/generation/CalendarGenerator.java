@@ -72,7 +72,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.5 2004/04/10 16:06:02 ugo Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.6 2004/04/14 18:53:39 joerg Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     
@@ -256,7 +256,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     
     /**
      * Recycle resources
-     * @see org.apache.avalon.excalibur.pool.Recyclable.recycle()
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
         this.cacheKeyParList = null;
