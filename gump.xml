@@ -49,7 +49,9 @@
     <depend project="xml-xalan2"/>
     <depend project="xml-commons-resolver"/>
 
-    <depend project="avalon-framework" ids="impl api"/>
+    <depend project="avalon-framework-api"/>
+    <depend project="avalon-framework-legacy"/>
+    <depend project="avalon-framework-impl"/>
     <depend project="excalibur-compatibility"/>
     <depend project="excalibur-instrument"/>
     <depend project="excalibur-instrument-manager"/>
