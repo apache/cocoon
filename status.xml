@@ -195,6 +195,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BRD" type="update">
+    Updated Xalan to a CVS snapshot (2003-05-06), fixes bug with incorrect
+    namespaces in endElement SAX events.
+  </action>
   <action dev="BD" type="add" fixes-bug="16523" due-to="Bart Guijt" due-to-email="b.guijt1@chello.nl">
    QDox block added, parses Java source code and javadoc tags, includes samples.
   </action>
