@@ -28,6 +28,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.xpath.XPathAPI;
+import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -46,7 +47,9 @@ import org.xml.sax.SAXException;
  * unless: (deprecated) xpath expression that must return empty node set
  * if-prop: use path file only when project property is set
  * remove: xpath expression to remove before adding nodes
+ * add-comments: if specified, overrides the ant task value
  * add-attribute: name of attribute to add to context node (requires value)
+ * add-attribute-<i>name</i>: add attribute <i>name</i> with the specified value
  * value: value of attribute to add to context node (requires add-attribute)
  * insert-before: xpath expression, add new nodes before
  * insert-after: xpath expression, add new nodes after
@@ -56,7 +59,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.25 $ $Date: 2004/05/01 16:12:05 $
+ * @version CVS $Revision: 1.26 $ $Date: 2004/05/07 18:32:45 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -292,6 +295,25 @@ public final class XConfToolTask extends MatchingTask {
                 }
                 if (root instanceof Element) {
                     ((Element) root).setAttribute(name, value);
+                }
+            }
+ 
+            // Override addComments from ant task if specified as an attribute
+            String addCommentsAttr = getAttribute(elem, "add-comments", replaceProperties);
+            if ((addCommentsAttr!=null) && (addCommentsAttr.length()>0)) {
+                setAddComments(new Boolean(addCommentsAttr));
+            }
+
+            // Allow multiple attributes to be added or modified
+            if (root instanceof Element) {
+                NamedNodeMap attrMap = elem.getAttributes();
+                for (int i=0; i<attrMap.getLength(); ++i){
+                    Attr attr = (Attr)attrMap.item(i);
+                    final String addAttr = "add-attribute-";
+                    if (attr.getName().startsWith(addAttr)) {
+                        String key = attr.getName().substring(addAttr.length());
+                        ((Element) root).setAttribute(key, attr.getValue());
+                    }
                 }
             }
 
