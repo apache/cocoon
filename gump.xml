@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.173 2004/07/11 22:06:26 antonio Exp $
+    | CVS $Id: gump.xml,v 1.174 2004/07/11 23:45:08 antonio Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1234,7 +1234,7 @@
       Java Development Tools from the Eclipse IDE Project
     </description>
     <home nested="lib/optional"/>
-    <jar name="jdtcore-2.1.3.jar"/>
+    <jar name="jdtcore-3.0.0.jar"/>
   </project>
 
   <project name="xreporter-expression">

@@ -56,7 +56,7 @@ import java.util.StringTokenizer;
 /**
  * Eclipse Java Compiler
  *
- * @version CVS $Id: EclipseJavaCompiler.java,v 1.2 2004/07/11 21:08:53 antonio Exp $
+ * @version CVS $Id: EclipseJavaCompiler.java,v 1.3 2004/07/11 23:45:50 antonio Exp $
  */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
@@ -186,8 +186,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                         buf.getChars(0, result.length, result, 0);
                     }
                 } catch (IOException e) {
-                    handleError(className, -1, -1, 
-                                e.getMessage());
+                    handleError(className, -1, -1, e.getMessage());
                     //e.printStackTrace();
                 }
                 return result;
@@ -322,10 +321,11 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
             };
         final IErrorHandlingPolicy policy = DefaultErrorHandlingPolicies.proceedWithAllProblems();
-        final Map settings = new HashMap();
+        final Map settings = new HashMap(8);
         settings.put(CompilerOptions.OPTION_LineNumberAttribute, CompilerOptions.GENERATE);
         settings.put(CompilerOptions.OPTION_SourceFileAttribute, CompilerOptions.GENERATE);
         settings.put(CompilerOptions.OPTION_ReportDeprecation, CompilerOptions.IGNORE);
+        settings.put(CompilerOptions.OPTION_ReportUnusedImport, CompilerOptions.IGNORE);
         if (sourceEncoding != null) {
             settings.put(CompilerOptions.OPTION_Encoding, sourceEncoding);
         }
