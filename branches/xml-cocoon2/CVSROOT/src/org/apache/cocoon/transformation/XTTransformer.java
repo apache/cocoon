@@ -67,7 +67,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-30 21:42:33 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-06 19:21:03 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -87,11 +87,11 @@ implements Transformer, Composer {
      */
     public void compose(ComponentManager manager) {
         try {
-        log.debug("Looking up " + Roles.STORE);
+            log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
-    } catch (Exception e) {
-        log.error("Could not find component", e);
-    }
+        } catch (Exception e) {
+            log.error("Could not find component", e);
+        }
     }
 
     /**

@@ -5,58 +5,54 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-06 06:21:55 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-06 19:19:51 $
  */
 
 public interface Constants {
 
-    public static final String NAME          = "@name@";
-    public static final String VERSION       = "@version@";
-    public static final String COMPLETE_NAME = NAME + " " + VERSION;
-    public static final String CONF_VERSION  = "2.0";
-    public static final String YEAR          = "@year@";
+    String NAME          = "@name@";
+    String VERSION       = "@version@";
+    String COMPLETE_NAME = NAME + " " + VERSION;
+    String CONF_VERSION  = "2.0";
+    String YEAR          = "@year@";
 
-    public static final String RELOAD_PARAM   = "cocoon-reload";
-    public static final String SHOWTIME_PARAM = "cocoon-showtime";
-    public static final String VIEW_PARAM     = "cocoon-view";
+    String RELOAD_PARAM   = "cocoon-reload";
+    String SHOWTIME_PARAM = "cocoon-showtime";
+    String VIEW_PARAM     = "cocoon-view";
 
-    public static final String TEMPDIR_PROPERTY    = "org.apache.cocoon.properties.tempdir";
-    public static final String DEFAULT_CONTEXT_DIR = "./webapp";
-    public static final String DEFAULT_DEST_DIR    = "./site";
-    public static final String DEFAULT_WORK_DIR    = "./work";
-    public static final String DEFAULT_CONF_FILE   = "cocoon.xconf";
+    String TEMPDIR_PROPERTY    = "org.apache.cocoon.properties.tempdir";
+    String DEFAULT_CONTEXT_DIR = "./webapp";
+    String DEFAULT_DEST_DIR    = "./site";
+    String DEFAULT_WORK_DIR    = "./work";
+    String DEFAULT_CONF_FILE   = "cocoon.xconf";
 
-    public static final String PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
-    public static final String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.XercesParser";
+    String PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
+    String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.XercesParser";
 
-    public static final String XSP_PREFIX          = "xsp";
-    public static final String XSP_URI             = "http://apache.org/xsp";
-    public static final String XSP_REQUEST_PREFIX  = "xsp-request";
-    public static final String XSP_REQUEST_URI     = XSP_URI + "/request";
-    public static final String XSP_RESPONSE_PREFIX = "xsp-response";
-    public static final String XSP_RESPONSE_URI    = XSP_URI + "/response";  
+    String XSP_PREFIX          = "xsp";
+    String XSP_URI             = "http://apache.org/xsp";
+    String XSP_REQUEST_PREFIX  = "xsp-request";
+    String XSP_REQUEST_URI     = XSP_URI + "/request";
+    String XSP_RESPONSE_PREFIX = "xsp-response";
+    String XSP_RESPONSE_URI    = XSP_URI + "/response";
 
-    public static final String LINK_CONTENT_TYPE     = "application/x-cocoon-links";
-    public static final String LINK_VIEW             = "links";
-    public static final String LINK_CRAWLING_ROLE    = "static";
+    String LINK_CONTENT_TYPE     = "application/x-cocoon-links";
+    String LINK_VIEW             = "links";
+    String LINK_CRAWLING_ROLE    = "static";
 
-    public static final String REQUEST_OBJECT  = "request";
-    public static final String RESPONSE_OBJECT = "response";
-    public static final String CONTEXT_OBJECT  = "context";
-    public static final String LINK_OBJECT     = "link";
-    
-    public static final String INDEX_URI = "index";
-    
-    public static final String CATALINA_SERVLET_CLASSPATH = "org.apache.catalina.jsp_classpath";
-    public static final String TOMCAT_SERVLET_CLASSPATH = "org.apache.tomcat.jsp_classpath";
-    public static final String RESIN_SERVLET_CLASSPATH = "caucho.class.path";
+    String REQUEST_OBJECT  = "request";
+    String RESPONSE_OBJECT = "response";
+    String CONTEXT_OBJECT  = "context";
+    String LINK_OBJECT     = "link";
 
-    public final static String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/" + CONF_VERSION + "/error";
-    public final static String ERROR_NAMESPACE_PREFIX = "error";
+    String INDEX_URI = "index";
+
+    String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/" + CONF_VERSION + "/error";
+    String ERROR_NAMESPACE_PREFIX = "error";
 
 }

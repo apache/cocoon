@@ -51,7 +51,7 @@ import org.apache.log.LogTarget;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.34 $ $Date: 2000-12-06 06:21:56 $
+ * @version CVS $Revision: 1.1.4.35 $ $Date: 2000-12-06 19:19:58 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -83,7 +83,7 @@ public class CocoonServlet extends HttpServlet {
             String path = this.context.getRealPath("/") +
                           "/WEB-INF/logs/cocoon.log";
 
-            Category cocoonCategory = LogKit.createCategory("cocoon", Priority.ERROR);
+            Category cocoonCategory = LogKit.createCategory("cocoon", Priority.DEBUG);
             log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
                     new FileOutputLogTarget(path),
                     new ServletLogTarget(this.context, Priority.ERROR)
@@ -92,32 +92,46 @@ public class CocoonServlet extends HttpServlet {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
 
-        LogKit.setGlobalPriority(Priority.ERROR);
+        LogKit.setGlobalPriority(Priority.DEBUG);
 
-        // WARNING (SM): the line below BREAKS the Servlet API portability of
-        // web applications.
-        // This is a hack to go around java compiler design problems that
-        // do not allow applications to force their own classloader to the
-        // compiler during compilation.
-        // We look for a specific Tomcat attribute so we are bound to Tomcat
-        // this means Cocoon won't be able to compile things if the necessary
-        // classes are not already present in the *SYSTEM* classpath, any other
-        // container classloading will break it on other servlet containers.
-        // To fix this, Javac must be redesigned and rewritten or we have to
-        // write our own compiler.
-        // So, for now, the cocoon.war file with included libraries can work
-        // only in Tomcat or in containers that simulate this context attribute
-        // (I don't know if any do) or, for other servlet containers, you have
-        // to extract all the libraries and place them in the system classpath
-        // or the compilation of sitemaps and XSP will fail.
-        // I know this sucks, but I don't have the energy to write a java
-        // compiler to fix this :(
-        this.classpath = (String) context.getAttribute(Cocoon.CATALINA_SERVLET_CLASSPATH);
-        if (this.classpath == null) {
-            this.classpath = (String) context.getAttribute(Cocoon.TOMCAT_SERVLET_CLASSPATH);
-        }
-        if (this.classpath == null) {
-            this.classpath = (String) context.getAttribute(Cocoon.RESIN_SERVLET_CLASSPATH);
+        /* WARNING (SM): the lines below BREAKS the Servlet API portability of
+         * web applications.
+         *
+         * This is a hack to go around java compiler design problems that
+         * do not allow applications to force their own classloader to the
+         * compiler during compilation.
+         *
+         * We look for a specific Tomcat attribute so we are bound to Tomcat
+         * this means Cocoon won't be able to compile things if the necessary
+         * classes are not already present in the *SYSTEM* classpath, any other
+         * container classloading will break it on other servlet containers.
+         * To fix this, Javac must be redesigned and rewritten or we have to
+         * write our own compiler.
+         *
+         * So, for now, the cocoon.war file with included libraries can work
+         * only in Tomcat or in containers that simulate this context attribute
+         * (I don't know if any do) or, for other servlet containers, you have
+         * to extract all the libraries and place them in the system classpath
+         * or the compilation of sitemaps and XSP will fail.
+         * I know this sucks, but I don't have the energy to write a java
+         * compiler to fix this :(
+         *
+         * This solution is to allow you to specify the servlet ClassPath
+         * attribute so that Cocoon can use it.  If your files are in the
+         * system classpath, then we are still ok.  For these popular
+         * servlet containers, we will provide you with the attribute name:
+         *
+         * Catalina (Tomcat 4.x) = "org.apache.catalina.jsp_classpath"
+         * Tomcat (3.x)          = "org.apache.tomcat.jsp_classpath"
+         * Resin                 = "caucho.class.path"
+         * WebSphere (3.5 sp2)   = "com.ibm.websphere.servlet.application.classpath"
+         *
+         * For other servlet containers, please consult your manuals or
+         * put Cocoon in the System Classpath.
+         */
+        String servletClassPath = conf.getInitParameter("classpath-attribute");
+        if (servletClassPath != null) {
+            this.classpath = (String) context.getAttribute(servletClassPath);
         }
 
         this.workDir = ((File) this.context.getAttribute("javax.servlet.context.tempdir")).toString();
