@@ -89,7 +89,6 @@ import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.slide.authenticate.CredentialsToken;
 import org.apache.slide.common.NamespaceAccessToken;
-import org.apache.slide.common.NamespaceConfig;
 import org.apache.slide.common.SlideException;
 import org.apache.slide.common.SlideToken;
 import org.apache.slide.common.SlideTokenImpl;
@@ -104,7 +103,6 @@ import org.apache.slide.lock.Lock;
 import org.apache.slide.lock.NodeLock;
 import org.apache.slide.macro.Macro;
 import org.apache.slide.security.AccessDeniedException;
-import org.apache.slide.security.Security;
 import org.apache.slide.structure.ObjectNode;
 import org.apache.slide.structure.ObjectNotFoundException;
 import org.apache.slide.structure.Structure;
@@ -117,7 +115,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.13 2003/12/14 15:25:02 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.14 2003/12/22 13:35:06 joerg Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -130,13 +128,11 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     
     /* Slide access */
     private NamespaceAccessToken m_nat;
-    private NamespaceConfig m_config;
     private SlideToken m_slideToken;
     
     /* Slide helpers */
     private Structure m_structure;
     private Content m_content;
-    private Security m_security;
     private Lock m_lock;
     private Macro m_macro;
 
@@ -221,10 +217,8 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         CredentialsToken credentials = new CredentialsToken(m_principal);
         m_slideToken = new SlideTokenImpl(credentials);
         
-        m_config = m_nat.getNamespaceConfig();
         m_structure = m_nat.getStructureHelper();
         m_content = m_nat.getContentHelper();
-        m_security = m_nat.getSecurityHelper();
         m_lock = m_nat.getLockHelper();
         m_macro = m_nat.getMacroHelper();
         

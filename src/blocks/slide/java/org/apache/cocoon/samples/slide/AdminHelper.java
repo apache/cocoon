@@ -98,7 +98,7 @@ public class AdminHelper {
         try {
             
             // make sure the role exists
-            ObjectNode role = structure.retrieve(slideToken,roleUri);
+            structure.retrieve(slideToken,roleUri);
             nat.begin();
             
             ObjectNode user = new SubjectNode();
@@ -316,7 +316,6 @@ public class AdminHelper {
         String userUri = usersPath + "/" + username;
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
-        Structure structure = nat.getStructureHelper();
         Content content = nat.getContentHelper();
         
         try {

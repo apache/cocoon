@@ -80,7 +80,7 @@ import org.apache.excalibur.source.SourceException;
  * Multiple actions for upload files, change properties and permissions.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceMultiAction.java,v 1.3 2003/12/08 18:06:44 unico Exp $
+ * @version CVS $Id: SourceMultiAction.java,v 1.4 2003/12/22 13:35:06 joerg Exp $
  */ 
 public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe {
 
@@ -183,11 +183,8 @@ public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe
         Request request = ObjectModelHelper.getRequest(objectModel);
 
         String uri = parameters.getParameter(SOURCE_URI, request.getParameter(SOURCE_URI));
-        String collectionname = parameters.getParameter(SOURCE_NAME, request.getParameter(SOURCE_NAME));
         String principal = parameters.getParameter(PRINCIPAL,
                               request.getParameter(PRINCIPAL));
-        String password = parameters.getParameter(PASSWORD,
-                              request.getParameter(PASSWORD));
 
         getLogger().info("create collection called by '"+principal+"' for '"+uri+"'");
 

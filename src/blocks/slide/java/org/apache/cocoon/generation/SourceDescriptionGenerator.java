@@ -89,7 +89,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @deprecated  use TraversableSourceDescriptionGenerator instead
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.8 2003/12/14 15:22:54 unico Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.9 2003/12/22 13:35:06 joerg Exp $
  */
 public class SourceDescriptionGenerator extends ServiceableGenerator
   implements CacheableProcessingComponent, Recyclable {
@@ -619,7 +619,6 @@ public class SourceDescriptionGenerator extends ServiceableGenerator
     public void pushSourceLocks(LockableSource source)
       throws SAXException, SourceException {
         SourceLock[] locks = source.getSourceLocks();
-        SourceLock lock;
 
         if (locks != null && locks.length > 0) {
             this.contentHandler.startElement(SOURCE_NS, LOCKS_NODE_NAME,
@@ -627,7 +626,7 @@ public class SourceDescriptionGenerator extends ServiceableGenerator
                                              new AttributesImpl());
 
             for (int i = 0; locks.length > 0; i++) {
-                lock = (SourceLock) locks[i];
+                SourceLock lock = locks[i];
 
                 AttributesImpl attributes = new AttributesImpl();
 
