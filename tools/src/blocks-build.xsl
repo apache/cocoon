@@ -30,7 +30,7 @@
           <include name="*.jar"/>
         </fileset>
         <!-- Currently, we have no JVM dependent libraries
-          <fileset dir="${{lib.core}/jvm${target.vm}}">
+          <fileset dir="${{lib.core}}/jvm${{target.vm}}">
              <include name="*.jar"/>
           </fileset>
         -->
