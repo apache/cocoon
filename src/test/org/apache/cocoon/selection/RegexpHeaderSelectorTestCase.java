@@ -21,7 +21,11 @@ import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
-
+/**
+ * Test case for RegexpHeaderSelector.
+ * 
+ * @version CVS $Id$
+ */
 public class RegexpHeaderSelectorTestCase extends SitemapComponentTestCase {
 
     private final String REGEXP_HEADER_SELECTOR = "regexp-header";
