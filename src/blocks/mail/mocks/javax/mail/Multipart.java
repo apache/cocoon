@@ -8,11 +8,14 @@ package javax.mail;
  */
 public class Multipart {
 
-	public int getCount() {
-		throw new NoSuchMethodError("This is a mock object");
-	}
-	
-	public Part getBodyPart(int index) {
-		throw new NoSuchMethodError("This is a mock object");
-	}
+    public int getCount() {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public BodyPart getBodyPart(int index) throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
+    }
+
+    public void addBodyPart(BodyPart part) throws MessagingException {
+    }
 }
