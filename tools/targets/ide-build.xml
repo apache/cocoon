@@ -28,10 +28,10 @@
             out="${build.temp}/blocks-eclipse.xml"
             style="${tools}/ide/eclipse/blocks-classpath.xsl"/>
 
-      <ant antfile="${build.temp}/blocks-eclipse.xml"
-               inheritAll="true"
-               inheritRefs="false"
-               target="generate-customized-eclipse-project"/>
+    <ant antfile="${build.temp}/blocks-eclipse.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="generate-customized-eclipse-project"/>
   </target>
 
   <!-- Generate the Emacs JDE project file -->
