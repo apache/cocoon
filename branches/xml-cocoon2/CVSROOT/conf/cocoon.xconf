@@ -32,7 +32,7 @@
           <builtin-logicsheet>
             <parameter name="prefix" value="xsp-response"/>
             <parameter name="uri" value="http://xml.apache.org/cocoon/xsp/response"/>
-            <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+            <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
           </builtin-logicsheet>
         </target-language>
       </component-instance>
