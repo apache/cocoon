@@ -48,7 +48,15 @@ SAX events.</p>
   }
 </source>
 
-<p>Both methods result in <code>&lt;foo&gt;bar&lt;/foo&gt;</code> being inserted in the resulting
+<p>To insert a <code>FragmentTest</code> you might do something like this
+ (if <code>myMethod()</code> returns a <code>FragmentTest</code>):</p>
+
+<source>
+  &lt;xsp:expr&gt;MyClass.myMethod()&lt;/xsp:expr&gt;
+</source>
+
+<p>Both methods in the example above
+ result in <code>&lt;foo&gt;bar&lt;/foo&gt;</code> being inserted in the resulting
 document.</p>
 
 <p>Of course, it is very wasteful to write two methods to do exactly the same thing! 
