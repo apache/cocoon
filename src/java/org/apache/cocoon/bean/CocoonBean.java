@@ -94,7 +94,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.35 2003/10/11 01:32:53 joerg Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.36 2003/10/13 12:08:10 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -751,5 +751,17 @@ public class CocoonBean extends CocoonWrapper {
             // or do something:
             return false;
         }
+    }
+    /**
+     * Print a description of the software before running
+     */
+    public static String getProlog() {
+        String lSep = System.getProperty("line.separator");
+        StringBuffer msg = new StringBuffer();
+        msg.append("------------------------------------------------------------------------ ").append(lSep);
+        msg.append(Constants.NAME).append(" ").append(Constants.VERSION).append(lSep);
+        msg.append("Copyright (c) ").append(Constants.YEAR).append(" Apache Software Foundation. All rights reserved.").append(lSep);
+        msg.append("------------------------------------------------------------------------ ").append(lSep).append(lSep);
+        return msg.toString();
     }
 }

@@ -67,7 +67,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.2 2003/10/11 05:44:07 upayavira Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.3 2003/10/13 12:08:10 upayavira Exp $
  */
 public class BeanConfigurator {
 
@@ -86,14 +86,17 @@ public class BeanConfigurator {
     private static final String NODE_URI_FILE = "uri-file";
     private static final String NODE_CHECKSUMS_URI = "checksums-uri";
  
-    // context-dir is needed by ant task
-    public static final String ATTR_CONTEXT_DIR = "context-dir";
+    private static final String ATTR_CONTEXT_DIR = "context-dir";
     private static final String ATTR_DEST_DIR = "dest-dir";
     private static final String ATTR_WORK_DIR = "work-dir";
     private static final String ATTR_CONFIG_FILE = "config-file";
     private static final String ATTR_URI_FILE = "uri-file";
     private static final String ATTR_CHECKSUMS_URI = "checksums-uri";
- 
+    private static final String ATTR_AGENT = "user-agent";
+    private static final String ATTR_ACCEPT = "accept";
+    private static final String ATTR_DEFAULT_FILENAME = "default-filename";
+    private static final String ATTR_LOCALE = "locale";
+     
     private static final String NODE_BROKEN_LINKS = "broken-links";
     private static final String ATTR_BROKEN_LINK_REPORT_TYPE = "type";
     private static final String ATTR_BROKEN_LINK_REPORT_FILE = "file";
@@ -163,7 +166,24 @@ public class BeanConfigurator {
         if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
             cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
         }
-        
+        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
+            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
+        }
+        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
+            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
+        }
+        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
+            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
+        }
+        if (hasAttribute(root, ATTR_AGENT)) {
+            cocoon.setAgentOptions(getAttributeValue(root, ATTR_AGENT));
+        }
+        if (hasAttribute(root, ATTR_ACCEPT)) {
+            cocoon.setAgentOptions(getAttributeValue(root, ATTR_ACCEPT));
+        }
+        if (hasAttribute(root, ATTR_DEFAULT_FILENAME)) {
+            cocoon.setAgentOptions(getAttributeValue(root, ATTR_DEFAULT_FILENAME));
+        }
 
         if (destDir == null || destDir.length() == 0) {
             destDir = getNodeValue(root, NODE_DEST_DIR);
@@ -212,15 +232,12 @@ public class BeanConfigurator {
                         cocoon.setChecksumURI(getNodeValue(node));
                     }                
                 } else if (nodeName.equals(NODE_AGENT)) {
-                    //@TODO@ Move this to be attributes too
                     cocoon.setAgentOptions(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_ACCEPT)) {
-                    //@TODO@ Move this to be attributes too
                     cocoon.setAcceptOptions(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_DEFAULT_FILENAME)) {
-                    //@TODO@ Move this to be attributes too
                     cocoon.setDefaultFilename(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_INCLUDE)) {
