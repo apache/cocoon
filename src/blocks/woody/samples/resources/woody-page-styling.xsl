@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<xsl:stylesheet
-  version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+                exclude-result-prefixes="wi">
   
   <xsl:template name="woody-page-head">
       

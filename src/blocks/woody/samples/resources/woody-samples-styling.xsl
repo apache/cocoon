@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<xsl:stylesheet
-  version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
   <xsl:include href="woody-page-styling.xsl"/>
   <xsl:include href="woody-field-styling.xsl"/>
@@ -53,6 +53,4 @@
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
-  
-
 </xsl:stylesheet>
