@@ -97,7 +97,8 @@ implements ComponentHandler {
 
         if( Poolable.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
-            info.setModel(ComponentInfo.MODEL_POOLED);
+            // FIXME - change this later on to MODEL_POOLED
+            info.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
         }
 
         if( numInterfaces > 1 ) {
@@ -130,8 +131,10 @@ implements ComponentHandler {
             factory = new ComponentFactory(componentEnv, info);
         }
 
-        if( info.getModel() == ComponentInfo.MODEL_POOLED )  {
+        if( info.getModel() == ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED)  {
             handler = new NonThreadSafePoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
+        } else if( info.getModel() == ComponentInfo.MODEL_POOLED ) {
+            handler = new PoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
         } else if( info.getModel() == ComponentInfo.MODEL_SINGLETON ) {
             handler = new ThreadSafeComponentHandler( info, componentEnv.logger, factory );
         } else {

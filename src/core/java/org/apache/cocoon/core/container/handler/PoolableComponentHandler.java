@@ -56,9 +56,9 @@ import org.apache.cocoon.core.container.ComponentFactory;
  *  but not pooled.</li>
  * </ul>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
-public class NewPoolableComponentHandler
+public class PoolableComponentHandler
 extends NonThreadSafePoolableComponentHandler {
     
     /**
@@ -69,7 +69,7 @@ extends NonThreadSafePoolableComponentHandler {
      *                managed by the ComponentHandler.
      * @param config The configuration to use to configure the pool.
      */
-    public NewPoolableComponentHandler( final ComponentInfo info,
+    public PoolableComponentHandler( final ComponentInfo info,
                                      final Logger logger,
                                      final ComponentFactory factory,
                                      final Configuration config )
@@ -152,9 +152,9 @@ extends NonThreadSafePoolableComponentHandler {
     protected static final class ProxyHandler implements InvocationHandler, Core.CleanupTask {
         
         private ThreadLocal componentHolder = new InheritableThreadLocal();
-        private final NewPoolableComponentHandler handler;
+        private final PoolableComponentHandler handler;
         
-        public ProxyHandler(NewPoolableComponentHandler handler) {
+        public ProxyHandler(PoolableComponentHandler handler) {
             this.handler = handler;
         }
         
