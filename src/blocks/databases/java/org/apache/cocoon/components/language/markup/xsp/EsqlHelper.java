@@ -38,11 +38,7 @@ import java.sql.Types;
 
 public class EsqlHelper {
 
-    private static Boolean TRUE;
-
-    static {
-        EsqlHelper.TRUE = Boolean.TRUE;
-    }
+    //private static Boolean TRUE = Boolean.TRUE;
 
     /** returns byte array from BLOB
      */
@@ -73,9 +69,7 @@ public class EsqlHelper {
                 buffer = new byte[length];
                 reader.read(buffer);
                 reader.close();
-                if (buffer == null)
-                    return null;
-                return buffer;
+                return buffer != null ? buffer : null;
             } else {
                 return set.getString(column).getBytes();
             }
@@ -88,7 +82,7 @@ public class EsqlHelper {
                     .getClass()
                     .getMethod("isTemporary", new Class[0])
                     .invoke(dbBlob, new Object[0])
-                    .equals(TRUE))
+                    .equals(Boolean.TRUE))
                     dbBlob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
                         dbBlob,
                         new Object[0]);
@@ -113,12 +107,13 @@ public class EsqlHelper {
             buffer = new byte[length];
             reader.read(buffer);
             reader.close();
-            if (buffer != null)
+            if (buffer != null) {
                 result = buffer;
-            else if (defaultString != null && !defaultString.equals("_null_"))
+            } else if (defaultString != null && !defaultString.equals("_null_")) {
                 result = defaultString.getBytes();
-            else
+            } else {
                 result = null;
+            }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting blob data for column " + column, e);
         } finally {
@@ -128,10 +123,11 @@ public class EsqlHelper {
                     .getClass()
                     .getMethod("isTemporary", new Class[0])
                     .invoke(dbBlob, new Object[0])
-                    .equals(TRUE))
+                    .equals(Boolean.TRUE)) {
                     dbBlob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
                         dbBlob,
                         new Object[0]);
+                }
             }
         }
         return result;
@@ -169,14 +165,16 @@ public class EsqlHelper {
                 buffer = new char[length];
                 reader.read(buffer);
                 reader.close();
-                if (reader != null)
+                if (reader != null) {
                     reader.close();
-                if (buffer != null)
+                }
+                if (buffer != null) {
                     result = new String(buffer);
-                else if (defaultString != null && !defaultString.equals("_null_"))
+                } else if (defaultString != null && !defaultString.equals("_null_")) {
                     result = defaultString;
-                else
+                } else {
                     result = null;
+                }
             } else {
                 result = set.getString(column);
                 if (result == null && defaultString != null && !defaultString.equals("_null_"))
@@ -192,10 +190,11 @@ public class EsqlHelper {
                         .getClass()
                         .getMethod("isTemporary", new Class[0])
                         .invoke(dbClob, new Object[0])
-                        .equals(TRUE))
+                        .equals(Boolean.TRUE)) {
                         dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
                             dbClob,
                             new Object[0]);
+                    }
                 } catch (Exception e1) {
                     // swallow
                 }
@@ -224,14 +223,16 @@ public class EsqlHelper {
             buffer = new char[length];
             reader.read(buffer);
             reader.close();
-            if (reader != null)
+            if (reader != null) {
                 reader.close();
-            if (buffer != null)
+            }
+            if (buffer != null) {
                 result = new String(buffer);
-            else if (defaultString != null && !defaultString.equals("_null_"))
+            } else if (defaultString != null && !defaultString.equals("_null_")) {
                 result = defaultString;
-            else
+            } else {
                 result = null;
+            }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting text from column " + column, e);
         } finally {
@@ -242,7 +243,7 @@ public class EsqlHelper {
                         .getClass()
                         .getMethod("isTemporary", new Class[0])
                         .invoke(dbClob, new Object[0])
-                        .equals(TRUE))
+                        .equals(Boolean.TRUE))
                         dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
                             dbClob,
                             new Object[0]);
@@ -284,21 +285,22 @@ public class EsqlHelper {
                 buffer = new byte[length];
                 asciiStream.read(buffer);
                 asciiStream.close();
-                if (buffer != null)
+                if (buffer != null) {
                     result = new String(buffer);
-                else if (defaultString != null && !defaultString.equals("_null_"))
+                } else if (defaultString != null && !defaultString.equals("_null_")) {
                     result = defaultString;
-                else
+                } else {
                     result = null;
+                }
             } else {
                 result = set.getString(column);
-                if (result == null && defaultString != null && !defaultString.equals("_null_"))
+                if (result == null && defaultString != null && !defaultString.equals("_null_")) {
                     result = defaultString;
+                }
             }
         } catch (Exception e) {
             throw new CascadingRuntimeException(
-                "Error getting ascii data from column " + column,
-                e);
+                "Error getting ascii data from column " + column, e);
         } finally {
             if (asciiStream != null) {
                 try {
@@ -314,17 +316,17 @@ public class EsqlHelper {
                         .getClass()
                         .getMethod("isTemporary", new Class[0])
                         .invoke(dbClob, new Object[0])
-                        .equals(TRUE))
+                        .equals(Boolean.TRUE)) {
                         dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
                             dbClob,
                             new Object[0]);
+                    }
                 } catch (Exception e1) {
                     // swallow
                 }
             }
 
         }
-
         return result;
     }
 
@@ -343,12 +345,13 @@ public class EsqlHelper {
             buffer = new byte[length];
             asciiStream.read(buffer);
             asciiStream.close();
-            if (buffer != null)
+            if (buffer != null) {
                 result = new String(buffer);
-            else if (defaultString != null && !defaultString.equals("_null_"))
+            } else if (defaultString != null && !defaultString.equals("_null_")) {
                 result = defaultString;
-            else
+            } else {
                 result = null;
+            }
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting ascii data for column " + column, e);
         } finally {
@@ -366,16 +369,16 @@ public class EsqlHelper {
                         .getClass()
                         .getMethod("isTemporary", new Class[0])
                         .invoke(dbClob, new Object[0])
-                        .equals(TRUE))
+                        .equals(Boolean.TRUE)) {
                         dbClob.getClass().getMethod("freeTemporary", new Class[0]).invoke(
                             dbClob,
                             new Object[0]);
+                    }
                 } catch (Exception e1) {
                     // swallow
                 }
             }
         }
-
         return result;
     }
 
@@ -390,10 +393,11 @@ public class EsqlHelper {
                 throw new CascadingRuntimeException("Unsupported Encoding Exception", uee);
             }
         } else {
-            if (defaultString != null && !defaultString.equals("_null_"))
+            if (defaultString != null && !defaultString.equals("_null_")) {
                 return defaultString;
-            else
+            } else {
                 return null; /* before was "" but null is more consequent */
+            }
         }
     }
 
