@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.5 $ $Date: 2000-09-19 00:27:51 $
+ * @version CVS $Revision: 1.1.4.6 $ $Date: 2000-09-22 12:21:08 $
  */
 
 public class Main {
@@ -41,6 +41,7 @@ public class Main {
 
         String destDir  = Cocoon.DEFAULT_DEST_DIR;
         String confFile = Cocoon.DEFAULT_CONF_FILE;
+        String workDir  = Cocoon.DEFAULT_WORK_DIR;
         List targets = new ArrayList();
         
         for (int i = 0; i < args.length; i++) {
@@ -59,6 +60,15 @@ public class Main {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("You must specify a destination dir when " +
                         "using the -d/--destdir argument");
+                    return;
+                }
+            } else if (arg.equals("-w") || arg.equals("--workdir")) {
+                try {
+                    workDir = args[i + 1];
+                    i++;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("You must specify a destination dir when " +
+                        "using the -w/--workdir argument");
                     return;
                 }
             } else if (arg.equals("-c") || arg.equals("--conf")) {
@@ -99,10 +109,11 @@ public class Main {
         }
 
         try {
-            File dest = getDestinationDir(destDir);
+            File dest = getDir(destDir, "destination");
+            File work = getDir(workDir, "working");
             File conf = getConfigurationFile(confFile);
             File root = conf.getParentFile();
-            Main main = new Main(new Cocoon(conf, null), conf, dest);
+            Main main = new Main(new Cocoon(conf, null, work), conf, dest);
             System.out.println("[main] Starting...");
             main.process(targets);
             System.out.println("[main] Done.");
@@ -129,6 +140,7 @@ public class Main {
         msg.append("  -l/--logfile <file>    use given file for log" + lSep);
         msg.append("  -c/--conf    <file>    use given file as configurations" + lSep);
         msg.append("  -d/--destdir <dir>     use given dir as destination" + lSep + lSep);
+        msg.append("  -w/--workdir <dir>     use given dir as working directory" + lSep + lSep);
         msg.append("Note: if the configuration file is not specified, it will default to" + lSep);
         msg.append("'" + Cocoon.DEFAULT_CONF_FILE + "' in the current working directory, then in the user directory" + lSep);
         msg.append("and finally in the '/usr/local/etc/' directory before giving up." + lSep);
@@ -164,13 +176,13 @@ public class Main {
         throw new FileNotFoundException("The configuration file could not be found.");
     }
 
-    private static File getDestinationDir(String dir) throws Exception {
+    private static File getDir(String dir, String type) throws Exception {
 
         File d = new File(dir);
 
         if (!d.exists()) {
             if (!d.mkdirs()) {
-                throw new IOException("Error creating destination directory '" + d + "'");
+                throw new IOException("Error creating " + type + " directory '" + d + "'");
             }
         }
 
@@ -185,6 +197,8 @@ public class Main {
         return d;
     }
 
+    // -----------------------------------------------------------------------
+    
     private Cocoon cocoon;
     private File destDir;
     private File root;
@@ -326,6 +340,5 @@ public class Main {
             return "xxx";
         }
     }
-    
 }
 

@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.26 $ $Date: 2000-09-19 00:27:51 $
+ * @version CVS $Revision: 1.4.2.27 $ $Date: 2000-09-22 12:21:03 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -53,22 +53,25 @@ public class Cocoon
     private HashMap configurations = new HashMap();
     
     /** The configuration file */ 
-    private File configurationFile = null; 
+    private File configurationFile; 
     
     /** The sitemap file */ 
-    private String sitemapFileName = null; 
+    private String sitemapFileName; 
     
     /** The configuration tree */
-    private Configuration configuration = null;
+    private Configuration configuration;
     
     /** The sitemap manager */
-    private SitemapManager sitemapManager = null;
+    private SitemapManager sitemapManager;
     
     /** The root uri/path */
-    private URL root = null;
+    private URL root;
 
-    /** The classpath (if available) */
-    private String classpath = null;
+    /** The classpath (null if not available) */
+    private String classpath;
+
+    /** The working directory (null if not available) */
+    private File workDir;
             
     /**
      * Create a new <code>Cocoon</code> instance.
@@ -88,20 +91,13 @@ public class Cocoon
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(String configurationFile, String classpath)
-    throws SAXException, IOException, ConfigurationException {
-        this(new File(configurationFile).getCanonicalFile(), classpath);
-    }
-    
-    /**
-     * Create a new <code>Cocoon</code> object, parsing configuration from
-     * the specified file.
-     */
-    public Cocoon(File configurationFile, String classpath)
+    public Cocoon(File configurationFile, String classpath, File workDir)
     throws SAXException, IOException, ConfigurationException {
         this();
 
         this.classpath = classpath;
+        
+        this.workDir = workDir;
                 
         this.configurationFile = configurationFile;
         if (!configurationFile.isFile()) {
@@ -133,6 +129,14 @@ public class Cocoon
      */
     public String getClasspath() {
         return this.classpath;
+    }
+
+    /**
+     * Get the local workpath
+     * @return the workpath available to this instance or null if not available.
+     */
+    public File getWorkDir() {
+        return this.workDir;
     }
 
     /**

@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-03 17:45:45 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-22 12:21:04 $
  */
 
 public interface Constants {
@@ -27,7 +27,7 @@ public interface Constants {
     public static final String TEMPDIR_PROPERTY  = "org.apache.cocoon.properties.tempdir";
     public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
     public static final String DEFAULT_DEST_DIR  = "./site";
-    public static final String DEFAULT_TEMP_DIR  = "./work";
+    public static final String DEFAULT_WORK_DIR  = "./work";
 
     public static final String PARSER_PROPERTY = "org.apache.cocoon.components.parser.Parser";
     public static final String DEFAULT_PARSER  = "org.apache.cocoon.components.parser.XercesParser";
@@ -44,5 +44,8 @@ public interface Constants {
     public static final String LINK_CRAWLING_ROLE    = "static";
     public static final String LINK_TRANSLATING_VIEW = "translate-links";
     public static final String LINK_TRANSLATED_NAME  = "translated-links";    
+
+    public static final String CATALINA_SERVLET_CLASSPATH = "org.apache.catalina.jsp_classpath";
+    public static final String TOMCAT_SERVLET_CLASSPATH = "org.apache.tomcat.jsp_classpath";
 
 }
