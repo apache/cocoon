@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
     <fd:widgets>
         <fd:field id="stringfield">
