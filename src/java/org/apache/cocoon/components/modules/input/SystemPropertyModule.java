@@ -8,6 +8,8 @@ import java.util.Map;
 /**
  * SystemPropertyModule is an JXPath based InputModule implementation that
  * provides access to system properties.
+ * Available system properties are defined by Java's <a
+ * href="http://java.sun.com/j2se/1.4.1/docs/api/java/lang/System.html#getProperties()">System.getProperties()</a>.
  *
  * JXPath allows to apply XPath functions to system properties.
  *
@@ -16,7 +18,7 @@ import java.util.Map;
  * which is wrapped into a configuration exception and re-thrown.
  *
  * @author Konstantin Piroumian
- * @version CVS $Id: SystemPropertyModule.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: SystemPropertyModule.java,v 1.3 2003/05/03 16:02:42 jefft Exp $
  */
 public class SystemPropertyModule extends AbstractJXPathModule
     implements ThreadSafe {
