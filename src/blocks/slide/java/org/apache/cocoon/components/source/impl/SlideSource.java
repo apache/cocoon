@@ -78,9 +78,7 @@ import org.xml.sax.InputSource;
 /**
  * A sources from jakarta slide repositories.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.20 2004/03/27 22:25:10 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.21 2004/04/13 15:16:38 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 

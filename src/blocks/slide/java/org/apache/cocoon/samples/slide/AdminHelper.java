@@ -43,8 +43,6 @@ import org.apache.slide.structure.SubjectNode;
 
 /**
  * Helper class for the slide samples administration application.
- * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
 public class AdminHelper {
     

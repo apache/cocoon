@@ -35,8 +35,7 @@ import org.apache.excalibur.source.TraversableSource;
 /**
  * Data transfer object for a Source object.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDTO.java,v 1.2 2004/04/13 15:11:12 unico Exp $
+ * @version CVS $Id: SourceDTO.java,v 1.3 2004/04/13 15:16:38 unico Exp $
  */
 public class SourceDTO implements Source, ModifiableTraversableSource, 
            MoveableSource, LockableSource, InspectableSource, 
