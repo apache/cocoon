@@ -8,7 +8,7 @@
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
     | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.5 2003/03/26 21:21:29 stefano Exp $
+    | CVS $Id: xml2html.xslt,v 1.6 2003/11/14 14:04:15 joerg Exp $
     +-->
     
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -19,7 +19,7 @@
             <STYLE>
               BODY  {background-color: white; color: black; font: monospace;}
                 .b  {cursor:pointer; color:red; font-weight:bold; text-decoration:none}
-                .e  {border: 0px; padding: 0px; margin: 0px 2em 0px 2em; text-indent:-1em;}
+                .e  {border: 0px; padding: 0px; margin: 0px 0px 0px 2em; text-indent:-1em;}
                 .en {color:#000088; font-weight:bold;}
                 .an {color:#880000}
                 .av {color:#888888}
