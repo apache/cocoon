@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sunlet-administration.xml,v 1.1 2003/03/09 00:05:29 pier Exp $ 
+<!-- $Id: sunlet-administration.xml,v 1.2 2003/12/10 15:38:22 giacomo Exp $ 
 
 -->
 <table><tbody>
@@ -29,7 +29,7 @@
 		<td>
 			<link><target>_new</target>
                         <text>Documentation</text>
-                        <url>../../documents/index.html</url>
+                        <url>../../docs/index.html</url>
 			</link>
 		</td>
 	</tr>
