@@ -1,4 +1,4 @@
-/*-- $Id: CocoonCache.java,v 1.7 2000-11-01 20:12:40 greenrd Exp $ --
+/*-- $Id: CocoonCache.java,v 1.8 2000-11-14 22:02:57 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.framework.*;
  * statically and dynamically generated.
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $Date: 2000/02/14 00:59:18 $
+ * @version $Revision: 1.8 $Date: 2000/11/01 20:12:40 $
  */
 public class CocoonCache implements Cache, Status {
 
@@ -79,7 +79,8 @@ public class CocoonCache implements Cache, Status {
      * the page is returned, otherwise null is returned.
      */
     public Page getPage(HttpServletRequest request) {
-        Page page = (Page) store.get(Utils.encode(request));
+        String encoded = Utils.encode(request);
+        Page page = (Page) store.get(encoded);
 
         if (page == null) {
             return null;
@@ -94,6 +95,8 @@ public class CocoonCache implements Cache, Status {
                 break;
             }
         }
+
+        if (changed) store.remove (encoded);
 
         return (changed) ? null : page;
     }
