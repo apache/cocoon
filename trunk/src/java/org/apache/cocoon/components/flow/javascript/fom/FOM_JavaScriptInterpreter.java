@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.7 2003/08/14 21:48:40 sylvain Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.8 2003/09/23 22:46:44 vgritsenko Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -154,7 +154,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         }
 
         public Script getScript(Context context, Scriptable scope,
-                                             boolean refresh)
+                                boolean refresh)
             throws Exception {
             if (refresh) {
                 source.refresh();
@@ -166,14 +166,15 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             return script;
         }
     }
+
     /**
      * Mapping of String objects (source uri's) to ScriptSourceEntry's
-     *
      */
     Map compiledScripts = new HashMap();
 
     JSErrorReporter errorReporter;
     boolean enableDebugger = false;
+
     /**
      * JavaScript debugger: there's only one of these: it can debug multiple
      * threads executing JS code.
@@ -244,8 +245,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             // Access to Cocoon internal objects
             FOM_Cocoon.init(scope);
             errorReporter = new JSErrorReporter(getLogger());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Context.exit();
             e.printStackTrace();
             throw e;
@@ -323,14 +323,12 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             return "ThreadScope";
         }
         
-        public void put(String name, Scriptable start,
-                        Object value) {
+        public void put(String name, Scriptable start, Object value) {
             useSession = true;
             super.put(name, start, value);
         }
         
-        public void put(int index, Scriptable start,
-                        Object value) {
+        public void put(int index, Scriptable start, Object value) {
             useSession = true;
             super.put(index, start, value);
         }

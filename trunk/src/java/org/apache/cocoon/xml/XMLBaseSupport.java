@@ -107,8 +107,9 @@ public class XMLBaseSupport {
                 baseSource = resolve(getCurrentBase(), base);
                 baseUrl = baseSource.getURI();
             } finally {
-                if (baseSource != null)
+                if (baseSource != null) {
                     resolver.release(baseSource);
+                }
             }
             bases.push(new BaseInfo(baseUrl, level));
         }
@@ -131,8 +132,10 @@ public class XMLBaseSupport {
             } else {
                 source = resolver.resolveURI(location);
             }
-            if (logger.isDebugEnabled())
-                logger.debug("XMLBaseSupport: resolved location " + location + " against base URI " + baseURI + " to " + source.getURI());
+            if (logger.isDebugEnabled()) {
+                logger.debug("XMLBaseSupport: resolved location " + location +
+                             " against base URI " + baseURI + " to " + source.getURI());
+            }
             return source;
         } catch (IOException e) {
             throw new SAXException("XMLBaseSupport: problem resolving uri.", e);
