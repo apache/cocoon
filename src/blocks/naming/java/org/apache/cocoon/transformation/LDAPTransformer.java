@@ -41,6 +41,10 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -167,7 +171,7 @@ public class LDAPTransformer extends AbstractTransformer {
     public static final int STATE_INSIDE_EXECUTE_ADD = 25;
 
     /** Default parameters that might apply to all queries */
-    protected Properties default_properties = new Properties();
+    protected HashMap default_properties = new HashMap();
 
     /** The name of the value element we're currently receiving */
     protected String current_name;
@@ -188,111 +192,52 @@ public class LDAPTransformer extends AbstractTransformer {
     protected XMLConsumer xml_consumer;
     protected LexicalHandler lexical_handler;
 
-    /** BEGIN SitemapComponent methods */
+    /** SitemapComponent methods */
 
     public void setup(SourceResolver resolver, Map objectModel, String source, Parameters parameters)
         throws ProcessingException, SAXException, IOException {
         current_state = STATE_OUTSIDE;
 
-        // Check the initializer
-        String parameter = parameters.getParameter(MAGIC_INITIALIZER_ELEMENT, null);
+        setDefaultProperty(parameters, MAGIC_INITIALIZER_ELEMENT);    // Check the initializer
+        setDefaultProperty(parameters, MAGIC_VERSION_ELEMENT);        // Check the version
+        setDefaultProperty(parameters, MAGIC_AUTHENTICATION_ELEMENT); // Check the authentication
+        setDefaultProperty(parameters, MAGIC_SCOPE_ELEMENT);          // Check the scope
+        setDefaultProperty(parameters, MAGIC_SERVERURL_ELEMENT);      // Check the serverurl
+        setDefaultProperty(parameters, MAGIC_ROOT_DN_ELEMENT);        // Check the ldap-root_dn
+        setDefaultProperty(parameters, MAGIC_PASSWORD_ELEMENT);       // Check the ldap-pwd
+        setDefaultProperty(parameters, MAGIC_PORT_ELEMENT);           // Check the port
+        setDefaultProperty(parameters, MAGIC_SEARCHBASE_ELEMENT);     // Check the searchbase
+        setDefaultProperty(parameters, MAGIC_DOC_ELEMENT);            // Check the doc-element
+        setDefaultProperty(parameters, MAGIC_ROW_ELEMENT);            // Check the row-element
+        setDefaultProperty(parameters, MAGIC_ERROR_ELEMENT);          // Check the error-element
+        setDefaultProperty(parameters, MAGIC_SAX_ERROR);              // Check the sax-error
+        setDefaultProperty(parameters, MAGIC_DEREF_LINK_ELEMENT);     // Check the deref-link-element
+        setDefaultProperty(parameters, MAGIC_COUNT_LIMIT_ELEMENT);    // Check the count-limit-element
+        setDefaultProperty(parameters, MAGIC_TIME_LIMIT_ELEMENT);     // Check the time-limit-element
+        setDefaultProperty(parameters, MAGIC_DEBUG_ELEMENT);          // Check the debug-element
+        setDefaultProperty(parameters, MAGIC_ENCODING_ELEMENT);       // Check the encoding
+        setDefaultProperty(parameters, MAGIC_FILTER_ELEMENT);         // Check the filter-element
+    }
+
+    /** My very own methods */
+
+    /* Helper to set default properties */
+    protected void setDefaultProperty(Parameters parameters, String propertyName) {
+        String parameter = parameters.getParameter(propertyName, null);
         if (parameter != null) {
-            default_properties.setProperty(MAGIC_INITIALIZER_ELEMENT, parameter);
-        }
-        // Check the version
-        parameter = parameters.getParameter(MAGIC_VERSION_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_VERSION_ELEMENT, parameter);
-        }
-        // Check the authentication
-        parameter = parameters.getParameter(MAGIC_AUTHENTICATION_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_AUTHENTICATION_ELEMENT, parameter);
-        }
-        // Check the scope
-        parameter = parameters.getParameter(MAGIC_SCOPE_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_SCOPE_ELEMENT, parameter);
-        }
-        // Check the serverurl
-        parameter = parameters.getParameter(MAGIC_SERVERURL_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_SERVERURL_ELEMENT, parameter);
-        }
-        // Check the ldap-root_dn
-        parameter = parameters.getParameter(MAGIC_ROOT_DN_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_ROOT_DN_ELEMENT, parameter);
-        }
-        // Check the ldap-pwd
-        parameter = parameters.getParameter(MAGIC_PASSWORD_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_PASSWORD_ELEMENT, parameter);
-        }
-        // Check the port
-        parameter = parameters.getParameter(MAGIC_PORT_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_PORT_ELEMENT, parameter);
-        }
-        // Check the searchbase
-        parameter = parameters.getParameter(MAGIC_SEARCHBASE_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_SEARCHBASE_ELEMENT, parameter);
-        }
-        // Check the doc-element
-        parameter = parameters.getParameter(MAGIC_DOC_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_DOC_ELEMENT, parameter);
-        }
-        // Check the row-element
-        parameter = parameters.getParameter(MAGIC_ROW_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_ROW_ELEMENT, parameter);
-        }
-        // Check the error-element
-        parameter = parameters.getParameter(MAGIC_ERROR_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_ERROR_ELEMENT, parameter);
-        }
-        // Check the sax-error
-        parameter = parameters.getParameter(MAGIC_SAX_ERROR, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_SAX_ERROR, parameter);
-        }
-        // Check the deref-link-element
-        parameter = parameters.getParameter(MAGIC_DEREF_LINK_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_DEREF_LINK_ELEMENT, parameter.toUpperCase());
-        }
-        // Check the count-limit-element
-        parameter = parameters.getParameter(MAGIC_COUNT_LIMIT_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_COUNT_LIMIT_ELEMENT, parameter);
-        }
-        // Check the time-limit-element
-        parameter = parameters.getParameter(MAGIC_TIME_LIMIT_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_TIME_LIMIT_ELEMENT, parameter);
-        }
-        // Check the debug-element
-        parameter = parameters.getParameter(MAGIC_DEBUG_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_DEBUG_ELEMENT, parameter);
-        }
-        // Check the encoding
-        parameter = parameters.getParameter(MAGIC_ENCODING_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_ENCODING_ELEMENT, parameter);
-        }
-        // Check the filter-element
-        parameter = parameters.getParameter(MAGIC_FILTER_ELEMENT, null);
-        if (parameter != null) {
-            default_properties.setProperty(MAGIC_FILTER_ELEMENT, parameter);
+            default_properties.put(propertyName, parameter);
         }
     }
-    /** END SitemapComponent methods */
-
-    /** BEGIN my very own methods */
+    
+    /* Helper class to store a new Query in the stack */
+    protected void storeQuery(int nextState) {
+        current_state = nextState;
+        current_query_index = queries.size();
+        LDAPQuery query = new LDAPQuery(this);
+        queries.addElement(query);
+        getCurrentQuery().toDo = nextState;
+        getCurrentQuery().query_index = current_query_index;
+    }
 
     /**
      * This will be the meat of LDAPTransformer, where the query is run.
@@ -316,158 +261,70 @@ public class LDAPTransformer extends AbstractTransformer {
         throw new IllegalStateException(my_name + ": " + message);
     }
 
-    protected void startExecuteQuery(Attributes attributes) {
-        LDAPQuery query;
+    protected void startExecuteElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_OUTSIDE :
             case LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY;
-                getCurrentQuery().query_index = current_query_index;
+                storeQuery(LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY);
                 break;
             default :
                 throwIllegalStateException("Not expecting a start execute-query element");
         }
     }
 
-    protected void endExecuteQuery() throws SAXException {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-                executeQuery(current_query_index);
-                queries.remove(current_query_index);
-                --current_query_index;
-                if (current_query_index > -1) {
-                    current_state = getCurrentQuery().toDo;
-                } else {
-                    queries.removeAllElements();
-                    current_state = LDAPTransformer.STATE_OUTSIDE;
-                }
-                break;
-            default :
-                throwIllegalStateException("Not expecting a end execute-query element");
-        }
-    }
-
-    protected void startExecuteIncrement(Attributes attributes) {
-        LDAPQuery query;
+    protected void startExecuteElement(int state, String name) {
         switch (current_state) {
             case LDAPTransformer.STATE_OUTSIDE :
             case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT;
-                getCurrentQuery().query_index = current_query_index;
+                storeQuery(state);
                 break;
             default :
-                throwIllegalStateException("Not expecting a start execute-increment element");
+                throwIllegalStateException("Not expecting a start " + name + " element");
         }
     }
 
-    protected void endExecuteIncrement() throws SAXException {
-        switch (current_state) {
-            case LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT :
-                executeQuery(current_query_index);
-                queries.remove(current_query_index);
-                --current_query_index;
-                if (current_query_index > 1) {
-                    current_state = getCurrentQuery().toDo;
-                } else {
-                    queries.removeAllElements();
-                    current_state = LDAPTransformer.STATE_OUTSIDE;
-                }
-                break;
-            default :
-                throwIllegalStateException("Not expecting a end execute-increment element");
+    protected void endExecuteElement(int state, String name) throws SAXException {
+        if (current_state == state) {
+            executeQuery(current_query_index);
+            queries.remove(current_query_index);
+            --current_query_index;
+            if (current_query_index > -1) {
+                current_state = getCurrentQuery().toDo;
+            } else {
+                queries.removeAllElements();
+                current_state = LDAPTransformer.STATE_OUTSIDE;
+            }
+        } else {
+            throwIllegalStateException("Not expecting a end " + name + " element");
         }
     }
 
-    protected void startExecuteReplace(Attributes attributes) {
-        LDAPQuery query;
-        switch (current_state) {
-            case LDAPTransformer.STATE_OUTSIDE :
-            case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE;
-                getCurrentQuery().query_index = current_query_index;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start execute-replace element");
-        }
-    }
-
-    protected void endExecuteReplace() throws SAXException {
-        switch (current_state) {
-            case LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE :
-                executeQuery(current_query_index);
-                queries.remove(current_query_index);
-                --current_query_index;
-                if (current_query_index > 1) {
-                    current_state = getCurrentQuery().toDo;
-                } else {
-                    queries.removeAllElements();
-                    current_state = LDAPTransformer.STATE_OUTSIDE;
-                }
-                break;
-            default :
-                throwIllegalStateException("Not expecting a end execute-replace element");
-        }
-    }
-
-    protected void startExecuteAdd(Attributes attributes) {
-        LDAPQuery query;
-        switch (current_state) {
-            case LDAPTransformer.STATE_OUTSIDE :
-            case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_ADD;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_ADD;
-                getCurrentQuery().query_index = current_query_index;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start execute-add element");
-        }
-    }
-
-    protected void endExecuteAdd() throws SAXException {
-        switch (current_state) {
-            case LDAPTransformer.STATE_INSIDE_EXECUTE_ADD :
-                executeQuery(current_query_index);
-                queries.remove(current_query_index);
-                --current_query_index;
-                if (current_query_index > 1) {
-                    current_state = getCurrentQuery().toDo;
-                } else {
-                    queries.removeAllElements();
-                    current_state = LDAPTransformer.STATE_OUTSIDE;
-                }
-                break;
-            default :
-                throwIllegalStateException("Not expecting a end execute-add element");
-        }
-    }
-
-    protected void startInitializerElement(Attributes attributes) {
+    protected void startQueryParameterElement(int state, String name) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
             case STATE_INSIDE_EXECUTE_INCREMENT :
             case STATE_INSIDE_EXECUTE_REPLACE :
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
+                current_state = state;
+                getCurrentQuery().current_state = state;
                 break;
             default :
-                throwIllegalStateException("Not expecting a start initializer element");
+                throwIllegalStateException("Not expecting a start " + name + " element");
+        }
+    }
+
+    protected void startParameterElement(int state, String name) {
+        switch (current_state) {
+            case STATE_INSIDE_EXECUTE_QUERY :
+            case STATE_INSIDE_EXECUTE_INCREMENT :
+            case STATE_INSIDE_EXECUTE_REPLACE :
+            case STATE_INSIDE_EXECUTE_ADD :
+                current_value.setLength(0);
+                current_state = state;
+                break;
+            default :
+                throwIllegalStateException("Not expecting a start " + name + " serverurl element");
         }
     }
 
@@ -482,21 +339,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startScopeElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start scope element");
-        }
-    }
-
     protected void endScopeElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT :
@@ -505,21 +347,6 @@ public class LDAPTransformer extends AbstractTransformer {
                 break;
             default :
                 throwIllegalStateException("Not expecting a end scope element");
-        }
-    }
-
-    protected void startAuthenticationElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start authentication element");
         }
     }
 
@@ -534,20 +361,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startServerurlElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start serverurl element");
-        }
-    }
-
     protected void endServerurlElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT :
@@ -556,20 +369,6 @@ public class LDAPTransformer extends AbstractTransformer {
                 break;
             default :
                 throwIllegalStateException("Not expecting a end serverurl element");
-        }
-    }
-
-    protected void startPortElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PORT_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start port element");
         }
     }
 
@@ -600,27 +399,13 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void endShowAttributeElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_SHOW_ATTRIBUTE_ELEMENT :
-                if (current_value.toString().toUpperCase().equals("FALSE")) {
+                if (!BooleanUtils.toBoolean(current_value.toString())) {
                     getCurrentQuery().showAttribute = false;
                 }
                 current_state = getCurrentQuery().toDo;
                 break;
             default :
                 throwIllegalStateException("Not expecting a end show-attribute element");
-        }
-    }
-
-    protected void startSearchbaseElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start searchbase element");
         }
     }
 
@@ -635,20 +420,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startDocElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DOC_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start doc-element element");
-        }
-    }
-
     protected void endDocElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_DOC_ELEMENT :
@@ -657,20 +428,6 @@ public class LDAPTransformer extends AbstractTransformer {
                 break;
             default :
                 throwIllegalStateException("Not expecting a end doc-element element");
-        }
-    }
-
-    protected void startRowElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROW_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start row-element element");
         }
     }
 
@@ -685,20 +442,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startErrorElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start error-element element");
-        }
-    }
-
     protected void endErrorElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT :
@@ -707,20 +450,6 @@ public class LDAPTransformer extends AbstractTransformer {
                 break;
             default :
                 throwIllegalStateException("Not expecting a end error-element element");
-        }
-    }
-
-    protected void startSaxError(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start sax-error element");
         }
     }
 
@@ -737,20 +466,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startRootDnElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start root-dn element");
-        }
-    }
-
     protected void endRootDnElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT :
@@ -759,20 +474,6 @@ public class LDAPTransformer extends AbstractTransformer {
                 break;
             default :
                 throwIllegalStateException("Not expecting a end root-dn element");
-        }
-    }
-
-    protected void startPasswordElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PASSWORD_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start password element");
         }
     }
 
@@ -863,20 +564,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startVersionElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_state = LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT;
-                current_value.setLength(0);
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start version element");
-        }
-    }
-
     protected void endVersionElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT :
@@ -914,44 +601,14 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startDerefLinkElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_state = LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT;
-                current_value.setLength(0);
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start deref-link element");
-        }
-    }
-
     protected void endDerefLinkElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT :
-                if (current_value.toString().toUpperCase().equals("TRUE")) {
-                    getCurrentQuery().deref_link = true;
-                }
+                getCurrentQuery().deref_link = BooleanUtils.toBoolean(current_value.toString());
                 current_state = getCurrentQuery().toDo;
                 break;
             default :
                 throwIllegalStateException("Not expecting a end deref-link element");
-        }
-    }
-
-    protected void startCountLimitElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_state = LDAPTransformer.STATE_INSIDE_COUNT_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start count-limit element");
         }
     }
 
@@ -966,20 +623,6 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startTimeLimitElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_state = LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start time-limit element");
-        }
-    }
-
     protected void endTimeLimitElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT :
@@ -991,26 +634,10 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
-    protected void startDebugElement(Attributes attributes) {
-        switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY :
-            case STATE_INSIDE_EXECUTE_INCREMENT :
-            case STATE_INSIDE_EXECUTE_REPLACE :
-            case STATE_INSIDE_EXECUTE_ADD :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT;
-                break;
-            default :
-                throwIllegalStateException("Not expecting a start debug element");
-        }
-    }
-
     protected void endDebugElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT :
-                if (current_value.toString().toUpperCase().equals("TRUE")) {
-                    getCurrentQuery().debug = true;
-                }
+                getCurrentQuery().debug = BooleanUtils.toBoolean(current_value.toString());
                 current_state = getCurrentQuery().toDo;
                 break;
             default :
@@ -1019,11 +646,11 @@ public class LDAPTransformer extends AbstractTransformer {
     }
 
     protected LDAPQuery getCurrentQuery() {
-        return (LDAPQuery) queries.elementAt(current_query_index);
+        return (LDAPQuery)queries.elementAt(current_query_index);
     }
 
     protected LDAPQuery getQuery(int i) {
-        return (LDAPQuery) queries.elementAt(i);
+        return (LDAPQuery)queries.elementAt(i);
     }
 
     /** END my very own methods */
@@ -1047,53 +674,53 @@ public class LDAPTransformer extends AbstractTransformer {
         getLogger().debug("RECEIVED START ELEMENT " + name + "(" + uri + ")");
 
         if (name.equals(LDAPTransformer.MAGIC_EXECUTE_QUERY)) {
-            startExecuteQuery(attributes);
+            startExecuteElement();
         } else if (name.equals(LDAPTransformer.MAGIC_EXECUTE_INCREMENT)) {
-            startExecuteIncrement(attributes);
+            startExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_INITIALIZER_ELEMENT)) {
-            startInitializerElement(attributes);
+            startQueryParameterElement(LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT)) {
-            startAuthenticationElement(attributes);
+            startQueryParameterElement(LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_SCOPE_ELEMENT)) {
-            startScopeElement(attributes);
+            startQueryParameterElement(LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_VERSION_ELEMENT)) {
-            startVersionElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_SERVERURL_ELEMENT)) {
-            startServerurlElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_PORT_ELEMENT)) {
-            startPortElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_PORT_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_DOC_ELEMENT)) {
-            startDocElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_DOC_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_ROW_ELEMENT)) {
-            startRowElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_ROW_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_ERROR_ELEMENT)) {
-            startErrorElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_SAX_ERROR)) {
-            startSaxError(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_ROOT_DN_ELEMENT)) {
-            startRootDnElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_PASSWORD_ELEMENT)) {
-            startPasswordElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_PASSWORD_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT)) {
             startAttributeElement(attributes);
         } else if (name.equals(LDAPTransformer.MAGIC_SHOW_ATTRIBUTE_ELEMENT)) {
             startShowAttributeElement(attributes);
         } else if (name.equals(LDAPTransformer.MAGIC_SEARCHBASE_ELEMENT)) {
-            startSearchbaseElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_FILTER_ELEMENT)) {
             startFilterElement(attributes);
         } else if (name.equals(LDAPTransformer.MAGIC_DEREF_LINK_ELEMENT)) {
-            startDerefLinkElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_COUNT_LIMIT_ELEMENT)) {
-            startCountLimitElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_COUNT_LIMIT_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_TIME_LIMIT_ELEMENT)) {
-            startTimeLimitElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_DEBUG_ELEMENT)) {
-            startDebugElement(attributes);
+            startParameterElement(LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_EXECUTE_REPLACE)) {
-            startExecuteReplace(attributes);
+            startExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE, LDAPTransformer.MAGIC_EXECUTE_REPLACE);
         } else if (name.equals(LDAPTransformer.MAGIC_EXECUTE_ADD)) {
-            startExecuteAdd(attributes);
+            startExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_ADD, LDAPTransformer.MAGIC_EXECUTE_ADD);
         }
     }
 
@@ -1102,12 +729,14 @@ public class LDAPTransformer extends AbstractTransformer {
             super.endElement(uri, name, raw);
             return;
         }
-        getLogger().debug("RECEIVED END ELEMENT " + name + "(" + uri + ")");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("RECEIVED END ELEMENT " + name + "(" + uri + ")");
+        }
 
         if (name.equals(LDAPTransformer.MAGIC_EXECUTE_QUERY)) {
-            endExecuteQuery();
+            endExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY, LDAPTransformer.MAGIC_EXECUTE_QUERY);
         } else if (name.equals(LDAPTransformer.MAGIC_EXECUTE_INCREMENT)) {
-            endExecuteIncrement();
+            endExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT, LDAPTransformer.MAGIC_EXECUTE_INCREMENT);
         } else if (name.equals(LDAPTransformer.MAGIC_INITIALIZER_ELEMENT)) {
             endInitializerElement();
         } else if (name.equals(LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT)) {
@@ -1149,9 +778,9 @@ public class LDAPTransformer extends AbstractTransformer {
         } else if (name.equals(LDAPTransformer.MAGIC_DEBUG_ELEMENT)) {
             endDebugElement();
         } else if (name.equals(LDAPTransformer.MAGIC_EXECUTE_REPLACE)) {
-            endExecuteReplace();
+            endExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE, LDAPTransformer.MAGIC_EXECUTE_REPLACE);
         } else if (name.equals(LDAPTransformer.MAGIC_EXECUTE_ADD)) {
-            endExecuteAdd();
+            endExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_ADD, LDAPTransformer.MAGIC_EXECUTE_ADD);
         }
     }
 
@@ -1178,7 +807,9 @@ public class LDAPTransformer extends AbstractTransformer {
             && current_state != LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT) {
             super.characters(ary, start, length);
         }
-        getLogger().debug("RECEIVED CHARACTERS: " + new String(ary, start, length));
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("RECEIVED CHARACTERS: " + new String(ary, start, length));
+        }
         current_value.append(ary, start, length);
     }
 
@@ -1198,15 +829,7 @@ public class LDAPTransformer extends AbstractTransformer {
     }
 
     protected static String getStringValue(Object object) {
-        if (object instanceof byte[]) {
-            return new String((byte[]) object);
-        } else if (object instanceof char[]) {
-            return new String((char[]) object);
-        } else if (object != null) {
-            return object.toString();
-        } else {
-            return "";
-        }
+        return ObjectUtils.toString(object);
     }
 
     public final Logger getTheLogger() {
@@ -1225,16 +848,16 @@ public class LDAPTransformer extends AbstractTransformer {
         protected LDAPTransformer transformer;
 
         /** LDAP configuration information */
-        protected String initializer = "com.sun.jndi.ldap.LdapCtxFactory";
-        protected String serverurl = "localhost";
-        protected int port = 389;
-        protected String root_dn = "";
-        protected String password = "";
-        protected String version = "2";
-        protected String scope = "ONELEVEL_SCOPE";
-        protected String authentication = "simple";
+        protected String initializer;
+        protected String serverurl;
+        protected int port;
+        protected String root_dn;
+        protected String password;
+        protected String version;
+        protected String scope;
+        protected String authentication;
         private final static String LDAP_ENCODING = "ISO-8859-1"; 
-        protected String encoding = LDAP_ENCODING;
+        protected String encoding;
 
         /** LDAP environment information */
         protected Properties env = new Properties();
@@ -1242,94 +865,60 @@ public class LDAPTransformer extends AbstractTransformer {
 
         /** LDAP Query */
         protected int toDo;
-        protected String searchbase = "";
+        protected String searchbase;
         protected List attrModeVal = new LinkedList();
         protected List attrListe = new LinkedList();
         protected List attrVale = new LinkedList();
-        protected String REPLACE_MODE_DEFAULT = "";
-        protected String REPLACE_MODE_APPEND = "";
-        protected boolean showAttribute = true;
-        protected String filter = "";
-        protected String doc_element = "doc-element";
-        protected String exec_element = "exec-element";
-        protected String row_element = "row-element";
-        protected String error_element = "ldap-error";
-        protected boolean sax_error = false;
-        protected boolean deref_link = false;
-        // Dereference: true -> dereference the link during search
-        protected long count_limit = 0; // Maximum number of entries to return: 0 -> no limit
-        protected int time_limit = 0;
-        // Number of milliseconds to wait before return: 0 -> infinite
-        protected boolean debug = false;
+        protected String REPLACE_MODE_DEFAULT = StringUtils.defaultString(LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_DEFAULT);
+        protected String REPLACE_MODE_APPEND = StringUtils.defaultString(LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_VALUE_A);
+        protected boolean showAttribute;
+        protected String filter;
+        protected String doc_element;
+        protected String exec_element;
+        protected String row_element;
+        protected String error_element;
+        protected boolean sax_error;
+        protected boolean deref_link; // Dereference: true -> dereference the link during search
+        protected long count_limit;   // Maximum number of entries to return: 0 -> no limit
+        protected int time_limit;     // Number of milliseconds to wait before return: 0 -> infinite
+        protected boolean debug; 
 
         protected LDAPQuery(LDAPTransformer transformer) {
             this.transformer = transformer;
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_INITIALIZER_ELEMENT)) {
-                initializer = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_INITIALIZER_ELEMENT);
+            initializer = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_INITIALIZER_ELEMENT, "com.sun.jndi.ldap.LdapCtxFactory");
+            serverurl = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_SERVERURL_ELEMENT, "localhost");
+            port = MapUtils.getIntValue(transformer.default_properties, LDAPTransformer.MAGIC_PORT_ELEMENT, 389);
+            root_dn = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_ROOT_DN_ELEMENT, "");
+            password = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_PASSWORD_ELEMENT, "");
+            version = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_VERSION_ELEMENT, "2");
+            scope = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_SCOPE_ELEMENT, "ONELEVEL_SCOPE");
+            authentication = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT, "simple");
+            searchbase = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_SEARCHBASE_ELEMENT, "");
+            showAttribute = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_SHOW_ATTRIBUTE_ELEMENT, true);
+            doc_element = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_DOC_ELEMENT, "doc-element");
+            row_element = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_ROW_ELEMENT, "row-element");
+            error_element = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_ERROR_ELEMENT, "ldap-error");
+            sax_error = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_SAX_ERROR);
+            deref_link = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_DEREF_LINK_ELEMENT);
+            count_limit = MapUtils.getLongValue(transformer.default_properties, LDAPTransformer.MAGIC_DEREF_LINK_ELEMENT);
+            time_limit = MapUtils.getIntValue(transformer.default_properties, LDAPTransformer.MAGIC_TIME_LIMIT_ELEMENT);
+            debug = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_DEBUG_ELEMENT);
+            encoding = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_ENCODING_ELEMENT, LDAP_ENCODING);
+            filter = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_FILTER_ELEMENT, "");
+        }
+
+        /** shared constraints initialization */
+        protected void initConstraints(SearchControls constraints) {
+            if (scope.equals("OBJECT_SCOPE")) {
+                constraints.setSearchScope(SearchControls.OBJECT_SCOPE);
+            } else if (scope.equals("SUBTREE_SCOPE")) {
+                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            } else {
+                constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
             }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SERVERURL_ELEMENT)) {
-                serverurl = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SERVERURL_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_PORT_ELEMENT)) {
-                port = Integer.parseInt(transformer.default_properties.getProperty(LDAPTransformer.MAGIC_PORT_ELEMENT));
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ROOT_DN_ELEMENT)) {
-                root_dn = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ROOT_DN_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_PASSWORD_ELEMENT)) {
-                password = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_PASSWORD_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_VERSION_ELEMENT)) {
-                version = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_VERSION_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SCOPE_ELEMENT)) {
-                scope = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SCOPE_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT)) {
-                authentication = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SEARCHBASE_ELEMENT)) {
-                searchbase = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SEARCHBASE_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SHOW_ATTRIBUTE_ELEMENT)) {
-                showAttribute = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SHOW_ATTRIBUTE_ELEMENT).equals("FALSE") ? false : true;
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_DOC_ELEMENT)) {
-                doc_element = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_DOC_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ROW_ELEMENT)) {
-                row_element = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ROW_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ERROR_ELEMENT)) {
-                error_element = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ERROR_ELEMENT);
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SAX_ERROR)) {
-                sax_error = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_SAX_ERROR).equals("TRUE") ? true : false;
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_DEREF_LINK_ELEMENT)) {
-                deref_link = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_DEREF_LINK_ELEMENT).equals("TRUE") ? true : false;
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_COUNT_LIMIT_ELEMENT)) {
-                count_limit = Long.parseLong(transformer.default_properties.getProperty(LDAPTransformer.MAGIC_COUNT_LIMIT_ELEMENT));
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_TIME_LIMIT_ELEMENT)) {
-                time_limit = Integer.parseInt(transformer.default_properties.getProperty(LDAPTransformer.MAGIC_TIME_LIMIT_ELEMENT));
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_DEBUG_ELEMENT)) {
-                debug = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_DEBUG_ELEMENT).equals("TRUE") ? true : false;
-            }
-            if (null != transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ENCODING_ELEMENT)) {
-                encoding = transformer.default_properties.getProperty(LDAPTransformer.MAGIC_ENCODING_ELEMENT);
-            }
-            if (null != LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_VALUE_A) {
-                REPLACE_MODE_APPEND = LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_VALUE_A;
-            }
-            if (null != LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_DEFAULT) {
-                REPLACE_MODE_DEFAULT = LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_DEFAULT;
-            }
-            if (null != transformer.default_properties.getProperty(MAGIC_FILTER_ELEMENT)) {
-                filter = transformer.default_properties.getProperty(MAGIC_FILTER_ELEMENT);
-            }
+            constraints.setTimeLimit(time_limit);
+            constraints.setDerefLinkFlag(deref_link);
+            constraints.setCountLimit(count_limit);
         }
 
         protected void execute() throws Exception, NamingException {
@@ -1347,16 +936,7 @@ public class LDAPTransformer extends AbstractTransformer {
                 switch (toDo) {
                     case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
                         try {
-                            if (scope.equals("OBJECT_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.OBJECT_SCOPE);
-                            } else if (scope.equals("SUBTREE_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                            } else {
-                                constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
-                            }
-                            constraints.setTimeLimit(time_limit);
-                            constraints.setDerefLinkFlag(deref_link);
-                            constraints.setCountLimit(count_limit);
+                            initConstraints(constraints);
                             if (attrList.length > 0) {
                                 constraints.setReturningAttributes(attrList);
                             }
@@ -1473,16 +1053,7 @@ public class LDAPTransformer extends AbstractTransformer {
                         break;
                     case LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT :
                         try {
-                            if (scope.equals("OBJECT_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.OBJECT_SCOPE);
-                            } else if (scope.equals("SUBTREE_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                            } else {
-                                constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
-                            }
-                            constraints.setTimeLimit(time_limit);
-                            constraints.setDerefLinkFlag(deref_link);
-                            constraints.setCountLimit(count_limit);
+                            initConstraints(constraints);
                             if (attrList.length != 1) {
                                 transformer.start(error_element, attr);
                                 transformer.data("Increment must reference exactly 1 attribute.");
@@ -1558,16 +1129,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 attrModeMap.put(attrList[i], attrMode[i]);
                             }
 
-                            if (scope.equals("OBJECT_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.OBJECT_SCOPE);
-                            } else if (scope.equals("SUBTREE_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                            } else {
-                                constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
-                            }
-                            constraints.setTimeLimit(time_limit);
-                            constraints.setDerefLinkFlag(deref_link);
-                            constraints.setCountLimit(count_limit);
+                            initConstraints(constraints);
                             if (attrList.length < 1) {
                                 transformer.start(error_element, attr);
                                 transformer.data("Modify must reference 1 or more attribute.");
@@ -1576,7 +1138,6 @@ public class LDAPTransformer extends AbstractTransformer {
                                 if (!filter.equals("")) {
                                     constraints.setReturningAttributes(attrList);
                                     NamingEnumeration ldapresults = ctx.search(searchbase, filter, constraints);
-                                    String attrID = "";
                                     SearchResult si = null;
                                     /* start indicate element of executing query */
                                     if (!exec_element.equals("")) {
@@ -1594,7 +1155,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             while (ae.hasMoreElements()) {
                                                 Attribute at = (Attribute) ae.next();
                                                 Enumeration vals = at.getAll();
-                                                attrID = at.getID();
+                                                String attrID = at.getID();
                                                 ModificationItem[] mods = new ModificationItem[1];
                                                 replaceMode = (String) attrModeMap.get(attrID);
 
@@ -1602,7 +1163,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                                 String newAttrValue = "";
                                                 /* Check the replacing method */
                                                 if (replaceMode.equals(REPLACE_MODE_DEFAULT)) {
-                                                    newAttrValue = (String) attrMap.get(attrID);
+                                                    newAttrValue = (String)attrMap.get(attrID);
                                                 } else if (replaceMode.equals(REPLACE_MODE_APPEND)) {
                                                     newAttrValue = attrValue + (String) attrMap.get(attrID);
                                                 }
@@ -1613,11 +1174,8 @@ public class LDAPTransformer extends AbstractTransformer {
 
                                                 // Perform the requested modifications on the named object
                                                 ctx.modifyAttributes(
-                                                    new StringBuffer(si.toString().substring(0, si.toString().indexOf(":")))
-                                                        .append(",")
-                                                        .append(searchbase)
-                                                        .toString(),
-                                                    mods);
+                                                        si.toString().substring(0, si.toString().indexOf(":")) + "," + searchbase,
+                                                        mods);
 
                                                 /* confirm of success */
                                                 transformer.start(attrID, attr);
@@ -1637,7 +1195,6 @@ public class LDAPTransformer extends AbstractTransformer {
                                 } else {
                                     //filter is not present
                                     javax.naming.directory.Attributes attrs = ctx.getAttributes(searchbase, attrList);
-                                    String attrID = "";
                                     /* start indicate element of executing query */
                                     if (!exec_element.equals("")) {
                                         transformer.start(exec_element, attr);
@@ -1645,13 +1202,12 @@ public class LDAPTransformer extends AbstractTransformer {
                                     if (!row_element.equals("")) {
                                         transformer.start(row_element, attr);
                                     }
-
                                     if (attrs != null) {
                                         NamingEnumeration ae = attrs.getAll();
                                         while (ae.hasMoreElements()) {
                                             Attribute at = (Attribute) ae.next();
                                             Enumeration vals = at.getAll();
-                                            attrID = at.getID();
+                                            String attrID = at.getID();
                                             ModificationItem[] mods = new ModificationItem[1];
                                             replaceMode = (String) attrModeMap.get(attrID);
 
@@ -1723,16 +1279,7 @@ public class LDAPTransformer extends AbstractTransformer {
                             for (int i = 0; i < attrVal.length; i++)
                                 attrMap.put(attrList[i], attrVal[i]);
 
-                            if (scope.equals("OBJECT_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.OBJECT_SCOPE);
-                            } else if (scope.equals("SUBTREE_SCOPE")) {
-                                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                            } else {
-                                constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
-                            }
-                            constraints.setTimeLimit(time_limit);
-                            constraints.setDerefLinkFlag(deref_link);
-                            constraints.setCountLimit(count_limit);
+                            initConstraints(constraints);
                             if (attrList.length < 1) {
                                 transformer.start(error_element, attr);
                                 transformer.data("Modify must reference 1 or more attribute.");
@@ -1741,7 +1288,6 @@ public class LDAPTransformer extends AbstractTransformer {
                                 if (!filter.equals("")) {
                                     constraints.setReturningAttributes(attrList);
                                     NamingEnumeration ldapresults = ctx.search(searchbase, filter, constraints);
-                                    String attrID = "";
                                     SearchResult si = null;
                                     /* start indicate element of executing query */
                                     if (!exec_element.equals("")) {
@@ -1759,7 +1305,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             NamingEnumeration ae = attrs.getAll();
                                             while (ae.hasMoreElements()) {
                                                 Attribute at = (Attribute) ae.next();
-                                                attrID = at.getID();
+                                                String attrID = at.getID();
                                                 // Specify the changes to make
                                                 ModificationItem[] mods = new ModificationItem[1];
 
@@ -1783,7 +1329,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             }
                                         }
                                         /* Add the attributes */
-                                        if (attrMap.size() > 0) {
+                                        if (!attrMap.isEmpty()) {
                                             ModificationItem[] mods = new ModificationItem[1];
                                             for (int i = 0; i < attrList.length; i++) {
                                                 if (attrMap.containsKey(attrList[i])) {
@@ -1808,7 +1354,6 @@ public class LDAPTransformer extends AbstractTransformer {
                                         if (!row_element.equals("")) {
                                             transformer.end(row_element);
                                         }
-
                                     }
                                     if (!exec_element.equals("")) {
                                         transformer.end(exec_element);
@@ -1816,7 +1361,6 @@ public class LDAPTransformer extends AbstractTransformer {
                                 } else {
                                     //filter is not present
                                     javax.naming.directory.Attributes attrs = ctx.getAttributes(searchbase, attrList);
-                                    String attrID = "";
                                     /* start indicate element of executing query */
                                     if (!exec_element.equals("")) {
                                         transformer.start(exec_element, attr);
@@ -1829,7 +1373,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                         NamingEnumeration ae = attrs.getAll();
                                         while (ae.hasMoreElements()) {
                                             Attribute at = (Attribute) ae.next();
-                                            attrID = at.getID();
+                                            String attrID = at.getID();
                                             // Specify the changes to make
                                             ModificationItem[] mods = new ModificationItem[1];
 
@@ -1845,11 +1389,10 @@ public class LDAPTransformer extends AbstractTransformer {
                                             transformer.end(attrID);
                                             /* Remove the attribute from map after replacing */
                                             attrMap.remove(attrID);
-
                                         }
                                     }
                                     /* Add the attributes */
-                                    if (attrMap.size() > 0) {
+                                    if (!attrMap.isEmpty()) {
                                         ModificationItem[] mods = new ModificationItem[1];
                                         for (int i = 0; i < attrList.length; i++) {
                                             if (attrMap.containsKey(attrList[i])) {
@@ -1865,11 +1408,9 @@ public class LDAPTransformer extends AbstractTransformer {
                                             }
                                         }
                                     }
-
                                     if (!row_element.equals("")) {
                                         transformer.end(row_element);
                                     }
-
                                     /* end indicate element of executing query */
                                     if (!exec_element.equals("")) {
                                         transformer.end(exec_element);
@@ -1893,7 +1434,6 @@ public class LDAPTransformer extends AbstractTransformer {
                             }
                         }
                         break;
-
                     default :
                 } //end switch
             } catch (NamingException e) {
@@ -1965,27 +1505,30 @@ public class LDAPTransformer extends AbstractTransformer {
         }
 
         protected void debugPrint() {
-            transformer.getTheLogger().debug("[LDAPTransformer] query_index: " + query_index);
-            transformer.getTheLogger().debug("[LDAPTransformer] current_state: " + current_state);
-            transformer.getTheLogger().debug("[LDAPTransformer] serverurl: " + serverurl);
-            transformer.getTheLogger().debug("[LDAPTransformer] port: " + port);
-            transformer.getTheLogger().debug("[LDAPTransformer] root_dn: " + root_dn);
-            transformer.getTheLogger().debug("[LDAPTransformer] password: " + password);
-            transformer.getTheLogger().debug("[LDAPTransformer] version: " + version);
-            transformer.getTheLogger().debug("[LDAPTransformer] scope: " + scope);
-            transformer.getTheLogger().debug("[LDAPTransformer] authentication: " + authentication);
-            transformer.getTheLogger().debug("[LDAPTransformer] toDo: " + toDo);
-            transformer.getTheLogger().debug("[LDAPTransformer] searchbase: " + searchbase);
-            transformer.getTheLogger().debug("[LDAPTransformer] showAttribute: " + showAttribute);
-            transformer.getTheLogger().debug("[LDAPTransformer] attribute: " + attrListe.toString());
-            transformer.getTheLogger().debug("[LDAPTransformer] filter: " + filter);
-            transformer.getTheLogger().debug("[LDAPTransformer] doc_element: " + doc_element);
-            transformer.getTheLogger().debug("[LDAPTransformer] row_element: " + row_element);
-            transformer.getTheLogger().debug("[LDAPTransformer] error_element: " + error_element);
-            transformer.getTheLogger().debug("[LDAPTransformer] sax-error: " + sax_error);
-            transformer.getTheLogger().debug("[LDAPTransformer] deref_link: " + deref_link);
-            transformer.getTheLogger().debug("[LDAPTransformer] count_limit: " + count_limit);
-            transformer.getTheLogger().debug("[LDAPTransformer] time_limit: " + time_limit);
+            Logger logger = transformer.getTheLogger();
+            if (logger.isDebugEnabled()) {
+                logger.debug("[LDAPTransformer] query_index: " + query_index);
+                logger.debug("[LDAPTransformer] current_state: " + current_state);
+                logger.debug("[LDAPTransformer] serverurl: " + serverurl);
+                logger.debug("[LDAPTransformer] port: " + port);
+                logger.debug("[LDAPTransformer] root_dn: " + root_dn);
+                logger.debug("[LDAPTransformer] password: " + password);
+                logger.debug("[LDAPTransformer] version: " + version);
+                logger.debug("[LDAPTransformer] scope: " + scope);
+                logger.debug("[LDAPTransformer] authentication: " + authentication);
+                logger.debug("[LDAPTransformer] toDo: " + toDo);
+                logger.debug("[LDAPTransformer] searchbase: " + searchbase);
+                logger.debug("[LDAPTransformer] showAttribute: " + showAttribute);
+                logger.debug("[LDAPTransformer] attribute: " + attrListe.toString());
+                logger.debug("[LDAPTransformer] filter: " + filter);
+                logger.debug("[LDAPTransformer] doc_element: " + doc_element);
+                logger.debug("[LDAPTransformer] row_element: " + row_element);
+                logger.debug("[LDAPTransformer] error_element: " + error_element);
+                logger.debug("[LDAPTransformer] sax-error: " + sax_error);
+                logger.debug("[LDAPTransformer] deref_link: " + deref_link);
+                logger.debug("[LDAPTransformer] count_limit: " + count_limit);
+                logger.debug("[LDAPTransformer] time_limit: " + time_limit);
+            }
         }
 
         /**
