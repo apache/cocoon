@@ -289,9 +289,7 @@ public class LDAPTransformer extends AbstractTransformer {
         if (parameter != null) {
             default_properties.setProperty(MAGIC_FILTER_ELEMENT, parameter);
         }
-
     }
-
     /** END SitemapComponent methods */
 
     /** BEGIN my very own methods */
@@ -301,7 +299,7 @@ public class LDAPTransformer extends AbstractTransformer {
      */
     protected void executeQuery(int index) throws SAXException {
         this.contentHandler.startPrefixMapping("", LDAPTransformer.my_uri);
-        LDAPQuery query = (LDAPQuery) queries.elementAt(index);
+        LDAPQuery query = (LDAPQuery)queries.elementAt(index);
         try {
             query.execute();
         } catch (NamingException e) {
@@ -311,7 +309,6 @@ public class LDAPTransformer extends AbstractTransformer {
             getLogger().error(e.toString());
             throw new SAXException(e);
         }
-
         this.contentHandler.endPrefixMapping("");
     }
 
@@ -323,13 +320,6 @@ public class LDAPTransformer extends AbstractTransformer {
         LDAPQuery query;
         switch (current_state) {
             case LDAPTransformer.STATE_OUTSIDE :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY;
-                getCurrentQuery().query_index = current_query_index;
-                break;
             case LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT :
                 current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY;
                 current_query_index = queries.size();
@@ -365,13 +355,6 @@ public class LDAPTransformer extends AbstractTransformer {
         LDAPQuery query;
         switch (current_state) {
             case LDAPTransformer.STATE_OUTSIDE :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT;
-                getCurrentQuery().query_index = current_query_index;
-                break;
             case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
                 current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT;
                 current_query_index = queries.size();
@@ -407,13 +390,6 @@ public class LDAPTransformer extends AbstractTransformer {
         LDAPQuery query;
         switch (current_state) {
             case LDAPTransformer.STATE_OUTSIDE :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE;
-                getCurrentQuery().query_index = current_query_index;
-                break;
             case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
                 current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_REPLACE;
                 current_query_index = queries.size();
@@ -449,13 +425,6 @@ public class LDAPTransformer extends AbstractTransformer {
         LDAPQuery query;
         switch (current_state) {
             case LDAPTransformer.STATE_OUTSIDE :
-                current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_ADD;
-                current_query_index = queries.size();
-                query = new LDAPQuery(this);
-                queries.addElement(query);
-                getCurrentQuery().toDo = LDAPTransformer.STATE_INSIDE_EXECUTE_ADD;
-                getCurrentQuery().query_index = current_query_index;
-                break;
             case LDAPTransformer.STATE_INSIDE_EXECUTE_QUERY :
                 current_state = LDAPTransformer.STATE_INSIDE_EXECUTE_ADD;
                 current_query_index = queries.size();
@@ -490,20 +459,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startInitializerElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT;
@@ -528,20 +485,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startScopeElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT;
@@ -566,20 +511,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startAuthenticationElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT;
@@ -604,17 +537,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startServerurlElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_SERVERURL_ELEMENT;
@@ -638,17 +562,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startPortElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PORT_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PORT_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PORT_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_PORT_ELEMENT;
@@ -672,19 +587,11 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startShowAttributeElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SHOW_ATTRIBUTE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
+          //case STATE_INSIDE_EXECUTE_REPLACE:
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_SHOW_ATTRIBUTE_ELEMENT;
                 break;
-/*
-            case STATE_INSIDE_EXECUTE_REPLACE:
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SHOW_ATTRIBUTE_ELEMENT;
-                break;
-*/
             default :
                 throwIllegalStateException("Not expecting a start show-attribute element");
         }
@@ -706,17 +613,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startSearchbaseElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_SEARCHBASE_ELEMENT;
@@ -740,17 +638,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startDocElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DOC_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DOC_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DOC_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_DOC_ELEMENT;
@@ -774,17 +663,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startRowElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROW_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROW_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROW_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_ROW_ELEMENT;
@@ -808,17 +688,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startErrorElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT;
@@ -842,17 +713,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startSaxError(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT;
@@ -878,17 +740,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startRootDnElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT;
@@ -912,17 +765,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startPasswordElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PASSWORD_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PASSWORD_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_PASSWORD_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_PASSWORD_ELEMENT;
@@ -946,9 +790,6 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startAttributeElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_ATTRIBUTE_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
                 current_state = LDAPTransformer.STATE_INSIDE_ATTRIBUTE_ELEMENT;
                 current_value.setLength(0);
@@ -1025,17 +866,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startVersionElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_state = LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_state = LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_state = LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT;
                 current_value.setLength(0);
@@ -1059,20 +891,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startFilterElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
-                getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
                 getCurrentQuery().current_state = LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT;
@@ -1097,17 +917,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startDerefLinkElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_state = LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_state = LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_state = LDAPTransformer.STATE_INSIDE_DEREF_LINK_ELEMENT;
                 current_value.setLength(0);
@@ -1133,17 +944,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startCountLimitElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_COUNT_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_state = LDAPTransformer.STATE_INSIDE_COUNT_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_state = LDAPTransformer.STATE_INSIDE_COUNT_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_state = LDAPTransformer.STATE_INSIDE_COUNT_LIMIT_ELEMENT;
                 current_value.setLength(0);
@@ -1167,17 +969,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startTimeLimitElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_state = LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_state = LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_state = LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT;
-                current_value.setLength(0);
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_state = LDAPTransformer.STATE_INSIDE_TIME_LIMIT_ELEMENT;
                 current_value.setLength(0);
@@ -1201,17 +994,8 @@ public class LDAPTransformer extends AbstractTransformer {
     protected void startDebugElement(Attributes attributes) {
         switch (current_state) {
             case STATE_INSIDE_EXECUTE_QUERY :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_INCREMENT :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_REPLACE :
-                current_value.setLength(0);
-                current_state = LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT;
-                break;
             case STATE_INSIDE_EXECUTE_ADD :
                 current_value.setLength(0);
                 current_state = LDAPTransformer.STATE_INSIDE_DEBUG_ELEMENT;
