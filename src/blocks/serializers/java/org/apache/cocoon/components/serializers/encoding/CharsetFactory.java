@@ -62,6 +62,11 @@ public final class CharsetFactory {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(CHARSET_LOOKUP_CLASS);
 
+        if (url == null) {
+            throw new CharsetFactoryException("Unable to load charsets "
+                    + "because their classes are not present", null);
+        }
+
         if ("jar".equals(url.getProtocol())) {
             this.loadCharsetsFromJar(url);
         } else if ("file".equals(url.getProtocol())) {
