@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.Pointer;
  * Simple binding for multi fields: on save, first deletes the target data
  * before recreating it from scratch.
  *
- * @version CVS $Id: MultiValueJXPathBinding.java,v 1.3 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id: MultiValueJXPathBinding.java,v 1.4 2004/05/11 08:22:54 bruno Exp $
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 
@@ -80,6 +80,8 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
                         ConversionResult conversionResult = convertor.convertFromString((String)value, convertorLocale, null);
                         if (conversionResult.isSuccessful())
                             value = conversionResult.getResult();
+                        else
+                            value = null;
                     } else {
                         getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
                     }

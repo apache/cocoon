@@ -34,7 +34,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.8 2004/05/07 16:43:42 mpo Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.9 2004/05/11 08:22:54 bruno Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -307,6 +307,8 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                                 (String)value, vBinding.getConvertorLocale(), null);
                         if (conversionResult.isSuccessful())
                             value = conversionResult.getResult();
+                        else
+                            value = null;
                     } else {
                         if (getLogger().isWarnEnabled()) {
                             getLogger().warn("Convertor ignored on backend-value " +
