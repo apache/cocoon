@@ -20,6 +20,7 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -52,7 +53,7 @@ import java.util.Map;
  * private static String returnCookieProperty(Map ,String ,int ,String );
  * </pre>
  *
- * @version CVS $Id: XSPCookieHelper.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id$
  */
 public class XSPCookieHelper extends XSPObjectHelper {
     /**
@@ -93,11 +94,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
         if ((path.trim()).length() > 0)
             cookieToSet.setPath("/");
 
-        if (secure == "true")
-            cookieToSet.setSecure(true);
-        else
-            cookieToSet.setSecure(false);
-
+        cookieToSet.setSecure(BooleanUtils.toBoolean(secure));
         cookieToSet.setVersion(version);
         response.addCookie(cookieToSet);
     }
