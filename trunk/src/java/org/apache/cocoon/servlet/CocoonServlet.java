@@ -50,53 +50,19 @@
 */
 package org.apache.cocoon.servlet;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
-
-import org.apache.cocoon.Cocoon;
+import org.apache.avalon.framework.logger.NullLogger;
+import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
@@ -108,17 +74,23 @@ import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
-import org.apache.cocoon.util.log.CocoonLogFormatter;
 
-import org.apache.excalibur.instrument.InstrumentManager;
-import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
-
-import org.apache.log.ContextMap;
-import org.apache.log.Hierarchy;
-import org.apache.log.Priority;
-import org.apache.log.ErrorHandler;
-import org.apache.log.util.DefaultErrorHandler;
-import org.apache.log.output.ServletOutputLogTarget;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -130,15 +102,15 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.20 2003/10/20 13:39:10 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.21 2003/10/21 13:48:31 bloritsch Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
-    /** Application <code>Context</code> Key for the servlet configuration 
+    /** Application <code>Context</code> Key for the servlet configuration
      *  @since 2.1.3
      */
     public static final String CONTEXT_SERVLET_CONFIG = "servlet-config";
-    
+
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
         + Constants.COMPLETE_NAME + " in ";
@@ -149,7 +121,6 @@ public class CocoonServlet extends HttpServlet {
     static final float HOUR   = 60 * MINUTE;
 
     private Logger log;
-    private LoggerManager loggerManager;
 
     /**
      * The time the cocoon instance was created
@@ -157,20 +128,14 @@ public class CocoonServlet extends HttpServlet {
     protected long creationTime = 0;
 
     /**
-     * The <code>Cocoon</code> instance
+     * The <code>CocoonBean</code> instance
      */
-    protected Cocoon cocoon;
+    protected CocoonBean cocoonBean = new CocoonBean();
 
     /**
      * Holds exception happened during initialization (if any)
      */
     protected Exception exception;
-
-    /**
-     * Avalon application context
-     */
-    protected DefaultContext appContext = new DefaultContext();
-
 
     /**
      * Default value for {@link #allowReload} parameter (false)
@@ -211,7 +176,6 @@ public class CocoonServlet extends HttpServlet {
     private int maxUploadSize;
 
     private File uploadDir;
-    private File workDir;
     private File cacheDir;
     private String containerEncoding;
     private String defaultFormEncoding;
@@ -228,9 +192,6 @@ public class CocoonServlet extends HttpServlet {
     /** The parent ComponentManager, if any. Stored here in order to be able to dispose it in destroy(). */
     private ComponentManager parentComponentManager;
 
-    protected String forceLoadParameter;
-    protected String forceSystemProperty;
-
     /**
      * If true or not set, this class will try to catch and handle all Cocoon exceptions.
      * If false, it will rethrow them to the servlet container.
@@ -238,26 +199,11 @@ public class CocoonServlet extends HttpServlet {
     private boolean manageExceptions;
 
     /**
-     * Flag to enable avalon excalibur instrumentation of Cocoon.
-     */
-    private boolean enableInstrumentation;
-
-    /**
-     * The <code>InstrumentManager</code> instance
-     */
-    private DefaultInstrumentManager instrumentManager;
-
-    /**
      * This is the path to the servlet context (or the result
      * of calling getRealPath('/') on the ServletContext.
      * Note, that this can be null.
      */
     protected String servletContextPath;
-
-    /**
-     * This is the url to the servlet context directory
-     */
-    protected String servletContextURL;
 
     /**
      * The RequestFactory is responsible for wrapping multipart-encoded
@@ -309,7 +255,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.servletContext = conf.getServletContext();
-        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
+        cocoonBean.setProperty(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
         this.servletContextPath = this.servletContext.getRealPath("/");
 
         // first init the work-directory for the logger.
@@ -318,23 +264,24 @@ public class CocoonServlet extends HttpServlet {
         if (workDirParam != null) {
             if (this.servletContextPath == null) {
                 // No context path : consider work-directory as absolute
-                this.workDir = new File(workDirParam);
+                cocoonBean.setWorkDirectory(new File( workDirParam ));
             } else {
                 // Context path exists : is work-directory absolute ?
                 File workDirParamFile = new File(workDirParam);
                 if (workDirParamFile.isAbsolute()) {
                     // Yes : keep it as is
-                    this.workDir = workDirParamFile;
+                    cocoonBean.setWorkDirectory( workDirParamFile );
                 } else {
                     // No : consider it relative to context path
-                    this.workDir = new File(servletContextPath , workDirParam);
+                    cocoonBean.setWorkDirectory( new File(servletContextPath , workDirParam) );
                 }
             }
         } else {
-            this.workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
-            this.workDir = new File(workDir, "cocoon-files");
+            File tempDir = (File) this.servletContext.getAttribute( "javax.servlet.context.tempdir" );
+            cocoonBean.setWorkDirectory( new File( tempDir, "cocoon-files" ) );
         }
-        this.workDir.mkdirs();
+
+        cocoonBean.getWorkDirectory().mkdirs();
 
         initLogger();
         String path = this.servletContextPath;
@@ -357,42 +304,43 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
+        String servletContextURL;
+
         try {
             if (path.indexOf(':') > 1) {
-                this.servletContextURL = path;
+                servletContextURL = path;
             } else {
-                this.servletContextURL = new File(path).toURL().toExternalForm();
+                servletContextURL = new File(path).toURL().toExternalForm();
             }
         } catch (MalformedURLException me) {
             // VG: Novell has absolute file names starting with the
             // volume name which is easily more then one letter.
             // Examples: sys:/apache/cocoon or sys:\apache\cocoon
             try {
-                this.servletContextURL = new File(path).toURL().toExternalForm();
+                servletContextURL = new File(path).toURL().toExternalForm();
             } catch (MalformedURLException ignored) {
                 throw new ServletException("Unable to determine servlet context URL.", me);
             }
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("URL for Root: " + this.servletContextURL);
+            getLogger().debug("URL for Root: " + servletContextURL);
         }
-        this.appContext.put(Constants.CONTEXT_ROOT_URL, this.servletContextURL);
-        
-        this.forceLoadParameter = getInitParameter("load-class", null);
+        cocoonBean.setContextURI(servletContextURL);
 
-        this.forceSystemProperty = getInitParameter("force-property", null);
+        setForceLoad( getInitParameter("load-class", null) );
+
+        setForceProperty( getInitParameter("force-property", null) );
 
         // add work directory
         if (workDirParam != null) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using work-directory " + this.workDir);
+                getLogger().debug("Using work-directory " + cocoonBean.getWorkDirectory());
             }
         } else {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("work-directory was not set - defaulting to " + this.workDir);
+                getLogger().debug("work-directory was not set - defaulting to " + cocoonBean.getWorkDirectory() );
             }
         }
-        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
@@ -413,13 +361,13 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().debug("Using upload-directory " + this.uploadDir);
             }
         } else {
-            this.uploadDir = new File(workDir, "upload-dir" + File.separator);
+            this.uploadDir = new File( cocoonBean.getWorkDirectory(), "upload-dir" + File.separator);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("upload-directory was not set - defaulting to " + this.uploadDir);
             }
         }
         this.uploadDir.mkdirs();
-        this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
+        cocoonBean.setProperty(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
 
         this.enableUploads = getInitParameterAsBoolean("enable-uploads", ENABLE_UPLOADS);
 
@@ -460,15 +408,15 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().debug("Using cache-directory " + this.cacheDir);
             }
         } else {
-            this.cacheDir = IOUtils.createFile(workDir, "cache-dir" + File.separator);
+            this.cacheDir = IOUtils.createFile(cocoonBean.getWorkDirectory(), "cache-dir" + File.separator);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("cache-directory was not set - defaulting to " + this.cacheDir);
             }
         }
         this.cacheDir.mkdirs();
-        this.appContext.put(Constants.CONTEXT_CACHE_DIR, this.cacheDir);
+        cocoonBean.setProperty(Constants.CONTEXT_CACHE_DIR, this.cacheDir);
 
-        this.appContext.put(Constants.CONTEXT_CONFIG_URL,
+        cocoonBean.setProperty(Constants.CONTEXT_CONFIG_URL,
                             getConfigFile(conf.getInitParameter("configurations")));
         if (conf.getInitParameter("configurations") == null) {
             if (getLogger().isDebugEnabled()) {
@@ -502,7 +450,7 @@ public class CocoonServlet extends HttpServlet {
 
 		this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
-		this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
+		//this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
 
         this.requestFactory = new RequestFactory(this.autoSaveUploads,
                                                  this.uploadDir,
@@ -511,8 +459,16 @@ public class CocoonServlet extends HttpServlet {
                                                  this.maxUploadSize,
                                                  this.defaultFormEncoding);
         // Add the servlet configuration
-        this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
-        this.createCocoon();
+        cocoonBean.setProperty(CONTEXT_SERVLET_CONFIG, conf);
+
+        try
+        {
+            cocoonBean.initialize();
+        }
+        catch ( Exception e )
+        {
+            throw new ServletException("Could not start up cocoon", e);
+        }
     }
 
     /**
@@ -526,17 +482,15 @@ public class CocoonServlet extends HttpServlet {
             } catch (Exception e){}
         }
 
-        if (this.cocoon != null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Servlet destroyed - disposing Cocoon");
-            }
-            this.disposeCocoon();
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Servlet destroyed - disposing Cocoon");
         }
+        cocoonBean.dispose();
 
-        if (this.enableInstrumentation) {
-            this.instrumentManager.dispose();
-        }
-
+        /* *********************************************************
+         * **** WARNING!!!!  Why are WE disabling a parent????? ****
+         * *********************************************************
+         */
         if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
             ((Disposable)this.parentComponentManager).dispose();
         }
@@ -670,7 +624,7 @@ public class CocoonServlet extends HttpServlet {
                 libList.add(st.nextToken());
             }
 
-            File root = new File(this.workDir, "lib");
+            File root = new File(cocoonBean.getWorkDirectory(), "lib");
             root.mkdirs();
 
             File[] oldLibs = root.listFiles();
@@ -773,7 +727,7 @@ public class CocoonServlet extends HttpServlet {
                                  getLogger().debug ("extraClassPath is not absolute pre-pending context path: " + path);
                              }
                          } else {
-                             path = this.workDir.toString() + s;
+                             path = cocoonBean.getWorkDirectory().toString() + s;
                              if (getLogger().isDebugEnabled()) {
                                  getLogger().debug ("extraClassPath is not absolute pre-pending work-directory: " + path);
                              }
@@ -799,7 +753,19 @@ public class CocoonServlet extends HttpServlet {
      * file.
      */
     protected void initLogger() {
-        String logLevel = getInitParameter("log-level", "INFO");
+        cocoonBean.setInitializationLogger(new NullLogger());
+
+        /* I am leaving this all commented out.  Avalon no longer forces you to use
+         * LogKit, so you can use Log4J all the way.  In order to make this work the
+         * way you want, we may need to create a special implementation of an Avalon
+         * Logger for the initialization process.  It would either use the Servlet
+         * logging facility or something else.  I just don't want to force Cocoon
+         * to use LogKit either if the users don't want to.
+         */
+
+        cocoonBean.setProperty("servlet-context", servletContext);
+
+/*        String logLevel = getInitParameter("log-level", "INFO");
 
         final String accesslogger = getInitParameter("servlet-logger");
 
@@ -823,7 +789,7 @@ public class CocoonServlet extends HttpServlet {
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
         if (this.servletContextPath == null) {
-            File logSCDir = new File(this.workDir, "log");
+            File logSCDir = new File(cocoonBean.getWorkDirectory(), "log");
             logSCDir.mkdirs();
             if (logger.isWarnEnabled()) {
                 logger.warn("Setting servlet-context for LogKit to " + logSCDir);
@@ -861,6 +827,7 @@ public class CocoonServlet extends HttpServlet {
         } else {
             this.log = logKitLoggerManager.getLoggerForCategory("cocoon");
         }
+        */
     }
 
     /**
@@ -931,25 +898,16 @@ public class CocoonServlet extends HttpServlet {
      * separate each entry with whitespace, a comma, or a semi-colon.
      * Cocoon will strip any whitespace from the entry.
      */
-    private void forceLoad() {
-        if (this.forceLoadParameter != null) {
-            StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoadParameter, " \t\r\n\f;,", false);
+    private void setForceLoad(String forceLoadParameter) {
+        if (forceLoadParameter != null) {
+            final StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoadParameter, " \t\r\n\f;,", false);
+            final List classList = new ArrayList(fqcnTokenizer.countTokens());
 
             while (fqcnTokenizer.hasMoreTokens()) {
-                final String fqcn = fqcnTokenizer.nextToken().trim();
-
-                try {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Trying to load class: " + fqcn);
-                    }
-                    ClassUtils.loadClass(fqcn).newInstance();
-                } catch (Exception e) {
-                    if (getLogger().isWarnEnabled()) {
-                        getLogger().warn("Could not force-load class: " + fqcn, e);
-                    }
-                    // Do not throw an exception, because it is not a fatal error.
-                }
+                classList.add( fqcnTokenizer.nextToken().trim() );
             }
+
+            cocoonBean.setClassForceLoadList(classList);
         }
     }
 
@@ -960,8 +918,8 @@ public class CocoonServlet extends HttpServlet {
      * separate each entry with whitespace, a comma, or a semi-colon.
      * Cocoon will strip any whitespace from the entry.
      */
-    private void forceProperty() {
-        if (this.forceSystemProperty != null) {
+    private void setForceProperty(String forceSystemProperty ) {
+        if (forceSystemProperty != null) {
             StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
 
             java.util.Properties systemProps = System.getProperties();
@@ -1032,18 +990,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // Get the cocoon engine instance
-        getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
-
-        // Check if cocoon was initialized
-        if (this.cocoon == null) {
-            manageException(request, res, null, null,
-                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Initialization Problem",
-                            null /* "Cocoon was not initialized" */,
-                            null /* "Cocoon was not initialized, cannot process request" */,
-                            this.exception);
-            return;
-        }
+        CompilingProcessor cocoon = getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
 
         // We got it... Process the request
         String uri = request.getServletPath();
@@ -1077,7 +1024,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         String contentType = null;
-        ContextMap ctxMap = null;
+//        ContextMap ctxMap = null;
 
         Environment env;
         try{
@@ -1098,6 +1045,9 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             try {
+                /* Put this in a separate method so that we can make it work for both
+                 * LogKit and Log4J
+                 *
                 // Initialize a fresh log context containing the object model: it
                 // will be used by the CocoonLogFormatter
                 ctxMap = ContextMap.getCurrentContext();
@@ -1108,8 +1058,9 @@ public class CocoonServlet extends HttpServlet {
                 ctxMap.set("objectModel", env.getObjectModel());
                 // Add a unique request id (threadName + currentTime
                 ctxMap.set("request-id", threadName + System.currentTimeMillis());
+                 */
 
-                if (this.cocoon.process(env)) {
+                if (cocoon.process(env)) {
                     contentType = env.getContentType();
                 } else {
                     // We reach this when there is nothing in the processing change that matches
@@ -1185,9 +1136,11 @@ public class CocoonServlet extends HttpServlet {
                 }
             }
         } finally {
+            /*
             if (ctxMap != null) {
                 ctxMap.clear();
             }
+            */
 
             try {
                 if (request instanceof MultipartHttpServletRequest) {
@@ -1283,11 +1236,11 @@ public class CocoonServlet extends HttpServlet {
             formEncoding = this.defaultFormEncoding;
         }
         env = new HttpEnvironment(uri,
-                                  this.servletContextURL,
+                                  cocoonBean.getContextURI(),
                                   req,
                                   res,
                                   this.servletContext,
-                                  (HttpContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
+                                  (HttpContext) cocoonBean.getProperty(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                   this.containerEncoding,
                                   formEncoding);
         env.enableLogging(getLogger());
@@ -1316,7 +1269,7 @@ public class CocoonServlet extends HttpServlet {
                     ((LogEnabled) parentComponentManager).enableLogging(getLogger());
                 }
                 if (parentComponentManager instanceof Contextualizable) {
-                    ((Contextualizable) parentComponentManager).contextualize(this.appContext);
+                    ((Contextualizable) parentComponentManager).contextualize(/*this.appContext*/ new DefaultContext());
                 }
                 if (parentComponentManager instanceof Initializable) {
                     ((Initializable) parentComponentManager).initialize();
@@ -1330,67 +1283,6 @@ public class CocoonServlet extends HttpServlet {
         return parentComponentManager;
     }
 
-
-
-    /**
-     * Creates the Cocoon object and handles exception handling.
-     */
-    private synchronized void createCocoon()
-    throws ServletException {
-
-        /* HACK for reducing class loader problems.                                     */
-        /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
-        if (this.initClassLoader) {
-            try {
-                Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e){}
-        }
-
-        updateEnvironment();
-        forceLoad();
-        forceProperty();
-
-        try {
-            URL configFile = (URL) this.appContext.get(Constants.CONTEXT_CONFIG_URL);
-            if (getLogger().isInfoEnabled()) {
-                getLogger().info("Reloading from: " + configFile.toExternalForm());
-            }
-            Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
-            ContainerUtil.enableLogging(c, this.getCocoonLogger());
-            c.setLoggerManager( getLoggerManager() );
-            ContainerUtil.contextualize(c, this.appContext);
-            final ComponentManager parent = this.getParentComponentManager();
-            if ( parent != null ) {
-                ContainerUtil.compose(c, getParentComponentManager());
-                ContainerUtil.service(c, this.getParentComponentManager());
-            }
-            if (this.enableInstrumentation) {
-                c.setInstrumentManager(getInstrumentManager());
-            }
-            ContainerUtil.initialize(c);
-            this.creationTime = System.currentTimeMillis();
-
-            disposeCocoon();
-            this.cocoon = c;
-        } catch (Exception e) {
-            if (getLogger().isErrorEnabled()) {
-                getLogger().error("Exception reloading", e);
-            }
-            this.exception = e;
-            disposeCocoon();
-        }
-    }
-
-    private Logger getCocoonLogger()
-    {
-        final String rootlogger = getInitParameter("cocoon-logger");
-        if (rootlogger != null) {
-            return this.getLoggerManager().getLoggerForCategory(rootlogger);
-        } else {
-            return getLogger();
-        }
-    }
-
     /**
      * Method to update the environment before Cocoon instances are created.
      *
@@ -1399,43 +1291,8 @@ public class CocoonServlet extends HttpServlet {
      * of this class (eg. Cocoon Context).
      */
     protected void updateEnvironment() throws ServletException {
-        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, classLoader);
-        this.appContext.put(Constants.CONTEXT_CLASSPATH, getClassPath());
-    }
-
-    /**
-     * Helper method to obtain an <code>InstrumentManager</code> instance
-     *
-     * @return an <code>InstrumentManager</code> instance
-     */
-    private InstrumentManager getInstrumentManager()
-        throws Exception
-    {
-        String imConfig = getInitParameter("instrumentation-config");
-        if (imConfig == null) {
-            throw new ServletException("Please define the init-param 'instrumentation-config' in your web.xml");
-        }
-
-        final InputStream is = this.servletContext.getResourceAsStream(imConfig);
-        final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        final Configuration conf = builder.build(is);
-
-        // Get the logger for the instrument manager
-        final String imLoggerCategory = conf.getAttribute("logger", "core.instrument");
-        Logger imLogger = this.loggerManager.getLoggerForCategory(imLoggerCategory);
-
-        // Set up the Instrument Manager
-        DefaultInstrumentManager instrumentManager = new DefaultInstrumentManager();
-        instrumentManager.enableLogging(imLogger);
-        instrumentManager.configure(conf);
-        instrumentManager.initialize();
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Instrument manager created " + instrumentManager);
-        }
-
-        this.instrumentManager = instrumentManager;
-        return instrumentManager;
+        cocoonBean.setParentClassLoader( classLoader);
+        cocoonBean.setClassPath( getClassPath());
     }
 
     private String processTime(long time) {
@@ -1460,13 +1317,15 @@ public class CocoonServlet extends HttpServlet {
      * Gets the current cocoon object.  Reload cocoon if configuration
      * changed or we are reloading.
      */
-    private void getCocoon(final String pathInfo, final String reloadParam)
+    private CompilingProcessor getCocoon(final String pathInfo, final String reloadParam)
     throws ServletException {
+
+        CompilingProcessor processor = cocoonBean.getRootProcessor();
         if (this.allowReload) {
             boolean reload = false;
 
-            if (this.cocoon != null) {
-                if (this.cocoon.modifiedSince(this.creationTime)) {
+            if (processor != null) {
+                if (processor.modifiedSince(this.creationTime)) {
                     if (getLogger().isInfoEnabled()) {
                         getLogger().info("Configuration changed reload attempt");
                     }
@@ -1485,21 +1344,23 @@ public class CocoonServlet extends HttpServlet {
             }
 
             if (reload) {
-                initLogger();
-                createCocoon();
+                synchronized(cocoonBean)
+                {
+                    cocoonBean.dispose();
+                    try
+                    {
+                        cocoonBean.initialize();
+                    }
+                    catch ( Exception e )
+                    {
+                        throw new ServletException("Could not recreate Cocoon", e);
+                    }
+                }
+                processor = cocoonBean.getRootProcessor();
             }
         }
-    }
 
-    /**
-     * Destroy Cocoon
-     */
-    private final void disposeCocoon()
-    {
-        if (this.cocoon != null) {
-            ContainerUtil.dispose(this.cocoon);
-            this.cocoon = null;
-        }
+        return processor;
     }
 
     /**
@@ -1559,10 +1420,5 @@ public class CocoonServlet extends HttpServlet {
     protected Logger getLogger()
     {
         return this.log;
-    }
-
-    protected LoggerManager getLoggerManager()
-    {
-        return this.loggerManager;
     }
 }

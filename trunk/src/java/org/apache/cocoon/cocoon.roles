@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE role-list [
-<!ELEMENT role-list (role+)> 
+<!ELEMENT role-list (role+)>
 <!ELEMENT role (hint*)>
 <!ELEMENT hint EMPTY>
 <!ATTLIST role name CDATA #REQUIRED
@@ -32,7 +32,7 @@
         default-class="org.apache.cocoon.components.resolver.DefaultResolver"/>
 
   <!-- Parser:
-  
+
        Starting with Cocoon 2.1 we have a bunch of different parser:
        - a SAX parser (producing SAX events)
        - a DOM parser (producint a document)
@@ -152,12 +152,7 @@
         shorthand="i18n-bundles"
         default-class="org.apache.cocoon.i18n.XMLResourceBundleFactory"/>
 
-  <!-- Control flow layer: the interpreters selector and continuations  manager -->
-  <role name="org.apache.cocoon.components.flow.Interpreter" 
-        shorthand="flow-interpreters"
-        default-class="org.apache.cocoon.components.flow.InterpreterSelector" />
-
-  <role name="org.apache.cocoon.components.flow.ContinuationsManager" 
+  <role name="org.apache.cocoon.components.flow.ContinuationsManager"
         shorthand="continuations-manager"
         default-class="org.apache.cocoon.components.flow.ContinuationsManagerImpl" />
 
@@ -173,7 +168,7 @@
   <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
         shorthand="global-variables"
         default-class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"/>
-  
+
   <!-- Storing data in the current request -->
   <role name="org.apache.cocoon.components.persistence.RequestDataStore"
         shorthand="request-data-store"

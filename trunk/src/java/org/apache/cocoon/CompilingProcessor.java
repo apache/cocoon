@@ -55,9 +55,9 @@ import org.apache.cocoon.environment.Environment;
  * CompilingProcessor does XYZ
  *
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1 $
+ * @version CVS $Revision: 1.2 $
  */
-public interface CompilingProcessor extends Processor
+public interface CompilingProcessor extends Processor, Modifiable
 {
     String ROLE = CompilingProcessor.class.getName();
 
