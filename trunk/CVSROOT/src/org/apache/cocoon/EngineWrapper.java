@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.10 2000-05-07 22:34:18 stefano Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.11 2000-05-25 14:06:34 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-05-07 22:34:18 $
+ * @version $Revision: 1.11 $ $Date: 2000-05-25 14:06:34 $
  */
 
 public class EngineWrapper {

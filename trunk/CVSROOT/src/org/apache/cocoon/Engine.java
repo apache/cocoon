@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.28 2000-05-12 12:40:29 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.29 2000-05-25 14:06:34 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.28 $ $Date: 2000-05-12 12:40:29 $
+ * @version $Revision: 1.29 $ $Date: 2000-05-25 14:06:34 $
  */
 
 public class Engine implements Defaults {
@@ -114,20 +114,20 @@ public class Engine implements Defaults {
         this.configurations = configurations;
 
         // stores the engine context
-        if (context == null) {
-            // use the STDIO logger if no context is available
-            logger = new StdioLogger((String) configurations.get(LOG_LEVEL));
-            manager.setRole("logger", logger);
-        } else if (context instanceof ServletContext) {
-            this.servletContext = (ServletContext) context;
-
+        if (context instanceof ServletContext) {
             // register the context
+            this.servletContext = (ServletContext) context;
             manager.setRole("context", context);
 
             // use the context for the logger
             logger = new ServletLogger(this.servletContext, (String) configurations.get(LOG_LEVEL));
-            manager.setRole("logger", logger);
+        } else {
+            // use the STDIO logger if no context is available
+            logger = new StdioLogger((String) configurations.get(LOG_LEVEL));
         }
+
+        // Register the logger
+        manager.setRole("logger", logger);
 
         // Create the parser and register it
         parser = (Parser) manager.create((String) configurations.get(PARSER_PROP,
@@ -296,7 +296,7 @@ public class Engine implements Defaults {
                     environment.put("browser", browsers.map(agent));
                     environment.put("request", request);
                     environment.put("response", response);
-                    environment.put("context", servletContext);
+                    if (servletContext != null) environment.put("context", servletContext);
 
                     // process the document through the document processors
                     while (true) {
