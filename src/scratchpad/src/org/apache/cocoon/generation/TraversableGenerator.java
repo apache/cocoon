@@ -55,6 +55,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -126,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.5 2003/07/10 20:05:37 joerg Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.6 2003/08/01 17:21:15 sylvain Exp $
  */
 public class TraversableGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
@@ -146,7 +147,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
     protected static final String SIZE_ATTR_NAME = "size";
 
     /** The validity that is being built */
-    protected CollectionValidity validity;
+    protected MultiSourceValidity validity;
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
 
@@ -290,7 +291,7 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
      */
     public SourceValidity getValidity() {
         if (this.validity == null) {
-            this.validity = new CollectionValidity(this.refreshDelay);
+            this.validity = new MultiSourceValidity(this.resolver, this.refreshDelay);
         }
         return this.validity;
     }
@@ -317,6 +318,9 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
             addAncestorPath(inputSource, ancestors);
 
             this.contentHandler.endDocument();
+            if (this.validity != null) {
+                this.validity.close();
+            }
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } catch (IOException ioe) {
@@ -565,54 +569,5 @@ public class TraversableGenerator extends ComposerGenerator implements Cacheable
         this.excludeRE = null;
         this.validity = null;
         super.recycle();
-    }
-
-    /** Specific validity class, that holds all resources that have been generated */
-    public static class CollectionValidity implements SourceValidity {
-
-        private long expiry;
-        private long delay;
-        List sources = new ArrayList();
-        List sourcesDates = new ArrayList();
-
-        public CollectionValidity(long delay) {
-            expiry = System.currentTimeMillis() + delay;
-            this.delay = delay;
-        }
-
-        public int isValid() {
-            if (System.currentTimeMillis() <= expiry) {
-                return 1;
-            }
-
-            expiry = System.currentTimeMillis() + delay;
-            int len = sources.size();
-            for (int i = 0; i < len; i++) {
-                TraversableSource ts =  (TraversableSource) sources.get(i);
-                if (!ts.exists()) {
-                    return -1; // Source was removed
-                }
-
-                long oldDate = ((Long) sourcesDates.get(i)).longValue();
-                long newDate = ts.getLastModified();
-
-                if (oldDate != newDate) {
-                    return -1;
-                }
-            }
-
-            // all content is up to date: update the expiry date
-            expiry = System.currentTimeMillis() + delay;
-            return 1;
-        }
-
-        public int isValid(SourceValidity newValidity) {
-            return isValid();
-        }
-
-        public void addSource(TraversableSource f) {
-            sources.add(f);
-            sourcesDates.add(new Long(f.getLastModified()));
-        }
     }
 }
