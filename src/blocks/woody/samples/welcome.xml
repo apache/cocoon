@@ -2,14 +2,15 @@
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
  <group name="Main examples page.">
-  <sample name="Back" href="..">to Cocoon examples main page</sample>
+   <sample name="Back" href="../blocks">to Cocoon examples main page</sample>
   <note>
-    Woody is a new form framework for Cocoon.
-    Woody is currently still alpha software and under active development. Your
+    Woody is the new form framework for Cocoon.
+    Woody is marked as an unstable block because it is currently under
+    development and its contracts are not yet fixed. Your
     feedback is very much welcome on the Cocoon mailing lists.
   </note>
   <sample name="Woody Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">
-    Currently the documentation is available on the Cocoon Wiki.</sample>
+    Documentation is available on the Cocoon Wiki.</sample>
  </group>
 
  <group name="Basic Samples">
