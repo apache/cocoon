@@ -15,9 +15,12 @@
  */
 package org.apache.cocoon.configuration;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 /**
+ * This object holds the global configuration of Cocoon.
  *
  * @version SVN $Id$
  */
@@ -29,8 +32,8 @@ public class Settings {
     protected String configuration;    
     protected String loggingConfiguration;
     protected String cocoonLogger;    
-    protected String servletLogger;
-    protected String logLevel;
+    protected String accessLogger;
+    protected String bootstrapLogLevel;
     protected String loggerClassName;
     protected boolean allowReload;
     protected String[] loadClasses;    
@@ -47,11 +50,33 @@ public class Settings {
     protected boolean manageExceptions;
     protected String formEncoding;
     protected String log4jConfiguration;
+    protected String overrideLogLevel;
     
-    public Settings(Properties properties) {
-        // ignore
+    /**
+     * Create a new settings object
+     */
+    public Settings() {
+        // nothing to do
     }
     
+    /**
+     * Fill from a properties object
+     */
+    public void fill(Properties props) {
+        if ( props != null ) {
+            final Iterator i = props.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
+                String key = current.getKey().toString();
+                if ( key.startsWith("org.apache.cocoon.") ) {
+                    key = key.substring("org.apache.cocoon.".length());
+                    if ( key.equals("override.loglevel") ) {
+                        this.overrideLogLevel = current.getValue().toString();
+                    }
+                }
+            }
+        }
+    }
     
     /**
      * @return Returns the allowReload.
@@ -224,14 +249,14 @@ public class Settings {
     /**
      * @return Returns the logLevel.
      */
-    public String getLogLevel() {
-        return this.logLevel;
+    public String getBootstrapLogLevel() {
+        return this.bootstrapLogLevel;
     }
     /**
      * @param logLevel The logLevel to set.
      */
-    public void setLogLevel(String logLevel) {
-        this.logLevel = logLevel;
+    public void setBootstrapLogLevel(String logLevel) {
+        this.bootstrapLogLevel = logLevel;
     }
     /**
      * @return Returns the manageExceptions.
@@ -339,15 +364,29 @@ public class Settings {
     }
     
     /**
-     * @return Returns the servletLogger.
+     * @return Returns the accessLogger.
      */
-    public String getServletLogger() {
-        return this.servletLogger;
+    public String getAccessLogger() {
+        return this.accessLogger;
     }
     /**
      * @param servletLogger The servletLogger to set.
      */
-    public void setServletLogger(String servletLogger) {
-        this.servletLogger = servletLogger;
+    public void setAccessLogger(String servletLogger) {
+        this.accessLogger = servletLogger;
+    }
+    
+    /**
+     * @return Returns the overrideLogLevel.
+     */
+    public String getOverrideLogLevel() {
+        return this.overrideLogLevel;
+    }
+    
+    /**
+     * @param overrideLogLevel The overrideLogLevel to set.
+     */
+    public void setOverrideLogLevel(String overrideLogLevel) {
+        this.overrideLogLevel = overrideLogLevel;
     }
 }

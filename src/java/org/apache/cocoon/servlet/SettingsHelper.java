@@ -32,12 +32,13 @@ public class SettingsHelper {
     }
     
     public static Settings getSettings(ServletConfig config) {
-        final Settings s = new Settings(null);
+        final Settings s = new Settings();
+        s.fill(System.getProperties());
         
         // logging
         s.setCocoonLogger(config.getInitParameter("cocoon-logger"));
-        s.setServletLogger(config.getInitParameter("servlet-logger"));
-        s.setLogLevel(config.getInitParameter("log-level"));
+        s.setAccessLogger(config.getInitParameter("servlet-logger"));
+        s.setBootstrapLogLevel(config.getInitParameter("log-level"));
         s.setLoggerClassName(config.getInitParameter("logger-class"));
         String value = config.getInitParameter("logkit-config");
         if ( value != null ) {
