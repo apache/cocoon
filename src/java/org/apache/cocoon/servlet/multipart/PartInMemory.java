@@ -22,7 +22,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartInMemory.java,v 1.5 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PartInMemory extends Part {
 
@@ -37,7 +37,7 @@ public class PartInMemory extends Part {
      * @param in
      * @param size
      */
-    protected PartInMemory(Map headers, InputStream in, int size) {
+    public PartInMemory(Map headers, InputStream in, int size) {
         super(headers);
         this.in = in;
         this.size = size;
