@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: sitemap.xmap,v 1.4 2003/05/22 13:37:46 vgritsenko Exp $ -->
+<!-- CVS: $Id: sitemap.xmap,v 1.5 2003/10/22 16:56:22 joerg Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -22,11 +22,25 @@
     <map:view name="content" from-label="content">
       <map:serialize type="xml"/>
     </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
   </map:views>
 
   <!-- ======================= Pipelines ================================= -->
   <map:pipelines>
     <map:pipeline>
+
+      <map:match pattern="descriptors/*.xml">
+        <map:generate src="{0}"/>
+        <map:serialize type="xml"/>
+      </map:match>
 
       <map:match pattern="">
         <map:redirect-to uri="page"/>

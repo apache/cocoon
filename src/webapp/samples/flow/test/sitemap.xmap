@@ -8,6 +8,10 @@
 
   <map:pipelines>
     <map:pipeline>
+      <map:match pattern="sendpage.js">
+        <map:read src="{0}" mime-type="text/plain"/>
+      </map:match>
+    
       <map:match pattern="">
         <map:redirect-to uri="showString"/>
       </map:match>

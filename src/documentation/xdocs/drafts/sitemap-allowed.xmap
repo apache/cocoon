@@ -50,7 +50,7 @@
       <parameter name="deprecated" value="error"/>
       -->
       </map:generate>
-      <map:transform src="../../stylesheets/simple-xml2html.xsl"/>
+      <map:transform src="../../stylesheets/simple-xml2html.xslt"/>
       <map:serialize/>
       <!-- any unsupported tag will result in error
       <unknown-tag/>
@@ -59,7 +59,7 @@
 
     <!-- Pipeline with no map:generate|read|mount|redirect-to|call is illegal
     <map:pipeline>
-      <map:transform src="../../stylesheets/simple-xml2html.xsl"/>
+      <map:transform src="../../stylesheets/simple-xml2html.xslt"/>
       <map:serialize/>
     </map:pipeline>
     -->
@@ -67,7 +67,7 @@
     <!-- Pipeline with map:generate|transform must have serialize
     <map:pipeline>
       <map:generate src="sitemap.xmap"/>
-      <map:transform src="../../stylesheets/simple-xml2html.xsl"/>
+      <map:transform src="../../stylesheets/simple-xml2html.xslt"/>
     </map:pipeline>
     -->
 

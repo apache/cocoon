@@ -18,7 +18,7 @@
     </xsp:logic>
 
     <resources>
-       <resource type="file" href="employee.xml">Descriptor</resource>
+       <resource type="file" href="employee.xml?cocoon-view=pretty-content">Descriptor</resource>
        <resource type="file" href="../transform/sql-page.xml.sql">Schema</resource>
        <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
        <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>

@@ -8,7 +8,7 @@
    <page>
 
     <resources>
-       <resource type="file" href="descriptor.xml">Descriptor</resource>
+       <resource type="file" href="descriptor.xml?cocoon-view=pretty-content">Descriptor</resource>
        <resource type="doc" href="userdocs/xsp/logicsheet-forms.html">Action &amp; Logicsheet</resource>
     </resources>
 
