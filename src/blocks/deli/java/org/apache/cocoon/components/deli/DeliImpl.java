@@ -98,7 +98,7 @@ import java.util.*;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: DeliImpl.java,v 1.4 2003/07/30 02:21:31 joerg Exp $
+ * @version CVS $Id: DeliImpl.java,v 1.5 2003/07/30 15:17:43 joerg Exp $
  */
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable, Deli, Composable, Disposable, Initializable,
@@ -343,7 +343,7 @@ public final class DeliImpl extends AbstractLogEnabled
         public Locale getLocale() { return request.getLocale(); }
         public Enumeration getLocales() { return request.getLocales(); }
 
-        /** @deprecated use {@link CocoonServletContext#getRealPath(java.lang.String)} instead. */
+        /** @deprecated use {@link org.apache.cocoon.components.deli.DeliImpl.CocoonServletContext#getRealPath(java.lang.String)} instead. */
         public String getRealPath(String s) { return null; }
         public Cookie[] getCookies() { return null; }
         public RequestDispatcher getRequestDispatcher(String s) { return null; }

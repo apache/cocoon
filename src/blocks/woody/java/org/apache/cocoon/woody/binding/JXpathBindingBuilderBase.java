@@ -71,20 +71,20 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
 
     /**
      * Makes the logger available to the subclasses.
-     * @return
+     * @return Logger
      */
     protected Logger getLogger() {
         return this.logger;
     }
 
     /**
-     * Builds a configured binding object based on the configuration as 
-     * described in the bindingElement.  The BuilderMap can be used to 
-     * find appropriate builders for possible subBinders.  
-     * 
+     * Builds a configured binding object based on the configuration as
+     * described in the bindingElement.  The BuilderMap can be used to
+     * find appropriate builders for possible subBinders.
+     *
      * @param bindingElm
      * @param assistant
-     * @return
+     * @return JXPathBindingBase
      */
     public abstract JXPathBindingBase buildBinding(
         Element bindingElm,

@@ -54,30 +54,30 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * RepeaterJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link RepeaterJXPathBinding} out of the configuration in the 
+ * RepeaterJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link RepeaterJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:repeater 
+ * &lt;wb:repeater
  *   id="contacts"
  *   parent-path="contacts"
  *   row-path="contact"
  *   unique-row-id="id"
  *   unique-path="@id"   &gt;
- * 
+ *
  *   &lt;wb:on-bind&gt;
  *      &lt;!-- nested bindings executed on updates AND right after the insert --&gt;
  *   &lt;/wb:on-bind&gt;
- * 
+ *
  *   &lt;wb:on-delete-row&gt;
  *      &lt;!-- nested bindings executed on deletion of row --&gt;
  *   &lt;/wb:on-delete-row&gt;
- * 
+ *
  *   &lt;wb:on-insert-row&gt;
  *      &lt;!-- nested bindings executed to prepare the insertion of a row --&gt;
  *   &lt;/wb:on-insert-row&gt;
- * 
+ *
  * &lt;/wb:repeater&gt;
  * </code></pre>
  */
@@ -85,12 +85,12 @@ public class RepeaterJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
 
     /**
-     * Creates an instance of {@link RepeaterJXPathBinding} according to the 
+     * Creates an instance of {@link RepeaterJXPathBinding} according to the
      * attributes and nested comfiguration elements of the bindingElm.
-     * 
+     *
      * @param bindingElm
      * @param assistant
-     * @return
+     * @return JXPathBindingBase
      */
     public JXPathBindingBase buildBinding(
         Element bindingElm,
