@@ -51,7 +51,6 @@
 package org.apache.cocoon.servlet.multipart;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
@@ -72,7 +71,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @author Stefano Mazzocchi
- * @version CVS $Id: MultipartHttpServletRequest.java,v 1.5 2003/11/13 14:56:12 sylvain Exp $
+ * @version CVS $Id: MultipartHttpServletRequest.java,v 1.6 2003/11/15 04:25:22 joerg Exp $
  */
 public class MultipartHttpServletRequest implements HttpServletRequest {
 
