@@ -86,7 +86,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.9 2003/05/23 12:13:15 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.10 2003/05/23 14:20:09 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -141,8 +141,28 @@ public class SimpleProfileManager
             }
             
             String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+            Layout layout = null;
 
-			Layout layout = null;
+            if ( key != null ) {
+                // now search for a layout
+                Map layoutMap = (Map)service.getAttribute("layout-map");
+                if ( layoutMap == null ) {
+                    Object[] objects = (Object[])service.getAttribute(portalPrefix+"/Layout");
+                    if (objects != null && objects[0] != null) {
+                        layoutMap = new HashMap();
+                        this.cacheLayouts(layoutMap, (Layout)objects[0]);
+                        service.setAttribute("layout-map", layoutMap);
+                    }
+                }
+                if ( layoutMap != null) {
+                    layout = (Layout) layoutMap.get( key );
+                    if ( layout != null) {
+                        return layout;
+                    }
+                }
+            }
+            
+
 			Object[] objects = (Object[])service.getAttribute(portalPrefix+"/Layout");
 			if (objects != null)
 				layout = (Layout)objects[0];
@@ -225,6 +245,25 @@ public class SimpleProfileManager
         }
     }
     
+    /**
+     * @param layoutMap
+     * @param layout
+     */
+    private void cacheLayouts(Map layoutMap, Layout layout) {
+        if ( layout != null ) {
+            layoutMap.put( layout.getId(), layout );
+            if ( layout instanceof CompositeLayout ) {
+                CompositeLayout cl = (CompositeLayout)layout;
+                Iterator i = cl.getItems().iterator();
+                while ( i.hasNext() ) {
+                    Item current = (Item)i.next();
+                    this.cacheLayouts( layoutMap, current.getLayout() );
+                }
+            }
+        }
+        
+    }
+
     public void saveUserProfiles() {
 		MapSourceAdapter adapter = null;
 		PortalService service = null;

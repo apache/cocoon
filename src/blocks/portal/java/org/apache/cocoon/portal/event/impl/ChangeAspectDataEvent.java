@@ -50,26 +50,26 @@
 */
 package org.apache.cocoon.portal.event.impl;
 
+import org.apache.cocoon.portal.aspect.Aspectalizable;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.layout.Layout;
 
 /**
  * This events set the aspect data for a layout object
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutAspectDataEvent.java,v 1.1 2003/05/19 14:10:12 cziegeler Exp $
+ * @version CVS $Id: ChangeAspectDataEvent.java,v 1.1 2003/05/23 14:20:09 cziegeler Exp $
  */
-public final class LayoutAspectDataEvent
+public final class ChangeAspectDataEvent
     implements Event {
 
-    private Layout target;
+    private Aspectalizable target;
     
     private String aspectName;
     
     private Object data;
     
-    public LayoutAspectDataEvent(Layout target, String aspectName, Object data) {
+    public ChangeAspectDataEvent(Aspectalizable target, String aspectName, Object data) {
         this.target = target;
         this.aspectName = aspectName;
         this.data = data;
@@ -92,7 +92,7 @@ public final class LayoutAspectDataEvent
     /**
      * @return
      */
-    public Layout getTarget() {
+    public Aspectalizable getTarget() {
         return target;
     }
 
