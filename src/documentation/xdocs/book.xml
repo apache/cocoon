@@ -2,8 +2,8 @@
 
 <!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "dtd/book-cocoon-v10.dtd">
 
-<book software="Apache Cocoon" 
-      title="Apache Cocoon Documentation" 
+<book software="Apache Cocoon"
+      title="Apache Cocoon Documentation"
       copyright="1999-2003 The Apache Software Foundation"
       xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -16,6 +16,7 @@
 
   <menu label="Documentation">
     <menu-item label="Introduction" href="introduction.html"/>
+    <menu-item label="Tracks" href="tracks/index.html"/>
     <menu-item label="Installing" href="userdocs/installation/index.html"/>
     <menu-item label="Overview" href="overview.html"/>
     <menu-item label="Manual" href="userdocs/intro.html"/>
@@ -37,7 +38,7 @@
     <menu-item label="Hall of Fame" href="who.html"/>
     <external label="Contributing" href="http://cocoon.apache.org/community/contrib.html"/>
     <external label="Mail Lists" href="http://cocoon.apache.org/community/mail-lists.html"/>
-    <external label="Mail Archives" href="http://cocoon.apache.org/community/mail-archives.html"/> 
+    <external label="Mail Archives" href="http://cocoon.apache.org/community/mail-archives.html"/>
   </menu>
 
   <menu label="Project">
@@ -47,13 +48,13 @@
   </menu>
 
   <menu label="Links">
-    <external label="Cocoon Links" href="http://cocoon.apache.org/link/index.html"/>  
+    <external label="Cocoon Links" href="http://cocoon.apache.org/link/index.html"/>
     <external label="Live Sites" href="http://cocoon.apache.org/link/livesites-2.1.html"/>
     <external label="Cocoon Hosting" href="http://cocoon.apache.org/link/hosting.html"/>
   </menu>
 
   <menu label="Other Releases">
-    <external label="Cocoon 1.x" href="http://cocoon.apache.org/1.x/"/> 
-    <external label="Cocoon 2.0" href="http://cocoon.apache.org/2.0/"/> 
+    <external label="Cocoon 1.x" href="http://cocoon.apache.org/1.x/"/>
+    <external label="Cocoon 2.0" href="http://cocoon.apache.org/2.0/"/>
   </menu>
 </book>
