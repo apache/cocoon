@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.11 2004/02/06 22:24:40 joerg Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.12 2004/02/22 18:10:59 cziegeler Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Serviceable, ThreadSafe {
@@ -100,10 +100,10 @@ public class XMLFileModule extends AbstractJXPathModule
     /** Default value for cachability of sources */
     boolean cacheAll = true;
     /** Default src */
-    String src = null;
+    String src;
 
-    SourceResolver resolver = null;
-    ServiceManager manager = null;
+    SourceResolver resolver;
+    ServiceManager manager;
     
 
     /**
@@ -205,6 +205,18 @@ public class XMLFileModule extends AbstractJXPathModule
     }
 
 
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
+	 */
+	public void dispose() {
+		super.dispose();
+        if ( this.manager != null ) {
+            this.manager.release( this.resolver );
+            this.manager = null;
+            this.resolver = null;
+        }
+	}
+    
     /**
      * Static (cocoon.xconf) configuration.
      * Configuration is expected to be of the form:
