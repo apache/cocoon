@@ -122,7 +122,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="fop"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -145,7 +145,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="scratchpad"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -187,7 +187,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="batik"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -209,7 +209,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="chaperon"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -234,7 +234,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="jfor"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -254,7 +254,7 @@
     <package>org.apache.cocoon</package>
     <ant target="gump-block">
       <property name="block-name" value="itext"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -275,7 +275,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="session-fw"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -293,7 +293,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="authentication-fw"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -312,7 +312,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="databases"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -334,7 +334,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="hsqldb"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -356,7 +356,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="poi"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -378,7 +378,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="naming"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -399,7 +399,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="jsp"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -418,7 +418,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="python"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -438,7 +438,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="lucene"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -459,7 +459,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="html"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -482,7 +482,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="bsf"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -506,7 +506,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="profiler"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -524,7 +524,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="velocity"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -545,7 +545,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="linkrewriter"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -563,7 +563,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="web3"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -584,7 +584,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="slide"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -618,7 +618,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="proxy"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="commons-httpclient-2.0-branch"/>
@@ -640,7 +640,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="xmldb"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -666,7 +666,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="deli"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -690,7 +690,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="asciiart"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -710,7 +710,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="mail"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -735,7 +735,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="axis"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -760,7 +760,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="taglib"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -778,7 +778,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="forms"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -813,7 +813,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="qdox"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -834,7 +834,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="portal"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -866,7 +866,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="petstore"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -888,7 +888,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="stx"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -911,7 +911,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="webdav"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -936,7 +936,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="eventcache"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -959,7 +959,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="apples"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -978,7 +978,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="querybean"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1000,7 +1000,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="slop"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1018,7 +1018,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="midi"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1036,7 +1036,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="cron"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1059,7 +1059,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="ojb"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1091,7 +1091,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="jms"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1116,7 +1116,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="repository"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1138,7 +1138,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="paranoid"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="jakarta-servletapi-4"/>
@@ -1157,7 +1157,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="xsp"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1181,7 +1181,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="javaflow"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1212,7 +1212,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="serializers"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1232,7 +1232,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="tour"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1254,7 +1254,7 @@
 
     <ant target="gump-block">
       <property name="block-name" value="faces"/>
-      <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
@@ -1286,7 +1286,7 @@
     
     <ant target="gump-block">
        <property name="block-name" value="template"/>
-       <property name="version" value="@@DATE@@"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
     </ant>
     
     <depend project="cocoon" inherit="all"/>
