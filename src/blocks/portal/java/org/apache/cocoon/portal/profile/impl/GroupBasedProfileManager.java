@@ -46,9 +46,9 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceValidity;
 
 /**
- * The profile manager using the authentication framework.
  * This profile manager uses a group based approach:
  * The coplet-base-data and the coplet-data are global, these are shared
  * between all users.
@@ -79,8 +79,13 @@ public class GroupBasedProfileManager
     
     protected static final String KEY_PREFIX = GroupBasedProfileManager.class.getName() + ':';
     
-    protected Map copletBaseDatas;
-    protected Map copletDatas;
+    protected static final class ProfileInfo {
+        public Map            objects;
+        public SourceValidity validity;
+    }
+    
+    protected ProfileInfo copletBaseDatas;
+    protected ProfileInfo copletDatas;
     
     /** The userinfo provider - the connection to the authentication mechanism */
     protected UserInfoProvider provider;
@@ -114,6 +119,8 @@ public class GroupBasedProfileManager
         ContainerUtil.contextualize(this.provider, this.context);
         ContainerUtil.service(this.provider, this.manager);
         ContainerUtil.initialize(this.provider);
+        this.copletBaseDatas = new ProfileInfo();
+        this.copletDatas = new ProfileInfo();
     }
     
     /* (non-Javadoc)
@@ -426,48 +433,62 @@ public class GroupBasedProfileManager
                                      final UserInfo      info,
                                      final PortalService service) 
     throws Exception {
-        if ( this.copletBaseDatas == null ) {
-            synchronized ( this ) {
-                if ( this.copletBaseDatas == null ) {
-                    final Map key = this.buildKey(CATEGORY_GLOBAL, 
-                            ProfileLS.PROFILETYPE_COPLETBASEDATA, 
-                            info, 
-                            true);
-                    final Map parameters = new HashMap();
-                    parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
-                                   ProfileLS.PROFILETYPE_COPLETBASEDATA);        
-
-                    this.copletBaseDatas = ((CopletBaseDataManager)loader.loadProfile(key, parameters)).getCopletBaseData();
-                    this.prepareObject(this.copletBaseDatas, service);
-                }
+        synchronized ( this ) {
+            final Map key = this.buildKey(CATEGORY_GLOBAL, 
+                    ProfileLS.PROFILETYPE_COPLETBASEDATA, 
+                    info, 
+                    true);
+            final Map parameters = new HashMap();
+            parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                           ProfileLS.PROFILETYPE_COPLETBASEDATA);
+            
+            if ( this.copletBaseDatas.validity != null
+                 && this.copletBaseDatas.validity.isValid() == SourceValidity.VALID) {
+                return this.copletBaseDatas.objects;
             }
+            final SourceValidity newValidity = loader.getValidity(key, parameters);
+            if ( this.copletBaseDatas.validity != null 
+                 && newValidity != null
+                 && this.copletBaseDatas.validity.isValid(newValidity) == SourceValidity.VALID) {
+                return this.copletBaseDatas.objects;
+            }
+            this.copletBaseDatas.objects = ((CopletBaseDataManager)loader.loadProfile(key, parameters)).getCopletBaseData();
+            this.copletBaseDatas.validity = newValidity;
+            this.copletDatas.objects = null;
+            this.copletDatas.validity = null;
+            this.prepareObject(this.copletBaseDatas.objects, service);
+            return this.copletBaseDatas.objects;
         }
-        return this.copletBaseDatas;
     }
     
     protected Map getGlobalDatas(final ProfileLS     loader,
                                  final UserInfo      info,
                                  final PortalService service) 
     throws Exception {
-        if ( this.copletDatas == null ) {
-            synchronized ( this ) {
-                if ( this.copletDatas == null ) {
-                    final Map key = this.buildKey(CATEGORY_GLOBAL, 
-                                                  ProfileLS.PROFILETYPE_COPLETDATA, 
-                                                  info, 
-                                                  true);
-                    final Map parameters = new HashMap();
-                    parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
-                                   ProfileLS.PROFILETYPE_COPLETDATA);        
-                    parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
-                                   this.copletBaseDatas);
-                    
-                    this.copletDatas = ((CopletDataManager)loader.loadProfile(key, parameters)).getCopletData();                    
-                    this.prepareObject(this.copletDatas, service);
-                }
+        synchronized ( this ) {
+            final Map key = this.buildKey(CATEGORY_GLOBAL, 
+                    ProfileLS.PROFILETYPE_COPLETDATA, 
+                    info, 
+                    true);
+            final Map parameters = new HashMap();
+            parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                           ProfileLS.PROFILETYPE_COPLETDATA);
+            
+            if ( this.copletDatas.validity != null
+                 && this.copletDatas.validity.isValid() == SourceValidity.VALID) {
+                return this.copletDatas.objects;
             }
+            final SourceValidity newValidity = loader.getValidity(key, parameters);
+            if ( this.copletDatas.validity != null 
+                 && newValidity != null
+                 && this.copletDatas.validity.isValid(newValidity) == SourceValidity.VALID) {
+                return this.copletDatas.objects;
+            }
+            this.copletDatas.objects = ((CopletDataManager)loader.loadProfile(key, parameters)).getCopletData();
+            this.copletDatas.validity = newValidity;
+            this.prepareObject(this.copletDatas.objects, service);
+            return this.copletDatas.objects;
         }
-        return this.copletDatas;
     }
 
     private boolean isSourceNotFoundException(Throwable t) {
