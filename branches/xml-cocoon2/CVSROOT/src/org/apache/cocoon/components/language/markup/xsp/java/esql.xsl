@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.22 2001-01-11 18:05:39 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.23 2001-01-16 03:33:58 balld Exp $-->
 <!--
 
  ============================================================================
@@ -53,9 +53,9 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/xsp"
   xmlns:esql="http://apache.org/cocoon/SQL/v2"
   xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
+  xmlns:xsp="http://apache.org/xsp"
 >
 <!--
 -->
@@ -174,26 +174,18 @@
       <xsp:include>java.text.DecimalFormat</xsp:include>
       <xsp:include>java.io.StringWriter</xsp:include>
       <xsp:include>java.io.PrintWriter</xsp:include>
-      <xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
+      <xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
+      <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
+      <xsl:if test="$environment = 'cocoon2'">
+        <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
+      </xsl:if>
     </xsp:structure>
     <xsp:logic>
       /** environment - <xsl:value-of select="$environment"/> **/
-      private static ComponentSelector esqlSelector = null;
-
-      public void compose(ComponentManager manager) {
-          super.compose(manager);
-
-          if (esqlSelector == null) {
-              try {
-                  esqlSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
-              } catch (ComponentManagerException cme) {
-                  log.error("Could not look up the datasource component", cme);
-              }
-          }
-      }
       /** xsp namespace uri - <xsl:value-of select="$xsp-namespace-uri"/> **/
+      static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
       class EsqlConnection {
-        DataSourceComponent datasource = null;
+        DBConnection db_connection = null;
         Connection connection = null;
         String dburl = null;
         String username = null;
@@ -223,7 +215,7 @@
     Stack _esql_connections = new Stack();
     EsqlConnection _esql_connection = null;
     Stack _esql_queries = new Stack();
-    EsqlQuery _esql_query = null;
+    EsqlQuery _esql_query = null; 
     SQLException _esql_exception = null;
     StringWriter _esql_exception_writer = null;
   </xsp:logic>
@@ -246,17 +238,15 @@
     try {
       <xsl:choose>
         <xsl:when test="esql:pool">
-          _esql_connection.datasource = (DataSourceComponent) esqlSelector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
-          _esql_connection.connection = _esql_connection.datasource.getConnection();
+          _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
+          _esql_connection.connection = _esql_connection.db_connection.getConnection();
         </xsl:when>
         <xsl:otherwise>
-          <xsl:if test="esql:driver">
           try {
             Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
             throw new RuntimeException("Error loading driver: "+String.valueOf(<xsl:copy-of select="$driver"/>));
           }
-          </xsl:if>
           try {
             <xsl:choose>
               <xsl:when test="esql:username">
@@ -287,16 +277,19 @@
         throw new RuntimeException("Error setting connection autocommit");
       }
       <xsl:apply-templates/>
-    } catch (Exception e) {
-        log.error("Error processing the page", e);
     } finally {
       try {
         if(!_esql_connection.connection.getAutoCommit()) {
           _esql_connection.connection.commit();
         }
-
-        _esql_connection.connection.close();
-
+        <xsl:choose>
+          <xsl:when test="esql:pool">
+            _esql_pool.releaseConnection(_esql_connection.db_connection);
+          </xsl:when>
+          <xsl:otherwise>
+            _esql_connection.connection.close();
+          </xsl:otherwise>
+        </xsl:choose>
         if (_esql_connections.empty()) {
           _esql_connection = null;
         } else {
@@ -471,6 +464,18 @@
         }
       </xsp:logic>
     </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsp:logic>
+        for (int _esql_i = 1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
+          String _esql_tagname = _esql_query.resultset_metadata.getColumnName(_esql_i);
+          <xsp:element>
+            <xsp:param name="name"><xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+            <xsp:expr>_esql_query.resultset.getString(_esql_i)</xsp:expr>
+          </xsp:element>
+        }
+        this.characters("\n");
+      </xsp:logic>
+    </xsl:when>
     <xsl:otherwise>
       <xsp:logic>
         throw new RuntimeException("esql:get-columns is not supported in this environment: "+<xsl:value-of select="$environment"/>);
@@ -569,9 +574,9 @@
   <xsp:expr><xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
- <xspdoc:desc>returns the value of the given column interpeted as an xml fragment.
- The fragment is parsed by the default xsp parser and the document element is returned.
- If a root attribute exists, its value is taken to be the name of an element to wrap around the contents of
+ <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. 
+ The fragment is parsed by the default xsp parser and the document element is returned. 
+ If a root attribute exists, its value is taken to be the name of an element to wrap around the contents of 
  the fragment before parsing.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-xml">
   <xsl:variable name="content">
@@ -588,6 +593,7 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- <xsl:call-template name="add-xml-decl"> not needed -->
+        <xsl:text>"&lt;?xml version=\"1.0\"?&gt;"+</xsl:text>
         <xsl:call-template name="get-string"/>
       </xsl:otherwise>
     </xsl:choose>
@@ -595,6 +601,24 @@
   <xsl:choose>
     <xsl:when test="$environment = 'cocoon1'">
       <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsp:logic>
+        {
+          /*
+          parser.setContentHandler(this.contentHandler);
+          parser.setLexicalHandler(this.lexicalHandler);
+          */
+          try {
+            XSPUtil.include(new InputSource(new StringReader(<xsl:copy-of select="$content"/>)),this.contentHandler,parser);
+            /*
+            parser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>)));
+            */
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("error parsing xml: "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage()+": "+String.valueOf(<xsl:copy-of select="$content"/>));
+          }
+        }
+      </xsp:logic>
     </xsl:when>
     <xsl:otherwise>
       <xsp:logic>
@@ -682,10 +706,11 @@
 <xsl:template name="get-string-encoded">
   <xsl:param name="column-spec"/>
   <xsl:param name="resultset"/>
+  <xsl:variable name="encoding"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:encoding"/></xsl:call-template></xsl:variable>
   <xsl:choose>
-    <xsl:when test="@encoding">
-      new String (<xsl:value-of select="$resultset"/>.getBytes
-        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="@encoding"/>)
+    <xsl:when test="$encoding">
+      new String (<xsl:value-of select="$resultset"/>.getBytes 
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
     </xsl:when>
     <xsl:otherwise>
       <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
