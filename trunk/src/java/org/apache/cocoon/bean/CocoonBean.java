@@ -84,6 +84,7 @@ public class CocoonBean
     private String m_logConfigURI = m_contextURI + File.separator + "cocoon.xlog";
     private String m_logCategory = "cocoon";
     private String m_configURI = Constants.DEFAULT_CONF_FILE;
+    private String m_roleConfigURI = "resource://org/apache/cocoon/cocoon.roles";
     private List m_classForceLoadList = new ArrayList();
     private String m_classPath = System.getProperty( "java.class.path" );
     private int m_threadsPerCPU = 1;
@@ -299,7 +300,8 @@ public class CocoonBean
         m_confBuilder.setContextClassLoader( m_parentClassLoader );
         m_confBuilder.setCommandFailureHandlerClass( CocoonCommandFailureHandler.class );
         m_confBuilder.setContainerClass(CocoonContainer.class);
-
+        m_confBuilder.setRoleManagerConfiguration(m_roleConfigURI);
+        
         m_confBuilder.setLifecycleExtensionManager( getLifecycleExtensionManager() );
 
         DefaultContext initContext = new DefaultContext( m_confBuilder.getContext() );
@@ -359,4 +361,5 @@ public class CocoonBean
         dispose();
         super.finalize();
     }
+    
 }

@@ -1,35 +1,34 @@
 <?xml version="1.0"?>
 <!DOCTYPE role-list [
 <!ELEMENT role-list (role+)>
-<!ELEMENT role (hint*)>
-<!ELEMENT hint EMPTY>
-<!ATTLIST role name CDATA #REQUIRED
-               shorthand CDATA #REQUIRED
-               default-class CDATA #IMPLIED
->
-<!ATTLIST hint shorthand CDATA #REQUIRED
-               class CDATA #REQUIRED
+<!ELEMENT role (component*)>
+<!ELEMENT component EMPTY>
+<!ATTLIST role name CDATA #REQUIRED>
+<!ATTLIST component 
+  shorthand CDATA #REQUIRED
+  class CDATA #REQUIRED
+  handler CDATA #IMPLIED
 >
 ]>
 
 <role-list>
 
-  <role name="org.apache.excalibur.source.SourceFactorySelector"
-        shorthand="source-factories"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+  <role name="org.apache.excalibur.source.SourceResolver">
+    <component 
+      shorthand="source-resolver"
+      class="org.apache.cocoon.components.source.CocoonSourceResolver"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
   </role>
 
-  <!-- This is the source resolver for Cocoon - do not change this!
-       If you want to use your own source resolver, define a 
-       component for the role org.apache.excalibur.source.SourceResolver/Cocoon -->
-  <role name="org.apache.excalibur.source.SourceResolver"
-        shorthand="source-resolver"
-        default-class="org.apache.cocoon.components.source.CocoonSourceResolver"/>
-
   <!-- The entity resolver used by most parsers -->
-  <role name="org.apache.excalibur.xml.EntityResolver"
-        shorthand="entity-resolver"
-        default-class="org.apache.cocoon.components.resolver.DefaultResolver"/>
+  <role name="org.apache.excalibur.xml.EntityResolver">
+    <component
+      shorthand="entity-resolver"
+      class="org.apache.cocoon.components.resolver.DefaultResolver"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
 
   <!-- Parser:
 
@@ -41,44 +40,91 @@
   -->
 
   <!-- This is the usual SAX parser -->
-  <role name="org.apache.excalibur.xml.sax.SAXParser"
-        shorthand="xml-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
+  <role name="org.apache.excalibur.xml.sax.SAXParser">
+    <component
+      shorthand="xml-parser"
+      class="org.apache.excalibur.xml.impl.JaxpParser"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
 
-  <!-- This is the usual DOM parser -->
-  <role name="org.apache.excalibur.xml.dom.DOMParser"
-        shorthand="dom-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
+  <!-- This is the usual DOM parser 
+  <role name="org.apache.excalibur.xml.dom.DOMParser">
+    <component
+      shorthand="dom-parser"
+      class="org.apache.excalibur.xml.impl.JaxpParser"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
+  -->
 
   <!-- A Dom Serializer -->
-  <role default-class="org.apache.excalibur.xml.dom.DefaultDOMSerializer" name="org.apache.excalibur.xml.dom.DOMSerializer" shorthand="dom-serializer"/>
-
+  <role name="org.apache.excalibur.xml.dom.DOMSerializer">
+    <component
+      class="org.apache.excalibur.xml.dom.DefaultDOMSerializer"
+      shorthand="dom-serializer"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
+  
   <!-- XSLT: -->
-  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
-        shorthand="xslt-processor"
-        default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
+  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor">
+    <component 
+      shorthand="xslt-processor"
+      class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
 
-  <role name="org.apache.excalibur.xml.xpath.XPathProcessor"
-        shorthand="xpath-processor"
-        default-class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"/>
+  <role name="org.apache.excalibur.xmlizer.XMLizer">
+    <component 
+      shorthand="xmlizer"
+      class="org.apache.excalibur.xmlizer.DefaultXMLizer"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />  
+  </role>
+  
+  <role name="org.apache.excalibur.xml.xpath.XPathProcessor">
+    <component
+      shorthand="xpath-processor"
+      class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
 
   <!-- Stores: -->
-  <role name="org.apache.excalibur.store.Store"
-       shorthand="persistent-store"
-       default-class="org.apache.cocoon.components.store.impl.DefaultStore"/>
+  <role name="org.apache.excalibur.store.Store">
+    <component 
+      shorthand="persistent-store"
+      class="org.apache.cocoon.components.store.impl.DefaultStore"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
+  
+  <role name="org.apache.excalibur.store.Store/TransientStore">
+    <component
+      shorthand="transient-store"
+      class="org.apache.excalibur.store.impl.MRUMemoryStore"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
 
-  <role name="org.apache.excalibur.store.Store/TransientStore"
-        shorthand="transient-store"
-        default-class="org.apache.excalibur.store.impl.MRUMemoryStore"/>
+  <role name="org.apache.excalibur.store.StoreJanitor">
+    <component
+      shorthand="store-janitor"
+      class="org.apache.excalibur.store.impl.StoreJanitorImpl"
+      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
+    />
+  </role>
 
-  <role name="org.apache.excalibur.store.StoreJanitor"
-       shorthand="store-janitor"
-       default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"/>
+  <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder">
+    <component 
+      shorthand="global-variables"
+      class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
+    />
+  </role>
 
-  <role name="org.apache.cocoon.Processor"
-        shorthand="sitemap"
-        default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
-
+  <!--
   <role name="org.apache.cocoon.components.language.generator.ServerPagesSelector"
        shorthand="server-pages"
        default-class="org.apache.cocoon.components.language.generator.GeneratorSelector"/>
@@ -113,14 +159,9 @@
         shorthand="datasources"
         default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
 	<hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.ResourceLimitingJdbcDataSource"/>
-    <!-- hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.JdbcDataSource"/ -->
     <hint shorthand="j2ee" class="org.apache.avalon.excalibur.datasource.J2eeDataSource"/>
     <hint shorthand="informix" class="org.apache.avalon.excalibur.datasource.InformixDataSource"/>
   </role>
-
-  <role name="org.apache.excalibur.xmlizer.XMLizer"
-        shorthand="xmlizer"
-        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
 
   <role name="org.apache.avalon.excalibur.monitor.Monitor"
         shorthand="monitor"
@@ -147,7 +188,6 @@
         shorthand="cache"
         default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
 
-  <!-- i18n components for resource bundle handling -->
   <role name="org.apache.cocoon.i18n.BundleFactory"
         shorthand="i18n-bundles"
         default-class="org.apache.cocoon.i18n.XMLResourceBundleFactory"/>
@@ -156,7 +196,6 @@
         shorthand="continuations-manager"
         default-class="org.apache.cocoon.components.flow.ContinuationsManagerImpl" />
 
-  <!-- input/output modules -->
   <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
         shorthand="input-modules"
         default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
@@ -165,13 +204,8 @@
         shorthand="output-modules"
         default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
 
-  <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
-        shorthand="global-variables"
-        default-class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"/>
-
-  <!-- Storing data in the current request -->
   <role name="org.apache.cocoon.components.persistence.RequestDataStore"
         shorthand="request-data-store"
         default-class="org.apache.cocoon.components.persistence.RequestDataStoreImpl"/>
-
+  -->
 </role-list>

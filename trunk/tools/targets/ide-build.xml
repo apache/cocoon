@@ -124,6 +124,7 @@
           <include name="services.list"/>
           <include name="**/*.meta"/>
           <include name="**/*.deps"/>
+          <include name="org/apache/cocoon/cocoon.roles"/>
         </fileset>
       </copy>
   </target>
