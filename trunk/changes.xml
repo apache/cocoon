@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: changes.xml,v 1.9 2003/03/19 08:52:12 cziegeler Exp $
+  CVS $Id: changes.xml,v 1.10 2003/03/19 15:42:13 cziegeler Exp $
 -->
 
 <changes title="History of Changes">
@@ -42,6 +42,11 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="update">
+    Correcting method names of new CacheableProcessingComponent interface.
+    It's now possible to write components that support the 2.0.x and the
+    2.1.x caching algorithm.
+  </action>
   <action dev="CZ" type="update">
     Setting minimum JDK version from 1.2 to 1.3.
   </action>

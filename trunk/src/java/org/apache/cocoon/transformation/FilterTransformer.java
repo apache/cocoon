@@ -81,7 +81,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FilterTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: FilterTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class FilterTransformer
 extends AbstractTransformer
@@ -132,7 +132,7 @@ implements CacheableProcessingComponent {
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return this.elementName + '<' + this.count + '>' + this.blocknr;
     }
 
@@ -144,7 +144,7 @@ implements CacheableProcessingComponent {
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

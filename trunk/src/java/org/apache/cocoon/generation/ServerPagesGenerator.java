@@ -91,7 +91,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: ServerPagesGenerator.java,v 1.2 2003/03/19 15:42:13 cziegeler Exp $
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements Disposable, CacheableProcessingComponent, Configurable {
@@ -142,8 +142,8 @@ public class ServerPagesGenerator extends ServletGenerator
      * @return The generated key or <code>null</code> if the component
      *         is currently not cacheable.
      */
-    public Serializable generateKey() {
-        Object generatorkey = generator.generateKey();
+    public Serializable getKey() {
+        Object generatorkey = generator.getKey();
         if (generatorkey==null)
             return this.inputSource.getURI();
         return this.inputSource.getURI() + '-' + generatorkey;
@@ -157,10 +157,10 @@ public class ServerPagesGenerator extends ServletGenerator
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         // VG: Input source's systemID is part of the key,
         // and need not be included into the validity.
-        return generator.generateValidity();
+        return generator.getValidity();
     }
 
     /**

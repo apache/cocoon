@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.4 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -847,7 +847,7 @@ public class I18nTransformer extends AbstractTransformer
      * Implemenation of CacheableProcessingComponents.
      * Generates unique key for the current locale.
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return catalogueLocation + '/' + catalogueName + '?' + this.locale;
     }
 
@@ -856,7 +856,7 @@ public class I18nTransformer extends AbstractTransformer
      * Generates validity object for this transformer or <code>null</code>
      * if this instance is not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return I18N_NOP_VALIDITY;
     }
 
