@@ -50,9 +50,8 @@
 */
 package org.apache.cocoon.woody.datatype;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Iterator;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Locale;
 
 import org.apache.cocoon.woody.Constants;
@@ -63,7 +62,7 @@ import org.xml.sax.SAXException;
 /**
  * Builds a selection list with possible values for a class implementing
  * the {@link Enum} interface.
- * @version CVS $Id: EnumSelectionList.java,v 1.1 2003/11/07 22:04:38 ugo Exp $
+ * @version CVS $Id: EnumSelectionList.java,v 1.2 2003/11/09 09:21:19 ugo Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
@@ -98,22 +97,25 @@ public class EnumSelectionList implements SelectionList {
         Locale locale)
         throws SAXException {
         try {
-            Method method = clazz.
-                getMethod("listValues", new Class[] {});
-            Iterator iter = ((Collection) method.invoke(null, null)).iterator();
+            Field fields[] = clazz.getDeclaredFields();
             contentHandler.startElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
-            while(iter.hasNext()) {
-                String stringValue = ((Enum) iter.next()).convertToString(locale);
-                // Output this item
-                AttributesImpl itemAttrs = new AttributesImpl();
-                itemAttrs.addCDATAAttribute("value", stringValue);
-                contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
-                contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-                contentHandler.startElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL, Constants.EMPTY_ATTRS);
-                contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
-                contentHandler.endElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL);
-                contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
-                contentHandler.endElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL);
+            for (int i = 0 ; i < fields.length ; ++i) {
+                int mods = fields[i].getModifiers();
+                if (Modifier.isPublic(mods) && Modifier.isStatic(mods)
+                        && Modifier.isFinal(mods) && fields[i].get(null).getClass().equals(clazz)) {
+                    String stringValue = clazz.getName() + "." + fields[i].getName();
+                    // Output this item
+                    AttributesImpl itemAttrs = new AttributesImpl();
+                    itemAttrs.addCDATAAttribute("value", stringValue);
+                    contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
+                    contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+                    // TODO: make i18n element optional
+                    contentHandler.startElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL, Constants.EMPTY_ATTRS);
+                    contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
+                    contentHandler.endElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL);
+                    contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+                    contentHandler.endElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL);
+                }
             }
             // End the selection-list
             contentHandler.endElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL);

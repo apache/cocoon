@@ -214,11 +214,17 @@
 
      <map:match pattern="form2-success-pipeline">
        <map:generate src="forms/form2_data-result.xml"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
        <map:serialize type="xml"/>
      </map:match>
 
      <map:match pattern="form2bean-success-pipeline">
        <map:generate type="jx" src="forms/form2_jx.xml"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
        <map:serialize/>
      </map:match>
 

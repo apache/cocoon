@@ -50,17 +50,12 @@
 */
 package org.apache.cocoon.woody.samples;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-
-import org.apache.cocoon.woody.datatype.Enum;
 
 /**
  * Description of Sex.
- * @version CVS $Id: Sex.java,v 1.4 2003/11/08 14:27:03 joerg Exp $
+ * @version CVS $Id: Sex.java,v 1.5 2003/11/09 09:21:19 ugo Exp $
  */
-public class Sex implements Enum {
+public class Sex {
 
     public static final Sex MALE = new Sex("M");
     public static final Sex FEMALE = new Sex("F");
@@ -71,30 +66,9 @@ public class Sex implements Enum {
     public String toString() {
       // Will probably have some i18n support here
       switch(code.charAt(0)) {
-          case 'M' : return "male";
-          case 'F' : return "female";
+          case 'M' : return this.getClass().getName() + ".MALE";
+          case 'F' : return this.getClass().getName() + ".FEMALE";
           default : return "unknown"; // Should never happen
       }
     }
-
-    public static Sex fromString(String value, Locale locale) {
-        if (value.equals("male")) return Sex.MALE;
-        if (value.equals("female")) return Sex.FEMALE;
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.Enum#convertToString(java.lang.Object, java.util.Locale)
-     */
-    public String convertToString(Locale locale) {
-        return toString();
-    }
-    
-    public static Collection listValues() {
-        Collection values = new ArrayList(2);
-        values.add(Sex.FEMALE);
-        values.add(Sex.MALE);
-        return values;
-    }
-
 }

@@ -50,15 +50,15 @@
 */
 package org.apache.cocoon.woody.datatype.convertor;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.woody.datatype.Enum;
 
 /**
  * Description of EnumConvertor.
- * @version CVS $Id: EnumConvertor.java,v 1.3 2003/11/07 14:28:05 vgritsenko Exp $
+ * @version CVS $Id: EnumConvertor.java,v 1.4 2003/11/09 09:21:19 ugo Exp $
  */
 public class EnumConvertor implements Convertor {
 
@@ -71,18 +71,28 @@ public class EnumConvertor implements Convertor {
     /* (non-Javadoc)
      * @see org.apache.cocoon.woody.datatype.convertor.Convertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
      */
-    public Object convertFromString(
-        String value,
-        Locale locale,
-        FormatCache formatCache) {
+    public Object convertFromString(String value,
+									Locale locale,
+									FormatCache formatCache) {
         try {
-            Method method = getTypeClass().
-                getMethod("fromString", new Class[] { String.class, Locale.class});
-            return method.invoke(null, new Object[] { value, locale});
+            // If the enum provides a "fromString" method, use it
+            try {
+                Method method = getTypeClass().
+                    getMethod("fromString", new Class[] { String.class, Locale.class});
+                return method.invoke(null, new Object[] { value, locale});
+            } catch(NoSuchMethodException nsme) {
+                // fromString method was not found, try to convert
+                // the value to a field via reflection.
+                // Strip the class name
+                int pos = value.lastIndexOf('.');
+                if (pos >= 0) {
+                    value = value.substring(pos + 1);
+                }
+                Class clazz = getTypeClass();
+                Field field = clazz.getField(value);
+                return field.get(null);
+            }
         } catch (Exception e) {
-            // FIXME: I'd like to throw a o.a.c.ProcessingException here,
-            // but unfortunately it's a checked exception.
-            // Checked exceptions are evil, aren't they?
             throw new CascadingRuntimeException("Got exception trying to convert " + value, e);
         }
     }
@@ -90,11 +100,22 @@ public class EnumConvertor implements Convertor {
     /* (non-Javadoc)
      * @see org.apache.cocoon.woody.datatype.convertor.Convertor#convertToString(java.lang.Object, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
      */
-    public String convertToString(
-        Object value,
-        Locale locale,
-        FormatCache formatCache) {
-        return ((Enum) value).convertToString(locale);
+    public String convertToString(Object value,
+								  Locale locale,
+								  FormatCache formatCache) {
+        Class clazz = getTypeClass();
+        Field fields[] = clazz.getDeclaredFields();
+        for (int i = 0 ; i < fields.length ; ++i) {
+            try {
+                if (fields[i].get(null).equals(value)) {
+                    return clazz.getName() + "." + fields[i].getName();
+                }
+            } catch (Exception e) {
+                throw new CascadingRuntimeException("Got exception trying to get value of field " + fields[i], e);
+            }
+        }
+        // Fall back on toString
+        return value.toString();
     }
 
     /* (non-Javadoc)
@@ -106,9 +127,6 @@ public class EnumConvertor implements Convertor {
             return Class.forName(className);
         }
         catch (ClassNotFoundException e) {
-            // FIXME: I'd like to throw a o.a.c.ProcessingException here,
-            // but unfortunately it's a checked exception.
-            // Checked exceptions are evil, aren't they?
             throw new CascadingRuntimeException("Class " + className + " not found", e);
         }
     }
