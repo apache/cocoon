@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.4 2003/04/10 21:46:58 stefano Exp $
+# $Id: cocoon.sh,v 1.5 2003/04/13 13:41:26 stefano Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -70,11 +70,11 @@ if [ "$COCOON_HOME" = "" ] ; then
 fi
 
 if [ "$COCOON_WEBAPP_HOME" = "" ] ; then
-  COCOON_WEBAPP_HOME='$COCOON_HOME/build/webapp'
+  COCOON_WEBAPP_HOME=$COCOON_HOME/build/webapp
 fi
 
 if [ "$COCOON_LIB" = "" ] ; then
-  COCOON_LIB='$COCOON_WEBAPP_HOME/WEB-INF/lib'
+  COCOON_LIB=$COCOON_WEBAPP_HOME/WEB-INF/lib
 fi
 
 if [ "$JETTY_PORT" = "" ] ; then
