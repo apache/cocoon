@@ -30,6 +30,8 @@
      <head>
        <title><xsl:value-of select="title"/></title>
        <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
+       <!-- copy local CSS, if any -->
+       <xsl:copy-of select="style"/>
      </head>
      <body>
        <xsl:call-template name="resources"/>
