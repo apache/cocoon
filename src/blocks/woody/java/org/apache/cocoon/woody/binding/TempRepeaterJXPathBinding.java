@@ -69,7 +69,7 @@ import org.w3c.dom.NodeList;
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.3 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.4 2004/01/27 05:50:08 tim Exp $
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -81,12 +81,13 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
     private final boolean deleteIfEmpty;
+    private final boolean virtualRows;
 
     public TempRepeaterJXPathBinding(
             JXpathBindingBuilderBase.CommonAttributes commonAtts,
             String repeaterId, String repeaterPath,
             String rowPath, String rowPathInsert,
-            boolean clearOnLoad, boolean deleteIfEmpty,
+            boolean virtualRows, boolean clearOnLoad, boolean deleteIfEmpty,
             JXPathBindingBase rowBinding, JXPathBindingBase insertBinding) {
         super(commonAtts);
         this.repeaterId = repeaterId;
@@ -97,38 +98,53 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         this.rowBinding.setParent(this);
         this.insertRowBinding = insertBinding;
         this.insertRowBinding.setParent(this);
+        this.virtualRows = virtualRows;
         this.clearOnLoad = clearOnLoad;
         this.deleteIfEmpty = deleteIfEmpty;
     }
 
     public void doLoad(Widget frmModel, JXPathContext jctx) {
-        // Find the repeater and clear it
+        // (There should be a general widget type checker for all the bindings to use,
+        // coupled with a general informative exception class to throw if the widget is
+        // of the wrong type or null.)
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
-
-        // TODO: RAD
         if (repeater == null) {
+            String fullId = frmModel.getFullyQualifiedId();
+            if (fullId == null || fullId.length() == 0) {
+                fullId = "";
+            } else {
+                fullId = fullId + ".";
+            }
             throw new RuntimeException(
-                    "frmModel.getLocation() = " + frmModel.getLocation() +
-                    "  repeaterId = " + this.repeaterId);
+                "TempRepeaterJXPathBinding: Repeater \"" + fullId + this.repeaterId +
+                "\" does not exist (" + frmModel.getLocation() + ")");
         }
-
+ 
+        // Start by clearing the repeater, if necessary.
         if (this.clearOnLoad) {
             repeater.removeRows();
         }
 
-        // Move to repeater context
-        Pointer ptr = jctx.getPointer(this.repeaterPath);
-        if (ptr.getNode() != null) {
-            // There are some nodes to load from
+        // Find the location of the repeater data.
+        Pointer repeaterPointer = jctx.getPointer(this.repeaterPath);
 
-            JXPathContext repeaterContext = jctx.getRelativeContext(ptr);
-            // build a jxpath iterator for pointers
+        // Check if there is data present.
+        //
+        // (Otherwise, should we check the leniency config option
+        // to decide whether to be silent or throw an exception?) 
+        if (repeaterPointer != null) {
+
+            // Narrow to repeater context.
+            JXPathContext repeaterContext = jctx.getRelativeContext(repeaterPointer);
+
+            // Build a jxpath iterator for the repeater row pointers.
             Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
 
-            //iterate through it
+            // Iterate through the rows of data.
             int rowNum = 0;
             while (rowPointers.hasNext()) {
-                // Get a row. It is created if needed (depends on clearOnLoad)
+
+                // Get or create a row widget.
                 Repeater.RepeaterRow thisRow;
                 if (repeater.getSize() > rowNum) {
                     thisRow = repeater.getRow(rowNum);
@@ -137,10 +153,29 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                 }
                 rowNum++;
 
-                // make a jxpath sub context on the iterated element
-                Pointer jxp = (Pointer) rowPointers.next();
-                JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
+                // Narrow to the row context.
+                Pointer rowPointer = (Pointer) rowPointers.next();
+                JXPathContext rowContext = repeaterContext.getRelativeContext(rowPointer);
 
+                // If virtual rows are requested, place a deep clone of the row data
+                // into a temporary node, and narrow the context to this virtual row.
+                //
+                // (A clone of the data is used to prevent modifying the source document.
+                // Otherwise, the appendChild method would remove the data from the source
+                // document.  Is this protection worth the penalty of a deep clone?)
+                //
+                // (This implementation of virtual rows currently only supports DOM
+                // bindings, but could easily be extended to support other bindings.)
+
+                if (virtualRows == true) {
+                    Node repeaterNode = (Node)repeaterPointer.getNode();
+                    Node virtualNode = repeaterNode.getOwnerDocument().createElementNS(null, "virtual");
+                    Node clone = ((Node)rowPointer.getNode()).cloneNode(true);
+                    virtualNode.appendChild(clone);
+                    rowContext = JXPathContext.newContext(repeaterContext, virtualNode);
+                }
+
+                // Finally, perform the load row binding.
                 this.rowBinding.loadFormFromModel(thisRow, rowContext);
             }
         }
@@ -150,47 +185,67 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
-        // Find the repeater
+        // (See comment in doLoad about type checking and throwing a meaningful exception.)
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 
+        // Perform shortcut binding if the repeater is empty
+        // and the deleteIfEmpty config option is selected.
         if (repeater.getSize() == 0 && this.deleteIfEmpty) {
-            // Repeater is empty : erase all
+            // Delete all of the old data for this repeater.
             jctx.removeAll(this.repeaterPath);
 
+        // Otherwise perform the normal save binding.
         } else {
-            // Repeater is not empty
 
-            // Move to repeater context and create the path if needed
+            // Narrow to the repeater context, creating the path if it did not exist.
             JXPathContext repeaterContext = jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
 
-            // Delete all that is already present
+            // Start by deleting all of the old row data.
             repeaterContext.removeAll(this.rowPath);
 
+            // Verify that repeater is not empty and has an insert row binding.
             if(repeater.getSize() > 0) {
                 if (this.insertRowBinding != null) {
+
                     //register the factory!
-                    this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
+                    //this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
+
+                    // Iterate through the repeater rows.
                     for (int i = 0; i < repeater.getSize(); i++) {
-                        java.lang.System.err.println("TempRepeater: Bind row.");
-                        //String path = this.rowPathInsert + '[' + (i+1) + ']';
-                        // -->  create the path to let the context be created
-                        //Pointer rowPtr = repeaterContext.createPath(path);
-                        //JXPathContext rowContext = repeaterContext.getRelativeContext(rowPtr);
-                        Node node = (Node)repeaterContext.getContextBean();
-                        Node virtualNode = node.getOwnerDocument().createElementNS(null, "virtual");
-                        //JXPathContext rowContext = JXPathContext.newContext(repeaterContext, virtualNode);
-                        JXPathContext rowContext = JXPathContext.newContext(repeaterContext, virtualNode);
-                        //    + bind to children for output
+
+                        // Narrow to the repeater row context.
+                        Pointer rowPointer = repeaterContext.getPointer(this.rowPathInsert);
+                        JXPathContext rowContext = repeaterContext.getRelativeContext(rowPointer);
+
+                        // Variables used for virtual rows.
+                        // They are initialized here just to keep the compiler happy. 
+                        Node rowNode = null;
+                        Node virtualNode = null;
+
+                        // If virtual rows are requested, create a temporary node and
+                        // narrow the context to this initially empty new virtual row.
+                        if (virtualRows == true) {
+                            rowNode = (Node)rowContext.getContextBean();
+                            virtualNode = rowNode.getOwnerDocument().createElementNS(null, "virtual");
+                            rowContext = JXPathContext.newContext(repeaterContext, virtualNode);
+                        }
+
+                        // Perform the insert row binding
+                        this.insertRowBinding.saveFormToModel(repeater, rowContext);
+
+                        // Perform the save row binding.
                         this.rowBinding.saveFormToModel(repeater.getRow(i), rowContext);
-                        // Append children to current path.
-                        NodeList list = virtualNode.getChildNodes();
-                        java.lang.System.err.println("Node count: " + list.getLength());
-                        //node.appendChild(virtualNode);
-                        int count = list.getLength();
-                        for (int j = 0; j < count; j++) {
-                            java.lang.System.err.println("Hello, child not null. j: " + j);
-                            node.appendChild(list.item(0));
-                            java.lang.System.err.println("After. j: " + j);
+
+                        // If virtual rows are requested, finish by appending the
+                        // children of the virtual row to the real context node.
+                        if (virtualRows == true) {
+                            NodeList list = virtualNode.getChildNodes();
+                            int count = list.getLength();
+                            for (int j = 0; j < count; j++) {
+                                // The list shrinks when a child is appended to the context
+                                // node, so we always reference the first child in the list.
+                                rowNode.appendChild(list.item(0));
+                            }
                         }
                         getLogger().debug("bound new row");
                     }

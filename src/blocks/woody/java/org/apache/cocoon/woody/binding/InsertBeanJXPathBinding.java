@@ -67,7 +67,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
  *
- * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.6 2004/01/27 05:50:08 tim Exp $
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
@@ -97,35 +97,57 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
      * inside this object into the target objectmodel.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        jxpc.setFactory(new AbstractFactory() {
-            public boolean createObject(JXPathContext context, Pointer pointer,
-                                        Object parent, String name, int index) {
-                try {
-                    Object[] args = new Object[1];
-                    Class[] argTypes = new Class[1];
+        try {
+            Object parent = jxpc.getContextBean();
+            Object[] args = new Object[1];
+            Class[] argTypes = new Class[1];
 
-                    // instantiate the new object
-                    argTypes[0] = Class.forName(InsertBeanJXPathBinding.this.className);
-                    args[0] = argTypes[0].newInstance();
-                    // lookup the named method on the parent
+            // instantiate the new object
+            argTypes[0] = Class.forName(this.className);
+            args[0] = argTypes[0].newInstance();
 
-                    Method addMethod =
-                        parent.getClass().getMethod(InsertBeanJXPathBinding.this.addMethodName, argTypes);
-                    // invoke this method with this new beast.
+            // lookup the named method on the parent
+            Method addMethod =
+                parent.getClass().getMethod(this.addMethodName, argTypes);
 
-                    addMethod.invoke(parent, args);
+            // invoke this method with this new beast.
+            addMethod.invoke(parent, args);
 
-                    if (getLogger().isDebugEnabled())
-                        getLogger().debug("InsertBean jxpath factory executed for index " + index);
-                    return true;
-                } catch (Exception e) {
-                    throw new CascadingRuntimeException("InsertBean jxpath factory failed.", e);
-                }
-            }
-        });
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("InsertBean performed.");
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("InsertBean failed.", e);
+        }
 
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("done registered factory for inserting node -- " + toString());
+        // jxpc.setFactory(new AbstractFactory() {
+        //     public boolean createObject(JXPathContext context, Pointer pointer,
+        //                                 Object parent, String name, int index) {
+        //         try {
+        //             Object[] args = new Object[1];
+        //             Class[] argTypes = new Class[1];
+        //
+        //             // instantiate the new object
+        //             argTypes[0] = Class.forName(InsertBeanJXPathBinding.this.className);
+        //             args[0] = argTypes[0].newInstance();
+        //             // lookup the named method on the parent
+        //
+        //             Method addMethod =
+        //                 parent.getClass().getMethod(InsertBeanJXPathBinding.this.addMethodName, argTypes);
+        //             // invoke this method with this new beast.
+        //
+        //             addMethod.invoke(parent, args);
+        //
+        //             if (getLogger().isDebugEnabled())
+        //                 getLogger().debug("InsertBean jxpath factory executed for index " + index);
+        //             return true;
+        //         } catch (Exception e) {
+        //             throw new CascadingRuntimeException("InsertBean jxpath factory failed.", e);
+        //         }
+        //     }
+        // });
+        //
+        // if (getLogger().isDebugEnabled())
+        //     getLogger().debug("done registered factory for inserting node -- " + toString());
     }
 
     public String toString() {

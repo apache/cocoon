@@ -68,7 +68,7 @@ import org.w3c.dom.Node;
  * <li>This expects the back-end model to be an XML file.</li>
  * </ol>
  *
- * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.6 2004/01/27 05:50:08 tim Exp $
  */
 public class InsertNodeJXPathBinding extends JXPathBindingBase {
 
@@ -97,23 +97,31 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) {
 
-        jxpc.setFactory(new AbstractFactory() {
-            public boolean createObject(JXPathContext context, Pointer pointer,
-                Object parent, String name, int index) {
-
-                Node parentNode = (Node) parent;
-                Document targetDoc = parentNode.getOwnerDocument();
-                Node toInsert = targetDoc.importNode(InsertNodeJXPathBinding.this.template, true);
-                parentNode.appendChild(toInsert);
-
-                if (getLogger().isDebugEnabled())
-                    getLogger().debug("InsertNode jxpath factory executed for index." + index);
-                return true;
-            }
-        });
+        Node parentNode = (Node)jxpc.getContextBean();
+        Document targetDoc = parentNode.getOwnerDocument();
+        Node toInsert = targetDoc.importNode(this.template, true);
+        parentNode.appendChild(toInsert);
 
         if (getLogger().isDebugEnabled())
-            getLogger().debug("done registered factory for inserting node -- " + toString());
+            getLogger().debug("InsertNode executed.");
+
+        // jxpc.setFactory(new AbstractFactory() {
+        //     public boolean createObject(JXPathContext context, Pointer pointer,
+        //         Object parent, String name, int index) {
+        //
+        //         Node parentNode = (Node) parent;
+        //         Document targetDoc = parentNode.getOwnerDocument();
+        //         Node toInsert = targetDoc.importNode(InsertNodeJXPathBinding.this.template, true);
+        //         parentNode.appendChild(toInsert);
+        //
+        //         if (getLogger().isDebugEnabled())
+        //             getLogger().debug("InsertNode jxpath factory executed for index." + index);
+        //         return true;
+        //     }
+        // });
+        //
+        // if (getLogger().isDebugEnabled())
+        //     getLogger().debug("done registered factory for inserting node -- " + toString());
     }
 
     public String toString() {

@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.3 2004/01/27 05:50:08 tim Exp $
  */
 public class TempRepeaterJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -82,6 +82,7 @@ public class TempRepeaterJXPathBindingBuilder
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
             String rowPathInsert = DomHelper.getAttribute(bindingElem, "row-path-insert", rowPath);
+            boolean virtualRows = DomHelper.getAttributeAsBoolean(bindingElem, "virtual-rows", false);
             boolean clearOnLoad = DomHelper.getAttributeAsBoolean(bindingElem, "clear-before-load", true);
             boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(bindingElem, "delete-parent-if-empty", false);
 
@@ -98,13 +99,15 @@ public class TempRepeaterJXPathBindingBuilder
             if (insertWrapElement != null)
                 insertBindings = assistant.makeChildBindings(insertWrapElement);
 
-            return new TempRepeaterJXPathBinding( commonAtts, repeaterId, parentPath, rowPath, rowPathInsert, clearOnLoad, deleteIfEmpty,
+            return new TempRepeaterJXPathBinding(
+                commonAtts, repeaterId, parentPath, rowPath, rowPathInsert, virtualRows, clearOnLoad, deleteIfEmpty,
                 new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings),
                 new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, insertBindings));
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building temp-repeater binding defined at " + DomHelper.getLocation(bindingElem), e);
+            throw new BindingException("Error building temp-repeater binding defined at " +
+                DomHelper.getLocation(bindingElem), e);
         }
     }
 }
