@@ -10,8 +10,6 @@ package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
 
-import org.apache.cocoon.xml.XMLConsumer;
-
 import org.apache.xml.serialize.SerializerFactory;
 import org.apache.xml.serialize.Method;
 import org.apache.xml.serialize.OutputFormat;
@@ -21,10 +19,10 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:36:27 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-23 22:43:37 $
  */
 
-public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
+public class XMLSerializer extends AbstractSerializer {
 
     private SerializerFactory factory;
     
