@@ -165,7 +165,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:mike@hihat.net">Michael McKibben</a>
- * @version CVS $Id: VelocityGenerator.java,v 1.2 2003/03/17 01:50:09 vgritsenko Exp $
+ * @version CVS $Id: VelocityGenerator.java,v 1.3 2003/03/18 21:22:09 vgritsenko Exp $
  */
 public class VelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -363,7 +363,7 @@ public class VelocityGenerator extends ComposerGenerator
             String type = loader.getAttribute("class");
             this.tmplEngine.setProperty(prefix + "class", type);
             Configuration[] loaderProperties = loader.getChildren("property");
-            for (int j = 0; i < loaderProperties.length; ++j) {
+            for (int j = 0; j < loaderProperties.length; j++) {
                 Configuration c = loaderProperties[j];
                 String propName = c.getAttribute("name");
                 this.tmplEngine.setProperty(prefix + propName, c.getAttribute("value"));
