@@ -17,8 +17,7 @@ import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
-import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -26,21 +25,14 @@ import org.apache.avalon.logger.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-20 20:50:08 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-23 17:52:51 $
  */
 
-public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
-    protected Logger log;
+public class RegexpURIMatcherFactory extends AbstractLoggable implements CodeFactory {
 
     public String generateParameterSource (NodeList conf)
     throws ConfigurationException {
         return "RE";
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     public String generateClassSource (String prefix, String pattern,
@@ -93,7 +85,7 @@ public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
             sb.append("}");
             return sb.toString();
         } catch (RESyntaxException rse) {
-            log.debug("RegexpURIMatcherFactory", rse);
+            getLogger().debug("RegexpURIMatcherFactory", rse);
             throw new ConfigurationException (rse.getMessage(), rse);
         }
     }

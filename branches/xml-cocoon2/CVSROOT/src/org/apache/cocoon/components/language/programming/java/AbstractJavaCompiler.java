@@ -14,24 +14,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-import org.apache.avalon.logger.Loggable;
 import org.apache.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.components.language.programming.*;
 
-import org.apache.log.Logger;
+import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:49:58 $
+ * @version $Revision: 1.1.2.12 $ $Date: 2001-04-23 17:52:24 $
  * @since 2.0
  */
-public abstract class AbstractJavaCompiler implements LanguageCompiler, Recyclable, Loggable {
-  /**
-   * The logger
-   */
-  protected Logger log;
+public abstract class AbstractJavaCompiler extends AbstractLoggable implements LanguageCompiler, Recyclable {
 
   /**
    * The source program filename
@@ -91,12 +86,6 @@ public abstract class AbstractJavaCompiler implements LanguageCompiler, Recyclab
   public void setDestination(String destDir) {
       this.destDir = destDir;
   }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
 
   /**
    * Set the classpath to be used for this compilation

@@ -36,14 +36,13 @@ import org.apache.avalon.context.Context;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.logger.Loggable;
 
 /**
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-23 14:45:54 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-23 17:53:01 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composable, Contextualizable, Processor, Disposable {
     private Context context;

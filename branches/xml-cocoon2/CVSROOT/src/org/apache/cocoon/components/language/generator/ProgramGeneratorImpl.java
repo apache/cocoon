@@ -20,8 +20,6 @@ import org.apache.avalon.component.Composable;
 import org.apache.avalon.context.Context;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.logger.Loggable;
-import org.apache.avalon.Modifiable;
 import org.apache.avalon.thread.ThreadSafe;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
@@ -48,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.48 $ $Date: 2001-04-20 20:49:50 $
+ * @version CVS $Revision: 1.1.2.49 $ $Date: 2001-04-23 17:52:14 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable
     implements ProgramGenerator, Contextualizable, Composable, Configurable, ThreadSafe, Disposable {
@@ -79,11 +77,6 @@ public class ProgramGeneratorImpl extends AbstractLoggable
 
     /** The root package */
     protected String rootPackage;
-
-    /** Set the Cache's logger */
-    public void setLogger(Logger log) {
-        super.setLogger(log);
-    }
 
     /** Contextualize this class */
     public void contextualize(Context context) {

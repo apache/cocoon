@@ -19,8 +19,6 @@ import java.util.Vector;
 import java.util.Map;
 import java.util.Enumeration;
 
-import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
@@ -50,12 +48,10 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-20 20:50:17 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-23 17:53:10 $ $Author: dims $
  */
 
-public class SQLTransformer extends AbstractTransformer implements Composable, Loggable, Poolable, Disposable {
-
-    private Logger log;
+public class SQLTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
 
     /** The SQL namespace **/
     public static final String my_uri = "http://apache.org/cocoon/SQL";
@@ -113,13 +109,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             this.manager = manager;
             this.dbSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
         } catch (ComponentException cme) {
-            this.log.warn("Could not get the DataSource Selector", cme);
-        }
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
+            getLogger().warn("Could not get the DataSource Selector", cme);
         }
     }
 
@@ -133,7 +123,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
         // Check for connection
         String parameter = parameters.getParameter(SQLTransformer.MAGIC_CONNECTION, null);
         if (parameter != null) {
-            log.debug("CONNECTION: "+parameter);
+            getLogger().debug("CONNECTION: "+parameter);
 
             default_properties.setProperty(SQLTransformer.MAGIC_CONNECTION, parameter);
         } else {
@@ -141,7 +131,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             // Check the dburl
             parameter = parameters.getParameter(SQLTransformer.MAGIC_DBURL,null);
             if (parameter != null) {
-                log.debug("DBURL: "+parameter);
+                getLogger().debug("DBURL: "+parameter);
 
                 default_properties.setProperty(SQLTransformer.MAGIC_DBURL,parameter);
             }
@@ -149,7 +139,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             // Check the username
             parameter = parameters.getParameter(SQLTransformer.MAGIC_USERNAME,null);
             if (parameter != null) {
-                log.debug("USERNAME: "+parameter);
+                getLogger().debug("USERNAME: "+parameter);
 
                 default_properties.setProperty(SQLTransformer.MAGIC_USERNAME,parameter);
             }
@@ -177,7 +167,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
         try {
             query.execute();
         } catch (SQLException e) {
-            log.debug("SQLTransformer.executeQuery()", e);
+            getLogger().debug("SQLTransformer.executeQuery()", e);
             throw new SAXException(e);
         }
         this.start(query.rowset_name, attr);
@@ -191,7 +181,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                 this.end(query.row_name);
             }
         } catch (SQLException e) {
-            log.debug("SQLTransformer.executeQuery()", e);
+            getLogger().debug("SQLTransformer.executeQuery()", e);
             throw new SAXException(e);
         }
         this.end(query.rowset_name);
@@ -250,7 +240,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                 if (current_value.length() > 0) {
                     getCurrentQuery().addQueryPart(
                       current_value.toString());
-                    log.debug("QUERY IS \""+
+                    getLogger().debug("QUERY IS \""+
                                            current_value.toString() + "\"");
 
                     current_value.setLength(0);
@@ -267,7 +257,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             case SQLTransformer.STATE_INSIDE_VALUE_ELEMENT:
                 getCurrentQuery().setParameter(current_name,
                                                current_value.toString());
-                log.debug("SETTING VALUE ELEMENT name {"+
+                getLogger().debug("SETTING VALUE ELEMENT name {"+
                                        current_name + "} value {"+
                                        current_value.toString() + "}");
 
@@ -303,7 +293,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                     level = Integer.parseInt( attributes.getValue(my_uri,
                                               SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
                 } catch (Exception e) {
-            log.debug("SQLTransformer", e);
+                    getLogger().debug("SQLTransformer", e);
                     throwIllegalStateException("Ancestor value elements must have a "+
                                                SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
                 }
@@ -314,12 +304,12 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                                                SQLTransformer.MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE + " attribute");
                 }
                 AncestorValue av = new AncestorValue(level, name);
-                log.debug("ANCESTOR VALUE "+level + " "+name);
+                getLogger().debug("ANCESTOR VALUE "+level + " "+name);
 
                 if (current_value.length() > 0) {
                     getCurrentQuery().addQueryPart(
                       current_value.toString());
-                    log.debug("QUERY IS \""+
+                    getLogger().debug("QUERY IS \""+
                                            current_value.toString() + "\"");
 
                     current_value.setLength(0);
@@ -349,8 +339,8 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
     /** BEGIN SAX ContentHandler handlers **/
 
     public void setDocumentLocator(Locator locator) {
-        log.info("PUBLIC ID"+locator.getPublicId());
-        log.info("SYSTEM ID"+locator.getSystemId());
+        getLogger().info("PUBLIC ID"+locator.getPublicId());
+        getLogger().info("SYSTEM ID"+locator.getSystemId());
         if (super.contentHandler != null)
             super.contentHandler.setDocumentLocator(locator);
     }
@@ -361,7 +351,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             super.startElement(uri, name, raw, attributes);
             return;
         }
-        log.debug("RECEIVED START ELEMENT "+name);
+        getLogger().debug("RECEIVED START ELEMENT "+name);
 
         if (name.equals(SQLTransformer.MAGIC_EXECUTE_QUERY)) {
             startExecuteQueryElement();
@@ -380,7 +370,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             super.endElement(uri, name, raw);
             return;
         }
-        log.debug("RECEIVED END ELEMENT "+name + "("+uri +
+        getLogger().debug("RECEIVED END ELEMENT "+name + "("+uri +
                                ")");
 
         if (name.equals(SQLTransformer.MAGIC_EXECUTE_QUERY)) {
@@ -402,7 +392,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                 current_state != SQLTransformer.STATE_INSIDE_QUERY_ELEMENT) {
             super.characters(ary, start, length);
         }
-        log.debug("RECEIVED CHARACTERS: "+
+        getLogger().debug("RECEIVED CHARACTERS: "+
                                new String(ary, start, length));
 
         current_value.append(ary, start, length);
@@ -514,7 +504,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                     try {
                         sb.append(query.getColumnValue(av.name));
                     } catch (SQLException e) {
-                        log.debug("SQLTransformer", e);
+                        getLogger().debug("SQLTransformer", e);
                         close();
                         throw e;
                     }
@@ -542,10 +532,10 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                         md = rs.getMetaData();
                 }
             } catch (SQLException e) {
-                log.error("Caught a SQLException", e);
+                getLogger().error("Caught a SQLException", e);
                 throw e;
             } catch (ComponentException cme) {
-                log.error("Could not use connection: " + connection, cme);
+                getLogger().error("Could not use connection: " + connection, cme);
             } finally {
                 conn.close();
                 if (datasource != null) dbSelector.release(datasource);
@@ -556,7 +546,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             try {
                 return transformer.getStringValue(rs.getObject(i));
             } catch (SQLException e) {
-                log.debug("SQLTransformer", e);
+                getLogger().debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -566,7 +556,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
             try {
                 return transformer.getStringValue(rs.getObject(name));
             } catch (SQLException e) {
-                log.debug("SQLTransformer", e);
+                getLogger().debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -584,7 +574,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                 }
                 return true;
             } catch (SQLException e) {
-                log.debug("SQLTransformer", e);
+                getLogger().debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -613,7 +603,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, L
                     try {
                         transformer.data(getColumnValue(i));
                     } catch (SQLException e) {
-                        log.debug("SQLTransformer", e);
+                        getLogger().debug("SQLTransformer", e);
                         close();
                         throw e;
                     }

@@ -18,8 +18,7 @@ import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
-import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * Base implementation of <code>ProgrammingLanguage</code>. This class sets the
@@ -27,33 +26,25 @@ import org.apache.avalon.logger.Loggable;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 20:49:57 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-23 17:52:19 $
  */
-public abstract class AbstractProgrammingLanguage
-  implements ProgrammingLanguage, Configurable, Loggable
+public abstract class AbstractProgrammingLanguage extends AbstractLoggable
+  implements ProgrammingLanguage, Configurable
 {
-  protected Logger log;
-
   /** The source code formatter */
   protected Class codeFormatter;
 
   protected String languageName;
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
 
   /**
    * Configure the language
    */
   public void configure(Configuration conf) throws ConfigurationException {
       try {
-          log.debug("Setting the parameters");
+          getLogger().debug("Setting the parameters");
           this.setParameters( Parameters.fromConfiguration(conf) );
       } catch (Exception e) {
-          log.error("Could not set Parameters", e);
+          getLogger().error("Could not set Parameters", e);
           throw new ConfigurationException("Could not get parameters because: " +
                                            e.getMessage());
       }
@@ -74,7 +65,7 @@ public abstract class AbstractProgrammingLanguage
         this.codeFormatter = ClassUtils.loadClass(className);
       }
     } catch (Exception e) {
-       log.error("Error with \"code-formatter\" parameter", e);
+       getLogger().error("Error with \"code-formatter\" parameter", e);
        throw e;
     }
   }
@@ -90,7 +81,7 @@ public abstract class AbstractProgrammingLanguage
       try {
         return (CodeFormatter) this.codeFormatter.newInstance();
       } catch (Exception e) {
-          log.error("Error instantiating CodeFormatter", e);
+          getLogger().error("Error instantiating CodeFormatter", e);
       }
     }
 

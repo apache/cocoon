@@ -25,7 +25,6 @@ import org.apache.avalon.component.ComponentManager;
 import org.apache.excalibur.pool.Poolable;
 import org.apache.excalibur.pool.Recyclable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.logger.Loggable;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -44,7 +43,7 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-23 13:28:51 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-23 17:52:44 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator

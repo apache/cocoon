@@ -18,8 +18,7 @@ import jstyle.JSBeautifier;
 
 import org.apache.cocoon.components.language.programming.*;
 
-import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This class implements <code>CodeFormatter</code> based on
@@ -27,10 +26,9 @@ import org.apache.avalon.logger.Loggable;
  * beautifier. This implementation is very improvised...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:49:59 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-23 17:52:31 $
  */
-public class JstyleFormatter implements CodeFormatter, Loggable {
-  protected Logger log;
+public class JstyleFormatter extends AbstractLoggable implements CodeFormatter {
   /**
    * The default preferred line length. Should be parametrized!
    */
@@ -44,12 +42,6 @@ public class JstyleFormatter implements CodeFormatter, Loggable {
    * The default space indentation. Should be parametrized!
    */
   protected static final int SPACE_INDENTATION = 2;
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
 
   /**
    * Format and beautify a <code>String</code> containing source code.
@@ -88,7 +80,7 @@ public class JstyleFormatter implements CodeFormatter, Loggable {
 
       return this.getString(out, encoding);
     } catch (Exception e) {
-      log.debug("JstyleFormatter.format()", e);
+      getLogger().debug("JstyleFormatter.format()", e);
       return code;
     }
   }

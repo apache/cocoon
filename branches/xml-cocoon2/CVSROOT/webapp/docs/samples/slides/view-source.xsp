@@ -12,6 +12,7 @@
 
   <xsp:structure>
    <xsp:include>java.net.*</xsp:include>
+   <xsp:include>org.w3c.dom.*</xsp:include>
    <xsp:include>org.apache.cocoon.xml.dom.DOMStreamer</xsp:include>
    <xsp:include>org.apache.cocoon.xml.dom.DOMBuilder</xsp:include>
    <xsp:include>org.apache.cocoon.components.parser.Parser</xsp:include>

@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.9 $ $Date: 2001-01-31 15:48:36 $
+ * @version $Revision: 1.1.2.10 $ $Date: 2001-04-23 17:52:30 $
  * @since 2.0
  */
 
@@ -58,7 +58,7 @@ public class Jikes extends AbstractJavaCompiler {
                     sleep(SLEEP_TIME);
                 }
             } catch (Exception e) {
-               log.warn("Jikes.run()", e);
+               getLogger().warn("Jikes.run()", e);
             }
         }
     }
@@ -131,7 +131,7 @@ public class Jikes extends AbstractJavaCompiler {
             this.errors = new ByteArrayInputStream(tmpErr.toByteArray());
 
         } catch (InterruptedException somethingHappened) {
-            log.debug("Jikes.compile():SomethingHappened", somethingHappened);
+            getLogger().debug("Jikes.compile():SomethingHappened", somethingHappened);
             return false;
         }
 

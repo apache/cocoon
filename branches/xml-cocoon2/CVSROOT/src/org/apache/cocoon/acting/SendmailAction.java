@@ -22,7 +22,6 @@ import javax.mail.internet.AddressException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.logger.Loggable;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;

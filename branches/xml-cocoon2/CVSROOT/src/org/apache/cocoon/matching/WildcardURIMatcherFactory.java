@@ -14,8 +14,7 @@ import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
-import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -24,11 +23,10 @@ import org.apache.avalon.logger.Loggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-20 20:50:08 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-23 17:52:53 $
  */
 
-public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
-    protected Logger log;
+public class WildcardURIMatcherFactory extends AbstractLoggable implements CodeFactory {
 
     /** The int representing '*' in the pattern <code>int []</code>. */
     protected static final int MATCH_FILE	= -1;
@@ -50,12 +48,6 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
     public String generateParameterSource (NodeList conf)
     throws ConfigurationException {
         return "int []";
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     /**
@@ -94,7 +86,7 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
             return result.append (sourcePattern[j])
                          .append ("};\n").toString();
         } catch (NullPointerException pe) {
-            log.error("WildcardURIMatcherFactory:NULL", pe);
+            getLogger().error("WildcardURIMatcherFactory:NULL", pe);
             throw new ConfigurationException (pe.getMessage(), pe);
         }
     }

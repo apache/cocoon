@@ -20,7 +20,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The compiled Javascript (Rhino) programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-08 20:39:27 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-23 17:52:39 $
  */
 public class JavascriptLanguage extends JavaLanguage
 {
@@ -76,7 +76,7 @@ public class JavascriptLanguage extends JavaLanguage
 
       compiler.main(args);
     } catch (Exception e) {
-      log.warn("JavascriptLanguage.compile", e);
+      getLogger().warn("JavascriptLanguage.compile", e);
       throw new LanguageException(e.getMessage());
     }
   }

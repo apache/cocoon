@@ -34,7 +34,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-20 20:49:59 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-23 17:52:27 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composable, Disposable {
 
@@ -98,11 +98,11 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
     this.manager = manager;
     if (this.classLoaderManager == null) {
       try {
-          log.debug("Looking up " + Roles.CLASS_LOADER);
+          getLogger().debug("Looking up " + Roles.CLASS_LOADER);
           this.classLoaderManager =
             (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
       } catch (Exception e) {
-          log.error("Could not find component", e);
+          getLogger().error("Could not find component", e);
       }
     }
   }
@@ -123,7 +123,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       return
         this.classLoaderManager.loadClass(name.replace(File.separatorChar, '.'));
     } catch (Exception e) {
-      log.warn("Could not load class for program '" + name + "'", e);
+      getLogger().warn("Could not load class for program '" + name + "'", e);
       throw new LanguageException("Could not load class for program '" + name + "' due to a " + e.getClass().getName() + ": " + e.getMessage());
     }
   }
@@ -145,7 +145,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
 
       AbstractJavaCompiler compiler = (AbstractJavaCompiler) this.compilerClass.newInstance();
       if (compiler instanceof Loggable) {
-          ((Loggable) compiler).setLogger(this.log);
+          ((Loggable) compiler).setLogger(getLogger());
       }
 
       int pos = name.lastIndexOf(File.separatorChar);
@@ -170,7 +170,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       try {
         systemExtClasspath = expandDirs(systemExtDirs);
       } catch (Exception e) {
-        log.warn("Could not expand Directory:" + systemExtDirs, e);
+        getLogger().warn("Could not expand Directory:" + systemExtDirs, e);
       }
 
       compiler.setClasspath(
@@ -205,13 +205,13 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       }
 
     } catch (InstantiationException e) {
-      log.warn("Could not instantiate the compiler", e);
+      getLogger().warn("Could not instantiate the compiler", e);
       throw new LanguageException("Could not instantiate the compiler: " + e.getMessage());
     } catch (IllegalAccessException e) {
-      log.warn("Could not access the compiler class", e);
+      getLogger().warn("Could not access the compiler class", e);
       throw new LanguageException("Could not access the compiler class: " + e.getMessage());
     } catch (IOException e) {
-      log.warn("Error during compilation", e);
+      getLogger().warn("Error during compilation", e);
       throw new LanguageException("Error during compilation: " + e.getMessage());
     }
   }
@@ -227,7 +227,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
     try {
       return (CompiledComponent) program.newInstance();
     } catch (Exception e) {
-      log.warn("Could not instantiate program instance", e);
+      getLogger().warn("Could not instantiate program instance", e);
       throw new LanguageException("Could not instantiate program instance due to a " + e.getClass().getName() + ": " + e.getMessage());
     }
   }
