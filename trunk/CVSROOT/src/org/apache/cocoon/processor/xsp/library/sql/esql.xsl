@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.59 2001-02-05 04:50:18 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.60 2001-02-05 20:52:53 balld Exp $-->
 <!--
 
  ============================================================================
@@ -239,26 +239,19 @@
   </xsp:page>
 </xsl:template>
 
-<xsl:template match="xsp:page/*">
-  <xsl:choose>
-    <xsl:when test="not(namespace-uri(.)=$xsp-namespace-uri)">
-      <xsl:copy>
-        <xsl:apply-templates select="@*"/>
-        <xsp:logic>
-          Stack _esql_connections = new Stack();
-          EsqlConnection _esql_connection = null;
-          Stack _esql_queries = new Stack();
-          EsqlQuery _esql_query = null;
-          SQLException _esql_exception = null;
-          StringWriter _esql_exception_writer = null;
-        </xsp:logic>
-        <xsl:apply-templates/>
-      </xsl:copy>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:apply-templates/>
-    </xsl:otherwise>
-  </xsl:choose>
+<xsl:template match="xsp:page/*[not(starts-with(name(.),'xsp:'))]">
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <xsp:logic>
+      Stack _esql_connections = new Stack();
+      EsqlConnection _esql_connection = null;
+      Stack _esql_queries = new Stack();
+      EsqlQuery _esql_query = null;
+      SQLException _esql_exception = null;
+      StringWriter _esql_exception_writer = null;
+    </xsp:logic>
+    <xsl:apply-templates/>
+  </xsl:copy>
 </xsl:template>
 
 <xsl:template match="esql:connection">
