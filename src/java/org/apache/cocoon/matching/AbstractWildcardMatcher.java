@@ -52,7 +52,9 @@ package org.apache.cocoon.matching;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.sitemap.PatternException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +63,7 @@ import java.util.Map;
  * Base class for wildcard matchers
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractWildcardMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: AbstractWildcardMatcher.java,v 1.2 2004/02/06 15:41:21 sylvain Exp $
  */
 
 public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher implements ThreadSafe {
@@ -70,13 +72,19 @@ public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher 
      * Compile the pattern in an <code>int[]</code>.
      */
     public Object preparePattern(String pattern) {
-        return WildcardHelper.compilePattern(pattern);
+        // if pattern is null, return null to allow throwing a located exception in preparedMatch()
+        return pattern == null ? null : WildcardHelper.compilePattern(pattern);
     }
 
     /**
      * Match the prepared pattern against the result of {@link #getMatchString(Map, Parameters)}.
      */
-    public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) {
+    public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
+
+        if(preparedPattern == null) {
+            throw new PatternException("A pattern is needed at " +
+                parameters.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "unknown location"));
+        }
 
         String match = getMatchString(objectModel, parameters);
 

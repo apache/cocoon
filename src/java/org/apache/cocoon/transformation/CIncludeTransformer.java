@@ -146,7 +146,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.7 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.8 2004/02/06 15:41:21 sylvain Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -483,6 +483,10 @@ implements Disposable, CacheableProcessingComponent {
                                             String select, String ns, String prefix,
                                             boolean cache)
     throws SAXException, IOException {
+
+        if (src == null) {
+            throw new SAXException("Missing 'src' attribute on cinclude:include element");
+        }
 
         if (element == null) element="";
         if (select == null) select="";

@@ -84,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.10 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.11 2004/02/06 15:41:21 sylvain Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     protected SourceResolver resolver;
@@ -179,40 +179,50 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
         }
 
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
-            if (xIncludeLevel == 1 && useFallback && uri.equals(XINCLUDE_NAMESPACE_URI)
-                    && name.equals(XINCLUDE_FALLBACK_ELEMENT)) {
-                fallbackLevel++;
-
-                // don't need these anymore
-                useFallback = false;
-                fallBackException = null;
-
-                return;
-            } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
-                xIncludeLevel++;
-                return;
-            }
-
-            xmlBaseSupport.startElement(uri, name, raw, attr);
-            if (XINCLUDE_INCLUDE_ELEMENT.equals(name) && XINCLUDE_NAMESPACE_URI.equals(uri)) {
-                String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
-                String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-
-                if (null == parse) parse="xml";
-                xIncludeLevel++;
-
-                try {
-                    processXIncludeElement(href, parse);
-                } catch (ProcessingException e) {
-                    getLogger().debug("Rethrowing exception", e);
-                    throw new SAXException(e);
-                } catch (IOException e) {
-                    getLogger().debug("Rethrowing exception", e);
-                    throw new SAXException(e);
+            if (uri.equals(XINCLUDE_NAMESPACE_URI)) {
+                if (xIncludeLevel == 1 && useFallback && name.equals(XINCLUDE_FALLBACK_ELEMENT)) {
+                    fallbackLevel++;
+    
+                    // don't need these anymore
+                    useFallback = false;
+                    fallBackException = null;
+    
+                    return;
+                } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
+                    xIncludeLevel++;
+                    return;
                 }
-                return;
+    
+                xmlBaseSupport.startElement(uri, name, raw, attr);
+                if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
+                    String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
+                    if (href == null) {
+                        throw new SAXException(raw + " must have a 'href' attribute at " + getLocation());
+                    }
+                    
+                    String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
+    
+                    if (null == parse) parse="xml";
+                    xIncludeLevel++;
+    
+                    try {
+                        processXIncludeElement(href, parse);
+                    } catch (ProcessingException e) {
+                        getLogger().debug("Rethrowing exception", e);
+                        throw new SAXException(e);
+                    } catch (IOException e) {
+                        getLogger().debug("Rethrowing exception", e);
+                        throw new SAXException(e);
+                    }
+                    return;
+                }
+                
+                throw new SAXException("Unknown XInclude element " + raw + " at " + getLocation());
+                
+            } else {
+                xmlBaseSupport.startElement(uri, name, raw, attr);
+                super.startElement(uri,name,raw,attr);
             }
-            super.startElement(uri,name,raw,attr);
         }
 
         public void endElement(String uri, String name, String raw) throws SAXException {
@@ -461,6 +471,14 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                 parent = parent.getParent();
             }
             return false;
+        }
+        
+        private String getLocation() {
+            if (this.locator == null) {
+                return "unknown location";
+            } else {
+                return this.locator.getSystemId() + ":" + this.locator.getColumnNumber() + ":" + this.locator.getLineNumber();
+            }
         }
     }
 }

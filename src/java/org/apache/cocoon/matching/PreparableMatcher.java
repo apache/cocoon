@@ -61,7 +61,7 @@ import java.util.Map;
  * or to match with a request-time evaluated pattern (for {..} substitution).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatcher.java,v 1.2 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: PreparableMatcher.java,v 1.3 2004/02/06 15:41:21 sylvain Exp $
  */
 public interface PreparableMatcher extends Matcher {
 
@@ -90,7 +90,7 @@ public interface PreparableMatcher extends Matcher {
      * @return                a <code>Map</code> object with replacements for wildcards/regular-expressions
      *                        contained in the pattern. If the return value is null there was no match.
      */
-    Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters);
+    Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException;
 }
 
 
