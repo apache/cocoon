@@ -213,9 +213,9 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      *         {@link #startProcessing(Environment)}.
      */
     public static void endProcessing(Environment env, Object key) {
-        env.finishingProcessing();
         ((EnvironmentDescription) key).release();
         env.getObjectModel().remove(PROCESS_KEY);
+        env.finishingProcessing();
     }
 
     /**
