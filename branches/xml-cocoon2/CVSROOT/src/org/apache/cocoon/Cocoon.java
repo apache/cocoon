@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.FileReader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -35,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.7 $ $Date: 2000-07-02 20:59:13 $
+ * @version CVS $Revision: 1.4.2.8 $ $Date: 2000-07-06 18:58:29 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -83,7 +84,10 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
         Parser p=(Parser)this.getComponent("parser");
         SAXConfigurationBuilder b=new SAXConfigurationBuilder();
         p.setContentHandler(b);
-        p.parse(new InputSource(this.configurationFile.getPath()));
+        String path = this.configurationFile.getPath();
+        InputSource is = new InputSource(new FileReader(path));
+        is.setSystemId(path);
+        p.parse(is);
         this.setConfiguration(b.getConfiguration());
         this.root=this.configurationFile.getParentFile().toURL();
 /*
