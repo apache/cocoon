@@ -65,8 +65,11 @@ public class TreeProcessor extends AbstractLogEnabled
     /** The context */
     protected Context context;
 
-    /** The component manager given by the upper level (root manager or parent concrete processor) */
-    protected ServiceManager parentServiceManager;
+    /**
+     * The component manager given by the upper level
+     * (root manager or parent concrete processor)
+     */
+    protected ServiceManager manager;
 
     /** Last modification time */
     protected long lastModified = 0;
@@ -118,22 +121,22 @@ public class TreeProcessor extends AbstractLogEnabled
                             String prefix)
     throws Exception {
         this.parent = parent;
+        enableLogging(parent.getLogger());
 
         // Copy all that can be copied from the parent
-        enableLogging(parent.getLogger());
         this.context = parent.context;
         this.source = sitemapSource;
         this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
 
-        this.parentServiceManager = parent.concreteProcessor.getComponentInfo().getServiceManager();
+        this.manager = parent.concreteProcessor.getComponentInfo().getServiceManager();
 
-        this.resolver = (SourceResolver) this.parentServiceManager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
-        ContainerUtil.service(this.environmentHelper, this.parentServiceManager);
+        ContainerUtil.service(this.environmentHelper, this.manager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
         this.sitemapExecutor = parent.sitemapExecutor;
     }
@@ -163,8 +166,8 @@ public class TreeProcessor extends AbstractLogEnabled
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
-        this.parentServiceManager = manager;
-        this.resolver = (SourceResolver) this.parentServiceManager.lookup(SourceResolver.ROLE);
+        this.manager = manager;
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
     }
 
     public void initialize() throws Exception {
@@ -174,12 +177,12 @@ public class TreeProcessor extends AbstractLogEnabled
                     (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         }
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
-        ContainerUtil.service(this.environmentHelper, this.parentServiceManager);
+        ContainerUtil.service(this.environmentHelper, this.manager);
 
         // Create sitemap executor
         if (this.parent == null) {
             try {
-                this.sitemapExecutor = (SitemapExecutor) this.parentServiceManager.lookup(SitemapExecutor.ROLE);
+                this.sitemapExecutor = (SitemapExecutor) this.manager.lookup(SitemapExecutor.ROLE);
                 this.releaseSitemapExecutor = true;
             } catch (ServiceException e) {
                 this.sitemapExecutor = new DefaultExecutor();
@@ -218,7 +221,7 @@ public class TreeProcessor extends AbstractLogEnabled
             Source source = this.resolver.resolveURI(xconfURL);
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX(this.parentServiceManager, source, null, handler);
+                SourceUtil.toSAX(this.manager, source, null, handler);
                 this.treeBuilderConfiguration = handler.getConfiguration();
             } finally {
                 this.resolver.release(source);
@@ -328,10 +331,10 @@ public class TreeProcessor extends AbstractLogEnabled
         String result = TreeBuilder.ROLE + "/sitemap-" + version;
 
         try {
-            return (TreeBuilder)this.parentServiceManager.lookup(result);
-        } catch(Exception ex) {
+            return (TreeBuilder) this.manager.lookup(result);
+        } catch (Exception e) {
             throw new ConfigurationException("This version of Cocoon does not handle sitemap version " +
-                                             version + " at " + this.source.getURI(), ex);
+                                             version + " at " + this.source.getURI(), e);
         }
     }
 
@@ -369,7 +372,7 @@ public class TreeProcessor extends AbstractLogEnabled
         // If these components try to access the current processor or the
         // current service manager they must get this one - which is currently
         // in the process of initialization.
-        EnvironmentHelper.enterProcessor(this, this.parentServiceManager, env);
+        EnvironmentHelper.enterProcessor(this, this.manager, env);
 
         try {
             // Load the sitemap file
@@ -393,12 +396,12 @@ public class TreeProcessor extends AbstractLogEnabled
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
             try {
                 treeBuilder.setProcessor(newProcessor);
-                treeBuilder.setParentProcessorManager(this.parentServiceManager);
+                treeBuilder.setParentProcessorManager(this.manager);
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
                 newProcessor.setProcessorData(root, treeBuilder.getDisposableNodes());
             } finally {
-                this.parentServiceManager.release(treeBuilder);
+                this.manager.release(treeBuilder);
             }
         } finally {
             EnvironmentHelper.leaveProcessor();
@@ -440,18 +443,18 @@ public class TreeProcessor extends AbstractLogEnabled
         this.concreteProcessor = null;
 
         if (this.releaseSitemapExecutor) {
-            this.parentServiceManager.release(this.sitemapExecutor);
+            this.manager.release(this.sitemapExecutor);
             this.sitemapExecutor = null;
         }
 
-        if (this.parentServiceManager != null) {
+        if (this.manager != null) {
             if (this.source != null) {
                 this.resolver.release(this.source.getSource());
                 this.source = null;
             }
-            this.parentServiceManager.release(this.resolver);
+            this.manager.release(this.resolver);
             this.resolver = null;
-            this.parentServiceManager = null;
+            this.manager = null;
         }
     }
 }
