@@ -47,14 +47,13 @@ package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.PortalManager;
@@ -67,6 +66,7 @@ import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.om.entity.PortletApplicationEntity;
@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletAdapter.java,v 1.3 2004/01/27 08:05:34 cziegeler Exp $
+ * @version CVS $Id: PortletAdapter.java,v 1.4 2004/02/06 13:07:17 cziegeler Exp $
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -105,21 +105,12 @@ public class PortletAdapter
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        PortletPortalManager portalManager = null;
-        try {
-            portalManager = (PortletPortalManager) this.manager.lookup(PortalManager.ROLE);
-            this.portletContainer = portalManager.getPortletContainer();
-            this.environment = portalManager.getPortletContainerEnvironment();
-        } finally {
-            this.manager.release(portalManager);
-        }
+        // now get the portal manager
+        ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+        PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
+        
+        this.portletContainer = portalManager.getPortletContainer();
+        this.environment = portalManager.getPortletContainerEnvironment();
     }
 
     /* (non-Javadoc)
