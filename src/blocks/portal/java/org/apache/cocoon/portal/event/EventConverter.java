@@ -58,18 +58,35 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: EventConverter.java,v 1.1 2003/05/07 06:22:26 cziegeler Exp $
+ * @version CVS $Id: EventConverter.java,v 1.2 2003/12/08 15:56:26 cziegeler Exp $
  */
 public interface EventConverter extends Component {
 
     String ROLE = EventConverter.class.getName();
     
-    
+    /**
+     * Encode an event.
+     * This is used to "activate" events using a link
+     * @param event The event to encode
+     * @return A unique string representation for this event
+     */
     String encode(Event event);
     
+    /**
+     * Decode an event
+     * This is used to "activate" events using a link
+     * @param value The string representation created using {@link #encode(Event)}
+     * @return The event or null 
+     */
     Event decode(String value);
 
+    /**
+     * This notifies the converter that a new event processing phase starts
+     */
     void start();
     
+    /**
+     * This notifies the converter that an event processing phase ends
+     */
     void finish();
 }

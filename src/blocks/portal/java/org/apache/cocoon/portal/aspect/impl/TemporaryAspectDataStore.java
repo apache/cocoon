@@ -50,60 +50,79 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.portal.LinkService;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
-import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 
 /**
  * An aspect data store is a component that manages aspect data objects.
+ * This store holds the data for the current request.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestAspectDataStore.java,v 1.6 2003/12/08 15:56:26 cziegeler Exp $
+ * @version CVS $Id: TemporaryAspectDataStore.java,v 1.1 2003/12/08 15:56:26 cziegeler Exp $
  */
-public class RequestAspectDataStore 
-    extends TemporaryAspectDataStore
-    implements Parameterizable {
+public class TemporaryAspectDataStore 
+    extends AbstractLogEnabled
+    implements Component, Serviceable, ThreadSafe, AspectDataStore, Contextualizable {
     
-    protected String requestParameterName;
+    protected Context context;
     
-    public void setAspectData(Aspectalizable owner, String aspectName, Object data) {
-        super.setAspectData(owner, aspectName, data);
-
-        // create persistence
-        ChangeAspectDataEvent e;
-        if ( owner instanceof CopletInstanceData) {
-            e = new ChangeCopletInstanceAspectDataEvent((CopletInstanceData)owner, aspectName, data);
-        } else {
-            e = new ChangeAspectDataEvent( owner, aspectName, data );
-        }
-        if ( this.requestParameterName != null ) {
-            e.setRequestParameterName( this.requestParameterName );
-        }
-        LinkService service = null;
-        try {
-            service = (LinkService)this.manager.lookup(LinkService.ROLE);
-            service.addEventToLink( e );
-        } catch (ServiceException ce) {
-            throw new CascadingRuntimeException("Unable to lookup link service.", ce);
-        } finally {
-            this.manager.release( service );
-        }
-        
+    protected ServiceManager manager;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
+    protected Map getMap(Aspectalizable owner) {
+        final Request request = ContextHelper.getRequest(this.context);
+        Map componentMap = (Map)request.getAttribute(this.getClass().getName());
+        if ( componentMap == null) {
+            componentMap = new HashMap(3);
+            request.setAttribute(this.getClass().getName(), componentMap);
+        }
+        Map ownerMap = (Map)componentMap.get( owner );
+        if ( ownerMap == null ) {
+            ownerMap = new HashMap(3);
+            componentMap.put( owner, ownerMap );
+        }
+        return ownerMap;
+    }
+    
+    public Object getAspectData(Aspectalizable owner, String aspectName) {
+        return this.getMap(owner).get( aspectName );
+    }
+    
+    public void setAspectData(Aspectalizable owner, String aspectName, Object data) {
+        this.getMap(owner).put(aspectName, data);
+    }
+
+    public boolean isPersistent() {
+        return false;
+    }
+    
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void parameterize(Parameters pars) throws ParameterException {
-        requestParameterName = pars.getParameter("parameter-name", null);
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+
     }
 
 }

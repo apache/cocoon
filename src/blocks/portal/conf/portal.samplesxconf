@@ -189,6 +189,11 @@
                         store="session"
                         auto-create="true"
                         value="1"/>
+                <aspect name="fullScreen"
+                        class="java.lang.Boolean"
+                        store="temporary"
+                        auto-create="true"
+                        value="false"/>
             </coplet-instance-data-aspects>
         </coplet>
     </coplets>
