@@ -65,7 +65,7 @@ import java.sql.Connection;
  * Unfortunately it seems NOT to work with mssql
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: JdbcEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
+ * @version CVS $Id: JdbcEsqlQuery.java,v 1.4 2003/06/09 11:02:03 tcurdt Exp $
  */
 final public class JdbcEsqlQuery extends AbstractEsqlQuery {
 
@@ -119,7 +119,7 @@ final public class JdbcEsqlQuery extends AbstractEsqlQuery {
      * Which is totally stupid for limit/paging purposes. So we probably
      * better stick with an additional count query from the AbstractEsqlQuery
      */
-    /*
+
     public int getRowCount() throws SQLException {
         ResultSet rs = getResultSet();
         synchronized (rs) {
@@ -136,7 +136,6 @@ final public class JdbcEsqlQuery extends AbstractEsqlQuery {
             return (count);
         }
     }
-    */
 
     public void getResultRows() throws SQLException {
         final int skip = getSkipRows();
