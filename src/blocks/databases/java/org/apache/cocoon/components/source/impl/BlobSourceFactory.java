@@ -74,7 +74,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSourceFactory.java,v 1.1 2003/06/23 17:53:42 cziegeler Exp $
+ * @version CVS $Id: BlobSourceFactory.java,v 1.2 2003/07/17 18:50:52 sylvain Exp $
  */
 public class BlobSourceFactory
   extends AbstractLogEnabled
@@ -90,6 +90,7 @@ public class BlobSourceFactory
     public Source getSource(String location, Map parameters)
         throws MalformedURLException, IOException, SourceException {
         BlobSource blob = new BlobSource(location);
+        this.setupLogger(blob);
         blob.compose(this.manager);
         return blob;
     }
@@ -98,13 +99,9 @@ public class BlobSourceFactory
      * Release a {@link Source} object.
      */
     public void release( Source source ) {
-        if ( null != source ) {
-            if ( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug("Releasing source " + source.getURI());
-            }
-            // simply do nothing
-        }
+        // Nothing to do
     }
+    
 	/**
 	 * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
 	 */
