@@ -67,6 +67,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.EventAware;
+import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.NamedEvent;
 
 /**
@@ -84,7 +85,7 @@ import org.apache.cocoon.caching.validity.NamedEvent;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSEventListener.java,v 1.5 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: JMSEventListener.java,v 1.6 2004/01/05 17:14:44 unico Exp $
  * @author <a href="mailto:chaul@informatik.tu-darmstadt.de">chaul</a>
  */
 public class JMSEventListener
@@ -100,7 +101,23 @@ public class JMSEventListener
     protected String connectionName = null;
     protected JMSConnection connection = null;
 
+    /*
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
 
+    /* 
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void parameterize(Parameters parameters) throws ParameterException {
+
+        this.connectionName = parameters.getParameter("connection");
+        this.serviceName = parameters.getParameter("component");
+        this.selector = parameters.getParameter("message-selector", this.selector);
+    }
+    
     public void initialize() {
 
         try {
@@ -125,16 +142,16 @@ public class JMSEventListener
 		}
     }
 
-        /* 
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
-    public void parameterize(Parameters parameters) throws ParameterException {
-
-        this.connectionName = parameters.getParameter("connection");
-        this.serviceName = parameters.getParameter("component");
-        this.selector = parameters.getParameter("message-selector", this.selector);
+    public void dispose() {
+        if (this.manager != null){
+            this.manager.release(connection);
+            this.manager.release(service);
+        }
     }
-
+    
     /* 
      * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
      */
@@ -144,13 +161,14 @@ public class JMSEventListener
             if (service == null) {
                 service = (EventAware) this.manager.lookup(this.serviceName);
             }
+            Event event = this.convertMessage(message);
             if (this.getLogger().isInfoEnabled())
                 this.getLogger().info(
                     "Notifying "
                         + this.serviceName
                         + " of "
-                        + this.convertMessage(message.toString()));
-            service.processEvent(new NamedEvent(this.convertMessage(message.toString())));
+                        + event);
+            service.processEvent(event);
         } catch (ServiceException e) {
             if (this.getLogger().isErrorEnabled()) {
                 this.getLogger().error(
@@ -167,33 +185,18 @@ public class JMSEventListener
     }
 
     /**
-     * Convert the message contents to a cache key. Assume that the message contains of
-     * the trigger name, a '|', and the table name. Extract the tablename only. You might
-     * want to override this method.
+     * Convert the message contents to a cache event. The default implementation 
+     * assumes that the message contains the trigger name, a '|', and a table name. 
+     * It extracts the tablename and creates a NamedEvent with it. 
+     * Override this method to provide your own message to event mappings.
      * 
-     * @param message
-     * @return cache key
+     * @param message  the JMS message.
+     * @return  the cache event.
      */
-    protected String convertMessage(String message) {
-        int pos = message.indexOf('|');
-        return message.substring(pos + 1);
+    protected Event convertMessage(Message message) {
+        String name = message.toString();
+        int pos = name.indexOf('|');
+        return new NamedEvent(name.substring(pos + 1));
     }
-
-    /*
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
-
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
-	 */
-	public void dispose() {
-        if (this.manager != null){
-            this.manager.release(connection);
-            this.manager.release(service);
-        }
-	}
 
 }
