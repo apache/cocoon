@@ -34,6 +34,7 @@ import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -41,6 +42,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
 import org.xml.sax.SAXException;
+import EDU.oswego.cs.dl.util.concurrent.CountDown;
 
 /**
  * Default implementation of a {@link IncludeCacheManager}.
@@ -55,7 +57,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.8 2004/03/18 07:42:12 cziegeler Exp $
+ *  @version CVS $Id$
  *  @since   2.1
  */
 public final class DefaultIncludeCacheManager
@@ -108,10 +110,17 @@ public final class DefaultIncludeCacheManager
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("Booting preemptive loader: " + this.preemptiveLoaderURI);
                     }
-                    PreemptiveBooter thread = new PreemptiveBooter();
-                    thread.setURI(this.preemptiveLoaderURI);
-                    thread.start();
-                    Thread.yield();
+                    PreemptiveBooter thread = new PreemptiveBooter( this.preemptiveLoaderURI );
+                    try
+                    {
+                        final RunnableManager runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
+                        runnableManager.execute( thread );
+                        this.manager.release( runnableManager );
+                    }
+                    catch( final ServiceException se )
+                    {
+                        getLogger().error( "Cannot lookup RunnableManager", se );
+                    }
                 }
             }
         } 
@@ -221,13 +230,8 @@ public final class DefaultIncludeCacheManager
                     this.getLogger().debug("Waiting for pooled thread to finish loading.");
                 }
 
-                // wait
-                while (!loader.finished) {                    
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                    }
-                }
+                // wait for it
+                loader.join();
 
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug("Pooled thread finished loading.");
@@ -414,53 +418,59 @@ public final class DefaultIncludeCacheManager
         this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store, this.getLogger());
     }
 
-}
-
-final class LoaderThread implements Runnable {
-    
-    private  Source source;
-    private  XMLSerializer serializer;
-    boolean  finished;
-    Exception exception;
-    byte[]    content;
-    ServiceManager manager;
-    
-    public LoaderThread(Source source, 
-                        XMLSerializer serializer,
-                        ServiceManager manager) {
-        this.source = source;
-        this.serializer = serializer;
-        this.finished = false;
-        this.manager = manager;
-    }
-    
-    public void run() {
-        try {
-            SourceUtil.toSAX(this.source, this.serializer);
-            this.content = (byte[])this.serializer.getSAXFragment();
-        } catch (Exception local) {
-            this.exception = local;
-        } finally {
-            this.manager.release( this.serializer );
-            this.finished = true;
+    final private static class LoaderThread implements Runnable {
+        
+        final private Source source;
+        final private XMLSerializer serializer;
+        final private CountDown finished;
+        Exception exception;
+        byte[]    content;
+        final private ServiceManager manager;
+        
+        public LoaderThread(Source source, 
+                            XMLSerializer serializer,
+                            ServiceManager manager) {
+            this.source = source;
+            this.serializer = serializer;
+            this.finished = new CountDown( 1 );
+            this.manager = manager;
+        }
+        
+        public void run() {
+            try {
+                SourceUtil.toSAX(this.source, this.serializer);
+                this.content = (byte[])this.serializer.getSAXFragment();
+            } catch (Exception local) {
+                this.exception = local;
+            } finally {
+                this.manager.release( this.serializer );
+                this.finished.release();
+            }
+        }
+        
+        void join() {
+            try {
+                this.finished.acquire();
+            } catch ( final InterruptedException ie) {
+                // ignore
+            }
         }
     }
-    
-}
 
-final class PreemptiveBooter extends Thread {
+    final class PreemptiveBooter implements Runnable {
 
-    private String uri;
-    
-    void setURI(String uri) {
-        this.uri = uri;
-    }
-    
-    public void run() {
-        try {
-            URL url = new URL(this.uri);
-            url.getContent();
-        } catch (Exception ignore) {
+        private final String uri;
+        
+        public PreemptiveBooter( final String uri ) {
+            this.uri = uri;
+        }
+        
+        public void run() {
+            try {
+                URL url = new URL(this.uri);
+                url.getContent();
+            } catch (Exception ignore) {
+            }
         }
     }
 }

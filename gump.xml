@@ -83,6 +83,7 @@
     <depend project="pizza"/>
     <depend project="junit"/>
     <depend project="eclipse-jtd"/>
+    <depend project="concurrent"/>
 
     <depend project="xmlunit"/><!-- used by the testcases -->
     <depend project="qdox"/>   <!-- used by ant tasks -->
@@ -1235,6 +1236,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="concurrent"/>
     
     <library name="pizza"/>
 

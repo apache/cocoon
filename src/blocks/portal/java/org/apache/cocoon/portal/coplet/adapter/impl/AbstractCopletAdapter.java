@@ -23,6 +23,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -30,6 +31,7 @@ import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import EDU.oswego.cs.dl.util.concurrent.CountDown;
 
 /**
  * This is the abstract base adapter to use pipelines as coplets
@@ -60,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.11 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -115,14 +117,13 @@ public abstract class AbstractCopletAdapter
                 if ( timeout != null ) {
                     final int milli = timeout.intValue() * 1000;
                     LoaderThread loader = new LoaderThread(this, coplet, buffer);
-                    Thread thread = new Thread(loader);
-                    thread.start();
+                    final RunnableManager runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
+                    runnableManager.execute( loader );
+                    this.manager.release( runnableManager );
                     try {
-                        thread.join(milli);
+                        read = loader.join( milli );
                     } catch (InterruptedException ignore) {
-                    }
-                    if ( loader.finished ) {
-                        read = true;
+                        // ignored
                     }
                 } else {
                     this.streamContent( coplet, buffer );
@@ -202,10 +203,10 @@ public abstract class AbstractCopletAdapter
 
 final class LoaderThread implements Runnable {
     
-    private  AbstractCopletAdapter adapter;
-    private  ContentHandler        handler;
-    private  CopletInstanceData    coplet;
-    boolean  finished;
+    private final AbstractCopletAdapter adapter;
+    private final ContentHandler        handler;
+    private final CopletInstanceData    coplet;
+    private final CountDown             finished;
     Exception exception;
 
     public LoaderThread(AbstractCopletAdapter adapter, 
@@ -214,6 +215,7 @@ final class LoaderThread implements Runnable {
         this.adapter = adapter;
         this.coplet  = coplet;
         this.handler = handler;
+        this.finished = new CountDown( 1 );
     }
     
     public void run() {
@@ -222,8 +224,14 @@ final class LoaderThread implements Runnable {
         } catch (Exception local) {
             this.exception = local;
         } finally {
-            this.finished = true;
+            this.finished.release();
         }
+    }
+    
+    boolean join( final long milis )
+    throws InterruptedException 
+    {
+        return this.finished.attempt( milis );
     }
     
 }

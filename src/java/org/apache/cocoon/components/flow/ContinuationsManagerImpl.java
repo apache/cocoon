@@ -22,7 +22,11 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.thread.RunnableManager;
 
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.Sink;
@@ -55,7 +59,7 @@ import java.util.TreeSet;
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
         implements ContinuationsManager, Component, Configurable,
-                   ThreadSafe, Contextualizable, Instrumentable {
+                   ThreadSafe, Instrumentable, Serviceable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -65,8 +69,6 @@ public class ContinuationsManagerImpl
      */
     protected SecureRandom random;
     protected byte[] bytes;
-
-    protected Sink m_commandSink;
 
     /**
      * How long does a continuation exist in memory since the last
@@ -101,6 +103,7 @@ public class ContinuationsManagerImpl
     private CounterInstrument continuationsCreated;
     private CounterInstrument continuationsInvalidated;
 
+    private ServiceManager serviceManager;
 
     public ContinuationsManagerImpl() throws Exception {
         try {
@@ -122,17 +125,25 @@ public class ContinuationsManagerImpl
     /**
      * Get the command sink so that we can be notified of changes
      */
-    public void contextualize(Context context) throws ContextException {
-        m_commandSink = (Sink) context.get(Queue.ROLE);
+    public void service(final ServiceManager manager) throws ServiceException {
+        this.serviceManager = manager;
     }
 
     public void configure(Configuration config) {
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
 
         final Configuration expireConf = config.getChild("expirations-check");
+        final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
+        final long interval = expireConf.getChild("period", true).getValueAsLong(180000);
         try {
-            final ContinuationInterrupt interrupt = new ContinuationInterrupt(expireConf);
-            this.m_commandSink.enqueue(interrupt);
+            final RunnableManager runnableManager = (RunnableManager)serviceManager.lookup(RunnableManager.ROLE);
+            runnableManager.execute( new Runnable() {
+                public void run()
+                {
+                    expireContinuations();
+                }
+            }, initialDelay, interval);
+            serviceManager.release(runnableManager);
         } catch (Exception e) {
             getLogger().warn("Could not enqueue continuations expiration task. " +
                              "Continuations will not automatically expire.", e);
@@ -363,7 +374,7 @@ public class ContinuationsManagerImpl
     /**
      * Remove all continuations which have already expired.
      */
-    private void expireContinuations() {
+    protected void expireContinuations() {
         long now = 0;
         if (getLogger().isDebugEnabled()) {
             now = System.currentTimeMillis();
@@ -395,51 +406,6 @@ public class ContinuationsManagerImpl
             displayAllContinuations();
             displayExpireSet();
             */
-        }
-    }
-
-
-    final class ContinuationInterrupt implements RepeatedCommand {
-        private final long m_interval;
-        private final long m_initialDelay;
-
-        /**
-         * @param expireConf
-         */
-        public ContinuationInterrupt(Configuration expireConf) {
-            // only periodic time triggers are supported
-            m_initialDelay =
-                    expireConf.getChild("offset", true).getValueAsLong(100);
-            m_interval =
-                    expireConf.getChild("period", true).getValueAsLong(100);
-        }
-
-        /**
-         * Repeat forever
-         */
-        public int getNumberOfRepeats() {
-            return -1;
-        }
-
-        /**
-         * Get the number of millis to wait between invocations
-         */
-        public long getRepeatInterval() {
-            return m_interval;
-        }
-
-        /**
-         * Get the number of millis to wait for the first invocation
-         */
-        public long getDelayInterval() {
-            return m_initialDelay;
-        }
-
-        /**
-         * expire any continuations that need expiring.
-         */
-        public void execute() throws Exception {
-            expireContinuations();
         }
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.transformation;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -27,6 +28,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.MultiSourceValidity;
+import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.EmbeddedXMLPipe;
@@ -618,13 +620,15 @@ public class IncludeTransformer extends AbstractTransformer
         public IncludeBuffer(Source source) {
             this.source = source;
 
-            // FIXME Need thread pool component. Based on EDU.oswego.cs.dl.util.concurrent.PooledExecutor.
-            //       See also org.apache.cocoon.components.cron.QuartzJobScheduler.ThreadPool
             try {
-                Thread t = new Thread(this);
-                t.setName("IncludeSource#" + source.getURI());
-                t.setDaemon(true);
-                t.start();
+                final RunnableManager runnableManager = (RunnableManager)m_manager.lookup( RunnableManager.ROLE );
+                runnableManager.execute( "daemon", this ); // XXX: GP: Do we really need daemon threads here ?
+                m_manager.release( runnableManager );
+            } catch (final ServiceException e) {
+                // In case we failed to spawn a thread
+                this.e = new SAXException(e);
+                m_resolver.release(source);
+                throw new CascadingRuntimeException( e.getMessage(), e );
             } catch (RuntimeException e) {
                 // In case we failed to spawn a thread
                 this.e = new SAXException(e);

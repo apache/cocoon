@@ -199,6 +199,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="GP" type="add">
+     Added replacement for Excalibur Event package in org.apache.cocoon.components.thread and migrated most 
+     classes using their own threads to that package
+   </action>
+
    <action dev="AG" type="update">
      Updated antlr to 2.7.4, db-ojb to 1.0.1
    </action>

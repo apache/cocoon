@@ -25,31 +25,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.language.programming.CompilerError;
+import org.apache.cocoon.components.thread.RunnableManager;
+import EDU.oswego.cs.dl.util.concurrent.CountDown;
 
 /**
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Jikes.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  * @since 2.0
  */
 
-public class Jikes extends AbstractJavaCompiler {
+public class Jikes extends AbstractJavaCompiler implements Serviceable {
 
     static final int OUTPUT_BUFFER_SIZE = 1024;
     static final int BUFFER_SIZE = 512;
 
-    private class StreamPumper extends Thread {
+    private ServiceManager m_serviceManager;
+    
+    private class StreamPumper implements Runnable {
 
         private BufferedInputStream stream;
         private boolean endOfStream = false;
         private int SLEEP_TIME = 5;
         private OutputStream out;
+        private CountDown m_done;
 
-        public StreamPumper(BufferedInputStream is, OutputStream out) {
+        public StreamPumper(BufferedInputStream is, OutputStream out, CountDown done) {
             this.stream = is;
             this.out = out;
+            m_done = done;
         }
 
         public void pumpStream() throws IOException {
@@ -69,12 +78,22 @@ public class Jikes extends AbstractJavaCompiler {
             try {
                 while (!endOfStream) {
                     pumpStream();
-                    sleep(SLEEP_TIME);
+                    Thread.sleep(SLEEP_TIME);
                 }
             } catch (Exception e) {
                // getLogger().warn("Jikes.run()", e);
             }
+            m_done.release(); // signal 'we are finished'
         }
+        }
+
+    /**
+     * Set the {@link ServiceManager}
+     */
+    public void service( ServiceManager serviceManager )
+    throws ServiceException
+    {
+        m_serviceManager = serviceManager;
     }
 
     /**
@@ -128,15 +147,26 @@ public class Jikes extends AbstractJavaCompiler {
 
             BufferedInputStream compilerErr = new BufferedInputStream(p.getErrorStream());
 
-            StreamPumper errPumper = new StreamPumper(compilerErr, tmpErr);
+            RunnableManager runnableManager = null;
+            try
+            {
+                runnableManager = (RunnableManager)m_serviceManager.lookup( RunnableManager.ROLE );
+            }
+            catch( final ServiceException se )
+            {
+                getLogger().error( "Cannot get RunnableManager", se );
+                throw new IOException( "Cannot get RunnableManager" );
+            }
 
-            errPumper.start();
+            final CountDown done = new CountDown( 1 );
+            StreamPumper errPumper = new StreamPumper(compilerErr, tmpErr, done);
+            runnableManager.execute( errPumper );
+            m_serviceManager.release( runnableManager );
 
             p.waitFor();
             exitValue = p.exitValue();
 
-            // Wait until the complete error stream has been read
-            errPumper.join();
+            done.acquire(); // Wait for StreadmPumper to finish
             compilerErr.close();
 
             p.destroy();
