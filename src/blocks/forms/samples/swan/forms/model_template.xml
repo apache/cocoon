@@ -18,7 +18,7 @@
   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
 
-  <title>Swam Form Model Editor</title>
+  <title>Swan Form Model Editor</title>
 
   <content>
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
