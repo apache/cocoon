@@ -1,11 +1,10 @@
-/**
- ****************************************************************************
+/*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
- */
+ *****************************************************************************/
 package org.apache.cocoon.components.language.markup.xsp;
 
 import java.io.BufferedInputStream;
@@ -43,7 +42,7 @@ import org.xml.sax.SAXException;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:05:47 $
+ * @version $Revision: 1.1.2.13 $ $Date: 2001-04-25 18:20:34 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {

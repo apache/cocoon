@@ -1,12 +1,10 @@
-/**
- ****************************************************************************
+/*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
- ****************************************************************************
- */
+ *****************************************************************************/
 package org.apache.cocoon.components.sax;
 
 import org.apache.cocoon.xml.XMLConsumer;
@@ -25,7 +23,7 @@ import org.xml.sax.ext.LexicalHandler;
  * The incoming events are forwarded to two other components.
  *
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:06:34 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 18:20:36 $
  */
 
 public final class XMLTeePipe

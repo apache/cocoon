@@ -1,11 +1,10 @@
-/**
- ****************************************************************************
+/*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
- */
+ *****************************************************************************/
 package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
@@ -24,7 +23,7 @@ import org.apache.cocoon.util.IOUtils;
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-25 17:05:53 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-25 18:20:35 $
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
     /** The compiler */

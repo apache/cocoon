@@ -1,12 +1,10 @@
-/**
- ****************************************************************************
+/*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
- ****************************************************************************
- */
+ *****************************************************************************/
 package org.apache.cocoon.components.sax;
 
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:06:32 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 18:20:36 $
  */
 
 public final class XMLByteStreamInterpreter
