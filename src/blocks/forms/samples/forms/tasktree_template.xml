@@ -71,10 +71,10 @@
         <div class="section">
           <ft:struct id="task">
             <span class="actions">
-              <ft:widget id="down"><fi:styling type="image" src="resources/move_down.gif"/></ft:widget>
-              <ft:widget id="up"><fi:styling type="image" src="resources/move_up.gif"/></ft:widget>
-              <ft:widget id="delete"><fi:styling type="image" src="resources/delete.gif"/></ft:widget>
-              <ft:widget id="add"><fi:styling type="image" src="resources/new.gif"/></ft:widget>
+              <ft:widget id="down"><fi:styling type="image" src="resources/img/move_down.gif"/></ft:widget>
+              <ft:widget id="up"><fi:styling type="image" src="resources/img/move_up.gif"/></ft:widget>
+              <ft:widget id="delete"><fi:styling type="image" src="resources/img/delete.gif"/></ft:widget>
+              <ft:widget id="add"><fi:styling type="image" src="resources/img/new.gif"/></ft:widget>
             </span>
             Title: <ft:widget id="title"/>
             From <ft:widget id="start"><fi:styling size="10"/></ft:widget>
@@ -99,7 +99,9 @@
             </ft:repeater-widget>
           </jx:when>
           <jx:otherwise>
-            <ft:widget id="addsub"/>
+            <ft:widget id="addsub">
+	      <fi:styling type="link"/>
+	    </ft:widget>
           </jx:otherwise>
         </jx:choose>
       </ft:class>
