@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.17 2000-07-21 23:38:26 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.18 2000-11-07 18:30:13 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,11 +57,15 @@ import org.w3c.dom.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+// XXX: Most of the methods in XSPUtil are not specific to XSP
+// and should be moved somewhere else.
+import org.apache.cocoon.processor.xsp.XSPUtil;
+
 /**
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.17 $ $Date: 2000-07-21 23:38:26 $
+ * @version $Revision: 1.18 $ $Date: 2000-11-07 18:30:13 $
  */
 
 public final class Utils {
@@ -292,10 +296,10 @@ public final class Utils {
      * Returns the stack trace as a string
      */
     public static final String getStackTraceAsString(Throwable e) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(bytes, true);
+        StringWriter sw = new StringWriter ();
+        PrintWriter writer = new PrintWriter(sw);
         e.printStackTrace(writer);
-        return bytes.toString();
+        return XSPUtil.encodeMarkup (sw.toString());
     }
 
     /*

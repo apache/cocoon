@@ -1,4 +1,4 @@
-/*-- $Id: Frontend.java,v 1.8 2000-04-04 11:10:11 stefano Exp $ -- 
+/*-- $Id: Frontend.java,v 1.9 2000-11-07 18:30:14 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * smart publishing behavior. (ECS may be used instead).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-04-04 11:10:11 $
+ * @version $Revision: 1.9 $ $Date: 2000-11-07 18:30:14 $
  */
 
 public class Frontend implements Defaults {
@@ -86,9 +86,7 @@ public class Frontend implements Defaults {
     }
 	
     public static void error(ServletResponse response, String message, Throwable t) throws IOException {
-        StringWriter buffer = new StringWriter();
-        if (t != null) t.printStackTrace(new PrintWriter(buffer));
-    	print(response, message, buffer.toString());
+    	print(response, message, Utils.getStackTraceAsString (t));
     }
 
     public static void print(ServletResponse response, String title, String message) throws IOException {
