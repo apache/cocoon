@@ -62,17 +62,6 @@ import org.apache.avalon.framework.service.WrapperServiceManager;
  * </p>
  * <pre>
  *   &lt;testcase&gt;
- *     &lt;annotation&gt;
- *       &lt;![CDATA[
- *         &lt;title&gt;{Name of test}&lt;/title&gt;
- *         &lt;para&gt;
- *           {Description of test}
- *           The configuration is specified in the file located in
- *           &lt;parameter&gt;cocoon/src/test/{path and name of conf file}.xtext&lt;/parameter&gt;.
- *         &lt;/para&gt;
- *       ]]&gt;
- *     &lt;/annotation&gt;
- *
  *     &lt;context&gt;
  *       &lt;entry name="foo" value="bar"/&gt;
  *       &lt;entry name="baz" class="my.context.Class"/&gt;
@@ -108,12 +97,6 @@ import org.apache.avalon.framework.service.WrapperServiceManager;
  *  following elements: <code>annotation</code>,
  *  <code>context</code>, <code>roles</code>, and <code>components</code>
  *  </dd>.
- *
- * <dt>annotation</dt>
- * <dd>Defines a test annotation.  This element should define a block of
- *  XML enclosed within a CDATA element.  The XML should be made up of a
- *  <code>title</code> element, naming the test, and a <code>para</code>
- *  element which is used to describe the test.</dd>
  *
  * <dt>context</dt>
  * <dd>Allows context properties to be set in the context passed to any
@@ -196,12 +179,6 @@ public class ContainerTestCase extends TestCase {
 
         final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
         final Configuration conf = builder.build( testconf );
-
-        String annotation = conf.getChild( "annotation" ).getValue( null );
-
-        if( ( null != annotation ) && !( "".equals( annotation ) ) ) {
-            this.logger.info( annotation );
-        }
 
         Context context = this.setupContext( conf.getChild( "context" ) );
 
