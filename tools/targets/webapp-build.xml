@@ -65,10 +65,6 @@
           <include name="*.jar"/>
         </fileset>
       -->
-      <fileset dir="${lib.optional}">
-        <include name="*.jar"/>
-        <exclude name="servlet*.jar"/>
-      </fileset>
       <fileset dir="${lib.local}">
         <include name="*.jar"/>
         <exclude name="servlet*.jar"/>
