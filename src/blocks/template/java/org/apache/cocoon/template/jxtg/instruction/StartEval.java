@@ -44,7 +44,7 @@ public class StartEval extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         try {
             Object val = this.value.getNode(expressionContext);
@@ -52,8 +52,11 @@ public class StartEval extends StartInstruction {
                 throw new Exception("macro invocation required instead of: " + val);
             }
             StartElement call = (StartElement) val;
+            
+            //FIXME: eval does not allow to call macro providing macro body
+            MacroContext newMacroContext = new MacroContext( call.getQname(), null, null );
             Invoker.execute(consumer, expressionContext, executionContext,
-                            call, call.getNext(), call.getEndElement());
+                            newMacroContext, call.getNext(), call.getEndElement());
         } catch (Exception exc) {
             throw new SAXParseException(exc.getMessage(), getLocation(), exc);
         } catch (Error err) {

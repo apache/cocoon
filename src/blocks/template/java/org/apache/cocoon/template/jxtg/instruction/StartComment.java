@@ -41,13 +41,13 @@ public class StartComment extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         // Parse the body of the comment
         NodeList nodeList =
             Invoker.toDOMNodeList("comment", this,
                                   expressionContext, executionContext,
-                                  macroCall);
+                                  macroContext);
         // JXPath doesn't handle NodeList, so convert it to an array
         int len = nodeList.getLength();
         final StringBuffer buf = new StringBuffer();

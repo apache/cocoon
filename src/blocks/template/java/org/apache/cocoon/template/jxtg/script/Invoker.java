@@ -19,6 +19,7 @@ import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.environment.LocatorFacade;
+import org.apache.cocoon.template.jxtg.instruction.MacroContext;
 import org.apache.cocoon.template.jxtg.instruction.StartCall;
 import org.apache.cocoon.template.jxtg.instruction.StartDefine;
 import org.apache.cocoon.template.jxtg.script.event.Event;
@@ -33,9 +34,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 
 public class Invoker {
@@ -43,7 +42,7 @@ public class Invoker {
 
     public static void execute(final XMLConsumer consumer,
             ExpressionContext expressionContext,
-            ExecutionContext executionContext, StartElement macroCall,
+            ExecutionContext executionContext, MacroContext macroContext,
             Event startEvent, Event endEvent) throws SAXException {
 
         Event ev = startEvent;
@@ -59,16 +58,16 @@ public class Invoker {
                         .getDefinitions().get(startElement.getQname());
                 if (def == null) {
                     ev = ev.execute(consumer, expressionContext,
-                            executionContext, macroCall, startEvent, endEvent);
+                            executionContext, macroContext, startEvent, endEvent);
                     continue;
                 }
 
                 StartCall call = new StartCall( def, startElement );
                 ev = call.execute(consumer, expressionContext,
-                        executionContext, macroCall, startEvent, endEvent);
+                        executionContext, macroContext, startEvent, endEvent);
             } else
                 ev = ev.execute(consumer, expressionContext, executionContext,
-                        macroCall, startEvent, endEvent);
+                        macroContext, startEvent, endEvent);
         }
     }
 
@@ -110,28 +109,15 @@ public class Invoker {
         streamer.stream(node);
     }
 
-    public static void call(Locator location, StartElement macroCall,
-            final XMLConsumer consumer, ExpressionContext expressionContext,
-            ExecutionContext executionContext, Event startEvent, Event endEvent)
-            throws SAXException {
-        try {
-            execute(consumer, expressionContext, executionContext, macroCall,
-                    startEvent, endEvent);
-        } catch (SAXParseException exc) {
-            throw new SAXParseException(macroCall.getLocalName() + ": "
-                    + exc.getMessage(), location, exc);
-        }
-    }
-
     public static NodeList toDOMNodeList(String elementName,
             StartInstruction si, ExpressionContext expressionContext,
-            ExecutionContext executionContext, StartElement macroCall)
+            ExecutionContext executionContext, MacroContext macroContext)
             throws SAXException {
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
         builder.startElement(JXTemplateGenerator.NS, elementName, elementName,
                 EMPTY_ATTRS);
-        execute(builder, expressionContext, executionContext, macroCall, si
+        execute(builder, expressionContext, executionContext, macroContext, si
                 .getNext(), si.getEndInstruction());
         builder.endElement(JXTemplateGenerator.NS, elementName, elementName);
         builder.endDocument();

@@ -78,7 +78,7 @@ public class StartImport extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         String uri;
         AttributeEvent e = this.uri;
@@ -132,7 +132,7 @@ public class StartImport extends StartInstruction {
         }
         try {
             Invoker.execute(consumer, expressionContext, executionContext,
-                            macroCall, doc.getNext(), doc.getEndDocument());
+                            macroContext, doc.getNext(), doc.getEndDocument());
         } catch (Exception exc) {
             throw new SAXParseException(
                                         "Exception occurred in imported template " + uri

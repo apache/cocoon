@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.Substitutions;
+import org.apache.cocoon.template.jxtg.instruction.MacroContext;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -96,7 +97,7 @@ public class StartElement extends Event {
 
     public Event execute(XMLConsumer consumer,
             ExpressionContext expressionContext,
-            ExecutionContext executionContext, StartElement macroCall,
+            ExecutionContext executionContext, MacroContext macroContext,
             Event startEvent, Event endEvent) throws SAXException {
         Iterator i = getAttributeEvents().iterator();
         AttributesImpl attrs = new AttributesImpl();

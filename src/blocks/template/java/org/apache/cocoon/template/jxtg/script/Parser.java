@@ -68,6 +68,8 @@ public class Parser implements ContentHandler, LexicalHandler {
                     .getName());
             registerInstruction("formatDate", StartFormatDate.class.getName());
             registerInstruction("comment", StartComment.class.getName());
+            registerInstruction("call", StartCall.class.getName());
+            registerInstruction("withParam", StartParameterInstance.class.getName());
         } catch (Exception e) {
             // we'll do something more professional with that when the configuration moves
             // to the sitemap

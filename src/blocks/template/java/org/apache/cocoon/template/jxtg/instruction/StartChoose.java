@@ -39,7 +39,7 @@ public class StartChoose extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         StartWhen startWhen = this.firstChoice;
         while (startWhen != null) {
@@ -57,7 +57,7 @@ public class StartChoose extends StartInstruction {
             }
             if (result) {
                 Invoker.execute(consumer, expressionContext, executionContext,
-                                macroCall, startWhen.getNext(),
+                                macroContext, startWhen.getNext(),
                                 startWhen.getEndInstruction());
                 break;
             }
@@ -65,7 +65,7 @@ public class StartChoose extends StartInstruction {
         }
         if (startWhen == null && this.otherwise != null) {
             Invoker.execute(consumer, expressionContext, executionContext,
-                            macroCall, this.otherwise.getNext(),
+                            macroContext, this.otherwise.getNext(),
                             this.otherwise.getEndInstruction());
         }
         return getEndInstruction().getNext();

@@ -59,7 +59,7 @@ public class StartParameterInstance extends StartInstruction {
     }
 
     public StartParameterInstance(AttributeEvent event) {
-        super( (Locator) null );
+        super((Locator) null);
         this.name = event.getLocalName();
         this.value = event;
     }
@@ -70,33 +70,38 @@ public class StartParameterInstance extends StartInstruction {
 
     public Object getValue(ExpressionContext expressionContext)
             throws SAXException {
-        if (this.value instanceof CopyAttribute) {
+        if (this.value instanceof JXTExpression)
+            return getExpressionValue((JXTExpression) this.value,
+                    expressionContext);
+        else if (this.value instanceof CopyAttribute) {
             CopyAttribute copy = (CopyAttribute) this.value;
             return copy.getValue();
         } else if (this.value instanceof SubstituteAttribute) {
             SubstituteAttribute substEvent = (SubstituteAttribute) this.value;
             if (substEvent.getSubstitutions().size() == 1
-                    && substEvent.getSubstitutions().get(0) instanceof JXTExpression) {
-                JXTExpression expr = (JXTExpression) substEvent
-                        .getSubstitutions().get(0);
-                Object val;
-                try {
-                    val = expr.getNode(expressionContext);
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), getLocation(),
-                            e);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(),
-                            getLocation(), new ErrorHolder(err));
-                }
-                return val != null ? val : "";
-            } else {
+                    && substEvent.getSubstitutions().get(0) instanceof JXTExpression)
+                return getExpressionValue((JXTExpression) substEvent
+                        .getSubstitutions().get(0), expressionContext);
+            else
                 return substEvent.getSubstitutions().toString(getLocation(),
                         expressionContext);
-            }
+
         } else {
             throw new Error("this shouldn't have happened");
         }
+    }
 
+    private Object getExpressionValue(JXTExpression expr,
+            ExpressionContext expressionContext) throws SAXException {
+        Object val;
+        try {
+            val = expr.getNode(expressionContext);
+        } catch (Exception e) {
+            throw new SAXParseException(e.getMessage(), getLocation(), e);
+        } catch (Error err) {
+            throw new SAXParseException(err.getMessage(), getLocation(),
+                    new ErrorHolder(err));
+        }
+        return val != null ? val : "";
     }
 }
