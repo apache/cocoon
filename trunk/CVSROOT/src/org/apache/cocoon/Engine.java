@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.34 2000-09-16 16:04:30 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.35 2000-10-15 22:43:13 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.interpreter.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.34 $ $Date: 2000-09-16 16:04:30 $
+ * @version $Revision: 1.35 $ $Date: 2000-10-15 22:43:13 $
  */
 
 public class Engine implements Defaults {
@@ -136,22 +136,22 @@ public class Engine implements Defaults {
         manager.setRole("logger", logger);
 
         // Create the parser and register it
-        parser = (Parser) manager.create((String) configurations.get(PARSER_PROP,
+        parser = (Parser) manager.create(getConfigTr(PARSER_PROP,
             PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
         manager.setRole("parser", parser);
 
         // Create the transformer and register it
-        transformer = (Transformer) manager.create((String) configurations.get(TRANSFORMER_PROP,
+        transformer = (Transformer) manager.create(getConfigTr(TRANSFORMER_PROP,
             TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
         manager.setRole("transformer", transformer);
 
         // Create the store and register it
-        store = (Store) manager.create((String) configurations.get(STORE_PROP,
+        store = (Store) manager.create(getConfigTr(STORE_PROP,
             STORE_DEFAULT), configurations.getConfigurations(STORE_PROP));
         manager.setRole("store", store);
 
         // Create the cache and register it
-        cache = (Cache) manager.create((String) configurations.get(CACHE_PROP,
+        cache = (Cache) manager.create(getConfigTr(CACHE_PROP,
             CACHE_DEFAULT), configurations.getConfigurations(CACHE_PROP));
         manager.setRole("cache", cache);
 
@@ -190,10 +190,15 @@ public class Engine implements Defaults {
         // If enabled, create the profiler and register it
         PROFILE = configurations.get ("profiler.enabled", "false").equals ("true");
         if (PROFILE) {
-          profiler = (Profiler) manager.create((String) configurations.get(PROFILER_PROP,
+          profiler = (Profiler) manager.create(getConfigTr(PROFILER_PROP,
               PROFILER_DEFAULT), configurations.getConfigurations(PROFILER_PROP));
           manager.setRole("profiler", profiler);
         }
+    }
+
+    /** Gets a configuration string with spaces trimmed from each end. */
+    private String getConfigTr (String name, String defaultStr) {
+      return ((String) configurations.get (name, defaultStr)).trim ();
     }
 
     /**
