@@ -42,13 +42,13 @@
       </p>
       <p>These are the SitemapTask attributes that are used in the code:</p>
       <ul>
+        <li>@cocoon.sitemap.component.documentation - The documentation (optional)</li>
         <li>@cocoon.sitemap.component.name - The name of the component in the sitemap (required)</li>
         <li>@cocoon.sitemap.component.logger - The logger category (optional)</li>
         <li>@cocoon.sitemap.component.label - The label for views (optional)</li>
         <li>@cocoon.sitemap.component.mimetype - The mime type for serializers and readers (optional)</li>
         <li>@cocoon.sitemap.component.hide - If this tag is specified, the component is not added to the sitemap (optional)</li>
         <li>@cocoon.sitemap.component.documentation.disabled - If this tag is specified, no documentation is generated (optional)</li>
-        <li>@cocoon.sitemap.component.documentation description - The documentation (optional)</li>
         <li>@cocoon.sitemap.component.configuration - Configuration (optional)</li>
         <li>@cocoon.sitemap.component.documentation.caching - Caching info (optional)</li>
         <li>@cocoon.sitemap.component.pooling.min - Pooling min (optional)</li>
