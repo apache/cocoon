@@ -51,7 +51,6 @@
 
 package org.apache.cocoon.generation;
 
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
@@ -61,7 +60,6 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -70,17 +68,14 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Testcase for generator components. It tests the generator
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.2 2003/03/12 15:02:17 bloritsch Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.3 2003/03/18 01:33:38 vgritsenko Exp $
  */
 public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 {
@@ -106,7 +101,6 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
      */
     public AbstractGeneratorTestCase(String name) {
         super(name);
-
     }
 
     /**
@@ -146,7 +140,7 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
         Source assertionsource = null;
 
         try {
-            selector = (ComponentSelector) this.manager.lookup(Generator.ROLE+
+            selector = (ComponentSelector) this.manager.lookup(Generator.ROLE +
                 "Selector");
             assertNotNull("Test lookup of generator selector", selector);
 
@@ -199,12 +193,12 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
                 if ((test.assertiontype==EQUAL) ||
                     (test.assertiontype==NOTEQUAL)) {
                     parser.parse(new InputSource(assertionsource.getInputStream()),
-                                 (ContentHandler) new WhitespaceFilter(builder),
-                                 (LexicalHandler) builder);
+                                 new WhitespaceFilter(builder),
+                                 builder);
                 } else {
                     parser.parse(new InputSource(assertionsource.getInputStream()),
-                                 (ContentHandler) builder,
-                                 (LexicalHandler) builder);
+                                 builder,
+                                 builder);
                 }
                 Document assertiondocument = builder.getDocument();
 
@@ -250,27 +244,21 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
                 resolver.release(assertionsource);
                 assertionsource = null;
             }
-
         } catch (ComponentException ce) {
             getLogger().error("Could not retrieve generator", ce);
-            fail("Could not retrieve generator:"+ce.toString());
-        } catch (SAXException saxe) {
-            getLogger().error("Could not execute test", saxe);
-            fail("Could not execute test:"+saxe.toString());
-        } catch (IOException ioe) {
-            getLogger().error("Could not execute test", ioe);
-            fail("Could not execute test:"+ioe.toString());
-        } catch (ProcessingException pe) {
-            getLogger().error("Could not execute test", pe);
-            pe.printStackTrace();
-            fail("Could not execute test:"+pe.toString());
+            fail("Could not retrieve generator: " + ce.toString());
+        } catch (Exception e) {
+            getLogger().error("Could not execute test", e);
+            fail("Could not execute test: " + e);
         } finally {
-            if (generator!=null) {
+            if (generator != null) {
                 selector.release(generator);
             }
             this.manager.release(selector);
             this.manager.release(resolver);
-            resolver.release(assertionsource);
+            if (resolver != null) {
+                resolver.release(assertionsource);
+            }
             this.manager.release((Component) parser);
         }
     }
@@ -302,7 +290,7 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
      */
     public final void assertXMLEqual(Diff diff, boolean assertion,
                                      String msg) {
-        assertEquals(msg+", "+diff.toString(), assertion, diff.similar());
+        assertEquals(msg + ", " + diff.toString(), assertion, diff.similar());
     }
 
     /**
@@ -322,7 +310,7 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
      */
     public final void assertXMLIdentical(Diff diff, boolean assertion,
                                          String msg) {
-        assertEquals(msg+", "+diff.toString(), assertion, diff.identical());
+        assertEquals(msg + ", " + diff.toString(), assertion, diff.identical());
     }
 
     /**
