@@ -372,7 +372,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     /**
      * Associates a JavaScript scope, a Scriptable object, with
-     * {@link #getInterpreterID identifier} of this {@link Interpreter}
+     * {@link #getInterpreterID() identifier} of this {@link Interpreter}
      * instance.
      *
      * @param scope a <code>ThreadScope</code> value
