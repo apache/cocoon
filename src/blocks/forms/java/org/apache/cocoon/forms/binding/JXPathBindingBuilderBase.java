@@ -97,14 +97,15 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
      */
     protected static CommonAttributes getCommonAttributes(Element bindingElm) throws BindingException {
         try {
+            String location = DomHelper.getLocation(bindingElm);
             //TODO: should we eventually remove this?
             //throw an error if people are still using the old-style @read-only or @readonly
             if (DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false)) {
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
+                throw new BindingException("Error in binding file " + location
                         + "\nThe usage of the attribute @readonly has been deprecated in favour of @direction.");
             }
             if (DomHelper.getAttributeAsBoolean(bindingElm, "read-only", false)) {
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
+                throw new BindingException("Error in binding file " + location
                         + "\nThe usage of the attribute @read-only has been deprecated in favour of @direction.");
             }
 
@@ -124,10 +125,10 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             // we (actually jxpath) doesn't support un-prefixed namespace-declarations:
             // so we decide to break on those above silently ignoring them
             if (nsDeclarationMap != null && nsDeclarationMap.values().contains(null))
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
+                throw new BindingException("Error in binding file " + location
                                 + "\nBinding doesn't support having namespace-declarations without explicit prefixes.");
             
-            return new CommonAttributes(direction, leniency, nsDeclarationMap);
+            return new CommonAttributes(location, direction, leniency, nsDeclarationMap);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
@@ -141,6 +142,11 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
       * actions of a given binding.
       */
      protected static class CommonAttributes{
+
+        /**
+         * Source location of this binding.
+         */
+        final String location;
         /**
          * Flag which controls whether a binding is active during loading.
          */
@@ -159,13 +165,14 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          */
         final Map nsDeclarations;
 
-        final static CommonAttributes DEFAULT = new CommonAttributes(true, true, null, null);
+        final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null, null);
 
-        CommonAttributes(String direction, String leniency, Map nsDeclarations){
-            this(isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations);
+        CommonAttributes(String location, String direction, String leniency, Map nsDeclarations){
+            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations);
         }
 
-        CommonAttributes(boolean loadEnabled, boolean saveEnabled, Boolean leniency, Map nsDeclarations){
+        CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency, Map nsDeclarations){
+            this.location = location;
             this.loadEnabled = loadEnabled;
             this.saveEnabled = saveEnabled;
             this.leniency = leniency;
@@ -198,7 +205,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * @return null if the leniency parameter is null or a String otherwise the allowed values
          */
         private static Boolean decideLeniency(String leniency) {
-                return BooleanUtils.toBooleanObject(leniency);
+            return BooleanUtils.toBooleanObject(leniency);
         }
     }
 }
