@@ -55,7 +55,7 @@
                 </form>
               </td>
               <form action="changepwd.do" method="post">
-                <input type="hidden" name="username" value="${user}"/>
+                <input type="hidden" name="useruri" value="${user}"/>
                 <td align="left">
                   <input type="password" name="password" size="10" maxlength="40"/>
                 </td>
@@ -67,11 +67,15 @@
                 <input type="hidden" name="subjecturi" value="${user}"/>
                 <td align="left">
                   <select name="objecturi">
-                    <jx:forEach var="role" items="#{roles[member = $user]}">
-                      <option value="{$role.uri}">
-                        ${role.uri}
-                      </option>
-                    </jx:forEach> 
+                    <jx:forEach var="role" items="${roles}">
+                      <jx:forEach var="member" items="${role.members}">
+                        <jx:if test="${member == user}">
+                          <option value="${role.uri}">
+                            ${role.uri}
+                          </option>
+                        </jx:if>
+                      </jx:forEach>
+                    </jx:forEach>
                   </select>
                 </td>
                 <td align="left">
@@ -82,11 +86,11 @@
             <tr>
               <td colspan="4"/>
               <form action="addmember.do" method="post">
-                <input type="hidden" name="subjecturi" value="{$user}"/>
+                <input type="hidden" name="subjecturi" value="${user}"/>
                 <td align="left">
                   <select name="objecturi" size="1">
                     <jx:forEach var="role" items="${roles}">
-                      <option value="{$role.uri}">
+                      <option value="${role.uri}">
                         ${role.uri}
                       </option>
                     </jx:forEach>
@@ -127,7 +131,7 @@
           <jx:forEach var="role" items="${roles}">
             <tr>
               <form action="removeobject.do" method="post">
-                <input type="hidden" name="objecturi" value="{$roleuri}"/>
+                <input type="hidden" name="objecturi" value="${role.uri}"/>
                 <td align="left">
                   ${role.uri}
                 </td>

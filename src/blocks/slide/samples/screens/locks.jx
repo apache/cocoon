@@ -60,7 +60,7 @@
               <b>Type</b>
             </td>
             <td align="left">
-              <b>Expiration (mins)</b>
+              <b>Expiration</b>
             </td>
             <td align="left">
               <b>Inheritable</b>
@@ -70,16 +70,16 @@
             </td>
             <td align="right"/>
           </tr>
-          <jx:forEach var="lock" items="${source.locks}">
+          <jx:forEach var="lock" items="${locks}">
             <tr bgcolor="#eeeeee">
               <td align="left">
-                ${lock.subject}
+                ${lock.subjectUri}
               </td>
               <td align="left">
-                ${lock.type}
+                ${lock.typeUri}
               </td>
               <td align="left">
-                ${lock.expiration}
+                ${lock.expirationDate}
               </td>
               <td align="left">
                 ${lock.inheritable}
@@ -90,8 +90,8 @@
               <td align="right">
                 <form action="removelock.do" method="post">
                   <input type="hidden" name="resourcePath" value="${source.path}"/>
-                  <input type="hidden" name="objectUri" value="${lock.object}"/>
-                  <input type="hidden" name="lockId" value="${lock.id}"/>
+                  <input type="hidden" name="objectUri" value="${lock.objectUri}"/>
+                  <input type="hidden" name="lockId" value="${lock.lockId}"/>
                   <input type="submit" name="doRemoveLock" value="Delete"/>
                 </form>
               </td>
@@ -102,18 +102,18 @@
               <input type="hidden" name="resourcePath" value="${source.path}"/>
               <td align="left">
                 <select name="subject">
-                  <option>self</option>
-                  <option>owner</option>
-                  <option>authenticated</option>
-                  <option>unauthenticated</option>
-                  <option>all</option>
+                  <option value="self">self</option>
+                  <option value="owner">owner</option>
+                  <option value="authenticated">authenticated</option>
+                  <option value="unauthenticated">unauthenticated</option>
+                  <option value="all">all</option>
                   <jx:forEach var="role" items="${roles}">
-                    <option value="{$role.uri}">
+                    <option value="${role.uri}">
                       role: ${role.uri}
                     </option>
                   </jx:forEach>
                   <jx:forEach var="user" items="${users}">
-                    <option value="{$user}">
+                    <option value="${user}">
                       user: ${user}
                     </option>
                   </jx:forEach>
@@ -121,10 +121,10 @@
               </td>
               <td align="left">
                 <select name="type">
-                  <option>all</option>
-                  <option>default</option>
+                  <option value="all">all</option>
+                  <option value="default">default</option>
                   <jx:forEach var="privilege" items="${privileges}">
-                    <option value="{$privilege}">
+                    <option value="${privilege}">
                       ${privilege}
                     </option>
                   </jx:forEach>
