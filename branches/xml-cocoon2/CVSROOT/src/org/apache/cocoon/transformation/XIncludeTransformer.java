@@ -26,13 +26,13 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
 import org.apache.avalon.utils.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.parser.Parser;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
-import org.apache.cocoon.xml.util.DOMBuilder;
-import org.apache.cocoon.xml.util.DOMStreamer;
-import org.apache.cocoon.xml.util.XPathAPI;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.xml.xpath.XPathAPI;
 
 /**
  * My first pass at an XInclude transformation. Currently it should set the base URI 
@@ -42,7 +42,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:40 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-05 17:26:24 $ $Author: stefano $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 

@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-02 21:12:40 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-05 17:26:23 $
  */
 public abstract class AbstractTransformer extends AbstractXMLProducer
 implements Transformer {
@@ -67,6 +67,8 @@ implements Transformer {
      */
     public void endPrefixMapping(String prefix)
     throws SAXException {
+        if (super.contentHandler!=null)
+            super.contentHandler.endPrefixMapping(prefix);
     }
 
     /**

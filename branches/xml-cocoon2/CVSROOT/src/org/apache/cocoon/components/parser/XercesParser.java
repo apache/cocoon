@@ -9,7 +9,7 @@ package org.apache.cocoon.components.parser;
 
 import java.io.IOException;
 import org.apache.cocoon.xml.AbstractXMLProducer;
-import org.apache.cocoon.xml.util.DOMFactory;
+import org.apache.cocoon.xml.dom.DOMFactory;
 import org.apache.xerces.dom.DocumentImpl;
 import org.apache.xerces.dom.DocumentTypeImpl;
 import org.apache.xerces.parsers.SAXParser;
@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:33 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-05 17:27:50 $
  */
 public class XercesParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, DOMFactory {
