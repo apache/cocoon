@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 17:50:07 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-03-30 04:52:54 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */
@@ -388,7 +388,8 @@ public class DOMBuilder implements XMLConsumer {
     public void startEntity(java.lang.String name) 
     throws SAXException {
         // This method can only called at BODY level
-        if(state!=S_BODY) throw new SAXException("Invalid state"+location());
+        if((state!=S_BODY)&&(state!=S_DTD))
+            throw new SAXException("Invalid state"+location());
         // Update the current element with the entity reference node
         EntityReference eref=this.document.createEntityReference(name);
         this.current.appendChild(eref);
