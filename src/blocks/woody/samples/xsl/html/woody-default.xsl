@@ -31,7 +31,9 @@
 
   <xsl:template name="field">
     <xsl:param name="fieldelement"/>
-    <input name="{$fieldelement/@id}" value="{$fieldelement/wi:value}"/>
+    <input name="{$fieldelement/@id}" value="{$fieldelement/wi:value}">
+      <xsl:copy-of select="wi:styling/@*"/>
+    </input>
   </xsl:template>
 
   <xsl:template name="field-with-selection-list">
