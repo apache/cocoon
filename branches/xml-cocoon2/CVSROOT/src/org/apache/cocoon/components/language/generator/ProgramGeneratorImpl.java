@@ -37,7 +37,6 @@ import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
 import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.DOMUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
@@ -50,7 +49,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-19 14:43:08 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-10-19 20:21:15 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable

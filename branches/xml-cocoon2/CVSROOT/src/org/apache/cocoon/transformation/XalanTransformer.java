@@ -25,7 +25,6 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
-import org.apache.cocoon.util.DOMUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 
@@ -43,7 +42,7 @@ import org.apache.trax.Processor;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-10-19 16:40:00 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-10-19 20:21:22 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable {
@@ -63,7 +62,7 @@ implements Transformer, Composer, Poolable {
         Templates templates = (Templates)templatesCache.get(xsluri);
         if(templates == null)
         {
-    	    Processor processor = DOMUtils.getXSLTProcessor();
+    	    Processor processor = Processor.newInstance("xslt");
 	    templates = processor.process(resolver.resolveEntity(null, xsluri));
             templatesCache.put(xsluri,templates);
         }
