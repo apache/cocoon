@@ -10,6 +10,20 @@
 
 <web-app>
 
+  <!-- Context Configuration ========================================== -->
+
+  <!--+
+      | Set a context property useful to allow you to ProxyPass your
+      | web application mounted to a different URI without loosing the
+      | ability to do cookie-based sessions.
+      | WARNING: this is Jetty specific!
+      +-->
+  <!--context-param>
+    <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
+    <param-value>/some/path/to/your/webapp</param-value>
+    <description>An override of the session cookie path</description>
+   </context-param-->
+   
   <!-- Servlet Configuration ========================================== -->
 
   <servlet>
