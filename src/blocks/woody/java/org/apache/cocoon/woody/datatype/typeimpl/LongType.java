@@ -61,34 +61,6 @@ import java.text.ParseException;
  * for whole numbers.
  */
 public class LongType extends AbstractDatatype {
-    public Object convertFromString(String value) {
-        try {
-            return new Long(Long.parseLong(value));
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public Object convertFromStringLocalized(String value, Locale locale) {
-        DecimalFormat numberFormat = I18nSupport.getInstance().getIntegerFormat(locale);
-        // TODO numberFormat.applyPattern(...)
-        try {
-            return new Long(numberFormat.parse(value).longValue());
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
-    public String convertToString(Object value) {
-        return value.toString();
-    }
-
-    public String convertToStringLocalized(Object value, Locale locale) {
-        DecimalFormat numberFormat = I18nSupport.getInstance().getIntegerFormat(locale);
-        // TODO numberFormat.applyPattern(...)
-        return numberFormat.format(value);
-    }
-
     public Class getTypeClass() {
         return Long.class;
     }
