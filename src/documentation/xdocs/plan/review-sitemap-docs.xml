@@ -2735,6 +2735,13 @@
           <link href="http://reports.linkalarm.com/855893764719/">LinkAlarm report</link> and fix broken links.
         </li>
         <li>
+          Document the procedure for reviewing a document/code and for
+          amending this table.
+        </li>
+        <li>
+          Enhance the SitemapTask.java
+        </li>
+        <li>
           Add basic SitemapTask attributes to the java code. This could be
           automated. Check if the SitemapTask.java copes with empty default
           values. Add to column C.
@@ -2753,6 +2760,10 @@
           Reduce the length of labels in the left-hand-panel of the documents,
           e.g. "Transformer" => "Tr" or delete the word entirely.
           In the generated */book.xml files.
+        </li>
+        <li>
+          Develop tools to analyse the table and ensure that it remains
+          synchronised.
         </li>
         <li>
           Monitor the email discussion on the cocoon-dev mailing list:
