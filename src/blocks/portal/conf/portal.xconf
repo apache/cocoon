@@ -19,7 +19,7 @@
     </event-aspects>
  </component>
 
- <component class="org.apache.cocoon.portal.profile.impl.SimpleProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager">
+ <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager">
  </component>
 
  <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" logger="portal" role="org.apache.cocoon.portal.PortalManager"/>

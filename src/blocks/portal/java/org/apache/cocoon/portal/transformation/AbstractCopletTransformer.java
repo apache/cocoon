@@ -63,10 +63,21 @@ import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.xml.sax.SAXException;
 
 /**
- * Abstract transformer implementation
+ * Abstract transformer implementation that provides a method getCopletInstanceData().
+ * There are two possibilities how the transformer obtains the information required for 
+ * getting the coplet instance data:<br><br>
+ * 1) If it is used within a coplet pipeline and this pipeline is called using the "cocoon:" protocol,
+ * all required information are passed automatically.<br>
+ * 2) Otherwise the portal name and the coplet id must be passed to the transformer 
+ * as paremeters in the following way:
+ *
+ * <pre>&lt;map:transform type="coplet"&gt;
+ * 	&lt;map:parameter name="portalName" type="exampleportal"/&gt;
+ * 	&lt;map:parameter name="copletId" type="examplecoplet"/&gt;
+ * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.1 2003/05/26 12:49:13 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.2 2003/05/27 11:54:17 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
