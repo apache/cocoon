@@ -2,9 +2,12 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:include href="ps-woody-default.xsl"/>
+
   <xsl:template match="site">
     <html>
       <head>
+        <title>Cocoon Petstore Demo</title>
         <meta content="text/html; charset=windows-1252" http-equiv="Content-Type" />
         <meta HTTP-EQUIV="Cache-Control" CONTENT="max-age=0"/>
         <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache"/>
@@ -19,27 +22,15 @@
               <td>
                 <form method="post" action="index.do">
                   <input type="image" border="0" src="images/logo-topbar.gif" />
-                  <select name="view" width="14" align="left" onChange="document.forms[0].submit()">
-                    <xsl:choose>
-                      <xsl:when test="@view='jxpath'">
-                        <option value="JXPath">JXPath</option>
-                        <option value="Jexl">Jexl</option>
-                        <option value="Xsp">Xsp</option>
-                        <option value="Velocity">Velocity</option>
-                      </xsl:when>
-                      <xsl:when test="@view='jexl'">
-                        <option value="Jexl">Jexl</option>
-                        <option value="JXPath">JXPath</option>
-                        <option value="Xsp">Xsp</option>
-                        <option value="Velocity">Velocity</option>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <option value="Xsp">Xsp</option>
-                        <option value="JXPath">JXPath</option>
-                        <option value="Jexl">Jexl</option>
-                        <option value="Velocity">Velocity</option>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                  <select name="view" width="14" align="left" onchange="document.forms[0].submit()">
+                    <xsl:if test="@view='woody'">
+                      <xsl:attribute name="disabled">disabled</xsl:attribute>
+                      <option value="woody" selected="selected">woody</option>
+                    </xsl:if>
+                    <option value="jexl"><xsl:if test="@view='jexl'"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Jexl</option>
+                    <option value="jxpath"><xsl:if test="@view='jxpath'"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>JXPath</option>
+                    <option value="xsp"><xsl:if test="@view='xsp'"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Xsp</option>
+                    <option value="velocity"><xsl:if test="@view='velocity'"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Velocity</option>
                   </select>
                 </form>
               </td>
@@ -51,7 +42,7 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <a href="signonForm.do?signoff=true"><img border="0" name="img_signout" src="images/sign-out.gif" /></a><img border="0" src="images/separator.gif" hspace="4" />
-                    <a href="editAccount.form"><img border="0" name="img_myaccount" src="images/my_account.gif" /></a>
+                    <a href="editAccount.do"><img border="0" name="img_myaccount" src="images/my_account.gif" /></a>
                   </xsl:otherwise>
                 </xsl:choose>
                 <img border="0" src="images/separator.gif" hspace="4" /><a href="../help.html"><img border="0" name="img_help" src="images/help.gif" /></a>
@@ -79,7 +70,7 @@
         <xsl:apply-templates/>
         <br/>
         <p align="center">
-          <a href="http://cocoon.apache.org"><img border="0" align="center" src="images/cocoon.gif" /></a>
+          <a href="http://cocoon.apache.org/"><img border="0" align="center" src="images/cocoon.gif" /></a>
         </p>
       </body>
     </html>
@@ -119,24 +110,27 @@
   <xsl:template match="menu">
     <table bgcolor="#FFFF88" border="0" cellspacing="0" cellpadding="5" width="200">
       <tbody>
-        <tr>
-          <td>
-            <!-- 
-            #if (!$accountForm.signOn)
-            <b><i><font size="2" color="BLACK">Welcome $accountForm.account.firstName!</font></i></b>
-            #end
-            -->
-          </td>
-        </tr>
         <xsl:apply-templates/>
       </tbody>
     </table>
   </xsl:template>
 
-  <xsl:template match="menu/category">
+  <xsl:template match="firstName">
     <tr>
       <td>
-        <a href="viewCategory.do?categoryId={@id}"><i><h2><xsl:value-of select="@name" /></h2></i></a>
+        <b><i><font size="2" color="BLACK">Welcome <xsl:value-of select="." /></font></i></b>
+      </td>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="menu/category">
+    <xsl:variable name="up" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+    <xsl:variable name="lo" select="'abcdefghijklmnopqrstuvwxyz'"/>
+    <xsl:variable name="loname"><xsl:value-of select="translate(@name,$up,$lo)" /></xsl:variable>
+
+    <tr>
+      <td>
+        <a href="viewCategory.do?categoryId={@id}"><img border="0" src="images/{$loname}_icon.gif" alt="{@name}"/></a>
       </td>
     </tr>
   </xsl:template>
@@ -198,7 +192,7 @@
 
   <xsl:template match="search/product">
     <tr bgcolor="#FFFF88">
-      <td><a href="viewProduct.do?productId={@id}"><xsl:value-of select="product-desc" /></a></td>
+      <td><a href="viewProduct.do?productId={@id}"><xsl:value-of select="product-desc" disable-output-escaping="yes"/></a></td>
       <td>
         <b><a href="viewProduct.do?productId={@id}"><font color="BLACK"><xsl:value-of select="@id" /></font></a></b>
       </td>
@@ -210,7 +204,7 @@
     <tr>
       <td>
         <xsl:if test="@firstPage='false'" >
-          <a href="{@continuation}.kont?page=previous"><font color="white"><B>&lt;&lt; Prev</B></font></a>
+          <a href="{@continuation}.kont?page=previous"><font color="white"><B>&lt;&lt; Prev</B></font></a>&#160;
         </xsl:if>
         <xsl:if test="@lastPage='false'" >
           <a href="{@continuation}.kont?page=next"><font color="white"><B>Next &gt;&gt;</B></font></a>
@@ -243,7 +237,7 @@
         <b><a href="viewItem.do?itemId={@id}"><xsl:value-of select="@id" /></a></b>
       </td>
       <td>
-        <b><xsl:value-of select="@product-id" /></b>
+        <b><xsl:value-of select="@productId" /></b>
       </td>
       <td>
         <xsl:value-of select="desc" /><xsl:text> </xsl:text><xsl:value-of select="../@name" />
@@ -263,9 +257,10 @@
     <td><b>Description</b></td>
     <td><b>Quantity</b></td>
     <td><b>List Price</b></td>
+    <td><b>Total Cost</b></td>
   </xsl:template>
 
-  <xsl:template match="cart[@name='Shopping Cart']">
+  <xsl:template match="cart">
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td valign="top" width="20%" align="left">
@@ -277,22 +272,28 @@
             <table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="5">
               <tr bgcolor="#cccccc">
                 <xsl:call-template name="cart-common-columns" />
-                <td></td>
+                <xsl:if test="@name='Shopping Cart'">
+                  <td></td>
+                </xsl:if>
               </tr>
               <xsl:if test="not(item)">
                 <tr bgcolor="#FFFF88">
-                  <td colspan="6">
+                  <td colspan="7">
                     <b>Your cart is empty.</b>
                   </td>
                 </tr>
               </xsl:if>
               <xsl:apply-templates select="item" />
               <tr bgcolor="#FFFF88">
-                <td colspan="5" align="right">
-                  <b>Sub Total: <xsl:value-of select="format-number(total, '$#,##0.00')"/></b><br />
+                <td colspan="6" align="right">
+                  <b>Sub Total: $<xsl:value-of select="format-number (subTotal, '###,##0.00')"/></b><br />
+                  <xsl:if test="@name='Shopping Cart'">
                   <input type="image" border="0" src="images/button_update_cart.gif" name="update" />
+                  </xsl:if>
                 </td>
-                <td></td>
+                <xsl:if test="@name='Shopping Cart'">
+                  <td></td>
+                </xsl:if>
               </tr>
             </table>
           </form>
@@ -306,47 +307,23 @@
     </table>
   </xsl:template>
 
-  <xsl:template match="cart[@name='Checkout Summary']">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td valign="top" width="20%" align="left">
-          <xsl:apply-templates select="backpointer" />
-        </td>
-        <td valign="top" align="center">
-          <h2 align="center"><xsl:value-of select="@name" /></h2>
-          <table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="5">
-            <tr bgcolor="#cccccc">
-              <xsl:call-template name="cart-common-columns" />
-            </tr>
-            <xsl:apply-templates select="item" />
-            <tr bgcolor="#FFFF88">
-              <td colspan="5" align="right">
-                <b>Sub Total: <xsl:value-of select="format-number(total, '$#,##0.00')"/></b><br />
-              </td>
-            </tr>
-          </table>
-          <xsl:apply-templates select="nextpointer" />
-        </td>
-        <td valign="top" width="20%" align="right">
-        </td>
-      </tr>
-    </table>
-  </xsl:template>
-
   <xsl:template match="cart[@name='Status']">
     <table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="5">
       <tr bgcolor="#cccccc">
-        <xsl:call-template name="cart-common-columns" />
+        <td><b>Pos.</b></td>
+        <td><b>Item ID</b></td>
+        <td><b>Quantity</b></td>
+        <td><b>List Price</b></td>
+        <td><b>Total Cost</b></td>
       </tr>
-      <xsl:apply-templates select="item" />
+      <xsl:apply-templates select="lineItem" />
       <tr bgcolor="#FFFF88">
         <td colspan="5" align="right">
-          <b>Total: <xsl:value-of select="format-number(total, '$#,##0.00')"/></b><br />
+          <b>Total: $<xsl:value-of select="format-number (total, '###,##0.00')"/></b><br />
         </td>
       </tr>
     </table>
   </xsl:template>
-
 
   <xsl:template match="nextpointer">
     <br />
@@ -355,6 +332,15 @@
     </center>
   </xsl:template>
 
+  <xsl:template match="cart/lineItem">
+    <tr bgcolor="#FFFF88">
+      <td><xsl:value-of select="@linenum" />.</td>
+      <td><b><xsl:value-of select="@id" /></b></td>
+      <td><xsl:value-of select="format-number (quantity, '####')"/></td>
+      <td align="right">$<xsl:value-of select="format-number (unitprice, '###,##0.00')"/></td>
+      <td align="right">$<xsl:value-of select="format-number (total, '###,##0.00')"/></td>
+    </tr>
+  </xsl:template>
 
   <xsl:template match="cart/item">
     <tr bgcolor="#FFFF88">
@@ -362,7 +348,7 @@
         <b><xsl:value-of select="@id" /></b>
       </td>
       <td>
-        <xsl:value-of select="@product-id" />
+        <xsl:value-of select="@productId" />
       </td>
       <td>
         <xsl:value-of select="desc" />
@@ -380,7 +366,10 @@
         </xsl:choose>
       </td>
       <td align="right">
-        <xsl:value-of select="format-number(price, '$#,##0.00')"/>
+        $<xsl:value-of select="format-number(listPrice, '###,##0.00')"/>
+      </td>
+      <td align="right">
+        $<xsl:value-of select="format-number(total, '###,##0.00')"/>
       </td>
       <xsl:if test="../@name='Shopping Cart'">
         <td>
@@ -395,7 +384,7 @@
       <table align="center" bgcolor="#008800" cellspacing="2" cellpadding="3" border="0" width="60%">
         <tr bgcolor="#FFFF88">
           <td bgcolor="#FFFFFF">
-            <xsl:value-of select="product-desc" />
+            <xsl:value-of select="product-desc" disable-output-escaping="yes"/>
           </td>
         </tr>
         <tr bgcolor="#FFFF88">
@@ -413,15 +402,14 @@
             <font size="3"><i><xsl:value-of select="product-name" /></i></font>
           </td>
         </tr>
-        <!-- quantity stuff still missing -->
         <tr bgcolor="#FFFF88">
           <td>
-            <xsl:value-of select="format-number(instock, '####')"/> in stock.
+            <xsl:value-of select="format-number (instock, '####')"/> in stock.
           </td>
         </tr>
         <tr bgcolor="#FFFF88">
           <td>
-            <xsl:value-of select="format-number(price, '$#,##0.00')"/>
+            $<xsl:value-of select="format-number (price, '###,##0.00')"/>
           </td>
         </tr>
         <tr bgcolor="#FFFF88">
@@ -431,55 +419,6 @@
         </tr>
       </table>
     </p>
-  </xsl:template>
-
-  <xsl:template match="editAccountForm">
-    <xsl:copy-of select="*"/>
-  </xsl:template>
-
-  <xsl:template match="form[@styleId='workingAccountForm']">
-    <form>
-      <xsl:copy-of select="@action | @method | @styleId "/>
-      <xsl:choose>
-        <xsl:when test="/site/@signOn='true'">
-          <hidden name="workingAccountForm" property="validate" value="newAccount"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <hidden name="workingAccountForm" property="validate" value="editAccount" />
-          <hidden name="workingAccountForm" property="account.username" />
-        </xsl:otherwise>
-      </xsl:choose>
-      <table cellpadding="10" cellspacing="0" align="center" border="1" bgcolor="#dddddd">
-        <tr>
-          <td>
-            <xsl:apply-templates/>
-          </td>
-        </tr>
-      </table>
-      <br />
-      <center>
-        <input border="0" type="image" src="images/button_submit.gif" name="submit" value="Save Account Information" />
-      </center>
-    </form>
-    <xsl:if test="/site/@signOn='false'">
-      <p>
-        <center><b><a href="listOrders.do">My Orders</a></b></center>
-      </p>
-    </xsl:if>
-  </xsl:template>
-
-
-  <xsl:template match="form[@styleId='workingOrderForm']">
-    <b><font color="RED"><xsl:value-of select="message" /></font></b>
-    <form>
-      <xsl:copy-of select="@action | @method | @styleId"/>
-      <xsl:apply-templates/>
-      <p>
-        <center>
-          <input type="image" src="images/button_submit.gif"/>
-        </center>
-      </p>
-    </form>
   </xsl:template>
 
   <xsl:template match="form[@label='signon']">
@@ -495,76 +434,11 @@
     </form>
   </xsl:template>
 
-  <xsl:template match="panel[panel]">
-    <table width="60%" align="center" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
-      <xsl:if test="@header">
-        <tr bgcolor="#FFFF88">
-          <td align="center" colspan="2">
-            <font size="4"><b><xsl:value-of select="@header" /></b></font>
-            <xsl:if test="@subheader">
-              <br /><font size="3"><b><xsl:value-of select="@subheader" /></b></font>
-            </xsl:if>
-          </td>
-        </tr>
-      </xsl:if>
-      <xsl:apply-templates/>
-    </table>
-  </xsl:template>
-
-  <xsl:template match="panel">
-    <font color="darkgreen"><h3><xsl:value-of select="@label" /></h3></font>
-    <table border="0" cellpadding="3" cellspacing="1" bgcolor="#008800">
-      <xsl:apply-templates/>
-    </table>
-  </xsl:template>
-
-  <xsl:template match="panel/panel">
-    <tr bgcolor="#FFFF88">
-      <td colspan="2">
-        <font color="GREEN" size="4"><b><xsl:value-of select="@label" />:</b></font>
-      </td>
-    </tr>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="panel/select">
-    <tr bgcolor="#FFFF88">
-      <td><xsl:value-of select="@label" /></td>
-      <td>
-        <select>
-          <xsl:copy-of select="@type | @src | @value | @name | @size | @selected | node()" />
-        </select>
-      </td>
-    </tr>
-  </xsl:template>
-
-  <xsl:template match="panel/input">
-    <tr bgcolor="#FFFF88">
-      <td><xsl:value-of select="@label" /></td>
-      <td><input><xsl:copy-of select="@type | @src | @value | @name | @size | @selected"/></input></td>
-    </tr>
-  </xsl:template>
-
-  <xsl:template match="panel/field">
-    <tr bgcolor="#FFFF88">
-      <td><xsl:value-of select="@label" />:</td>
-      <td><xsl:value-of select="." /></td>
-    </tr>
-  </xsl:template>
-
-  <xsl:template match="panel/field[@empty]">
-    <tr bgcolor="#FFFF88">
-      <td colspan="{@empty}"><xsl:value-of select="@label" />
-        <xsl:apply-templates />
-      </td>
-    </tr>
-  </xsl:template>
-
   <xsl:template match="message">
     <br clear="all" />
-    <center>
-      <b>
-        <font size="4">
+      <center>
+        <b>
+          <font size="3">
           <xsl:if test="@type='warning'">
             <xsl:attribute name="color">RED</xsl:attribute> 
           </xsl:if>
@@ -584,8 +458,95 @@
 
   <xsl:template match="register">
     <center>
-      <a href="newAccountForm.do"><img border="0" src="images/button_register_now.gif" /></a>
+      <a href="{@do}"><img border="0" src="images/button_register_now.gif" /></a>
     </center>
   </xsl:template>
+
+  <xsl:template match="panel[panel]">
+    <table width="60%" align="center" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
+      <xsl:if test="@header">
+        <tr bgcolor="#FFFF88">
+          <td align="center" colspan="2">
+            <font size="4"><b><xsl:value-of select="@header" /></b></font>
+            <xsl:if test="@subheader"><br /><font size="3"><b><xsl:value-of select="@subheader" /></b></font></xsl:if>
+          </td>
+        </tr>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </table>
+  </xsl:template>
+
+  <xsl:template match="panel/panel">
+    <tr bgcolor="#FFFF88">
+      <td colspan="2">
+        <b><font size="4"><font color="GREEN"><xsl:value-of select="@label" /></font> <xsl:value-of select="@value" /></font></b>
+      </td>
+    </tr>
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="panel/field">
+    <tr bgcolor="#FFFF88">
+      <td><xsl:value-of select="@label" />:</td>
+      <td><xsl:value-of select="." /></td>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="panel/field[@empty]">
+    <tr bgcolor="#FFFF88">
+      <td colspan="{@empty}"><xsl:value-of select="@label" />
+        <xsl:apply-templates />
+      </td>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="orderlist">
+    <p>
+      <center>
+        <h2><xsl:value-of select="@name" /></h2>
+      </center>
+      <table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="3">
+        <tr bgcolor="#CCCCCC">
+          <td>
+            <b>Order ID</b>
+          </td>
+          <td>
+            <b>Date</b>
+          </td>
+          <td>
+            <b>Total Price</b>
+          </td>
+          <td>
+            <b>Status</b>
+          </td>
+        </tr>
+        <xsl:apply-templates/>
+      </table>
+    </p>
+  </xsl:template>
+
+  <xsl:template match="orderlist/order">
+    <tr bgcolor="#FFFF88">
+      <td>
+        <b><a href="viewOrder.do?orderId={@id}"><font color="BLACK"><xsl:value-of select="@id" /></font></a></b>
+      </td>
+      <td>
+        <xsl:value-of select="date"/>
+      </td>
+      <td>
+        $<xsl:value-of select="format-number (total, '###,##0.00')"/>
+      </td>
+      <td>
+        <b><xsl:value-of select="@status" /></b>
+      </td>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="error">
+    <h3>Error</h3>
+    <b><xsl:value-of select="." /></b>
+  </xsl:template>
+
+
 
 </xsl:stylesheet>

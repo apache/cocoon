@@ -6,15 +6,13 @@
   xmlns:jpath="http://apache.org/xsp/jpath/1.0"
   >
 
-    <site>
+    <site view="xsp">
         <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
             <welcome>
-<!-- doesn't work
-                <jpath:if test="accountForm/signOn = 'false'">
-                    <firstName><jpath:value-of select="accountForm/account/firstName"/></firstName>
-                </jpath:if>
--->         
                 <menu>
+                    <jpath:if test="accountForm/signOn != 'false'">
+                        <firstName><jpath:value-of select="accountForm/account/firstName"/></firstName>
+                    </jpath:if>
                     <jpath:for-each select="categoryList" >
                         <category>
                             <xsp:attribute name="name"><jpath:value-of select="name"/></xsp:attribute>

@@ -6,7 +6,7 @@
   xmlns:jpath="http://apache.org/xsp/jpath/1.0"
   >
 
-    <site>
+    <site view="xsp">
         <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
         <backpointer>
             <xsp:attribute name="name"><jpath:value-of select="product/category"/></xsp:attribute>
@@ -16,7 +16,7 @@
             <xsp:attribute name="name"><jpath:value-of select="product/name"/></xsp:attribute>
             <jpath:for-each select="itemList" >
                 <item>
-                    <xsp:attribute name="product-id"><jpath:value-of select="productId"/></xsp:attribute>
+                    <xsp:attribute name="productId"><jpath:value-of select="productId"/></xsp:attribute>
                     <xsp:attribute name="id"><jpath:value-of select="itemId"/></xsp:attribute>
                     <desc>
                         <jpath:value-of select="attr1"/> 

@@ -2,20 +2,16 @@
 
 <page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
     <site signOn="#{accountForm/signOn}" view="jxpath">
-            <welcome>
-                <c:if test="#{not(accountForm/signOn)}">
+        <welcome>
+            <menu>
+                <c:if test="#{accountForm/signOn != 'false'}">
                     <firstName>#{accountForm/account/firstName}</firstName>
                 </c:if>
-                <menu>
-                    <c:forEach select="#{categoryList}" >
-                        <category name="#{name}" id="#{catId}"/>
-                    </c:forEach>
-                </menu>
-            </welcome>
+                <c:forEach select="#{categoryList}" >
+                    <category name="#{name}" id="#{catId}"/>
+                </c:forEach>
+            </menu>
+        </welcome>
     </site>
 </page>
-
-
-
-
 

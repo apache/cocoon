@@ -1,4 +1,5 @@
 <html><head>
+<title>Cocoon Petstore Demo</title>
 <meta content="text/html; charset=windows-1252" http-equiv="Content-Type" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="max-age=0"/>
 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"/>
@@ -15,11 +16,11 @@
     <td>
       <form method="post" action="index.do">
         <input type="image" border="0" src="images/logo-topbar.gif" />
-        <select name="view" width="14" align="left" value="Velocity" onChange="document.forms[0].submit()">
-          <option value="Velocity">Velocity</option>
-          <option value="JXPath">JXPath</option>
-          <option value="Jexl">Jexl</option>
-          <option value="Xsp">Xsp</option>
+        <select name="view" width="14" align="left" onChange="document.forms[0].submit()">
+          <option value="jexl">Jexl</option>
+          <option value="jxpath">JXPath</option>
+          <option value="xsp">Xsp</option>
+          <option value="velocity" selected="selected">Velocity</option>
         </select>
       </form>
     </td>
@@ -33,7 +34,7 @@
       <a href="signonForm.do?signoff=true">
       <img border="0" name="img_signout" src="images/sign-out.gif" /></a>
       <img border="0" src="images/separator.gif" />
-      <a href="editAccount.form">
+      <a href="editAccount.do">
       <img border="0" name="img_myaccount" src="images/my_account.gif" /></a>
 #end
 

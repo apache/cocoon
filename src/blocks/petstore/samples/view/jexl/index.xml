@@ -2,16 +2,16 @@
 
 <page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
-            <welcome>
+        <welcome>
+            <menu>
                 <c:if test="${!accountForm.signOn}">
                     <firstName>${accountForm.account.firstName}</firstName>
                 </c:if>
-                <menu>
-                   <c:forEach var="item" items="${categoryList}" >
-                      <category name="${item.name}" id="${item.catId}"/>
-                   </c:forEach>
-                </menu>
-            </welcome>
+                <c:forEach var="item" items="${categoryList}" >
+                    <category name="${item.name}" id="${item.catId}"/>
+                </c:forEach>
+            </menu>
+        </welcome>
     </site>
 </page>
 
