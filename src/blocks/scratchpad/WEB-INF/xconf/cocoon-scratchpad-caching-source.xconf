@@ -16,6 +16,9 @@
 -->
 
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-cron.xconf"/>
+
   <source-factories>
 
     <!--+

@@ -15,7 +15,15 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-portal.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-taglib.xconf"/>
+
   <component-instance role="org.apache.cocoon.taglib.TagSelector" class="org.apache.cocoon.core.container.DefaultServiceSelector">
     <taglib name="http://java.sun.com/jsf/core" logger="sitemap.taglib.jsf" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
       <tag name="actionListener" class="org.apache.cocoon.faces.taglib.ActionListenerTag" logger="sitemap.taglib.jsf"/>
