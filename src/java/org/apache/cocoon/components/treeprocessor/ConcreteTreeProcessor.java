@@ -36,7 +36,12 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.ComponentLocator;
+import org.apache.cocoon.sitemap.EnterSitemapEvent;
+import org.apache.cocoon.sitemap.EnterSitemapEventListener;
+import org.apache.cocoon.sitemap.LeaveSitemapEvent;
+import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.sitemap.SitemapListener;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -226,6 +231,16 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         currentThread.setContextClassLoader(this.classloader);
 
         try {
+            // invoke listeners
+            if ( this.enterSitemapEventListeners.size() > 0 ) {
+                final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
+                final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
+                while ( enterSEI.hasNext() ) {
+                    final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)enterSEI.next();
+                    ((EnterSitemapEventListener)current.component).enteredSitemap(enterEvent);
+                }
+            }
+
             // and now process
             EnvironmentHelper.enterProcessor(this, this.manager, environment);
             final Redirector oldRedirector = context.getRedirector();
@@ -247,6 +262,16 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             }
 
         } finally {
+            // invoke listeners
+            if ( this.leaveSitemapEventListeners.size() > 0 ) {
+                final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
+                final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
+                while ( leaveSEI.hasNext() ) {
+                    final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)leaveSEI.next();
+                    ((LeaveSitemapEventListener)current.component).leftSitemap(leaveEvent);
+                }
+            }
+
             // Restore classloader
             currentThread.setContextClassLoader(oldClassLoader);
 
@@ -330,8 +355,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.disposeListeners(this.enterSitemapEventListeners);
         this.disposeListeners(this.leaveSitemapEventListeners);
 
-        // dispose component locator
-        ContainerUtil.dispose(this.applicationContainer);
+        // dispose component locator - if it is a SitemapListener it is already disposed!
+        if ( !(this.applicationContainer instanceof SitemapListener) ) {
+            ContainerUtil.dispose(this.applicationContainer);
+        }
         this.applicationContainer = null;
     }
 

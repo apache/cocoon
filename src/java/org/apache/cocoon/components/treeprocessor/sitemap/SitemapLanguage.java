@@ -44,7 +44,10 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.ComponentLocator;
+import org.apache.cocoon.sitemap.EnterSitemapEventListener;
+import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapListener;
 import org.apache.cocoon.sitemap.impl.ComponentManager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
@@ -138,20 +141,20 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             }
 
             // and finally the listeners
+            if ( this.applicationContainer instanceof SitemapListener ) {
+                this.addListener(new TreeBuilder.EventComponent(this.applicationContainer, false));
+            }
+
             final Configuration listenersWrapper = config.getChild("listeners", false);
             if ( listenersWrapper != null ) {
-                final Configuration[] listeners = listenersWrapper.getChildren("listener");
+                final Configuration[] listeners = listenersWrapper.getChildren("listener");                
                 for(int i = 0; i < listeners.length; i++) {
                     final Configuration current = listeners[i];
-                    // TODO - we could use a string tokenizer and allow several invoke keys
-                    final String invoke = current.getAttribute("invoke");
-                    if ( "on-enter".equals(invoke) ) {
-                        this.enterSitemapEventListeners.add(this.createListener(newManager, context, current));
-                    } else if ( "on-leave".equals(invoke) ) {
-                        this.leaveSitemapEventListeners.add(this.createListener(newManager, context, current));                        
-                    } else {
-                        throw new ConfigurationException("Unknown invokation key '" + invoke + "' for sitemap listener.");
+                    final TreeBuilder.EventComponent listener = this.createListener(newManager, context, current);
+                    if ( !(listener.component instanceof SitemapListener) ) {
+                        throw new ConfigurationException("Listener must implement the SitemapListener interface.");
                     }
+                    this.addListener(listener);
                 }
             }
         } finally {
@@ -164,7 +167,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     /**
      * Create a listener
      */
-    protected Object createListener(ServiceManager manager, Context context, Configuration config) 
+    protected TreeBuilder.EventComponent createListener(ServiceManager manager, Context context, Configuration config) 
     throws Exception {
         // role or class?
         final String role = config.getAttribute("role", null);
@@ -177,6 +180,17 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             LifecycleHelper.setupComponent(component, this.getLogger(), context, manager, config);
 
             return new TreeBuilder.EventComponent(component, false);
+        }
+    }
+
+    /**
+     * Add a listener
+     */
+    protected void addListener(TreeBuilder.EventComponent listener) {
+        if ( listener.component instanceof EnterSitemapEventListener ) {
+            this.enterSitemapEventListeners.add(listener);
+        } else if ( listener.component instanceof LeaveSitemapEventListener ) {
+            this.leaveSitemapEventListeners.add(listener);
         }
     }
 
