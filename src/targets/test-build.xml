@@ -1,10 +1,10 @@
 <!-- === Test targets =========================================================== -->
 
   <!-- Runs all tests -->
-  <target name="test" depends="junit.tests, anteater.tests" description="Runs all tests"/>
+  <target name="test" depends="junit-tests, anteater-tests, block-tests" description="Runs all tests"/>
 
   <!-- Runs JUnit tests -->
-  <target name="junit.tests" depends="compile">
+  <target name="junit-tests" depends="compile">
     <mkdir dir="${build.test}"/>
 
     <!-- Copy test files to build test dir -->
@@ -29,6 +29,7 @@
         <pathelement path="${build.deprecated}" />
       </classpath>
     </javac>
+
     <junit printsummary="yes" haltonfailure="yes" fork="yes">
       <classpath>
         <pathelement location="${build.test}" />
@@ -54,7 +55,7 @@
   </target>
 
   <!-- Anteater tests  -->
-  <target name="anteater.tests">
+  <target name="anteater-tests">
     <property name="host" value="localhost"/>
     <property name="port" value="8888"/>
     <property name="base" value="/"/>
@@ -67,5 +68,13 @@
       <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
     </exec>
     -->
+  </target>
+
+  <!-- Block tests -->
+  <target name="block-tests" depends="compile,prepare-blocks">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="tests"/>
   </target>
 
