@@ -51,6 +51,10 @@
 
 package org.apache.cocoon.components.modules.input;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -65,10 +69,23 @@ import org.apache.cocoon.util.HashMap;
  * getLogger().
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractInputModule.java,v 1.2 2003/03/12 13:27:04 haul Exp $
+ * @version CVS $Id: AbstractInputModule.java,v 1.3 2004/02/15 19:04:58 haul Exp $
  */
 public abstract class AbstractInputModule extends AbstractLogEnabled
     implements InputModule, Configurable, Disposable {
+
+    /**
+     * For those modules that access only one attribute, have a 
+     * fixed collection we can return an iterator for.
+     */
+    final static Vector returnNames;
+    static {
+        Vector tmp = new Vector();
+        tmp.add("attribute");
+        returnNames = tmp;
+    }
+
+
 
     /**
      * Stores (global) configuration parameters as <code>key</code> /
@@ -102,5 +119,35 @@ public abstract class AbstractInputModule extends AbstractLogEnabled
     public void dispose() {
         // Purposely empty so that we don't need to implement it in every
         // class.
+    }
+    
+    //
+    // you need to implement at least one of the following two methods
+    // since the ones below have a cyclic dependency!
+    // 
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
+        Object[] result = this.getAttributeValues(name, modeConf, objectModel);
+        return (result == null ? null : result[0]);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
+    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
+        throws ConfigurationException {
+        Object result = this.getAttribute(name, modeConf, objectModel);
+        return (result == null ? null : new Object[] {result});
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
+    public Iterator getAttributeNames(Configuration modeConf, Map objectModel) throws ConfigurationException {
+        return AbstractInputModule.returnNames.iterator();
     }
 }
