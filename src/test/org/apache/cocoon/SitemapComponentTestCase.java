@@ -17,9 +17,11 @@
 package org.apache.cocoon;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.transform.TransformerException;
@@ -31,8 +33,13 @@ import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.flow.AbstractInterpreter;
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -41,9 +48,9 @@ import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -60,7 +67,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.5 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -70,7 +77,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
     private MockResponse response = new MockResponse();
     private MockContext context = new MockContext();
     private MockRedirector redirector = new MockRedirector();
-    private HashMap objectmodel = new HashMap();
+    private Map objectmodel = new HashMap();
 
     /**
      * Create a new composite test case.
@@ -99,6 +106,12 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 
     public final Map getObjectModel() {
         return objectmodel;
+    }
+    
+    protected void addContext(DefaultContext context) {
+        context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
+        context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, response);
+        context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
     }
 
     public void setUp() {
@@ -156,7 +169,49 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         }
         return result;
     }
-    
+
+    /**
+     * Select with a pattern.
+     *
+     * @param type Hint of the matcher. 
+     * @param expression Expression for the selector.
+     * @param parameters Matcher parameters.
+     */
+    public final boolean select(String type, String expression, Parameters parameters) {
+
+        ComponentSelector selector = null;
+        org.apache.cocoon.selection.Selector sel = null;
+        SourceResolver resolver = null;
+
+        boolean result = false;
+        try {
+            selector = (ComponentSelector) this.manager.lookup(org.apache.cocoon.selection.Selector.ROLE +
+                "Selector");
+            assertNotNull("Test lookup of selector selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if selector name is not null", type);
+            sel = (org.apache.cocoon.selection.Selector) selector.select(type);
+            assertNotNull("Test lookup of selector", sel);
+            
+
+            result = sel.select(expression, objectmodel, parameters);
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve selector", ce);
+            fail("Could not retrieve selector: " + ce.toString());
+        } finally {
+            if (sel != null) {
+                selector.release(sel);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return result;
+    }
+
     /**
      * Perform the action component.
      *
@@ -165,6 +220,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @param parameters Action parameters.
      */
     public final Map act(String type, String source, Parameters parameters) throws Exception {
+        
+        redirector.reset();
 
         ComponentSelector selector = null;
         Action action = null;
@@ -312,20 +369,25 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             ce.printStackTrace();
             fail("Could not retrieve transformer:"+ce.toString());
         } finally {
-            if (transformer!=null)
+            if (transformer!=null) {
                 selector.release(transformer);
+            }
 
-            if (selector!=null)
+            if (selector!=null) {
                 this.manager.release(selector);
+            }
 
-            if (inputsource!=null)
+            if (inputsource!=null) {
                 resolver.release(inputsource);
+            }
 
-            if (resolver!=null)
+            if (resolver!=null) {
                 this.manager.release(resolver);
+            }
 
-            if (parser!=null)
+            if (parser!=null) {
                 this.manager.release((Component) parser);
+            }
         }
 
         return document; 
@@ -393,6 +455,96 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         }
 
         return document.toByteArray();
+    }
+    
+    public String callFunction(String type, String source, String function, Map params) throws Exception {
+        
+        redirector.reset();
+        
+        ComponentSelector selector = null;
+        Interpreter interpreter = null;
+        SourceResolver resolver = null;
+
+        try {
+            selector = (ComponentSelector) this.manager.lookup(Interpreter.ROLE);
+            assertNotNull("Test lookup of interpreter selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if interpreter name is not null", type);
+            interpreter = (Interpreter) selector.select(type);
+            assertNotNull("Test lookup of interpreter", interpreter);
+            
+            ((AbstractInterpreter)interpreter).register(source);
+            
+            ArrayList parameters = new ArrayList();
+            for (Iterator i = params.keySet().iterator(); i.hasNext();) {
+                String name = (String)i.next();
+                String value = (String)params.get(name);
+                parameters.add(new Interpreter.Argument(name, value));
+            }
+            
+            interpreter.callFunction(function, parameters, getRedirector());
+            
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve interpeter", ce);
+            fail("Could not retrieve interpreter: " + ce.toString());
+        } finally {
+            if (interpreter != null) {
+                selector.release((Component) interpreter);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return FlowHelper.getWebContinuation(getObjectModel()).getId();
+    }
+    
+    public String callContinuation(String type, String source, String id, Map params) throws Exception {
+        
+        redirector.reset();
+        
+        ComponentSelector selector = null;
+        Interpreter interpreter = null;
+        SourceResolver resolver = null;
+
+        try {
+            selector = (ComponentSelector) this.manager.lookup(Interpreter.ROLE);
+            assertNotNull("Test lookup of interpreter selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if interpreter name is not null", type);
+            interpreter = (Interpreter) selector.select(type);
+            assertNotNull("Test lookup of interpreter", interpreter);
+
+            ((AbstractInterpreter)interpreter).register(source);
+            
+            ArrayList parameters = new ArrayList();
+            for (Iterator i = params.keySet().iterator(); i.hasNext();) {
+                String name = (String)i.next();
+                String value = (String)params.get(name);
+                parameters.add(new Interpreter.Argument(name, value));
+            }
+            
+            interpreter.handleContinuation(id, parameters, getRedirector());
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve interpreter", ce);
+            fail("Could not retrieve interpreter: " + ce.toString());
+        } finally {
+            if (interpreter != null) {
+                selector.release((Component) interpreter);
+            }
+            this.manager.release(selector);
+            this.manager.release(resolver);
+        }
+        return FlowHelper.getWebContinuation(getObjectModel()).getId();
+    }
+    
+    public Object getFlowContextObject() {
+        return FlowHelper.getContextObject(getObjectModel());
     }
 
     public final void print(Document document) {
