@@ -80,8 +80,6 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
     private ComponentManager componentManager;
 
     public void configure(Configuration configuration) throws ConfigurationException {
-        LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, componentManager, null, null, null);
-
         // read available datatypes from configuration
         Configuration[] datatypeConfs = configuration.getChild("datatypes").getChildren("datatype");
         if (datatypeConfs.length == 0)
@@ -99,6 +97,7 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
             DatatypeBuilder datatypeBuilder;
             try {
                 datatypeBuilder = (DatatypeBuilder)clazz.newInstance();
+                LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, componentManager, null, null, datatypeConfs[i]);
                 lifecycleHelper.setupComponent(datatypeBuilder);
             } catch (Exception e) {
                 throw new ConfigurationException("Could not create DatatypeBuilder \"" + factoryClassName + "\"", e);
@@ -123,6 +122,7 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
             ValidationRuleBuilder validationRuleBuilder;
             try {
                 validationRuleBuilder = (ValidationRuleBuilder)clazz.newInstance();
+                LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, componentManager, null, null, validationRuleConfs[i]);
                 lifecycleHelper.setupComponent(validationRuleBuilder);
             } catch (Exception e) {
                 throw new ConfigurationException("Could not create ValidationRuleBuilder \"" + factoryClassName + "\"", e);
