@@ -104,34 +104,34 @@
             <th><ft:repeater-widget-label id="contacts" widget-id="birthdate"/></th>
             <th><ft:repeater-widget-label id="contacts" widget-id="select"/></th>
           </tr>
-              <jx:choose>
-                <jx:when test="${widget.getChild('contacts').getSize() == 0}">
-                  <tr><td colspan="6" align="center"><em>There are no contacts to display</em></td></tr>
-                </jx:when>
-                <jx:otherwise>
-                  <!-- The contents of the repeater-widget element is a template that will
-                       be applied to each row in the repeater. -->
-                  <ft:repeater-widget id="contacts">
-                    <tr>
-                      <td><ft:widget id="firstname"/></td>
-                      <td><ft:widget id="lastname"/></td>
-                      <td><ft:widget id="phone"/></td>
-                      <td><ft:widget id="email"/></td>
-                      <td><ft:widget id="birthdate"/></td>
-                      <td><ft:widget id="select"/></td>
-                    </tr>
-                  </ft:repeater-widget>
-                </jx:otherwise>
-              </jx:choose>
+          <jx:choose>
+            <jx:when test="${widget.getChild('contacts').getSize() == 0}">
+              <tr><td colspan="6" align="center"><em>There are no contacts to display</em></td></tr>
+            </jx:when>
+            <jx:otherwise>
+              <!-- The contents of the repeater-widget element is a template that will
+                   be applied to each row in the repeater. -->
+              <ft:repeater-widget id="contacts">
+                <tr>
+                  <td><ft:widget id="firstname"/></td>
+                  <td><ft:widget id="lastname"/></td>
+                  <td><ft:widget id="phone"/></td>
+                  <td><ft:widget id="email"/></td>
+                  <td><ft:widget id="birthdate"/></td>
+                  <td><ft:widget id="select"/></td>
+                </tr>
+              </ft:repeater-widget>
+            </jx:otherwise>
+          </jx:choose>
           <tr>
             <td colspan="6">
               <ft:widget id="addcontact"/>
-                  <jx:if test="${widget.getChild('contacts').getSize() > 0}">
-                    <ft:widget id="removecontacts"/>
-                    <br/>
-                    <small>Hint: remove all contacts to see how dynamic form templates can change
-                      their layout depending on widget values</small>
-                  </jx:if>
+              <jx:if test="${widget.getChild('contacts').getSize() > 0}">
+                <ft:widget id="removecontacts"/>
+                <br/>
+                <small>Hint: remove all contacts to see how dynamic form templates can change
+                  their layout depending on widget values</small>
+              </jx:if>
             </td>
           </tr>
         </table>
