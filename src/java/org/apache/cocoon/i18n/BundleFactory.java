@@ -61,7 +61,7 @@ import org.apache.avalon.framework.component.ComponentSelector;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: BundleFactory.java,v 1.6 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.7 2004/01/15 15:24:31 kpiroumian Exp $
  */
 public interface BundleFactory extends ComponentSelector {
 
@@ -101,6 +101,18 @@ public interface BundleFactory extends ComponentSelector {
      * @exception     ComponentException if a bundle is not found
      */
     Bundle select(String base, String bundleName, Locale locale) throws ComponentException;
+
+    /**
+     * Select a bundle based on the catalogue base location, bundle name,
+     * and the locale.
+     *
+     * @param directories    catalogue base location (URI)
+     * @param bundleName    bundle name
+     * @param locale  locale
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    Bundle select(String[] directories, String bundleName, Locale locale) throws ComponentException;
 
     /**
      * Select a bundle based on the bundle name and the locale name from
