@@ -64,7 +64,7 @@ import org.apache.cocoon.webapps.authentication.user.UserHandler;
  *  This action tests if the user is logged in for a given handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LoggedInAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
+ * @version CVS $Id: LoggedInAction.java,v 1.4 2003/10/21 11:52:36 cziegeler Exp $
 */
 public final class LoggedInAction
 extends ServiceableAction
@@ -91,7 +91,7 @@ implements ThreadSafe {
             authManager = (AuthenticationManager) this.manager.lookup(AuthenticationManager.ROLE);
             UserHandler handler = authManager.isAuthenticated(handlerName);
             if ( handler != null ) {
-                map = handler.getContext().getContextInfo();
+                map = EMPTY_MAP;
             }
         } finally {
             this.manager.release( authManager);
