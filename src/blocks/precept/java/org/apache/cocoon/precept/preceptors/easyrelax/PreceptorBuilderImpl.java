@@ -94,7 +94,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 23, 2002
- * @version CVS $Id: PreceptorBuilderImpl.java,v 1.4 2003/11/20 17:11:02 joerg Exp $
+ * @version CVS $Id: PreceptorBuilderImpl.java,v 1.5 2004/01/06 13:42:47 joerg Exp $
  */
 public class PreceptorBuilderImpl extends AbstractXMLConsumer
         implements PreceptorBuilder, Serviceable, Disposable, Poolable {
@@ -119,13 +119,13 @@ public class PreceptorBuilderImpl extends AbstractXMLConsumer
     private String constraintType;
     private String constraintName;
     private String constraintContext;
-    private String includeUri;
+//    private String includeUri;
     private StringBuffer currentPath;
     private Map constraintAliases;
     private XMLByteStreamInterpreter xmli;
     private ConstraintFactory constraintFactory = new ConstraintFactory();
 
-    private boolean define;
+//    private boolean define;
 
     private ContentHandler redirect;
     private int redirectLevel;
@@ -192,7 +192,7 @@ public class PreceptorBuilderImpl extends AbstractXMLConsumer
         constraintAliases = new HashMap();
         redirect = null;
         redirectLevel = 0;
-        define = false;
+//        define = false;
         xmli = new XMLByteStreamInterpreter();
         xmli.setContentHandler(new EmbeddedXMLPipe(this));
     }
@@ -219,10 +219,10 @@ public class PreceptorBuilderImpl extends AbstractXMLConsumer
                 if ("grammar".equals(name)) {
                 }
                 else if ("include".equals(name)) {
-                    includeUri = attributes.getValue("uri");
+//                    includeUri = attributes.getValue("uri");
                 }
                 else if ("define".equals(name)) {
-                    define = true;
+//                    define = true;
                 }
                 else if ("start".equals(name)) {
                 }
@@ -322,7 +322,7 @@ public class PreceptorBuilderImpl extends AbstractXMLConsumer
                 else if ("include".equals(name)) {
                 }
                 else if ("define".equals(name)) {
-                    define = false;
+//                    define = false;
                 }
                 else if ("start".equals(name)) {
                 }
