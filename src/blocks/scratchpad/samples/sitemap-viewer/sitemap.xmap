@@ -42,6 +42,36 @@
 <!-- =========================== Resources =============================== -->
 <map:resources>
   
+      <map:resource name="show-sitemap">
+
+            <map:aggregate element="sitemapandfiles">
+                <map:part src="cocoon:/{filename}.descr?location={location}"/>
+                <map:part src="cocoon:/allfiles-list?location={location}"/>
+            </map:aggregate>
+            
+            <map:transform src="transforms/sitemapdescr2html.xsl">
+
+                <!-- set showsources to 0 if you don't want the link to the sources (secure) or to 1 
+                       if you want to show the sources (unsecure) -->
+                <map:parameter name="showsources" value="{showsources}"/>
+            </map:transform>
+            
+            <map:select type="browser">
+                <map:when test="explorer">
+                </map:when>
+                <map:when test="mozilla5">
+                </map:when>
+                <map:otherwise>
+                    <map:transform src="transforms/kill-dynamic.xsl"/>
+                </map:otherwise>
+            </map:select>
+
+            <map:serialize type="xhtml-transitional"/>
+
+
+      </map:resource>
+ 
+  
   <!-- load a page of a section if page is not available load default page/image 
     of this section
   -->
@@ -78,92 +108,81 @@
 
 
         <!-- 
-            If you set the internal-only value to "yes", you'll get the unsecure version of the viewer, 
-            set it to "no" to make it secure. Also change the "showsources" value in the xsl below from 1 to 0 or 
-            vice versa -->
+            If you set the internal-only value to "no", you'll get the unsecure version of the viewer, 
+            set it to "yes" to make it secure. -->
             
         <map:pipeline internal-only="yes" label="srcviewing">
+        
             <map:match pattern="src/**">
                 <map:mount uri-prefix="src" check-reload="no" src="unsecure.xmap"/>
             </map:match>
-            <map:match pattern="**/src/*.xmap">
+
+            <map:match pattern="*._xmap">
                 <map:act type="request">
                     <map:parameter name="parameters" value="true"/>
-                    <map:redirect-to uri="../../src/{../2}.xmap?location={location}"/>
-                 </map:act>
+                    <map:call resource="show-sitemap">
+                         <map:parameter name="filename" value="{../1}"/>
+                         <map:parameter name="location" value="{location}"/>
+                         <map:parameter name="showsources" value="1"/>
+                    </map:call>
+                </map:act>
             </map:match>
+                        
+        </map:pipeline>
+            
 
-
-            <map:match pattern="**/src/**/*.*">
-                <map:redirect-to uri="../../src/{3}.{4}?location={1}/{2}"/>
-            </map:match>
-
-            <map:match pattern="**/src/*.*">
+        <map:pipeline internal-only="no">
+        
+            <map:match pattern="*._xmap">
                 <map:act type="request">
                     <map:parameter name="parameters" value="true"/>
-                    <map:redirect-to uri="../../src/{../2}.{../3}?location={location}"/>
-                 </map:act>
+                    <map:call resource="show-sitemap">
+                         <map:parameter name="filename" value="{../1}"/>
+                         <map:parameter name="location" value="{location}"/>
+                         <map:parameter name="showsources" value="0"/>
+                    </map:call>
+                </map:act>
             </map:match>
 
-            <map:match pattern="**/src/**">
-                <map:read src="cocoon:/../{2}/src/{1}/{3}"/>
-            </map:match>
-
-            <map:match pattern="**/src/*.*">
-                <map:redirect-to uri="../  "/>
-            </map:match>
-
-            <map:match pattern="*/*/src/*.*">
-                <map:redirect-to uri="../  "/>
-            </map:match>
-
-            <map:match pattern="**/*/src/*.*">
-                <map:redirect-to uri="../../  "/>
-            </map:match>
-
-            <map:match pattern="**/*.descr01">
-                 <map:generate src="cocoon:/source/{1}/{2}.xmap"/>
-                 <map:transform src="transforms/sitemap2descr01.xsl">
-                     <map:parameter name="location" value="{1}"/>
-                 </map:transform>
-
-                 <map:serialize type="xml"/>
-            </map:match>
-
+        </map:pipeline>
+            
+        <map:pipeline internal-only="yes">
+            
             <map:match pattern="*.descr01">
-                 <map:generate src="cocoon:/source/{1}.xmap"/>
-                 <map:transform src="transforms/sitemap2descr01.xsl">
-                     <map:parameter name="location" value=""/>
-                 </map:transform>
-
-                 <map:serialize type="xml"/>
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                     <map:generate src="../{location}/{../1}.xmap"/>
+                     <map:transform src="transforms/sitemap2descr01.xsl">
+                         <map:parameter name="location" value="{location}"/>
+                         <map:parameter name="filename" value="{../1}.xmap"/>
+                     </map:transform>
+                     <map:serialize type="xml"/>
+                 </map:act>
             </map:match>
 
-            <map:match pattern="**.descr">
-                 <map:generate src="cocoon:/{1}.descr01"/>
-                 <map:transform src="transforms/sitemap2descr02.xsl"/>
-                 <map:serialize type="xml"/>
-            </map:match>
-
-            <map:match pattern="source/**.xmap">
-                 <map:generate src="../{1}.xmap"/>
-                 <map:serialize type="xml"/>
+            <map:match pattern="*.descr">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                     <map:generate src="cocoon:/{../1}.descr01?location={location}"/>
+                     <map:transform src="transforms/sitemap2descr02.xsl"/>
+                     <map:serialize type="xml"/>
+                 </map:act>
             </map:match>
 
         </map:pipeline>
 
 
         <map:pipeline>
-            <map:match pattern="src/**.xmap">
+            <map:match pattern="src/**._xmap">
                 <map:act type="request">
                     <map:parameter name="parameters" value="true"/>
                     <map:redirect-to uri="../disabled.html"/>
                  </map:act>
             </map:match>
-            <map:match pattern="**/src/**.xmap">
+            <map:match pattern="**/src/**._xmap">
                 <map:act type="request">
                     <map:parameter name="parameters" value="true"/>
-                    <map:redirect-to uri="../../src/{../2}.xmap?location={location}"/>
+                    <map:redirect-to uri="../../src/{../2}._xmap?location={location}"/>
                  </map:act>
             </map:match>
         </map:pipeline>
@@ -171,7 +190,7 @@
 
         <map:pipeline internal-only="yes">
             
-
+            
         </map:pipeline>
 
         <map:pipeline internal-only="yes">
@@ -192,11 +211,7 @@
 
         <map:pipeline>
     
-            <map:match pattern="**/*.gif">
-                <map:read mime-type="image/gif" src="cocoon:/{2}.gif"/>
-            </map:match>
-
-            <map:match pattern="*_*.gif">
+           <map:match pattern="*_*.gif">
               <map:act type="resource-exists" src="images/{1}_{2}.gif">
                 <map:call resource="load-page">
                   <map:parameter name="sect" value="images"/>
@@ -221,16 +236,8 @@
             </map:match>
 
 
-            <map:match pattern="**/*.js">
-                <map:read mime-type="text/txt" src="scripts/{2}.javascript"/>
-            </map:match>
-
             <map:match pattern="*.js">
                 <map:read mime-type="text/txt" src="scripts/{1}.javascript"/>
-            </map:match>
-
-            <map:match pattern="**/*.css">
-                <map:read mime-type="text/css" src="styles/{2}.css"/>
             </map:match>
 
             <map:match pattern="*.css">
@@ -286,37 +293,12 @@
                   <map:serialize type="xml"/>
               </map:match>
 
-            <map:match pattern="**/*.xmap">
-            
-                <map:aggregate element="sitemapandfiles">
-                    <map:part src="cocoon:/{1}/{2}.descr"/>
-                    <map:part src="cocoon:/allfiles-list?location={1}"/>
-                </map:aggregate>
-                <map:transform src="transforms/sitemapdescr2html.xsl">
-
-                    <!-- change showsources to 0 if you don't want the link to the sources -->
-                    <map:parameter name="showsources" value="0"/>
-                </map:transform>
-                
-                <map:select type="browser">
-                    <map:when test="explorer">
-                    </map:when>
-                    <map:when test="mozilla5">
-                    </map:when>
-                    <map:otherwise>
-                        <map:transform src="transforms/kill-dynamic.xsl"/>
-                    </map:otherwise>
-                </map:select>
-
-                <map:serialize type="xhtml-transitional"/>
-            </map:match>
-
         <map:pipeline>
 
         </map:pipeline>
 
             <map:match pattern="**">
-                <map:generate  src="cocoon:/{1}.xmap"/>
+                <map:generate  src="cocoon:/{1}._xmap"/>
                 <map:serialize type="html"/>
             </map:match>
 
