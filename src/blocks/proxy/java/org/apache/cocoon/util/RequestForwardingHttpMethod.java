@@ -32,7 +32,7 @@ import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
  * to a server.
  * 
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version $Id: RequestForwardingHttpMethod.java,v 1.3 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RequestForwardingHttpMethod extends EntityEnclosingMethod {
     
@@ -93,10 +93,10 @@ public class RequestForwardingHttpMethod extends EntityEnclosingMethod {
                 cookie.setName(name);
                 newCookiesList.add(cookie);
             }
-        
+
             CookieSpecBase cookieFormatter = new CookieSpecBase();
             Header cookieHeader = 
-                cookieFormatter.formatCookieHeader((Cookie[])newCookiesList.toArray(new Cookie[0]));
+                cookieFormatter.formatCookieHeader((Cookie[])newCookiesList.toArray(new Cookie[newCookiesList.size()]));
             this.addRequestHeader(cookieHeader);
         }
 
