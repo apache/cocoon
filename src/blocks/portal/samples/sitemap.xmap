@@ -108,7 +108,7 @@
 
       <!-- select skin to use -->
       <map:global-variables>
-		<skin>basic</skin>
+		<skin>common</skin>
       </map:global-variables>
 
     </map:component-configurations>
