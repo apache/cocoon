@@ -76,7 +76,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.17 2003/11/13 13:18:35 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.18 2003/11/27 02:14:08 vgritsenko Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -211,7 +211,7 @@ public class Field extends AbstractWidget {
         // whitespace & empty field handling
         if (newEnteredValue != null) {
             // TODO make whitespace behaviour configurable !!
-            newEnteredValue.trim();
+            newEnteredValue = newEnteredValue.trim();
 
             if (newEnteredValue.length() == 0) {
                 newEnteredValue = null;
