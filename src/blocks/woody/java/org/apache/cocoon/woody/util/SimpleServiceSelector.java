@@ -104,7 +104,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
             Object component = null;
             try {
                 component = clazz.newInstance();
-                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, null, null, componentConfs[i]);
+                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, null, componentConfs[i]);
                 lifecycleHelper.setupComponent(component);
             } catch (Exception e) {
                 throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i].getLocation(), e);

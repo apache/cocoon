@@ -88,7 +88,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         
         LifecycleHelper.setupComponent( app, getLogger(), appleContext, 
                                         this.serviceManager, super.manager,  
-                                        null, null, null, true);
+                                        null, null, true);
         
         processApple(params, env, app, wk);
     }

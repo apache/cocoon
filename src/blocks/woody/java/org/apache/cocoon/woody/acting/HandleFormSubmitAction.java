@@ -104,7 +104,7 @@ public class HandleFormSubmitAction extends AbstractWoodyAction implements Actio
                 // TODO cache these classes
                 Class clazz = Class.forName(formHandlerClassName);
                 formHandler = (FormHandler)clazz.newInstance();
-                LifecycleHelper.setupComponent(formHandler, null, null, manager, null, null, null);
+                LifecycleHelper.setupComponent(formHandler, null, null, manager, null, null);
                 formHandler.setup(form);
                 form.setFormHandler(formHandler);
             }
