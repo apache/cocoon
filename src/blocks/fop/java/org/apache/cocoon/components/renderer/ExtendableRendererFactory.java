@@ -29,11 +29,11 @@ import java.util.Map;
  * type. This factory is extendable as new <code>Renderer</code>s can
  * be added at runtime.
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: ExtendableRendererFactory.java,v 1.2 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ExtendableRendererFactory implements RendererFactory {
 
-  protected static Map renderers = new HashMap();
+  protected final static Map renderers = new HashMap();
 
   protected final static RendererFactory singleton = new ExtendableRendererFactory();
 

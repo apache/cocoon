@@ -30,11 +30,11 @@ import java.util.Map;
  * be added at runtime.
  *
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: ExtendableTranscoderFactory.java,v 1.2 2004/03/05 13:01:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ExtendableTranscoderFactory implements TranscoderFactory {
 
-    protected static Map transcoders = new HashMap();
+    protected final static Map transcoders = new HashMap();
 
     protected final static TranscoderFactory singleton = new ExtendableTranscoderFactory();
 

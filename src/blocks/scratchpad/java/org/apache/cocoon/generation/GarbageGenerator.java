@@ -40,7 +40,7 @@ import org.xml.sax.SAXParseException;
 public class GarbageGenerator extends ServiceableGenerator {
 
     // FIXME - We should not use a static variable here: use a component instead
-    protected static Map cache = new HashMap();
+    protected final static Map cache = new HashMap();
 
     protected JXPathContext jxpathContext;
     protected Source source;

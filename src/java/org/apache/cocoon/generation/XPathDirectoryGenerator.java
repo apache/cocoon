@@ -134,7 +134,7 @@ extends DirectoryGenerator {
     protected static final String QUERY_ATTR_NAME = "query";
 
     /** All the mapping files lastmodified dates */
-    protected static Map mappingFiles = new HashMap();
+    protected static final Map mappingFiles = new HashMap();
 
     /** The parser for the XML snippets to be included. */
     protected DOMParser parser = null;
