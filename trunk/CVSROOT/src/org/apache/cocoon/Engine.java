@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.22 2000-04-20 22:29:41 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.23 2000-04-26 13:49:19 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,12 +73,12 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.22 $ $Date: 2000-04-20 22:29:41 $
+ * @version $Revision: 1.23 $ $Date: 2000-04-26 13:49:19 $
  */
 
 public class Engine implements Defaults {
 
-    private static Engine instance = null;
+    private static Hashtable engineInstances;
 
     Configurations configurations;
 
@@ -105,6 +105,9 @@ public class Engine implements Defaults {
      */
     private Engine(Configurations configurations, Object context) throws Exception {
 
+        // Create the engine instance table
+        engineInstances = new HashTable(1, 0.90);
+        
         // Create the object manager which is both Factory and Director
         // and register it
         manager = new Manager();
@@ -194,16 +197,17 @@ public class Engine implements Defaults {
      */
     public static Engine getInstance(Configurations confs, Object context) throws Exception {
 
-        if (instance == null) {
-            synchronized (Engine.class) {
-                if (instance == null) {
-                    instance = new Engine(confs, context);
-                }
-            }
+        Engine engine = (Engine) engineInstances.get(context);
+        
+        if (engine == null) {
+           synchronized (Engine.class) {
+              engine = new Engine(confs, context);
+              engineInstances.put(context, engine);
+           }
         }
 
-        return instance;
-    }
+        return engine;
+   }
 
     /**
      * This is the <code>getInstance()</code> version that should be used by
@@ -215,8 +219,11 @@ public class Engine implements Defaults {
      * @return Engine - instance to operate on
      */
     public static Engine getInstance() throws Exception {
-        if (instance != null) return instance;
-
+        if (!engineInstances.isEmpty()) {
+            // return the first engine instance found
+            return (Engine) engineInstances.elements().nextElement();
+        }
+ 
         throw new Exception("The Cocoon engine has not been initialized!");
     }
 
