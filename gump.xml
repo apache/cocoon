@@ -73,6 +73,7 @@
     <depend project="commons-jexl"/>
     <depend project="commons-jxpath"/>
     <depend project="commons-lang"/>
+    <depend project="logging-log4j"/>
 
     <depend project="cocoon-javac"/>
     <depend project="cocoon-javacImpl"/>
