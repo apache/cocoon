@@ -61,7 +61,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.11 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.12 2004/04/30 11:36:26 cziegeler Exp $
  * @author <a href="mailto:haul@apache.org">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
@@ -294,8 +294,12 @@ public class JMSConnectionImpl extends AbstractLogEnabled
             }
             this.subscribers.clear();
         }
-        this.session.close();
-        this.connection.close();
+        if ( this.session != null ) {
+            this.session.close();
+        }
+        if ( this.connection != null ) {
+            this.connection.close();
+        }
     }
 
 }
