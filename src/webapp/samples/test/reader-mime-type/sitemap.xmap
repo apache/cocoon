@@ -26,7 +26,7 @@
   <map:pipelines>
     <map:pipeline type="caching">
       <map:match pattern="test10.*">
-        <map:read src="test.xzy"/>
+        <map:read src="test.foo"/>
       </map:match>
       <map:match pattern="test20.*">
         <map:read src="test.xml"/>

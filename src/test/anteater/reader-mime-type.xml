@@ -38,15 +38,17 @@
                 <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
                 <header name="Content-type" pattern=".*"/>
             </match>
+            <match assign="test10-passed-1"/>
         </httpRequest>
-        <fail if="test10-failed-1"/>
+        <fail if="test10-failed-1" message="Content-type header expected to be absent"/>
         <httpRequest href="${baseUrl}/test10.xml" description="Check content-type (cached)">
             <match assign="test10-failed-2">
                 <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
                 <header name="Content-type" pattern=".*"/>
             </match>
+            <match assign="test10-passed-2"/>
         </httpRequest>
-        <fail if="test10-failed-2"/>
+        <fail if="test10-failed-2" message="Content-type header expected to be absent"/>
 
         <!-- Check content-type derived from map:read/@src -->
         <httpRequest href="${baseUrl}/test20.x20" description="Check content-type">
@@ -93,15 +95,15 @@
             </match>
             <match assign="test50-passed-1"/>
         </httpRequest>
-        <fail if="test50-failed-1"/>
+        <fail if="test50-failed-1" message="Content-type header expected to be absent"/>
         <httpRequest href="${baseUrl}/test50.xml" description="Check content-type (cached)">
             <match assign="test50-failed-2">
                 <echo message="Ignore following message text:  message doesn't match because header 'content-type' is not present"/>
                 <header name="Content-type" pattern=".*"/>
             </match>
-            <match/>
+            <match assign="test50-passed-2"/>
         </httpRequest>
-        <fail if="test50-failed-2"/>
+        <fail if="test50-failed-2" message="Content-type header expected to be absent"/>
 
         <!-- Check content-type derived from map:read/@src -->
         <httpRequest href="${baseUrl}/test60.x60" description="Check content-type">
