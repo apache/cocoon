@@ -44,31 +44,48 @@
     </s1>
     <s1 title="The classes and interfaces">
       <p>These classes and interfaces are extensively used by Cocoon:</p>
-      <s2 title="ComponentManager">
+      <s2 title="ServiceManager">
         <p>
-          <code>org.apache.avalon.framework.component.ComponentManager</code>
+          <code>org.apache.avalon.framework.service.ServiceManager</code>
         </p>
-        <p>A <code>ComponentManager</code> selects <code>Component</code>s based
+        <p>A <code>ServiceManager</code> selects <code>Component</code>s based
           on a role. The contract is that all the <code>Component</code>s
           implement the differing roles and there is one <code>Component</code>
           per role. If you need to select one of many <code>Component</code>s
           that implement the same role, then you need to use a
-          <code>ComponentSelector</code>. Roles are the full interface name.</p>
+          <code>ServiceSelector</code>. Roles are the full interface name.</p>
         <p>To understand roles better let's use the the analogy of a play. There
           are many different roles in a script. Any actor or actress can play
           any given part and you get broadly the same results (same phrases
           spoken, same movements made, etc.), but with each actor the exact
           nuances of the performance are different.</p>
-        <p>The <code>Cocoon</code> class implements e.g. the
-          <code>ComponentManager</code> interface.</p>
       </s2>
-      <s2 title="Composable">
+      <s2 title="ComponentManager (deprecated)">
+        <p>
+          <code>org.apache.avalon.framework.component.ComponentManager</code>
+        </p>
+        <p>This is the deprecated version of the <code>ServiceManager</code>. In
+          some places this component is still used, but over time all the usages
+          of this class will be replaced with the <code>ServiceManager</code>.</p>
+      </s2>
+      <s2 title="Serviceable">
+        <p>
+          <code>org.apache.avalon.framework.service.Serviceable</code>
+        </p>
+        <p>A <code>Serviceable</code> is a class that needs to connect to
+          software components using a "role" abstraction, thus not depending on
+          particular implementations but on behavioral interfaces. This means,
+          if you need to use other components in your implementation, you
+          have to implement <code>Serviceable</code> to be able to get other
+          components.</p>
+      </s2>
+      <s2 title="Composable (deprecated)">
         <p>
           <code>org.apache.avalon.framework.component.Composable</code>
         </p>
-        <p>A <code>Composable</code> is a class that needs to connect to
-          software components using a "role" abstraction, thus not depending on
-          particular implementations but on behavioral interfaces. </p>
+        <p>This is the deprecated version of <code>Serviceable</code>.  In
+          some places this component is still used, but over time all the usages
+          of this class will be replaced with <code>Serviceable</code>.</p>
       </s2>
       <s2 title="Component">
         <p>
@@ -86,6 +103,10 @@
           <code>Component</code>s in Cocoon are e.g. those defined in
           <code>cocoon.xconf</code>.
         </p>
+        <note><code>Component</code> is only required in combination with
+          <code>ComponentManager</code> and <code>Composable</code>. As these
+          are still used in Cocoon, it's required to implement <code>Component</code>
+          in order to work properly everywhere.</note>
       </s2>
       <s2 title="Configuration">
         <p>
