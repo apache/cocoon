@@ -12,9 +12,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.Iterator;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.xml.sax.EntityResolver;
 
 import org.apache.avalon.Component;
@@ -40,29 +43,10 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-23 22:34:27 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-26 20:49:01 $
  */
-public class DatabaseDeleteAction extends ComposerAction implements Configurable {
-    private ComponentSelector dbselector;
-    private String database;
-
-    /**
-     * Configure the <code>Action</code> so that we can use the same database
-     * for all instances.
-     */
-    public void configure(Configuration conf) throws ConfigurationException {
-        super.configure(conf);
-
-        Configuration connElement = conf.getChild("use-connection");
-
-        try {
-            this.dbselector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
-            this.database = connElement.getValue();
-        } catch (ComponentManagerException cme) {
-            getLogger().error("Could not get the DataSourceComponentSelector", cme);
-            throw new ConfigurationException("Could not get the DataSource ComponentSelector", cme);
-        }
-    }
+public final class DatabaseDeleteAction extends AbstractDatabaseAction {
+    private static final Map deleteStatements = new HashMap();
 
     /**
      * Delete a record from the database.  This action assumes that
@@ -82,57 +66,26 @@ public class DatabaseDeleteAction extends ComposerAction implements Configurable
      *   </li>
      * </ul>
      */
-    public Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
+    public final Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
 
         try {
-            datasource = (DataSourceComponent) this.dbselector.select(this.database);
+            Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
+            String query = this.getDeleteQuery(conf);
+            datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
 
-            Iterator lookup = param.getParameterNames();
-            ArrayList keys = new ArrayList();
-            ArrayList keyNames = new ArrayList();
-            ArrayList values = new ArrayList();
+            PreparedStatement statement = conn.prepareStatement(query);
 
-            while (lookup.hasNext()) {
-                String test = (String) lookup.next();
+            Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
 
-                if (test.startsWith("key:")) {
-                    keys.add(param.getParameter(test, null));
-                    keyNames.add(test.substring("key:".length()));
-                } else if ("table".equals(test) == false) {
-                    values.add(param.getParameter(test, null));
-                }
-            }
-
-            StringBuffer query = new StringBuffer("DELETE FROM ");
-            query.append(param.getParameter("table", null));
-            query.append(" WHERE ");
-
-            boolean firstIteration = true;
-            Iterator keyIterator = keys.iterator();
-
-            while (keyIterator.hasNext()) {
-                if (firstIteration) {
-                    firstIteration = false;
-                } else {
-                    query.append(" AND ");
-                }
-
-                query.append((String) keyIterator.next());
-                query.append(" = ?");
-            }
-
-            PreparedStatement statement = conn.prepareStatement(query.toString());
-
-            keyIterator = keyNames.iterator();
-            int i = 1;
-
-            while (keyIterator.hasNext()) {
-                statement.setString(i, request.getParameter((String) keyIterator.next()));
-                i++;
+            for (int i = 1; keys.hasNext(); i++) {
+                Configuration itemConf = (Configuration) keys.next();
+                String parameter = itemConf.getAttribute("param");
+                Object value = request.get(parameter);
+                this.setColumn(statement, i, value, itemConf);
             }
 
             statement.execute();
@@ -151,5 +104,44 @@ public class DatabaseDeleteAction extends ComposerAction implements Configurable
         }
 
         return null;
+    }
+
+    /**
+     * Get the String representation of the PreparedStatement.  This is
+     * mapped to the Configuration object itself, so if it doesn't exist,
+     * it will be created.
+     */
+    private final String getDeleteQuery(Configuration conf) throws ConfigurationException {
+        String query = null;
+
+        synchronized (DatabaseDeleteAction.deleteStatements) {
+            query = (String) DatabaseDeleteAction.deleteStatements.get(conf);
+
+            if (query == null) {
+                Configuration table = conf.getChild("table");
+                Iterator keys = table.getChild("keys").getChildren("key");
+
+                StringBuffer queryBuffer = new StringBuffer("DELETE FROM ");
+                queryBuffer.append(table.getAttribute("name"));
+                queryBuffer.append(" WHERE ");
+
+                boolean firstIteration = true;
+
+                while (keys.hasNext()) {
+                    if (firstIteration) {
+                        firstIteration = false;
+                    } else {
+                        queryBuffer.append(" AND ");
+                    }
+
+                    queryBuffer.append(((Configuration) keys.next()).getAttribute("dbcol"));
+                    queryBuffer.append(" = ?");
+                }
+            }
+
+            DatabaseDeleteAction.deleteStatements.put(conf, query);
+        }
+
+        return query;
     }
 }
