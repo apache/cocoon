@@ -118,7 +118,7 @@
       response.setContentType(
         String.valueOf(
           <xsl:copy-of select="$type"/>
-	)
+        )
       );
     </xsp:logic>
   </xsl:template>
@@ -192,12 +192,12 @@
           XSPResponseLibrary.addDateHeader(
             response,
             String.valueOf(<xsl:copy-of select="$name"/>),
-	    String.valueOf(
+            String.valueOf(
               <xsl:call-template name="get-nested-content">
                 <xsl:with-param name="content" select="$date"/>
               </xsl:call-template>
-	    ),
-	    String.valueOf(<xsl:copy-of select="$format"/>)
+            ),
+            String.valueOf(<xsl:copy-of select="$format"/>)
           );
         </xsl:when>
         <xsl:otherwise>
@@ -466,12 +466,12 @@
           XSPResponseLibrary.setDateHeader(
             response,
             String.valueOf(<xsl:copy-of select="$name"/>),
-	    String.valueOf(
+            String.valueOf(
               <xsl:call-template name="get-nested-content">
                 <xsl:with-param name="content" select="$date"/>
               </xsl:call-template>
-	    ),
-	    String.valueOf(<xsl:copy-of select="$format"/>)
+            ),
+            String.valueOf(<xsl:copy-of select="$format"/>)
           );
         </xsl:when>
         <xsl:otherwise>

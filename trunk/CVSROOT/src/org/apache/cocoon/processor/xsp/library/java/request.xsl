@@ -76,7 +76,7 @@
         </xsl:when>
         <xsl:when test="$as = 'string'">
           XSPRequestLibrary.getAttribute(
-	    request,
+            request,
             String.valueOf(<xsl:copy-of select="$name"/>)
           )
         </xsl:when>
@@ -292,8 +292,8 @@
         </xsl:when>
         <xsl:when test="$as = 'array'">
           request.getParameterValues(
-	    String.valueOf(<xsl:copy-of select="$name"/>)
-	  )
+            String.valueOf(<xsl:copy-of select="$name"/>)
+          )
         </xsl:when>
       </xsl:choose>
     </xsp:expr>
@@ -383,6 +383,26 @@
     </xsp:expr>
   </xsl:template>
 
+  <!-- request.getServerName -->
+  <xsl:template match="request:get-server-name">
+    <!-- Ensure attribute "as" has a value -->
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsp:expr>
+      <xsl:choose>
+        <xsl:when test="$as = 'node'">
+          XSPRequestLibrary.getServerName(request, document)
+        </xsl:when>
+        <xsl:when test="$as = 'string'">
+          request.getServerName()
+        </xsl:when>
+      </xsl:choose>
+    </xsp:expr>
+  </xsl:template>
 
   <!-- request.getServerPort -->
   <xsl:template match="request:get-server-port">
@@ -753,7 +773,7 @@
             <xsl:with-param name="content" select="format"/>
           </xsl:call-template>
         </xsl:when>
-	<xsl:otherwise>null</xsl:otherwise>
+        <xsl:otherwise>null</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
@@ -772,8 +792,8 @@
             new Date(
               request.getDateHeader(
                 String.valueOf(
-		  String.valueOf(<xsl:copy-of select="$name"/>)
-		)
+                  String.valueOf(<xsl:copy-of select="$name"/>)
+                )
               )
             ),
             <xsl:copy-of select="$format"/>
@@ -917,7 +937,7 @@
       </xsl:choose>
     </xsp:expr>
   </xsl:template>
- 
+
   <!-- request.isRequestedSessionIdFromCookie -->
   <xsl:template match="request:is-requested-session-id-from-cookie">
     <!-- Ensure attribute "as" has a value -->
@@ -941,7 +961,7 @@
       </xsl:choose>
     </xsp:expr>
   </xsl:template>
- 
+
   <!-- request.isRequestedSessionIdFromURL -->
   <xsl:template match="request:is-requested-session-id-from-url">
     <!-- Ensure attribute "as" has a value -->
@@ -966,7 +986,7 @@
     </xsp:expr>
   </xsl:template>
 
- 
+
   <!-- request.isRequestedSessionIdValid -->
   <xsl:template match="request:is-requested-session-id-valid">
     <!-- Ensure attribute "as" has a value -->
@@ -990,7 +1010,7 @@
       </xsl:choose>
     </xsp:expr>
   </xsl:template>
- 
+
   <!-- request.isUserInRole -->
   <xsl:template match="request:is-user-in-role">
     <!-- Get "role" parameter as either attribute or nested element -->

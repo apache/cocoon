@@ -302,10 +302,10 @@
     <xsp:logic>
       session.setInactiveInterval(
         Integer.parseInt(
-	  String.valueOf(
-	    <xsl:copy-of select="$interval"/>
-	  )
-	)
+          String.valueOf(
+            <xsl:copy-of select="$interval"/>
+          )
+        )
       );
     </xsp:logic>
   </xsl:template>

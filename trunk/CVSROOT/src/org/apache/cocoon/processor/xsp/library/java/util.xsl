@@ -77,13 +77,13 @@
         );
       } catch (Exception e) {
         xspCurrentNode.appendChild(
-	  document.createTextNode(
-	    "{" +
-	      "Unable to embed: " +
-	      embedURI +
-	    "}"
-	  )
-	);
+          document.createTextNode(
+            "{" +
+              "Unable to embed: " +
+              embedURI +
+            "}"
+          )
+        );
       }
     } </xsp:logic>
   </xsl:template>
