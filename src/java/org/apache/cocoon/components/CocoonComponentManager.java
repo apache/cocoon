@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.8 2003/04/24 09:02:15 bdelacretaz Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.9 2003/04/26 13:35:39 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -108,7 +108,7 @@ implements SourceResolver
     private static ComponentManager rootManager;
     
     /** The {@link SitemapConfigurationHolder}s */
-    private static Map sitemapConfigurationHolders = new HashMap(15);
+    private Map sitemapConfigurationHolders = new HashMap(15);
     
     /** Create the ComponentManager */
     public CocoonComponentManager() {
@@ -322,11 +322,11 @@ implements SourceResolver
             // FIXME: how can we prevent that this is called over and over again?
             SitemapConfigurationHolder holder;
             
-            holder = (SitemapConfigurationHolder)sitemapConfigurationHolders.get( role );
+            holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
             if ( null == holder ) {
                 // create new holder
                 holder = new DefaultSitemapConfigurationHolder( role );
-                sitemapConfigurationHolders.put( role, holder );
+                this.sitemapConfigurationHolders.put( role, holder );
             }
 
             try {
