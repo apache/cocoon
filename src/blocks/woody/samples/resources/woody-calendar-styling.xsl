@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
-
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-
   <!--+
       | This stylesheet is designed to be included by 'woody-advanced-styling.xsl'.
       +-->
@@ -13,9 +11,9 @@
   <xsl:param name="resources-uri">resources</xsl:param>
 
   <xsl:template match="head" mode="woody-calendar">
-    <script src="{$resources-uri}/mattkruse-lib/CalendarPopup.js" language="JavaScript" type="text/javascript"/>
-    <script src="{$resources-uri}/mattkruse-lib/date.js" language="JavaScript" type="text/javascript"/>
-    <script language="JavaScript" type="text/javascript">
+    <script src="{$resources-uri}/mattkruse-lib/CalendarPopup.js" type="text/javascript"/>
+    <script src="{$resources-uri}/mattkruse-lib/date.js" type="text/javascript"/>
+    <script type="text/javascript">
       // Setup calendar
       var woody_calendar = CalendarPopup('woody_calendarDiv');
       woody_calendar.setWeekStartDay(1);
