@@ -15,6 +15,6 @@
   limitations under the License.
 -->
 <catalogue>
-  <message key="org.apache.cocoon.woody.samples.Sex.FEMALE">féminin</message>
+  <message key="org.apache.cocoon.woody.samples.Sex.FEMALE">fÃ©minin</message>
   <message key="org.apache.cocoon.woody.samples.Sex.MALE">masculin</message>
 </catalogue>

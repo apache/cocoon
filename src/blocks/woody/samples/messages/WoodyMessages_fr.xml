@@ -16,34 +16,34 @@
 -->
 <!-- This catalogue file contains translations for built-in Woody messages. -->
 <catalogue>
-  <message key="general.field-required">Cette donnée est obligatoire.</message>
+  <message key="general.field-required">Cette donnÃ©e est obligatoire.</message>
 
   <message key="datatype.conversion-failed">N'est pas un(e) {0}.</message>
   <message key="datatype.long">nombre entier</message>
   <message key="datatype.date">date</message>
 
-  <message key="validation.string.exact-length">Doit avoir exactement {0} caractères.</message>
-  <message key="validation.string.range-length">Doit avoir entre {0} et {1} caractères.</message>
-  <message key="validation.string.min-length">Doit avoir au moins {0} caractères.</message>
-  <message key="validation.string.max-length">Doit avoir au plus {0} caractères.</message>
-  <message key="validation.string.regexp">Ne correspond pas à l'expression régulière : {0}</message>
+  <message key="validation.string.exact-length">Doit avoir exactement {0} caractÃ¨res.</message>
+  <message key="validation.string.range-length">Doit avoir entre {0} et {1} caractÃ¨res.</message>
+  <message key="validation.string.min-length">Doit avoir au moins {0} caractÃ¨res.</message>
+  <message key="validation.string.max-length">Doit avoir au plus {0} caractÃ¨res.</message>
+  <message key="validation.string.regexp">Ne correspond pas Ã  l'expression rÃ©guliÃ¨re : {0}</message>
 
   <message key="validation.string.invalidemail">N'est pas une adresse mail correcte.</message>
 
-  <message key="validation.array.exact-valuecount">{0} éléments doivent être séléctionnés.</message>
-  <message key="validation.array.range-valuecount">Entre {0} et {1} éléments doivent être sélectionnés.</message>
-  <message key="validation.array.min-valuecount">Au moins {0} éléments doivent être séléctionnés.</message>
-  <message key="validation.array.max-valuecount">Au plus {0} éléments peuvent être séléctionnés.</message>
+  <message key="validation.array.exact-valuecount">{0} Ã©lÃ©ments doivent Ãªtre sÃ©lÃ©ctionnÃ©s.</message>
+  <message key="validation.array.range-valuecount">Entre {0} et {1} Ã©lÃ©ments doivent Ãªtre sÃ©lectionnÃ©s.</message>
+  <message key="validation.array.min-valuecount">Au moins {0} Ã©lÃ©ments doivent Ãªtre sÃ©lÃ©ctionnÃ©s.</message>
+  <message key="validation.array.max-valuecount">Au plus {0} Ã©lÃ©ments peuvent Ãªtre sÃ©lÃ©ctionnÃ©s.</message>
 
-  <message key="multivaluefield.conversionfailed">Un des éléments séléctionnées a un type incorrect.</message>
+  <message key="multivaluefield.conversionfailed">Un des Ã©lÃ©ments sÃ©lÃ©ctionnÃ©es a un type incorrect.</message>
 
-  <message key="validation.numeric.range">Doit être compris entre {0} et {1}.</message>
-  <message key="validation.numeric.min">Doit être supérieur ou égal à {0}.</message>
-  <message key="validation.numeric.max">Doit être inférieur ou égal à {0}.</message>
+  <message key="validation.numeric.range">Doit Ãªtre compris entre {0} et {1}.</message>
+  <message key="validation.numeric.min">Doit Ãªtre supÃ©rieur ou Ã©gal Ã  {0}.</message>
+  <message key="validation.numeric.max">Doit Ãªtre infÃ©rieur ou Ã©gal Ã  {0}.</message>
 
-  <message key="validation.mod10">Numéro de carte incorrect.</message>
+  <message key="validation.mod10">NumÃ©ro de carte incorrect.</message>
 
 
-  <message key="aggregatedfield.split-failed">Ne correspond pas à l'expression régulière: {0}</message>
+  <message key="aggregatedfield.split-failed">Ne correspond pas Ã  l'expression rÃ©guliÃ¨re: {0}</message>
   <message key="upload.invalid-type">Type de fichier incorrect.</message>
 </catalogue>
