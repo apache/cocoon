@@ -30,13 +30,13 @@ For conceptual information on generators see the user's guide document <link hre
 			<ul>
 				<li><link href="directory-generator.html">Directory Generator</link></li>
 				<li><link href="file-generator.html">File Generator</link> (The default generator)</li>
-				<li><link href="error-generator.html">Error Generator</link> (FIXME: does not exist - renamed to NotifyingGenerator??)</li>
 				<li><link href="extractor-generator.html">Fragment Extractor Generator</link> (optional: Batik block)</li>
 				<li><link href="html-generator.html">HTML Generator</link> (optional: HTML block)</li>
 				<li><link href="imagedirectory-generator.html">Image Directory Generator</link></li>
 				<li><link href="jsp-generator.html">JSP Generator</link> (optional: JSP block)</li>
 				<li><link href="linkstatus-generator.html">LinkStatus Generator</link></li>
                 <li>MP3 Directory Generator (no documentation exists)</li>
+				<li><link href="error-generator.html">Notifying Generator</link></li>
 				<li><link href="php-generator.html">Php Generator</link> (optional: PHP block)</li>
 				<li><link href="profile-generator.html">Profile Generator</link> (optional: Profiler block)</li>
 				<li><link href="request-generator.html">Request Generator</link></li>
