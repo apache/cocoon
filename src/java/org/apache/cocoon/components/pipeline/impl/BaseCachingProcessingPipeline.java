@@ -16,9 +16,9 @@
 package org.apache.cocoon.components.pipeline.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.components.pipeline.AbstractProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLDeserializer;
@@ -31,7 +31,7 @@ import org.apache.cocoon.components.sax.XMLSerializer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.2 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: BaseCachingProcessingPipeline.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
  */
 public abstract class BaseCachingProcessingPipeline
     extends AbstractProcessingPipeline
@@ -59,7 +59,7 @@ public abstract class BaseCachingProcessingPipeline
         
         try {
             this.cache = (Cache)this.manager.lookup(cacheRole);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ParameterException("Unable to lookup cache: " + cacheRole, ce);
         }
     }

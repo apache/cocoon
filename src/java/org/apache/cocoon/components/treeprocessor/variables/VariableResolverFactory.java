@@ -16,13 +16,15 @@
 package org.apache.cocoon.components.treeprocessor.variables;
 
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.sitemap.PatternException;
 
 import java.util.List;
 
 /**
  *
- * @version CVS $Id: VariableResolverFactory.java,v 1.4 2004/03/05 13:02:53 bdelacretaz Exp $
+ * @version CVS $Id: VariableResolverFactory.java,v 1.5 2004/07/15 12:49:51 sylvain Exp $
  */
 public class VariableResolverFactory {
     
@@ -97,8 +99,18 @@ public class VariableResolverFactory {
     /**
      * Get a resolver for a given expression. Chooses the most efficient implementation
      * depending on <code>expression</code>.
+     * 
+     * @deprecated use the version with <code>ServiceManager</service>
      */
     public static VariableResolver getResolver(String expression, ComponentManager manager) throws PatternException {
+        return getResolver(expression, new WrapperServiceManager(manager));
+    }
+
+    /**
+     * Get a resolver for a given expression. Chooses the most efficient implementation
+     * depending on <code>expression</code>.
+     */
+    public static VariableResolver getResolver(String expression, ServiceManager manager) throws PatternException {
         if (needsResolve(expression)) {
             VariableResolver resolver = new PreparedVariableResolver(expression, manager);
             List collector = (List)disposableCollector.get();

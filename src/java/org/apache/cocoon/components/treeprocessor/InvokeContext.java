@@ -15,24 +15,24 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Recomposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Redirector;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -47,12 +47,12 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.10 2004/06/23 17:13:00 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.11 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class InvokeContext 
 extends AbstractLogEnabled
-implements Recomposable, Disposable {
+implements Serviceable, Disposable {
 
     private List mapStack = new ArrayList();
     private HashMap nameToMap = new HashMap();
@@ -61,10 +61,10 @@ implements Recomposable, Disposable {
     private boolean isBuildingPipelineOnly;
 
     /** The current component manager, as set by the last call to compose() or recompose() */
-    private ComponentManager currentManager;
+    private ServiceManager currentManager;
 
     /** The component manager that was used to get the pipelines */
-    private ComponentManager pipelinesManager;
+    private ServiceManager pipelinesManager;
 
     /** The name of the processing pipeline component */
     protected String processingPipelineName;
@@ -88,7 +88,7 @@ implements Recomposable, Disposable {
     protected Redirector redirector;
     
     /** The Selector for the processing pipeline */
-    protected ComponentSelector pipelineSelector;
+    protected ServiceSelector pipelineSelector;
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
      * the current request is external.
@@ -112,21 +112,14 @@ implements Recomposable, Disposable {
     }
 
     /**
-     * Composable Interface
+     * Serviceable interface
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.currentManager = manager;
-    }
-
-    /**
-     * Recomposable interface
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
 
         this.currentManager = manager;
 
-        if (this.processingPipeline instanceof Recomposable) {
-            ((Recomposable)this.processingPipeline).recompose(manager);
+        if (this.processingPipeline != null) {
+            this.processingPipeline.setProcessorManager(manager);
         }
     }
 
@@ -150,11 +143,10 @@ implements Recomposable, Disposable {
             // Keep current manager for proper release
             this.pipelinesManager = this.currentManager;
 
-            this.pipelineSelector = (ComponentSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
+            this.pipelineSelector = (ServiceSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
             this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineName);
-            if (this.processingPipeline instanceof Recomposable) {
-                ((Recomposable)this.processingPipeline).recompose(this.pipelinesManager);
-            }
+            this.processingPipeline.setProcessorManager(this.currentManager);
+
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)

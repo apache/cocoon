@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -28,23 +29,21 @@ import org.apache.cocoon.matching.PreparableMatcher;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNodeBuilder.java,v 1.2 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: MatchNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class MatchNodeBuilder extends AbstractParentProcessingNodeBuilder
   implements ThreadSafe {
-
-    private static final String SELECTOR_ROLE = Matcher.ROLE + "Selector";
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
         String pattern = config.getAttribute("pattern", null);
         String name = config.getAttribute("name", null);
 
-        String type = this.treeBuilder.getTypeForStatement(config, SELECTOR_ROLE);
+        String type = this.treeBuilder.getTypeForStatement(config, Matcher.ROLE);
 
         // Get the type and class for this matcher
-        ComponentsSelector selector = (ComponentsSelector)this.manager.lookup(SELECTOR_ROLE);
+        ServiceSelector selector = (ServiceSelector)this.manager.lookup(Matcher.ROLE + "Selector");
 
         Class clazz = null;
         try {

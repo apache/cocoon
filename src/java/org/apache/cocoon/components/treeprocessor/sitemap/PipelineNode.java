@@ -17,9 +17,9 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
@@ -36,11 +36,11 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.16 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.17 2004/07/15 12:49:50 sylvain Exp $
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
-        implements Composable, ParameterizableProcessingNode {
+        implements Serviceable, ParameterizableProcessingNode {
 
     // TODO : handle a 'fail-hard' environment attribute
     // can be useful to stop off-line generation when there's an error
@@ -77,8 +77,8 @@ public class PipelineNode
     /**
      * The component manager is used to create error pipelines
      */
-    public void compose(ComponentManager manager) {
-        this.errorHandlerHelper.compose(manager);
+    public void service(ServiceManager manager) {
+        this.errorHandlerHelper.service(manager);
     }
 
     public void enableLogging(Logger logger) {

@@ -15,11 +15,9 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
+import java.util.Map;
+
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -30,21 +28,16 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.sitemap.PatternException;
 
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNode.java,v 1.4 2004/06/17 13:52:35 cziegeler Exp $
+ * @version CVS $Id: SelectNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
  */
 public class SelectNode extends SimpleSelectorProcessingNode
-                        implements ParameterizableProcessingNode, Composable, Disposable {
+    implements ParameterizableProcessingNode {
 
     /** The parameters of this node */
     private Map parameters;
-
-    /** Pre-selected selector, if it's ThreadSafe */
-    protected Selector threadSafeSelector;
 
     private ProcessingNode[][] whenNodes;
 
@@ -55,7 +48,7 @@ public class SelectNode extends SimpleSelectorProcessingNode
     private ComponentManager manager;
 
     public SelectNode(String name) throws PatternException {
-        super(name);
+        super(Selector.ROLE + "Selector", name);
     }
 
     public void setParameters(Map parameterMap) {
@@ -66,17 +59,6 @@ public class SelectNode extends SimpleSelectorProcessingNode
         this.whenNodes = whenNodes;
         this.whenTests = whenTests;
         this.otherwhiseNodes = otherwhiseNodes;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        setSelector((ComponentSelector)manager.lookup(Selector.ROLE + "Selector"));
-
-        // Get the selector, if it's ThreadSafe
-        this.threadSafeSelector = (Selector)this.getThreadSafeComponent();
     }
 
     /* (non-Javadoc)
@@ -93,11 +75,11 @@ public class SelectNode extends SimpleSelectorProcessingNode
         final Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
         // If selector is ThreadSafe, avoid select() and try/catch block (faster !)
-        if (this.threadSafeSelector != null) {
+        if (this.getThreadSafeComponent() != null) {
 
             for (int i = 0; i < this.whenTests.length; i++) {
                 if ( this.executor.invokeSelector(this, objectModel,
-                        this.threadSafeSelector,
+                        (Selector)this.getThreadSafeComponent(),
                         whenTests[i].resolve(context, objectModel),
                         resolvedParams)) {
                     return invokeNodes(this.whenNodes[i], env, context);
@@ -132,20 +114,5 @@ public class SelectNode extends SimpleSelectorProcessingNode
                 this.selector.release(selector);
             }
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (this.threadSafeSelector != null) {
-            this.selector.release(this.threadSafeSelector);
-            this.threadSafeSelector = null;
-        }
-        if (this.selector != null) {
-            this.manager.release(this.selector);
-            this.selector = null;
-        }
-        this.manager = null;
     }
 }

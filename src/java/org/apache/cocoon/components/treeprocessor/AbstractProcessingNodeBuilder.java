@@ -15,51 +15,42 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Recomposable;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.5 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
  */
 
 
 public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
-  implements ProcessingNodeBuilder, Recomposable {
+  implements ProcessingNodeBuilder /*, Serviceable*/ {
 
     protected TreeBuilder treeBuilder;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Recomposable#recompose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }
+//    public void service(ServiceManager manager) throws ServiceException {
+//        this.manager = manager;
+//    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#setBuilder(org.apache.cocoon.components.treeprocessor.TreeBuilder)
      */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
+        this.manager = treeBuilder.getProcessor().getComponentInfo().getServiceManager();
     }
 
     /**

@@ -17,11 +17,6 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -34,11 +29,11 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNode.java,v 1.4 2004/06/11 08:51:56 cziegeler Exp $
+ * @version CVS $Id: MatchNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class MatchNode extends SimpleSelectorProcessingNode
-        implements ParameterizableProcessingNode, Composable, Disposable {
+        implements ParameterizableProcessingNode {
 
     /** The 'pattern' attribute */
     private VariableResolver pattern;
@@ -46,29 +41,16 @@ public class MatchNode extends SimpleSelectorProcessingNode
     /** The 'name' for the variable anchor */
     private String name;
 
-    /** The matcher, if it's ThreadSafe */
-    private Matcher threadSafeMatcher;
-
     private Map parameters;
 
-    private ComponentManager manager;
-
     public MatchNode(String type, VariableResolver pattern, String name) throws PatternException {
-        super(type);
+        super(Matcher.ROLE + "Selector", type);
         this.pattern = pattern;
         this.name = name;
     }
 
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
-    }
-
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        this.setSelector((ComponentSelector)manager.lookup(Matcher.ROLE + "Selector"));
-
-        // Get matcher if it's ThreadSafe
-        this.threadSafeMatcher = (Matcher)this.getThreadSafeComponent();
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
@@ -84,11 +66,11 @@ public class MatchNode extends SimpleSelectorProcessingNode
 
         Map result = null;
 
-        if (this.threadSafeMatcher != null) {
+        if (this.hasThreadSafeComponent()) {
             // Avoid select() and try/catch block (faster !)
             result = this.executor.invokeMatcher(this, 
                                                  objectModel, 
-                                                 this.threadSafeMatcher, 
+                                                 (Matcher)this.getThreadSafeComponent(), 
                                                  resolvedPattern, 
                                                  resolvedParams);
         } else {
@@ -117,12 +99,5 @@ public class MatchNode extends SimpleSelectorProcessingNode
             // Matcher failed
             return false;
         }
-    }
-
-    /**
-     * Disposable Interface
-     */
-    public void dispose() {
-        this.manager.release(this.selector);
     }
 }

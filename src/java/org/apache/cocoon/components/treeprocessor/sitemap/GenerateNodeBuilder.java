@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: GenerateNodeBuilder.java,v 1.2 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: GenerateNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class GenerateNodeBuilder extends AbstractProcessingNodeBuilder
@@ -41,7 +41,7 @@ public class GenerateNodeBuilder extends AbstractProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        String type = this.treeBuilder.getTypeForStatement(config, Generator.ROLE + "Selector");
+        String type = this.treeBuilder.getTypeForStatement(config, Generator.ROLE);
 
         this.views = ((SitemapLanguage)this.treeBuilder).getViewsForStatement(Generator.ROLE, type, config);
         this.pipelineHints = ((SitemapLanguage)this.treeBuilder).getHintsForStatement(Generator.ROLE, type, config);

@@ -16,13 +16,13 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -35,16 +35,16 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.5 2004/06/08 13:09:27 cziegeler Exp $
+ * @version CVS $Id: FlowNode.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
  */
 public class FlowNode extends AbstractProcessingNode
-        implements Composable, Contextualizable, Disposable {
+        implements Serviceable, Contextualizable, Disposable {
 
-    ComponentManager manager;
+    ServiceManager manager;
     String language;
     Context context;
     Interpreter interpreter;
-    ComponentSelector interpreterSelector;
+    ServiceSelector interpreterSelector;
 
     public FlowNode(String language) {
         this.language = language;
@@ -78,18 +78,19 @@ public class FlowNode extends AbstractProcessingNode
      * @param manager a <code>ComponentManager</code> value
      * @exception ComponentException if no flow interpreter could be obtained
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
 
         try {
-            this.interpreterSelector = (ComponentSelector)manager.lookup(Interpreter.ROLE);
+            this.interpreterSelector = (ServiceSelector)manager.lookup(Interpreter.ROLE);
             // Obtain the Interpreter instance for this language
             this.interpreter = (Interpreter)this.interpreterSelector.select(language);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw ce;
         } catch (Exception ex) {
-            throw new ComponentException(language,
-                "ScriptNode: Couldn't obtain a flow interpreter for " + language + ": " + ex);
+            throw new ServiceException(language,
+                "ScriptNode: Couldn't obtain a flow interpreter for " + language +
+                " at " + getLocation(), ex);
         }
     }
 
@@ -99,7 +100,7 @@ public class FlowNode extends AbstractProcessingNode
     public void dispose() {
         if ( this.manager != null ) {
             if ( this.interpreterSelector != null ) {
-                this.interpreterSelector.release( (Component)this.interpreter );
+                this.interpreterSelector.release(this.interpreter );
                 this.interpreter = null;
                 this.manager.release( this.interpreterSelector );
                 this.interpreterSelector = null;

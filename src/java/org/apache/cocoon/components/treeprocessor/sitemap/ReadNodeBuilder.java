@@ -25,19 +25,24 @@ import org.apache.cocoon.reading.Reader;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ReadNodeBuilder.java,v 1.2 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: ReadNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class ReadNodeBuilder extends AbstractProcessingNodeBuilder implements ThreadSafe {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        String type = this.treeBuilder.getTypeForStatement(config, Reader.ROLE + "Selector");
+        String type = this.treeBuilder.getTypeForStatement(config, Reader.ROLE);
+        
+        String mimeType = config.getAttribute("mime-type", null);
+        if (mimeType == null) {
+            mimeType = this.treeBuilder.getProcessor().getComponentInfo().getMimeType(Reader.ROLE, type);
+        }
 
         ReadNode node = new ReadNode(
             type,
             VariableResolverFactory.getResolver(config.getAttribute("src", null), this.manager),
-            VariableResolverFactory.getResolver(config.getAttribute("mime-type", null), this.manager),
+            VariableResolverFactory.getResolver(mimeType, this.manager),
             config.getAttributeAsInteger("status-code", -1)
         );
 

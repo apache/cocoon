@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.pipeline;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
@@ -42,7 +43,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.6 2004/06/02 20:11:35 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.7 2004/07/15 12:49:49 sylvain Exp $
  */
 public interface ProcessingPipeline {
 
@@ -76,7 +77,13 @@ public interface ProcessingPipeline {
     /**
      * Informs pipeline we have come across a branch point
      */
-    void informBranchPoint(); 
+    void informBranchPoint();
+    
+    /**
+     * Set the <code>ServiceManager</code> where pipeline components have to be searched for.
+     * @param manager the processor's service manager.
+     */
+    void setProcessorManager(ServiceManager manager);
 
     /**
      * Add a transformer at the end of the pipeline.

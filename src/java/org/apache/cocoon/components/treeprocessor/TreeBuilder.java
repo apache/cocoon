@@ -15,23 +15,25 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.List;
+
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
-
-import java.util.List;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.6 2004/06/09 09:41:15 cziegeler Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public interface TreeBuilder extends Component {
 
     void setProcessor(ConcreteTreeProcessor processor);
+    
+    void setParentProcessorManager(ServiceManager manager);
 
     ConcreteTreeProcessor getProcessor();
 
@@ -81,16 +83,14 @@ public interface TreeBuilder extends Component {
      * Get the type for a statement : it returns the 'type' attribute if present,
      * and otherwhise the default hint for the <code>ComponentSelector</code> identified by
      * the role <code>role</code>.
+     * 
+     * @param statement the statement
+     * @param role the component's role (warn: not the selector's role)
      *
      * @throws ConfigurationException if the default type could not be found.
      */
     String getTypeForStatement(Configuration statement, String role) throws ConfigurationException;
 
-    /**
-     * Return the sitemap component manager
-     */
-    ComponentManager getSitemapComponentManager();
-    
     /**
      * Add an attribute. Useful to transmit information between distant (in the tree) node builders
      */

@@ -15,16 +15,24 @@
  */
 package org.apache.cocoon.components.pipeline;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -43,14 +51,6 @@ import org.apache.cocoon.xml.XMLProducer;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-
 /**
  * This is the base for all implementations of a <code>ProcessingPipeline</code>.
  * It is advisable to inherit from this base class instead of doing a complete
@@ -58,17 +58,17 @@ import java.util.StringTokenizer;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.25 2004/06/27 00:44:35 antonio Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.26 2004/07/15 12:49:49 sylvain Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Recyclable, Recomposable, Component {
+  implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable, Component {
 
     // Generator stuff
     protected Generator generator;
     protected Parameters generatorParam;
     protected String generatorSource;
-    protected ComponentSelector generatorSelector;
+    protected ServiceSelector generatorSelector;
 
     // Transformer stuff
     protected ArrayList transformers = new ArrayList();
@@ -81,16 +81,14 @@ public abstract class AbstractProcessingPipeline
     protected Parameters serializerParam;
     protected String serializerSource;
     protected String serializerMimeType;
-    protected String sitemapSerializerMimeType;
-    protected OutputComponentSelector serializerSelector;
+    protected ServiceSelector serializerSelector;
 
     // Reader stuff
     protected Reader reader;
     protected Parameters readerParam;
     protected String readerSource;
     protected String readerMimeType;
-    protected String sitemapReaderMimeType;
-    protected OutputComponentSelector readerSelector;
+    protected ServiceSelector readerSelector;
 
     /** This is the last component in the pipeline, either the serializer
      *  or a custom xmlconsumer for the cocoon: protocol etc.
@@ -98,10 +96,10 @@ public abstract class AbstractProcessingPipeline
     protected XMLConsumer lastConsumer;
 
     /** the component manager set with compose() */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     /** the component manager set with compose() and recompose() */
-    protected ComponentManager newManager;
+    protected ServiceManager newManager;
 
     /** The configuration */
     protected Parameters configuration;
@@ -127,17 +125,16 @@ public abstract class AbstractProcessingPipeline
     /**
      * Composable Interface
      */
-    public void compose (ComponentManager manager)
-    throws ComponentException {
+    public void service (ServiceManager manager)
+    throws ServiceException {
         this.manager = manager;
         this.newManager = manager;
     }
 
     /**
-     * Recomposable Interface
+     * Set the processor's service manager
      */
-    public void recompose (ComponentManager manager)
-    throws ComponentException {
+    public void setProcessorManager (ServiceManager manager) {
         this.newManager = manager;
     }
 
@@ -205,13 +202,13 @@ public abstract class AbstractProcessingPipeline
                 "' at " + getLocation(param));
         }
         try {
-            this.generatorSelector = (ComponentSelector) this.newManager.lookup(Generator.ROLE + "Selector");
-        } catch (ComponentException ce) {
+            this.generatorSelector = (ServiceSelector) this.newManager.lookup(Generator.ROLE + "Selector");
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of generator selector failed at " +getLocation(param), ce);
         }
         try {
             this.generator = (Generator) this.generatorSelector.select(role);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of generator '" + role + "' failed at " + getLocation(param), ce);
         }
         this.generatorSource = source;
@@ -241,16 +238,16 @@ public abstract class AbstractProcessingPipeline
             throw new ProcessingException ("Must set a generator before adding transformer '" + role +
                 "' at " + getLocation(param));
         }
-        ComponentSelector selector = null;
+        ServiceSelector selector = null;
         try {
-            selector = (ComponentSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
-        } catch (ComponentException ce) {
+            selector = (ServiceSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of transformer selector failed at " + getLocation(param), ce);
         }
         try {
             this.transformers.add(selector.select(role));
             this.transformerSelectors.add(selector);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of transformer '"+role+"' failed at " + getLocation(param), ce);
         }
         this.transformerSources.add(source);
@@ -279,19 +276,18 @@ public abstract class AbstractProcessingPipeline
         }
 
         try {
-            this.serializerSelector = (OutputComponentSelector) this.newManager.lookup(Serializer.ROLE + "Selector");
-        } catch (ComponentException ce) {
+            this.serializerSelector = (ServiceSelector) this.newManager.lookup(Serializer.ROLE + "Selector");
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of serializer selector failed at " + getLocation(param), ce);
         }
         try {
             this.serializer = (Serializer)serializerSelector.select(role);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of serializer '" + role + "' failed at " + getLocation(param), ce);
         }
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
-        this.sitemapSerializerMimeType = serializerSelector.getMimeTypeForHint(role);
         this.lastConsumer = this.serializer;
     }
 
@@ -313,19 +309,18 @@ public abstract class AbstractProcessingPipeline
         }
 
         try {
-            this.readerSelector = (OutputComponentSelector) this.newManager.lookup(Reader.ROLE + "Selector");
-        } catch (ComponentException ce) {
+            this.readerSelector = (ServiceSelector) this.newManager.lookup(Reader.ROLE + "Selector");
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of reader selector failed at " + getLocation(param), ce);
         }
         try {
             this.reader = (Reader)readerSelector.select(role);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of reader '"+role+"' failed at " + getLocation(param), ce);
         }
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
-        this.sitemapReaderMimeType = readerSelector.getMimeTypeForHint(role);
     }
 
     /**
@@ -384,21 +379,22 @@ public abstract class AbstractProcessingPipeline
                 // internal processing: text/xml
                 environment.setContentType("text/xml");
             } else {
-                String mimeType = this.serializer.getMimeType();
-                if (mimeType != null) {
-                    // we have a mimeType from the component itself
-                    environment.setContentType (mimeType);
-                } else if (serializerMimeType != null) {
-                    // there was a mimeType specified in the sitemap pipeline
-                    environment.setContentType (serializerMimeType);
-                } else if (this.sitemapSerializerMimeType != null) {
-                    // use the mimeType specified in the sitemap component declaration
-                    environment.setContentType (this.sitemapSerializerMimeType);
+                // Set the mime-type
+                // the behaviour has changed from 2.1.x to 2.2 according to bug #10277
+                if (serializerMimeType != null) {
+                    // there was a serializer defined in the sitemap
+                    environment.setContentType(serializerMimeType);
                 } else {
-                    // No mimeType available
-                    String message = "Unable to determine MIME type for " +
-                        environment.getURIPrefix() + "/" + environment.getURI();
-                    throw new ProcessingException(message);
+                    // ask to the component itself
+                    String mimeType = this.serializer.getMimeType();
+                    if (mimeType != null) {
+                        environment.setContentType (mimeType);
+                    } else {
+                        // No mimeType available
+                        String message = "Unable to determine MIME type for " +
+                            environment.getURIPrefix() + "/" + environment.getURI();
+                        throw new ProcessingException(message);
+                    }
                 }
             }
         } catch (SAXException e) {
@@ -557,8 +553,7 @@ public abstract class AbstractProcessingPipeline
             this.reader.setup(this.processor.getSourceResolver(),environment.getObjectModel(),readerSource,readerParam);
             // Set the mime-type
             // the behaviour has changed from 2.1.x to 2.2 according to bug #10277:
-            // MIME type declared on the reader instance
-            // MIME type declared for the reader component
+            // MIME type declared in the sitemap (instance or declaration, in this order)
             // Ask the Reader for a MIME type:
             //     A *.doc reader could peek into the file
             //     and return either text/plain or application/vnd.msword or
@@ -566,8 +561,6 @@ public abstract class AbstractProcessingPipeline
             //     by the server.
             if ( this.readerMimeType != null ) {
                 environment.setContentType(this.readerMimeType);
-            } else if ( this.sitemapReaderMimeType != null ) {
-                environment.setContentType(this.sitemapReaderMimeType);                
             } else {
                 final String mimeType = this.reader.getMimeType();
                 if (mimeType != null) {
@@ -655,8 +648,8 @@ public abstract class AbstractProcessingPipeline
         // Release transformers
         int size = this.transformerSelectors.size();
         for (int i = 0; i < size; i++) {
-            final ComponentSelector selector =
-                (ComponentSelector)this.transformerSelectors.get(i);
+            final ServiceSelector selector =
+                (ServiceSelector)this.transformerSelectors.get(i);
             selector.release( (Component)this.transformers.get(i) );
             this.newManager.release( selector );
         }

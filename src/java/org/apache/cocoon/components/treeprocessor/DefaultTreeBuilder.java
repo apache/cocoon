@@ -15,6 +15,12 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManageable;
@@ -22,10 +28,7 @@ import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Recomposable;
+import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -35,6 +38,11 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.WrapperServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -44,20 +52,14 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.excalibur.source.Source;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.12 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.13 2004/07/15 12:49:50 sylvain Exp $
  */
 public class DefaultTreeBuilder
         extends AbstractLogEnabled
-        implements TreeBuilder, Recomposable, Configurable, Contextualizable,
+        implements TreeBuilder, Configurable, Contextualizable, Serviceable,
                    RoleManageable, Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
@@ -71,32 +73,37 @@ public class DefaultTreeBuilder
     protected Context context;
 
     /**
-     * The parent component manager, set using <code>compose()</code> and <code>recompose()</code>
-     * (implementation of <code>Recomposable</code>).
+     * The parent component manager. Either the one of the parent processor, or that provided
+     * by Cocoon in service()
      */
-    protected ComponentManager parentManager;
+    protected ServiceManager ownManager;
 
     /**
      * The parent role manager, set using <code>setRoleManager</code> (implementation of
      * <code>RoleManageable</code>).
      */
-    protected RoleManager parentRoleManager;
+    protected RoleManager ownRoleManager;
 
     protected Configuration configuration;
     // -------------------------------------
+    
+    /**
+     * Component processor of the parent manager (can be null for the root sitemap)
+     */
+    protected ServiceManager parentProcessorManager;
 
     /**
      * Component manager created by {@link #createComponentManager(Configuration)}.
      */
-    protected ComponentManager manager;
+    protected ServiceManager processorManager;
 
     /**
      * Role manager result created by {@link #createRoleManager()}.
      */
-    protected RoleManager roleManager;
+    protected RoleManager processorRoleManager;
 
     /** Selector for ProcessingNodeBuilders */
-    protected ComponentSelector builderSelector;
+    protected ServiceSelector builderSelector;
 
     protected LifecycleHelper lifecycle;
 
@@ -128,22 +135,19 @@ public class DefaultTreeBuilder
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.parentManager = manager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.ownManager = manager;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Recomposable#recompose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
-        this.parentManager = manager;
+    public void setParentProcessorManager(ServiceManager manager) {
+        this.parentProcessorManager = manager;
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
      */
     public void setRoleManager(RoleManager rm) {
-        this.parentRoleManager = rm;
+        this.ownRoleManager = rm;
     }
 
     /* (non-Javadoc)
@@ -179,13 +183,13 @@ public class DefaultTreeBuilder
      */
     protected RoleManager createRoleManager() throws Exception
     {
-        RoleManager roles = new DefaultRoleManager(this.parentRoleManager);
+        RoleManager roles = new DefaultRoleManager(this.ownRoleManager);
 
         LifecycleHelper.setupComponent(roles,
             getLogger(),
             this.context,
-            this.manager,
-            this.parentRoleManager,
+            this.ownManager,
+            this.ownRoleManager,
             this.configuration.getChild("roles")
         );
 
@@ -204,9 +208,9 @@ public class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected ComponentManager createComponentManager(Configuration tree) throws Exception
+    protected ServiceManager createServiceManager(Configuration tree) throws Exception
     {
-        return this.parentManager;
+        return this.ownManager;
     }
 
     /**
@@ -215,7 +219,7 @@ public class DefaultTreeBuilder
      *
      * @return a selector for node builders
      */
-    protected ComponentSelector createBuilderSelector(String sitemapVersion)
+    protected ServiceSelector createBuilderSelector(String sitemapVersion)
     throws Exception {
 
         // Create the NodeBuilder selector.
@@ -262,12 +266,14 @@ public class DefaultTreeBuilder
         LifecycleHelper.setupComponent(selector,
             getLogger(),
             this.context,
-            this.manager,
-            this.roleManager,
-            base
+            this.ownManager,
+            new WrapperComponentManager(this.ownManager),
+            this.ownRoleManager,
+            base,
+            true
         );
 
-        return selector;
+        return new WrapperServiceSelector("BuilderSelector", selector);
     }
 
     /* (non-Javadoc)
@@ -313,9 +319,9 @@ public class DefaultTreeBuilder
         try {
             builder = (ProcessingNodeBuilder)this.builderSelector.select(nodeName);
 
-        } catch(ComponentException ce) {
+        } catch(ServiceException ce) {
             // Is it because this element is unknown ?
-            if (this.builderSelector.hasComponent(nodeName)) {
+            if (this.builderSelector.isSelectable(nodeName)) {
                 // No : rethrow
                 throw ce;
             } else {
@@ -323,10 +329,6 @@ public class DefaultTreeBuilder
                 String msg = "Unknown element '" + nodeName + "' at " + config.getLocation();
                 throw new ConfigurationException(msg);
             }
-        }
-
-        if (builder instanceof Recomposable) {
-            ((Recomposable)builder).recompose(this.manager);
         }
 
         builder.setBuilder(this);
@@ -403,15 +405,15 @@ public class DefaultTreeBuilder
      */
     protected ProcessingNode build(Configuration tree, String sitemapVersion) throws Exception {
 
-        this.roleManager = createRoleManager();
+        this.processorRoleManager = createRoleManager();
 
-        this.manager = createComponentManager(tree);
+        this.processorManager = createServiceManager(tree);
 
         // Create a helper object to setup components
         this.lifecycle = new LifecycleHelper(getLogger(),
             this.context,
-            this.manager,
-            this.roleManager,
+            this.processorManager,
+            this.processorRoleManager,
             null // configuration
         );
 
@@ -447,13 +449,6 @@ public class DefaultTreeBuilder
      */
     public List getDisposableNodes() {
         return this.disposableNodes;
-    }
-
-    /**
-     * Return the sitemap component manager
-     */
-    public ComponentManager getSitemapComponentManager() {
-        return this.manager;
     }
 
     /**
@@ -513,8 +508,8 @@ public class DefaultTreeBuilder
                 String value = child.getAttribute("value");
                 try {
                     params.put(
-                        VariableResolverFactory.getResolver(name, this.manager),
-                        VariableResolverFactory.getResolver(value, this.manager));
+                        VariableResolverFactory.getResolver(name, this.processorManager),
+                        VariableResolverFactory.getResolver(value, this.processorManager));
                 } catch(PatternException pe) {
                     String msg = "Invalid pattern '" + value + "' at " + child.getLocation();
                     throw new ConfigurationException(msg, pe);
@@ -527,47 +522,48 @@ public class DefaultTreeBuilder
 
     /**
      * Get the type for a statement : it returns the 'type' attribute if present,
-     * and otherwhise the default hint of the <code>ExtendedSelector</code> designated by
-     * role <code>role</code>.
+     * and otherwhise the default type defined for this role in the components declarations.
      *
-     * @throws ConfigurationException if the default type could not be found.
+     * @throws ConfigurationException if the type could not be found.
      */
     public String getTypeForStatement(Configuration statement, String role) throws ConfigurationException {
 
+        // Get the component type for the statement
         String type = statement.getAttribute("type", null);
+        if (type == null) {
+            type = getProcessor().getComponentInfo().getDefaultType(role);
+        }
+        
+        if (type == null) {
+            throw new ConfigurationException("No default type exists for 'map:" + statement.getName() +
+                "' at " + statement.getLocation()
+            );
+        }
 
-        ComponentSelector selector = null;
+        // Check that this type actually exists
+        ServiceSelector selector = null;
 
         try {
-            try {
-                selector = (ComponentSelector)this.manager.lookup(role);
-            } catch(ComponentException ce) {
-                String msg = "Cannot get component selector for '" + statement.getName() + "' at " +
-                    statement.getLocation();
-                throw new ConfigurationException(msg, ce);
-            }
+            selector = (ServiceSelector)this.processorManager.lookup(role + "Selector");
+        } catch(ServiceException ce) {
+            throw new ConfigurationException("Cannot get service selector for 'map:" +
+                statement.getName() + "' at " + statement.getLocation(),
+                ce
+            );
+        }            
 
-            if (type == null && selector instanceof ExtendedComponentSelector) {
-                type = ((ExtendedComponentSelector)selector).getDefaultHint();
-            }
+        boolean selectable = selector.isSelectable(type);
+        this.processorManager.release(selector);
 
-            if (type == null) {
-                String msg = "No default type exists for '" + statement.getName() + "' at " +
-                    statement.getLocation();
-                throw new ConfigurationException(msg);
-            }
-
-            if (!selector.hasComponent(type)) {
-                String msg = "Type '" + type + "' is not defined for '" + statement.getName() + "' at " +
-                    statement.getLocation();
-                throw new ConfigurationException(msg);
-            }
-        } finally {
-            this.manager.release(selector);
+        if (!selector.isSelectable(type)) {
+            throw new ConfigurationException("Type '" + type + "' does not exist for 'map:" +
+                statement.getName() + "' at " + statement.getLocation()
+            );
         }
+
         return type;
     }
-
+    
     public void recycle() {
         this.lifecycle = null; // Created in build()
         this.initializableNodes.clear();
@@ -580,8 +576,8 @@ public class DefaultTreeBuilder
         VariableResolverFactory.setDisposableCollector(null);
 
         this.processor = null;
-        this.manager = null;
-        this.roleManager = null;
+        this.processorManager = null;
+        this.processorRoleManager = null;
     }
 
     public void dispose() {

@@ -30,7 +30,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  * Builds a &lt;map:pipeline&gt;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: PipelineNodeBuilder.java,v 1.5 2004/03/10 23:37:31 unico Exp $
+ * @version CVS $Id: PipelineNodeBuilder.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class PipelineNodeBuilder
@@ -45,7 +45,7 @@ public class PipelineNodeBuilder
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
         
-        String type = this.treeBuilder.getTypeForStatement(config, ProcessingPipeline.ROLE + "Selector");
+        String type = this.treeBuilder.getTypeForStatement(config, ProcessingPipeline.ROLE);
         PipelineNode node = new PipelineNode(type);
 
         this.treeBuilder.setupNode(node, config);

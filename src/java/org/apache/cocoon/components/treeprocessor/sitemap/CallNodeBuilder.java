@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -27,23 +30,25 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 
 /**
- *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @version CVS $Id: CallNodeBuilder.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * 
+ * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez </a>
+ * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu </a>
+ * @version CVS $Id: CallNodeBuilder.java,v 1.3 2004/03/05 13:02:51 bdelacretaz
+ *          Exp $
  */
 
-public class CallNodeBuilder extends AbstractProcessingNodeBuilder
-  implements LinkedProcessingNodeBuilder {
+public class CallNodeBuilder extends AbstractProcessingNodeBuilder implements
+        LinkedProcessingNodeBuilder {
 
     protected ProcessingNode node;
+
     protected String resourceName;
+
     protected String functionName;
+
     protected String continuationId;
 
-    public ProcessingNode buildNode(Configuration config)
-        throws Exception
-    {
+    public ProcessingNode buildNode(Configuration config) throws Exception {
         resourceName = config.getAttribute("resource", null);
         functionName = config.getAttribute("function", null);
         continuationId = config.getAttribute("continuation", null);
@@ -52,59 +57,73 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
             // Building a CallFunction node
             if (functionName == null && continuationId == null) {
                 throw new ConfigurationException(
-                    "<map:call> must have either a 'resource', 'function' or 'continuation' attribute, at " +
-                    config.getLocation());
+                    "<map:call> must have either a 'resource', 'function' or 'continuation' attribute, at "
+                    + config.getLocation()
+                );
             }
 
-            node = new CallFunctionNode(
-                VariableResolverFactory.getResolver(functionName, this.manager),
-                VariableResolverFactory.getResolver(continuationId, this.manager)
+            // Build the ordered list of parameter names
+            // FIXME(SW): remove this in the future (see comment in FlowNode)
+            List argumentNames = new ArrayList();
+            Configuration[] params = config.getChildren("parameter");
+            for (int i = 0; i < params.length; i++) {
+                argumentNames.add(params[i].getAttribute("name"));
+            }
+
+            node = new CallFunctionNode(VariableResolverFactory.getResolver(
+                functionName, this.manager),
+                VariableResolverFactory.getResolver(continuationId, this.manager),
+                (String[]) argumentNames.toArray(new String[argumentNames.size()])
             );
-            
+
         } else {
             // Building a Call(Resource)Node
             if (functionName != null || continuationId != null) {
                 throw new ConfigurationException(
                     "<map:call> cannot have both a 'resource' and a 'function' or 'continuation' attribute, at "
-                    + config.getLocation()
-                );
+                    + config.getLocation());
             }
             node = new CallNode();
         }
 
         this.treeBuilder.setupNode(this.node, config);
-        if (node instanceof Configurable) 
-            ((Configurable)this.node).configure(config);
+        if (node instanceof Configurable) {
+            ((Configurable) this.node).configure(config);
+        }
 
         return this.node;
     }
 
-    public void linkNode()
-        throws Exception
-    {
-      if (resourceName != null) {
-        // We have a <map:call resource="..."/>
-        CategoryNode resources
-            = CategoryNodeBuilder.getCategoryNode(treeBuilder, "resources");
+    public void linkNode() throws Exception {
+        if (resourceName != null) {
+            // We have a <map:call resource="..."/>
+            CategoryNode resources = CategoryNodeBuilder.getCategoryNode(treeBuilder, "resources");
 
-        if (resources == null)
-            throw new ConfigurationException("This sitemap contains no resources. Cannot call at " + node.getLocation());
+            if (resources == null)
+                throw new ConfigurationException(
+                    "This sitemap contains no resources. Cannot call at " + node.getLocation());
 
-        ((CallNode)this.node).setResource(resources, this.resourceName);
-      }
-      else {
-        // We have a <map:call> with either "function" or
-        // "continuation", or both specified
+            ((CallNode) this.node).setResource(
+                resources,
+                VariableResolverFactory.getResolver(this.resourceName, this.manager)
+            );
+        } else {
+            // We have a <map:call> with either "function" or
+            // "continuation", or both specified
 
-        // Check to see if a flow has been defined in this sitemap
-        FlowNode flow = (FlowNode)treeBuilder.getRegisteredNode("flow");
-        if (flow == null)
-            throw new ConfigurationException("This sitemap contains no control flows defined, cannot call at " + node.getLocation() + ". Define a control flow using <map:flow>, with embedded <map:script> elements.");
-
-        // Get the Interpreter instance and set it up in the
-        // CallFunctionNode function
-        Interpreter interpreter = flow.getInterpreter();
-        ((CallFunctionNode)node).setInterpreter(interpreter);
-      }
+            // Check to see if a flow has been defined in this sitemap
+            FlowNode flow = (FlowNode) treeBuilder.getRegisteredNode("flow");
+            if (flow == null) {
+                throw new ConfigurationException(
+                    "This sitemap contains no control flows defined, cannot call at "
+                    + node.getLocation()
+                    + ". Define a control flow using <map:flow>, with embedded <map:script> elements.");
+            }
+            
+            // Get the Interpreter instance and set it up in the
+            // CallFunctionNode function
+            Interpreter interpreter = flow.getInterpreter();
+            ((CallFunctionNode) node).setInterpreter(interpreter);
+        }
     }
 }

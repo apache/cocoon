@@ -15,11 +15,9 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
+import java.util.Map;
+
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -31,21 +29,16 @@ import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.selection.SwitchSelector;
 import org.apache.cocoon.sitemap.PatternException;
 
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelectNode.java,v 1.6 2004/07/14 13:17:45 cziegeler Exp $
+ * @version CVS $Id: SwitchSelectNode.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
  */
 public class SwitchSelectNode extends SimpleSelectorProcessingNode
-                              implements ParameterizableProcessingNode, Composable, Disposable {
+    implements ParameterizableProcessingNode {
 
     /** The parameters of this node */
     private Map parameters;
-
-    /** Pre-selected selector, if it's ThreadSafe */
-    protected SwitchSelector threadSafeSelector;
 
     private ProcessingNode[][] whenNodes;
 
@@ -56,7 +49,7 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
     private ComponentManager manager;
 
     public SwitchSelectNode(String name) throws PatternException {
-        super(name);
+        super(Selector.ROLE + "Selector", name);
     }
 
     public void setParameters(Map parameterMap) {
@@ -69,21 +62,6 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         this.otherwhiseNodes = otherwhiseNodes;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-
-        setSelector((ComponentSelector)manager.lookup(Selector.ROLE + "Selector"));
-
-        // Get the selector, if it's ThreadSafe
-        this.threadSafeSelector = (SwitchSelector)this.getThreadSafeComponent();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
-     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 	
@@ -95,14 +73,15 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
         // If selector is ThreadSafe, avoid select() and try/catch block (faster !)
-        if (this.threadSafeSelector != null) {
+        if (this.hasThreadSafeComponent()) {
 
-            Object ctx = this.threadSafeSelector.getSelectorContext(objectModel, resolvedParams);
+            SwitchSelector switchSelector = (SwitchSelector)this.getThreadSafeComponent();
+            Object ctx = switchSelector.getSelectorContext(objectModel, resolvedParams);
 
             for (int i = 0; i < this.whenTests.length; i++) {
                 if (this.executor.invokeSwitchSelector(this, 
                                                        objectModel, 
-                                                       this.threadSafeSelector, 
+                                                       switchSelector, 
                                                        whenTests[i].resolve(context, objectModel), 
                                                        resolvedParams, 
                                                        ctx)) {
@@ -117,15 +96,15 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
             return false;
 
         } else {
-            SwitchSelector selector = (SwitchSelector)this.selector.select(this.componentName);
+            SwitchSelector switchSelector = (SwitchSelector)this.selector.select(this.componentName);
 
-            Object ctx = selector.getSelectorContext(objectModel, resolvedParams);
+            Object ctx = switchSelector.getSelectorContext(objectModel, resolvedParams);
            
             try {
                 for (int i = 0; i < this.whenTests.length; i++) {
                     if (this.executor.invokeSwitchSelector(this, 
                             objectModel, 
-                            selector, 
+                            switchSelector, 
                             whenTests[i].resolve(context, objectModel), 
                             resolvedParams, 
                             ctx)) {
@@ -142,17 +121,5 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
                 this.selector.release(selector);
             }
         }
-    }
-
-    public void dispose() {
-        if (this.threadSafeSelector != null) {
-            this.selector.release(this.threadSafeSelector);
-            this.threadSafeSelector = null;
-        }
-        if (this.selector == null) {
-            this.manager.release(this.selector);
-            this.selector = null;
-        }
-        this.manager = null;
     }
 }

@@ -15,13 +15,11 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
+import java.util.Map;
+
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
@@ -31,15 +29,13 @@ import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.sitemap.PatternException;
 
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.7 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.8 2004/07/15 12:49:50 sylvain Exp $
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
-                                 implements ParameterizableProcessingNode, Composable, Disposable {
+    implements ParameterizableProcessingNode, Initializable {
 
     /** The 'pattern' attribute */
     private String pattern;
@@ -51,13 +47,8 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
 
     private Map parameters;
 
-    /** The matcher, if it's ThreadSafe */
-    private PreparableMatcher threadSafeMatcher;
-
-    protected ComponentManager manager;
-
     public PreparableMatchNode(String type, String pattern, String name) {
-        super(type);
+        super(Matcher.ROLE + "Selector", type);
         this.pattern = pattern;
         this.name = name;
     }
@@ -69,32 +60,21 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
         this.parameters = parameterMap;
     }
 
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        setSelector((ComponentSelector)manager.lookup(Matcher.ROLE + "Selector"));
+    public void initialize() throws Exception {
 
-        // Prepare the pattern, and keep matcher if ThreadSafe
+        // Prepare the pattern
         PreparableMatcher matcher = (PreparableMatcher)selector.select(componentName);
-
-        if (matcher instanceof ThreadSafe) {
-            this.threadSafeMatcher = matcher;
-        }
 
         try {
             this.preparedPattern = matcher.preparePattern(this.pattern);
-
         } catch(PatternException pe) {
             String msg = "Invalid pattern '" + this.pattern + "' for matcher at " + this.getLocation();
-            throw new ComponentException(null, msg, pe);
-
+            throw new ConfigurationException(msg, pe);
         } finally {
-            if (this.threadSafeMatcher == null) {
-                selector.release(matcher);
-            }
+            selector.release(matcher);
         }
     }
 
@@ -114,9 +94,9 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
 
         Map result = null;
 
-        if (this.threadSafeMatcher != null) {
+        if (this.getThreadSafeComponent() != null) {
             // Avoid select() and try/catch block (faster !)
-            result = this.threadSafeMatcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
+            result = ((PreparableMatcher)this.getThreadSafeComponent()).preparedMatch(preparedPattern, objectModel, resolvedParams);
 
         } else {
             // Get matcher from selector
@@ -142,20 +122,5 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
             // Matcher failed
             return false;
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (this.threadSafeMatcher != null) {
-            selector.release(this.threadSafeMatcher);
-            this.threadSafeMatcher = null;
-        }
-        if (this.selector != null) {
-            this.manager.release(this.selector);
-            this.selector = null;
-        }
-        this.manager = null;
     }
 }

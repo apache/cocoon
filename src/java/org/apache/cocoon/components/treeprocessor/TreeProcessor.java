@@ -22,10 +22,6 @@ import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -35,11 +31,13 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
@@ -51,14 +49,14 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.38 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.39 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class TreeProcessor
     extends AbstractLogEnabled
     implements ThreadSafe,
                Processor,
-               Composable,
+               Serviceable,
                Configurable,
                RoleManageable,
                Contextualizable,
@@ -74,11 +72,11 @@ public class TreeProcessor
     /** The context */
     protected Context context;
 
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The component manager given by the upper level (root manager or parent concrete processor) */
+    protected ServiceManager parentServiceManager;
 
-    /** The role manager */
-    protected RoleManager roleManager;
+    /** The root role manager */
+    protected RoleManager rootRoleManager;
 
     /** Sitemap TreeBuilder */
     protected TreeBuilder treeBuilder;
@@ -134,19 +132,19 @@ public class TreeProcessor
         // Copy all that can be copied from the parent
         this.enableLogging(parent.getLogger());
         this.context = parent.context;
-        this.roleManager = parent.roleManager;
+        this.rootRoleManager = parent.rootRoleManager;
         this.source = sitemapSource;
         this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
 
-        // We have our own CM
-        this.manager = parent.concreteProcessor.sitemapComponentManager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.parentServiceManager = parent.concreteProcessor.getComponentInfo().getServiceManager();
+
+        this.resolver = (SourceResolver)this.parentServiceManager.lookup(SourceResolver.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
-        ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(this.manager));
+        ContainerUtil.service(this.environmentHelper, this.parentServiceManager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
         this.createTreeBuilder();
     }
@@ -165,31 +163,19 @@ public class TreeProcessor
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+    public void service(ServiceManager manager) throws ServiceException {
+        this.parentServiceManager = manager;
+        this.resolver = (SourceResolver)this.parentServiceManager.lookup(SourceResolver.ROLE);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
-     */
     public void setRoleManager(RoleManager rm) {
-        this.roleManager = rm;
+        this.rootRoleManager = rm;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null ) {
@@ -197,7 +183,7 @@ public class TreeProcessor
                 (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         }
         ContainerUtil.enableLogging(this.environmentHelper,getLogger());
-        ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(manager));
+        ContainerUtil.service(this.environmentHelper, parentServiceManager);
     }
 
     /**
@@ -229,7 +215,7 @@ public class TreeProcessor
             Source source = this.resolver.resolveURI( xconfURL );
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX( new ComponentManagerWrapper(this.manager), source, null, handler);
+                SourceUtil.toSAX(this.parentServiceManager, source, null, handler);
                 this.treeBuilderConfiguration = handler.getConfiguration();
             } finally {
                 this.resolver.release( source );
@@ -256,8 +242,8 @@ public class TreeProcessor
             LifecycleHelper.setupComponent(this.treeBuilder,
                                            getLogger(),
                                            this.context,
-                                           this.manager,
-                                           this.roleManager,
+                                           this.parentServiceManager,
+                                           this.rootRoleManager,
                                            this.treeBuilderConfiguration);
         } catch(ConfigurationException ce) {
             throw ce;
@@ -278,6 +264,7 @@ public class TreeProcessor
      */
     public boolean process(Environment environment) throws Exception {
 
+        // Get the concrete processor and delegate it the job
         setupConcreteProcessor(environment);
 
         return this.concreteProcessor.process(environment);
@@ -291,7 +278,7 @@ public class TreeProcessor
      */
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
-
+        // Get the concrete processor and delegate it the job
         setupConcreteProcessor(environment);
 
         return this.concreteProcessor.buildPipeline(environment);
@@ -375,15 +362,14 @@ public class TreeProcessor
         // If these components try to access the current processor or the
         // current service manager they must get this one - which is currently
         // in the process of initialization.
-        EnvironmentHelper.enterProcessor(this, new ComponentManagerWrapper(this.manager), env);
+        EnvironmentHelper.enterProcessor(this, this.parentServiceManager, env);
         try {
             if (this.treeBuilder instanceof Recyclable) {
                 ((Recyclable)this.treeBuilder).recycle();
             }
-            if (this.treeBuilder instanceof Recomposable) {
-                ((Recomposable)this.treeBuilder).recompose(this.manager);
-            }
+            
             this.treeBuilder.setProcessor(newProcessor);
+            this.treeBuilder.setParentProcessorManager(this.parentServiceManager);
             if (this.fileName == null) {
                 this.fileName = "sitemap.xmap";
             }
@@ -397,9 +383,8 @@ public class TreeProcessor
 
             ProcessingNode root = this.treeBuilder.build(this.source);
 
-            newProcessor.setProcessorData(this.treeBuilder.getSitemapComponentManager(),
-                                          root,
-                                          this.treeBuilder.getDisposableNodes());
+            newProcessor.setProcessorData(root, this.treeBuilder.getDisposableNodes());
+            
         } finally {
             EnvironmentHelper.leaveProcessor();
         }
@@ -433,14 +418,14 @@ public class TreeProcessor
         ContainerUtil.dispose(this.treeBuilder);
         this.treeBuilder = null;
 
-        if (this.manager != null) {
+        if (this.parentServiceManager != null) {
             if (this.source != null) {
                 this.resolver.release(this.source.getSource());
                 this.source = null;
             }
-            this.manager.release(this.resolver);
+            this.parentServiceManager.release(this.resolver);
             this.resolver = null;
-            this.manager = null;
+            this.parentServiceManager = null;
         }
     }
 }

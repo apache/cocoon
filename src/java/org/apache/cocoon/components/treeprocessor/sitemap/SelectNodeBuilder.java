@@ -17,10 +17,12 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.selection.SwitchSelector;
 
@@ -30,16 +32,14 @@ import java.util.List;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNodeBuilder.java,v 1.2 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: SelectNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class SelectNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
-    private static final String SELECTOR_ROLE = Selector.ROLE + "Selector";
-
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        String type = this.treeBuilder.getTypeForStatement(config, SELECTOR_ROLE);
+        String type = this.treeBuilder.getTypeForStatement(config, Selector.ROLE);
 
         // Lists of ProcessingNode[] and test resolvers for each "when"
         List whenChildren = new ArrayList();
@@ -87,7 +87,7 @@ public class SelectNodeBuilder extends AbstractParentProcessingNodeBuilder {
         VariableResolver[] whenResolvers = (VariableResolver[])whenTests.toArray(new VariableResolver[whenTests.size()]);
 
         // Get the type and class for this selector
-        ComponentsSelector compSelector = (ComponentsSelector)this.manager.lookup(SELECTOR_ROLE);
+        ServiceSelector compSelector = (ServiceSelector)this.manager.lookup(Selector.ROLE + "Selector");
 
         Class clazz = null;
         try {

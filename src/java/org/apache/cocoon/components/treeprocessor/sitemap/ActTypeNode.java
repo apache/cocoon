@@ -18,11 +18,6 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -38,11 +33,11 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.9 2004/06/11 08:51:56 cziegeler Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.10 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
-  implements ParameterizableProcessingNode, Disposable, Composable {
+  implements ParameterizableProcessingNode {
 
     /** The parameters of this node */
     private Map parameters;
@@ -53,18 +48,13 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
     /** The 'name' for the variable anchor */
     protected String name;
 
-    /** Pre-selected action, if it's ThreadSafe */
-    protected Action threadSafeAction;
-
-    protected ComponentManager manager;
-
     protected boolean inActionSet;
 
     public ActTypeNode(String type, 
                        VariableResolver source, 
                        String name,
                        boolean inActionSet)  {
-        super(type);
+        super(Action.ROLE + "Selector", type);
         this.source = source;
         this.name = name;
         this.inActionSet = inActionSet;
@@ -72,14 +62,6 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
-    }
-
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        setSelector((ComponentSelector)manager.lookup(Action.ROLE + "Selector"));
-
-        // Get the action, if it's thread safe
-        this.threadSafeAction = (Action)this.getThreadSafeComponent();
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
@@ -117,10 +99,10 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
         }
 
         // If action is ThreadSafe, avoid select() and try/catch block (faster !)
-        if (this.threadSafeAction != null) {
+        if (this.hasThreadSafeComponent()) {
             actionResult = this.executor.invokeAction(this, 
                                              objectModel, 
-                                             this.threadSafeAction, 
+                                             (Action)this.getThreadSafeComponent(), 
                                              redirector, 
                                              resolver, 
                                              resolvedSource, 
@@ -169,15 +151,4 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
             return false;   // Action failed
         //}
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (this.threadSafeAction != null) {
-            this.selector.release(this.threadSafeAction);
-        }
-        this.manager.release(this.selector);
-    }
-
 }

@@ -29,14 +29,12 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.container.ComponentLocatorImpl;
-import org.apache.cocoon.components.pipeline.OutputComponentSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.SitemapComponentSelector;
 import org.apache.cocoon.transformation.Transformer;
 
 /**
@@ -44,11 +42,10 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.11 2004/07/14 19:39:09 cziegeler Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.12 2004/07/15 12:49:50 sylvain Exp $
  */
 
-public class ComponentsSelector extends ExtendedComponentSelector
-                                implements OutputComponentSelector, SitemapComponentSelector {
+public class ComponentsSelector extends ExtendedComponentSelector {
 
     public static final int UNKNOWN     = -1;
     public static final int GENERATOR   = 0;
@@ -85,32 +82,8 @@ public class ComponentsSelector extends ExtendedComponentSelector
     /** The role as an integer */
     private int roleId;
 
-    /** The mime-type for hints */
-    private Map hintMimeTypes;
-
-    /** The labels for hints */
-    private Map hintLabels;
-
-    /** The pipeline-hint Map */
-    private Map pipelineHints;
-
     /** The set of known hints, used to add standard components (see ensureExists) */
     private Set knownHints = new HashSet();
-
-    /** The parent selector, if it's of the current class */
-    private SitemapComponentSelector parentSitemapSelector;
-    
-    /**
-     * Give access to the parent selector - if any
-     */
-    public void setParentLocator(ComponentLocatorImpl locator)
-    throws ComponentException {
-        super.setParentLocator(locator);
-
-        if (super.parentSelector instanceof SitemapComponentSelector) {
-            this.parentSitemapSelector = (SitemapComponentSelector)super.parentSelector;
-        }
-    }
 
     /**
      * Return the component instance name according to the selector role
@@ -127,7 +100,6 @@ public class ComponentsSelector extends ExtendedComponentSelector
     protected String getClassAttributeName() {
         return (this.roleId == UNKNOWN) ? "class" : "src";
     }
-
 
     public void configure(Configuration config) throws ConfigurationException {
         
@@ -146,49 +118,20 @@ public class ComponentsSelector extends ExtendedComponentSelector
                               role + " (role id = " + this.roleId + ")");
         }
 
-        // Only matchers and serializers can have a MIME type
-        if (this.roleId == SERIALIZER || this.roleId == READER) {
-            this.hintMimeTypes = new HashMap();
-        }
-
-        this.hintLabels = new HashMap();
-        this.pipelineHints = new HashMap();
-
         super.configure(config);
+        
     }
 
     /**
-     * Add a component in this selector. If needed, also register it's MIME type.
+     * Add a component in this selector.
      */
     public void addComponent(Object hint, Class clazz, Configuration config) throws ComponentException {
 
         super.addComponent(hint, clazz, config);
 
-        // Add to known hints
+        // Add to known hints. This is needed as we cannot call isSelectable() if initialize()
+        // has not been called, and we cannot add components once it has been called...
         this.knownHints.add(hint);
-
-        if (this.roleId == SERIALIZER || this.roleId == READER) {
-            // Get mime-type
-            String mimeType = config.getAttribute("mime-type", null);
-            if (mimeType != null) {
-                this.hintMimeTypes.put(hint, mimeType);
-            }
-        }
-
-        String label = config.getAttribute("label", null);
-        if (label != null) {
-            // Empty '' attribute will result in empty array,
-            // overriding all labels on the component declared in the parent.
-            StringTokenizer st = new StringTokenizer(label, " ,", false);
-            String[] labels = new String[st.countTokens()];
-            for (int i = 0; i < labels.length; i++) {
-                labels[i] = st.nextToken();
-            }
-            this.hintLabels.put(hint, labels);
-        }
-
-        String pipelineHint = config.getAttribute("hint", null);
-        this.pipelineHints.put(hint, pipelineHint);
     }
 
     /**
@@ -250,71 +193,9 @@ public class ComponentsSelector extends ExtendedComponentSelector
     private void ensureExists(Object hint, Class clazz, Configuration config) throws ComponentException {
 
         if (! this.knownHints.contains(hint)) {
-            this.addComponent(hint, clazz, config);
-        }
-    }
-
-    /**
-     * Get the MIME type for a given hint.
-     */
-    public String getMimeTypeForHint(Object hint) {
-
-        if (this.hintMimeTypes == null) {
-            // Not a component that has mime types
-            return null;
-
-        } else {
-            if (this.hasDeclaredComponent(hint)) {
-                return (String)this.hintMimeTypes.get(hint);
-                
-            } else if (this.parentSitemapSelector != null) {
-                return this.parentSitemapSelector.getMimeTypeForHint(hint);
-                
-            } else {
-                return null;
+            if (this.parentSelector == null || !this.parentSelector.hasComponent(hint)) {
+                this.addComponent(hint, clazz, config);
             }
         }
-    }
-
-    public boolean hasLabel(Object hint, String label) {
-        String[] labels = this.getLabels(hint);
-        if (labels != null) {
-            for (int i = 0; i < labels.length; i++) {
-                if (labels[i].equals(label))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    public String[] getLabels(Object hint) {
-        // If this hint is declared locally, use its labels (if any), otherwise inherit
-        // those of the parent.
-        if (this.hasDeclaredComponent(hint)) {
-            return (String[])this.hintLabels.get(hint);
-            
-        } else if (this.parentSitemapSelector != null) {
-            return parentSitemapSelector.getLabels(hint);
-            
-        } else {
-            return null;
-        }
-    }
-
-    public String getPipelineHint(Object hint) {
-        // If this hint is declared locally, use its hints (if any), otherwise inherit
-        // those of the parent.
-        if (this.hasDeclaredComponent(hint)) {
-            return (String)this.pipelineHints.get(hint);
-        } else if (this.parentSitemapSelector != null) {
-            return this.parentSitemapSelector.getPipelineHint(hint);
-        } else {
-            return null;
-        }
-    }
-
-    public void dispose() {
-        super.dispose();
-        this.parentSitemapSelector = null;
     }
 }
