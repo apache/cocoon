@@ -84,7 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author  <a href="mailto:mge@efp.co.at">Michael Gerzabek</a>
  * @since 21. Oct. 2002
- * @version CVS $Id: Web3RfcTransformer.java,v 1.4 2003/05/06 14:13:01 vgritsenko Exp $
+ * @version CVS $Id: Web3RfcTransformer.java,v 1.5 2003/07/01 11:33:55 haul Exp $
  */
 public class Web3RfcTransformer extends AbstractTransformer 
 implements Composable, Disposable, Configurable, Poolable, Recyclable {
@@ -207,9 +207,13 @@ implements Composable, Disposable, Configurable, Poolable, Recyclable {
                     catch (Exception ex) {
                         String error = "Problems getting client for backend: '" 
                             + this.backend + "'";
-                        getLogger().error (error, ex);                   
+                        getLogger().error (error, ex);   
+                        
+                        error = ex.getMessage();
+                        attributes.clear();
+                        super.contentHandler.startElement(uri, loc, raw, a);                
                         super.contentHandler.startElement(uri, Web3.PROCESSING_X_ELEM, 
-                            Web3.PROCESSING_X_ELEM, a);
+                            Web3.PROCESSING_X_ELEM, attributes);
                         super.contentHandler.characters(error.toCharArray(), 0, 
                             error.length());
                         super.contentHandler.endElement(uri, Web3.PROCESSING_X_ELEM, 
