@@ -382,7 +382,7 @@ by the main ones.
   <!-- =================================================================== -->
   <!-- Removes existing uncompressed webapp                                -->
   <!-- =================================================================== -->
-  <target name="remove-webapp" if="remove.webapp" description="Removes existing uncompressed webapp">
+  <target name="remove-webapp" if="remove.webapp" description="Removes existing uncompressed webapp" depends="init">
     <delete dir="${install.war}/${name}"/>
   </target>
   
