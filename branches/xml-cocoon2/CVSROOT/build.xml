@@ -80,7 +80,7 @@ pretty self-explanatory or type
 
  [unix]  ./build.sh  -projecthelp
  [win32] .\build.bat -projecthelp
- 
+
 and concentrate on the target descriptions that start with a star '*': these
 are the one you should call, the others are internal targets that are called
 by the main ones.
@@ -108,7 +108,7 @@ by the main ones.
     <property name="fullname" value="Apache Cocoon"/>
     <property name="Name"     value="Cocoon"/>
     <property name="name"     value="cocoon"/>
-    <property name="version"  value="2.0a4"/>
+    <property name="version"  value="2.0a5"/>
     <property name="year"     value="1999-2001"/>
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
