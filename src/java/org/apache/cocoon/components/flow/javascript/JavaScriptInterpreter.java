@@ -1,4 +1,4 @@
-/*
+/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -91,7 +91,7 @@ import org.mozilla.javascript.Wrapper;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.9 2003/03/23 19:41:03 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.10 2003/03/23 19:42:38 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -178,26 +178,26 @@ public class JavaScriptInterpreter extends AbstractInterpreter
     static org.mozilla.javascript.tools.debugger.Main debugger;
 
     static synchronized org.mozilla.javascript.tools.debugger.Main getDebugger() {
-	if (debugger == null) {
+        if (debugger == null) {
             final org.mozilla.javascript.tools.debugger.Main db
                 = new org.mozilla.javascript.tools.debugger.Main("Cocoon Flow Debugger");
             db.pack();
-	    java.awt.Dimension size = 
-		java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-	    size.width *= 0.75;
-	    size.height *= 0.75;
+            java.awt.Dimension size = 
+                java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+            size.width *= 0.75;
+            size.height *= 0.75;
             db.setSize(size);
             db.setExitAction(new Runnable() { 
                     public void run() { 
                         db.setVisible(false); 
                     } 
                 });
-	    db.setOptimizationLevel(OPTIMIZATION_LEVEL);
+            db.setOptimizationLevel(OPTIMIZATION_LEVEL);
             db.setVisible(true);
             debugger = db;
             Context.addContextListener(debugger);
-	}
-	return debugger;
+        }
+        return debugger;
     }
 
     public void configure(Configuration config)
@@ -225,7 +225,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Flow debugger enabled, creating");
             }
-	    getDebugger().doBreak();
+            getDebugger().doBreak();
         }
         Context context = Context.enter();
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
@@ -298,9 +298,9 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         if (userScopes == null) {
             return null;
         }
-	String uriPrefix = environment.getURIPrefix();
-	scope = (Scriptable)userScopes.get(uriPrefix);
-	return scope;
+        String uriPrefix = environment.getURIPrefix();
+        scope = (Scriptable)userScopes.get(uriPrefix);
+        return scope;
     }
 
     /**
@@ -322,8 +322,8 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
-	String uriPrefix = environment.getURIPrefix();
-	System.out.println("set uriPrefix="+uriPrefix);
+        String uriPrefix = environment.getURIPrefix();
+        System.out.println("set uriPrefix="+uriPrefix);
         userScopes.put(uriPrefix, scope);
     }
 
@@ -440,8 +440,8 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         }
         thrScope.put(LAST_EXEC_TIME, thrScope, 
                      new Long(System.currentTimeMillis()));
-	// Compile all the scripts first. That way you can set breakpoints
-	// in the debugger before they execute.
+        // Compile all the scripts first. That way you can set breakpoints
+        // in the debugger before they execute.
         for (int i = 0, size = execList.size(); i < size; i++) {
             String sourceURI = (String)execList.get(i);
             ScriptSourceEntry entry = 
@@ -454,7 +454,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             // Compile the script if necessary
             Script script = entry.getScript(context, this.scope, needsRefresh);
         }
-	// Execute the scripts if necessary
+        // Execute the scripts if necessary
         for (int i = 0, size = execList.size(); i < size; i++) {
             String sourceURI = (String)execList.get(i);
             ScriptSourceEntry entry = 
@@ -464,7 +464,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             if (lastExecTime == 0 || lastMod > lastExecTime) {
                 script.exec(context, thrScope);
             } 
-	}
+        }
         return thrScope;
     }
 
@@ -542,7 +542,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             Context context = Context.getCurrentContext();
             JSCocoon cocoon = (JSCocoon)thrScope.get("cocoon", thrScope);
             if (enableDebugger) {
-		getDebugger().setVisible(true);
+                getDebugger().setVisible(true);
             }
             int size = (params != null ? params.size() : 0);
             Object[] funArgs = new Object[size];
@@ -603,8 +603,8 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         JSCocoon cocoon = jswk.getJSCocoon();
         cocoon.setContext(manager, environment);
         final Scriptable kScope = cocoon.getParentScope();
-	if (enableDebugger) {
-	    getDebugger().setVisible(true);
+        if (enableDebugger) {
+            getDebugger().setVisible(true);
         }
 
         // We can now resume the processing from the state saved by the
@@ -639,7 +639,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             Context.exit();
         }
     }
-
+    
     private Throwable unwrap(JavaScriptException e) {
         Object value = e.getValue();
         while (value instanceof Wrapper) {
@@ -651,3 +651,6 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         return e;
     }
 }
+
+
+
