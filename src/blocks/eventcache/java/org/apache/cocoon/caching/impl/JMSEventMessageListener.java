@@ -73,6 +73,11 @@ public class JMSEventMessageListener extends AbstractMessageListener implements 
         m_eventAwareRole = parameters.getParameter(EVENTCACHE_ROLE_PARAM, DEFAULT_EVENTCACHE_ROLE);
     }
 
+    public void initialize() throws Exception {
+        super.initialize();
+        m_eventCache = (EventAware) m_manager.lookup(m_eventAwareRole);
+    }
+
     public void dispose() {
         super.dispose();
         this.m_manager.release(m_eventCache);
