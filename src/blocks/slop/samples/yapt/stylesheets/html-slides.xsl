@@ -2,7 +2,7 @@
 
 <!--
     Generate the HTML for one or many slides
-    $Id: html-slides.xsl,v 1.2 2003/09/26 15:02:41 bdelacretaz Exp $
+    $Id: html-slides.xsl,v 1.3 2003/09/27 18:46:34 bdelacretaz Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -33,8 +33,16 @@
                     </xsl:if>
                 </xsl:if>
 
+                <!-- indicate if multiple or single slides (boy is XSLT painful for this) -->
+                <xsl:variable name="typeId">
+                    <xsl:choose>
+                        <xsl:when test="$slideCount &gt; 1">multipleSlides</xsl:when>
+                        <xsl:otherwise>singleSlide</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+
                 <div id="content">
-                    <div id="slides-page">
+                    <div id="{$typeId}">
                         <xsl:apply-templates select="yapt-presentation"/>
                     </div>
                 </div>

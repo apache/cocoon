@@ -91,6 +91,7 @@ a:focus {
 #navigation {
     position:fixed;
     bottom: 0;
+    clear: both;
 }
 
 #navigation div {
@@ -110,25 +111,22 @@ a:focus {
     font-size: 120%;
 }
 
-/** printing */
-@media print {
-    #multipleSlides div.slide {
-        page-break-after: avoid; page-break-inside: avoid;
-    }
+/**
+    Multiple slides on a single page:
+    make sure each slide gets its own block, and prevent page breaks
+    in slides when printing (does not work with all browser, Opera works)
+*/
 
-    img {
-        page-break-inside: avoid;
-    }
+#multipleSlides div.singleSlide {
+    clear: both;
+    margin-top: 2.5em;
+    page-break-inside: avoid;
+}
 
-    h1, h2, h3, h4, h5, h6 {
-        page-break-after: avoid; page-break-inside: avoid;
-    }
+#multipleSlides h1 {
+    page-break-after: avoid;
+}
 
-    blockquote, pre {
-        page-break-inside: avoid;
-    }
-
-    ul, ol, dl {
-        page-break-before: avoid;
-    }
+#multipleSlides img {
+    page-break-inside: avoid;
 }

@@ -2,7 +2,7 @@ presentation: YAPT demo
 image-directory: yapt-demo-images
 author: Bertrand Delacrétaz
 date: September 2003
-cvs: $Id: yapt-demo.txt,v 1.1 2003/09/26 14:42:36 bdelacretaz Exp $
+cvs: $Id: yapt-demo.txt,v 1.2 2003/09/27 18:46:34 bdelacretaz Exp $
 A (short) journey through the (few) YAPT features.
 
 slide: What is YAPT?
@@ -38,6 +38,18 @@ Click anywhere on a slide to go to the next one.
 Use the grey links at the bottom of the page to go to the previous slide, or to the index.
 
 note: This page uses a hint-style line to indicate that it contains little text and can use a larger font
+
+
+slide: Test results
+
+CSS styles have been tested with the latest version of Firebird, Opera and IE on Mac OSX, they might not
+work properly with other browsers.
+
+When printing, only Opera honors the "page-breaks" CSS properties, current versions of other browsers
+will break images and slides in two when laying out pages.
+
+When an image on the left goes below flowed text, Opera does not correctly position the navigation bar at
+the bottom of the page.
 
 slide: Image examples: half-left image
 
