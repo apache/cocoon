@@ -44,7 +44,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.6 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.7 2004/03/17 11:50:21 cziegeler Exp $
  */
 public class XMLUtils {
 
@@ -122,10 +122,14 @@ public class XMLUtils {
      * @return an <code>XMLConsumer</code> for <code>ch</code> an <code>lh</code>
      */
     public static XMLConsumer getConsumer(ContentHandler ch, LexicalHandler lh) {
-        if (ch instanceof XMLConsumer)
+        if (ch instanceof XMLConsumer) {
             return (XMLConsumer)ch;
-        else
+        } else {
+            if ( lh == null && ch instanceof LexicalHandler ) {
+                lh = (LexicalHandler)ch;
+            }
             return new ContentHandlerWrapper(ch, lh);
+        }
     }
 
     /**
@@ -143,6 +147,7 @@ public class XMLUtils {
     /**
      * Serialize a DOM node to a String.
      * The defaultSerializeToXMLFormat() is used to format the serialized xml.
+     * @deprecated use serializeNode(Node, Properties) instead
      */
     public static String serializeNodeToXML(Node node)
     throws ProcessingException {
@@ -157,6 +162,7 @@ public class XMLUtils {
      * Encoding: ISO-8859-1
      * Omit xml declaration: no
      * Indent: yes
+     * @deprecated Use createPropertiesForXML(false) instead and add the encoding
      */
     public static Properties defaultSerializeToXMLFormat() {
         return defaultSerializeToXMLFormat(false);
@@ -170,16 +176,29 @@ public class XMLUtils {
      * Encoding: ISO-8859-1
      * Omit xml declaration: according to the flag
      * Indent: yes
+     * @deprecated Use createPropertiesForXML(boolean) instead and add the encoding
      */
     public static Properties defaultSerializeToXMLFormat(boolean omitXMLDeclaration) {
-        Properties format = new Properties();
-        format.put(OutputKeys.METHOD, "xml");
+        final Properties format = createPropertiesForXML(omitXMLDeclaration);
         format.put(OutputKeys.ENCODING, "ISO-8859-1");
-        format.put(OutputKeys.OMIT_XML_DECLARATION, (omitXMLDeclaration ? "yes" : "no"));
-        format.put(OutputKeys.INDENT, "yes");
         return format;
     }
 
+    /**
+     * Create a new properties set for serializing xml
+     * The omit xml declaration property can be controlled by the flag.
+     * Method: xml
+     * Omit xml declaration: according to the flag
+     * Indent: yes
+     */
+    public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
+        final Properties format = new Properties();
+        format.put(OutputKeys.METHOD, "xml");
+        format.put(OutputKeys.OMIT_XML_DECLARATION, (omitXMLDeclaration ? "yes" : "no"));
+        format.put(OutputKeys.INDENT, "yes");
+        return format;        
+    }
+    
     /**
      * Serialize a DOM node to a String.
      * The format of the output can be specified with the properties.
@@ -209,7 +228,7 @@ public class XMLUtils {
             throw new ProcessingException("TransformerException: " + local, local);
         } catch (SAXException local) {
             throw new ProcessingException("SAXException while streaming DOM node to SAX: " + local, local);
-        }
+        }        
     }
 
     /**
