@@ -734,6 +734,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         ConnectionProvider provider;
         if (dsType.equals("jndi")) {
             provider = new JNDIConnectionProvider(dsName, false);
+        } else if (dsType.equals("excalibur")) {
+            provider = new DataSourceComponentConnectionProvider(dsName, this.manager);
         } else {
             // assume class name
             try {
