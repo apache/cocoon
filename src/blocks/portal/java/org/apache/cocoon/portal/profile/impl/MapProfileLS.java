@@ -42,9 +42,11 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Element;
 
 /**
+ * This implementation uses Castor to load/save the profiles.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MapProfileLS.java,v 1.7 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MapProfileLS
     extends AbstractLogEnabled

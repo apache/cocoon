@@ -20,21 +20,20 @@ import java.util.Map;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
+ * This component is used for loading/saving of a profile.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: ProfileLS.java,v 1.5 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface ProfileLS {
     
     String ROLE = ProfileLS.class.getName();
     
-    //  TODO define ExceptionType later
     Object loadProfile(Object key, Map parameters) throws Exception;  
     
-    //TODO define ExceptionType later
     void saveProfile(Object key, Map parameters, Object profile) throws Exception;  
     
     SourceValidity getValidity(Object key, Map parameters);
