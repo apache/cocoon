@@ -592,12 +592,12 @@ Alias /cocoon/ "[cocoon-home]"</source>
 
   <s2 title="Installing Cocoon on iPlanet Web Server 4.x">
    <p>This has been tested on v4.1 under NT 4.</p>
-   
+
    <s3 title="If you prefer working with your file editor">
-    <p>Edit your <code>servlets.properties</code> file in the config folder 
+    <p>Edit your <code>servlets.properties</code> file in the config folder
     of your server (something like <code>C:\Netscape\Server4\https-something.somewhere.com\config</code>),
     add the following lines:</p>
-    
+
 <source><![CDATA[servlet.cocoon.code=org.apache.cocoon.Cocoon
 servlet.cocoon.initArgs=properties=<yourpath to cocoon>/cocoon/conf/cocoon.properties]]>
 </source>
@@ -642,6 +642,55 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
      </sl>
     </ol>
    </s3>
+  </s2>
+
+  <s2 title="Installing Cocoon on WebSphere 3.5">
+    <p>The following rough-and-ready script installs Cocoon and maps the content directory to
+ the cocoon examples directory using /cocoon as a URI.  This script assumes
+ you've unpacked the cocoon 1.8 distribution into d:/cocoon-1.8, you may need
+ to adjust the paths to make this work for your config.</p>
+    <p><strong>WARNING! This script will wipe out any user set command line arguments to the
+     default Application server.</strong></p>
+
+   <source><![CDATA[
+# usage: wscp -f ws.tcl
+
+set node [Node list]
+set appserv "[set node]ApplicationServer:Default Server"
+set webapp "$appserv/ServletEngine:Default Servlet Engine/WebApplication:cocoon"
+set cocoon "$webapp/Servlet:cocoon"
+
+# add the cocoon classes to the classpath
+# *** NOTE! - the following should be all on one line!! ***
+ApplicationServer modify $appserv/ -attribute
+{{CommandLineArgs {-classpath D:/cocoon-1.8/lib/bsf.jar;D:/cocoon-1.8/lib/bsfengines.jar;
+D:/cocoon-1.8/lib/turbine-pool.jar;D:/cocoon-1.8/lib/xerces_1_2.jar;
+D:/cocoon-1.8/lib/xalan_1_2_D02.jar;D:/cocoon-1.8/lib/fop_0_13_0.jar;
+D:/WebSphere/AppServer/jdk/lib/tools.jar;D:\cocoon-1.8\bin\cocoon.jar}}}
+
+# create the cocoon web application
+set attributes {}
+lappend attributes {Name cocoon}
+lappend attributes {Description {Cocoon web application}}
+lappend attributes {DocRoot {d:/cocoon-1.8/samples}}
+lappend attributes {URIPath default_host/cocoon}
+lappend attributes {Classpath d:/cocoon-1.8/samples}
+WebApplication create $webapp/ -attribute ${attributes}
+
+# create the servlet
+set attributes {}
+lappend attributes {Code org.apache.cocoon.Cocoon}
+lappend attributes {Name cocoon}
+lappend attributes {LoadAtStartup true}
+lappend attributes {Description {Cocoon servlet}}
+lappend attributes {URIPaths {default_host/cocoon/}}
+lappend attributes {InitParams {{properties D:\cocoon-1.8\conf\cocoon.properties}}}
+Servlet create $cocoon/ -attribute ${attributes}
+
+# stop & start the app server to make cocoon runnable.
+ApplicationServer stop $appserv/
+ApplicationServer start $appserv/
+   ]]></source>
   </s2>
 
   <s2 title="Installing Cocoon on other platforms">
