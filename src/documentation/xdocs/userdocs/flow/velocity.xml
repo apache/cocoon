@@ -31,19 +31,19 @@ In addition the following implicit objects are always available in
 the Velocity context:
 <p>
 <dl>
-<dt><code>request</code> (<code>org.apache.cocoon.environment.Request</code>)</dt>
+<dt><code>$request</code> (<code>org.apache.cocoon.environment.Request</code>)</dt>
 <dd>The current Cocoon request</dd>
 
-<dt><code>response</code> (<code>org.apache.cocoon.environment.Response</code>)</dt>
+<dt><code>$response</code> (<code>org.apache.cocoon.environment.Response</code>)</dt>
 <dd>The Cocoon response associated with the current request</dd>
 
-<dt><code>session</code> (<code>org.apache.cocoon.environment.Session</code>)</dt>
+<dt><code>$session</code> (<code>org.apache.cocoon.environment.Session</code>)</dt>
 <dd>The Cocoon session associated with the current request</dd>
 
-<dt><code>context</code> (<code>org.apache.cocoon.environment.Context</code>)</dt>
+<dt><code>$context</code> (<code>org.apache.cocoon.environment.Context</code>)</dt>
 <dd>The Cocoon context associated with the current request</dd>
 
-<dt><code>parameters</code> (<code>org.apache.avalon.framework.parameters.Parameters</code>)</dt>
+<dt><code>$parameters</code> (<code>org.apache.avalon.framework.parameters.Parameters</code>)</dt>
 <dd>Any parameters passed to the generator in the pipeline</dd>
 </dl>
 </p>
