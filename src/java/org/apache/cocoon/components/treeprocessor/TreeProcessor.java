@@ -89,7 +89,7 @@ import java.util.Map;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.8 2003/07/28 17:50:41 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.9 2003/07/28 18:09:48 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -323,7 +323,7 @@ public class TreeProcessor
         }
 
         // and now process
-        CocoonComponentManager.enterEnvironment(environment, this.manager, this);
+        CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
         try {
             return this.rootNode.invoke(environment, context);
         } finally {
@@ -342,7 +342,6 @@ public class TreeProcessor
 
         context.enableLogging(getLogger());
 
-        CocoonComponentManager.enterEnvironment(environment, this.manager, this);
         try {
             if ( process(environment, context) ) {
                 return context.getProcessingPipeline();
@@ -350,7 +349,6 @@ public class TreeProcessor
                 return null;
             }
         } finally {
-            CocoonComponentManager.leaveEnvironment();
             context.dispose();
         }
     }
