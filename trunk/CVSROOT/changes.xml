@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.20 2000-01-10 21:51:30 stefano Exp $
+  $Id: changes.xml,v 1.21 2000-01-20 00:17:41 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -14,7 +14,19 @@
     <person name="Ricardo Rocha" email="rrocha@apache.org" id="RR"/>
   </devs>
 
- <release version="1.6-dev" date="not yet released">
+ <release version="1.6.1-dev" date="Not yet released">
+  <action dev="SM" type="fix" due-to="Philippe Lavoie" due-to-email="philippe.lavoie@cactus.ca">
+  	Fixed problem with JRun path normalization.
+  </action>
+  <action dev="RR" type="fix">
+  	Removed dependencies on Java 1.2 from XSP engine.
+  </action>
+  <action dev="SM" type="update">
+  	Removed encoding from WML formatter since some WAP browsers don't like it.
+  </action>
+ </release>
+
+ <release version="1.6" date="January 18 2000">
   <action dev="SM" type="update">
   	Fixed command line operation.
   </action>

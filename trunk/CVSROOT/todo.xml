@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.14 2000-01-12 15:58:00 stefano Exp $
+  $Id: todo.xml,v 1.15 2000-01-20 00:17:41 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -32,6 +32,9 @@
   </action>
   <action context="code">
    Create a caching virtual URL file system for external inclusions.
+  </action>
+  <action context="code">
+   Add logging.
   </action>
  </actions>
  

@@ -78,8 +78,10 @@ packages from the indicated URL:
  GNU RegExp (1.0.8+)    - http://www.cacas.org/java/gnu/regexp/
 
  StyleBook (1.0b1+)     - xml-stylebook CVS at xml.apache.org
- 
-[stylebook is required only for documentation generation, not for compilation]
+ Site Style             - xml-site CVS at xml.apache.org
+
+ [xml-stylebook and xml-site are required only for documentation generation,
+  not for compilation]
  
 once you have placed all the ".jar" files in your classpath, you're ready to
 build the whole thing.
