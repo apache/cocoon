@@ -66,7 +66,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
-
+import java.util.Map;
 /**
  * Abstract superclass for various scripting languages used by Cocoon
  * for flow control. Defines some useful behavior like the ability to
@@ -76,7 +76,7 @@ import java.util.ArrayList;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.3 2003/05/07 04:36:33 coliver Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
@@ -219,18 +219,9 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
                         Environment environment)
     throws Exception
   {
-    environment.setAttribute("bean-dict", bizData);
-    if (continuation != null)
-      environment.setAttribute("kont", continuation);
-
-    try {
-      PipelinesNode.getRedirector(environment)
-        .redirect(false, uri);
-    }
-    finally {
-      environment.removeAttribute("bean-dict");
-      if (continuation != null)
-        environment.removeAttribute("kont");
-    }
+    Map objectModel = environment.getObjectModel();
+    Flow.setContextObject(objectModel, bizData);
+    Flow.setWebContinuation(objectModel, continuation);
+    PipelinesNode.getRedirector(environment).redirect(false, uri);
   }
 }

@@ -35,7 +35,7 @@
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
  APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+ INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
  DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
  OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
  ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
@@ -60,6 +60,7 @@ import java.util.Stack;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.Flow;
 import org.apache.cocoon.components.jxforms.validation.Violation;
 import org.apache.cocoon.components.jxforms.xmlform.Form;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -1193,9 +1194,8 @@ public class JXFormsGenerator extends AbstractGenerator {
                 }
             }
         }
-        // FIX ME: When we decide proper way to pass "bean" and "kont"
-        bean = ((Environment)resolver).getAttribute("bean-dict");
-        kont = (WebContinuation)((Environment)resolver).getAttribute("kont");
+        bean = Flow.getContextObject(objectModel);
+        kont = Flow.getWebContinuation(objectModel);
         this.objectModel = objectModel;
     }
 

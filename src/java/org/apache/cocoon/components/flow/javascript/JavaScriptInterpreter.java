@@ -44,7 +44,6 @@
 
 */
 package org.apache.cocoon.components.flow.javascript;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -91,11 +90,12 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.17 2003/05/01 09:32:34 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.18 2003/05/07 04:36:33 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
 {
+
     /**
      * LAST_EXEC_TIME
      * A long value is stored under this key in each top level JavaScript 
@@ -349,8 +349,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      * function="..."&gt;</code>, you need to invoke from the JavaScript
      * script <code>cocoon.createSession()</code>. This will place the
      * newly create Scriptable object in the user's session, where it
-     * will be retrieved from at the next invocation of
-     * {@link #callFunction(String, List, Environment))}.</p>
+     * will be retrieved from at the next invocation of {@link #callFunction}.</p>
      *
      * @param environment an <code>Environment</code> value
      * @return a <code>Scriptable</code> value
@@ -685,6 +684,21 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             return (Throwable)value;
         }
         return e;
+    }
+
+    public void forwardTo(String uri, Object bizData,
+                          WebContinuation continuation,
+                          Environment environment)
+        throws Exception {
+        Map objectModel = environment.getObjectModel();
+        // Make the live-connect objects available to the view layer
+        JavaScriptFlow.setPackages(objectModel, 
+                                   (Scriptable)ScriptableObject.getProperty(scope,
+                                                                            "Packages"));
+        JavaScriptFlow.setJavaPackage(objectModel, 
+                                      (Scriptable)ScriptableObject.getProperty(scope,
+                                                                   "java"));
+        super.forwardTo(uri, bizData, continuation, environment);
     }
 }
 
