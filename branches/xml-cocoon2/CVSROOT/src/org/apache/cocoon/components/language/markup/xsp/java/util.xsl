@@ -68,6 +68,7 @@
         <xsp:include>java.net.URL</xsp:include>
         <xsp:include>java.util.Date</xsp:include>
         <xsp:include>java.text.SimpleDateFormat</xsp:include>
+        <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
       </xsp:structure>
 
       <xsl:apply-templates/>
@@ -135,7 +136,7 @@
           URL __url = new URL(__name);
           InputSource __is = new InputSource(__url.openStream());
           __is.setSystemId(__url.toString());
-          newParser = (Parser) this.manager.lookup(Roles.PARSER);
+          org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
 
           XSPUtil.include(__is, this.contentHandler, newParser);
       } catch (Exception e) {
@@ -162,13 +163,13 @@
                   new FileReader(
                      XSPUtil.relativeFilename(
                        <xsl:copy-of select="$name"/>,
-                       request,
-                       (ServletContext) context
+                       this.request,
+                       this.context
                      )
                   )
               );
-          __is.setSystemId(__url.toString());
-          newParser = (Parser) this.manager.lookup(Roles.PARSER);
+
+          org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
 
           XSPUtil.include(__is, this.contentHandler, newParser);
       } catch (Exception e) {
@@ -195,8 +196,8 @@
                       String.valueOf(<xsl:copy-of select="$expr"/>)
                   )
               );
-          __is.setSystemId(__url.toString());
-          newParser = (Parser) this.manager.lookup(Roles.PARSER);
+
+          org.apache.cocoon.components.parser.Parser newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
 
           XSPUtil.include(__is, this.contentHandler, newParser);
       } catch (Exception e) {
@@ -222,8 +223,8 @@
       XSPUtil.getFileContents(
     XSPUtil.relativeFilename(
           String.valueOf(<xsl:copy-of select="$name"/>),
-      request,
-      (ServletContext) context
+      this.request,
+      this.context
     ), "<xsl:value-of select="@encoding"/>"
       )
     </xsp:expr>
