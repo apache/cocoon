@@ -89,7 +89,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 2002
  * @author <a href="mailto:tc@hist.umn.edu">Tony Collen</a>, December 2002
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HttpProxyGenerator.java,v 1.2 2003/03/16 17:49:06 vgritsenko Exp $
+ * @version CVS $Id: HttpProxyGenerator.java,v 1.3 2003/07/05 04:27:27 joerg Exp $
  */
 public class HttpProxyGenerator extends ComposerGenerator implements Configurable {
 
@@ -127,7 +127,9 @@ public class HttpProxyGenerator extends ComposerGenerator implements Configurabl
             this.method = new GetMethod();
         } else if ("POST".equalsIgnoreCase(method)) {
             this.method = new PostMethod();
-            /* Work around a bug from the HttpClient library */
+            /* TODO: Is this still needed? Does it refer to a bug in bugzilla?
+             *       At least the handling in httpclient has completely changed.
+             * Work around a bug from the HttpClient library */
             ((PostMethod) this.method).setRequestBody("");
         } else {
             throw new ConfigurationException("Invalid method \"" + method + "\" specified"
@@ -251,7 +253,9 @@ public class HttpProxyGenerator extends ComposerGenerator implements Configurabl
     public void recycle() {
         /* Recycle the method */
         this.method.recycle();
-        /* Work around a bug from the HttpClient library */
+        /* TODO: Is this still needed? Does it refer to a bug in bugzilla?
+         *       At least the handling in httpclient has completely changed.
+         *  Work around a bug from the HttpClient library */
         if (this.method instanceof PostMethod) ((PostMethod) this.method).setRequestBody("");
 
         /* Clean up our parent */
