@@ -137,38 +137,42 @@ public class CompilingClassLoader extends ClassLoader {
     }
 
     public void setSourcePath(String[] path) {
-        sourcePath.clear();
-        for (int i = 0; i < path.length; i++) {
-            sourcePath.add(path[i]);
+        synchronized (sourcePath) {
+            sourcePath.clear();
+            for (int i = 0; i < path.length; i++) {
+                sourcePath.add(path[i]);
+            }
+            sourcePath.add("");
         }
-        sourcePath.add("");
     }
 
     
     private Source getSource(String className) {
-        Iterator iter = sourcePath.iterator();
-        while (iter.hasNext()) {
-            String prefix = (String)iter.next();
-            if (prefix.length() > 0) {
-                if (!prefix.endsWith("/")) {
-                    prefix = prefix + "/";
+        synchronized (sourcePath) {
+            Iterator iter = sourcePath.iterator();
+            while (iter.hasNext()) {
+                String prefix = (String)iter.next();
+                if (prefix.length() > 0) {
+                    if (!prefix.endsWith("/")) {
+                        prefix = prefix + "/";
+                    }
                 }
+                String uri = prefix + className.replace('.', '/') + ".java";
+                Source src;
+                try {
+                    src = sourceResolver.resolveURI(uri);
+                } catch (MalformedURLException ignored) {
+                    continue;
+                } catch (IOException ignored) {
+                    continue;
+                }
+                if (src.exists()) {
+                    return src;
+                }
+                releaseSource(src);
             }
-            String uri = prefix + className.replace('.', '/') + ".java";
-            Source src;
-            try {
-                src = sourceResolver.resolveURI(uri);
-            } catch (MalformedURLException ignored) {
-                continue;
-            } catch (IOException ignored) {
-                continue;
-            }
-            if (src.exists()) {
-                return src;
-            }
-            releaseSource(src);
+            return null;
         }
-        return null;
     }
 
     private void releaseSource(Source src) {
@@ -279,6 +283,9 @@ public class CompilingClassLoader extends ClassLoader {
 			    System.out.println("Compiled: " + className);
 			    output.put(className,
 				    s.toByteArray());
+                            Source src = getSource(className);
+                            notifyListeners(src, null);
+                            releaseSource(src);
 			}
 		    };
 	    }
@@ -347,7 +354,6 @@ public class CompilingClassLoader extends ClassLoader {
                     throw new ClassCompilationException(msg);
                     
                 }
-                notifyListeners(src, null);
                 return (byte[])output.get(className);
             } finally {
                 releaseSource(src);
