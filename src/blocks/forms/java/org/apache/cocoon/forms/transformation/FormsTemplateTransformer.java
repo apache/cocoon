@@ -29,14 +29,14 @@ import java.util.Map;
 /**
  * See description of {@link WidgetReplacingPipe}.
  * 
- * @version CVS $Id: FormTemplateTransformer.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: FormsTemplateTransformer.java,v 1.3 2004/03/18 21:04:39 joerg Exp $
  */
-public class FormTemplateTransformer extends EffectWidgetReplacingPipe implements Transformer {
+public class FormsTemplateTransformer extends EffectWidgetReplacingPipe implements Transformer {
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
 
-        FormPipelineConfig pipeContext = FormPipelineConfig.createConfig(objectModel, parameters);
+        FormsPipelineConfig pipeContext = FormsPipelineConfig.createConfig(objectModel, parameters);
         super.init(null, pipeContext);
     }
 }

@@ -16,9 +16,9 @@
 package org.apache.cocoon.forms;
 
 /**
- * Various constants used in the form framework.
+ * Various constants used in the Cocoon Forms framework.
  * 
- * @version $Id: Constants.java,v 1.5 2004/03/13 03:25:26 joerg Exp $
+ * @version $Id: Constants.java,v 1.6 2004/03/18 21:04:41 joerg Exp $
  */
 public final class Constants {
 // TODO : see this later
@@ -48,6 +48,6 @@ public final class Constants {
     public static final String DEFINITION_PREFIX_COLON = "fd:";
 
     /** I18n catalogue containing the built-in messages. */
-    public static final String I18N_CATALOGUE = "form";
+    public static final String I18N_CATALOGUE = "forms";
 
 }

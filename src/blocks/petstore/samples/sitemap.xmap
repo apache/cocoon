@@ -81,7 +81,7 @@
       </map:match>
       <map:match pattern="view/*.cforms">
         <map:generate src="view/forms/{1}_t.xml" label="debug"/>
-        <map:transform type="form" label="debug1"/>
+        <map:transform type="forms" label="debug1"/>
         <map:call resource="html"/>
       </map:match>
     </map:pipeline>

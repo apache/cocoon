@@ -141,9 +141,9 @@ The update process is now going to start.
       <include name="**/*.xmap"/>
       <!--+
           | - Woody(Generator|TemplateTransformer|Messages)
-          | -> Form(Generator|TemplateTransformer|Messages)
+          | -> Forms(Generator|TemplateTransformer|Messages)
           +-->
-      <replacefilter token="Woody" value="Form"/>
+      <replacefilter token="Woody" value="Forms"/>
       <!--+
           | - stylesheet names
           +-->
@@ -156,14 +156,11 @@ The update process is now going to start.
       <replacefilter token="woody-" value=""/>
       <!--+
           | - package name: o.a.c.woody.* -> o.a.c.forms.*
-          +-->
-      <replacefilter token=".woody." value=".forms."/>
-      <!--+
-          | - hints for FormTemplateTransformer and FormGenerator
+          | - hints for FormsTemplateTransformer and FormsGenerator
           | - logger
           | - i18n catalogue
           +-->
-      <replacefilter token="woody" value="form"/>
+      <replacefilter token="woody" value="forms"/>
     </replace>
 
     <!-- updating flowscripts -->

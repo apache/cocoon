@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.3 2004/03/18 14:03:43 joerg Exp $
+ * @version CVS $Id: Form.js,v 1.4 2004/03/18 21:04:40 joerg Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -82,12 +82,12 @@ Form.prototype.getWidget = function(name) {
  *
  * @parameter uri the page uri (like in cocoon.sendPageAndWait())
  * @parameter bizdata some business data for the view (like in cocoon.sendPageAndWait()).
- *            The "CocoonForm" and "locale" properties are added to this object.
+ *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
  */
 Form.prototype.showForm = function(uri, bizData) {
 
     if (bizData == undefined) bizData = new Object();
-    bizData[Packages.org.apache.cocoon.forms.transformation.FormPipelineConfig.COCOONFORM] = this.form;
+    bizData[Packages.org.apache.cocoon.forms.transformation.FormsPipelineConfig.CFORMSKEY] = this.form;
 
     if (this.locale == null)
         this.locale = java.util.Locale.getDefault();
@@ -104,7 +104,7 @@ Form.prototype.showForm = function(uri, bizData) {
         if (result == null) result = k;
         
         var formContext = 
-            Packages.org.apache.cocoon.forms.flow.javascript.FormFlowHelper.getFormContext(cocoon, this.locale);
+            Packages.org.apache.cocoon.forms.flow.javascript.FormsFlowHelper.getFormContext(cocoon, this.locale);
 
         // Prematurely add the bizData as a request attribute so that event listeners can use it
         // (the same is done by cocoon.sendPage())

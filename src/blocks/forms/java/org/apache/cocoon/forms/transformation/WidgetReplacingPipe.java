@@ -43,7 +43,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.5 2004/03/18 21:04:39 joerg Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -92,7 +92,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected boolean repeaterWidget;
 
     protected WidgetReplacingPipe.InsertStylingContentHandler stylingHandler = new WidgetReplacingPipe.InsertStylingContentHandler();
-    protected FormPipelineConfig pipeContext;
+    protected FormsPipelineConfig pipeContext;
 
     /**
      * Have we encountered a <wi:style> element in a widget ?
@@ -105,7 +105,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected String namespacePrefix;
     
 
-    public void init(Widget newContextWidget, FormPipelineConfig newPipeContext) {
+    public void init(Widget newContextWidget, FormsPipelineConfig newPipeContext) {
         contextWidget = newContextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;
