@@ -4,10 +4,10 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.96 2003/07/28 11:28:22 gianugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.97 2003/07/29 02:07:31 vgritsenko Exp $:-->
 <status>
 
-  <developers>
+ <developers>
     <!-- in strict alphabetical order -->
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
   <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>
@@ -51,7 +51,7 @@
   <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
   <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
-  </developers>
+ </developers>
   
   <todo>
    <actions priority="high">
@@ -70,13 +70,9 @@
     </action>
 
     <action context="code" assigned-to="open">
-      For 2.1: use (only) released versions of excalibur (xml, source, store etc).
-      This requires a release of those components in excalibur.
-    </action>
-
-    <action context="code" assigned-to="open">
-      Complete (means put everything we know of into even if it has to be
-      commented) the cocoon.xconf file and put descriptions into it
+      For 2.1: use (only) released versions of excalibur (collections,
+      concurrent, source, store, xmlutil). This requires a release of those
+      components in excalibur.
     </action>
 
     <action context="build" assigned-to="open">
@@ -92,7 +88,7 @@
     <action context="code" assigned-to="NKB">
       For 2.1: Make comprehensive samples with the handle-errors sitemap and real world
       use cases. Add also specific Selector and a FaqBuilder to be used by the
-      as a NotifyingBuilder.
+      NotifyingBuilder.
     </action>
 
     <action context="code" assigned-to="open">
@@ -109,18 +105,6 @@
     <action context="code" assigned-to="open">
       Finish the
       <link href="plan/samples.html">refactoring of samples</link>
-    </action>
-
-    <action context="code" assigned-to="open">
-      Move complete Source implementation to Excalibur.
-    </action>
-
-    <action context="code" assigned-to="open">
-      Documentation to be published by Forrest.
-      See the
-      <link href="http://wiki.cocoondev.org/Wiki.jsp?page=ForrestProposal">proposal</link>
-      under development. (Note: the generation of the docs should be completely done by
-      Forrest. So we should remove the deprecated docs generation stuff within Cocoon.)
     </action>
 
     <action context="code" assigned-to="open">
@@ -145,7 +129,6 @@
       a problem during the serialization of the transient store, if the servlet container were
       stopped.
     </action>
-
    </actions>
 
    <actions priority="medium">
@@ -167,13 +150,8 @@
     </action>
 
     <action context="code">
-<!-- FIXME: remove ... this already above -->
-      For 2.1: Make a guide on how to upgrade Cocoon, and see how this can be eased.
-    </action>
-
-    <action context="code">
       For 2.1: Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
-      server : store fragments in the session rather than in a local store. <br/>
+      server: store fragments in the session rather than in a local store. <br/>
       This couldn't work, because if you working with caching pipelines, you cannot be sure
       that the entries are in the session(Stephan).
     </action>
@@ -189,6 +167,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="VG" type="update">
+    Updated FOP to the latest released version, 0.20.5.
+  </action>
   <action dev="GR" type="add">
     Added delete capabilities to the SourceWritingTransformer.
   </action>
