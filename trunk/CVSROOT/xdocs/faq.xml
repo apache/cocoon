@@ -243,7 +243,9 @@
    <p>Logicsheets
     are applied in the order specified (unlike 
     <![CDATA[<?cocoon-process type="xslt"?>]]>
-    which applies stylesheets in the reverse order to that specified).
+    which applies stylesheets in the reverse order to that specified). In order to
+    stop your logicsheets being applied twice, you will need to remove the logicsheet
+    line for that logicsheet in <code>cocoon.properties</code>.
    </p>
   </answer>
  </faq>
