@@ -23,8 +23,8 @@
     <menu-item label="Readers" href="readers/readers.html"/>
   </menu>
 
-  <menu label="Flowscript">
-    <menu-item label="Flowscript" href="flow/index.html"/>
+  <menu label="Control Flow">
+    <menu-item label="Control Flow" href="flow/index.html"/>
   </menu>
     
   <menu label="XSP">

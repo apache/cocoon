@@ -10,7 +10,7 @@
     <menu-item label="User Documentation" href="../index.html"/>
   </menu>
   
-  <menu label="Flowscript">
+  <menu label="Control Flow">
     <menu-item label="Introduction" href="index.html"/>
     <menu-item label="Continuations" href="continuations.html"/>
     <menu-item label="How does it work?" href="how-does-it-work.html"/>
