@@ -11,4 +11,6 @@
                 src="org.apache.cocoon.portal.acting.ObjectModelAction"/>
     <map:action name="portal-set-data"
                 src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
+    <map:action name="portal-save-profile"
+                src="org.apache.cocoon.portal.acting.SaveAction"/>
 </xmap>
