@@ -1,4 +1,4 @@
-/*-- $Id: FO2PDFFormatter.java,v 1.13 2001-03-25 16:32:00 greenrd Exp $ -- 
+/*-- $Id: FO2PDFFormatter.java,v 1.14 2001-03-26 00:17:11 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,7 +65,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.13 $ $Date: 2001-03-25 16:32:00 $
+ * @version $Revision: 1.14 $ $Date: 2001-03-26 00:17:11 $
  */
 
 public class FO2PDFFormatter extends AbstractFormatter implements Actor {
@@ -106,8 +106,6 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
     protected Formatter xmlFormatter;
     protected Parser parser;
 
-    protected boolean encodingHackEnabled;
- 
     public FO2PDFFormatter() {
         super.MIMEtype = "application/pdf";
         super.statusMessage = FOP_VERSION + " formatter (note: version number is often wildly inaccurate)";
@@ -115,7 +113,6 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
         
     public void init(Configurations conf) {
         super.init(conf);
-        encodingHackEnabled = "true".equals (conf.get ("encoding.hack"));
     }
 
     public void init(Director director) {
@@ -131,22 +128,15 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
         }
     }
 
-    public void format(Document document, OutputStream stream, Dictionary parameters) throws Exception {
+    public void format(Document document, OutputStream outStream, Dictionary parameters)
+    throws Exception {
 
 	    Driver driver = new Driver();
 	    driver.setRenderer("org.apache.fop.render.pdf.PDFRenderer", FOP_VERSION);
 	    driver.addElementMapping("org.apache.fop.fo.StandardElementMapping");
 	    driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
 
-            OutputStream outStream;
             if (STREAM_MODE) {
-
-                if (encodingHackEnabled) {
-                    outStream = new ByteArrayOutputStream ();
-                }
-                else {
-                    outStream = stream;
-                }
 
                 // We use reflection here to avoid compile-time errors
                 // This translates at runtime to
@@ -187,10 +177,5 @@ public class FO2PDFFormatter extends AbstractFormatter implements Actor {
             }
 	    driver.format();
 	    driver.render();
-
-            if (STREAM_MODE && encodingHackEnabled) {
-                if (encoding == null) encoding = "UTF-8";
-                stream.write (new String (outputStream.toByteArray (), encoding).getBytes ());
-            }
     }
 }
