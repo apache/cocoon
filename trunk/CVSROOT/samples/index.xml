@@ -86,6 +86,11 @@
    Allaire's ColdFusion or Ricoh's PIA).
   </sample>
 
+  <sample name="Simple Form Handling" url="fp/index.xml">
+   This example shows how the FP XSP form handling taglib can be used to 
+   maintain a dynamic page.
+  </sample>
+
   <sample name="DCP using Java" url="dcp/java/sample-page.xml">
    This page shows how you can use Cocoon to generate dynamic content using
    XML processing instructions to trigger Java logic execution.
