@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.23 2000-12-01 23:14:21 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.24 2000-12-01 23:36:44 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.23 $ $Date: 2000-12-01 23:14:21 $
+ * @version $Revision: 1.24 $ $Date: 2000-12-01 23:36:44 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -106,7 +106,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
         String path = (String) parameters.get("path");
         String browser = (String) parameters.get("browser");
         Hashtable params = this.filterParameters(request);
-        params.put ("ENVIRONMENT", Cocoon.version());
+        params.put ("XSP-ENVIRONMENT", Cocoon.version());
         params.put ("XSP-VERSION", XSPProcessor.version());
 
         try {

@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.32 2000-12-01 22:54:41 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.33 2000-12-01 23:36:44 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.32 $ $Date: 2000-12-01 22:54:41 $
+ * @version $Revision: 1.33 $ $Date: 2000-12-01 23:36:44 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -391,7 +391,7 @@ public class XSPProcessor extends AbstractActor
         Hashtable logicsheetParameters = new Hashtable();
         logicsheetParameters.put("filename", filename);
         logicsheetParameters.put("language", languageName);
-        logicsheetParameters.put("ENVIRONMENT", Cocoon.version ());
+        logicsheetParameters.put("XSP-ENVIRONMENT", Cocoon.version ());
         logicsheetParameters.put("XSP-VERSION", version());
   
         // Apply each logicsheet in sequence
