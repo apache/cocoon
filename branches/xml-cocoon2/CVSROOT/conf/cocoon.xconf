@@ -49,7 +49,6 @@
   </component>
 
   <component role="program-generator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
-    <parameter name="repository" value="/tmp/repository"/>
     <parameter name="auto-reload" value="true"/>
   </component>
 

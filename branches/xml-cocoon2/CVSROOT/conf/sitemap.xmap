@@ -30,7 +30,7 @@
   <map:serializers default="html"> 
    <map:serializer name="xml"       src="org.apache.cocoon.serialization.XMLSerializer"/> 
    <map:serializer name="html"      src="org.apache.cocoon.serialization.HTMLSerializer"/> 
-   <map:serializer name="fo2pdf"    src="org.apache.cocoon.serialization.FO2PDFSerializer"/> 
+   <!-- <map:serializer name="fo2pdf"    src="org.apache.cocoon.serialization.FOPSerializer"/> -->
    <map:serializer name="svg2jpg"   src="org.apache.cocoon.serialization.SVGSerializer"/> 
    <map:serializer name="image"     src="org.apache.cocoon.serialization.ImageSerializer"/> 
   </map:serializers>
@@ -39,6 +39,7 @@
   </map:selectors>
 
   <map:matchers default="uri-regexp">
+   <map:matcher name="uri"        factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
    <map:matcher name="uri-regexp" factory="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
   </map:matchers>
 
@@ -130,10 +131,10 @@
     <map:transform src="stylesheets/simple-welcome2html.xsl"/> 
     <map:serialize/> 
    </map:match>
-    
+
    <map:handle-errors> 
     <map:transform src="stylesheets/cool-error2html.xsl"/> 
-    <map:serialize/>   
+    <map:serialize/> 
    </map:handle-errors> 
 
   </map:pipeline>
