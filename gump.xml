@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.102 2003/12/11 18:22:39 sylvain Exp $
+    | CVS $Id: gump.xml,v 1.103 2004/01/13 11:29:49 unico Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -592,8 +592,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-repository"/>
+    <depend project="cocoon-block-eventcache"/>
+    <depend project="cocoon-block-jms"/>
     <depend project="jta"/>
     <depend project="jakarta-slide"/>
     <depend project="jdom"/>
