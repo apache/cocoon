@@ -30,6 +30,8 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
+import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -99,7 +101,8 @@ public class MountNode extends AbstractProcessingNode
         String oldContext   = env.getContext();
         Object oldPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
         env.setAttribute(COCOON_PASS_THROUGH, BooleanUtils.toBooleanObject(passThrough));
-
+        boolean overwriteLastContext = false;
+        
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
 
@@ -110,6 +113,7 @@ public class MountNode extends AbstractProcessingNode
                     context.setProcessingPipeline( pp );
                     return true;
                 } else {
+                    overwriteLastContext = true;
                     return false;
                 }
             } else {
@@ -119,6 +123,17 @@ public class MountNode extends AbstractProcessingNode
         } finally {
             // Restore context
             env.setContext(oldPrefix, oldURI, oldContext);
+            if ( overwriteLastContext ) {
+                EnvironmentWrapper wrapper = null;
+                if ( env instanceof EnvironmentWrapper ) {
+                    wrapper = (EnvironmentWrapper)env;
+                } else if ( env instanceof MutableEnvironmentFacade ) {
+                    wrapper = ((MutableEnvironmentFacade)env).getDelegate();
+                }
+                if ( wrapper != null ) {
+                    wrapper.changeLastContextToCurrent();
+                }                
+            }
             if (oldPassThrough != null) {
                 env.setAttribute(COCOON_PASS_THROUGH, oldPassThrough);
             } else {

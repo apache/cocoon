@@ -435,6 +435,12 @@ public class EnvironmentWrapper
         this.lastURI     = this.uris;
     }
 
+    public void changeLastContextToCurrent() {
+        this.lastContext = this.context;
+        this.lastPrefix  = this.prefix.toString();
+        this.lastURI     = this.uris;
+    }
+
     /**
      * Change the current context to the last one set by changeContext()
      * and return last processor
