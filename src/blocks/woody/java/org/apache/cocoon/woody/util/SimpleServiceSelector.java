@@ -50,21 +50,21 @@
 */
 package org.apache.cocoon.woody.util;
 
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.LifecycleHelper;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * A very simple ServiceSelector for ThreadSafe services.
