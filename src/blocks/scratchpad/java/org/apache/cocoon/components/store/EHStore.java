@@ -47,7 +47,7 @@ import org.apache.excalibur.store.StoreJanitor;
  *  IMPORTANT:<br>
  *  (from http://ehcache.sourceforge.net/documentation/) 
  *  Persistence:
- *  The Disk Cache used by EHCache is not meant to be persistence mechanism. 
+ *  The Disk Cache used by EHCache is not meant to be a persistence mechanism. 
  *  The data file for each cache is deleted, if it exists, on startup.
  *  No data from a previous instance of an application is persisted through the disk cache. 
  *  The data file for each cache is also deleted on shutdown.
