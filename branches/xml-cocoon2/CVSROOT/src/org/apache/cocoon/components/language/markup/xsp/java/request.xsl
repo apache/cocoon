@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 15:52:37 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-14 13:36:53 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -39,6 +39,43 @@
 	<!-- <xsp-request:uri> -->
         <xsp:logic>
           XSPRequestHelper.getUri(request, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-session-attribute">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+	<xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="default">
+      <xsl:choose>
+        <xsl:when test="@default">"<xsl:value-of select="@default"/>"</xsl:when>
+        <xsl:when test="default">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="xsp-request:default"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>null</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+       <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getSessionAttribute(request, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getSessionAttribute(request, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
