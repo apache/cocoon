@@ -27,7 +27,7 @@
 
   <body>
     <s1 title="Flowscript">
-	  <p>Cocoon Flowscript is a JavaScript API to manage control flow based on an
+    <p>Cocoon Flowscript is a JavaScript API to manage control flow based on an
         <link href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</link>
         version of the <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> JavaScript interpreter that supports continuations.</p>
     </s1>

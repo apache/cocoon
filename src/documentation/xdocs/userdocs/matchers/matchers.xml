@@ -17,30 +17,30 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Matchers</title>
-		<subtitle>in Cocoon</subtitle>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-			<person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
-			<person name="Diana Shannon, ed." email="shannon@apache.org"/>
-		 </authors>
-		 <abstract>This document describes all of the available matchers of Cocoon.</abstract>
-	</header>
-	<body>
-		 <s1 title="Goal">
-			<p>
+  <header>
+    <title>Matchers</title>
+    <subtitle>in Cocoon</subtitle>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+      <person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
+      <person name="Diana Shannon, ed." email="shannon@apache.org"/>
+     </authors>
+     <abstract>This document describes all of the available matchers of Cocoon.</abstract>
+  </header>
+  <body>
+     <s1 title="Goal">
+      <p>
       This document lists all of the available matchers of Apache Cocoon and
       describes their purpose.
       See also the concepts document
       <link href="../concepts/matchers_selectors.html">Using and Implementing
       Matchers and Selectors</link>.
       </p>
-		 </s1>
-		 <s1 title="Overview">
-			<p>
+     </s1>
+     <s1 title="Overview">
+      <p>
       A matcher is a core sitemap component of Cocoon. Matchers allow Cocoon 
       to associate a pure
       &quot;virtual&quot; URI space with a given set of &quot;instructions&quot;
@@ -88,7 +88,7 @@
       requirement. For example, a URI request for &quot;body-cocoon.xml&quot; 
       would match the second entry.
       </p>
-		 </s1>
+     </s1>
      <s1 title="Order">
        <p>
        It's important to understand that Cocoon is based on a "first-match"
@@ -161,22 +161,22 @@
         </li>
        </ul>
      </s1>
-		 <s1 title="Matchers in Cocoon">
+     <s1 title="Matchers in Cocoon">
        <ul>
-				 <li><strong>WildCard URI matcher</strong>(The default matcher): matches the URI against a wildcard pattern.</li>
-				 <li><strong>Regexp URI matcher:</strong> 
+         <li><strong>WildCard URI matcher</strong>(The default matcher): matches the URI against a wildcard pattern.</li>
+         <li><strong>Regexp URI matcher:</strong> 
          matches the URI against a full-blown regular expression</li>
-				 <li><strong>Request parameter 
+         <li><strong>Request parameter 
          matcher:</strong> matches a request parameters given as a pattern. If
          the parameter exists, its value is available for later substitution.
          </li>
-				 <li><strong>Wildcard request parameter matcher:</strong> matches a wildcard 
+         <li><strong>Wildcard request parameter matcher:</strong> matches a wildcard 
          given as a pattern against the <strong>value</strong> of a configured 
          parameter.
          </li>
-				 <li><strong>Wildcard session parameter matcher</strong>: similar to the 
+         <li><strong>Wildcard session parameter matcher</strong>: similar to the 
          Wildcard request parameter matcher, but it matches a session parameter.</li>
-			</ul>
-		</s1>
-	</body>
+      </ul>
+    </s1>
+  </body>
 </document>

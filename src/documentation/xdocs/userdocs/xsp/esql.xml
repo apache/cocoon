@@ -70,31 +70,31 @@
 . . .
 </xsp:page>
 ]]></source>
-	  
+    
    <s2 title="Connection">
-	<p>Esql can use connection pools configured in <code>cocoon.xconf</code> or
-	 individually set up connections.</p>
-	
-	<p><code>esql:pool</code> gives the name of the connection pool to use.</p>
+  <p>Esql can use connection pools configured in <code>cocoon.xconf</code> or
+   individually set up connections.</p>
+  
+  <p><code>esql:pool</code> gives the name of the connection pool to use.</p>
 
-	<p>Individually configured connections use the <code>esql:driver,
-	  esql:dburl, esql:username, esql:password</code> tags. Their meaning
-	 should be obvious.</p>
+  <p>Individually configured connections use the <code>esql:driver,
+    esql:dburl, esql:username, esql:password</code> tags. Their meaning
+   should be obvious.</p>
 
-	<s3 title="Connection Options"/>
-	<p>Per default, esql will try to switch a connection to <em>autocommit</em>
-	 mode. This is because it prevents hanging transactions that hold locks and
-	 disturb further database accesses. Esql can be forced to not use
-	 autocommit, by giving the
-	 <code>&lt;esql:autocommit&gt;false&lt;/esql:autocommit&gt;</code> nested
-	 element to <code>esql:connection</code>.</p>
+  <s3 title="Connection Options"/>
+  <p>Per default, esql will try to switch a connection to <em>autocommit</em>
+   mode. This is because it prevents hanging transactions that hold locks and
+   disturb further database accesses. Esql can be forced to not use
+   autocommit, by giving the
+   <code>&lt;esql:autocommit&gt;false&lt;/esql:autocommit&gt;</code> nested
+   element to <code>esql:connection</code>.</p>
 
-	<note>Even if a connection is configured with autocommit off in
-	 <code>cocoon.xconf</code>, esql will switch autocommit on if not
-	 instructed to do otherwise.</note>
+  <note>Even if a connection is configured with autocommit off in
+   <code>cocoon.xconf</code>, esql will switch autocommit on if not
+   instructed to do otherwise.</note>
 
-	<p>Other options like limiting the size of the resultset are discussed
-	 below.</p>
+  <p>Other options like limiting the size of the resultset are discussed
+   below.</p>
    </s2>
 
   </s1>
@@ -385,11 +385,11 @@
      For a more general alternative see further below.</p>
 
     <p>Parameters for a stored procedure call may be of
-	 <code>direction="in|out|inout"</code> with the usual JDBC meaning. In
-	 addition a <code>type</code> needs to be supplied for "out" and "inout"
-	 parameters. This would be the same "XXX" as used in a <code>get-XXX</code>
-	 JDBC-method call. Alternatively, you can use a fully qualified field name,
-	 e.g. "java.sql.Types.CHAR"</p> 
+   <code>direction="in|out|inout"</code> with the usual JDBC meaning. In
+   addition a <code>type</code> needs to be supplied for "out" and "inout"
+   parameters. This would be the same "XXX" as used in a <code>get-XXX</code>
+   JDBC-method call. Alternatively, you can use a fully qualified field name,
+   e.g. "java.sql.Types.CHAR"</p> 
 
     <p><code>&lt;esql:call-results/&gt;</code> (child of
      <code>&lt;esql:execute-query/&gt;</code>) may contain code that will
@@ -458,10 +458,10 @@
     <p>The same holds true for <code>esql:update-results</code> and
      <code>esql:no-results</code> blocks as well.</p>
 
-	<note>Support for multiple results is not widely available with DBMSs.
-	 Therefore support is disabled by default. Use the
-	 <code>&lt;esql:allow-multiple-results&gt;yes&lt;/esql:allow-multiple-results&gt;</code> 
-	 parameter to the &lt;esql:connection/&gt;.</note>
+  <note>Support for multiple results is not widely available with DBMSs.
+   Therefore support is disabled by default. Use the
+   <code>&lt;esql:allow-multiple-results&gt;yes&lt;/esql:allow-multiple-results&gt;</code> 
+   parameter to the &lt;esql:connection/&gt;.</note>
 
 
     <p>Example: Suppose stored procedure <code>bar</code> returns an update

@@ -17,18 +17,18 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Log Transformer</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-		 </authors>
-		 <abstract>This document describes the Log transformer of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Log Transformer">
-			<p>This transformations main purpose is debugging.
+  <header>
+    <title>Log Transformer</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+     </authors>
+     <abstract>This document describes the Log transformer of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Log Transformer">
+      <p>This transformations main purpose is debugging.
 The <code>LogTransformer</code> is a class that can be plugged into a pipeline
 to print the SAX events which passes through this transformer in a readable form
 to a file.</p>
@@ -45,11 +45,11 @@ to a file.</p>
  Because the log file will be hardcoded into the sitemap this LOGTransformer will
  not be thread save! If you don't specify the logfile the output is send to
  the standard output of your servlet engine.</p>
-			<ul>
-				<li>Name : log</li>
-				<li>Class: org.apache.cocoon.transformation.LogTransformer</li>
-				<li>Cacheable: no.</li>
-			</ul>
-		</s1>
-	</body>
+      <ul>
+        <li>Name : log</li>
+        <li>Class: org.apache.cocoon.transformation.LogTransformer</li>
+        <li>Cacheable: no.</li>
+      </ul>
+    </s1>
+  </body>
 </document>

@@ -194,11 +194,11 @@
             The following example demonstrates the use of XPath function 
             with <code>system-property</code> module.
           </p>
-	  <source>
+    <source>
 <![CDATA[
 <map:parameter name="users-home-base"
   value="{system-property:substring-before(user.home, user.name)}"/>]]>
-	  </source>
+    </source>
         </s3>
         <s3 title="Step 2b: Use it on an XSP">
           <p>

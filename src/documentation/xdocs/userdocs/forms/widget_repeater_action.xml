@@ -60,9 +60,9 @@
       to be defined, see also <link href="eventhandling.html">Event Handling</link>. The interface to be
       implemented for Java event listeners is <code>org.apache.cocoon.forms.event.ActionListener</code>.
       The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.
-	  The event handlers are called <em>after</em> the action is performed except for the
-	  <code>delete-rows</code> action where event handlers are called <em>before</em> the
-	  selected rows are deleted.</p>
+    The event handlers are called <em>after</em> the action is performed except for the
+    <code>delete-rows</code> action where event handlers are called <em>before</em> the
+    selected rows are deleted.</p>
     </s1>
   </body>
 </document>
