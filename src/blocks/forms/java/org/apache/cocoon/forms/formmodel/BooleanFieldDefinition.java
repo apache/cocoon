@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * The {@link WidgetDefinition} part of a BooleanField widget, see {@link BooleanField} for more information.
  * 
- * @version $Id: BooleanFieldDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: BooleanFieldDefinition.java,v 1.2 2004/04/22 14:44:31 mpo Exp $
  */
 public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     private ValueChangedListener listener;
@@ -44,4 +44,8 @@ public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     public boolean hasValueChangedListeners() {
         return listener != null;
     }
+        
+    public void setRequired(boolean required) {
+        throw new UnsupportedOperationException("The property 'required' is not available on widgets of type booleanfield.");
+    }    
 }

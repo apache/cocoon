@@ -18,10 +18,14 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} part of a MultiValueField widget, see {@link MultiValueField} for more information.
  * 
- * @version $Id: MultiValueFieldDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: MultiValueFieldDefinition.java,v 1.2 2004/04/22 14:44:31 mpo Exp $
  */
 public class MultiValueFieldDefinition extends FieldDefinition {
     public Widget createInstance() {
         return new MultiValueField(this);
     }
+    
+	public void setRequired(boolean required) {
+		throw new UnsupportedOperationException("The property 'required' is not available on widgets of type multivalue.");
+	}
 }
