@@ -222,6 +222,16 @@
    <action dev="VG" type="fix" fixes-bug="29765" due-to="Rui Alberto L. Gon&ccedil;alves" due-to-email="rui-l-goncalves@ptinovacao.pt">
      XMLDB Block: Add ability to delete collections with XMLDBTransformer.
    </action>
+   <action dev="VG" type="update">
+     Reworked LocaleAction and LocaleMatcher to have similar logic and
+     configuration.
+     <br/><strong>NOTE:</strong> Sitemap variable "lang" renamed to
+     "language", removed configuration parameters: "language-attribute",
+     "country-attribute", "variant-attribute".
+   </action>
+   <action dev="UV" type="add">
+     Added LocaleMatcher for file based internationalization.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="27260">
      Make implementation of Cocoon protocol compliant with the Source interface.
    </action>
@@ -237,6 +247,13 @@
    <action dev="VG" type="add">
      Portal block: Added ManagedCocoonPortlet, to be used together with
      CocoonServlet or CocoonPortlet.
+   </action>
+   <action dev="VG" type="update">
+     ResourceReader can now take configuration elements, parameters
+     are deprecated.
+   </action>
+   <action dev="VG" type="fix" fixes-bug="25712" due-to="Litrik De Roy">
+     Fix byte ranges support in ResourceReader.
    </action>
    <action dev="VG" type="update">
      Portal: CocoonPortlet has new configuration parameter,
