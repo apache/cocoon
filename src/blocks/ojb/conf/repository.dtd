@@ -1,4 +1,4 @@
-<!-- @version $Id: repository.dtd,v 1.1 2004/02/03 11:12:04 antonio Exp $ -->
+<!-- @version $Id: repository.dtd,v 1.2 2004/02/16 19:51:47 joerg Exp $ -->
 <!--
 	ObJectRelationalBridge - Bridging Java objects and relational dabatases
 	This DTD describes the grammar of the Descriptor repository
