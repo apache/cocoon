@@ -57,131 +57,34 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.EventRegistry;
-import org.apache.cocoon.caching.validity.Event;
-import org.apache.commons.collections.MultiHashMap;
 
 /**
- * This implementation of <code>EventRegistry</code> stores the event-key 
- * mappings in a simple pair of <code>MultiMap</code>s.  It handles 
+ * This implementation of <code>EventRegistry</code> handles 
  * persistence by serializing an <code>EventRegistryDataWrapper</code> to 
  * disk.
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.10 2004/02/27 17:27:04 unico Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.11 2004/02/28 21:51:14 ghoward Exp $
  */
 public class DefaultEventRegistryImpl 
-        extends AbstractLogEnabled
+        extends AbstractDoubleMapEventRegistry
         implements EventRegistry, 
-           Initializable,
-           ThreadSafe,
-           Disposable,
-           Contextualizable {
+                   Contextualizable {
 
-	private boolean m_init_success = false;
-	private File m_persistentFile;
-	private static final String PERSISTENT_FILE = "ev_cache.ser";
-    private MultiHashMap m_keyMMap;
-    private MultiHashMap m_eventMMap;
-
-    /**
-     * Registers (stores) a two-way mapping between this Event and this 
-     * PipelineCacheKey for later retrieval.
-     * 
-     * @param e The event to 
-     * @param key key
-     */
-    public void register(Event e, Serializable key) {
-        synchronized(this) {
-            m_keyMMap.put(key,e);
-            m_eventMMap.put(e,key);
-        }
-    }
-
-    /**
-     * Remove all registered data.
-     */
-    public void clear() {
-        synchronized(this) {
-            m_keyMMap.clear();
-            m_eventMMap.clear();
-        }
-    }
-
-    /**
-     * Retrieve all pipeline keys mapped to this event.
-     */
-    public Serializable[] keysForEvent(Event e) {
-        Collection coll = (Collection)m_eventMMap.get(e);
-        if (coll==null || coll.isEmpty()) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("The event map returned empty");
-            }
-            return null;
-        } else {
-            return (Serializable[])coll.toArray(new Serializable[coll.size()]);
-        }
-    }
-
-    /**
-     * Return all pipeline keys mapped to any event
-     */
-    public Serializable[] allKeys() {
-        Set keys = this.m_keyMMap.keySet();
-        return (Serializable[])keys.toArray(
-                        new Serializable[keys.size()]);
-    }
-
-    /**
-     * When a CachedResponse is removed from the Cache, any entries 
-     * in the event mapping must be cleaned up.
-     */
-    public void removeKey(Serializable key) {
-        Collection coll = (Collection)m_keyMMap.get(key);
-        if (coll==null || coll.isEmpty()) {
-            return;
-        } 
-        // get the iterator over all matching PCK keyed 
-        // entries in the key-indexed MMap.
-        synchronized(this) {
-            Iterator it = coll.iterator();
-            while (it.hasNext()) {
-                /* remove all entries in the event-indexed map where this
-                 * PCK key is the value.
-                 */ 
-                Object o = it.next();
-                if (o != null) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Removing from event mapping: " + o.toString());
-                    }
-                    m_eventMMap.remove(o,key);            
-                }
-            }
-    
-            // remove all entries in the key-indexed map where this PCK key 
-            // is the key -- confused yet?
-            m_keyMMap.remove(key);
-        }
-    }
+    private File m_persistentFile;
+    private static final String PERSISTENT_FILE = "ev_cache.ser";    
 
     /**
      * Set up the persistence file.
      */
-	public void contextualize(Context context) throws ContextException {
+    public void contextualize(Context context) throws ContextException {
         org.apache.cocoon.environment.Context ctx =
                 (org.apache.cocoon.environment.Context) context.get(
                                     Constants.CONTEXT_ENVIRONMENT_CONTEXT);
@@ -194,49 +97,19 @@ public class DefaultEventRegistryImpl
                 "The cache event registry cannot be " +
                 "used inside an unexpanded WAR file.");
         }
-	}
-
-    /**
-     * Recover state by de-serializing the data wrapper.  If this fails 
-     * a new empty mapping is initialized and the Cache is signalled of 
-     * the failure so it can clean up.
-     * 
-     * @return true if de-serializing was successful, false otherwise.
-     */
-	/*public boolean init() {
-        return recover();
-	}*/
-
-    /**
-     * Recover state by de-serializing the data wrapper.  If this fails 
-     * a new empty mapping is initialized and the Cache is signalled of 
-     * the failure so it can clean up.
-     */
-    public void initialize() throws Exception {
-        if (recover()) {
-            m_init_success = true;
-        }
     }
-
-    /**
-     * @return true if persistent state existed and was recovered successfully.
-     */
-    public boolean wasRecoverySuccessful() {
-        return m_init_success;
-    }
-
+    
     /** 
-     * Clean up resources at container shutdown.  An EventRegistry must persist 
-     * its data.  If the serialization fails, an error is logged but not thrown  
-     * because missing/invalid state is handled at startup.
+     * Persist by simple object serialization.  If the serialization fails, an 
+     * error is logged but not thrown because missing/invalid state is handled 
+     * at startup.
      */
-    public void dispose() {
+    protected void persist(EventRegistryDataWrapper registryWrapper) {
         ObjectOutputStream oos = null;
         try {
             oos = new ObjectOutputStream(
-                                        new FileOutputStream(this.m_persistentFile));
-            EventRegistryDataWrapper ecdw = wrapRegistry();
-            oos.writeObject(ecdw);
+                                        new FileOutputStream(this.m_persistentFile));       
+            oos.writeObject(registryWrapper);
             oos.flush();
         } catch (FileNotFoundException e) {
             getLogger().error("Unable to persist EventRegistry", e);
@@ -247,17 +120,7 @@ public class DefaultEventRegistryImpl
                 if (oos != null) oos.close();
             } catch (IOException e) {}
         }
-        m_keyMMap.clear();
-        m_keyMMap = null;
-        m_eventMMap.clear();
-        m_eventMMap = null;
     }
-
-	protected EventRegistryDataWrapper wrapRegistry() {
-		EventRegistryDataWrapper ecdw = new EventRegistryDataWrapper();
-		ecdw.setupMaps(this.m_keyMMap, this.m_eventMMap);
-		return ecdw;
-	}
 
     /* 
      * I don't think this needs to get synchronized because it should 
@@ -299,17 +162,6 @@ public class DefaultEventRegistryImpl
             return false;
         }
         return true;
-    }
-
-	protected void unwrapRegistry(EventRegistryDataWrapper ecdw) {
-		this.m_eventMMap = ecdw.get_eventMap();
-		this.m_keyMMap = ecdw.get_keyMap();
-	}
-
-    // TODO: don't hardcode initial size
-    protected final void createBlankCache() {
-        this.m_eventMMap = new MultiHashMap(100); 
-        this.m_keyMMap = new MultiHashMap(100); 
     }
 
 }

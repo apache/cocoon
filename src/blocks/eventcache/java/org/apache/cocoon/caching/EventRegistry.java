@@ -60,10 +60,18 @@ import org.apache.cocoon.caching.validity.Event;
  * mapping between cache <code>Event</code>s and 
  * <code>PipelineCacheKey</code>s necessary to allow for efficient 
  * event-based cache invalidation.
+ * 
+ * Because persistence and recovery between application shutdown and startup are 
+ * internal concerns they are not defined here even though it is expected that most 
+ * real-world implementers of this interface would require these features.  
+ * On the other hand, EventRegistry must help the Cache to ensure that outdated 
+ * content is never served, even if that means discarding potentially valid cached 
+ * entries.  For this reason, wasRecoverySuccessful() is defined here as part of 
+ * the public contract with the Cache.
  *  
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistry.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: EventRegistry.java,v 1.5 2004/02/28 21:51:14 ghoward Exp $
  */
 public interface EventRegistry extends Component {
     
