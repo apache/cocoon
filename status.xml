@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.186 2003/11/07 10:49:58 bdelacretaz Exp $:-->
+<!-- CVS $Id: status.xml,v 1.187 2003/11/07 11:53:47 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="23538" due-to-email="samc@atnet.net.au" due-to="Sam Coward">
+     Applying patch from Sam Coward (samc@atnet.net.au) for reducing 
+     setDocumentLocator calls in JXTemplateGenerator and JXFormsGenerator.
+  </action>
    <action dev="BD" type="add" fixes-bug="24294" due-to="Jelle Alten" due-to-email="jelle@ordina.nl">
      sitemap-viewer added to the scratchpad samples
   </action>
