@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.core.container.handler;
 
 import org.apache.cocoon.components.ComponentInfo;
 

@@ -23,8 +23,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.core.container.AbstractComponentHandler;
-import org.apache.cocoon.core.container.ComponentHandler;
+import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
+import org.apache.cocoon.core.container.handler.ComponentHandler;
 
 import java.io.File;
 import java.util.Collection;

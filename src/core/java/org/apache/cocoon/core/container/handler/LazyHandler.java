@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.core.container.handler;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.ComponentEnvironment;
 
 /**
  * 

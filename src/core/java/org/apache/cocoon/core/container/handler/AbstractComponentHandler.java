@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.core.container.handler;
 
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
@@ -25,6 +25,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.container.ComponentEnvironment;
+import org.apache.cocoon.core.container.ComponentFactory;
+import org.apache.cocoon.core.container.DefaultServiceSelector;
+import org.apache.cocoon.core.container.StandaloneServiceSelector;
 
 /**
  * This class acts like a Factory to instantiate the correct version
