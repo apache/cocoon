@@ -64,43 +64,44 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 
 /**
- * The <code>JSPReader</code> component is used to serve JSP page output data
- * in a sitemap pipeline.
+ * The <code>JSPReader</code> component is used to serve Servlet and JSP page 
+ * output data in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.6 2003/11/20 12:46:52 joerg Exp $
+ * @version CVS $Id: JSPReader.java,v 1.7 2004/01/16 13:53:13 unico Exp $
  */
 public class JSPReader extends ServiceableReader {
 
     /**
-     * Generates the output from JSP page.
+     * Generates the output from JSPEngine.
      */
     public void generate() throws IOException, ProcessingException {
-        // ensure that we are running in a servlet environment
+        
         if (this.source == null) {
             throw new ProcessingException("JSPReader: source JSP is not specified");
         }
 
-        HttpServletResponse httpResponse =
-            (HttpServletResponse)this.objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-        HttpServletRequest httpRequest =
-            (HttpServletRequest)this.objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
-        ServletContext httpContext =
-            (ServletContext)this.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT);
-
-        if (httpResponse == null || httpRequest == null || httpContext == null) {
-            throw new ProcessingException("JSPReader can be used only in a Servlet/JSP environment");
+        HttpServletResponse servletResponse =
+            (HttpServletResponse) super.objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+        HttpServletRequest servletRequest =
+            (HttpServletRequest) super.objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+        ServletContext servletContext =
+            (ServletContext) super.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT);
+        
+        // ensure that we are running in a servlet environment
+        if (servletResponse == null || servletRequest == null || servletContext == null) {
+            throw new ProcessingException("JSPReader can only be used from within a Servlet environment.");
         }
 
         JSPEngine engine = null;
         try {
             // TODO (KP): Should we exclude not supported protocols, say 'context'?
-            String url = this.source;
+            String url = super.source;
 
             // absolute path is processed as is
             if (!url.startsWith("/")) {
                 // get current request path
-                String servletPath = httpRequest.getServletPath();
+                String servletPath = servletRequest.getServletPath();
                 // remove sitemap URI part
                 String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
                 if (sitemapURI != null) {
@@ -112,13 +113,14 @@ public class JSPReader extends ServiceableReader {
                 url = servletPath + url;
             }
 
-            engine = (JSPEngine)this.manager.lookup(JSPEngine.ROLE);
+            engine = (JSPEngine) super.manager.lookup(JSPEngine.ROLE);
 
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("JSPReader executing JSP:" + url);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("JSPReader executing:" + url);
             }
 
-            byte[] bytes = engine.executeJSP(url, httpRequest, httpResponse, httpContext);
+            byte[] bytes = engine.executeJSP(url, servletRequest, servletResponse, servletContext);
+            
             // TODO (KP): Make buffer size configurable
             byte[] buffer = new byte[8192];
             int length = -1;
@@ -127,12 +129,13 @@ public class JSPReader extends ServiceableReader {
             ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
             while ((length = bais.read(buffer)) > -1) {
                 out.write(buffer, 0, length);
+                System.out.write(buffer,0,length);
             }
             bais.close();
             bais = null;
             out.flush();
         } catch (ServletException e) {
-            throw new ProcessingException("ServletException in JSPReader.generate()", e.getRootCause());
+            throw new ProcessingException("ServletException while executing JSPEngine", e.getRootCause());
         } catch (IOException e) {
             throw new ProcessingException("IOException JSPReader.generate()", e);
         } catch (ProcessingException e) {
@@ -140,7 +143,7 @@ public class JSPReader extends ServiceableReader {
         } catch (Exception e) {
             throw new ProcessingException("Exception JSPReader.generate()", e);
         } finally {
-            if (engine != null) this.manager.release(engine);
+            if (engine != null) super.manager.release(engine);
         }
     }
 }
