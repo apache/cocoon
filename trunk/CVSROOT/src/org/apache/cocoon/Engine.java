@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.20 2000-03-17 16:46:59 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.21 2000-04-08 00:46:26 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.20 $ $Date: 2000-03-17 16:46:59 $
+ * @version $Revision: 1.21 $ $Date: 2000-04-08 00:46:26 $
  */
 
 public class Engine implements Defaults {
@@ -114,7 +114,11 @@ public class Engine implements Defaults {
         this.configurations = configurations;
 
         // stores the engine context
-        if ((context != null) && (context instanceof ServletContext)) {
+        if (context == null) {
+            // use the STDIO logger if no context is available
+            logger = new StdioLogger((String) configurations.get(LOG_LEVEL));
+            manager.setRole("logger", logger);
+        } else if (context instanceof ServletContext) {
             this.servletContext = (ServletContext) context;
 
             // register the context
