@@ -164,9 +164,8 @@ public abstract class AbstractInterpreter
      * @see org.apache.cocoon.environment.Environment
      * @see org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper
      */
-    public void register(String source)
-    {
-        synchronized(this) {
+    public void register(String source) {
+        synchronized (this) {
             needResolve.add(source);
         }
     }

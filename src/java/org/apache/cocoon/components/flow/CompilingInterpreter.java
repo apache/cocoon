@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,16 +33,18 @@ import org.mozilla.javascript.Scriptable;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CompilingInterpreter.java,v 1.3 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public abstract class CompilingInterpreter 
-extends AbstractInterpreter {
+public abstract class CompilingInterpreter
+        extends AbstractInterpreter {
 
-    /** A source resolver */
+    /**
+     * A source resolver
+     */
     protected SourceResolver sourceresolver;
+
     /**
      * Mapping of String objects (source uri's) to ScriptSourceEntry's
-     *
      */
     protected Map compiledScripts = new HashMap();
 
@@ -51,38 +53,38 @@ extends AbstractInterpreter {
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        this.sourceresolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.sourceresolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.compiledScripts != null ) {
-            Iterator iter = this.compiledScripts.values().iterator();
-            while (iter.hasNext()) {
-                ScriptSourceEntry current = (ScriptSourceEntry)iter.next();
+        if (this.compiledScripts != null) {
+            Iterator i = this.compiledScripts.values().iterator();
+            while (i.hasNext()) {
+                ScriptSourceEntry current = (ScriptSourceEntry)i.next();
                 this.sourceresolver.release(current.getSource());
             }
             this.compiledScripts = null;
         }
-        if ( this.manager != null ) {
-            this.manager.release( this.sourceresolver );
+        if (this.manager != null) {
+            this.manager.release(this.sourceresolver);
             this.sourceresolver = null;
         }
         super.dispose();
     }
-    
+
     /**
      * TODO - This is a little bit strange, the interpreter calls
      * get Script on the ScriptSourceEntry which in turn
      * calls compileScript on the interpreter. I think we
      * need more refactoring here.
      */
-    protected abstract Script compileScript(Context context, 
-                                           Scriptable scope, 
-                                           Source source) throws Exception;
-    
+    protected abstract Script compileScript(Context context,
+                                            Scriptable scope,
+                                            Source source) throws Exception;
+
     protected class ScriptSourceEntry {
         final private Source source;
         private Script script;
@@ -104,7 +106,7 @@ extends AbstractInterpreter {
 
         public Script getScript(Context context, Scriptable scope,
                                 boolean refresh, CompilingInterpreter interpreter)
-            throws Exception {
+        throws Exception {
             if (refresh) {
                 source.refresh();
             }
@@ -115,5 +117,4 @@ extends AbstractInterpreter {
             return script;
         }
     }
-    
 }
