@@ -188,7 +188,7 @@
              windowtitle="${Name} API ${version} [${TODAY}]"
              doctitle="${Name} API ${version}"
              bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
-             stylesheetfile="${resources.styles}/javadoc.css"
+             stylesheetfile="${resources.javadoc}/javadoc.css"
              useexternalfile="yes"
              additionalparam="${javadoc.additionalparam}">
 
