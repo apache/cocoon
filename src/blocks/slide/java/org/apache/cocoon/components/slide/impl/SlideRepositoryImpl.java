@@ -55,6 +55,7 @@ import java.util.Hashtable;
 
 import org.apache.avalon.framework.activity.Disposable;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -86,11 +87,11 @@ import org.xml.sax.InputSource;
  * The class represent a manger for slide repositories
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepositoryImpl.java,v 1.1 2003/12/02 19:18:45 unico Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.2 2003/12/03 12:06:05 unico Exp $
  */
 public class SlideRepositoryImpl
 implements SlideRepository, LogEnabled, Serviceable, Configurable,
-Contextualizable, Disposable, ThreadSafe  {
+Contextualizable, Disposable, Component, ThreadSafe  {
 
     /** The service manager instance */
     protected ServiceManager manager = null;
