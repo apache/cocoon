@@ -62,7 +62,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLCocoonLogFormatter.java,v 1.4 2004/03/28 10:27:20 antonio Exp $
+ * @version CVS $Id$
  */
 public class XMLCocoonLogFormatter implements Formatter {
 
@@ -81,17 +81,18 @@ public class XMLCocoonLogFormatter implements Formatter {
     protected final static int         TYPE_THREAD        = 9;
     protected final static int         TYPE_HOST          = 10;
 
-    public final static String[] typeStrings = new String[] {"uri", // 0
-         "category",  // 1
-         "message",   // 2
-         "time",      // 3
-         "rtime",     // 4
-         "throwable", // 5
-         "priority",  // 6
-         "class",    // 7
+    public final static String[] typeStrings = new String[] {
+         "uri",         // 0
+         "category",    // 1
+         "message",     // 2
+         "time",        // 3
+         "rtime",       // 4
+         "throwable",   // 5
+         "priority",    // 6
+         "class",       // 7
          "class:short", // 8
-         "thread",   // 9
-         "host"};   // 10
+         "thread",      // 9
+         "host"};      // 10
 
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat("(yyyy-MM-dd) HH:mm.ss:SSS");
 
