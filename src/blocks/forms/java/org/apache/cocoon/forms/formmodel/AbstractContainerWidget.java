@@ -84,7 +84,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *                    of the contained widgets.
      */
     public void readFromRequest(FormContext formContext) {
-        if(getCombinedState().isAcceptingInputs() && getProcessChildRequests()) {
+        if(getCombinedState().isAcceptingInputs()) {
             widgets.readFromRequest(formContext);
         }
     }
@@ -101,7 +101,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *         extra validation rules on this containment level are ok.
      */
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         // Validate children first, then always validate self. Return combined result.

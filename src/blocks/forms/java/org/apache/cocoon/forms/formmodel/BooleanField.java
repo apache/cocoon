@@ -63,7 +63,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+        if (!getCombinedState().isAcceptingInputs())
             return;
 
         validationError = null;

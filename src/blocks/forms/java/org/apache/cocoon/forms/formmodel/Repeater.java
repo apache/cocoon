@@ -185,47 +185,43 @@ public class Repeater extends AbstractWidget
         if (!getCombinedState().isAcceptingInputs())
             return;
 
-        if(getProcessMyRequests() == true) {
-            // read number of rows from request, and make an according number of rows
-            String sizeParameter = formContext.getRequest().getParameter(getRequestParameterName() + ".size");
-            if (sizeParameter != null) {
-                int size = 0;
-                try {
-                    size = Integer.parseInt(sizeParameter);
-                } catch (NumberFormatException exc) {
-                    // do nothing
+        // read number of rows from request, and make an according number of rows
+        String sizeParameter = formContext.getRequest().getParameter(getRequestParameterName() + ".size");
+        if (sizeParameter != null) {
+            int size = 0;
+            try {
+                size = Integer.parseInt(sizeParameter);
+            } catch (NumberFormatException exc) {
+                // do nothing
+            }
+
+            // some protection against people who might try to exhaust the server by supplying very large
+            // size parameters
+            if (size > 500)
+                throw new RuntimeException("Client is not allowed to specify a repeater size larger than 500.");
+
+            int currentSize = getSize();
+            if (currentSize < size) {
+                for (int i = currentSize; i < size; i++) {
+                    addRow();
                 }
-
-                // some protection against people who might try to exhaust the server by supplying very large
-                // size parameters
-                if (size > 500)
-                    throw new RuntimeException("Client is not allowed to specify a repeater size larger than 500.");
-
-                int currentSize = getSize();
-                if (currentSize < size) {
-                    for (int i = currentSize; i < size; i++) {
-                        addRow();
-                    }
-                } else if (currentSize > size) {
-                    for (int i = currentSize - 1; i >= size; i--) {
-                        removeRow(i);
-                    }
+            } else if (currentSize > size) {
+                for (int i = currentSize - 1; i >= size; i--) {
+                    removeRow(i);
                 }
             }
         }
 
-        if(getProcessChildRequests() == true) {
-            // let the rows read their data from the request
-            Iterator rowIt = rows.iterator();
-            while (rowIt.hasNext()) {
-                RepeaterRow row = (RepeaterRow)rowIt.next();
-                row.readFromRequest(formContext);
-            }
+        // let the rows read their data from the request
+        Iterator rowIt = rows.iterator();
+        while (rowIt.hasNext()) {
+            RepeaterRow row = (RepeaterRow)rowIt.next();
+            row.readFromRequest(formContext);
         }
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         boolean valid = true;

@@ -73,7 +73,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs() || !getProcessMyRequests())
+        if (!getCombinedState().isAcceptingInputs())
             return;
 
         enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
@@ -109,7 +109,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         if (values != null)

@@ -248,27 +248,11 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
-     * Returns whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for this widget.
-     */
-    public boolean getProcessMyRequests() {
-      return this.processMyRequests;
-    }
-
-    /**
      * Controls whether {@link #readFromRequest(FormContext formContext)}
      * processes the request parameter(s) for this widget.
      */
     public void setProcessMyRequests(boolean processMyRequests) {
       this.processMyRequests = processMyRequests;
-    }
-
-    /**
-     * Returns whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for children of this widget.
-     */
-    public boolean getProcessChildRequests() {
-      return this.processChildRequests;
     }
 
     /**
@@ -321,8 +305,8 @@ public abstract class AbstractWidget implements Widget {
 
     public boolean validate() {
 
-        // Consider widget valid if it doesn't accept user inputs
-        if (!getCombinedState().isAcceptingInputs()) {
+        // Consider widget valid if it is not validating values.
+        if (!getCombinedState().isValidatingValues()) {
             return true;
         }
 
