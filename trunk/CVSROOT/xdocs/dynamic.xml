@@ -59,25 +59,33 @@
 
   <p>The solution was <em>servlet nesting</em>: the ability for a servlet to
   include another servlet's output inside its own transparently. This allowed
-  programmers to separate different logic on different servlets, thus removing
-  the need for servlet chaining.</p>
+  programmers to separate different logic on different servlets.</p>
+
+  <p>Unfortunately servlet nesting does not allow you to easily "pass through" 
+   information about sessions and cookies, and it basically breaks the HTTP model
+   because it invokes the second servlet from the wrong client (the server).
+   So servlet nesting is just a temporary hack, useful for simple tasks, but not
+   workable in general.
+  </p>
+
+  <p>The next solution proposed was Request Dispatching. A servlet could alter the
+   request object (but not the response!) and then forward the request to another
+   servlet (a kind of internal redirect, invisible to the client).</p>
 </s1>
 
-<s1 title="The limitations of Servlet Nesting">
-  <p>While servlet nesting was a major advantage over servlet
-  chaining because it allowed servlets to be somewhat modular without losing
-  the full API power, a common design pattern applies to the Servlet model in
-  general: no servlet is allowed to modify the output of another servlet. This
-  holds true for all servlet API versions up to today (version 2.2).</p>
+<s1 title="The limitations of the Servlet Interface">
+  <p>However, the problem with all these approaches was very simple: 
+   the servlet interface was never designed to be a general-purpose object-oriented
+   processing interface. Textual strings, returned from servlets, are the least
+   time-efficient way of representing XML; DOM objects, used in Cocoon 1, are more
+   time-efficient (and SAX events, used in Cocoon 2, are even more time-efficient).</p>
 
-  <p>This limitation is the key: if no further XML processing is
-  needed on the server side, using servlets/JSP for creating XML is a perfect
-  choice, but if this output requires some server side processing (for example
-  XSLT transformations), the Servlet API does not allow another servlet to
-  post-process it's output. This other servlet is, in our case, Cocoon.</p>
-
-  <p>In a few words, the Servlet API doesn't support <em>Servlet
-  Piping</em>.</p>
+  <p>Additionally, if you then want to start using your reusable XML-generating
+   or XML-transforming servlet in a non servlet environment (for example a 
+   standalone desktop application) you have to somehow "emulate" the functionality
+   of the servlet engine. This is silly - interfaces should not be unnecessarily
+   complex. Cocoon follows the principle,
+   <strong>If you don't need to write something as a servlet, don't!</strong></p>
 </s1>
 
 <s1 title="The Cocoon Model">
@@ -116,6 +124,11 @@
 
   <p>Here follows the code for an example producer distributed with
   Cocoon:</p>
+
+  <note>Of course, this uses a string which is not as fast as building a DOM object
+   directly, as mentioned above,
+   but we wanted to keep the example really simple, and in a page
+   this small the speed difference would not be noticeable anyway.</note>
 
 <source><![CDATA[
 public class DummyProducer
