@@ -20,23 +20,21 @@ package org.apache.cocoon.portal.pluto.om.common;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: Support.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface Support {
 
-    public static final int POST_LOAD  = 2;
-    public static final int PRE_BUILD  = 3;
-    public static final int POST_BUILD = 4;
-    public static final int PRE_STORE  = 5;
-    public static final int POST_STORE = 6;
+    int POST_LOAD  = 2;
+    int PRE_BUILD  = 3;
+    int POST_BUILD = 4;
+    int PRE_STORE  = 5;
+    int POST_STORE = 6;
 
-    //    public void preLoad(Object parameter) throws Exception; // not possible, because we use castor
+    void postLoad(Object parameter) throws Exception;
 
-    public void postLoad(Object parameter) throws Exception;
+    void preBuild(Object parameter) throws Exception;
+    void postBuild(Object parameter) throws Exception;
 
-    public void preBuild(Object parameter) throws Exception;
-    public void postBuild(Object parameter) throws Exception;
-
-    public void preStore(Object parameter) throws Exception;
-    public void postStore(Object parameter) throws Exception;
+    void preStore(Object parameter) throws Exception;
+    void postStore(Object parameter) throws Exception;
 }

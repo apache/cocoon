@@ -193,6 +193,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                     ci.setContent(c);
                     basket.addItem(ci);
                 } catch (Exception ignore) {
+                    // ignore it
                 }
                 if ( file instanceof PartOnDisk) {
                     ((PartOnDisk)file).getFile().delete();

@@ -44,9 +44,8 @@ public final class ActionRequest extends PortletRequest {
     public String getCharacterEncoding() {
         if (super.getCharacterEncoding() == null) {
             return getActionRequest().getCharacterEncoding();
-        } else {
-            return super.getCharacterEncoding();
         }
+        return super.getCharacterEncoding();
     }
 
     /**
@@ -79,16 +78,14 @@ public final class ActionRequest extends PortletRequest {
     /**
      * Action request provides content length for custom upload handling
      */
-    public int getContentLength()
-    {
+    public int getContentLength() {
         return getActionRequest().getContentLength();
     }
 
     /**
      * Action request provides content type for custom upload handling
      */
-    public String getContentType()
-    {
+    public String getContentType() {
         return getActionRequest().getContentType();
     }
 }

@@ -137,8 +137,7 @@ implements PortletInvoker, Contextualizable, Serviceable, Initializable {
         if ( this.portlet == null ) {
             throw new PortletException("Unable to instantiate portlet from class " + this.portletDefinition.getClassName());
         }
-        try
-        {
+        try {
             request.setAttribute(org.apache.pluto.Constants.METHOD_ID,
                 org.apache.pluto.Constants.METHOD_RENDER);
             request.setAttribute(org.apache.pluto.Constants.PORTLET_REQUEST, request);

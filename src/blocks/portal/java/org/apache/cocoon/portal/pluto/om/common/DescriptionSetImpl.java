@@ -26,13 +26,16 @@ import org.apache.pluto.om.common.DescriptionSet;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DescriptionSetImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class DescriptionSetImpl extends AbstractSupportSet implements DescriptionSet, java.io.Serializable, Support {
+public class DescriptionSetImpl 
+    extends AbstractSupportSet 
+    implements DescriptionSet, java.io.Serializable, Support {
 
-    // DescriptionSet implemenation.
-    public Description get(Locale locale)
-    {        
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.DescriptionSet#get(java.util.Locale)
+     */
+    public Description get(Locale locale) {        
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             Description desc = (Description)iterator.next();
@@ -43,11 +46,16 @@ public class DescriptionSetImpl extends AbstractSupportSet implements Descriptio
         return null;
     }
 
-    // Support implementation.
-    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
     public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
     public void postLoad(Object parameter) throws Exception {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
@@ -55,13 +63,25 @@ public class DescriptionSetImpl extends AbstractSupportSet implements Descriptio
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
     public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
     public void preBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
     public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
 }

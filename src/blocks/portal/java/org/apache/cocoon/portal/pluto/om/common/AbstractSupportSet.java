@@ -23,44 +23,40 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractSupportSet.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public abstract class AbstractSupportSet extends HashSet implements java.io.Serializable, Support {
+public abstract class AbstractSupportSet 
+    extends HashSet 
+    implements java.io.Serializable, Support {
 
-    public AbstractSupportSet()
-    {
+    public AbstractSupportSet() {
+        // nothing to do 
     }
 
 
     // support implemenation.
-    public void postLoad(Object parameter) throws Exception
-    {
+    public void postLoad(Object parameter) throws Exception {
         dispatch(parameter, POST_LOAD);
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    public void preBuild(Object parameter) throws Exception {
         dispatch(parameter, PRE_BUILD);
     }
     
-    public void postBuild(Object parameter) throws Exception
-    {
+    public void postBuild(Object parameter) throws Exception {
         dispatch(parameter, POST_BUILD);
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    public void preStore(Object parameter) throws Exception {
         dispatch(parameter, PRE_STORE);
     }
 
-    public void postStore(Object parameter) throws Exception
-    {
+    public void postStore(Object parameter) throws Exception {
         dispatch(parameter, POST_STORE);
     }
 
     // additional methods.
-    protected void dispatch(Object parameter, int id) throws Exception
-    {
+    protected void dispatch(Object parameter, int id) throws Exception {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             Support support = (Support)iterator.next();

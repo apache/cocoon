@@ -39,7 +39,7 @@ import org.apache.excalibur.source.SourceFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.8 2004/04/28 13:58:16 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
@@ -103,6 +103,7 @@ public class CopletSourceFactory
      * @see org.apache.excalibur.source.SourceFactory#release(Source)
      */
     public void release(Source source) {
+        // nothing to do 
     }
 
 }

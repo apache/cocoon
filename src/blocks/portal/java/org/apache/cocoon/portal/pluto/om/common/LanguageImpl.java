@@ -157,13 +157,11 @@ public class LanguageImpl implements Language, java.io.Serializable {
         return keywords;
     }
     
-    public String toString()
-    {
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(final int indent)
-    {
+    public String toString(final int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString()); buffer.append(":");

@@ -21,7 +21,7 @@ package org.apache.cocoon.portal.coplets.basket;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: SaveBasketEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SaveBasketEvent extends BasketEvent {
     
@@ -30,6 +30,7 @@ public class SaveBasketEvent extends BasketEvent {
      *
      */
     public SaveBasketEvent() {
+        // nothing to do 
     }
     
 }

@@ -195,7 +195,7 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     }
 
     protected void load(String baseWMDir, Mapping portletXMLMapping, Mapping webXMLMapping) 
-        throws Exception {
+    throws Exception {
         File f = new File(baseWMDir);
         String[] entries = f.list();
         List entryList = Arrays.asList(entries);

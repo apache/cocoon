@@ -22,9 +22,10 @@ package org.apache.cocoon.portal.event;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletDataEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface CopletDataEvent 
     extends ActionEvent {
-        
+    
+    // just a marker interface
 }

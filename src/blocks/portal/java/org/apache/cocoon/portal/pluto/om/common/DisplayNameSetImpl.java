@@ -27,14 +27,14 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DisplayNameSetImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DisplayNameSetImpl extends AbstractSupportSet implements DisplayNameSet, java.io.Serializable, Support {
 
-    // DisplayNameSet implementation.
-    
-    public DisplayName get(Locale locale)
-    {        
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.common.DisplayNameSet#get(java.util.Locale)
+     */
+    public DisplayName get(Locale locale) {        
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             DisplayName displayName = (DisplayName)iterator.next();
@@ -46,9 +46,11 @@ public class DisplayNameSetImpl extends AbstractSupportSet implements DisplayNam
     }
 
 
-    // Support implementation.
-
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
     public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     public void postLoad(Object parameter) throws Exception {
@@ -58,24 +60,35 @@ public class DisplayNameSetImpl extends AbstractSupportSet implements DisplayNam
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
     public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
     public void preBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
     public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
-    // additional methods.
-
-    public String toString()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());
@@ -86,6 +99,5 @@ public class DisplayNameSetImpl extends AbstractSupportSet implements DisplayNam
         }
         return buffer.toString();
     }
-
 
 }
