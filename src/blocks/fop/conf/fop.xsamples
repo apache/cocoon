@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!-- make FOP samples appear in the samples page -->
+
+<xsamples xpath="/samples" unless="group[@name='fop']">
+
+    <group name="fop">
+        <sample name="FOP PDF serializer" href="fop/">
+            Examples of PDF document generation.
+        </sample>
+    </group>
+
+</xsamples>
