@@ -157,7 +157,7 @@
         <tr>
           <td>fb:insert-bean</td>
           <td>inserts an object in a list-type bean property</td>
-          <td>classname, addmethod</td>
+          <td>addmethod, classname (optional)</td>
           <td>none</td>
         </tr>
         <tr>
@@ -495,16 +495,18 @@
       <s2 title="fb:insert-bean">
         <p>Attributes:</p>
         <ul>
-          <li>classname</li>
           <li>addmethod</li>
+          <li>classname (optional)</li>
           <li>direction (optional)</li>
         </ul>
 
         <p>This binding element can only be used when the target object is a Javabean.</p>
 
-        <p>It instantiates a new object of the type specified in the classname
-        attribute and calls the method specified in the addmethod attribute on the
-        current context object with the newly instantiated object as argument.</p>
+        <p>If classname is specified it instantiates a new object of the type specified 
+        in the classname attribute and calls the method specified in the addmethod 
+        attribute on the current context object with the newly instantiated object as argument.
+        If classname is not specified it will just call the addmethod (e.g. if the addmethod creates
+        the new instance itself).</p>
 
         <p><strong>NOTE:</strong> This binding is never active in the 'load' operation,
         so there is no need to specify the <code>direction="save"</code> to protect you model
