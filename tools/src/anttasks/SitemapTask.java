@@ -19,11 +19,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,7 +40,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 /**
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.3 $ $Date: 2004/05/01 16:12:05 $
+ * @version CVS $Revision: 1.4 $ $Date: 2004/05/01 16:31:15 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -69,6 +72,27 @@ public final class SitemapTask extends AbstractQdoxTask {
     /** The doc dir */
     private File docDir;
     
+    /** Cache for classes */
+    private static Map cache = new HashMap();
+    
+    /** The directory */
+    private String directory;
+    
+    public void setSource(File dir) {
+        try {
+            this.directory = dir.toURL().toExternalForm();
+            if ( !dir.isDirectory() ) {
+                throw new BuildException("Source is not a directory.");
+            }
+        } catch (IOException ioe) {
+            throw new BuildException(ioe);
+        }
+        FileSet set = new FileSet();
+        set.setDir(dir);
+        set.setIncludes("**/*.java");
+        super.addFileset(set);
+    }
+    
     public void setSitemap( final File sitemap ) {
         this.sitemap = sitemap;
     }
@@ -87,12 +111,16 @@ public final class SitemapTask extends AbstractQdoxTask {
 
         validate();
 
-        // this does the hard work :)
-        super.execute();        
+        List components = (List)cache.get(this.directory);
+        if ( components == null ) {
+            // this does the hard work :)
+            super.execute();
+            components = this.collectInfo();
+            cache.put(this.directory, components);
+        }
 
         try {
             
-            final List components = this.collectInfo();
             if ( this.sitemap != null ) {
                 this.processSitemap(components);
             }
@@ -111,6 +139,9 @@ public final class SitemapTask extends AbstractQdoxTask {
      * Validate that the parameters are valid.
      */
     private void validate() {
+        if ( this.directory == null ) {
+            throw new BuildException("Source is not specified.");
+        }
         if ( this.sitemap == null && this.docDir == null ) {
             throw new BuildException("Sitemap or DocDir is not specified.");
         }
