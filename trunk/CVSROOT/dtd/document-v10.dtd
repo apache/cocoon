@@ -45,6 +45,8 @@ CHANGE HISTORY:
   19991124 Added "img-inline" element to separate from "img". (SM)
   19991129 Removed "affiliation" from "author". (SM)
   19991129 Made "author" empty and moved "name|email" as attributes (SM)
+  19991215 Simplified table section (SM)
+  19991215 Changed "img-block" in more friendly "figure" (SM)
 
 COPYRIGHT:
   Copyright (c) 1999 The Apache Software Foundation.
@@ -341,7 +343,7 @@ COPYRIGHT:
 
 <!ENTITY % local.lists "">
 
-<!ENTITY % paragraphs "p|source|note|fixme|img-block">
+<!ENTITY % paragraphs "p|source|note|fixme|figure">
 
 <!ENTITY % tables "table">
 
@@ -377,112 +379,32 @@ COPYRIGHT:
     <!-- Tables -->
     <!-- ==================================================== -->
 
-    <!ENTITY % cellhalign.att
-            'align          (left|center
-                            |right|justify
-                            |char)          #IMPLIED
-            char            CDATA           #IMPLIED
-            charoff         CDATA           #IMPLIED'>
+    <!-- Attributes that indicate the spanning of the table cell -->
+    <!ENTITY % cell.span 
+        'colspan CDATA "1"
+         rowspan CDATA "1"'>
 
-    <!ENTITY % cellvalign.att
-            'valign         (top|middle
-                            |bottom
-                            |baseline)      #IMPLIED'>
+    <!-- Table element -->
+    <!ELEMENT table (caption?, tr+)>
+    <!ATTLIST table %common.att;>
 
-    <!ENTITY % thtd.att
-            'abbr           CDATA           #IMPLIED
-            axis            CDATA           #IMPLIED
-            headers         IDREFS          #IMPLIED
-            scope           (row
-                            |col
-                            |rowgroup
-                            |colgroup)      #IMPLIED
-            rowspan         NMTOKEN         "1"
-            colspan         NMTOKEN         "1"'>
-
-    <!ENTITY % width.att
-            'width          CDATA           #IMPLIED'>
-
-    <!ENTITY % span.att
-            'span           NMTOKEN         "1"'>
-
-
-
-    <!-- Table (based on the IETF HTML table standard [RFC1942]) -->
-    <!ELEMENT table
-            (caption?, (col*|colgroup*), thead?, tfoot?, tbody+)>
-    <!ATTLIST table
-            %common.att;
-            %width.att;
-            summary         CDATA           #IMPLIED
-            border          CDATA           #IMPLIED
-            frame           (void|above
-                            |below|hsides
-                            |lhs|rhs
-                            |vsides|box
-                            |border)        #IMPLIED
-            rules           (none|groups
-                            |rows|cols
-                            |all)           #IMPLIED
-            cellspacing     CDATA           #IMPLIED
-            cellpadding     CDATA           #IMPLIED>
-
+        <!-- The table title -->
         <!ELEMENT caption (%content.mix;)*>
         <!ATTLIST caption %common.att;>
 
-        <!ELEMENT colgroup (col)*>
-        <!ATTLIST colgroup
-                %common.att;
-                %span.att;
-                %width.att;
-                %cellhalign.att;
-                %cellvalign.att;>
+        <!-- The table row element -->
+        <!ELEMENT tr (th|td)+>
+        <!ATTLIST tr %common.att;>
 
-            <!ELEMENT col EMPTY>
-            <!ATTLIST col
-                    %common.att;
-                    %span.att;
-                    %width.att;
-                    %cellhalign.att;
-                    %cellvalign.att;>
+            <!-- The table row header element -->
+            <!ELEMENT th (%content.mix;)*>
+            <!ATTLIST th %common.att;
+                         %cell.span;>
 
-        <!ELEMENT thead (tr)+>
-        <!ATTLIST thead
-                %common.att;
-                %cellhalign.att;
-                %cellvalign.att;>
-
-        <!ELEMENT tfoot (tr)+>
-        <!ATTLIST tfoot
-                %common.att;
-                %cellhalign.att;
-                %cellvalign.att;>
-
-        <!ELEMENT tbody (tr)+>
-        <!ATTLIST tbody
-                %common.att;
-                %cellhalign.att;
-                %cellvalign.att;>
-
-            <!ELEMENT tr (th|td)+>
-            <!ATTLIST tr
-                    %common.att;
-                    %cellhalign.att;
-                    %cellvalign.att;>
-
-                <!ELEMENT th (%content.mix;)*>
-                <!ATTLIST th
-                        %common.att;
-                        %thtd.att;
-                        %cellhalign.att;
-                        %cellvalign.att;>
-
-                <!ELEMENT td (%content.mix;)*>
-                <!ATTLIST td
-                        %common.att;
-                        %thtd.att;
-                        %cellhalign.att;
-                        %cellvalign.att;>
+            <!-- The table row description element -->
+            <!ELEMENT td (%content.mix;)*>
+            <!ATTLIST td %common.att;
+                         %cell.span;>
 
     <!-- ==================================================== -->
     <!-- Lists -->
@@ -535,14 +457,14 @@ COPYRIGHT:
     <!-- Image Block (typically a separated and centered image) -->
     <!-- FIXME (SM): should we have the notion of soft links even here
          for inlined objects? -->
-    <!ELEMENT img-block EMPTY>
-    <!ATTLIST img-block src    CDATA  #REQUIRED
-                        alt    CDATA  #REQUIRED
-                        height CDATA  #IMPLIED
-                        width  CDATA  #IMPLIED
-                        usemap CDATA  #IMPLIED
-                        ismap  (ismap) #IMPLIED
-                        %common.att;>
+    <!ELEMENT figure EMPTY>
+    <!ATTLIST figure src    CDATA  #REQUIRED
+                     alt    CDATA  #REQUIRED
+                     height CDATA  #IMPLIED
+                     width  CDATA  #IMPLIED
+                     usemap CDATA  #IMPLIED
+                     ismap  (ismap) #IMPLIED
+                     %common.att;>
 
 
 
