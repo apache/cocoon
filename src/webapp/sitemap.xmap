@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.42 2003/12/12 14:48:43 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.43 2003/12/27 00:01:25 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -122,7 +122,10 @@
   <map:serializers default="html">
     <map:serializer logger="sitemap.serializer.links" name="links" src="org.apache.cocoon.serialization.LinkSerializer"/>
     <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-grow="4" pool-max="32" pool-min="4" src="org.apache.cocoon.serialization.HTMLSerializer"/>
+    <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-grow="4" pool-max="32" pool-min="4" src="org.apache.cocoon.serialization.HTMLSerializer">
+      <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
+      <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
+    </map:serializer>
     <map:serializer logger="sitemap.serializer.wml" mime-type="text/vnd.wap.wml" name="wml" src="org.apache.cocoon.serialization.XMLSerializer">
      <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
      <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
