@@ -124,7 +124,7 @@ A.menu:hover {
         <br/>
         
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-          <tr><td bgcolor="#0086b2"><img src="images/dot.gif" width="1" height="1"/></td></tr>
+          <tr><td bgcolor="#0086b2"><img src="resources/dot.gif" width="1" height="1"/></td></tr>
           <tr>
             <td align="center"><font face="arial,helvetica,sanserif" size="-1" color="#0086b2"><i>
               Copyright &#169; <xsl:value-of select="$copyright"/>.
