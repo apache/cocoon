@@ -557,7 +557,7 @@
      pollute the CocoonServlet hierarchy when called in that context (e.g. when
      generating a static site from a CMS).
    </action>
-   <action dev="GP" type="add">
+   <action dev="GP" type="add" fixes-bug="31760">
      Added replacement for Excalibur Event package in
      org.apache.cocoon.components.thread and migrated most classes using their own
      threads to that package.
