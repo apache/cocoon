@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.11 2003/08/06 14:50:11 bruno Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.12 2003/08/13 17:12:25 sylvain Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -251,6 +251,12 @@ public class I18nTransformer extends AbstractTransformer
      */
     public static final String I18N_OLD_NAMESPACE_URI =
             "http://apache.org/cocoon/i18n/2.0";
+
+    /**
+     * Did we already encountered a old namespace ? This is static to ensure that
+     * the associated message will be logged only once.
+     */
+    private static boolean deprecationFound = false;
 
     //
     // i18n elements
@@ -1127,15 +1133,19 @@ public class I18nTransformer extends AbstractTransformer
             strBuffer = null;
         }
 
-        if (I18N_OLD_NAMESPACE_URI.equals(uri)) {
-            this.getLogger().error("The namespace "
-                                  + I18N_OLD_NAMESPACE_URI
-                                  + " for i18n is not supported any more, use: "
-                                  + I18N_NAMESPACE_URI);
-        }
-
         // Process start element event
-        if (I18N_NAMESPACE_URI.equals(uri)) {
+        if (I18N_OLD_NAMESPACE_URI.equals(uri)) {
+            if (!deprecationFound) {
+                deprecationFound = true;
+                this.getLogger().warn("The namespace '"
+                                      + I18N_OLD_NAMESPACE_URI
+                                      + "' for i18n is not supported any more, use: '"
+                                      + I18N_NAMESPACE_URI + "'");
+            }
+            debug("Starting deprecated i18n element: " + name);
+            startI18NElement(name, attr);
+
+        } else if (I18N_NAMESPACE_URI.equals(uri)) {
             debug("Starting i18n element: " + name);
             startI18NElement(name, attr);
         } else { // We have a non i18n element event
@@ -1164,7 +1174,7 @@ public class I18nTransformer extends AbstractTransformer
             strBuffer = null;
         }
 
-        if (I18N_NAMESPACE_URI.equals(uri)) {
+        if (I18N_NAMESPACE_URI.equals(uri) || I18N_OLD_NAMESPACE_URI.equals(uri)) {
             endI18NElement(name);
         } else if (current_state == STATE_INSIDE_PARAM) {
             param_recorder.endElement(uri, name, raw);
@@ -1221,8 +1231,22 @@ public class I18nTransformer extends AbstractTransformer
 
             prev_state = current_state;
             current_state = STATE_INSIDE_TEXT;
-            current_key = attr.getValue(I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
-            currentCatalogueId = attr.getValue(I18N_NAMESPACE_URI, I18N_CATALOGUE_ATTRIBUTE);
+            
+            current_key = attr.getValue("", I18N_KEY_ATTRIBUTE);
+            if (current_key == null) {
+                // Try the namespaced attribute
+                current_key = attr.getValue(I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
+                if (current_key == null) {
+                    // Try the old namespace
+                    current_key = attr.getValue(I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);   
+                }
+            }
+
+            currentCatalogueId = attr.getValue("", I18N_CATALOGUE_ATTRIBUTE);
+            if (currentCatalogueId == null) {
+                // Try the namespaced attribute
+                currentCatalogueId = attr.getValue(I18N_NAMESPACE_URI, I18N_CATALOGUE_ATTRIBUTE);
+            }
             if (prev_state != STATE_INSIDE_PARAM)
                 tr_text_recorder = null;
 
@@ -1540,8 +1564,12 @@ public class I18nTransformer extends AbstractTransformer
 
         // Translate all attributes from i18n:attr="name1 name2 ..."
         // using their values as keys
-        int i18n_attr_index =
-                temp_attr.getIndex(I18N_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
+        int i18n_attr_index = temp_attr.getIndex(I18N_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
+        
+        if (i18n_attr_index == -1) {
+            // Try the old namespace
+            i18n_attr_index = temp_attr.getIndex(I18N_OLD_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
+        }
 
         if (i18n_attr_index != -1) {
             StringTokenizer st =
