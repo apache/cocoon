@@ -123,7 +123,7 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.4 2003/06/21 13:34:03 joerg Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.5 2003/06/25 00:55:31 joerg Exp $
  */
 public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
@@ -149,6 +149,15 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
     protected DirValidity validity;
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
+
+    /**
+     * The cache key needs to be generated for the configuration of this
+     * generator, so storing the parameters for generateKey().
+     * Using the member variables after setup() would not work I guess. I don't
+     * know a way from the regular expressions back to the pattern or at least
+     * a useful string.
+     */
+    protected List cacheKeyParList;
 
     /** The depth parameter determines how deep the DirectoryGenerator should delve. */
     protected int depth;
@@ -196,9 +205,14 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
         }
         super.setup(resolver, objectModel, src, par);
 
+        this.cacheKeyParList = new ArrayList();
+        this.cacheKeyParList.add(src);
+
         this.depth = par.getParameterAsInteger("depth", 1);
+        this.cacheKeyParList.add(String.valueOf(this.depth));
 
         String dateFormatString = par.getParameter("dateFormat", null);
+        this.cacheKeyParList.add(dateFormatString);
         if (dateFormatString != null) {
             this.dateFormatter = new SimpleDateFormat(dateFormatString);
         } else {
@@ -206,10 +220,13 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
         }
 
         this.sort = par.getParameter("sort", "name");
+        this.cacheKeyParList.add(this.sort);
 
         this.reverse = par.getParameterAsBoolean("reverse", false);
+        this.cacheKeyParList.add(String.valueOf(this.reverse));
 
         this.refreshDelay = par.getParameterAsLong("refreshDelay", 1L) * 1000L;
+        this.cacheKeyParList.add(String.valueOf(this.refreshDelay));
 
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("depth: " + this.depth);
@@ -222,20 +239,22 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
         String rePattern = null;
         try {
             rePattern = par.getParameter("root", null);
+            this.cacheKeyParList.add(rePattern);
             this.rootRE = (rePattern == null) ? null : new RE(rePattern);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("root pattern: " + rePattern);
             }
 
             rePattern = par.getParameter("include", null);
+            this.cacheKeyParList.add(rePattern);
             this.includeRE = (rePattern == null) ? null : new RE(rePattern);
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("include pattern: " + rePattern);
             }
 
             rePattern = par.getParameter("exclude", null);
+            this.cacheKeyParList.add(rePattern);
             this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
-
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("exclude pattern: " + rePattern);
             }
@@ -254,8 +273,12 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
      *        the key generation is buggy!!
      */
     public Serializable getKey() {
-        return super.source + this.depth + this.dateFormatter + this.sort
-               + this.reverse + this.rootRE + this.excludeRE + this.includeRE;
+        StringBuffer buffer = new StringBuffer();
+        int len = this.cacheKeyParList.size();
+        for (int i = 0; i < len; i++) {
+            buffer.append((String)this.cacheKeyParList.get(i) + ":");
+        }
+        return buffer.toString();
     }
 
     /**
@@ -529,6 +552,7 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
      */
     public void recycle() {
         super.recycle();
+        this.cacheKeyParList = null;
         this.attributes = null;
         this.dateFormatter = null;
         this.rootRE = null;
