@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.26 2001-01-16 23:35:28 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.27 2001-01-17 00:02:38 balld Exp $-->
 <!--
 
  ============================================================================
@@ -53,7 +53,7 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
   xmlns:esql="http://apache.org/cocoon/SQL/v2"
   xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
@@ -472,10 +472,10 @@
   <xsp:logic>
     while (_esql_query.resultset.next()) {
       <xsl:apply-templates/>
+      _esql_query.position++;
       if (_esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
         break;
       }
-      _esql_query.position++;
     }
   </xsp:logic>
 </xsl:template>

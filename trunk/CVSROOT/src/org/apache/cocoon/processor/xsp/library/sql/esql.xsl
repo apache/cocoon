@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.44 2001-01-16 23:45:29 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.45 2001-01-17 00:02:13 balld Exp $-->
 <!--
 
  ============================================================================
@@ -472,10 +472,10 @@
   <xsp:logic>
     while (_esql_query.resultset.next()) {
       <xsl:apply-templates/>
+      _esql_query.position++;
       if (_esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
         break;
       }
-      _esql_query.position++;
     }
   </xsp:logic>
 </xsl:template>
