@@ -50,7 +50,7 @@
           | produces the screens called by the flowscript
           +-->     
       <map:match pattern="page/*">
-        <map:generate type="serverpages" src="screens/{1}.xsp"/>
+        <map:generate src="screens/{1}.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
