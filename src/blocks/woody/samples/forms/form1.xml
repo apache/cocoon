@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--+
-    | CVS $Id: form1.xml,v 1.17 2003/11/19 03:29:12 vgritsenko Exp $
+    | CVS $Id: form1.xml,v 1.18 2003/12/30 20:44:47 vgritsenko Exp $
     +-->
 
 <wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
@@ -178,6 +178,11 @@
             here, with a locale attribute on them. -->
           </wd:patterns>
         </wd:convertor>
+        <wd:validation>
+          <wd:range min="Date(1850, 1, 1)" max="Date(2150, 1, 1)">
+            <wd:failmessage>Dead and not born yet should not bother filling this form</wd:failmessage>
+          </wd:range>
+        </wd:validation>
       </wd:datatype>
     </wd:field>
   
