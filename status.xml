@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.171 2003/10/08 10:09:41 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.172 2003/10/09 12:01:07 ugo Exp $:-->
 
 <status>
  <developers>
@@ -49,6 +49,7 @@
   <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>
   <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
   <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
+  <person name="Ugo Cei" email="ugo@apache.org" id="UC"/>
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
@@ -191,6 +192,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="UC" type="fix">
+    Fixed ResolverImplTestCase so that the "test" build target does not fail (it still depends on the
+    deprecated block, though).
+   </action>
    <action dev="BRD" type="fix">
      Woody: fixed a bug causing an endless loop during validation of a field if
      during the validation of the field the value of the field itself was again
