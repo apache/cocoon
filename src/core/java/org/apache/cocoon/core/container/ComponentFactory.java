@@ -58,8 +58,6 @@ public class ComponentFactory {
     
     private final Logger logger;
     
-    private final String role;
-    
     private final LoggerManager loggerManager;
 
     private final RoleManager roleManager;
@@ -73,15 +71,13 @@ public class ComponentFactory {
      * @param context the <code>Context</code> to pass to <code>Contexutalizable</code>s.
      *
      */
-    public ComponentFactory( final String role,
-                             final Class componentClass,
+    public ComponentFactory( final Class componentClass,
                              final Configuration configuration,
                              final ServiceManager serviceManager,
                              final Context context,
                              final Logger logger,
                              final LoggerManager loggerManager,
                              final RoleManager roleManager) {
-        this.role = role;
         this.componentClass = componentClass;
         this.configuration = configuration;
         this.serviceManager = serviceManager;

@@ -98,7 +98,6 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
     /**
      * Obtain a new ComponentHandler for the specified component. 
      * 
-     * @param role The role
      * @param componentClass Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
@@ -106,13 +105,11 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    protected AbstractComponentHandler getComponentHandler( final String role,
-                                                    final Class componentClass,
+    protected AbstractComponentHandler getComponentHandler( final Class componentClass,
                                                     final Configuration configuration,
                                                     final ServiceManager serviceManager)
     throws Exception {
-        return AbstractComponentHandler.getComponentHandler( role,
-                                                     componentClass,
+        return AbstractComponentHandler.getComponentHandler(componentClass,
                                                      configuration,
                                                      serviceManager,
                                                      this.context,
