@@ -20,7 +20,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -90,7 +89,7 @@ import java.util.Vector;
  * <p>In addition a request attribute
  * <code>org.apache.cocoon.acting.FormValidatorAction.results</code>
  * contains the validation results in both cases and make it available
- * to XSPs. The special parameter "*" contains either the validation
+ * to other components. The special parameter "*" contains either the validation
  * result "OK", if all parameters were validated successfully, or
  * "ERROR" otherwise. Mind you that redirections create new request
  * objects and thus the result is not available for the target
@@ -194,6 +193,11 @@ public abstract class AbstractValidatorAction
     implements Configurable {
 
     /**
+     * This is the name of the request attribute containing the result
+     */
+    public static final String FORMVALIDATOR_PATH = "org.apache.cocoon.acting.FormValidatorAction.results";
+
+   /**
      * Reads parameter values for all parameters that are contained in the active
      * constraint list. If a parameter has multiple values, all are stored in the
      * resulting map.
@@ -1038,7 +1042,7 @@ public abstract class AbstractValidatorAction
         }
         // store validation results in request attribute
         ObjectModelHelper.getRequest(objectModel).setAttribute(
-            Constants.XSP_FORMVALIDATOR_PATH,
+            FORMVALIDATOR_PATH,
             resultMap);
         //return Collections.unmodifiableMap (actionMap);
         return actionMap;

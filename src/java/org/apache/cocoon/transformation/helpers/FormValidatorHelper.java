@@ -20,7 +20,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.excalibur.source.Source;
 
-import org.apache.cocoon.Constants;
+import org.apache.cocoon.acting.AbstractValidatorAction;
 import org.apache.cocoon.acting.ConfigurationHelper;
 import org.apache.cocoon.acting.ValidatorActionResult;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -37,7 +37,7 @@ import java.util.Map;
  * The <code>ValidatorActionResult</code> object helper
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FormValidatorHelper.java,v 1.2 2004/03/10 15:19:32 unico Exp $
+ * @version CVS $Id$
  */
 public class FormValidatorHelper {
 
@@ -107,7 +107,7 @@ public class FormValidatorHelper {
      */
     public static Map getResults(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        return (Map) request.getAttribute(Constants.XSP_FORMVALIDATOR_PATH);
+        return (Map) request.getAttribute(AbstractValidatorAction.FORMVALIDATOR_PATH);
     }
 
 

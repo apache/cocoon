@@ -100,68 +100,6 @@ public final class Constants {
      */
     public static final String ACTION_PARAM_PREFIX = "cocoon-action-";
 
-    /** The name of the property holding the class for a XML parser
-     * @deprecated Cocoon now uses the system's JAXP parser to load its configuration 
-     */
-    public static final String PARSER_PROPERTY = "org.apache.excalibur.xml.sax.SAXParser";
-
-    /** The name of the class for the default XML parser to use
-     * @deprecated Cocoon now uses the system's JAXP parser to load its configuration 
-     */
-    public static final String DEFAULT_PARSER  = "org.apache.excalibur.xml.impl.JaxpParser";
-
-    /** The namespace for the XSP core logicsheet. */
-    public static final String XSP_URI = "http://apache.org/xsp";
-
-    /**
-     * The namespace prefix for the request logicsheet.
-     *
-     * FIXME(GP): Would logicsheets belong to the core?
-     */
-    public static final String XSP_REQUEST_PREFIX = "xsp-request";
-
-    /**
-     * The namespace for the request logicsheet.
-     *
-     * FIXME(GP): Would logicsheets belong to the core?
-     */
-    public static final String XSP_REQUEST_URI = XSP_URI + "/request/2.0";
-
-    /**
-     * The namespace prefix for the response logicsheet.
-     *
-     * FIXME(GP): Would logicsheets belong to the core?
-     */
-    public static final String XSP_RESPONSE_PREFIX = "xsp-response";
-
-    /**
-     * The namespace for the response logicsheet.
-     *
-     * FIXME(GP): Would logicsheets belong to the core?
-     */
-    public static final String XSP_RESPONSE_URI = XSP_URI + "/response/2.0";
-
-    /**
-     * The namespace prefix for the cookie logicsheet.
-     *
-     * FIXME(GP): Would logicsheets belong to the core?
-     */
-    public static final String XSP_COOKIE_PREFIX = "xsp-cookie";
-
-    /**
-     * The namespace for the cookie logicsheet.
-     *
-     * FIXME(GP): Would logicsheets belong to the core?
-     */
-    public static final String XSP_COOKIE_URI = XSP_URI + "/cookie/2.0";
-
-    /**
-     * Don't know exactly what this is for. (I can guess it's for the FormValidator)
-     *
-     * FIXME(GP): Isn't this component specific?
-     */
-    public static final String XSP_FORMVALIDATOR_PATH = "org.apache.cocoon.acting.FormValidatorAction.results";
-
     /** The URI for xml namespaces */
     public static final String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
 

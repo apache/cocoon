@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -35,14 +34,14 @@ import java.util.Map;
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: XSPRequestHelper.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id$
  */
 public class XSPRequestHelper {
     /**
      * Assign values to the object's namespace uri and prefix
      */
-    private static final String URI = Constants.XSP_REQUEST_URI;
-    private static final String PREFIX = Constants.XSP_REQUEST_PREFIX;
+    private static final String URI = XSPUtil.XSP_REQUEST_URI;
+    private static final String PREFIX = XSPUtil.XSP_REQUEST_PREFIX;
 
     private static void getLocale(Locale locale, ContentHandler handler)
         throws SAXException

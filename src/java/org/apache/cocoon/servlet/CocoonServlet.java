@@ -167,7 +167,12 @@ public class CocoonServlet extends HttpServlet {
      * can be overwritten
      */
     protected Settings getSettings() {
-        return SettingsHelper.getSettings(this.getServletConfig());        
+        // create a settings object from the servlet parameters
+        Settings s = SettingsHelper.getSettings(this.getServletConfig());
+        // now overwrite with system properties
+        s.fill(System.getProperties());
+
+        return s;        
     }
     
     /**

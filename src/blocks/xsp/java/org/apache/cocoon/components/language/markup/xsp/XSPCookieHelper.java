@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -52,14 +51,14 @@ import java.util.Map;
  * private static String returnCookieProperty(Map ,String ,int ,String );
  * </pre>
  *
- * @version CVS $Id: XSPCookieHelper.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id$
  */
 public class XSPCookieHelper extends XSPObjectHelper {
     /**
      * Assign values to the object's namespace uri and prefix
      */
-    private static final String URI = Constants.XSP_COOKIE_URI;
-    private static final String PREFIX = Constants.XSP_COOKIE_PREFIX;
+    private static final String URI = XSPUtil.XSP_COOKIE_URI;
+    private static final String PREFIX = XSPUtil.XSP_COOKIE_PREFIX;
 
     /**
      * This method will set a new cookie with values that are passed through parameters

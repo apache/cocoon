@@ -17,8 +17,8 @@ package org.apache.cocoon.samples.jms;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
+import org.apache.cocoon.util.NetUtils;
 import org.hsqldb.Trigger;
 
 /**
@@ -37,11 +37,10 @@ public class HTTPTrigger implements Trigger {
      */
     public void fire(String triggerName, String tableName, Object[] row) {
         try {
-            // FIXME: Method URLEncoder.encode(triggerName.toLowerCase(), "UTF-8") is absent on JDK1.3
             HttpURLConnection con = (HttpURLConnection) new URL(this.protocol, this.hostname, this.port, this.path+"?trigger="
-                            + URLEncoder.encode(triggerName.toLowerCase())
+                            + NetUtils.encode(triggerName.toLowerCase(), "utf-8")
                             + "&table="
-                            + URLEncoder.encode(tableName.toLowerCase())).openConnection();
+                            + NetUtils.encode(tableName.toLowerCase(), "utf-8")).openConnection();
             con.connect();
             con.getContent();
             con.disconnect();
