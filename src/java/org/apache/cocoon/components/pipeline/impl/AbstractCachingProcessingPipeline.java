@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.14 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.15 2004/02/18 21:23:03 joerg Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -892,10 +892,6 @@ public abstract class AbstractCachingProcessingPipeline
         return null;
     }
     
-    /**
-     * 
-     * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getValidityForInternalPipeline(int)
-     */
     SourceValidity getValidityForInternalPipeline(int index) {
         final SourceValidity validity;
 
