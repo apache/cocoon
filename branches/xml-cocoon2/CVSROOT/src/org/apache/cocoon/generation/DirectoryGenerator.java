@@ -14,6 +14,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Stack;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -27,6 +28,9 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.url.URLFactory;
+
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 
 /**
  * Generates an XML directory listing.
@@ -61,7 +65,9 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-22 17:10:30 $ */
+ * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
+ *         (SMB GmbH) for Virbus AG
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-08 15:50:57 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -89,6 +95,13 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
     protected AttributesImpl attributes = new AttributesImpl();
     protected SimpleDateFormat dateFormatter;
 
+    protected RE rootRE;
+    protected RE includeRE;
+    protected RE excludeRE;
+    
+    protected boolean isRequestedDirectory;
+
+
     /**
      * Set the request parameters. Must be called before the generate
      * method.
@@ -115,10 +128,44 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         }
 
         this.depth = par.getParameterAsInteger("depth", 1);
-
+        getLogger().debug("depth: " + this.depth);
+        
+        String rePattern = par.getParameter("root", null);
+        try {
+            getLogger().debug("root pattern: " + rePattern);
+            this.rootRE = (rePattern == null)?null:new RE(rePattern);
+        } catch (RESyntaxException rese) {
+            getLogger().error("Syntax error in root pattern!'", rese);
+            throw new ProcessingException("Syntax error in root pattern!'",
+                    rese);
+        }
+        
+        rePattern = par.getParameter("include", null);
+        try {
+            getLogger().debug("include pattern: " + rePattern);
+            this.includeRE = (rePattern == null)?null:new RE(rePattern);
+        } catch (RESyntaxException rese) {
+            getLogger().error("Syntax error in include pattern!'", rese);
+            throw new ProcessingException("Syntax error in include pattern!'",
+                    rese);
+        }
+        
+        rePattern = par.getParameter("exclude", null);
+        try {
+            getLogger().debug("exclude pattern: " + rePattern);
+            this.excludeRE = (rePattern == null)?null:new RE(rePattern);
+        } catch (RESyntaxException rese) {
+            getLogger().error("Syntax error in exlcude pattern!'", rese);
+            throw new ProcessingException("Syntax error in exclude pattern!'",
+                    rese);
+        }
+        
+        this.isRequestedDirectory = false;
+        
         /* Create a reusable attributes for creating nodes */
         AttributesImpl attributes = new AttributesImpl();
     }
+
 
     /**
      * Generate XML data.
@@ -153,7 +200,10 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping(PREFIX,URI);
-        addPath(path, depth);
+
+        Stack ancestors = getAncestors(path);
+        addPathWithAncestors(path, ancestors);
+        
         this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
         } catch (IOException ioe) {
@@ -163,6 +213,43 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
     }
 
+
+    /**
+     * Creates a stack containing the ancestors of File up to specified
+     * directory.
+     * @param path the File whose ancestors shall be retrieved
+     *
+     * @return a Stack containing the ancestors.
+     */
+    protected Stack getAncestors(File path) {
+        File parent = path;
+        Stack ancestors = new Stack();
+
+        while ((parent != null) && !isRoot(parent)) {
+            parent = parent.getParentFile();
+            if (parent != null) {
+                ancestors.push(parent);
+            }
+        }
+        
+        return ancestors;
+    }
+    
+    
+    protected void addPathWithAncestors(File path, Stack ancestors) 
+            throws SAXException {
+
+        if (ancestors.empty()) {
+            this.isRequestedDirectory = true;
+            addPath(path, depth);
+        } else {
+            startNode(DIR_NODE_NAME, (File)ancestors.pop());
+            addPathWithAncestors(path, ancestors);
+            endNode(DIR_NODE_NAME);
+        }
+    }
+    
+    
     /**
      * Adds a single node to the generated document. If the path is a
      * directory, and depth is greater than zero, then recursive calls
@@ -183,15 +270,20 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
             if (depth>0) {
                 File contents[] = path.listFiles();
                 for (int i=0; i<contents.length; i++) {
-                    addPath(contents[i], depth-1);
+                    if (isIncluded(contents[i]) && !isExcluded(contents[i])) {
+                        addPath(contents[i], depth-1);
+                    }
                 }
             }
             endNode(DIR_NODE_NAME);
         } else {
-            startNode(FILE_NODE_NAME, path);
-            endNode(FILE_NODE_NAME);
+            if (isIncluded(path) && !isExcluded(path)) {
+                startNode(FILE_NODE_NAME, path);
+                endNode(FILE_NODE_NAME);
+            }
         }
     }
+
 
     /**
      * Begins a named node, and calls setNodeAttributes to set its
@@ -210,6 +302,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         setNodeAttributes(path);
         super.contentHandler.startElement(URI, nodeName, nodeName, attributes);
     }
+
 
     /**
      * Sets the attributes for a given path. The default method sets attributes
@@ -234,7 +327,14 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         attributes.addAttribute("", DATE_ATTR_NAME,
                     DATE_ATTR_NAME, "CDATA",
                     dateFormatter.format(new Date(lastModified)));
+
+        if (this.isRequestedDirectory) {
+            attributes.addAttribute("", "requested", "requested", "CDATA",
+                    "true");
+            this.isRequestedDirectory = false;
+        }
     }
+
 
     /**
      * Ends the named node.
@@ -251,4 +351,53 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
     throws SAXException {
         super.contentHandler.endElement(URI, nodeName, nodeName);
     }
+
+
+    /**
+     * Determines if a given File is the defined root.
+     *
+     * @param path the File to check
+     *
+     * @return true if the File is the root or the root pattern is not set,
+     *      false otherwise.
+     */
+    protected boolean isRoot(File path) {
+
+        return (this.rootRE == null)
+                ? true
+                : this.rootRE.match(path.getName());
+    }
+
+
+    /**
+     * Determines if a given File shall be visible.
+     *
+     * @param path the File to check
+     *
+     * @return true if the File shall be visible or the include Pattern is
+            <code>null</code>, false otherwise.
+     */
+    protected boolean isIncluded(File path) {
+
+        return (this.includeRE == null)
+                ? true
+                : this.includeRE.match(path.getName());
+    }
+
+
+    /**
+     * Determines if a given File shall be excluded from viewing.
+     *
+     * @param path the File to check
+     *
+     * @return false if the given File shall not be excluded or the
+     * exclude Pattern is <code>null</code>, true otherwise.
+     */
+    protected boolean isExcluded(File path) {
+
+        return (this.excludeRE == null)
+                ? false
+                : this.excludeRE.match(path.getName());
+    }
+
 }
