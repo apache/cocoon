@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.14 2003/03/16 10:38:00 stefano Exp $:
+       CVS: $Id: build.xml,v 1.15 2003/03/16 11:23:55 stefano Exp $:
 
 ============================================================================ -->
 
@@ -78,7 +78,14 @@
     <condition property="unless.exclude.idldocs">
       <istrue value="${exclude.idldocs}"/>
     </condition>
-        
+
+    <condition property="exclude.validate.config">
+      <isfalse value="${validate.config}"/>
+    </condition>
+    <condition property="exclude.validate.xdocs">
+      <isfalse value="${validate.xdocs}"/>
+    </condition>
+            
     <filter token="Name"                value="${fullname}"/>
     <filter token="name"                value="${fullname}"/>
     <filter token="year"                value="${year}"/>
@@ -724,7 +731,7 @@
     <xpatch directory="${resources.javadoc}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
   </target>
     
-  <target name="prepare-webapp-docs" depends="init" unless="unless.exclude.webapp.documentation">
+  <target name="prepare-webapp-docs" depends="validate-xdocs" unless="unless.exclude.webapp.documentation">
     <mkdir dir="${build.webapp.docs}"/>
     
     <copy todir="${build.webapp.docs}" filtering="on">
@@ -795,61 +802,19 @@
     </xslt>
   </target>
 
-  <!-- Validate some important default core configuration files. Process the
-       default config files here, then do them again later in validate-config
-       after the blocks have been processed and fragments added.
-  -->
-  <target name="validate-core-config" depends="prepare,init-jing"
-          description="Validation of default core configuration files using RELAX NG"
-          if="validate.config">
-    <echo message="Conducting validation of default core configuration files."/>
-    <echo message="(You can turn validation off if you must - comment out the validate.config property in build.properties)"/>
-    <jing rngfile="./src/webapp/WEB-INF/entities/any.rng">
-      <fileset dir="./src/webapp/WEB-INF" includes="cocoon.xconf"/>
-    </jing>
-    <jing rngfile="./src/webapp/WEB-INF/entities/roles-v01.rng">
-      <fileset dir="./src/java/org/apache/cocoon" includes="cocoon.roles"/>
-    </jing>
-<!-- FIXME: recent sitemap changes have broken validation
-    <jing rngfile="${build.webapp}/WEB-INF/entities/sitemap-v06.rng">
-      <fileset dir="./src/webapp" includes="sitemap.xmap"/>
-    </jing>
--->
-  </target>
+  <!-- Validate configuration files. -->
+  <target name="validate-config" depends="init-jing" unless="exclude.validate.config">
+    <echo message="Validating configuration files"/>
 
-  <!-- Validate some important final configuration files. At this stage
-       the fragments from blocks have been added to the default core config.
-  -->
-  <target name="validate-config" depends="init-jing" if="validate.config">
-    <echo message="Conducting validation of final configuration files."/>
-    <echo message="(You can turn validation off if you must - comment out the validate.config property in build.properties)"/>
+    <echo message="Validating cocoon.xconf using RELAX NG ..."/>
     <jing rngfile="${build.webapp}/WEB-INF/entities/any.rng">
       <fileset dir="${build.webapp}/WEB-INF" includes="cocoon.xconf"/>
     </jing>
-<!-- FIXME: precept.xroles has a new un-defined attribute "default-hint"
-     which is breaking validation.
-    <jing rngfile="${build.webapp}/WEB-INF/entities/roles-v01.rng">
-      <fileset dir="${build}/classes/org/apache/cocoon"
-               includes="cocoon.roles"/>
-    </jing>
--->
-<!-- FIXME: recent sitemap changes have broken validation
-    <jing rngfile="${build.webapp}/WEB-INF/entities/sitemap-v06.rng">
-      <fileset dir="${build.webapp}" includes="sitemap.xmap"/>
-    </jing>
--->
   </target>
 
   <!-- Validation of xdocs  -->
-  <!-- This only does documentation/xdocs/**.xml and does not attempt to do
-       webapps, blocks, java, etc. because most of their xdocs do not bother
-       to declare a ruleset. -->
-  <target name="validate-xdocs"
-          description="Validation of all core XML documentation"
-          depends="prepare-docs,init-jing"
-          if="validate.xdocs">
+  <target name="validate-xdocs" depends="prepare-docs,init-jing" unless="exclude.validate.xdocs">
     <echo message="Conducting validation of core XML documentation."/>
-    <echo message="(You can turn validation off if you must - comment out the validate.xdocs property in build.properties)"/>
 
     <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/book-v01.rng">
