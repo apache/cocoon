@@ -23,6 +23,9 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -40,10 +43,10 @@ import org.xmldb.api.DatabaseManager;
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.7 2004/03/05 13:02:36 bdelacretaz Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.8 2004/04/19 14:53:50 cziegeler Exp $
  */
 public final class XMLDBSourceFactory extends AbstractLogEnabled
-                                      implements SourceFactory, Configurable, Serviceable, ThreadSafe {
+                                      implements SourceFactory, Contextualizable, Configurable, Serviceable, ThreadSafe {
 
     /** The ServiceManager instance */
     protected ServiceManager m_manager;
@@ -51,6 +54,15 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
     /** A Map containing the authentication credentials */
     protected HashMap credentialMap;
 
+    /** The avalon context */
+    protected Context context;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
     /**
      * Configure the instance and initialize XML:DB connections (load and register the drivers).
      */
@@ -125,7 +137,8 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
 
         return new XMLDBSource(this.getLogger(),
                                credential, location,
-                               this.m_manager);
+                               this.m_manager,
+                               this.context);
     }
 
     public void release(org.apache.excalibur.source.Source source) {
