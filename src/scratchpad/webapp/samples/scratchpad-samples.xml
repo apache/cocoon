@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.7 2003/06/13 10:27:38 cziegeler Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.8 2003/06/22 18:48:20 coliver Exp $ -->
 
 <samples>
 
@@ -17,6 +17,12 @@
  <group name="JXForms">
     <sample name="JXForms" href="jxforms/">
       JXForms Feedback Wizard Sample 
+    </sample>
+  </group>
+
+ <group name="Garbage">
+    <sample name="Garbage" href="garbage/">
+      Flowscript Calculator Sample using Garbage Template Generator
     </sample>
   </group>
   
