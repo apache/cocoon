@@ -306,6 +306,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <target name="docs" depends="prepare-docs">
     <mkdir dir="${build.docs}"/>
+    <delete file="${docs.dir}/book.xml"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
           args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}"/>
@@ -316,6 +317,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <target name="site" depends="prepare-docs">
     <mkdir dir="${site}"/>
+    <delete file="${docs.dir}/book.xml"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
           args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
