@@ -32,9 +32,13 @@ import org.xml.sax.SAXException;
  * into events.
  * The transformer listens for the element a and form. Links
  * that only contain an anchor are ignored.
- *
+ * In addition if a link has the attribute "external" with the value
+ * "true", the link is also ignored.
+ * 
+ * TODO: Support target attribute
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.11 2004/04/15 07:51:41 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.12 2004/05/06 11:03:44 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -65,9 +69,13 @@ extends AbstractCopletTransformer {
     throws SAXException {
         boolean processed = false;
         if ("a".equals(name) ) {
+            boolean convert = false;
             final boolean isRemoteAnchor = this.isRemoteAnchor(attr);
-            this.stack.push(isRemoteAnchor? Boolean.TRUE: Boolean.FALSE);
             if ( isRemoteAnchor ) {
+                convert = this.isExternalLink(attr);
+            }
+            this.stack.push(convert ? Boolean.TRUE: Boolean.FALSE);
+            if ( convert ) {
                 this.createAnchorEvent(attr);
                 processed = true;
             }
@@ -87,8 +95,8 @@ extends AbstractCopletTransformer {
     throws SAXException {
         boolean processed = false;
         if ( "a".equals(name) ) {
-            final Boolean isRemoteAnchor = (Boolean)this.stack.pop();
-            if ( isRemoteAnchor.booleanValue() ) {
+            final Boolean converted = (Boolean)this.stack.pop();
+            if ( converted.booleanValue() ) {
                 this.xmlConsumer.endElement(CopletTransformer.NAMESPACE_URI,
                                             CopletTransformer.LINK_ELEM,
                                             "coplet:" + CopletTransformer.LINK_ELEM);
@@ -111,6 +119,7 @@ extends AbstractCopletTransformer {
     throws SAXException {
         AttributesImpl newAttributes = new AttributesImpl(attributes);
         newAttributes.removeAttribute("href");
+        newAttributes.removeAttribute("external");
         String link = attributes.getValue("href");
 
         CopletInstanceData cid = this.getCopletInstanceData();
@@ -178,4 +187,26 @@ extends AbstractCopletTransformer {
         return false;
     }
 
+    /**
+     * a link in an external application is not transformed
+     * if there is an attribute external="true" in the link-element
+     * or if the link starts with "mailto:".
+     * 
+     * @param attributes attributes of the node
+     * @return true if the attribute 'external' is 'true'
+     */
+    private boolean isExternalLink (Attributes attributes) {        
+        final String external = attributes.getValue("external");
+        // links to external documents will be not transformed to portal links
+        if (external != null && external.trim().length() > 0 
+            && external.trim().toLowerCase().equals ("true") ) {            
+            return true;
+        }
+        final String link = attributes.getValue("href");
+        if ( link != null && link.startsWith("mailto:") ) {
+            return true;
+        }
+        return false;
+    }
+    
 }
