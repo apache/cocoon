@@ -336,7 +336,7 @@
      Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
    </action>
    <action dev="AG" type="update">
-     Updated jexl to 1.0.
+     Updated jexl to 1.0, lucene to 1.4.1
    </action>
    <action dev="DC" type="add" fixes-bug="30321" due-to="Colin Adams">
      Selector for matching the request headers using a regular expression.
@@ -356,6 +356,9 @@
    </action>
    <action dev="VG" type="update">
      Cron block: Add support for persistent job stores, type "tx" and "cmt".
+   </action>
+   <action dev="VG" type="fix">
+     Cron block: Fix TestCronJob pipeline call functionality.
    </action>
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232,

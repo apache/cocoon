@@ -15,6 +15,12 @@
  */
 package org.apache.cocoon.components.cron;
 
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -32,12 +38,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.Constants;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -55,11 +55,9 @@ import org.quartz.utils.ConnectionProvider;
 import org.quartz.utils.DBConnectionManager;
 import org.quartz.utils.JNDIConnectionProvider;
 
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 /**
  * This component can either schedule jobs or directly execute one.
