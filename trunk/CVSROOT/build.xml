@@ -300,7 +300,7 @@ of build files, give credits to the original authors. Thank you.
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${site.dir}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${site.dir}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${site.dir}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
-    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${sbk.docs}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${site.dir}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${site.dir}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${site.dir}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${site.dir}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
