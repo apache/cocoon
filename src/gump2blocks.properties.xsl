@@ -48,7 +48,8 @@
 #------------------------------------------------------------------------------#
 
 # Remove blocks from your cocoon distribution by setting the corresponding
-# include property to true or false.
+# include property to true or false. The blocks are included by default, i.e. if
+# no property was set.
 
 # NOTE: Don't modify this file directly but make a copy named
 # 'local.blocks.properties' and modify that. The build system will first load
@@ -129,12 +130,11 @@
         <xsl:with-param name="text" select="'is needed by'"/>
     </xsl:call-template>
 
+    <!-- TODO: make this configurable externally (dependent on @status or @name) -->
+    <xsl:if test="not(@status='deprecated' or @exclude='true')">#</xsl:if>
     <xsl:text>include.block.</xsl:text>
     <xsl:value-of select="substring-after(@name, 'cocoon-block-')"/>
-    <xsl:text>=</xsl:text>
-    <!-- TODO: make this configurable externally (dependent on @status or @name) -->
-    <xsl:value-of select="not(@status='deprecated' or @exclude='true')"/>
-    <xsl:text>&#10;</xsl:text>
+    <xsl:text>=false&#10;</xsl:text>
 </xsl:template>
 
 <xsl:template name="dependency">
