@@ -19,7 +19,7 @@
   <description>
     Documentation Targets
   </description>
-  
+
   <target name="prepare-docs" unless="exclude.documentation" depends="blocks">
 
     <!-- Set classpath for documentation -->
@@ -51,8 +51,11 @@
 
 	<!-- generate sitemap components docs using SitemapTask -->
     <sitemap-components docDir="${build.context}/xdocs/userdocs" source="${java}"/>
-    <!-- -->
-    
+    <echo message="Building component docs from blocks."/>
+    <sitemap-components docDir="${build.context}/xdocs/userdocs" source="${blocks}"/>
+    <!--
+    -->
+
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
     overwrite it with the old Cocoon-specific sitemap here -->
     <move file="${build.context}/sitemap-localdocs.xmap"
@@ -243,9 +246,9 @@ It will generate docs into ${build.site}"/>
 
   </target>
   -->
-  
+
   <!-- Creates Javadocs -->
-  <target name="javadocs" 
+  <target name="javadocs"
           depends="prepare-blocks"
           description="Builds the API documentation (javadocs)"
           unless="internal.exclude.javadocs">
