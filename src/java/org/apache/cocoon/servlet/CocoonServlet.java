@@ -206,6 +206,9 @@ public class CocoonServlet extends HttpServlet {
      */
     protected RequestFactory requestFactory;
 
+    /** Settings */
+    protected Settings settings;
+    
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
      * notice that I have broken the init into sub methods to make it
@@ -236,6 +239,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // ignore this
             }
         }
 
@@ -280,9 +284,9 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
         String path = this.servletContextPath;
-/*        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("getRealPath for /: " + path);
-        }*/
+        // these two variables are just for debugging. We can't log at this point
+        // as the logger isn't initialized yet.
+        String debugPathOne = null, debugPathTwo = null;
         if (path == null) {
             // Try to figure out the path of the root from that of WEB-INF
             try {
@@ -290,13 +294,9 @@ public class CocoonServlet extends HttpServlet {
             } catch (MalformedURLException me) {
                 throw new ServletException("Unable to get resource 'WEB-INF'.", me);
             }
-           /* if (getLogger().isDebugEnabled()) {
-                getLogger().debug("getResource for /WEB-INF: " + path);
-            }*/
+            debugPathOne = path;
             path = path.substring(0, path.length() - "WEB-INF".length());
-            /*if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Path for Root: " + path);
-            }*/
+            debugPathTwo = path;
         }
         try {
             if (path.indexOf(':') > 1) {
@@ -317,8 +317,17 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.servletContextURL);
 
         // Init logger
+        this.settings = SettingsHelper.getSettings(this.getServletConfig());
+        
         initLogger();
-
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug(this.settings.toString());
+            this.getLogger().debug("getRealPath for /: " + this.servletContextPath);
+            if ( this.servletContextPath == null ) {                
+                this.getLogger().debug("getResource for /WEB-INF: " + debugPathOne);
+                this.getLogger().debug("Path for Root: " + debugPathTwo);
+            }
+        }
         this.forceLoadParameter = getInitParameter("load-class", null);
         this.forceSystemProperty = getInitParameter("force-property", null);
 
@@ -718,9 +727,6 @@ public class CocoonServlet extends HttpServlet {
     }
 
     protected void initLogger() {
-        // get settings - TODO we will move this to a better place soon
-        final Settings settings = SettingsHelper.getSettings(this.getServletConfig());
-
         final CocoonLogFormatter formatter = new CocoonLogFormatter();
         formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
                             "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
@@ -737,7 +743,7 @@ public class CocoonServlet extends HttpServlet {
             subcontext.put("context-root", this.servletContextPath);
         }
 
-        LoggingHelper lh = new LoggingHelper(settings, servTarget, subcontext);
+        LoggingHelper lh = new LoggingHelper(this.settings, servTarget, subcontext);
         this.loggerManager = lh.getLoggerManager();
         this.log = lh.getLogger();
     }

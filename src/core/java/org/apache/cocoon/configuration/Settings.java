@@ -40,8 +40,8 @@ public class Settings {
     protected boolean enableUploads;
     protected String uploadDirectory;    
     protected boolean autosaveUploads;
-    protected boolean overwriteUploads;
-    protected long maxUploadSize;
+    protected String overwriteUploads;
+    protected int maxUploadSize;
     protected String cacheDirectory;
     protected String workDirectory;
     protected String[] extraClasspaths;
@@ -273,25 +273,25 @@ public class Settings {
     /**
      * @return Returns the maxUploadSize.
      */
-    public long getMaxUploadSize() {
+    public int getMaxUploadSize() {
         return this.maxUploadSize;
     }
     /**
      * @param maxUploadSize The maxUploadSize to set.
      */
-    public void setMaxUploadSize(long maxUploadSize) {
+    public void setMaxUploadSize(int maxUploadSize) {
         this.maxUploadSize = maxUploadSize;
     }
     /**
      * @return Returns the overwriteUploads.
      */
-    public boolean isOverwriteUploads() {
+    public String getOverwriteUploads() {
         return this.overwriteUploads;
     }
     /**
      * @param overwriteUploads The overwriteUploads to set.
      */
-    public void setOverwriteUploads(boolean overwriteUploads) {
+    public void setOverwriteUploads(String overwriteUploads) {
         this.overwriteUploads = overwriteUploads;
     }
     /**
@@ -388,5 +388,38 @@ public class Settings {
      */
     public void setOverrideLogLevel(String overrideLogLevel) {
         this.overrideLogLevel = overrideLogLevel;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "Settings:\n"+
+               "- Configuration: " + this.configuration + "\n" + 
+               "- Classloader: " + ( this.classloaderClassName == null ? "-" : this.classloaderClassName ) + "\n" + 
+               "- InitClassloader: " + this.initClassloader + "\n" + 
+               "- ForceProperties: " + ( this.forceProperties == null ? "-" : this.forceProperties.toString() ) + "\n" +
+               "- Logging-Configuration: " + this.loggingConfiguration + "\n" +
+               "- Cocoon-Logger: " + this.cocoonLogger + "\n" + 
+               "- Access-Logger: " + this.accessLogger + "\n" +
+               "- Logger-Classname: " + this.loggerClassName + "\n" + 
+               "- Bootstrap-Loglevel: " + this.bootstrapLogLevel + "\n" +
+               "- Allow-Reload: " + this.allowReload + "\n" +
+               "- Enable-Uploads: " + this.enableUploads + "\n" +
+               "- Upload-Directory: " + this.uploadDirectory + "\n" +
+               "- Autosave-Uploads: " + this.autosaveUploads + "\n" +
+               "- Overwrite-Uploads: " + this.overwriteUploads + "\n" +
+               "- Max.Uploadsize: " + this.maxUploadSize + "\n" +
+               "- Cache-Directory: " + this.cacheDirectory + "\n" + 
+               "- Work-Directory: " + this.workDirectory + "\n" +
+               "- Load Classes: " + this.loadClasses + "\n" + 
+               "- Extra Classpath: " + this.extraClasspaths + "\n" +
+               "- Parent ServiceManager: " + this.parentServiceManagerClassName + "\n" +
+               "- Show Time: " + this.showTime + "\n" + 
+               "- Manage Exceptions: " + this.manageExceptions + "\n" +
+               "- Form-Encoding: " + this.formEncoding + "\n" + 
+               "- Log4J Configuration: " + this.log4jConfiguration + "\n" +
+               "- Override Loglevel: " + this.overrideLogLevel + "\n";
+
     }
 }
