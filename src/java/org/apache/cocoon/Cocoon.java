@@ -59,6 +59,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 
+import org.apache.avalon.excalibur.component.ComponentProxyGenerator;
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
@@ -115,7 +116,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.20 2003/11/05 21:01:06 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.21 2003/11/06 15:44:26 unico Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -323,13 +324,18 @@ public class Cocoon
         } catch (Exception e) {
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
-
+        
         ContainerUtil.initialize(startupManager);
-
+        
         this.configure(startupManager);
-
+        
         ContainerUtil.dispose(startupManager);
         startupManager = null;
+
+        // add the logger manager to the component locator
+        final ComponentProxyGenerator proxyGenerator = new ComponentProxyGenerator();
+        final Component loggerManagerProxy = proxyGenerator.getProxy(LoggerManager.class.getName(),loggerManager);
+        componentManager.addComponentInstance(LoggerManager.ROLE,loggerManagerProxy);
 
         ContainerUtil.initialize(this.componentManager);
 
