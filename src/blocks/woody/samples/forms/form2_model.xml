@@ -64,15 +64,14 @@
 
   <wd:field id="number" required="true">
     <wd:label>Select a number:</wd:label>
-    <wd:datatype base="long">
-      <wd:selection-list>
-        <wd:item value="1"/>
-        <wd:item value="2"/>
-        <wd:item value="3"/>
-        <wd:item value="4"/>
-        <wd:item value="5"/>
-      </wd:selection-list>
-    </wd:datatype>
+    <wd:datatype base="long"/>
+    <wd:selection-list>
+      <wd:item value="1"/>
+      <wd:item value="2"/>
+      <wd:item value="3"/>
+      <wd:item value="4"/>
+      <wd:item value="5"/>
+    </wd:selection-list>
   </wd:field>
 
   <wd:repeater id="contacts">
