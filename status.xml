@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Deprecated Pizza compiler support in XSP. To be removed in Cocoon 2.2.
+   </action>
    <action dev="VG" type="update">
      CForms: JavaSelectionList implementations can now be Contextualizable and
      can build SelectionLists with XMLizable labels.
@@ -378,7 +381,7 @@
      Paranoid: make the classloader implementation configurable
    </action>
    <action dev="AG" type="fix" fixes-bug="32408" due-to="Juan Jose Pablos" due-to-email="cheche@che-che.com">
-     typo on the date-selector doc.
+     Typo on the date-selector doc.
    </action>
    <action dev="AG" type="fix" fixes-bug="30043" due-to="Micah Dubinko" due-to-email="mdubinko@snapbridge.com">
      xml2html.xslt does not work on IE.
