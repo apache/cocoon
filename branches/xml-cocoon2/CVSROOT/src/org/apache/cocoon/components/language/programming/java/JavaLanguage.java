@@ -30,7 +30,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-11-10 22:38:54 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-26 21:48:04 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
 
@@ -117,7 +117,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
       return
         this.classLoaderManager.loadClass(name.replace(File.separatorChar, '.'));
     } catch (Exception e) {
-      throw new LanguageException(e.getMessage());
+      throw new LanguageException("Could not load class for program '" + name + "' due to a " + e.getClass().getName() + ": " + e.getMessage());
     }
   }
 
@@ -201,7 +201,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
     try {
       return ((Class) program).newInstance();
     } catch (Exception e) {
-      throw new LanguageException(e.getMessage());
+      throw new LanguageException("Could not instantiate program instance due to a " + e.getClass().getName() + ": " + e.getMessage());
     }
   }
 

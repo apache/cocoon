@@ -10,6 +10,7 @@ package org.apache.cocoon.components.image;
 
 import org.apache.avalon.*;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.ThreadSafe;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.awt.image.*;
@@ -26,7 +27,7 @@ import org.apache.log.LogKit;
  * @version 1.0
  * @see Java Advanced Imaging API
  */
-public class JAIJPEGEncoder implements ImageEncoder, Configurable {
+public class JAIJPEGEncoder implements ImageEncoder, Configurable, ThreadSafe {
 
     private Logger log = LogKit.getLoggerFor("cocoon");
 

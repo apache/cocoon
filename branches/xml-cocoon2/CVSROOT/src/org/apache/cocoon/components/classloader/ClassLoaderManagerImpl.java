@@ -9,13 +9,15 @@ package org.apache.cocoon.components.classloader;
 
 import java.io.IOException;
 
+import org.apache.avalon.ThreadSafe;
+
 /**
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:26 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-26 21:48:02 $
  */
-public class ClassLoaderManagerImpl implements ClassLoaderManager {
+public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**
    * The single class loader instance
    */

@@ -15,12 +15,13 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Composer;
+import org.apache.avalon.ThreadSafe;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:42:36 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-26 21:48:01 $
  */
-public class ComponentFactory implements ObjectFactory {
+public class ComponentFactory implements ObjectFactory, ThreadSafe {
 	/** The class which this <code>ComponentFactory</code>
 	 * should create.
 	 */

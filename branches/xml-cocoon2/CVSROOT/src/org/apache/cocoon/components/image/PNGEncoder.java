@@ -9,6 +9,7 @@
 package org.apache.cocoon.components.image;
 
 import org.apache.avalon.Parameters;
+import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.*;
 import java.io.OutputStream;
 import java.io.IOException;
@@ -27,7 +28,7 @@ import org.apache.log.LogKit;
  * @version 1.0
  * @see <a href="http://catcode.com/pngencoder/">PngEncoder package</a>
  */
-public class PNGEncoder implements ImageEncoder, Configurable {
+public class PNGEncoder implements ImageEncoder, Configurable, ThreadSafe {
 
     private Logger log = LogKit.getLoggerFor("cocoon");
 

@@ -22,6 +22,7 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.ComponentSelector;
+import org.apache.avalon.ThreadSafe;
 
 import org.apache.avalon.Parameters;
 
@@ -52,10 +53,10 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-11-10 22:38:53 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-11-26 21:48:03 $
  */
 public class ProgramGeneratorImpl
-  implements ProgramGenerator, Composer, Configurable
+  implements ProgramGenerator, Composer, Configurable, ThreadSafe
 {
 
     private Logger log = LogKit.getLoggerFor("cocoon");

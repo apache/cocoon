@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-22 23:09:03 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-26 21:48:04 $
  */
 public class ResourceReader extends AbstractReader {
 
@@ -48,7 +48,6 @@ public class ResourceReader extends AbstractReader {
         long len = 0;
         long lastModified = 0;
         try {
-            System.out.println(">>>> ResourceReader: " + this.source);
             if(this.source.indexOf(":/")!=-1) {
                 src = this.source;
                 url = new URL (src);
@@ -71,7 +70,6 @@ public class ResourceReader extends AbstractReader {
             throw new IOException ("ResourceReader: malformed source \""
                 +src+"\". "+mue.toString());
         }
-        System.out.println(">>>> Length: " + len);
         byte[] buffer = new byte[(int)len];
         is.read(buffer);
         is.close();
