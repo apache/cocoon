@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.context.Context;
@@ -197,6 +199,8 @@ public class StatusGenerator
         genSettings();
         genVMStatus();
 
+        genProperties();
+
         // End root element.
         this.xmlConsumer.endElement(namespace, "statusinfo", "statusinfo");
     }
@@ -327,11 +331,45 @@ public class StatusGenerator
 
     private void genSettings() throws SAXException {
         final Settings s = Core.getSettings(this.context);
-        this.startGroup("settings");
+        this.startGroup("Settings");
         
-        // FIXME add all
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
-        this.addValue(Settings.KEY_CONFIGURATION_RELOAD_DELAY, String.valueOf(s.getConfigurationReloadDelay()));
+        this.addValue(Settings.KEY_CONFIGURATION_RELOAD_DELAY, s.getConfigurationReloadDelay());
+        this.addValue(Settings.KEY_ALLOW_RELOAD, s.isAllowReload());
+        this.addValue(Settings.KEY_INIT_CLASSLOADER, s.isInitClassloader());
+        this.addValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
+        this.addValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
+        this.addValue(Settings.KEY_FORCE_PROPERTIES, s.getForceProperties());
+        this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
+        this.addValue(Settings.KEY_LOGGING_ACCESS_LOGGER, s.getAccessLogger());
+        this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
+        this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
+        this.addValue(Settings.KEY_LOGGING_LOG4J_CONFIGURATION, s.getLog4jConfiguration());
+        this.addValue(Settings.KEY_LOGGING_MANAGER_CLASS, s.getLoggerClassName());
+        this.addValue(Settings.KEY_LOGGING_OVERRIDE_LOGLEVEL, s.getOverrideLogLevel());
+        this.addValue(Settings.KEY_MANAGE_EXCEPTIONS, s.isManageExceptions());
+        this.addValue(Settings.KEY_PARENT_SERVICE_MANAGER, s.getParentServiceManagerClassName());
+        this.addValue(Settings.KEY_UPLOADS_DIRECTORY, s.getUploadDirectory());
+        this.addValue(Settings.KEY_UPLOADS_AUTOSAVE, s.isAutosaveUploads());
+        this.addValue(Settings.KEY_UPLOADS_ENABLE, s.isEnableUploads());
+        this.addValue(Settings.KEY_UPLOADS_MAXSIZE, s.getMaxUploadSize());
+        this.addValue(Settings.KEY_UPLOADS_OVERWRITE, s.isAllowOverwrite());
+        this.addValue(Settings.KEY_CACHE_DIRECTORY, s.getCacheDirectory());
+        this.addValue(Settings.KEY_WORK_DIRECTORY, s.getWorkDirectory());
+        this.addValue(Settings.KEY_FORM_ENCODING, s.getFormEncoding());
+        this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
+        this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
+    }
+
+    private void genProperties() throws SAXException {
+        this.startGroup("System-Properties");
+        final Properties p = System.getProperties();
+        final Enumeration e = p.keys();
+        while ( e.hasMoreElements() ) {
+            final String key = (String)e.nextElement();
+            final String value = p.getProperty(key);
+            this.addValue(key, value);
+        }
         this.endGroup();
     }
 
@@ -355,6 +393,58 @@ public class StatusGenerator
     /** Utility function to begin and end a <code>value</code> tag pair. */
     private void addValue(String name, String value) throws SAXException {
         addValue(name, value, null);
+    }
+
+    /** Utility function to begin and end a <code>value</code> tag pair. */
+    private void addValue(String name, boolean value) throws SAXException {
+        addValue(name, String.valueOf(value), null);
+    }
+
+    /** Utility function to begin and end a <code>value</code> tag pair. */
+    private void addValue(String name, int value) throws SAXException {
+        addValue(name, String.valueOf(value), null);
+    }
+
+    /** Utility function to begin and end a <code>value</code> tag pair. */
+    private void addValue(String name, long value) throws SAXException {
+        addValue(name, String.valueOf(value), null);
+    }
+
+    /** Utility function to begin and end a <code>value</code> tag pair. */
+    private void addValue(String name, List value) throws SAXException {
+        addValue(name, value.iterator());
+    }
+
+    /** Utility function to begin and end a <code>value</code> tag pair. */
+    private void addValue(String name, Iterator value) throws SAXException {
+        final StringBuffer buffer = new StringBuffer();
+        boolean first = true;
+        while ( value.hasNext() ) {
+            if ( !first ) {
+                buffer.append(',');
+            } else {
+                first = false;
+            }
+            buffer.append(value.next());
+        }
+        addValue(name, buffer.toString(), null);
+    }
+
+    /** Utility function to begin and end a <code>value</code> tag pair. */
+    private void addValue(String name, Map value) throws SAXException {
+        final StringBuffer buffer = new StringBuffer();
+        final Iterator i = value.entrySet().iterator();
+        boolean first = true;
+        while ( i.hasNext() ) {
+            if ( !first ) {
+                buffer.append(',');
+            } else {
+                first = false;
+            }
+            Map.Entry current = (Map.Entry)i.next();
+            buffer.append(current.getKey()).append('=').append(current.getValue());
+        }
+        addValue(name, buffer.toString(), null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
