@@ -55,6 +55,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.JavaScriptException;
+
 import org.apache.cocoon.sitemap.SitemapRedirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Session;
@@ -88,362 +91,370 @@ import org.apache.avalon.framework.component.Component;
  */
 public class JSCocoon extends ScriptableObject
 {
-  protected static String OBJECT_SOURCE_RESOLVER = "source-resolver";
-  protected JavaScriptInterpreter interpreter;
-  protected Scriptable scope;
-  protected NativeArray parameters;
-  protected Environment environment;
-  protected ComponentManager manager;
+    protected static String OBJECT_SOURCE_RESOLVER = "source-resolver";
+    protected JavaScriptInterpreter interpreter;
+    protected Scriptable scope;
+    protected NativeArray parameters;
+    protected Environment environment;
+    protected ComponentManager manager;
 
-  public JSCocoon() {}
+    public JSCocoon() {}
 
-  public String getClassName()
-  {
-    return "Cocoon";
-  }
-
-  public void setScope(Scriptable scope)
-  {
-    this.scope = scope;
-  }
-
-  public Scriptable getScope()
-  {
-    return scope;
-  }
-
-  public void setParameters(NativeArray parameters)
-  {
-    this.parameters = parameters;
-  }
-
-  public void setInterpreter(JavaScriptInterpreter interpreter)
-  {
-    this.interpreter = interpreter;
-  }
-
-  public void setContext(ComponentManager manager, Environment environment)
-  {
-    this.manager = manager;
-    this.environment = environment;
-  }
-
-  public void invalidateContext()
-  {
-    manager = null;
-    environment = null;
-  }
-
-  public NativeArray jsGet_parameters()
-  {
-    return parameters;
-  }
-
-  public JavaScriptInterpreter jsGet_interpreter()
-  {
-    return interpreter;
-  }
-
-  public Environment jsGet_environment()
-  {
-    return environment;
-  }
-
-  public Request jsGet_request()
-  {
-      if (environment == null) {
-        // context has been invalidated
-        return null;
-      }
-      Map objectModel = environment.getObjectModel();
-      return ObjectModelHelper.getRequest(objectModel);
-  }
-
-  public Response jsGet_response()
-  {
-      if (environment == null) {
-        // context has been invalidated
-        return null;
-      }
-    Map objectModel = environment.getObjectModel();
-    return ObjectModelHelper.getResponse(objectModel);
-  }
-
-  public Session jsGet_session()
-  {
-      if (environment == null) {
-        // context has been invalidated
-        return null;
-      }
-    return jsGet_request().getSession();
-  }
-
-  public Context jsGet_context()
-  {
-      if (environment == null) {
-        // context has been invalidated
-        return null;
-      }
-    Map objectModel = environment.getObjectModel();
-    return ObjectModelHelper.getContext(objectModel);
-  }
-
-  public ComponentManager jsGet_componentManager()
-  {
-    return manager;
-  }
-
-
-
-  /**
-   * Load the file specified as argument. Registers the file with the
-   * interpreter and then forces its loading by calling {@link
-   * JavaScriptInterpreter#checkForModifiedScripts}.
-   *
-   * @param filename a <code>String</code> value
-   * @return an <code>Object</code> value
-   * @exception Exception if an error occurs
-   */
-  public Object jsFunction_load(String filename)
-    throws Exception
-  {
-    try {
-      interpreter.register(filename);
-      interpreter.checkForModifiedScripts(environment);
+    public String getClassName()
+    {
+        return "Cocoon";
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
-      throw ex;
+
+    public void setScope(Scriptable scope)
+    {
+        this.scope = scope;
     }
-    return null;
-  }
 
-  public String jsFunction_toString()
-  {
-    return "[object " + toString() + "]";
-  }
-
-  public void jsFunction_forwardTo(String uri, Object bizData, Object cont)
-    throws Exception
-  {
-    bizData = jsobjectToObject(bizData);
-    
-    WebContinuation kont = null;
-
-    if (cont != null)
-      kont = ((JSWebContinuation)cont).getWebContinuation();
-
-    if (bizData != null) System.err.println("FWD:" + bizData.getClass().getName());
-
-    interpreter.forwardTo(uri, bizData, kont, environment);
-  }
-
-  /**
-   * Call the Cocoon sitemap for the given URI, sending the output of the
-   * eventually matched pipeline to the specified outputstream.
-   *
-   * @param uri The URI for which the request should be generated.
-   * @param biz Extra data associated with the subrequest.
-   * @param out An OutputStream where the output should be written to.
-   * @return Whatever the Cocoon processor returns (????).
-   * @exception Exception If an error occurs.
-   */
-  public boolean jsFunction_process(String uri, Object biz, Object out)
-    throws Exception
-  {
-    out = jsobjectToObject(out);
-    biz = jsobjectToObject(biz);
-    if (biz != null) System.err.println("PRC:"+biz.getClass().getName());
-    return interpreter.process(uri, biz, (OutputStream)out, environment);
-  }
-
-  /**
-     Set the Scope object in the session object of the current
-     user. This effectively means that at the next invocation from the
-     sitemap of a JavaScript function (using the &lt;map:call
-     function="..."&gt;), will obtain the same scope as the current
-     one.
-  */
-  public void jsFunction_createSession()
-  {
-    interpreter.setSessionScope(environment, scope);
-  }
-
-  /**
-     Remove the Scope object from the session object of the current
-     user.
-  */
-  public void jsFunction_removeSession()
-  {
-    interpreter.removeSessionScope(environment);
-  }
-
-  public void jsFunction_diplayAllContinuations()
-    throws ComponentException
-  {
-    ContinuationsManager continuationsMgr
-      = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
-
-    try {
-      if (continuationsMgr instanceof ContinuationsManagerImpl)
-        ((ContinuationsManagerImpl)continuationsMgr).displayAllContinuations();
+    public Scriptable getScope()
+    {
+        return scope;
     }
-    finally {
-      manager.release((Component)continuationsMgr);
+
+    public void setParameters(NativeArray parameters)
+    {
+        this.parameters = parameters;
     }
-  }
 
-  // All right, this breaks the encapsulation, but I couldn't find any
-  // better way to obtain the ComponentManager for a
-  // JSWebContinuation.
-  ComponentManager getComponentManager()
-  {
-    return manager;
-  }
-
-
-  public static Map jsobjectToMap(Scriptable jsobject)
-  {
-    HashMap hash = new HashMap();
-    Object[] ids = jsobject.getIds();
-    for (int i = 0; i < ids.length; i++) {
-      String key = ScriptRuntime.toString(ids[i]);
-      Object value = jsobject.get(key, jsobject);
-      if (value == Undefined.instance)
-        value = null;
-      else
-        value = jsobjectToObject(value);
-      hash.put(key, value);
+    public void setInterpreter(JavaScriptInterpreter interpreter)
+    {
+        this.interpreter = interpreter;
     }
-    return hash;
-  }
 
-  public static Object jsobjectToObject(Object obj) 
-  {
-     // unwrap Scriptable wrappers of real Java objects
-    if (obj instanceof Wrapper) {
-      obj = ((Wrapper) obj).unwrap();
-    } else if (obj == Undefined.instance) {
-      obj = null;
+    public void setContext(ComponentManager manager, Environment environment)
+    {
+        this.manager = manager;
+        this.environment = environment;
     }
-    return obj;
-  }
+
+    public void invalidateContext()
+    {
+        manager = null;
+        environment = null;
+    }
+
+    public NativeArray jsGet_parameters()
+    {
+        return parameters;
+    }
+
+    public JavaScriptInterpreter jsGet_interpreter()
+    {
+        return interpreter;
+    }
+
+    public Environment jsGet_environment()
+    {
+        return environment;
+    }
+
+    public Request jsGet_request()
+    {
+        if (environment == null) {
+            // context has been invalidated
+            return null;
+        }
+        Map objectModel = environment.getObjectModel();
+        return ObjectModelHelper.getRequest(objectModel);
+    }
+
+    public Response jsGet_response()
+    {
+        if (environment == null) {
+            // context has been invalidated
+            return null;
+        }
+        Map objectModel = environment.getObjectModel();
+        return ObjectModelHelper.getResponse(objectModel);
+    }
+
+    public Session jsGet_session()
+    {
+        if (environment == null) {
+            // context has been invalidated
+            return null;
+        }
+        return jsGet_request().getSession();
+    }
+
+    public Context jsGet_context()
+    {
+        if (environment == null) {
+            // context has been invalidated
+            return null;
+        }
+        Map objectModel = environment.getObjectModel();
+        return ObjectModelHelper.getContext(objectModel);
+    }
+
+    public ComponentManager jsGet_componentManager()
+    {
+        return manager;
+    }
+
+
+
+    /**
+     * Load the file specified as argument. Registers the file with the
+     * interpreter and then forces its loading by calling {@link
+     * JavaScriptInterpreter#checkForModifiedScripts}.
+     *
+     * @param filename a <code>String</code> value
+     * @return an <code>Object</code> value
+     * @exception Exception if an error occurs
+     */
+    public Object jsFunction_load(String filename) throws JavaScriptException
+    {
+        org.mozilla.javascript.Context cx = 
+            org.mozilla.javascript.Context.getCurrentContext(); 
+        try {
+            Script script = interpreter.compileScript(cx, environment, filename);
+            return script.exec(cx, ScriptableObject.getTopLevelScope(this));
+        } catch (JavaScriptException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JavaScriptException(e);
+        }
+    }
+
+    public String jsFunction_toString()
+    {
+        return "[object " + toString() + "]";
+    }
+
+    public void jsFunction_forwardTo(String uri, Object bizData, Object cont)
+        throws JavaScriptException 
+    {
+        try {
+            bizData = jsobjectToObject(bizData);
+            
+            WebContinuation kont = null;
+            
+            if (cont != null)
+                kont = ((JSWebContinuation)cont).getWebContinuation();
+            
+            interpreter.forwardTo(uri, bizData, kont, environment);
+        } catch (JavaScriptException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JavaScriptException(e);
+        }
+    }
+
+    /**
+     * Call the Cocoon sitemap for the given URI, sending the output of the
+     * eventually matched pipeline to the specified outputstream.
+     *
+     * @param uri The URI for which the request should be generated.
+     * @param biz Extra data associated with the subrequest.
+     * @param out An OutputStream where the output should be written to.
+     * @return Whatever the Cocoon processor returns (????).
+     */
+    public boolean jsFunction_process(String uri, Object biz, Object out)
+        throws JavaScriptException
+    {
+        try {
+            out = jsobjectToObject(out);
+            biz = jsobjectToObject(biz);
+            return interpreter.process(uri, biz, (OutputStream)out, environment);
+        } catch (JavaScriptException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JavaScriptException(e);
+        }
+    }
+
+    /**
+       Set the Scope object in the session object of the current
+       user. This effectively means that at the next invocation from the
+       sitemap of a JavaScript function (using the &lt;map:call
+       function="..."&gt;), will obtain the same scope as the current
+       one.
+    */
+    public void jsFunction_createSession()
+    {
+        interpreter.setSessionScope(environment, scope);
+    }
+
+    /**
+       Remove the Scope object from the session object of the current
+       user.
+    */
+    public void jsFunction_removeSession()
+    {
+        interpreter.removeSessionScope(environment);
+    }
+
+    public void jsFunction_diplayAllContinuations()
+        throws ComponentException
+    {
+        ContinuationsManager continuationsMgr
+            = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
+
+        try {
+            if (continuationsMgr instanceof ContinuationsManagerImpl)
+                ((ContinuationsManagerImpl)continuationsMgr).displayAllContinuations();
+        }
+        finally {
+            manager.release((Component)continuationsMgr);
+        }
+    }
+
+    // All right, this breaks the encapsulation, but I couldn't find any
+    // better way to obtain the ComponentManager for a
+    // JSWebContinuation.
+    ComponentManager getComponentManager()
+    {
+        return manager;
+    }
+
+
+    public static Map jsobjectToMap(Scriptable jsobject)
+    {
+        HashMap hash = new HashMap();
+        Object[] ids = jsobject.getIds();
+        for (int i = 0; i < ids.length; i++) {
+            String key = ScriptRuntime.toString(ids[i]);
+            Object value = jsobject.get(key, jsobject);
+            if (value == Undefined.instance)
+                value = null;
+            else
+                value = jsobjectToObject(value);
+            hash.put(key, value);
+        }
+        return hash;
+    }
+
+    public static Object jsobjectToObject(Object obj) 
+    {
+        // unwrap Scriptable wrappers of real Java objects
+        if (obj instanceof Wrapper) {
+            obj = ((Wrapper) obj).unwrap();
+        } else if (obj == Undefined.instance) {
+            obj = null;
+        }
+        return obj;
+    }
 
     public Scriptable jsFunction_callAction(String type,
                                             String source,
                                             Scriptable parameters)
         throws Exception
     {
-      Redirector redirector = new SitemapRedirector(this.environment);
-      SourceResolver resolver = (SourceResolver)this.environment.getObjectModel()
-          .get(OBJECT_SOURCE_RESOLVER);
-      ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-      ComponentSelector actionSelector
-          = (ComponentSelector)sitemapManager.lookup(Action.ROLE + "Selector");
-      Action action = (Action)actionSelector.select(type);
-      Map result = null;
-      try {
-        result = action.act(redirector, 
-                            resolver,
-                            this.environment.getObjectModel(),
-                            source, 
-                            jsobjectToParameters(parameters));
-      }
-      finally {
-        actionSelector.release(action);
-      }
+        Redirector redirector = new SitemapRedirector(this.environment);
+        SourceResolver resolver = (SourceResolver)this.environment.getObjectModel()
+            .get(OBJECT_SOURCE_RESOLVER);
+        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ComponentSelector actionSelector
+            = (ComponentSelector)sitemapManager.lookup(Action.ROLE + "Selector");
+        Action action = (Action)actionSelector.select(type);
+        Map result = null;
+        try {
+            result = action.act(redirector, 
+                                resolver,
+                                this.environment.getObjectModel(),
+                                source, 
+                                jsobjectToParameters(parameters));
+        }
+        finally {
+            actionSelector.release(action);
+        }
 
-      // what should be done with the redirector ??
-      // ignore it or call sendPage with it?
-      return (result!=null? new ScriptableMap(result) : null);
+        // what should be done with the redirector ??
+        // ignore it or call sendPage with it?
+        return (result!=null? new ScriptableMap(result) : null);
     }
 
     public static Parameters jsobjectToParameters(Scriptable jsobject)
     {
-      Parameters params = new Parameters();
-      Object[] ids = jsobject.getIds();
-      for (int i = 0; i < ids.length; i++) {
-        String key = ScriptRuntime.toString(ids[i]);
-        Object value = jsobject.get(key, jsobject);
-        if (value == Undefined.instance)
-          value = null;
-        else
-          value = ScriptRuntime.toString(value);
-        params.setParameter(key, (String) value);
-      }
-      return params;
+        Parameters params = new Parameters();
+        Object[] ids = jsobject.getIds();
+        for (int i = 0; i < ids.length; i++) {
+            String key = ScriptRuntime.toString(ids[i]);
+            Object value = jsobject.get(key, jsobject);
+            if (value == Undefined.instance)
+                value = null;
+            else
+                value = ScriptRuntime.toString(value);
+            params.setParameter(key, (String) value);
+        }
+        return params;
     }
 
     public Object jsFunction_inputModuleGetAttribute(String type, String attribute)
         throws Exception
     {
-      // since no new components can be declared on sitemap we could
-      // very well use the 'other' one here. Anyway, since it's there...
-      ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-      ComponentSelector inputSelector = (ComponentSelector)sitemapManager
-          .lookup(InputModule.ROLE + "Selector");
-      InputModule input = (InputModule) inputSelector.select(type);
-      Object result = null;
-      try {
-        result = input.getAttribute(attribute, null,
-                                    this.environment.getObjectModel());
-      }
-      finally {
-        inputSelector.release(input);
-      }
-      return result;
+        // since no new components can be declared on sitemap we could
+        // very well use the 'other' one here. Anyway, since it's there...
+        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ComponentSelector inputSelector = (ComponentSelector)sitemapManager
+            .lookup(InputModule.ROLE + "Selector");
+        InputModule input = (InputModule) inputSelector.select(type);
+        Object result = null;
+        try {
+            result = input.getAttribute(attribute, null,
+                                        this.environment.getObjectModel());
+        }
+        finally {
+            inputSelector.release(input);
+        }
+        return result;
     }
 
     public void jsFunction_outputModuleSetAttribute(String type, String attribute,
                                                     Object value)
         throws Exception
     {
-      // since no new components can be declared on sitemap we could
-      // very well use the 'other' one here. Anyway, since it's there...
-      ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-      ComponentSelector outputSelector = (ComponentSelector)sitemapManager
-          .lookup(OutputModule.ROLE + "Selector");
-      OutputModule output = (OutputModule) outputSelector.select(type);
-      try {
-        output.setAttribute(null, this.environment.getObjectModel(), attribute,
-                            jsobjectToObject(value));
-      }
-      finally {
-        outputSelector.release(output);
-      }
+        // since no new components can be declared on sitemap we could
+        // very well use the 'other' one here. Anyway, since it's there...
+        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ComponentSelector outputSelector = (ComponentSelector)sitemapManager
+            .lookup(OutputModule.ROLE + "Selector");
+        OutputModule output = (OutputModule) outputSelector.select(type);
+        try {
+            output.setAttribute(null, this.environment.getObjectModel(), attribute,
+                                jsobjectToObject(value));
+        }
+        finally {
+            outputSelector.release(output);
+        }
     }
 
     public void jsFunction_outputModuleCommit(String type)
         throws Exception
     {
-      // since no new components can be declared on sitemap we could
-      // very well use the 'other' one here. Anyway, since it's there...
-      ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-      ComponentSelector outputSelector = (ComponentSelector)sitemapManager
-          .lookup(OutputModule.ROLE + "Selector");
-      OutputModule output = (OutputModule) outputSelector.select(type);
-      try {
-        output.commit(null, this.environment.getObjectModel());
-      }
-      finally {
-        outputSelector.release(output);
-      }
+        // since no new components can be declared on sitemap we could
+        // very well use the 'other' one here. Anyway, since it's there...
+        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ComponentSelector outputSelector = (ComponentSelector)sitemapManager
+            .lookup(OutputModule.ROLE + "Selector");
+        OutputModule output = (OutputModule) outputSelector.select(type);
+        try {
+            output.commit(null, this.environment.getObjectModel());
+        }
+        finally {
+            outputSelector.release(output);
+        }
     }
 
     public void jsFunction_outputModuleRollback(String type)
         throws Exception
     {
-      // since no new components can be declared on sitemap we could
-      // very well use the 'other' one here. Anyway, since it's there...
-      ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-      ComponentSelector outputSelector = (ComponentSelector)sitemapManager
-          .lookup(OutputModule.ROLE + "Selector");
-      OutputModule output = (OutputModule) outputSelector.select(type);
-      try {
-        output.rollback(null, this.environment.getObjectModel(), null);
-      }
-      finally {
-        outputSelector.release(output);
-      }
+        // since no new components can be declared on sitemap we could
+        // very well use the 'other' one here. Anyway, since it's there...
+        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ComponentSelector outputSelector = (ComponentSelector)sitemapManager
+            .lookup(OutputModule.ROLE + "Selector");
+        OutputModule output = (OutputModule) outputSelector.select(type);
+        try {
+            output.rollback(null, this.environment.getObjectModel(), null);
+        }
+        finally {
+            outputSelector.release(output);
+        }
     }
 }

@@ -2,64 +2,53 @@ package org.apache.cocoon.components.flow.javascript;
 
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
-
-import java.util.List;
+import org.mozilla.javascript.tools.ToolErrorReporter;
+import org.apache.avalon.framework.logger.Logger;
 
 /**
  * Implements a Rhino JavaScript {@link
- * org.mozilla.javascript.ErrorReporter}. This is used to explicitly
- * refer to the error in the original source files, rather than the
- * combined file as presented for parsing by {@link ListInputStream}
- * in {@link JavaScriptInterpreter#readScripts}.
- *
- * <p>When an error is reported, either during the parsing of the
- * JavaScript files, or at runtime, an instance of this class is
- * invoked. This class maintains a list of {@link SourceInfo} objects,
- * which contain the original {@link
- * org.apache.cocoon.environment.Source} object and the line numbers
- * in it. When the error happens, the reporter matches the aggregated
- * line number to the actual source of the error.
- *
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @since August 15, 2002
+ * org.mozilla.javascript.ErrorReporter}. 
+ * Like ToolErrorReporter but logs to supplied logger instead of stdout
  */
 public class JSErrorReporter implements ErrorReporter
 {
-  /**
-   * List of {@link SourceInfo} objects.
-   */
-  protected List sourcesInfo;
+  private Logger logger;
 
-  public JSErrorReporter(List sourcesInfo)
+  public JSErrorReporter(Logger logger)
   {
-    this.sourcesInfo = sourcesInfo;
+      this.logger = logger;
   }
 
   public void error(String message,
                     String sourceName, int line,
                     String lineSrc, int column)
   {
-    String errMsg = getErrorMessage("ERROR: ", message, line, lineSrc, column);
-    System.out.print(errMsg);
+      String errMsg = getErrorMessage("msg.error", message, 
+				      sourceName, line, lineSrc, column);
+      System.err.println(errMsg);
+      logger.error(errMsg);
   }
 
   public void warning(String message, String sourceName, int line,
-                      String lineSrc, int column)
+		      String lineSrc, int column)
   {
-    System.out.print(getErrorMessage("WARNING: ", message, line, lineSrc, column));
+      String errMsg = getErrorMessage("msg.warning", message, 
+				    sourceName, line, lineSrc, column);
+      System.err.println(errMsg);
+      logger.warn(errMsg);
   }
     
   public EvaluatorException runtimeError(String message, String sourceName,
                                          int line, String lineSrc,
                                          int column)
   {
-    String errMsg = getErrorMessage("", message, line, lineSrc, column);
-    return new EvaluatorException(errMsg);
+      return new EvaluatorException(getErrorMessage("msg.error", message,
+						    sourceName, line,
+						    lineSrc, column));
   }
 
   /**
-   * Identifies the real location of the error in the file given the
-   * information stored in <code>sourcesInfo</code>.
+   * Formats error message
    *
    * @param type a <code>String</code> value, indicating the error
    * type (error or warning)
@@ -75,50 +64,22 @@ public class JSErrorReporter implements ErrorReporter
    * message, with the source file and line number adjusted to the
    * real values
    */
-  protected String getErrorMessage(String type,
-                                   String message,
-                                   int line,
-                                   String lineSource, int column)
-  {
-    int i = 0, size = sourcesInfo.size();
-    int accLines = 0;
-
-    // Find the file which contains the line number indicated by the error
-    SourceInfo source;
-    do {
-      source = (SourceInfo)sourcesInfo.get(i);
-      accLines += source.getLineNumbers();
-      i++;
-    } while (accLines < line && i < size);
-
-    String errorMsg;
-
-    if (i == size && line > accLines) {
-      errorMsg = "ERROR: Line number " + line + " out of bounds!";
-      return errorMsg;
+    String getErrorMessage(String type,
+			   String message,
+			   String sourceName, int line,
+			   String lineSource, int column)
+    {
+	if (line > 0) {
+	    if (sourceName != null) {
+		Object[] errArgs = { sourceName, new Integer(line), message };
+		return ToolErrorReporter.getMessage("msg.format3", errArgs);
+	  } else {
+	      Object[] errArgs = { new Integer(line), message };
+	      return ToolErrorReporter.getMessage("msg.format2", errArgs);
+            }
+        } else {
+            Object[] errArgs = { message };
+            return ToolErrorReporter.getMessage("msg.format1", errArgs);
+        }
     }
-
-    String systemId = source.getSystemId();
-    int realLineNo = line - (accLines - source.getLineNumbers());
-
-    errorMsg = systemId + ":" + realLineNo;
-
-    // If line source information is provided, make use of that to
-    // print a more descriptive error message.
-    if (lineSource != null) {
-      errorMsg += "\n\n" + lineSource + "\n";
-
-      StringBuffer blanks = new StringBuffer(column);
-      for (i = 1; i < column; i++)
-        blanks.append(" ");
-
-      errorMsg += blanks + "^" + "\n\n";
-    }
-    else
-      errorMsg += ": ";
-
-    errorMsg += type + message + "\n\n";
-
-    return errorMsg;
-  }
 }
