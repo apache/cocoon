@@ -284,6 +284,28 @@
   </answer>
  </faq>
 
+ <faq id="onetimeinit">
+  <question>
+   How can I tell Cocoon to only execute a piece of code once, when a page is first
+   requested?
+  </question>
+  <answer>
+   <p>Simple. Just put this <strong>outside</strong> your page root element, but inside
+    your xsp:page element.</p>
+
+   <source>&lt;xsp:logic&gt;
+    // class level variables, if any, go here, e.g.
+    final String myConfig;    
+
+    {
+     // init code here, e.g.
+     myConfig = MyConfigurator.getConfig ("mypage");
+    }
+    &lt;/xsp:logic&gt;
+   </source>
+  </answer>
+ </faq>
+
  <faq id="nojsp">
   <question>I put xerces.jar before another xml jar but now JSP has stopped working.
    How can I get both XSP and JSP to work?
@@ -314,7 +336,10 @@
     full CLASSPATH to its servlets (e.g. Cocoon) and (b) javac, jikes and/or
     Java's Classloader API were not designed for this scenario. Cocoon 2
     aims to solve this problem but it will probably require far-reaching and/or 
-    servlet-engine-specific changes.</p>
+    servlet-engine-specific changes. However, it is on the Todo list to add
+    certain industry-standard directories like WEB-INF/classes to the Cocoon 
+    internal CLASSPATH.
+   </p>
   </answer>
  </faq>
 
@@ -904,7 +929,7 @@
    </p>
 
    <note>The current Servlet API (2.2) does not include any explicit support for
-    servlet chaining. However, the Cocoon Project is in close contact with the
+    servlet chaining. However, the Cocoon Project has been in close contact with the
     Servlet API Expert Group at
     Sun (Stefano Mazzocchi being a member of that board), and Filter APIs
     should be part of the Servlet 2.3 API specification.
