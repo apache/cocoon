@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: xsp.xsl,v 1.1 2003/03/09 00:08:59 pier Exp $-->
+<!-- $Id: xsp.xsl,v 1.2 2004/02/11 00:18:40 vgritsenko Exp $-->
 <!--
  *****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
@@ -15,7 +15,7 @@
  * XSP Core logicsheet for the JavaScript language
  *
  * @author <a href="mailto:vgritsenko@apache.org>Vadim Gritsenko</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:59 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/02/11 00:18:40 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -402,7 +402,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
         <xsl:value-of select="."/>
       </xsl:when>
       <xsl:otherwise>
-        page.xspCharacters("<xsl:value-of select="XSLTExtension:escape($extension, .)"/>");
+        page.xspCharacters("<xsl:value-of select="XSLTExtension:escapeJava($extension, .)"/>");
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
