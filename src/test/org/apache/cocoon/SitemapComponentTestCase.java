@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -39,6 +40,8 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
+import org.apache.cocoon.core.container.CocoonServiceManager;
+import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockRedirector;
@@ -103,6 +106,9 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
     }
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
     public void setUp() throws Exception {
         super.setUp();
         objectmodel.clear();
@@ -117,6 +123,38 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, context);
 
         redirector.reset();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
+     */
+    protected void addComponents(CocoonServiceManager manager) 
+    throws ServiceException {
+        super.addComponents(manager);
+        final String[] o = this.getSitemapComponentInfo();
+        if ( o != null ) {
+            final String typeClassName = o[0];
+            final String componentClassName = o[1];
+            final String key = o[2];
+            
+            // Create configuration for selector
+            final DefaultConfiguration df = new DefaultConfiguration("transformers");
+            final DefaultConfiguration factory = new DefaultConfiguration("component-instance");
+            factory.setAttribute("class", componentClassName);
+            factory.setAttribute("name", key);
+            df.addChild(factory);
+            manager.addComponent(typeClassName + "Selector", 
+                                 CocoonServiceSelector.class, 
+                                 df);
+        }
+    }
+
+    /**
+     * This triple can be used to add a sitemap component to the service manager
+     * @return A triple of strings: class name of the type, class name of the component, key
+     */
+    protected String[] getSitemapComponentInfo() {
+        return null;
     }
 
     /**
