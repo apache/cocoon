@@ -136,7 +136,7 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.3 2003/07/03 11:36:09 cziegeler Exp $
+ * @version CVS $Id: Sendmail.java,v 1.4 2003/10/22 04:44:26 antonio Exp $
  */
 public class Sendmail extends AbstractAction implements ThreadSafe, Configurable {
     private final static String STATUS = "status";
@@ -268,8 +268,7 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
 
         } finally {
             ObjectModelHelper.getRequest(objectModel).setAttribute(Sendmail.REQUEST_ATTRIBUTE, status);
-            return (success ? status : null);
         }
+		return (success ? status : null);
     }
-
 }
