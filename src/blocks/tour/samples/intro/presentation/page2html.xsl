@@ -30,6 +30,10 @@
         </xsl:copy>
     </xsl:template>
 
+    <xsl:template match="toc-and-content">
+      <xsl:apply-templates/>	
+    </xsl:template>
+    
     <!-- HTML page skeleton -->
     <xsl:template match="page">
         <html>
