@@ -8,6 +8,10 @@
 
 <xsl:variable name="brandingText">OpenWiki, the post-it note of the web.</xsl:variable>
 
+<xsl:template name="head">
+	<p>No head today!</p>
+</xsl:template>
+
 <xsl:template name="brandingImage">
     <a href="{/ow:wiki/ow:frontpage/@href}"><img src="{/ow:wiki/ow:imagepath}/logo.gif" align="right" border="0" alt="OpenWiki" /></a>
 </xsl:template>
