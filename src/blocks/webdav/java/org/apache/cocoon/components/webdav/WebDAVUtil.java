@@ -243,7 +243,7 @@ public class WebDAVUtil {
         for (int i = 0; i<sourceproperties.size(); i++) {
             propertiesMap.put(((SourceProperty) sourceproperties.get(i)).getNamespace()
                               + ":" + ((SourceProperty) sourceproperties.get(i)).getName(),
-                              (SourceProperty) sourceproperties.get(i));
+                              sourceproperties.get(i));
         }
         return propertiesMap;
     }
