@@ -33,8 +33,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
  * to its composed object instances.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Wirings extends Resolver {
 

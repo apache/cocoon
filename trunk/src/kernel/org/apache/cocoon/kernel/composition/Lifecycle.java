@@ -30,8 +30,7 @@ package org.apache.cocoon.kernel.composition;
  * is implemented by a normal component, it will be silently ignored.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public interface Lifecycle {
 

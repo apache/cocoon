@@ -24,8 +24,7 @@ import org.xml.sax.SAXException;
  * log entries and outputting them.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public abstract class AbstractLogger extends Logger {
 

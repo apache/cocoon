@@ -40,8 +40,7 @@ import java.util.NoSuchElementException;
  * name spaces</b>.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class Configuration extends ArrayList {
 
@@ -1036,8 +1035,7 @@ public class Configuration extends ArrayList {
          * <p>Check if this {@link Iterator} can return the next element.</p>
          *
          * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
-         * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
-         * @version 1.0 (CVS $Revision: 1.2 $)
+         * @version 1.0 (CVS $Revision: 1.3 $)
          */
         public boolean hasNext() {
             /* No name, no children. Bye! */

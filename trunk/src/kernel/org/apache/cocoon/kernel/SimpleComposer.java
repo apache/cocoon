@@ -28,8 +28,7 @@ import org.apache.cocoon.kernel.deployment.DeploymentException;
  * requested.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class SimpleComposer implements Composer {
 

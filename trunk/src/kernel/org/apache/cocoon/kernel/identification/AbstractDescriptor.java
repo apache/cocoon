@@ -32,8 +32,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  * interface .</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public abstract class AbstractDescriptor extends ParsedIdentifier
 implements Descriptor {

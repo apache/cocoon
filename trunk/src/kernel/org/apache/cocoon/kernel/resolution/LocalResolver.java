@@ -35,8 +35,7 @@ import java.util.jar.JarEntry;
  * If the file is not a directory, it must (then) be a valid JAR archive.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class LocalResolver implements Resolver {
 

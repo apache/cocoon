@@ -24,8 +24,7 @@ import org.apache.cocoon.kernel.identification.Identifier;
  * {@link Descriptor}s.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public interface Library extends Set {
 

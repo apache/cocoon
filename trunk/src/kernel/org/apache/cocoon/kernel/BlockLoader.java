@@ -41,8 +41,7 @@ import org.apache.cocoon.kernel.deployment.Loader;
  * in every method returning a {@link Block}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class BlockLoader extends HashLibrary implements Loader {
 
@@ -191,8 +190,7 @@ public class BlockLoader extends HashLibrary implements Loader {
      * {@link #addURL(URL)} method.</p>
      *
      * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
-     * @author <a href="http://www.vnunet.com/">VNU Business Publications</a>
-     * @version 1.0 (CVS $Revision: 1.2 $)
+     * @version 1.0 (CVS $Revision: 1.3 $)
      */
     private static final class RootClassLoader extends URLClassLoader {
 

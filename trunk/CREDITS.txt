@@ -71,6 +71,9 @@ This product includes software developed by the Exolab Project
 This product includes software developed by ANTLR Project
 (http://www.antlr.org/)
 
+This product includes sofrware developed by VNU Business Publications
+(http://www.vnunet.com/)
+
 
 
 
