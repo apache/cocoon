@@ -35,5 +35,5 @@ CREATE TABLE employee_table (
 #
 
 INSERT INTO employee_table VALUES (1,1,'Donald Ball');
-INSERT INTO employee_table VALUES (2,1,'Stefano Mazzochi');
+INSERT INTO employee_table VALUES (2,1,'Stefano Mazzocchi');
 INSERT INTO employee_table VALUES (3,2,'Pierpaolo Fumagalli');

@@ -3,13 +3,13 @@
 <!DOCTYPE page [
  <!ELEMENT page (title?, content)>
  <!ELEMENT title (#PCDATA)>
- <!ELEMENT content (paragraph+)>
- <!ELEMENT paragraph (#PCDATA)>
+ <!ELEMENT content (para+)>
+ <!ELEMENT para (#PCDATA)>
 ]>
 
 <page>
  <title>Hello</title>
  <content>
-  <paragraph>This is my first Cocoon2 page!</paragraph>
+  <para>This is my first Cocoon2 page!</para>
  </content>
 </page>

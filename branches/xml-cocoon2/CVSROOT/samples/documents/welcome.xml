@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<welcome title="Cocoon">
+ <logo href="resources/cocoon.png"/>
+ 
+ <description>
+  Welcome to the Cocoon live demo.
+ </description>
+ 
+ <samples>
+  <group name="Static Content Examples">
+   <sample name="Hello World" url="hello">
+    This is a very simple demostration of how to use Cocoon. A simple XML page
+    is transformed into an HTML page.
+   </sample>
+   <sample name="java.apache.org" url="java.apache.org">
+    This page shows a much more complex example that shows how powerful
+    is the style separation and how powerful XML+XSL can be even for
+    static web publishing.
+   </sample>
+   <sample name="jakarta.apache.org" url="jakarta.apache.org">
+    This pages shows the same thing for the Apache Jakarta web site.
+   </sample>
+  </group>
+  <group name="Dynamic Content Examples">
+   <sample name="Simple XSP" url="simple_dynamic_page">
+    Simple XSP example.
+   </sample>
+  </group>
+ </samples>
+</welcome>

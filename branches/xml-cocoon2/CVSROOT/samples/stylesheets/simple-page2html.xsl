@@ -9,20 +9,20 @@
       <xsl:value-of select="title"/>
      </title>
     </head>
-    <body bgcolor="#ffffff">
+    <body bgcolor="white" alink="red" link="blue" vlink="blue">
      <xsl:apply-templates/>
     </body>
    </html>
   </xsl:template>
 
   <xsl:template match="title">
-   <h1 align="center">
+   <h2 style="color: navy; text-align: center">
     <xsl:apply-templates/>
-   </h1>
+   </h2>
   </xsl:template>
 
-  <xsl:template match="paragraph">
-   <p align="center">
+  <xsl:template match="para">
+   <p align="left">
     <i><xsl:apply-templates/></i>
    </p>
   </xsl:template>
