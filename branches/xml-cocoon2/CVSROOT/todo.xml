@@ -4,11 +4,11 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.19 2001-03-20 12:37:02 cziegeler Exp $
+  $Id: todo.xml,v 1.6.2.20 2001-04-04 20:23:05 giacomo Exp $
 -->
 
 
-<todo title="Things To Do">
+<todo title="Things To Do for Apache Cocoon 2">
 
  <devs>
   <!-- in strict alphabetical order -->
@@ -24,6 +24,27 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Complete the cocoon.xconf file and put descriptions into it
+  </action>
+
+  <action context="code">
+   Complete/write documentation in general
+  </action>
+
+  <action context="code">
+   Complete the web.xml file and put descriptions into it (similar to the
+   httpd.conf file of the web server or the server.xml of Cataline)
+  </action>
+
+  <action context="code" assigned-to="GP">
+   Implement content aggregation at the sitemap level.
+  </action>
+
+  <action context="code">
+   Implement caching of intermediate SAX events between sitemap pipeline components.
+  </action>
+
   <action context="code">
    Create a form validation Action that uses an external configuration file
    to validate the form and make sure that values are within acceptable ranges.
@@ -51,15 +72,15 @@
   </action>
 
  </actions>
- 
+
  <actions priority="medium">
 
   <action context="code">
-   Implement a internal profiling tool that should indicate the load and history of 
-   such along with the status page. Something both useful and fancy to show the 
+   Implement a internal profiling tool that should indicate the load and history of
+   such along with the status page. Something both useful and fancy to show the
    power of C2.
   </action>
-  
+
  </actions>
 
 </todo>
