@@ -128,8 +128,7 @@ public class MountNode extends AbstractProcessingNode
 
     private synchronized TreeProcessor getProcessor(String source, String prefix) throws Exception {
 
-        TreeProcessor processor = (TreeProcessor)processors.get(source);
-
+        TreeProcessor processor = (TreeProcessor) processors.get(source);
         if (processor == null) {
             // Handle directory mounts
             String actualSource;
@@ -152,9 +151,9 @@ public class MountNode extends AbstractProcessingNode
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        Iterator iter = this.processors.values().iterator();
-        while(iter.hasNext()) {
-            ((TreeProcessor)iter.next()).dispose();
+        Iterator i = this.processors.values().iterator();
+        while (i.hasNext()) {
+            ((TreeProcessor) i.next()).dispose();
         }
         this.processors.clear();
     }
