@@ -118,6 +118,19 @@ import org.xml.sax.helpers.AttributesImpl;
  * lt;/D:searchrequestgt;
  * lt;/dasl:querygt;
  * 
+ * Features
+ * - Substitution of a value: with this feature it's possible to pass value from sitemap
+ * that are substituted into a query. 
+ * sitemap example:
+ *        lt;map:transformer type="dasl"gt;
+ *          lt;parameter name="repos" value="/repos/"gt;
+ *        lt;/map:transformergt;
+ * query example:
+ *        ....
+ *        lt;D:hrefgt;lt;substitute-value name="repos"/gt;lt;/D:hrefgt;
+ *        ....
+ * This feature is like substitute-value of SQLTransformer
+ * 
  * TODO: the SWCL Search method doesn't preserve the result order, which makes
  * order-by clauses useless.
  *
@@ -141,6 +154,10 @@ public class DASLTransformer extends AbstractSAXTransformer {
     static final String WEBDAV_SCHEME = "webdav://";
     /** The tag name of root_tag for result */
     static final String RESULT_ROOT_TAG = "query-result";
+    /** The tag name for substitution of query parameter */
+    static final String SUBSTITUTE_TAG = "substitute-value";	
+    /** The tag name for substitution of query parameter */
+    static final String SUBSTITUTE_TAG_NAME_ATTRIBUTE = "name";
 
     protected static final String PATH_NODE_NAME = "path";
     protected static final String RESOURCE_NODE_NAME = "resource";
@@ -170,6 +187,17 @@ public class DASLTransformer extends AbstractSAXTransformer {
                     "http://" + targetUrl.substring(WEBDAV_SCHEME.length());
             if (!targetUrl.startsWith("http"))
                 throw new SAXException("Illegal value for target, must be an http:// or webdav:// URL");
+        } else if (name.equals(SUBSTITUTE_TAG) && uri.equals(DASL_QUERY_NS)) {
+            String parName = attr.getValue( DASL_QUERY_NS, SUBSTITUTE_TAG_NAME_ATTRIBUTE );
+            if ( parName == null ) {
+                throw new IllegalStateException( "Substitute value elements must have a " +
+                                           SUBSTITUTE_TAG_NAME_ATTRIBUTE + " attribute" );
+            }
+            String substitute = this.parameters.getParameter( parName, null );
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug( "SUBSTITUTE VALUE " + substitute );
+            }
+            super.characters(substitute.toCharArray(), 0, substitute.length());
         } else {
             super.startElement(uri, name, raw, attr);
         }
@@ -193,6 +221,8 @@ public class DASLTransformer extends AbstractSAXTransformer {
             } catch (ProcessingException e) {
                 throw new SAXException("Unable to fetch the query data:", e);
             }
+        } else if (name.equals(SUBSTITUTE_TAG) && uri.equals(DASL_QUERY_NS)) {
+            //Do nothing!!!!
         } else {
             super.endElement(uri, name, raw);
         }
@@ -263,3 +293,4 @@ public class DASLTransformer extends AbstractSAXTransformer {
     }
 
 }
+
