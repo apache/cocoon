@@ -17,7 +17,7 @@
  <group name="DocBook">
   <sample name="Simplified DocBook" href="sdocbook-demo.html">
    You will need the DocBook DTDs installed locally and the catalog
-   properly configured.
+   properly configured. We show you how to set up a quick minimal test.
   </sample>
  </group>
 
