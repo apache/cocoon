@@ -249,7 +249,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.14 2003/11/13 13:56:32 vgritsenko Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.15 2003/11/13 13:59:46 vgritsenko Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -918,6 +918,7 @@ public class I18nTransformer extends AbstractTransformer
         if (factory == null) {
             throw new ConfigurationException("BundleFactory component is not found.");
         }
+        
         // read in the config options from the transformer definition
 
         // there are two possible configuration methods:
@@ -938,16 +939,21 @@ public class I18nTransformer extends AbstractTransformer
 
         if ((catalogueName != null || catalogueLocation != null) && cataloguesConf != null) {
             // if old and new style configuration are used at the same time...
-            throw new ConfigurationException("I18nTransformer: old and new configuration style are used at the same time. Use either the 'catalogue-name' and 'catalogue-location' elements or use the 'catalogues' element, but don't use both at the same time.");
+            throw new ConfigurationException("I18nTransformer: old and new configuration style " +
+                                             "are used at the same time. Use either the 'catalogue-name' " +
+                                             "and 'catalogue-location' elements or use the 'catalogues' element, " +
+                                             "but don't use both at the same time.");
         } else if (catalogueName != null || catalogueLocation != null) {
             if (!(catalogueName != null && catalogueLocation != null))
-                throw new ConfigurationException("I18nTransformer: catalogue-name and catalogue-location must both be specified");
+                throw new ConfigurationException("I18nTransformer: catalogue-name and " +
+                                                 "catalogue-location must both be specified");
             if (getLogger().isDebugEnabled())
                 getLogger().debug("using old-style configuration: name = " + catalogueName
                         + ", location = " + catalogueLocation);
         } else if (cataloguesConf == null) {
             // if both old and new style configuration are missing ...
-            throw new ConfigurationException("Missing configuration for the I18nTransformer: a 'catalogues' element specifying the catalogues is required.");
+            throw new ConfigurationException("Missing configuration for the I18nTransformer: " +
+                                             "a 'catalogues' element specifying the catalogues is required.");
         } else {
             // new configuration style
             Configuration[] catalogueConfs = cataloguesConf.getChildren("catalogue");
@@ -959,14 +965,17 @@ public class I18nTransformer extends AbstractTransformer
                 try {
                     newCatalogueInfo = new CatalogueInfo(name, location);
                 } catch (PatternException e) {
-                    throw new ConfigurationException("I18nTransformer: error in name or location attribute on catalogue element with id " + id, e);
+                    throw new ConfigurationException("I18nTransformer: error in name or location " +
+                                                     "attribute on catalogue element with id " + id, e);
                 }
                 catalogues.put(id, newCatalogueInfo);
             }
 
             defaultCatalogueId = cataloguesConf.getAttribute("default");
-            if (!catalogues.containsKey(defaultCatalogueId))
-                throw new ConfigurationException("I18nTransformer: default catalogue id '" + defaultCatalogueId + "' denotes a nonexisting catalogue");
+            if (!catalogues.containsKey(defaultCatalogueId)) {
+                throw new ConfigurationException("I18nTransformer: default catalogue id '" +
+                                                 defaultCatalogueId + "' denotes a nonexisting catalogue");
+            }
         }
 
         // obtain default text to use for untranslated messages
@@ -1053,16 +1062,22 @@ public class I18nTransformer extends AbstractTransformer
                 localCatName = localCatName != null ? localCatName : catalogueName;
                 localCatLocation = localCatLocation != null ? localCatLocation : catalogueLocation;
                 if (localCatName == null || localCatLocation == null)
-                    throw new ProcessingException("I18nTransformer: incorrect usage: either catalogue-name or catalogue-location are not specified.");
+                    throw new ProcessingException("I18nTransformer: incorrect usage: either " +
+                                                  "catalogue-name or catalogue-location are not specified.");
                 defaultCatalogue = getCatalogue(localCatName, localCatLocation);
             } else if ((localDefaultCatalogueId != null || localCatLocation != null) && localCatName != null) {
                 // throw error if old and new configuration style are used at the same time
-                throw new ProcessingException("I18nTransformer: either specify 'catalogue-name' and 'catalogue-location' or specify 'default-catalogue-id', but don't mix the two configuration styles.");
+                throw new ProcessingException("I18nTransformer: either specify 'catalogue-name' " +
+                                              "and 'catalogue-location' or specify 'default-catalogue-id', " +
+                                              "but don't mix the two configuration styles.");
             } else if (localDefaultCatalogueId != null) {
                 // then if new local configuration style
                 CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(localDefaultCatalogueId);
-                if (catalogueInfo == null)
-                    throw new ProcessingException("I18nTransformer: '" + localDefaultCatalogueId + "' is not an existing catalogue id.");
+                if (catalogueInfo == null) {
+                    throw new ProcessingException("I18nTransformer: '" +
+                                                  localDefaultCatalogueId +
+                                                  "' is not an existing catalogue id.");
+                }
                 defaultCatalogue = catalogueInfo.getCatalogue();
             } else if (catalogueName != null && catalogueLocation != null) {
                 // then global old configuration style
@@ -2088,7 +2103,10 @@ public class I18nTransformer extends AbstractTransformer
                 try {
                     catalogue = catalogueInfo.getCatalogue();
                 } catch (Exception e) {
-                    getLogger().error("Error getting catalogue " + catalogueInfo.getName() + " from location " + catalogueInfo.getLocation() + " for locale " + locale + ", will not translate key " + key);
+                    getLogger().error("Error getting catalogue " + catalogueInfo.getName() +
+                                      " from location " + catalogueInfo.getLocation() +
+                                      " for locale " + locale +
+                                      ", will not translate key " + key);
                     return defaultValue;
                 }
             }
