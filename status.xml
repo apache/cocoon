@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.162 2003/10/02 04:27:46 ghoward Exp $:-->
+<!-- CVS $Id: status.xml,v 1.163 2003/10/02 06:16:15 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -202,6 +202,8 @@
      value is consumed instead. Add repeater tag. Make transformer inherit from
      AbstractSAXTransformer. Update examples to show basic repeat tag usage.
    </action>
+ </release>
+ <release version="2.1.2" date="September 30 2003">
    <action dev="VG" type="fix" fixes-bug="23516">
      Fix default namespace handling in Xscript variables.
    </action>
