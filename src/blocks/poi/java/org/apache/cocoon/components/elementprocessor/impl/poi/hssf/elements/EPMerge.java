@@ -61,6 +61,7 @@ import java.io.IOException;
  * This element is a container of other elements and has several attributes.
  *
  * @author Danny Mui (danny@muibros.com)
+ * @version CVS $Id: EPMerge.java,v 1.5 2004/01/31 08:50:39 antonio Exp $
  */
 public class EPMerge extends BaseElementProcessor {
 
@@ -84,22 +85,26 @@ public class EPMerge extends BaseElementProcessor {
 
     /**
      * Setup the merged regions
-     *
      * @exception IOException
      */
     public void endProcessing() throws IOException {
         RangeAddress rangeAddress = new RangeAddress(getCellRange());
         Sheet sheet = this.getSheet();
 
-        //subtracting one since rangeaddress starts at 1,1 where rows/cols start at 0,0
-        short fromCol = (short)(rangeAddress.getXPosition(rangeAddress.getFromCell()) - 1);
-        int   fromRow = rangeAddress.getYPosition(rangeAddress.getFromCell()) - 1;
-        short toCol   = (short)(rangeAddress.getXPosition(rangeAddress.getToCell()) - 1);
-        int   toRow   = rangeAddress.getYPosition(rangeAddress.getToCell()) - 1;
+        //subtracting one since rangeaddress starts at 1,1 where rows/cols
+        // start at 0,0
+        short fromCol =
+            (short) (rangeAddress.getXPosition(rangeAddress.getFromCell()) - 1);
+        int fromRow = rangeAddress.getYPosition(rangeAddress.getFromCell()) - 1;
+        short toCol =
+            (short) (rangeAddress.getXPosition(rangeAddress.getToCell()) - 1);
+        int toRow = rangeAddress.getYPosition(rangeAddress.getToCell()) - 1;
 
-        getLogger().debug("Merging Range: Row (" + fromRow + ") Col (" + fromCol + ")"
-                                   + " to Row (" + toRow   + ") Col (" + toCol   + ")");
-
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Merging Range: Row (" + fromRow + ") Col ("
+                    + fromCol + ")" + " to Row (" + toRow + ") Col (" + toCol
+                    + ")");
+        }
         Region region = new Region(fromRow, fromCol, toRow, toCol);
         sheet.addMergedRegion(region);
     }

@@ -66,75 +66,57 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPRev_Diagonal.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPRev_Diagonal.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPRev_Diagonal
-    extends BaseElementProcessor
-{
-    private NumericResult          _style;
-    private boolean                _color_fetched;
-    private ColorCode              _color;
-    private static final String    _style_attribute = "Style";
-    private static final String    _color_attribute = "Color";
-    private static final Validator _style_validator = new Validator()
-    {
-        public IOException validate(final Number number)
-        {
+public class EPRev_Diagonal extends BaseElementProcessor {
+    private NumericResult _style;
+    private boolean _color_fetched;
+    private ColorCode _color;
+    private static final String _style_attribute = "Style";
+    private static final String _color_attribute = "Color";
+    private static final Validator _style_validator = new Validator() {
+        public IOException validate(final Number number) {
             return BorderStyle.isValid(number.intValue()) ? null
-                                                          : new IOException(
-                                                              "\"" + number
-                                                              + "\" is not a legal value");
+                : new IOException("\"" + number + "\" is not a legal value");
         }
     };
 
     /**
      * constructor
      */
-
-    public EPRev_Diagonal()
-    {
+    public EPRev_Diagonal() {
         super(null);
-        _style         = null;
-        _color         = null;
-	_color_fetched = false;
+        _style = null;
+        _color = null;
+        _color_fetched = false;
     }
 
     /**
      * @return style as an int from BorderStyle
-     *
      * @exception IOException
      */
-
-    public int getStyle()
-        throws IOException
-    {
-        if (_style == null)
-        {
+    public int getStyle() throws IOException {
+        if (_style == null) {
             _style =
-                NumericConverter.extractInteger(getValue(_style_attribute),
-                                                _style_validator);
+                NumericConverter.extractInteger(
+                    getValue(_style_attribute),
+                    _style_validator);
         }
         return _style.intValue();
     }
 
     /**
      * @return color
-     *
      * @exception IOException
      */
-
-    public ColorCode getColor()
-        throws IOException
-    {
-        if (!_color_fetched)
-        {
-	    String colorString = getValue(_color_attribute);
-	    if (colorString != null)
-	    {
-		_color = new ColorCode(colorString);
-	    }
-	    _color_fetched = true;
+    public ColorCode getColor() throws IOException {
+        if (!_color_fetched) {
+            String colorString = getValue(_color_attribute);
+            if (colorString != null) {
+                _color = new ColorCode(colorString);
+            }
+            _color_fetched = true;
         }
         return _color;
     }
-}   // end public class EPRev_Diagonal
+} // end public class EPRev_Diagonal

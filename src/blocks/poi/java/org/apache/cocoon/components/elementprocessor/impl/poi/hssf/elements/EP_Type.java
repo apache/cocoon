@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
@@ -68,29 +66,22 @@ import java.io.IOException;
  * numeric.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Type.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EP_Type.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EP_Type
-    extends BaseElementProcessor
-{
-    private NumericResult          _type;
+public class EP_Type extends BaseElementProcessor {
+    private NumericResult _type;
     private static final Validator _validator = new Validator()
     {
-        public IOException validate(final Number number)
-        {
-            return GTKTypes.isValid(number.intValue()) ? null
-                                                       : new IOException(
-                                                           "\"" + number
-                                                           + "\" is not a legal value");
+        public IOException validate(final Number number) {
+            return GTKTypes.isValid(number.intValue()) ? null :
+                new IOException("\"" + number + "\" is not a legal value");
         }
     };
 
     /**
      * constructor
      */
-
-    public EP_Type()
-    {
+    public EP_Type() {
         super(null);
         _type = null;
     }
@@ -100,12 +91,8 @@ public class EP_Type
      *
      * @exception IOException if the type is not numeric
      */
-
-    int getType()
-        throws IOException
-    {
-        if (_type == null)
-        {
+    int getType() throws IOException {
+        if (_type == null) {
             _type = NumericConverter.extractInteger(getData(), _validator);
         }
         return _type.intValue();

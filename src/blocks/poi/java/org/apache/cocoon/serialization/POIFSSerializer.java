@@ -73,10 +73,9 @@ import org.xml.sax.SAXException;
  *
  * @author   Marc Johnson (marc_johnson27591@hotmail.com)
  * @author   Nicola Ken Barozzi (nicolaken@apache.org)
- * @version CVS $Id: POIFSSerializer.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: POIFSSerializer.java,v 1.3 2004/01/31 08:50:45 antonio Exp $
  */
-public abstract class POIFSSerializer
-      extends ElementProcessorSerializer
+public abstract class POIFSSerializer extends ElementProcessorSerializer
 {
   private POIFSFileSystem _filesystem;
 
@@ -99,8 +98,7 @@ public abstract class POIFSSerializer
    *      output stream
    */
 
-  public void endDocument()
-    throws SAXException {
+  public void endDocument() throws SAXException {
     doLocalPreEndDocument();
 
     OutputStream stream = getOutputStream();
@@ -108,13 +106,11 @@ public abstract class POIFSSerializer
     if ( stream != null ) {
       try {
         _filesystem.writeFilesystem( stream );
-      }
-      catch ( IOException e ) {
+      } catch ( IOException e ) {
         throw SAXExceptionFactory(
           "could not process endDocument event", e );
       }
-    }
-    else {
+    } else {
       throw SAXExceptionFactory(
         "no outputstream for writing the document!!" );
     }
@@ -152,14 +148,12 @@ public abstract class POIFSSerializer
    *@exception  SAXException  on errors
    */
 
-  protected void doPreInitialization( ElementProcessor processor )
-    throws SAXException {
+  protected void doPreInitialization(ElementProcessor processor)
+      throws SAXException {
     try {
-      ( ( POIFSElementProcessor ) processor ).setFilesystem( _filesystem );
-    }
-    catch ( ClassCastException e ) {
-      throw SAXExceptionFactory( "could not pre-initialize processor",
-        e );
+      ((POIFSElementProcessor)processor).setFilesystem(_filesystem);
+    } catch (ClassCastException e) {
+      throw SAXExceptionFactory( "could not pre-initialize processor", e );
     }
   }
 

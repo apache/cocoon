@@ -59,18 +59,14 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPNames.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPNames.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPNames
-    extends BaseElementProcessor
-{
+public class EPNames extends BaseElementProcessor {
 
     /**
      * constructor
      */
-
-    public EPNames()
-    {
+    public EPNames() {
         super(null);
     }
-}   // end public class EPNames
+} // end public class EPNames

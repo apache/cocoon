@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
@@ -67,10 +65,9 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPButton.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPButton.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPButton
-    extends BaseElementProcessor
+public class EPButton extends BaseElementProcessor
 {
     private String                 _label;
     private String                 _object_bound;
@@ -78,32 +75,24 @@ public class EPButton
     private Anchors                _object_anchor_type;
     private NumericResult          _direction;
     private static final String    _label_attribute              = "Label";
-    private static final String    _object_bound_attribute       =
-        "ObjectBound";
-    private static final String    _object_offset_attribute      =
-        "ObjectOffset";
-    private static final String    _object_anchor_type_attribute =
+    private static final String  _object_bound_attribute = "ObjectBound";
+    private static final String _object_offset_attribute = "ObjectOffset";
+    private static final String _object_anchor_type_attribute =
         "ObjectAnchorType";
-    private static final String    _direction_attribute          =
-        "Direction";
-    private static final Validator _direction_validator          =
+    private static final String _direction_attribute = "Direction";
+    private static final Validator _direction_validator =
         new Validator()
     {
-        public IOException validate(final Number number)
-        {
+        public IOException validate(final Number number) {
             return Direction.isValid(number.intValue()) ? null
-                                                        : new IOException(
-                                                            "\"" + number
-                                                            + "\" is not a legal value");
+                : new IOException("\"" + number + "\" is not a legal value");
         }
     };
 
     /**
      * constructor
      */
-
-    public EPButton()
-    {
+    public EPButton() {
         super(null);
         _label              = null;
         _object_bound       = null;
@@ -117,17 +106,12 @@ public class EPButton
      *
      * @exception IOException
      */
-
-    public String getLabel()
-        throws IOException
-    {
-        if (_label == null)
-        {
+    public String getLabel() throws IOException {
+        if (_label == null) {
             _label = getValue(_label_attribute);
-            if (_label == null)
-            {
+            if (_label == null) {
                 throw new IOException("missing " + _label_attribute
-                                      + " attribute");
+                        + " attribute");
             }
         }
         return _label;
@@ -138,15 +122,10 @@ public class EPButton
      *
      * @exception IOException
      */
-
-    public String getObjectBound()
-        throws IOException
-    {
-        if (_object_bound == null)
-        {
+    public String getObjectBound() throws IOException {
+        if (_object_bound == null) {
             _object_bound = getValue(_object_bound_attribute);
-            if (_object_bound == null)
-            {
+            if (_object_bound == null) {
                 throw new IOException("missing " + _object_bound_attribute
                                       + " attribute");
             }
@@ -160,11 +139,8 @@ public class EPButton
      * @exception IOException
      */
 
-    public Offsets getOffsets()
-        throws IOException
-    {
-        if (_object_offset == null)
-        {
+    public Offsets getOffsets() throws IOException {
+        if (_object_offset == null) {
             _object_offset = new Offsets(getValue(_object_offset_attribute));
         }
         return _object_offset;
@@ -175,12 +151,8 @@ public class EPButton
      *
      * @exception IOException
      */
-
-    public Anchors getAnchors()
-        throws IOException
-    {
-        if (_object_anchor_type == null)
-        {
+    public Anchors getAnchors() throws IOException {
+        if (_object_anchor_type == null) {
             _object_anchor_type =
                 new Anchors(getValue(_object_anchor_type_attribute));
         }
@@ -192,12 +164,8 @@ public class EPButton
      *
      * @exception IOException
      */
-
-    public int getDirection()
-        throws IOException
-    {
-        if (_direction == null)
-        {
+    public int getDirection() throws IOException {
+        if (_direction == null) {
             _direction = NumericConverter.extractInteger(
                 getValue(_direction_attribute), _direction_validator);
         }

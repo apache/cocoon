@@ -73,25 +73,22 @@ import java.io.IOException;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPStyleRegion.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: EPStyleRegion.java,v 1.5 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPStyleRegion
-    extends BaseElementProcessor
-{
+public class EPStyleRegion extends BaseElementProcessor {
     private static final String _start_col_attribute = "startCol";
     private static final String _start_row_attribute = "startRow";
-    private static final String _end_col_attribute   = "endCol";
-    private static final String _end_row_attribute   = "endRow";
-    private NumericResult       _start_col;
-    private NumericResult       _start_row;
-    private NumericResult       _end_col;
-    private NumericResult       _end_row;
+    private static final String _end_col_attribute = "endCol";
+    private static final String _end_row_attribute = "endRow";
+    private NumericResult _start_col;
+    private NumericResult _start_row;
+    private NumericResult _end_col;
+    private NumericResult _end_row;
 
-    private HSSFCellStyle       _style;
-    private Hashtable           colorhash;
+    private HSSFCellStyle _style;
+    private Hashtable colorhash;
 
-    private boolean             invalid;
-
+    private boolean invalid;
 
     //kludge constant to fix gnumeric's love of declaring large stlye regions
     //for the blank sections of the sheet w/no apparent purpose that we can
@@ -101,135 +98,103 @@ public class EPStyleRegion
     /**
      * constructor
      */
-
-    public EPStyleRegion()
-    {
+    public EPStyleRegion() {
         super(null);
         _start_col = null;
         _start_row = null;
-        _end_col   = null;
-        _end_row   = null;
+        _end_col = null;
+        _end_row = null;
     }
 
     /**
      * Override of Initialize() implementation
-     *
-     * @param attributes the array of Attribute instances; may be
-     *                   empty, will never be null
+     * @param attributes the array of Attribute instances; may be empty, will
+     *                  never be null
      * @param parent the parent ElementProcessor; may be null
-     *
      * @exception IOException if anything is wrong
      */
-
-    public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
+    public void initialize(final Attribute[] attributes,
+                final ElementProcessor parent) throws IOException {
         super.initialize(attributes, parent);
 
-        Region region = new Region(getStartRow(),
-                                   (short)getStartCol(),
-                                   getEndRow(),
-                                   (short)getEndCol());
+        Region region = new Region(getStartRow(), (short)getStartCol(),
+                getEndRow(), (short)getEndCol());
 
-//        if (region.getRowFrom() == 0 &&
-//            region.getColumnFrom() ==0)
-//            getLogger().debug("got 0,0");
+        //        if (region.getRowFrom() == 0 &&
+        //            region.getColumnFrom() ==0)
+        //            getLogger().debug("got 0,0");
 
-        getLogger().debug("region area is "+region.getArea());
-        if(region.getArea() < MAX_AREA) {  //protect against stupid mega regions
-                                       //of generally NOTHING and no real
-                                       //puprose created by gnumeric
+        getLogger().debug("region area is " + region.getArea());
+        if (region.getArea() < MAX_AREA) {
+            //protect against stupid mega regions
+            //of generally NOTHING and no real
+            //puprose created by gnumeric
             getLogger().debug("region added");
-            _style = getSheet().addStyleRegion(region
-                                      ); //test
+            _style = getSheet().addStyleRegion(region); //test
         } else {
             invalid = true;
         }
-
         colorhash = ((EPStyles)parent).getColorHash();
     }
 
-
     /**
      * @return start row
-     *
      * @exception IOException
      */
-
-    public int getStartRow()
-        throws IOException
-    {
-        if (_start_row == null)
-        {
-            _start_row = NumericConverter
-                .extractNonNegativeInteger(getValue(_start_row_attribute));
+    public int getStartRow() throws IOException {
+        if (_start_row == null) {
+            _start_row = NumericConverter.extractNonNegativeInteger(
+                    getValue(_start_row_attribute));
         }
         return _start_row.intValue();
     }
 
     /**
      * @return start column
-     *
      * @exception IOException
      */
-
-    public int getStartCol()
-        throws IOException
-    {
-        if (_start_col == null)
-        {
-            _start_col = NumericConverter
-                .extractNonNegativeInteger(getValue(_start_col_attribute));
+    public int getStartCol() throws IOException {
+        if (_start_col == null) {
+            _start_col = NumericConverter.extractNonNegativeInteger(
+                    getValue(_start_col_attribute));
         }
         return _start_col.intValue();
     }
 
     /**
      * @return end row
-     *
      * @exception IOException
      */
-
-    public int getEndRow()
-        throws IOException
-    {
-        if (_end_row == null)
-        {
-            _end_row =
-                NumericConverter
-                    .extractNonNegativeInteger(getValue(_end_row_attribute));
+    public int getEndRow() throws IOException {
+        if (_end_row == null) {
+            _end_row = NumericConverter.extractNonNegativeInteger(
+                    getValue(_end_row_attribute));
         }
         return _end_row.intValue();
     }
 
     /**
      * @return end column
-     *
      * @exception IOException
      */
-
-    public int getEndCol()
-        throws IOException
-    {
-        if (_end_col == null)
-        {
-            _end_col =
-                NumericConverter
-                    .extractNonNegativeInteger(getValue(_end_col_attribute));
+    public int getEndCol() throws IOException {
+        if (_end_col == null) {
+            _end_col = NumericConverter.extractNonNegativeInteger(
+                    getValue(_end_col_attribute));
         }
         return _end_col.intValue();
     }
 
     /**
-     *  @return HSSFCellStyle associated with this style region.
+     * @return HSSFCellStyle associated with this style region.
      */
     public HSSFCellStyle getStyle() {
         return _style;
     }
 
     /**
-     * @return instance created in the EPStyles instance from HSSFColor.getTripletHash();
+     * @return instance created in the EPStyles instance from
+     *             HSSFColor.getTripletHash();
      * @see org.apache.poi.hssf.util.HSSFColor#getTripletHash()
      */
     public Hashtable getColorHash() {
@@ -237,12 +202,11 @@ public class EPStyleRegion
     }
 
     /**
-     *
-     * @return validity (used to determine whether this is a big wasteful region with
-     *  no purpose (gnumeric does this
+     * @return validity (used to determine whether this is a big wasteful
+     *             region with no purpose (gnumeric does this
      */
-    public boolean isValid () {
+    public boolean isValid() {
         return (!invalid);
     }
 
-}   // end public class EPStyleRegion
+} // end public class EPStyleRegion

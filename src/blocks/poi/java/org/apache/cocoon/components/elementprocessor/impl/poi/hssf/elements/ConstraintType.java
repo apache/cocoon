@@ -57,7 +57,7 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Contraint codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: ConstraintType.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: ConstraintType.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
 public class ConstraintType
 {
@@ -68,8 +68,7 @@ public class ConstraintType
     public static final int CONSTRAINT_TYPE_INT          = 8;
     public static final int CONSTRAINT_TYPE_BOOL         = 16;
 
-    private ConstraintType()
-    {
+    private ConstraintType() {
     }
 
     /**
@@ -80,11 +79,8 @@ public class ConstraintType
      * @return true if valid, false otherwise
      */
 
-    public static boolean isValid(final int val)
-    {
-        switch (val)
-        {
-
+    public static boolean isValid(final int val) {
+        switch (val) {
             case CONSTRAINT_TYPE_NONE :
             case CONSTRAINT_TYPE_LESS_THAN :
             case CONSTRAINT_TYPE_GREATER_THAN :
@@ -92,7 +88,6 @@ public class ConstraintType
             case CONSTRAINT_TYPE_INT :
             case CONSTRAINT_TYPE_BOOL :
                 return true;
-
             default :
                 return false;
         }

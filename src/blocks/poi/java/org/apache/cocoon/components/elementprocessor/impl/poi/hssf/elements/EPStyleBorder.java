@@ -60,18 +60,14 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPStyleBorder.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPStyleBorder.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPStyleBorder
-    extends BaseElementProcessor
-{
+public class EPStyleBorder extends BaseElementProcessor {
 
     /**
      * constructor
      */
-
-    public EPStyleBorder()
-    {
+    public EPStyleBorder() {
         super(null);
     }
-}   // end public class EPStyleBorder
+} // end public class EPStyleBorder

@@ -62,76 +62,58 @@ import java.io.IOException;
  * with all that information in an easily digested form.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: StyleOrientation.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: StyleOrientation.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class StyleOrientation
-{
-    private int                    _alignment;
-    private static final int       _horiz           = 1;
-    private static final int       _vert_horiz_text = 2;
-    private static final int       _vert_vert_text  = 4;
-    private static final int       _vert_vert_text2 = 8;
-    private static final Validator _validator       = new Validator()
-    {
-        public IOException validate(final Number number)
-        {
+public class StyleOrientation {
+    private int _alignment;
+    private static final int _horiz = 1;
+    private static final int _vert_horiz_text = 2;
+    private static final int _vert_vert_text = 4;
+    private static final int _vert_vert_text2 = 8;
+    private static final Validator _validator = new Validator() {
+        public IOException validate(final Number number) {
             int value = number.intValue();
 
-            return ((value >= 0) && (value <= 15)) ? null
-                                                   : new IOException(
-                                                       "\"" + number
-                                                       + "\" is out of range");
+            return (value >= 0 && value <= 15) ? null
+                : new IOException("\"" + number + "\" is out of range");
         }
     };
 
     /**
      * Create a StyleOrientation object
-     *
      * @param value the string containing the style orientation data
-     *
      * @exception IOException if the data is malformed
      */
-
-    public StyleOrientation(final String value)
-        throws IOException
-    {
-        _alignment = NumericConverter.extractInteger(value,
-                _validator).intValue();
+    public StyleOrientation(final String value) throws IOException {
+        _alignment =
+            NumericConverter.extractInteger(value, _validator).intValue();
     }
 
     /**
      * @return true if horiz bit is set
      */
-
-    public boolean isHoriz()
-    {
+    public boolean isHoriz() {
         return (_alignment & _horiz) == _horiz;
     }
 
     /**
      * @return true if vert horiz text bit is set
      */
-
-    public boolean isVertHorizText()
-    {
+    public boolean isVertHorizText() {
         return (_alignment & _vert_horiz_text) == _vert_horiz_text;
     }
 
     /**
      * @return true if vert vert text bit is set
      */
-
-    public boolean isVertVertText()
-    {
+    public boolean isVertVertText() {
         return (_alignment & _vert_vert_text) == _vert_vert_text;
     }
 
     /**
      * @return true if vert vert text2 bit is set
      */
-
-    public boolean isVertVertText2()
-    {
+    public boolean isVertVertText2() {
         return (_alignment & _vert_vert_text2) == _vert_vert_text2;
     }
-}   // end public class StyleOrientation
+} // end public class StyleOrientation

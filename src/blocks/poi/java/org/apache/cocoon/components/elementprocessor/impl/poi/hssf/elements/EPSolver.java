@@ -65,83 +65,61 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPSolver.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPSolver.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPSolver
-    extends BaseElementProcessor
-{
-    private NumericResult       _target_row;
-    private NumericResult       _target_col;
-    private NumericResult       _problem_type;
-    private String              _inputs;
-    private static final String _target_row_attribute   = "TargetRow";
-    private static final String _target_col_attribute   = "TargetCol";
+public class EPSolver extends BaseElementProcessor {
+    private NumericResult _target_row;
+    private NumericResult _target_col;
+    private NumericResult _problem_type;
+    private String _inputs;
+    private static final String _target_row_attribute = "TargetRow";
+    private static final String _target_col_attribute = "TargetCol";
     private static final String _problem_type_attribute = "ProblemType";
-    private static final String _inputs_attribute       = "Inputs";
+    private static final String _inputs_attribute = "Inputs";
 
     /**
      * constructor
      */
-
-    public EPSolver()
-    {
+    public EPSolver() {
         super(null);
-        _target_row   = null;
-        _target_col   = null;
+        _target_row = null;
+        _target_col = null;
         _problem_type = null;
-        _inputs       = null;
+        _inputs = null;
     }
 
     /**
      * @return target column
-     *
      * @exception IOException
      */
-
-    public int getTargetCol()
-        throws IOException
-    {
-        if (_target_col == null)
-        {
-            _target_col =
-                NumericConverter
-                    .extractInteger(getValue(_target_col_attribute));
+    public int getTargetCol() throws IOException {
+        if (_target_col == null) {
+            _target_col = NumericConverter.extractInteger(
+                    getValue(_target_col_attribute));
         }
         return _target_col.intValue();
     }
 
     /**
      * @return target row
-     *
      * @exception IOException
      */
-
-    public int getTargetRow()
-        throws IOException
-    {
-        if (_target_row == null)
-        {
-            _target_row =
-                NumericConverter
-                    .extractInteger(getValue(_target_row_attribute));
+    public int getTargetRow() throws IOException {
+        if (_target_row == null) {
+            _target_row = NumericConverter.extractInteger(
+                    getValue(_target_row_attribute));
         }
         return _target_row.intValue();
     }
 
     /**
      * @return problem type
-     *
      * @exception IOException
      */
-
-    public int getProblemType()
-        throws IOException
-    {
-        if (_problem_type == null)
-        {
-            _problem_type =
-                NumericConverter
-                    .extractInteger(getValue(_problem_type_attribute));
+    public int getProblemType() throws IOException {
+        if (_problem_type == null) {
+            _problem_type = NumericConverter.extractInteger(
+                    getValue(_problem_type_attribute));
         }
         return _problem_type.intValue();
     }
@@ -149,16 +127,12 @@ public class EPSolver
     /**
      * @return inputs
      */
-
-    public String getInputs()
-    {
-        if (_inputs == null)
-        {
+    public String getInputs() {
+        if (_inputs == null) {
             String value = getValue(_inputs_attribute);
 
-            _inputs = (value == null) ? ""
-                                      : value.trim();
+            _inputs = (value == null) ? "" : value.trim();
         }
         return _inputs;
     }
-}   // end public class EPSolver
+} // end public class EPSolver

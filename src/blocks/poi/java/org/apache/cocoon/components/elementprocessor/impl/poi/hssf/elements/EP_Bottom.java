@@ -66,11 +66,9 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Bottom.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EP_Bottom.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EP_Bottom
-    extends BaseElementProcessor
-{
+public class EP_Bottom extends BaseElementProcessor {
     private static final String _points_attribute    = "Points";
     private static final String _pref_unit_attribute = "PrefUnit";
     private NumericResult       _points;
@@ -80,8 +78,7 @@ public class EP_Bottom
      * constructor
      */
 
-    public EP_Bottom()
-    {
+    public EP_Bottom() {
         super(null);
         _points    = null;
         _pref_unit = null;
@@ -93,11 +90,8 @@ public class EP_Bottom
      * @exception IOException
      */
 
-    double getPoints()
-        throws IOException
-    {
-        if (_points == null)
-        {
+    double getPoints() throws IOException {
+        if (_points == null) {
             _points =
                 NumericConverter.extractDouble(getValue(_points_attribute));
         }
@@ -110,11 +104,8 @@ public class EP_Bottom
      * @exception IOException
      */
 
-    int getPrefUnit()
-        throws IOException
-    {
-        if (_pref_unit == null)
-        {
+    int getPrefUnit() throws IOException {
+        if (_pref_unit == null) {
             _pref_unit =
                 PrintUnits.extractPrintUnits(getValue(_pref_unit_attribute));
         }

@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
@@ -66,51 +64,40 @@ import java.io.IOException;
  * element
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPCols.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: EPCols.java,v 1.5 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPCols
-    extends BaseElementProcessor
-{
-    private NumericResult       _default_size_pts;
-    private boolean             _default_size_pts_fetched;
-    private static final String _default_size_pts_attribute =
-        "DefaultSizePts";
+public class EPCols extends BaseElementProcessor {
+    private NumericResult _default_size_pts;
+    private boolean _default_size_pts_fetched;
+    private static final String _default_size_pts_attribute = "DefaultSizePts";
 
     // package scope so test code can access
-    static final String         DEFAULT_SIZE_PTS            = "40.0";
+    static final String DEFAULT_SIZE_PTS = "40.0";
 
     /**
      * constructor
      */
-
-    public EPCols()
-    {
+    public EPCols() {
         super(null);
-        _default_size_pts         = null;
+        _default_size_pts = null;
         _default_size_pts_fetched = false;
     }
 
     /**
      * get the default size of columns, in points
-     *
      * @return size in points
-     *
      * @exception IOException if the attribute is malformed
      * @exception NullPointerException if the attribute is missing
      */
-
     public double getDefaultSizePts()
-        throws IOException, NullPointerException
-    {
-        if (!_default_size_pts_fetched)
-        {
+        throws IOException, NullPointerException {
+        if (!_default_size_pts_fetched) {
             String value = getValue(_default_size_pts_attribute);
 
-            if ((value == null) || value.trim().equals(""))
-            {
+            if (value == null || value.trim().equals("")) {
                 value = DEFAULT_SIZE_PTS;
             }
-            _default_size_pts         = NumericConverter.extractDouble(value);
+            _default_size_pts = NumericConverter.extractDouble(value);
             _default_size_pts_fetched = true;
         }
         return _default_size_pts.doubleValue();
@@ -118,19 +105,16 @@ public class EPCols
 
     /**
      * Override of Initialize() implementation
-     *
-     * @param attributes the array of Attribute instances; may be
-     *                   empty, will never be null
+     * @param attributes the array of Attribute instances; may be empty, will
+     *                  never be null
      * @param parent the parent ElementProcessor; may be null
-     *
      * @exception IOException if anything is wrong
      */
-
-    public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
+    public void initialize(
+        final Attribute[] attributes,
+        final ElementProcessor parent)
+        throws IOException {
         super.initialize(attributes, parent);
         getSheet().setDefaultColumnWidth(getDefaultSizePts());
     }
-}   // end public class EPCols
+} // end public class EPCols

@@ -67,7 +67,7 @@ import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
  * handle specific XML elements and their content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: AbstractElementProcessorFactory.java,v 1.2 2003/03/11 19:05:00 vgritsenko Exp $
+ * @version CVS $Id: AbstractElementProcessorFactory.java,v 1.3 2004/01/31 08:50:44 antonio Exp $
  */
 public abstract class AbstractElementProcessorFactory
      extends AbstractLogEnabled implements ElementProcessorFactory, Component
@@ -87,8 +87,7 @@ public abstract class AbstractElementProcessorFactory
      * Protected default constructor
      */
 
-    protected AbstractElementProcessorFactory()
-    {
+    protected AbstractElementProcessorFactory() {
         _element_processor_map = new HashMap();
     }
 
@@ -105,27 +104,21 @@ public abstract class AbstractElementProcessorFactory
      */
 
     public ElementProcessor createElementProcessor(final String name)
-        throws CannotCreateElementProcessorException
-    {
+        throws CannotCreateElementProcessorException {
         Object progenitor = lookupElementProcessorProgenitor(name);
 
-        if (progenitor == null)
-        {
+        if (progenitor == null) {
             CannotCreateElementProcessorException exception =
                 new CannotCreateElementProcessorException(
                     "Cannot find progenitor for that name");
-
             exception.setElementName(name);
             throw exception;
         }
         ElementProcessor processor = null;
 
-        try
-        {
+        try {
             processor = doCreateElementProcessor(progenitor);
-        }
-        catch (CannotCreateElementProcessorException e)
-        {
+        } catch (CannotCreateElementProcessorException e) {
             e.setElementName(name);
             throw e;
         }
@@ -147,18 +140,15 @@ public abstract class AbstractElementProcessorFactory
     protected void addElementProcessorProgenitor(final String name,
             final Object progenitor)
     {
-        if ((name == null) || (name.equals("")))
-        {
+        if ((name == null) || (name.equals(""))) {
             throw new IllegalArgumentException(
                 "Cannot use null or empty name as a key");
         }
-        if (progenitor == null)
-        {
+        if (progenitor == null) {
             throw new IllegalArgumentException(
                 "Cannot add null progenitor to the map");
         }
-        if (_element_processor_map.put(name, progenitor) != null)
-        {
+        if (_element_processor_map.put(name, progenitor) != null) {
             throw new IllegalArgumentException(
                 name + " is already in use in the map");
         }
@@ -177,10 +167,11 @@ public abstract class AbstractElementProcessorFactory
 
     protected Object lookupElementProcessorProgenitor(final String name)
     {
-        Object o = _element_processor_map.get(name);
-        if ((o == null) && (!name.equals("*")))	{
-      	    o = lookupElementProcessorProgenitor("*");
-      	}	return o;
+        Object obj = _element_processor_map.get(name);
+        if (obj == null && !name.equals("*")) {
+            obj = lookupElementProcessorProgenitor("*");
+      	}
+        return obj;
     }
 
     /**
@@ -199,8 +190,7 @@ public abstract class AbstractElementProcessorFactory
      */
 
     protected abstract ElementProcessor doCreateElementProcessor(
-        final Object progenitor)
-        throws CannotCreateElementProcessorException;
+        final Object progenitor) throws CannotCreateElementProcessorException;
 
     /**
      * A reference implementation of doCreateElementProcessor that can
@@ -217,52 +207,35 @@ public abstract class AbstractElementProcessorFactory
 
     protected ElementProcessor createNewElementProcessorInstance(
             final Class progenitor)
-        throws CannotCreateElementProcessorException
-    {
+            throws CannotCreateElementProcessorException {
         ElementProcessor rval = null;
 
-        try
-        {
-            rval = ( ElementProcessor ) progenitor.newInstance();
-            if(rval instanceof AbstractLogEnabled)
-            {
+        try {
+            rval = (ElementProcessor)progenitor.newInstance();
+            if (rval instanceof AbstractLogEnabled) {
                ((AbstractLogEnabled)rval).enableLogging(getLogger());
             }
-        }
-        catch (ExceptionInInitializerError e)
-        {
+        } catch (ExceptionInInitializerError e) {
             throw new CannotCreateElementProcessorException(
-                "an exception (" + e
-                + ")occurred in initializing the associated ElementProcessor class");
-        }
-        catch (SecurityException e)
-        {
+                    "an exception (" + e + ") occurred in initializing the associated ElementProcessor class");
+        } catch (SecurityException e) {
             throw new CannotCreateElementProcessorException(
                 "a security exception was caught while creating the associated ElementProcessor");
-        }
-        catch (InstantiationException e)
-        {
+        } catch (InstantiationException e) {
             throw new CannotCreateElementProcessorException(
                 "associated ElementProcessor is an interface or abstract class or has no zero-parameter constructor");
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             throw new CannotCreateElementProcessorException(
                 "cannot access ElementProcessor class or its zero-parameter constructor");
-        }
-        catch (ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             throw new CannotCreateElementProcessorException(
                 "object created does not implement ElementProcessor");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CannotCreateElementProcessorException(
                 "exception (" + e
                 + ") occured while creating new instance of ElementProcessor");
         }
-        if (rval == null)
-        {
+        if (rval == null) {
             throw new CannotCreateElementProcessorException(
                 "somehow generated a null ElementProcessor");
         }
@@ -285,54 +258,36 @@ public abstract class AbstractElementProcessorFactory
 
     protected ElementProcessor constructElementProcessor(
             final Constructor progenitor)
-        throws CannotCreateElementProcessorException
-    {
+            throws CannotCreateElementProcessorException {
         ElementProcessor rval = null;
 
-        try
-        {
-            rval = ( ElementProcessor ) progenitor
-                .newInstance(new Object[ 0 ]);
-                
-            if(rval instanceof AbstractLogEnabled)
-            {
+        try {
+            rval = (ElementProcessor) progenitor.newInstance(new Object[0]);
+            if (rval instanceof AbstractLogEnabled) {
                ((AbstractLogEnabled)rval).enableLogging(getLogger());
             }
-        }
-        catch (ExceptionInInitializerError e)
-        {
+        } catch (ExceptionInInitializerError e) {
             throw new CannotCreateElementProcessorException(
                 "an exception (" + e
                 + ")occurred in initializing the associated ElementProcessor class");
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             throw new CannotCreateElementProcessorException(
                 "the ElementProcessor constructor apparently needs parameters");
-        }
-        catch (InstantiationException e)
-        {
+        } catch (InstantiationException e) {
             throw new CannotCreateElementProcessorException(
                 "associated ElementProcessor is an interface or abstract class");
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             throw new CannotCreateElementProcessorException(
                 "cannot access ElementProcessor class or its zero-parameter constructor");
-        }
-        catch (InvocationTargetException e)
-        {
+        } catch (InvocationTargetException e) {
             throw new CannotCreateElementProcessorException(
                 "ElementProcessor constructor threw an exception ["
                 + e.toString() + "]");
-        }
-        catch (ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             throw new CannotCreateElementProcessorException(
                 "object created does not implement ElementProcessor");
         }
-        if (rval == null)
-        {
+        if (rval == null) {
             throw new CannotCreateElementProcessorException(
                 "somehow generated a null ElementProcessor");
         }

@@ -58,18 +58,17 @@ import org.apache.cocoon.components.elementprocessor.types.Validator;
 import java.io.IOException;
 
 /**
- * Anchors. This particular object is represented in gnumeric's XML as
- * four integers, space separated. Presumably, each represents an
- * anchor for a particular direction -- top, bottom, left, right --
- * but what the reference is for each anchor is not known, nor is it
- * known which one is top, bottom, left, or right, or even whether
- * that's the correct interpretation of the numbers. This is an area
- * of the gnumeric XML that is not terribly well documented even in
- * their code, and I don't think the features that use anchors are
- * terribly mature yet.
+ * Anchors. This particular object is represented in gnumeric's XML as four
+ * integers, space separated. Presumably, each represents an anchor for a
+ * particular direction -- top, bottom, left, right -- but what the reference
+ * is for each anchor is not known, nor is it known which one is top, bottom,
+ * left, or right, or even whether that's the correct interpretation of the
+ * numbers. This is an area of the gnumeric XML that is not terribly well
+ * documented even in their code, and I don't think the features that use
+ * anchors are terribly mature yet.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Anchors.java,v 1.4 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: Anchors.java,v 1.5 2004/01/31 08:50:39 antonio Exp $
  */
 public class Anchors
 {
@@ -87,11 +86,8 @@ public class Anchors
     private static final Validator _validator                        =
         new Validator()
     {
-        public IOException validate(final Number number)
-        {
-            switch (number.intValue())
-            {
-
+        public IOException validate(final Number number) {
+            switch (number.intValue()) {
                 case ANCHOR_UNKNOWN :
                 case ANCHOR_PERCENTAGE_FROM_COLROW_ST :
                 case ANCHOR_PERCENTAGE_FROM_COLROW_END :
@@ -115,42 +111,32 @@ public class Anchors
      * @exception IOException if the string is badly formed
      */
 
-    public Anchors(final String value)
-        throws IOException
-    {
-        if (value == null)
-        {
+    public Anchors(final String value) throws IOException {
+        if (value == null) {
             throw new IOException("cannot process a null anchors string");
         }
         char[]   input   = value.trim().toCharArray();
         int      index   = 0;
 
-        for (int j = 0; j < _component_count; j++)
-        {
-            while ((index < input.length)
-                    && (Character.isWhitespace(input[ index ])))
-            {
+        for (int j = 0; j < _component_count; j++) {
+            while (index < input.length
+                    && Character.isWhitespace(input[index])) {
                 ++index;
             }
-            if (index == input.length)
-            {
+            if (index == input.length) {
                 throw new IOException("insufficient anchors in string");
             }
             int tailIndex = index;
 
-            while ((tailIndex < input.length)
-                    && (!Character.isWhitespace(input[ tailIndex ])))
-            {
+            while (tailIndex < input.length
+                    && !Character.isWhitespace(input[tailIndex])) {
                 ++tailIndex;
             }
-            _components[ j ] = NumericConverter.extractInteger(
-                new String(input, index, tailIndex - index),
-                _validator).intValue();
-            index            = tailIndex;
+            _components[j] = NumericConverter.extractInteger(new String(input,
+                    index, tailIndex - index), _validator).intValue();
+            index = tailIndex;
         }
-        if (new String(input, index, input.length - index).trim().length()
-                != 0)
-        {
+        if (new String(input, index, input.length - index).trim().length() != 0) {
             throw new IOException("Too much data in string for "
                                   + _component_count + " anchors");
         }
@@ -160,8 +146,7 @@ public class Anchors
      * @return components
      */
 
-    public int [] getComponents()
-    {
+    public int [] getComponents() {
         return _components;
     }
 }   // end public class Anchors

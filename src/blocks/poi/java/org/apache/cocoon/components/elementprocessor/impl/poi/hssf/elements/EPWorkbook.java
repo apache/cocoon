@@ -61,20 +61,15 @@ import java.io.IOException;
  * might care about that, but not today.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPWorkbook.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPWorkbook.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPWorkbook
-    extends BaseElementProcessor
-{
+public class EPWorkbook extends BaseElementProcessor {
     private Workbook _workbook;
 
     /**
      * constructor
      */
-
-    public EPWorkbook()
-    {
-
+    public EPWorkbook() {
         // the Workbook element has no implied attributes
         super(null);
         _workbook = new Workbook();
@@ -82,24 +77,17 @@ public class EPWorkbook
 
     /**
      * override of getWorkbook()
-     *
      * @return the workbook
      */
-
-    protected Workbook getWorkbook()
-    {
+    protected Workbook getWorkbook() {
         return _workbook;
     }
 
     /**
      * override of endProcessing()
-     *
      * @exception IOException
      */
-
-    public void endProcessing()
-        throws IOException
-    {
+    public void endProcessing() throws IOException {
         _workbook.write(getFilesystem());
     }
-}   // end public class EPWorkbook
+} // end public class EPWorkbook

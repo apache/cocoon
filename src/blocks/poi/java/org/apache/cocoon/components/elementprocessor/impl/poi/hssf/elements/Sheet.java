@@ -71,7 +71,7 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.6 2003/07/02 12:49:56 bruno Exp $
+ * @version CVS $Id: Sheet.java,v 1.7 2004/01/31 08:50:39 antonio Exp $
  */
 
 // package scope
@@ -96,7 +96,6 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * Constructor Sheet
-     *
      * @param workbook
      */
     Sheet(final Workbook workbook) {
@@ -110,7 +109,6 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * renameSheet
-     *
      * @param new_name
      */
     void renameSheet(final String new_name) {
@@ -122,27 +120,24 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * set a column's width
-     *
      * @param number the column number
      * @param points
-     *
      * @exception IOException if any arguments are illegal
      */
-    void setColumnWidth(final int number, final double points) throws IOException {
-        if ((number < 0) || (number > Short.MAX_VALUE)) {
+    void setColumnWidth(final int number, final double points)
+        throws IOException {
+        if (number < 0 || number > Short.MAX_VALUE) {
             throw new IOException("column number " + number + " is too large");
         }
         if (!isValidColumnPoints(points)) {
             throw new IOException("points " + points + " is out of range");
         }
-        _sheet.setColumnWidth((short)number, (short)((points * 48) + .5));
+        _sheet.setColumnWidth((short)number, (short) ((points * 48) + .5));
     }
 
     /**
      * get the column width of a specified column
-     *
      * @param number the column number
-     *
      * @return column width in characters
      */
     short getColumnWidth(short number) {
@@ -151,16 +146,14 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * set default column width
-     *
      * @param width width, in points
-     *
      * @exception IOException
      */
     void setDefaultColumnWidth(double width) throws IOException {
-        if ((width < 0) || (width >= (4.8 * (0.5 + Short.MAX_VALUE)))) {
+        if (width < 0 || (width >= (4.8 * (0.5 + Short.MAX_VALUE)))) {
             throw new IOException("Invalid width (" + width + ")");
-        }   // 12 is being used as a "guessed" points for the font
-        _sheet.setDefaultColumnWidth((short)((width / 4.8) + 0.5));
+        } // 12 is being used as a "guessed" points for the font
+        _sheet.setDefaultColumnWidth((short) ((width / 4.8) + 0.5));
     }
 
     /**
@@ -172,16 +165,14 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * set default row height
-     *
      * @param height height, in points
-     *
      * @exception IOException
      */
     void setDefaultRowHeight(double height) throws IOException {
         if (!isValidPoints(height)) {
             throw new IOException("Invalid height (" + height + ")");
         }
-        _sheet.setDefaultRowHeight((short)((height * 20) + .5));
+        _sheet.setDefaultRowHeight((short) ((height * 20) + .5));
     }
 
     /**
@@ -207,11 +198,8 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * get a specified row
-     *
      * @param rowNo the row number
-     *
      * @return a Row object
-     *
      * @exception IOException if rowNo is out of range
      */
     Row getRow(int rowNo) throws IOException {
@@ -234,18 +222,19 @@ class Sheet extends AbstractLogEnabled {
     HSSFCellStyle addStyleRegion(Region region) {
         HSSFCellStyle style = _workbook.createStyle();
         /*
-        getLogger().debug("region = "+ region.getRowFrom() + ","+region.getColumnFrom()+
-            ","+region.getRowTo()+","+region.getColumnTo());
-            */
+         * getLogger().debug("region = "+ region.getRowFrom() +
+         * ","+region.getColumnFrom()+
+         * ","+region.getRowTo()+","+region.getColumnTo());
+         */
         regions.put(region, style);
         return style;
     }
 
     /**
-     *  returns the HSSFCellStyle for a cell if defined by region
-     *  if there is not a definition it returns null.  If you don't
-     *  expect that then your code dies a horrible death.
-     *  @return HSSFCellStyle
+     * returns the HSSFCellStyle for a cell if defined by region if there is
+     * not a definition it returns null. If you don't expect that then your
+     * code dies a horrible death.
+     * @return HSSFCellStyle
      */
     HSSFCellStyle getCellStyleForRegion(int row, short col) {
         Iterator iregions = regions.keySet().iterator();
@@ -267,20 +256,18 @@ class Sheet extends AbstractLogEnabled {
     }
 
     private boolean isValidPoints(double points) {
-        return ((points >= 0) && (points <= ((Short.MAX_VALUE + 0.5) / 20)));
+        return (points >= 0 && points <= ((Short.MAX_VALUE + 0.5) / 20));
     }
 
     private boolean isValidColumnPoints(double points) {
-        return ((points >= 0) && (points <= ((Short.MAX_VALUE + 0.5) / 48)));
+        return (points >= 0 && points <= ((Short.MAX_VALUE + 0.5) / 48));
     }
 
-    /* this method doesn't appear to be used
-    private boolean isValidCharacters(double characters)
-    {
-        return ((characters >= 0)
-                && (characters <= ((Short.MAX_VALUE + 0.5) / 256)));
-
-    } */
+    /*
+     * this method doesn't appear to be used private boolean
+     * isValidCharacters(double characters) { return ((characters >= 0) &&
+     * (characters <= ((Short.MAX_VALUE + 0.5) / 256)));
+     */
 
     /**
      * Flag a certain region of cells to be merged
@@ -292,23 +279,28 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * assigns blank cells to regions where no cell is currently allocated.
-     * Meaning if there is a sheet with a cell defined at 1,1 and a style region
-     * from 0,0-1,1 then cells 0,0;0,1;1,0 will be defined as blank cells pointing
-     * to the style defined by the style region.  If there is not a defined cell
-     * and no styleregion encompases the area, then no cell is defined.
+     * Meaning if there is a sheet with a cell defined at 1,1 and a style
+     * region from 0,0-1,1 then cells 0,0;0,1;1,0 will be defined as blank
+     * cells pointing to the style defined by the style region. If there is not
+     * a defined cell and no styleregion encompases the area, then no cell is
+     * defined.
      */
     public void assignBlanksToRegions() {
         Iterator iregions = regions.keySet().iterator();
         while (iregions.hasNext()) {
             Region region = ((Region)iregions.next());
-            //getLogger().debug("fixing region "+region.getRowFrom()+","+region.getColumnFrom()+"-"+
+            //getLogger().debug("fixing region
+            // "+region.getRowFrom()+","+region.getColumnFrom()+"-"+
             //          region.getRowTo()+","+region.getColumnTo());
-            for (int rownum = region.getRowFrom(); rownum < region.getRowTo() + 1; rownum++) {
+            for (int rownum = region.getRowFrom();
+                        rownum < region.getRowTo() + 1; rownum++) {
                 HSSFRow row = _sheet.getRow(rownum);
-                for (short colnum = region.getColumnFrom(); colnum < region.getColumnTo() + 1; colnum++) {
+                for (short colnum = region.getColumnFrom();
+                            colnum < region.getColumnTo() + 1; colnum++) {
                     HSSFCellStyle style = (HSSFCellStyle)regions.get(region);
                     if (!isBlank(style)) {
-                        //don't waste time with huge blocks of blankly styled cells
+                        //don't waste time with huge blocks of blankly styled
+                        // cells
                         if (row == null) {
                             if (rownum > Short.MAX_VALUE) {
                                 rownum = Short.MAX_VALUE;
@@ -317,10 +309,12 @@ class Sheet extends AbstractLogEnabled {
                         }
                         HSSFCell cell = row.getCell(colnum);
                         if (cell == null) {
-                            //getLogger().debug("creating blank cell at "+rownum + "," +colnum);
+                            //getLogger().debug("creating blank cell at
+                            // "+rownum + "," +colnum);
                             cell = row.createCell(colnum);
                             cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
-                            cell.setCellStyle((HSSFCellStyle)regions.get(region));
+                            cell.setCellStyle(
+                                (HSSFCellStyle)regions.get(region));
                         }
                     }
                 }
@@ -333,20 +327,17 @@ class Sheet extends AbstractLogEnabled {
         if (style.getFontIndex() > 0) {
             font = (_workbook.getWorkbook().getFontAt(style.getFontIndex()));
         }
-        if (style.getBorderBottom() == 0 &&
-                style.getBorderTop() == 0 &&
-                style.getBorderRight() == 0 &&
-                style.getBorderLeft() == 0 &&
-                style.getFillBackgroundColor() == HSSFColor.WHITE.index &&
-                style.getFillPattern() == 0 &&
-                (style.getFontIndex() == 0 ||
-                    ((font.getFontName().equals("Arial") ||
-                    font.getFontName().equals("Helvetica")) &&
-                    font.getFontHeightInPoints() > 8 &&
-                    font.getFontHeightInPoints() < 12))) {
+        if (style.getBorderBottom() == 0 && style.getBorderTop() == 0
+            && style.getBorderRight() == 0 && style.getBorderLeft() == 0
+            && style.getFillBackgroundColor() == HSSFColor.WHITE.index
+            && style.getFillPattern() == 0 && (style.getFontIndex() == 0
+                || ((font.getFontName().equals("Arial")
+                    || font.getFontName().equals("Helvetica"))
+                    && font.getFontHeightInPoints() > 8
+                    && font.getFontHeightInPoints() < 12))) {
             return true;
         }
         return false;
     }
 
-}   // end package scope class Sheet
+} // end package scope class Sheet

@@ -63,38 +63,28 @@ import java.io.IOException;
  * sheet. The value is contained in the data.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPMaxRow.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPMaxRow.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPMaxRow
-    extends BaseElementProcessor
-{
+public class EPMaxRow extends BaseElementProcessor {
     private NumericResult _max_row;
 
     /**
      * constructor
      */
-
-    public EPMaxRow()
-    {
+    public EPMaxRow() {
         super(null);
         _max_row = null;
     }
 
     /**
      * get the maximum row for the containing sheet
-     *
      * @return maximum row number
-     *
      * @exception IOException if the data is malformed
      */
-
-    public int getMaxRow()
-        throws IOException
-    {
-        if (_max_row == null)
-        {
+    public int getMaxRow() throws IOException {
+        if (_max_row == null) {
             _max_row = NumericConverter.extractPositiveInteger(getData());
         }
         return _max_row.intValue();
     }
-}   // end public class EPMaxRow
+} // end public class EPMaxRow

@@ -55,7 +55,7 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Border style codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: BorderStyle.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: BorderStyle.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
 public class BorderStyle
 {
@@ -74,8 +74,7 @@ public class BorderStyle
     public static final int BORDER_STYLE_MEDIUM_DASH_DOT_DOT = 12;
     public static final int BORDER_STYLE_SLANTED_DASH_DOT    = 13;
 
-    private BorderStyle()
-    {
+    private BorderStyle() {
     }
 
     /**
@@ -86,8 +85,7 @@ public class BorderStyle
      * @return true if valid, false otherwise
      */
 
-    public static boolean isValid(int val)
-    {
+    public static boolean isValid(int val) {
         return ((val >= BORDER_STYLE_NONE)
                 && (val <= BORDER_STYLE_SLANTED_DASH_DOT));
     }

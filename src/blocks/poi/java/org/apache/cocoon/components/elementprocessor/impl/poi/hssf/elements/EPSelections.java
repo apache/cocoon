@@ -66,22 +66,18 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPSelections.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPSelections.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPSelections
-    extends BaseElementProcessor
-{
+public class EPSelections extends BaseElementProcessor {
     private static final String _cursor_col_attribute = "CursorCol";
     private static final String _cursor_row_attribute = "CursorRow";
-    private NumericResult       _cursor_col;
-    private NumericResult       _cursor_row;
+    private NumericResult _cursor_col;
+    private NumericResult _cursor_row;
 
     /**
      * constructor
      */
-
-    public EPSelections()
-    {
+    public EPSelections() {
         super(null);
         _cursor_col = null;
         _cursor_row = null;
@@ -89,35 +85,25 @@ public class EPSelections
 
     /**
      * @return cursor column
-     *
      * @exception IOException
      */
-
-    public int getCursorCol()
-        throws IOException
-    {
-        if (_cursor_col == null)
-        {
-            _cursor_col = NumericConverter
-                .extractNonNegativeInteger(getValue(_cursor_col_attribute));
+    public int getCursorCol() throws IOException {
+        if (_cursor_col == null) {
+            _cursor_col = NumericConverter.extractNonNegativeInteger(
+                    getValue(_cursor_col_attribute));
         }
         return _cursor_col.intValue();
     }
 
     /**
      * @return cursor row
-     *
      * @exception IOException
      */
-
-    public int getCursorRow()
-        throws IOException
-    {
-        if (_cursor_row == null)
-        {
-            _cursor_row = NumericConverter
-                .extractNonNegativeInteger(getValue(_cursor_row_attribute));
+    public int getCursorRow() throws IOException {
+        if (_cursor_row == null) {
+            _cursor_row = NumericConverter.extractNonNegativeInteger(
+                    getValue(_cursor_row_attribute));
         }
         return _cursor_row.intValue();
     }
-}   // end public class EPSelections
+} // end public class EPSelections

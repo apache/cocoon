@@ -64,45 +64,33 @@ import java.io.IOException;
  * element
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPRows.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: EPRows.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPRows
-    extends BaseElementProcessor
-{
-    private NumericResult       _default_size_pts;
-    private static final String _default_size_pts_attribute =
-        "DefaultSizePts";
+public class EPRows extends BaseElementProcessor {
+    private NumericResult _default_size_pts;
+    private static final String _default_size_pts_attribute = "DefaultSizePts";
 
     // package scope so test code can see it
-    static final String         DEFAULT_SIZE_PTS            = "12.8";
+    static final String DEFAULT_SIZE_PTS = "12.8";
 
     /**
      * constructor
      */
-
-    public EPRows()
-    {
+    public EPRows() {
         super(null);
         _default_size_pts = null;
     }
 
     /**
      * get the default size of rows, in points
-     *
      * @return size in points
-     *
      * @exception IOException if the attribute is missing or malformed
      */
-
-    public double getDefaultSizePts()
-        throws IOException
-    {
-        if (_default_size_pts == null)
-        {
+    public double getDefaultSizePts() throws IOException {
+        if (_default_size_pts == null) {
             String value = getValue(_default_size_pts_attribute);
 
-            if ((value == null) || value.trim().equals(""))
-            {
+            if (value == null || value.trim().equals("")) {
                 value = DEFAULT_SIZE_PTS;
             }
             _default_size_pts = NumericConverter.extractDouble(value);
@@ -112,19 +100,14 @@ public class EPRows
 
     /**
      * Override of Initialize() implementation
-     *
-     * @param attributes the array of Attribute instances; may be
-     *                   empty, will never be null
+     * @param attributes the array of Attribute instances; may be empty, will
+     *                  never be null
      * @param parent the parent ElementProcessor; may be null
-     *
      * @exception IOException if anything is wrong
      */
-
-    public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
+    public void initialize(final Attribute[] attributes,
+                    final ElementProcessor parent) throws IOException {
         super.initialize(attributes, parent);
         getSheet().setDefaultRowHeight(getDefaultSizePts());
     }
-}   // end public class EPRows
+} // end public class EPRows

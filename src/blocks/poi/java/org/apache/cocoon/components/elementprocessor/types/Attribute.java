@@ -55,7 +55,7 @@ package org.apache.cocoon.components.elementprocessor.types;
  * shields the consumer from the data's XML origins.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Attribute.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: Attribute.java,v 1.3 2004/01/31 08:50:43 antonio Exp $
  */
 public class Attribute
 {
@@ -74,15 +74,12 @@ public class Attribute
      *            or empty, or if value is null.
      */
 
-    public Attribute(final String name, final String value)
-    {
-        if ((name == null) || (name.length() == 0))
-        {
+    public Attribute(final String name, final String value) {
+        if ((name == null) || (name.length() == 0)) {
             throw new IllegalArgumentException(
                 "Attribute name is null or empty");
         }
-        if (value == null)
-        {
+        if (value == null) {
             throw new IllegalArgumentException("Attribute value is null");
         }
         _name  = name;
@@ -95,8 +92,7 @@ public class Attribute
      * @return the name of the Attribute
      */
 
-    public String getName()
-    {
+    public String getName() {
         return _name;
     }
 
@@ -106,8 +102,7 @@ public class Attribute
      * @return the value of the Attribute as a String
      */
 
-    public String getValue()
-    {
+    public String getValue() {
         return _value;
     }
 
@@ -120,8 +115,7 @@ public class Attribute
      * @exception NumberFormatException if the value is not an int
      */
 
-    public int getValueAsInt()
-    {
+    public int getValueAsInt() {
         return Integer.parseInt(_value);
     }
 
@@ -134,8 +128,7 @@ public class Attribute
      * @exception NumberFormatException if the value is not a short
      */
 
-    public short getValueAsShort()
-    {
+    public short getValueAsShort() {
         return Short.parseShort(_value);
     }
 
@@ -147,8 +140,7 @@ public class Attribute
      * @exception NumberFormatException if the value is not a long
      */
 
-    public long getValueAsLong()
-    {
+    public long getValueAsLong() {
         return Long.parseLong(_value);
     }
 
@@ -169,24 +161,18 @@ public class Attribute
      *            represent a boolean
      */
 
-    public boolean getValueAsBoolean()
-    {
+    public boolean getValueAsBoolean() {
         boolean rvalue = false;
 
         if (_value.equalsIgnoreCase("t") || _value.equalsIgnoreCase("y")
                 || _value.equalsIgnoreCase("yes")
-                || _value.equalsIgnoreCase("true"))
-        {
+                || _value.equalsIgnoreCase("true")) {
             rvalue = true;
-        }
-        else if (_value.equalsIgnoreCase("f") || _value.equalsIgnoreCase("n")
+        } else if (_value.equalsIgnoreCase("f") || _value.equalsIgnoreCase("n")
                  || _value.equalsIgnoreCase("no")
-                 || _value.equalsIgnoreCase("false"))
-        {
+                 || _value.equalsIgnoreCase("false")) {
             rvalue = false;
-        }
-        else
-        {
+        } else {
             throw new IllegalArgumentException(
                 "Value [" + _value + "] does not represent a boolean value");
         }

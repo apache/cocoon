@@ -60,60 +60,42 @@ import java.io.IOException;
  * ordering, and a simpler way to deal with them.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: PrintOrder.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: PrintOrder.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class PrintOrder
-{
-    private static final String        _right_then_down            =
-        "r_then_d";
-    private static final String        _down_then_right            =
-        "d_then_r";
-    public static final int            PRINT_ORDER_RIGHT_THEN_DOWN = 0;
-    public static final int            PRINT_ORDER_DOWN_THEN_RIGHT = 1;
-    private static final NumericResult _null_result                =
+public class PrintOrder {
+    private static final String _right_then_down = "r_then_d";
+    private static final String _down_then_right = "d_then_r";
+    public static final int PRINT_ORDER_RIGHT_THEN_DOWN = 0;
+    public static final int PRINT_ORDER_DOWN_THEN_RIGHT = 1;
+    private static final NumericResult _null_result =
         new NumericResult(new IOException("print order cannot be null"));
-    private static final NumericResult _right_then_down_result     =
+    private static final NumericResult _right_then_down_result =
         new NumericResult(new Integer(PRINT_ORDER_RIGHT_THEN_DOWN));
-    private static final NumericResult _down_then_right_result     =
+    private static final NumericResult _down_then_right_result =
         new NumericResult(new Integer(PRINT_ORDER_DOWN_THEN_RIGHT));
 
-    private PrintOrder()
-    {
-    }
+    private PrintOrder() {}
 
     /**
      * convert a string into a NumericResult
-     *
      * @param value the string describing the print order
-     *
-     * @return a NumericResult containing either one of the public
-     *         enumeration values, or an appropriate IOException
+     * @return a NumericResult containing either one of the public enumeration
+     *             values, or an appropriate IOException
      */
+    public static NumericResult extractPrintOrder(final String value) {
+        NumericResult rval = null;
+        String input = (value == null) ? null : value.trim();
 
-    public static NumericResult extractPrintOrder(final String value)
-    {
-        NumericResult rval  = null;
-        String        input = (value == null) ? null
-                                              : value.trim();
-
-        if (input == null)
-        {
+        if (input == null) {
             rval = _null_result;
-        }
-        else if (input.equalsIgnoreCase(_right_then_down))
-        {
+        } else if (input.equalsIgnoreCase(_right_then_down)) {
             rval = _right_then_down_result;
-        }
-        else if (input.equalsIgnoreCase(_down_then_right))
-        {
+        } else if (input.equalsIgnoreCase(_down_then_right)) {
             rval = _down_then_right_result;
-        }
-        else
-        {
-            rval = new NumericResult(
-                new IOException(
+        } else {
+            rval = new NumericResult(new IOException(
                     "\"" + input + "\" is not a valid print order"));
         }
         return rval;
     }
-}   // end public class PrintOrder
+} // end public class PrintOrder

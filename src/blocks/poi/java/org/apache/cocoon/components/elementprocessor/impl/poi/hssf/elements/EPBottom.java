@@ -51,8 +51,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 
@@ -75,11 +73,9 @@ import java.util.Hashtable;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPBottom.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: EPBottom.java,v 1.5 2004/01/31 08:50:39 antonio Exp $
  */
-public class EPBottom
-    extends BaseElementProcessor
-{
+public class EPBottom extends BaseElementProcessor {
     private NumericResult          _style;
     private ColorCode              _color;
     private boolean                _color_fetched;
@@ -87,25 +83,20 @@ public class EPBottom
     private static final String    _color_attribute = "Color";
     private static final Validator _style_validator = new Validator()
     {
-        public IOException validate(final Number number)
-        {
+        public IOException validate(final Number number) {
             return BorderStyle.isValid(number.intValue()) ? null
-                                                          : new IOException(
-                                                              "\"" + number
-                                                              + "\" is not a legal value");
+                : new IOException("\"" + number + "\" is not a legal value");
         }
     };
 
     /**
      * constructor
      */
-
-    public EPBottom()
-    {
+    public EPBottom() {
         super(null);
         _style         = null;
         _color         = null;
-	_color_fetched = false;
+	    _color_fetched = false;
     }
     
     /**
@@ -119,12 +110,10 @@ public class EPBottom
      */
 
     public void initialize(final Attribute [] attributes,
-                           final ElementProcessor parent)
-        throws IOException
-    {
+            final ElementProcessor parent) throws IOException {
         super.initialize(attributes, parent);
         EPStyle pstyle = (EPStyle) getAncestor(EPStyle.class);
-        if ((pstyle != null) && pstyle.isValid()) {
+        if (pstyle != null && pstyle.isValid()) {
             Hashtable colorhash = pstyle.getColorHash();        
             HSSFColor color = null;
 
@@ -138,28 +127,21 @@ public class EPBottom
             if (colorCode != null) {
                 color = (HSSFColor)colorhash.get(colorCode.toString());
             }
-            if (color == null) color = new HSSFColor.BLACK();
-
-
+            if (color == null) {
+                color = new HSSFColor.BLACK();
+            }
             style.setBottomBorderColor(color.getIndex());
         }
         
     }    
-    
-    
-    
 
     /**
      * @return style as an int from BorderStyle
      *
      * @exception IOException
      */
-
-    public int getStyle()
-        throws IOException
-    {
-        if (_style == null)
-        {
+    public int getStyle() throws IOException {
+        if (_style == null) {
             _style =
                 NumericConverter.extractInteger(getValue(_style_attribute),
                                                 _style_validator);
@@ -172,16 +154,11 @@ public class EPBottom
      *
      * @exception IOException
      */
-
-    public ColorCode getColor()
-        throws IOException
-    {
-        if (!_color_fetched)
-        {
-	    String colorString = getValue(_color_attribute);
-	    if (colorString != null)
-	    {
-		_color = new ColorCode(colorString);
+    public ColorCode getColor() throws IOException {
+        if (!_color_fetched) {
+            String colorString = getValue(_color_attribute);
+	    if (colorString != null) {
+	        _color = new ColorCode(colorString);
 	    }
 	    _color_fetched = true;
         }

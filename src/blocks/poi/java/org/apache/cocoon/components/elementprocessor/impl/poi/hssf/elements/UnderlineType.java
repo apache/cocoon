@@ -55,28 +55,21 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Underline codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: UnderlineType.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: UnderlineType.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class UnderlineType
-{
-    public static final int UNDERLINE_NONE   = 0;
+public class UnderlineType {
+    public static final int UNDERLINE_NONE = 0;
     public static final int UNDERLINE_SINGLE = 1;
     public static final int UNDERLINE_DOUBLE = 2;
 
-    private UnderlineType()
-    {
-    }
+    private UnderlineType() {}
 
     /**
      * Is this a valid underline shading?
-     *
      * @param val value to be checked
-     *
      * @return true if valid, false otherwise
      */
-
-    public static boolean isValid(int val)
-    {
-        return ((val >= UNDERLINE_NONE) && (val <= UNDERLINE_DOUBLE));
+    public static boolean isValid(int val) {
+        return (val >= UNDERLINE_NONE && val <= UNDERLINE_DOUBLE);
     }
-}   // end public class UnderlineType
+} // end public class UnderlineType

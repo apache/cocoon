@@ -55,52 +55,44 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Style shading codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: StyleShading.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: StyleShading.java,v 1.4 2004/01/31 08:50:39 antonio Exp $
  */
-public class StyleShading
-{
-    public static final int STYLE_SHADING_NONE                         = 0;
-    public static final int STYLE_SHADING_SOLID                        = 1;
-    public static final int STYLE_SHADING_PERCENT75                    = 2;
-    public static final int STYLE_SHADING_PERCENT50                    = 3;
-    public static final int STYLE_SHADING_PERCENT25                    = 4;
-    public static final int STYLE_SHADING_PERCENT12PT5                 = 5;
-    public static final int STYLE_SHADING_PERCENT6PT25                 = 6;
-    public static final int STYLE_SHADING_HORIZONTAL_STRIPE            = 7;
-    public static final int STYLE_SHADING_VERTICAL_STRIPE              = 8;
-    public static final int STYLE_SHADING_REVERSE_DIAGONAL_STRIPE      = 9;
-    public static final int STYLE_SHADING_DIAGONAL_STRIPE              = 10;
-    public static final int STYLE_SHADING_DIAGONAL_CROSSHATCH          = 11;
-    public static final int STYLE_SHADING_THICK_DIAGONAL_CROSSHATCH    = 12;
-    public static final int STYLE_SHADING_THIN_HORIZONTAL_STRIPE       = 13;
-    public static final int STYLE_SHADING_THIN_VERTICAL_STRIPE         = 14;
+public class StyleShading {
+    public static final int STYLE_SHADING_NONE = 0;
+    public static final int STYLE_SHADING_SOLID = 1;
+    public static final int STYLE_SHADING_PERCENT75 = 2;
+    public static final int STYLE_SHADING_PERCENT50 = 3;
+    public static final int STYLE_SHADING_PERCENT25 = 4;
+    public static final int STYLE_SHADING_PERCENT12PT5 = 5;
+    public static final int STYLE_SHADING_PERCENT6PT25 = 6;
+    public static final int STYLE_SHADING_HORIZONTAL_STRIPE = 7;
+    public static final int STYLE_SHADING_VERTICAL_STRIPE = 8;
+    public static final int STYLE_SHADING_REVERSE_DIAGONAL_STRIPE = 9;
+    public static final int STYLE_SHADING_DIAGONAL_STRIPE = 10;
+    public static final int STYLE_SHADING_DIAGONAL_CROSSHATCH = 11;
+    public static final int STYLE_SHADING_THICK_DIAGONAL_CROSSHATCH = 12;
+    public static final int STYLE_SHADING_THIN_HORIZONTAL_STRIPE = 13;
+    public static final int STYLE_SHADING_THIN_VERTICAL_STRIPE = 14;
     public static final int STYLE_SHADING_THIN_REVERSE_DIAGONAL_STRIPE = 15;
-    public static final int STYLE_SHADING_THIN_DIAGONAL_STRIPE         = 16;
-    public static final int STYLE_SHADING_THIN_CROSSHATCH              = 17;
-    public static final int STYLE_SHADING_THIN_DIAGONAL_CROSSHATCH     = 18;
-    public static final int STYLE_SHADING_APPLIX_SMALL_CIRCLE          = 19;
-    public static final int STYLE_SHADING_APPLIX_SEMICIRCLE            = 20;
-    public static final int STYLE_SHADING_APPLIX_SMALL_THATCH          = 21;
-    public static final int STYLE_SHADING_APPLIX_ROUND_THATCH          = 22;
-    public static final int STYLE_SHADING_APPLIX_BRICK                 = 23;
-    public static final int STYLE_SHADING_PERCENT100                   = 24;
-    public static final int STYLE_SHADING_PERCENT87PT5                 = 25;
+    public static final int STYLE_SHADING_THIN_DIAGONAL_STRIPE = 16;
+    public static final int STYLE_SHADING_THIN_CROSSHATCH = 17;
+    public static final int STYLE_SHADING_THIN_DIAGONAL_CROSSHATCH = 18;
+    public static final int STYLE_SHADING_APPLIX_SMALL_CIRCLE = 19;
+    public static final int STYLE_SHADING_APPLIX_SEMICIRCLE = 20;
+    public static final int STYLE_SHADING_APPLIX_SMALL_THATCH = 21;
+    public static final int STYLE_SHADING_APPLIX_ROUND_THATCH = 22;
+    public static final int STYLE_SHADING_APPLIX_BRICK = 23;
+    public static final int STYLE_SHADING_PERCENT100 = 24;
+    public static final int STYLE_SHADING_PERCENT87PT5 = 25;
 
-    private StyleShading()
-    {
-    }
+    private StyleShading() {}
 
     /**
      * Is this a valid style shading?
-     *
      * @param val value to be checked
-     *
      * @return true if valid, false otherwise
      */
-
-    public static boolean isValid(int val)
-    {
-        return ((val >= STYLE_SHADING_NONE)
-                && (val <= STYLE_SHADING_PERCENT87PT5));
+    public static boolean isValid(int val) {
+        return (val >= STYLE_SHADING_NONE && val <= STYLE_SHADING_PERCENT87PT5);
     }
-}   // end public class StyleShading
+} // end public class StyleShading

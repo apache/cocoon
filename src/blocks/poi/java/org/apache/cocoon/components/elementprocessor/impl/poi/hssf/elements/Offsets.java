@@ -67,69 +67,54 @@ import java.io.IOException;
  * mature yet.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Offsets.java,v 1.4 2003/09/05 07:31:40 cziegeler Exp $
+ * @version CVS $Id: Offsets.java,v 1.5 2004/01/31 08:50:39 antonio Exp $
  */
-public class Offsets
-{
+public class Offsets {
     private static final int _component_count = 4;
-    private double[]         _components      =
-        new double[ _component_count ];
+    private double[] _components = new double[_component_count];
 
     /**
      * construct the Offsets object
-     *
      * @param value the string containing the offset values
-     *
      * @exception IOException if the string is badly formed
      */
-
-    public Offsets(final String value)
-        throws IOException
-    {
-        if (value == null)
-        {
+    public Offsets(final String value) throws IOException {
+        if (value == null) {
             throw new IOException("cannot process a null offsets string");
         }
-        char[]   input   = value.trim().toCharArray();
-        int      index   = 0;
+        char[] input = value.trim().toCharArray();
+        int index = 0;
 
-        for (int j = 0; j < _component_count; j++)
-        {
-            while ((index < input.length)
-                    && (Character.isWhitespace(input[ index ])))
-            {
+        for (int j = 0; j < _component_count; j++) {
+            while (index < input.length
+                && Character.isWhitespace(input[index])) {
                 ++index;
             }
-            if (index == input.length)
-            {
+            if (index == input.length) {
                 throw new IOException("insufficient offsets in string");
             }
             int tailIndex = index;
 
-            while ((tailIndex < input.length)
-                    && (!Character.isWhitespace(input[ tailIndex ])))
-            {
+            while (tailIndex < input.length
+                && !Character.isWhitespace(input[tailIndex])) {
                 ++tailIndex;
             }
-            _components[ j ] =
-                NumericConverter.extractDouble(new String(input, index,
-                    tailIndex - index)).doubleValue();
-            index            = tailIndex;
+            _components[j] = NumericConverter
+                    .extractDouble(new String(input, index, tailIndex - index))
+                    .doubleValue();
+            index = tailIndex;
         }
         if (new String(input, index, input.length - index).trim().length()
-                != 0)
-        {
-            throw new IOException("Too much data in string for "
-                                  + _component_count + " offsets");
+            != 0) {
+            throw new IOException(
+                "Too much data in string for " + _component_count + " offsets");
         }
     }
 
     /**
      * @return components
      */
-
-    public double [] getComponents()
-    {
+    public double[] getComponents() {
         return _components;
     }
-}   // end public class Offsets
+} // end public class Offsets
