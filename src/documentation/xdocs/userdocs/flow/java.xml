@@ -89,7 +89,7 @@
 </source>
    <p/>
    <s3 title="Configuration">
- <p>You control this behavior by specifying configuration properties in the <code>cocoon.xconf</code> file located in the WEB-INF/ directory of your application. The set these properties, locate the <code>component-instance</code> element under <code>flow-interpreters</code> whose <code>name</code> attribute has the value <code>"javascript"</code>. The following properties may be set:
+ <p>You control this behavior by specifying configuration properties in the <code>cocoon.xconf</code> file located in the WEB-INF/ directory of your application. These properties are located in the <code>component-instance</code> element under <code>flow-interpreters</code> whose <code>name</code> attribute has the value <code>"javascript"</code>. The following properties may be set:
  </p>
     <table>
      <tr>
