@@ -70,6 +70,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
 import org.apache.excalibur.source.SourceUtil;
@@ -84,7 +85,7 @@ import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.16 2004/01/19 13:05:11 antonio Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.17 2004/01/28 05:46:21 coliver Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Serviceable, Contextualizable, Interpreter,
@@ -267,7 +268,11 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             Map objectModel = environment.getObjectModel();
             FlowHelper.setWebContinuation(objectModel, continuation);
             FlowHelper.setContextObject(objectModel, bizData);
-            PipelinesNode.getRedirector(environment).redirect(false, uri);
+            Redirector redirector = PipelinesNode.getRedirector(environment);
+            if (redirector.hasRedirected()) {
+                throw new IllegalStateException("Pipeline has already been processed for this request");
+            }
+            redirector.redirect(false, uri);
         } else {
             throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }

@@ -96,7 +96,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.26 2004/01/21 14:31:25 vgritsenko Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.27 2004/01/28 05:46:21 coliver Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -115,6 +115,8 @@ public class FOM_Cocoon extends ScriptableObject {
         Scriptable parameters;
         FOM_Log log;
         WebContinuation lastContinuation;
+        FOM_WebContinuation fwk;
+        PageLocalScopeImpl currentPageLocal;
 
         public CallContext(CallContext caller,
                            FOM_JavaScriptInterpreter interp,
@@ -132,6 +134,34 @@ public class FOM_Cocoon extends ScriptableObject {
             this.avalonContext = avalonContext;
             this.logger = logger;
             this.lastContinuation = lastContinuation;
+            if (lastContinuation != null) {
+                fwk = new FOM_WebContinuation(lastContinuation);
+                Scriptable scope = FOM_Cocoon.this.getParentScope();
+                fwk.setParentScope(scope);
+                fwk.setPrototype(getClassPrototype(scope, fwk.getClassName()));
+                this.currentPageLocal = fwk.getPageLocal();
+            }
+            if (this.currentPageLocal != null) {
+                // "clone" the page local scope
+                this.currentPageLocal = this.currentPageLocal.duplicate();
+            } else {
+                this.currentPageLocal = new PageLocalScopeImpl(getTopLevelScope(FOM_Cocoon.this));
+            }
+            pageLocal.setDelegate(this.currentPageLocal);
+        }
+
+        public FOM_WebContinuation getLastContinuation() {
+            return fwk;
+        }
+
+        public void setLastContinuation(FOM_WebContinuation fwk) {
+            this.fwk = fwk;
+            if (fwk != null) {
+                pageLocal.setDelegate(fwk.getPageLocal());
+                this.lastContinuation = fwk.getWebContinuation();
+            } else {
+                this.lastContinuation = null;
+            }
         }
 
         public FOM_Session getSession() {
@@ -205,10 +235,12 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     private CallContext currentCall;
+    private PageLocalScopeHolder pageLocal;
 
     public String getClassName() {
         return "FOM_Cocoon";
     }
+
 
     // Called by FOM_JavaScriptInterpreter
     static void init(Scriptable scope) throws Exception {
@@ -220,6 +252,7 @@ public class FOM_Cocoon extends ScriptableObject {
         defineClass(scope, FOM_Context.class);
         defineClass(scope, FOM_Log.class);
         defineClass(scope, FOM_WebContinuation.class);
+        defineClass(scope, PageLocalImpl.class);
     }
 
     void pushCallContext(FOM_JavaScriptInterpreter interp,
@@ -229,6 +262,9 @@ public class FOM_Cocoon extends ScriptableObject {
                          Context avalonContext,
                          Logger logger,
                          WebContinuation lastContinuation) {
+        if (pageLocal == null) {
+            pageLocal = new PageLocalScopeHolder(getTopLevelScope(this));
+        }
         this.currentCall = new CallContext(currentCall, interp, env, manager,
                                            serviceManager, avalonContext,
                                            logger, lastContinuation);
@@ -241,49 +277,40 @@ public class FOM_Cocoon extends ScriptableObject {
             request.removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
         }
         this.currentCall = this.currentCall.caller;
+        // reset current page locals
+        if (this.currentCall != null) {
+            pageLocal.setDelegate(this.currentCall.currentPageLocal);
+        } else {
+            pageLocal.setDelegate(null);
+        }
     }
 
 
-    private FOM_WebContinuation forwardTo(String uri, Object bizData,
-                                          Continuation continuation)
-        throws Exception {
-        WebContinuation wk = null;
-        if (continuation != null) {
-            ContinuationsManager contMgr = (ContinuationsManager)
-                getComponentManager().lookup(ContinuationsManager.ROLE);
-            wk = contMgr.createWebContinuation(continuation,
-                                               currentCall.lastContinuation,
-                                               0,
-                                               null);
-        }
+    public FOM_WebContinuation jsGet_continuation() {
+        return currentCall.getLastContinuation();
+    }
 
-        String redUri = uri;
-
-        FOM_WebContinuation fom_wk =
-            new FOM_WebContinuation(wk);
-        fom_wk.setParentScope(getParentScope());
-        fom_wk.setPrototype(getClassPrototype(getParentScope(),
-                                              fom_wk.getClassName()));
-        getInterpreter().forwardTo(getParentScope(), this, redUri,
-                                   bizData, fom_wk, getEnvironment());
-
-        FOM_WebContinuation result = null;
-        if (wk != null) {
-            result = new FOM_WebContinuation(wk);
-            result.setParentScope(getParentScope());
-            result.setPrototype(getClassPrototype(getParentScope(),
-                                                  result.getClassName()));
-        }
-        return result;
+    public void jsSet_continuation(Object obj) {
+        FOM_WebContinuation fwk = (FOM_WebContinuation)unwrap(obj);
+        currentCall.setLastContinuation(fwk);
     }
 
     public FOM_WebContinuation jsFunction_sendPage(String uri,
                                                    Object obj,
-                                                   Object continuation)
+                                                   Object wk) 
         throws Exception {
-        return forwardTo(uri, unwrap(obj), (Continuation)unwrap(continuation));
+        FOM_WebContinuation fom_wk = (FOM_WebContinuation)unwrap(wk);
+        if (fom_wk != null) {
+            // save page locals
+            fom_wk.setPageLocal(pageLocal.getDelegate());
+        }
+        forwardTo(uri, unwrap(obj), fom_wk);
+        return fom_wk;
     }
 
+    public Scriptable jsFunction_createPageLocal() {
+        return pageLocal.createPageLocal();
+    }
 
     public void jsFunction_processPipelineTo(String uri,
                                              Object map,
@@ -1106,10 +1133,7 @@ public class FOM_Cocoon extends ScriptableObject {
         }
 
         public void jsFunction_setAttribute(String name, Object value) {
-            if (value instanceof NativeJavaObject) {
-                value = ((NativeJavaObject) value).unwrap();
-            }
-            session.setAttribute(name, value);
+            session.setAttribute(name, unwrap(value));
         }
 
         public void jsFunction_removeAttribute(String name) {
@@ -1520,6 +1544,27 @@ public class FOM_Cocoon extends ScriptableObject {
             list.add(arg);
         }
         getInterpreter().handleContinuation(kontId, list, getEnvironment());
+    }
+
+    /**
+     * Create a Bookmark WebContinuation from a JS Continuation with the last
+     * continuation of sendPageAndWait as its parent.
+     * PageLocal variables will be shared with the continuation of
+     * the next call to sendPageAndWait().
+     * @param k The JS continuation 
+     * @param ttl Lifetime for this continuation (zero means no limit)
+     */
+    public FOM_WebContinuation jsFunction_makeWebContinuation(Object k,
+                                                              Object ttl) 
+        throws Exception {
+        double d = org.mozilla.javascript.Context.toNumber(ttl);
+        FOM_WebContinuation result = 
+            makeWebContinuation((Continuation)unwrap(k), 
+                                jsGet_continuation(), 
+                                (int)d);
+        result.setPageLocal(pageLocal.getDelegate());
+        currentCall.setLastContinuation(result);
+        return result;
     }
 
     /**
