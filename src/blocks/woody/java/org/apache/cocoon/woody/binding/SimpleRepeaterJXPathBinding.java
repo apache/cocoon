@@ -66,7 +66,7 @@ import org.apache.commons.jxpath.Pointer;
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.9 2004/02/29 12:50:06 antonio Exp $
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -78,7 +78,10 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     private final boolean deleteIfEmpty;
 
     public SimpleRepeaterJXPathBinding(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts, String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, boolean deleteIfEmpty, JXPathBindingBase rowBinding) {
+            JXPathBindingBuilderBase.CommonAttributes commonAtts,
+            String repeaterId, String repeaterPath, String rowPath,
+            boolean clearOnLoad, boolean deleteIfEmpty,
+            JXPathBindingBase rowBinding) {
         super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
@@ -88,9 +91,10 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         this.deleteIfEmpty = deleteIfEmpty;
     }
 
-    public void doLoad(Widget frmModel, JXPathContext jctx) throws BindingException {
+    public void doLoad(Widget frmModel, JXPathContext jctx)
+            throws BindingException {
         // Find the repeater and clear it
-        Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater)frmModel.getWidget(this.repeaterId);
 
         if (this.clearOnLoad) {
             repeater.removeRows();
@@ -124,39 +128,42 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
                 this.rowBinding.loadFormFromModel(thisRow, rowContext);
             }
         }
-
-        if (getLogger().isDebugEnabled())
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("done loading rows " + toString());
+        }
     }
 
-    public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
+    public void doSave(Widget frmModel, JXPathContext jctx)
+            throws BindingException {
         // Find the repeater
-        Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        Repeater repeater = (Repeater)frmModel.getWidget(this.repeaterId);
 
         if (repeater.getSize() == 0 && this.deleteIfEmpty) {
             // Repeater is empty : erase all
             jctx.removeAll(this.repeaterPath);
-
         } else {
             // Repeater is not empty
-
             // Move to repeater context and create the path if needed
-            JXPathContext repeaterContext = jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
+            JXPathContext repeaterContext =
+                jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
 
             // Delete all that is already present
             repeaterContext.removeAll(this.rowPath);
 
             for (int i = 0; i < repeater.getSize(); i++) {
-                String path = this.rowPath + '[' + (i+1) + ']';
-                Pointer rowPtr = repeaterContext.createPath(path);
-                JXPathContext rowContext = repeaterContext.getRelativeContext(rowPtr);
-                this.rowBinding.saveFormToModel(repeater.getRow(i), rowContext);
+                Pointer rowPtr = repeaterContext.createPath(
+                        this.rowPath + '[' + (i+1) + ']');
+                JXPathContext rowContext =
+                    repeaterContext.getRelativeContext(rowPtr);
+                this.rowBinding.saveFormToModel(repeater.getRow(i),
+                        rowContext);
             }
         }
     }
 
     public String toString() {
-        return "SimpleRepeaterJXPathBinding [widget=" + this.repeaterId + ", xpath=" + this.repeaterPath + "]";
+        return this.getClass().getName()+ " [widget=" + this.repeaterId +
+            ", xpath=" + this.repeaterPath + "]";
     }
 
     public void enableLogging(Logger logger) {
