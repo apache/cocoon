@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!--+ $Id: login-html.xsl,v 1.1 2003/05/19 09:14:10 cziegeler Exp $ 
+<!--+ $Id: login-html.xsl,v 1.2 2003/05/19 13:26:53 cziegeler Exp $ 
     |
     | Description: Login page to HTML
     |
@@ -9,59 +9,40 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="content">
-<!--	<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="305"><tbody>
-		<tr>
-			<td>-->
-				<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="2" width="100%"><tbody>
-					<tr>
-						<td bgColor="#46627a" vAlign="middle" width="15">
-                    						<img height="1" src="sunspotdemoimg-space.gif" width="15"/>
-                  					</td>
-                  					<td bgColor="#46627a" align="center">
-                    						<font color="#ffffff" face="Verdana, Arial, Helvetica, sans-serif" size="2">
-                      							<b>
-                        							<center>Cocoon Portal Login</center>
-                      							</b>
-                    						</font>
-                  					</td>
-                				</tr>
-                				<tr>
-                  					<td bgColor="#cccccc" width="15">
-				  			<IMG height="1" src="sunspotdemoimg-space.gif" width="15"/>
-                  					</td>
-                  					<td bgColor="#cccccc" align="center">
-				  			<br/>
-                        					<font face="Arial, Helvetica, sans-serif" size="2">
-                          						<xsl:apply-templates/>
-							</font>
-							<br/>
-                  					</td>
-                				</tr>
-                				<tr>
-					            <td bgColor="#cccccc" width="15">
-							<img height="1" src="sunspotdemoimg-space.gif" width="15"/>
-                  					</td>
-                  					<td bgColor="#cccccc" align="center">
-				  			<br/>
-                        					<font face="Verdana, Arial, Helvetica, sans-serif" size="2">
-                          						If you are not already registered, use this guest login:
-								<br/><br/>
-								User:	<b>guest</b>
-								Password:
-								<b>guest</b>
-								<br/><br/>Or use this administrator login:<br/>
-								User:
-								<b>cocoon</b>
-								Password:
-								<b>cocoon</b>
-							</font>
-							<br/><br/>
-                  					</td>
-                				</tr>
-              			</tbody></table>
-<!--	          </td>
-        </tr>
-	</tbody></table>-->
+<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody>
+  <tr>
+	<td bgColor="#cccccc" align="center">
+	  <br/>
+      <font face="Arial, Helvetica, sans-serif" size="2">
+        <xsl:apply-templates/>
+      </font>
+      <br/>
+    </td>
+  </tr>
+  <tr>
+    <td bgColor="#cccccc" width="15">
+	  <img height="1" src="sunspotdemoimg-space.gif" width="15"/>
+    </td>
+  </tr>
+  <tr>
+    <td bgColor="#cccccc" align="center">
+	  <br/>
+      <font face="Verdana, Arial, Helvetica, sans-serif" size="2">
+         If you are not already registered, use this guest login:
+		 <br/><br/>
+		 User:	<b>guest</b>
+		 Password:
+		 <b>guest</b>
+		 <br/><br/>Or use this administrator login:<br/>
+		 User:
+		 <b>cocoon</b>
+		 Password:
+		 <b>cocoon</b>
+	   </font>
+	   <br/><br/>
+     </td>
+   </tr>
+</tbody></table>
 </xsl:template>
 
 <xsl:template match="form">
