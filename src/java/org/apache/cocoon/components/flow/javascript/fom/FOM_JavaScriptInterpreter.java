@@ -298,41 +298,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
     }
 
-    private ClassLoader getClassLoader(boolean needsRefresh) throws Exception {
-        if (!reloadScripts) {
-            return Thread.currentThread().getContextClassLoader();
-        }
-
-        synchronized (javaClassRepository) {
-            boolean reload = needsRefresh || classLoader == null;
-            if (needsRefresh && classLoader != null) {
-                reload = !javaClassRepository.upToDateCheck();
-            }
-
-            if (reload) {
-                // FIXME FIXME FIXME Resolver not released!
-                classLoader = new CompilingClassLoader(
-                        Thread.currentThread().getContextClassLoader(),
-                        (SourceResolver) manager.lookup(SourceResolver.ROLE),
-                        javaClassRepository);
-                classLoader.addSourceListener(
-                        new CompilingClassLoader.SourceListener() {
-                            public void sourceCompiled(Source src) {
-                                // no action
-                            }
-
-                            public void sourceCompilationError(Source src, String msg) {
-                                if (src != null) {
-                                    throw Context.reportRuntimeError(msg);
-                                }
-                            }
-                        });
-                updateSourcePath();
-            }
-            return classLoader;
-        }
-    }
-
     private void updateSourcePath() {
         if (classLoader != null) {
             classLoader.setSourcePath(javaSourcePath);
@@ -562,9 +527,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        ClassLoader classLoader = getClassLoader(needsRefresh);
-        Thread.currentThread().setContextClassLoader(classLoader);
-        thrScope.setupPackages(classLoader);
+        thrScope.setupPackages(Thread.currentThread().getContextClassLoader());
         cocoon.pushCallContext(this, redirector, manager,
                                avalonContext, getLogger(), null);
 
