@@ -75,7 +75,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.11 2003/09/25 17:37:30 sylvain Exp $
+ * @version CVS $Id: Field.java,v 1.12 2003/10/08 10:03:19 bruno Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -88,7 +88,8 @@ public class Field extends AbstractWidget {
     // but need to validate (error if field is required)
     private boolean needsParse = true;
     private boolean needsValidate = true;
-    
+    private boolean isValidating = false;
+
     private ValidationError validationError;
 
     public Field(FieldDefinition fieldDefinition) {
@@ -135,24 +136,33 @@ public class Field extends AbstractWidget {
                 }
             }
         }
-        
+
+        // if getValue() is called on this field while we're validating, then it's because a validation
+        // rule called getValue(), so then we just return the parsed (but not validated) value to avoid an endless loop
+        if (isValidating)
+            return value;
+
         // Validate the value
         if (this.needsValidate) {
-            
-            // Clear error, it will be recomputed
-            this.validationError = null;
-            
-            if (this.value == null) {
-                // No value : is it required ?
-                if (this.definition.isRequired()) {                    
-                    this.validationError = new ValidationError("general.field-required");
+            isValidating = true;
+            try {
+                // Clear error, it will be recomputed
+                this.validationError = null;
+
+                if (this.value == null) {
+                    // No value : is it required ?
+                    if (this.definition.isRequired()) {
+                        this.validationError = new ValidationError("general.field-required");
+                    }
+
+                } else {
+                    this.validationError = definition.getDatatype().validate(value, new ExpressionContextImpl(this));
                 }
-                
-            } else {
-                this.validationError = definition.getDatatype().validate(value, new ExpressionContextImpl(this));
+
+                this.needsValidate = false;
+            } finally {
+                isValidating = false;
             }
-            
-            this.needsValidate = false;
         }
         
         return this.validationError == null ? this.value : null;
