@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.25 2000-04-04 11:09:09 stefano Exp $
+  $Id: todo.xml,v 1.26 2000-04-18 12:52:58 stefano Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -15,15 +15,9 @@
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
 
- <actions priority="high">
-  <action context="code">
-   Fix the encoding problems.
-  </action>
- </actions>
-
  <actions priority="low">
   <action context="docs">
-   Write some more docs.
+   Cleanup and improve documentation.
   </action>
  </actions>
 
