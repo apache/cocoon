@@ -26,6 +26,8 @@ import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.ri.model.beans.BeanPropertyPointer;
+import org.apache.commons.jxpath.util.TypeUtils;
 
 /**
  * Provides a base class for hooking up Binding implementations that use the
@@ -273,6 +275,9 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         public boolean createObject(JXPathContext context, Pointer pointer, Object parent, String name, int index) {
             if (createCollectionItem(context, pointer, parent, name, index)) {
                 return true;
+            // AG: If this is a bean, then the object is supposed to exists.  
+            } else if (pointer instanceof BeanPropertyPointer) {
+                return createBeanField(context, pointer, parent, name, index);
             } else {
                 return super.createObject(context, pointer, parent, name, index);
             }
@@ -284,7 +289,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             final Object o = context.getValue(name);
             if (o == null) {
                 return false;
-            }
+            } 
             if (o instanceof Collection) {
                 ((Collection)o).add(null);
             } else if(o.getClass().isArray()) {
@@ -294,6 +299,43 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
                 return false;
             }
             return true;
+        }
+
+        // AG: Create the Object for the field as defined in the Bean.
+        // The value we will set here is not important. JXPath knows that it is UNITIALIZED.
+        // if we set it Pointer Value to null then the code will throw an exception.
+        //
+        // In short, there is no harm. The value will never show up.
+        // TODO: Manage other forms' types as Date, Bean and others not covered by this method.
+        private boolean createBeanField(JXPathContext context, Pointer pointer, Object parent, String name, int index) {
+            try {
+                Class clazz = parent.getClass().getDeclaredField(name).getType();
+                Object o = context.getValue(name);
+                if (o == null) {
+                    final Class[] parametersTypes = {String.class};
+                    final Object[] initArgs = {"0"};
+                    try {
+                        // AG: Here we service Booleans, Strings and Number() + his Direct know subclasses:
+                        // (BigDecimal, BigInteger, Byte, Double, Float, Integer, Long, Short)
+                        // as well as other classes that use an String as Constructor parameter.
+                        o = clazz.getConstructor(parametersTypes).newInstance(initArgs);
+                    } catch (Exception e) {
+                        // AG: The class has not a constructor using a String as a parameter.
+                        // ie: Boolean(String), Integer(String), etc.
+                        // Lets try with a constructor with no parameters. ie: Number().
+                        o = clazz.newInstance();
+                    }
+                } else if (TypeUtils.canConvert(o, clazz)) {
+                    o = TypeUtils.convert(o, clazz);
+                }
+                if (o != null) {
+                    pointer.setValue(o);
+                    return true;  // OK. We have an initial Object of the right Class initialized.
+                }
+            } catch (Exception e) {
+                // TODO: Output info in logs.
+            }
+            return false;
         }
     }
 }
