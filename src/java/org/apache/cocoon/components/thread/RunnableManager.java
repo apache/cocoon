@@ -41,6 +41,8 @@ public interface RunnableManager
      * @param priority The priority of threads created by this pool. This is
      *        one of {@link Thread#MIN_PRIORITY}, {@link
      *        Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     * @param isDaemon Whether or not thread from the pool should run in daemon
+     *        mode
      * @param keepAliveTime How long should a thread be alive for new work to
      *        be done before it is GCed
      * @param blockPolicy What's the blocking policy is resources are exhausted
@@ -54,6 +56,7 @@ public interface RunnableManager
                      int maxPoolSize,
                      int minPoolSize,
                      int priority,
+                     final boolean isDaemon,
                      long keepAliveTime,
                      String blockPolicy,
                      boolean shutdownGraceful,
@@ -68,6 +71,8 @@ public interface RunnableManager
      * @param priority The priority of threads created by this pool. This is
      *        one of {@link Thread#MIN_PRIORITY}, {@link
      *        Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     * @param isDaemon Whether or not thread from the pool should run in daemon
+     *        mode
      * @param keepAliveTime How long should a thread be alive for new work to
      *        be done before it is GCed
      * @param blockPolicy What's the blocking policy is resources are exhausted
@@ -82,6 +87,7 @@ public interface RunnableManager
                            int maxPoolSize,
                            int minPoolSize,
                            int priority,
+                           final boolean isDaemon,
                            long keepAliveTime,
                            String blockPolicy,
                            boolean shutdownGraceful,

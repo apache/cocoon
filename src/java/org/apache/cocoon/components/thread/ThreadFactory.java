@@ -22,9 +22,24 @@ package org.apache.cocoon.components.thread;
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version CVS $Id$
  */
-public interface ThreadFactory extends EDU.oswego.cs.dl.util.concurrent.ThreadFactory
+public interface ThreadFactory
+    extends EDU.oswego.cs.dl.util.concurrent.ThreadFactory
 {
     //~ Methods ----------------------------------------------------------------
+
+    /**
+     * Set the daemon mode of created <code>Thread</code>s should have
+     *
+     * @param isDaemon Whether new {@link Thread}s should run as daemons.
+     */
+    void setDaemon( boolean isDaemon );
+
+    /**
+     * Get the daemon mode created <code>Thread</code>s will have
+     *
+     * @return Whether new {@link Thread}s should run as daemons.
+     */
+    boolean isDaemon(  );
 
     /**
      * Set the priority newly created <code>Thread</code>s should have
@@ -33,6 +48,14 @@ public interface ThreadFactory extends EDU.oswego.cs.dl.util.concurrent.ThreadFa
      *        Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
      */
     void setPriority( int priority );
+
+    /**
+     * Get the priority newly created <code>Thread</code>s will have
+     *
+     * @return One of {@link Thread#MIN_PRIORITY}, {@link
+     *         Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
+     */
+    int getPriority(  );
 
     /**
      * Create a new Thread for a {@link Runnable} command

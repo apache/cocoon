@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.thread;
 
-
 /**
  * This class is responsible to create new Thread instances to run a command.
  *
@@ -27,11 +26,40 @@ public class DefaultThreadFactory
 {
     //~ Instance fields --------------------------------------------------------
 
+    /** The daemon mode */
+    private boolean m_isDaemon = false;
+
     /** The priority of newly created Threads */
     private int m_priority = Thread.NORM_PRIORITY;
 
+    //~ Methods ----------------------------------------------------------------
+
     /**
-     * @see org.apache.cocoon.components.thread.ThreadFactory#setPriority(int)
+     * Set the isDaemon property
+     *
+     * @param isDaemon Whether or not new <code>Thread</code> should run as
+     *        daemons.
+     */
+    public void setDaemon( boolean isDaemon )
+    {
+        m_isDaemon = isDaemon;
+    }
+
+    /**
+     * Get the isDaemon property
+     *
+     * @return Whether or not new <code>Thread</code> will run as daemons.
+     */
+    public boolean isDaemon(  )
+    {
+        return m_isDaemon;
+    }
+
+    /**
+     * Set the priority newly created <code>Thread</code>s should have
+     *
+     * @param priority One of {@link Thread#MIN_PRIORITY}, {@link
+     *        Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
      */
     public void setPriority( final int priority )
     {
@@ -43,15 +71,29 @@ public class DefaultThreadFactory
         }
     }
 
-    //~ Methods ----------------------------------------------------------------
+    /**
+     * Get the priority newly created <code>Thread</code>s will have
+     *
+     * @return One of {@link Thread#MIN_PRIORITY}, {@link
+     *         Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
+     */
+    public int getPriority(  )
+    {
+        return m_priority;
+    }
 
     /**
-     * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+     * Create a new Thread for Runnable
+     *
+     * @param command The {@link Runnable}
+     *
+     * @return A new Thread instance
      */
     public Thread newThread( final Runnable command )
     {
         final Thread thread = new Thread( command );
         thread.setPriority( m_priority );
+        thread.setDaemon( m_isDaemon );
 
         return thread;
     }

@@ -44,10 +44,11 @@ import java.util.TreeSet;
  *   &lt;thread-pools&gt;
  *     &lt;thread-pool&gt;  
  *       &lt;name&gt;default&lt;/name&gt;
- *       &lt;priority&gt;NORM&lt;/priority&gt; &lt;!-- MIN | NORM | MAX --&gt; 
- *       &lt;queue-size&gt;-1&lt;/queue-size&gt; &lt;!-- &lt;0 unbounded; ==0 no queue --&gt; 
- *       &lt;max-pool-size&gt;-1&lt;/max-pool-size&gt; &lt;!-- &le;0 unbounded --&gt; 
- *       &lt;min-pool-size&gt;2&lt;/min-pool-size&gt; &lt;!-- &le;0 not allowed --&gt;
+ *       &lt;priority&gt;NORM&lt;/priority&gt;
+ *       &lt;daemon&gt;false&lt;/daemon&gt;
+ *       &lt;queue-size&gt;-1&lt;/queue-size&gt;
+ *       &lt;max-pool-size&gt;-1&lt;/max-pool-size&gt;
+ *       &lt;min-pool-size&gt;2&lt;/min-pool-size&gt;
  *       &lt;keep-alive-time-ms&gt;20000&lt;/keep-alive-time-ms&gt;
  *       &lt;block-policy&gt;RUN&lt;/block-policy&gt;
  *       &lt;shutdown-graceful&gt;false&lt;/shutdown-graceful&gt;
@@ -55,6 +56,13 @@ import java.util.TreeSet;
  *     &lt;/thread-pool&gt; 
  *   &lt;/thread-pools&gt;
  * </pre>
+ * </p>
+ * 
+ * <p>
+ * Have a look at
+ * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html,
+ * {@link EDU.oswego.cs.dl.util.concurrent.PooledExecutor} or the cocoon.xconf
+ * file for more information.
  * </p>
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
@@ -82,6 +90,9 @@ public class DefaultRunnableManager
 
     /** The default thread priority */
     public static final String DEFAULT_THREAD_PRIORITY = "NORM";
+
+    /** The default daemon mode */
+    public static final boolean DEFAULT_DAEMON_MODE = false;
 
     /** The default keep alive time */
     public static final long DEFAULT_KEEP_ALIVE_TIME = 60000L;
@@ -152,6 +163,7 @@ public class DefaultRunnableManager
                     msg.append( ",max-pool-size=" ).append( pool.getMaximumPoolSize(  ) );
                     msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
                     msg.append( ",priority=" ).append( pool.getPriority(  ) );
+                    msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
                     msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
                     msg.append( ",block-policy=\"" ).append( pool.getBlockPolicy(  ) );
                     msg.append( "\",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
@@ -165,6 +177,7 @@ public class DefaultRunnableManager
                        .append( pool.getMaximumPoolSize(  ) );
                     msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
                     msg.append( ",priority=" ).append( pool.getPriority(  ) );
+                    msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
                     msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
                     msg.append( ",block-policy=" ).append( pool.getBlockPolicy(  ) );
                     msg.append( ",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
@@ -182,7 +195,7 @@ public class DefaultRunnableManager
             createPool( DEFAULT_THREADPOOL_NAME, DEFAULT_QUEUE_SIZE,
                         DEFAULT_MAX_POOL_SIZE, DEFAULT_MIN_POOL_SIZE,
                         getPriority( DEFAULT_THREAD_PRIORITY ),
-                        DEFAULT_KEEP_ALIVE_TIME,
+                        DEFAULT_DAEMON_MODE, DEFAULT_KEEP_ALIVE_TIME,
                         DefaultThreadPool.POLICY_DEFAULT,
                         DEFAULT_SHUTDOWN_GRACEFUL, DEFAULT_SHUTDOWN_WAIT_TIME );
         }
@@ -198,6 +211,8 @@ public class DefaultRunnableManager
      * @param priority The priority of threads created by this pool. This is
      *        one of {@link Thread#MIN_PRIORITY}, {@link
      *        Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     * @param isDaemon Whether or not thread from the pool should run in daemon
+     *        mode
      * @param keepAliveTime How long should a thread be alive for new work to
      *        be done before it is GCed
      * @param blockPolicy What's the blocking policy is resources are exhausted
@@ -211,14 +226,15 @@ public class DefaultRunnableManager
                             final int maxPoolSize,
                             final int minPoolSize,
                             final int priority,
+                            final boolean isDaemon,
                             final long keepAliveTime,
                             final String blockPolicy,
                             final boolean shutdownGraceful,
                             final int shutdownWaitTime )
     {
         createPool( new DefaultThreadPool(  ), name, queueSize, maxPoolSize,
-                    minPoolSize, priority, keepAliveTime, blockPolicy,
-                    shutdownGraceful, shutdownWaitTime );
+                    minPoolSize, priority, isDaemon, keepAliveTime,
+                    blockPolicy, shutdownGraceful, shutdownWaitTime );
     }
 
     /**
@@ -230,6 +246,8 @@ public class DefaultRunnableManager
      * @param priority The priority of threads created by this pool. This is
      *        one of {@link Thread#MIN_PRIORITY}, {@link
      *        Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     * @param isDaemon Whether or not thread from the pool should run in daemon
+     *        mode
      * @param keepAliveTime How long should a thread be alive for new work to
      *        be done before it is GCed
      * @param blockPolicy What's the blocking policy is resources are exhausted
@@ -244,6 +262,7 @@ public class DefaultRunnableManager
                                   final int maxPoolSize,
                                   final int minPoolSize,
                                   final int priority,
+                                  final boolean isDaemon,
                                   final long keepAliveTime,
                                   final String blockPolicy,
                                   final boolean shutdownGraceful,
@@ -253,7 +272,7 @@ public class DefaultRunnableManager
         final String name = "anon-" + pool.hashCode(  );
 
         return createPool( pool, name, queueSize, maxPoolSize, minPoolSize,
-                           priority, keepAliveTime, blockPolicy,
+                           priority, isDaemon, keepAliveTime, blockPolicy,
                            shutdownGraceful, shutdownWaitTime );
     }
 
@@ -562,6 +581,8 @@ public class DefaultRunnableManager
 
         final String priority =
             config.getChild( "priority" ).getValue( DEFAULT_THREAD_PRIORITY );
+        final boolean isDaemon =
+            config.getChild( "daemon" ).getValueAsBoolean( DEFAULT_DAEMON_MODE );
         final long keepAliveTime =
             config.getChild( "keep-alive-time-ms" ).getValueAsLong( DEFAULT_KEEP_ALIVE_TIME );
         final String blockPolicy =
@@ -573,8 +594,8 @@ public class DefaultRunnableManager
 
         return createPool( new DefaultThreadPool(  ), name, queueSize,
                            maxPoolSize, minPoolSize, getPriority( priority ),
-                           keepAliveTime, blockPolicy, shutdownGraceful,
-                           shutdownWaitTime );
+                           isDaemon, keepAliveTime, blockPolicy,
+                           shutdownGraceful, shutdownWaitTime );
     }
 
     /**
@@ -588,6 +609,8 @@ public class DefaultRunnableManager
      * @param priority The priority of threads created by this pool. This is
      *        one of {@link Thread#MIN_PRIORITY}, {@link
      *        Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     * @param isDaemon Whether or not thread from the pool should run in daemon
+     *        mode
      * @param keepAliveTime How long should a thread be alive for new work to
      *        be done before it is GCed
      * @param blockPolicy What's the blocking policy is resources are exhausted
@@ -604,6 +627,7 @@ public class DefaultRunnableManager
                                           final int maxPoolSize,
                                           final int minPoolSize,
                                           final int priority,
+                                          final boolean isDaemon,
                                           final long keepAliveTime,
                                           final String blockPolicy,
                                           final boolean shutdownGraceful,
@@ -629,6 +653,7 @@ public class DefaultRunnableManager
         }
 
         factory.setPriority( priority );
+        factory.setDaemon( isDaemon );
         pool.setThreadFactory( factory );
         pool.setQueue( queueSize );
         pool.setMaximumPoolSize( maxPoolSize );
