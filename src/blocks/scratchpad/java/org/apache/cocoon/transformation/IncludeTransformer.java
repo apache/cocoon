@@ -17,6 +17,9 @@ package org.apache.cocoon.transformation;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
@@ -28,6 +31,7 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.excalibur.source.Source;
@@ -44,8 +48,31 @@ import org.xml.sax.SAXException;
  * 
  * <p>Example:</p>
  *
- * <p><code>&lt;incl:include xmlns="http://apache.org/cocoon/include/1.0"
- * src="cocoon://path/to/include"/&gt;</code></p>
+ * <pre>
+ * &lt;incl:include xmlns:incl="http://apache.org/cocoon/include/1.0"
+ *               src="cocoon://path/to/include"/&gt;
+ * </pre>
+ *
+ * <p>Parameters to be passed to the included sources can be specified in two ways:
+ * the first one is to encode them onto the source itelf, for example:</p>
+ * 
+ * <pre>
+ * &lt;incl:include xmlns:incl="http://apache.org/cocoon/include/1.0"
+ *               src="cocoon://path/to/include?paramA=valueA&amp;paramB=valueB"/&gt;
+ * </pre>
+ *
+ * <p>Another approach allows the encoding of parameters to be done automatically by
+ * the transformer, so that one can easily pass parameter name or values containing
+ * the <code>&</code> (amperstand) or <code>=</code> (equals) character, which are
+ * reserved characters in URIs. An example:</p>
+ * 
+ * <pre>
+ * &lt;incl:include xmlns:incl="http://apache.org/cocoon/include/1.0"
+ *               src="cocoon://path/to/include"&gt;
+ *   &lt;incl:parameter name="firstParameterName" value="firstParameterValue"/&gt;
+ *   &lt;incl:parameter name="other&amp;Para=Name" value="other=Para&amp;Value"/&gt;
+ * &lt;/incl:include&gt;
+ * </pre>
  * 
  * <p>An interesting feature of this {@link Transformer} is that it implements the
  * {@link CacheableProcessingComponent} interface and provides full support for
@@ -63,15 +90,40 @@ import org.xml.sax.SAXException;
 public class IncludeTransformer extends AbstractTransformer 
 implements Serviceable, Transformer, CacheableProcessingComponent {
 
+    /** <p>The namespace URI of the elements recognized by this transformer.</p> */
     private static final String NS_URI = "http://apache.org/cocoon/include/1.0";
+    /** <p>The name of the element triggering inclusion of sources.</p> */
     private static final String INCLUDE_ELEMENT = "include";
+    /** <p>The name of the element defining an included subrequest parameter.</p> */
+    private static final String PARAMETER_ELEMENT = "parameter";
+    /** <p>The name of the attribute indicating the included source URI.</p> */
     private static final String SRC_ATTRIBUTE = "src";
+    /** <p>The name of the attribute indicating the parameter name.</p> */
+    private static final String NAME_ATTRIBUTE = "name";
+    /** <p>The name of the attribute indicating the parameter name.</p> */
+    private static final String VALUE_ATTRIBUTE = "value";
+    
+    /** <p>The encoding to use for parameter names and values.</p> */
+    private static final String ENCODING = "US-ASCII";
 
+    /** <p>The {@link ServiceManager} instance associated with this instance.</p> */
     private ServiceManager m_manager;
+    /** <p>The {@link SourceResolver} used to resolve included URIs.</p> */
     private SourceResolver m_resolver;
+    /** <p>The {@link SourceValidity} instance associated with this request.</p> */
     private MultiSourceValidity m_validity;
+    /** <p>A {@link NamespacesTable} used to filter namespace declarations.</p> */
     private NamespacesTable m_namespaces;
 
+    /** <p>A {@link Map} of the parameters to supply to the included source.</p> */
+    private Map x_parameters;
+    /** <p>The source to be included declared in an include element.</p> */
+    private String x_source; 
+    /** <p>The current parameter name captured.</p> */
+    private String x_parameter;
+    /** <p>The current parameter value (as a {@link StringBuffer}).</p> */
+    private StringBuffer x_value;
+    
     /**
      * <p>Create a new {@link IncludeTransformer} instance.</p>
      */
@@ -96,9 +148,11 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
      */
     public void setup(SourceResolver resolver, Map om, String src, Parameters parameters) 
     throws ProcessingException, SAXException, IOException {
+        this.m_namespaces = new NamespacesTable();
         this.m_resolver = resolver;
         this.m_validity = null;
-        this.m_namespaces = new NamespacesTable();
+        this.x_parameters = null;
+        this.x_value = null;
     }
 
     /**
@@ -107,10 +161,12 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
-        super.recycle();
+        this.m_namespaces = new NamespacesTable();
         this.m_resolver = null;
         this.m_validity = null;
-        this.m_namespaces = new NamespacesTable();
+        this.x_parameters = null;
+        this.x_value = null;
+        super.recycle();
     }
 
     /**
@@ -178,39 +234,93 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
     }
 
     /**
+     * <p>Receive notification of characters.</p>
+     *
+     * @see org.xml.sax.ContentHandler#characters(char[], int, int)
+     */
+    public void characters(char data[], int offset, int length)
+    throws SAXException {
+        /* If we have a parameter value to add to, let's add this chunk */
+        if (this.x_parameter != null) {
+            if (this.x_value == null) this.x_value = new StringBuffer();
+            this.x_value.append(data, offset, length);
+
+            /* Forward this only if we are not inside an include tag */
+        } else if (this.x_source == null) {
+            super.characters(data, offset, length);
+        }
+    }
+
+    /**
      * <p>Receive notification of the start of an element.</p>
      *
-     * @see org.xml.sax.ContentHandler#startElement(String, String, String, org.xml.sax.Attributes)
+     * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)
      */
     public void startElement(String uri, String localName, String qName, Attributes atts) 
     throws SAXException {
+        /* Check the namespace declaration */
         if (NS_URI.equals(uri)) {
+            /* Inclusion will not happen here but when we close this tag */
             if (INCLUDE_ELEMENT.equals(localName)) {
-                String src = atts.getValue(SRC_ATTRIBUTE);
-                Source source = null;
-                try {
-                    source = m_resolver.resolveURI(src);
-                    if (m_validity != null) {
-                        m_validity.addSource(source);
-                    }
-                    SourceUtil.toSAX(m_manager, source, "text/xml", 
-                            new IncludeXMLConsumer(super.contentHandler));
+                /* Check before we include (we don't want nested stuff) */
+                if (this.x_source != null) {
+                    throw new SAXException("Invalid include nested in another");
                 }
-                catch (IOException e) {
-                    throw new SAXException(e);
+
+                /* Remember the source we are trying to include */ 
+                this.x_source = atts.getValue(SRC_ATTRIBUTE);
+                if ((this.x_source == null) || (this.x_source.length() == 0)) {
+                    throw new SAXException("Attribute \"" + SRC_ATTRIBUTE
+                                           + "\" not specified");
                 }
-                catch (ProcessingException e) {
-                    throw new SAXException(e);
-                }
-                finally {
-                    if (source != null) {
-                        m_resolver.release(source);
-                    }
-                }
+                
+                /* Whatever list of parameters we got before, we wipe it! */
+                this.x_parameters = null;
+                this.x_value = null;
+                this.x_parameter = null;
+
+                /* Done with this element */
+                return;
             }
-        } else {
-            super.startElement(uri, localName, qName, atts);
+            
+            /* If this is a parameter, then make sure we prepare. */
+            if (PARAMETER_ELEMENT.equals(localName)) {
+                /* Check if we are in the right context */
+                if (this.x_source == null) {
+                    throw new SAXException("Parameter specified outside of include");
+                }
+                if (this.x_parameter != null) {
+                    throw new SAXException("Invalid parameter nested in another");
+                }
+
+                /* Get and process the parameter name */
+                this.x_parameter = atts.getValue(NAME_ATTRIBUTE);
+                if ((this.x_parameter == null) || (this.x_parameter.length() == 0)) {
+                    throw new SAXException("Attribute \"" + NAME_ATTRIBUTE 
+                                           + "\" not specified");
+                }
+
+                /* Make some room for the parameter value */
+                String value = atts.getValue(VALUE_ATTRIBUTE);
+                if (value != null) this.x_value = new StringBuffer(value);
+
+                /* Done with this element */
+                return;
+            }
+            
+            /* We don't have a clue of why we got here (wrong element?) */
+            if (this.getLogger().isWarnEnabled()) {
+                this.getLogger().warn("Unknown element \"" + localName + "\"");
+            }
+            return;
         }
+
+        /* Not our namespace, simply check and pass this element on! */
+        if (this.x_source == null) {
+            super.startElement(uri, localName, qName, atts);
+            return;
+        }
+        throw new SAXException("Element <" + qName + "/> invalid inside include");
     }
 
     /**
@@ -220,7 +330,69 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
      */
     public void endElement(String uri, String localName, String qName)
     throws SAXException {
-        if (!NS_URI.equals(uri)) {
+        /* Check the namespace declaration */
+        if (NS_URI.equals(uri)) {
+            
+            /* Inclusion will happen here, when we close the include element */
+            if (INCLUDE_ELEMENT.equals(localName)) {
+
+                /* Get the source discovered opening the element and include */
+                Source source = null;
+                try {
+                    if (this.x_parameter != null) {
+                        this.x_source = NetUtils.parameterize(this.x_source,
+                                                              this.x_parameters);
+                    }
+                    source = this.m_resolver.resolveURI(this.x_source);
+                    if (this.m_validity != null) this.m_validity.addSource(source);
+                    SourceUtil.toSAX(this.m_manager, source, "text/xml", 
+                                     new IncludeXMLConsumer(super.contentHandler));
+                } catch (IOException e) {
+                    /* Something bad happenend processing a stream */
+                    throw new SAXException(e);
+                } catch (ProcessingException e) {
+                    /* Something bad happened processing a pipeline */
+                    throw new SAXException(e);
+                } finally {
+                    /* In any case, make sure we release the source */
+                    if (source != null) this.m_resolver.release(source);
+                }
+                
+                /* We are done with the include element */
+                this.x_parameters = null;
+                this.x_value = null;
+                this.x_parameter = null;
+                this.x_source = null;
+                return;
+            }
+
+            /* Addition of parameters happens here (so that we can capture chars) */
+            if (PARAMETER_ELEMENT.equals(localName)) {
+                String value = (this.x_value != null? this.x_value.toString(): "");
+
+                /* Store the parameter name and value */
+                try {
+                    /* 
+                     * Note: the parameter name and value are URL encoded, so that
+                     * weird characters such as "&" or "=" (have special meaning)
+                     * are passed through flawlessly.
+                     */
+                    if (this.x_parameters == null) this.x_parameters = new HashMap();
+                    this.x_parameters.put(URLEncoder.encode(this.x_parameter, ENCODING),
+                                          URLEncoder.encode(value, ENCODING));
+                } catch (UnsupportedEncodingException e) {
+                    throw new SAXException("Your platform does not support the "
+                                           + ENCODING + " encoding", e);
+                }
+                
+                /* We are done with this parameter element */
+                this.x_value = null;
+                this.x_parameter = null;
+                return;
+            }
+            
+        } else {
+            /* This is not our namespace, pass the event on! */
             super.endElement(uri, localName, qName);
         }
     }
@@ -231,8 +403,10 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
      * @see CacheableProcessingComponent#getKey()
      */
     public Serializable getKey() {
-        // FIXME: In case of including "cocoon://" or other dynamic sources
-        // key has to be dynamic.
+        /*
+         * FIXME: In case of including "cocoon://" or other dynamic sources
+         * key has to be dynamic.
+         */
         return "I";
     }
 
