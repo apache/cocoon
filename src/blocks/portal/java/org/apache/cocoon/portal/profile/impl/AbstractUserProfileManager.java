@@ -64,9 +64,9 @@ public abstract class AbstractUserProfileManager
         PortalService service = null;
         ServiceSelector adapterSelector = null;
         try {
-            final String layoutKey = service.getDefaultLayoutKey();
             adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            final String layoutKey = service.getDefaultLayoutKey();
 
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute("CopletInstanceData:"+layoutKey);
             if ( copletInstanceDataManager != null ) {
