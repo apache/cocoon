@@ -49,7 +49,7 @@ import org.outerj.expression.ExpressionException;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.10 2004/05/07 16:43:43 mpo Exp $
+ * @version CVS $Id: AggregateField.java,v 1.11 2004/06/29 13:06:04 sylvain Exp $
  */
 public class AggregateField extends Field implements ContainerWidget {
 
@@ -98,7 +98,7 @@ public class AggregateField extends Field implements ContainerWidget {
         if (newEnteredValue != null) {
             // There is one aggregated entered value. Read it and split it.
             super.readFromRequest(formContext);
-            if (needsParse) {
+            if (this.valueState == VALUE_UNPARSED) {
                 setFieldsValues(enteredValue);
             }
         } else {
@@ -107,7 +107,9 @@ public class AggregateField extends Field implements ContainerWidget {
             for (Iterator i = fields.iterator(); i.hasNext();) {
                 Field field = (Field)i.next();
                 field.readFromRequest(formContext);
-                needsParse |= field.needsParse;
+                if (field.valueState == VALUE_UNPARSED) {
+                    this.valueState = VALUE_UNPARSED;
+                }
             }
             if (needsParse) {
                 combineFields();
@@ -117,7 +119,7 @@ public class AggregateField extends Field implements ContainerWidget {
 
     public void setValue(Object newValue) {
         super.setValue(newValue);
-        if (needsValidate) {
+        if (this.valueState == VALUE_PARSED) {
             setFieldsValues(enteredValue);
         }
     }
