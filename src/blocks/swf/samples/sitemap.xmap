@@ -2,7 +2,7 @@
 
 <!--
     sitemap for SWF samples setup contributed by joerg.heinicke@gmx.de
-    $Id: sitemap.xmap,v 1.1 2003/05/03 07:36:02 bdelacretaz Exp $
+    $Id: sitemap.xmap,v 1.2 2003/05/05 23:46:46 vgritsenko Exp $
 -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
