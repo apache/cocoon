@@ -663,7 +663,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
 
 
     final static String NS = 
-        "http://cocoon.apache.org/templates/jx/1.0";
+        "http://apache.org/cocoon/templates/jx/1.0";
 
     final static String TEMPLATE = "template";
     final static String FOR_EACH = "forEach";
