@@ -795,6 +795,7 @@ public class DefaultRunnableManager
                 m_commandStack.add( this );
                 m_commandStack.notifyAll(  );
             }
+            Thread.yield(); // Give others a chance to run
         }
 
         //~ Methods ------------------------------------------------------------
