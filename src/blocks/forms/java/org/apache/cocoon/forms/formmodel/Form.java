@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.6 2004/04/09 16:43:21 mpo Exp $
+ * @version CVS $Id: Form.java,v 1.7 2004/04/13 21:29:48 sylvain Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -47,12 +47,16 @@ public class Form extends AbstractContainerWidget {
     
     private Boolean endProcessing;
     private Locale locale = Locale.getDefault();
-    private CursorableLinkedList events;
     private FormHandler formHandler;
     private Widget submitWidget;
     private ProcessingPhase phase = ProcessingPhase.LOAD_MODEL;
     private boolean isValid = false;
     private ProcessingPhaseListener listener;
+
+    //In the "readFromRequest" phase, events are buffered to ensure that all widgets had the chance
+    //to read their value before events get fired.
+    private boolean bufferEvents = false;
+    private CursorableLinkedList events;
 
     public Form(FormDefinition definition) {
         this.definition = definition;
@@ -70,12 +74,17 @@ public class Form extends AbstractContainerWidget {
      */
     public void addWidgetEvent(WidgetEvent event) {
         
-        if (this.events == null) {
-            this.events = new CursorableLinkedList();
+        if (this.bufferEvents) {
+            if (this.events == null) {
+                this.events = new CursorableLinkedList();
+            }
+            
+            // FIXME: limit the number of events to detect recursive event loops ?
+            this.events.add(event);
+        } else {
+            // Send it right now
+            event.getSourceWidget().broadcastEvent(event);
         }
-        
-        // FIXME: limit the number of events to detect recursive event loops ?
-        this.events.add(event);
     }
     
     /**
@@ -213,8 +222,19 @@ public class Form extends AbstractContainerWidget {
             setSubmitWidget(submit);
         }
         
-        doReadFromRequest(formContext);
-        fireWidgetEvents();
+        try {
+            // Start buffering events
+            this.bufferEvents = true;
+            
+            doReadFromRequest(formContext);
+            
+            // Fire events, still buffering them: this ensures they will be handled in the same
+            // order as they were added.
+            fireWidgetEvents();
+        } finally {
+            // No need for buffering in the following phases
+            this.bufferEvents = false;
+        }
         
         // Notify the end of the current phase
         if (this.listener != null) {
