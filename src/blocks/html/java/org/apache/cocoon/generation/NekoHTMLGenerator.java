@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  * The neko html generator reads HTML from a source, converts it to XHTML
  * and generates SAX Events. It uses the NekoHTML library to do this.
  * 
- * @cocoon.sitemap.component.name   html
+ * @cocoon.sitemap.component.name   nekohtml
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.nekohtml
  * @cocoon.sitemap.component.documentation.caching
@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: NekoHTMLGenerator.java,v 1.1 2004/07/08 10:11:41 upayavira Exp $
+ * @version CVS $Id: NekoHTMLGenerator.java,v 1.2 2004/07/08 12:04:08 upayavira Exp $
  */
 public class NekoHTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -93,7 +93,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     /** XPath Processor */
     private XPathProcessor processor = null;
 
-    /** JTidy properties */
+    /** Neko properties */
     private Properties properties;
 
     public void service(ServiceManager manager)
