@@ -67,10 +67,9 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.Logger;
 
-import org.apache.excalibur.xml.xpath.XPathProcessor;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -88,14 +87,16 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.3 2003/11/27 02:51:58 vgritsenko Exp $
  */
-public class XMLResourceBundle
-    extends ResourceBundle
-    implements Bundle {
+public class XMLResourceBundle extends ResourceBundle
+                               implements Bundle {
 
     /** DOM factory */
-    protected static DocumentBuilderFactory docfactory = DocumentBuilderFactory.newInstance();
+    protected static final DocumentBuilderFactory docfactory = DocumentBuilderFactory.newInstance();
+
+    /** Logger */
+    protected Logger logger;
 
     /** Cache for storing string values for existing XPaths */
     private Hashtable cache = new Hashtable();
@@ -115,24 +116,20 @@ public class XMLResourceBundle
     /** Parent of the current bundle */
     protected XMLResourceBundle parent = null;
 
-    /** Logger */
-    protected Logger logger;
-
     /** Component Manager */
     protected ComponentManager manager = null;
 
     /** XPath Processor */
     private XPathProcessor processor = null;
 
+
     /**
      * Compose this instance
      *
      * @param manager The <code>ComponentManager</code> instance
-     *
      * @throws ComponentException if XPath processor is not found
      */
-    public void compose(ComponentManager manager)
-        throws ComponentException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.processor = (XPathProcessor) this.manager.lookup(XPathProcessor.ROLE);
     }
@@ -168,7 +165,7 @@ public class XMLResourceBundle
      * @throws SAXException if an error occurs while parsing the file
      */
     public void init(String name, String fileName, Locale locale, XMLResourceBundle parent, boolean cacheAtStartup)
-        throws IOException, ParserConfigurationException, SAXException {
+    throws IOException, ParserConfigurationException, SAXException {
         if (logger.isDebugEnabled()) {
             logger.debug("Constructing XMLResourceBundle: " + name + ", locale: " + locale);
         }
@@ -196,7 +193,7 @@ public class XMLResourceBundle
      * @exception SAXException if an error occurs while parsing the file
      */
     protected synchronized Document loadResourceBundle(String fileName)
-        throws IOException, ParserConfigurationException, SAXException {
+    throws IOException, ParserConfigurationException, SAXException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -206,7 +203,6 @@ public class XMLResourceBundle
         try {
             resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
             source = resolver.resolveURI(fileName);
-
             return builder.parse(new InputSource(source.getInputStream()));
         } catch (Exception e) {
             logger.warn("XMLResourceBundle: Non excalibur-source " + fileName, e);
@@ -254,10 +250,6 @@ public class XMLResourceBundle
      * @return true if contains, false otherwise
      */
     private boolean cacheNotFoundContains(String key) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(name + ": cache_not_found contains: " + key);
-        }
-
         return cacheNotFound.containsKey(key);
     }
 
@@ -268,10 +260,6 @@ public class XMLResourceBundle
      * @param value the value
      */
     private void cacheKey(String key, Node value) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(name + ": caching: " + key + " = " + value.toString());
-        }
-
         cache.put(key, value);
     }
 
@@ -281,10 +269,6 @@ public class XMLResourceBundle
      * @param key the key
      */
     private void cacheNotFoundKey(String key) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(name + ": caching not_found: " + key);
-        }
-
         cacheNotFound.put(key, "");
     }
 
@@ -292,22 +276,10 @@ public class XMLResourceBundle
      * Gets the value by the key from the &quot;key-cache&quot;.
      *
      * @param key the key
-     *
      * @return the value
      */
     private Node getFromCache(String key) {
-        Object value;
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(name + ": returning from cache: " + key);
-        }
-
-        value = cache.get(key);
-
-        if (value == null) {
-            logger.debug("Could not find!");
-        }
-
+        Object value = cache.get(key);
         return (Node)value;
     }
 
@@ -333,13 +305,11 @@ public class XMLResourceBundle
                 StringBuffer pathToChild = new StringBuffer(pathToParent).append('/').append(child.getNodeName());
 
                 NamedNodeMap attrs = child.getAttributes();
-
                 if (attrs != null) {
-                    Node temp = null;
                     int attrnum = attrs.getLength();
 
                     for (int j = 0; j < attrnum; j++) {
-                        temp = attrs.item(j);
+                        Node temp = attrs.item(j);
 
                         if (!temp.getNodeName().equalsIgnoreCase("xml:lang")) {
                             pathToChild.append("[@").append(temp.getNodeName()).append("='").append(temp.getNodeValue())
@@ -361,7 +331,6 @@ public class XMLResourceBundle
      * Get value by key.
      *
      * @param key the key
-     *
      * @return the value
      */
     private Object _getObject(String key) {
@@ -370,7 +339,6 @@ public class XMLResourceBundle
         }
 
         Node value = getFromCache(key);
-
         if (value == null && !cacheNotFoundContains(key)) {
             if (doc != null) {
                 value = (Node)_getObject(this.doc.getDocumentElement(), key);
@@ -432,7 +400,7 @@ public class XMLResourceBundle
      * @throws MissingResourceException on error
      */
     protected Object handleGetObject(String key)
-        throws MissingResourceException {
+    throws MissingResourceException {
         return _getObject(key);
     }
 
