@@ -41,17 +41,9 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-22 21:56:35 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-31 15:21:37 $
  */
-public class XSPMarkupLanguage extends AbstractMarkupLanguage implements Loggable {
-    private Logger log;
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
+public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
     /**
     * store the dependencies.
@@ -215,11 +207,11 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage implements Loggabl
             this.language = language;
         }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
+        public void setLogger(Logger logger) {
+            if (this.log == null) {
+                this.log = logger;
+            }
         }
-    }
 
         /**
          * @see org.xml.sax.ContentHandler
@@ -345,11 +337,11 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage implements Loggabl
             super(logicsheetMarkupGenerator, resolver);
         }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
+        public void setLogger(Logger logger) {
+            if (this.log == null) {
+                this.log = logger;
+            }
         }
-    }
 
         /**
          * @see org.xml.sax.ContentHandler
