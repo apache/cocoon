@@ -20,6 +20,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Cookie;
@@ -34,7 +35,7 @@ import org.apache.commons.lang.SystemUtils;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.12 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.13 2004/07/12 13:27:57 cziegeler Exp $
  */
 
 /*
@@ -103,7 +104,23 @@ public class CommandLineRequest implements Request {
         this.headers = headers;
     }
 
-    public Object get(String name) { return getAttribute(name); }
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
+    public Object get(String name) { 
+        String[] values = this.getParameterValues(name);
+        if (values == null || values.length == 0) {
+            return null;
+        } else if (values.length == 1) {
+            return values[0];
+        } else {
+            Vector vect = new Vector(values.length);
+            for (int i = 0; i < values.length; i++) {
+                vect.add(values[i]);
+            }
+            return vect;
+        }
+    }
 
     public String getContextPath() { return contextPath; }
     public String getServletPath() { return servletPath; }

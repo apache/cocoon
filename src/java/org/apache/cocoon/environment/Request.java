@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.10 2004/07/12 06:33:26 cziegeler Exp $
+ * @version CVS $Id: Request.java,v 1.11 2004/07/12 13:27:57 cziegeler Exp $
  *
  */
 
@@ -58,15 +58,23 @@ public interface Request {
 
     /**
      *
-     * Returns the value of the named attribute as an <code>Object</code>,
-     * or <code>null</code> if no attribute of the given name exists.
-     *
+     * Returns the value of the named parameter as an <code>Object</code>,
+     * or <code>null</code> if no parameter of the given name exists.
+     * Basically, this method is similar to {@link #getParameter(String)},
+     * but it returns an object instead. 
+     * This is useful when special processing has been made on these parameters,
+     * for example for file uploads. In this case you get an object 
+     * representing the uploaded file.
+     * If the parameters have not been processed, you either get a String
+     * object if the parameter has one value, or a Collection of Strings
+     * if the parameter has more than one value.
+     * 
      * @param name        a <code>String</code> specifying the name of
-     *                        the attribute
+     *                        the parameter
      *
      * @return                an <code>Object</code> containing the value
-     *                        of the attribute, or <code>null</code> if
-     *                        the attribute does not exist
+     *                        of the parameter, or <code>null</code> if
+     *                        the parameter does not exist
      *
      */
     Object get(String name);
