@@ -7,18 +7,13 @@
  *****************************************************************************/
 package org.apache.cocoon;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.xml.sax.SAXException;
-
 import org.apache.cocoon.environment.Environment;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:27 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-12 05:55:18 $
  */
 public interface Processor {
     /**

@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.StringBufferInputStream;
+import java.io.BufferedInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,7 +172,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-03-12 04:38:31 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-03-12 05:55:19 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -265,11 +266,11 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
 
                 if (attr instanceof File) {
                     File asciiFile = (File) attr;
-                    asciiStream = new FileInputStream(asciiFile);
+                    asciiStream = new BufferedInputStream(new FileInputStream(asciiFile));
                     length = (int) asciiFile.length();
                 } else {
                     String asciiText = (String) attr;
-                    asciiStream = new StringBufferInputStream(asciiText);
+                    asciiStream = new BufferedInputStream(new StringBufferInputStream(asciiText));
                     length = asciiText.length();
                 }
 
@@ -280,7 +281,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 break;
             case Types.BLOB:
                 File binaryFile = (File) request.get(attribute);
-                FileInputStream binaryStream = new FileInputStream(binaryFile);
+                InputStream binaryStream = new BufferedInputStream(new FileInputStream(binaryFile));
                 statement.setBinaryStream(position, binaryStream, (int) binaryFile.length());
                 break;
             case Types.TINYINT:
@@ -320,7 +321,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 // Upload an image (just like binary), but cache attributes
                 Parameters param = new Parameters();
                 File imageFile = (File) request.get(attribute);
-                FileInputStream imageStream = new FileInputStream(imageFile);
+                InputStream imageStream = new BufferedInputStream(new FileInputStream(imageFile));
                 statement.setBinaryStream(position, imageStream, (int) imageFile.length());
 
                 param.setParameter("image-size", Long.toString(imageFile.length()));

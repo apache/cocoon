@@ -10,7 +10,6 @@ package org.apache.cocoon.sitemap;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-12 04:39:07 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-12 05:55:24 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 

@@ -8,10 +8,10 @@
 package org.apache.cocoon.reading;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-03 17:17:21 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 05:55:23 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -114,7 +114,7 @@ public class ResourceReader extends AbstractReader implements Composer {
                 }
 
                 len = file.length();
-                is = new FileInputStream (file);
+                is = new BufferedInputStream(new FileInputStream (file));
             }
         } catch (SAXException se) {
             getLogger().error("ResourceReader: error resolving source \"" + source + "\"", se);

@@ -8,6 +8,7 @@
 package org.apache.cocoon.reading;
 
 import java.io.OutputStream;
+import java.io.BufferedOutputStream;
 import java.util.Map;
 
 import org.xml.sax.EntityResolver;
@@ -19,7 +20,7 @@ import org.apache.avalon.Poolable;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-22 17:10:41 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-12 05:55:23 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Poolable, Reader {
     /** The current <code>EntityResolver</code>. */
@@ -48,7 +49,7 @@ public abstract class AbstractReader extends AbstractLoggable implements Poolabl
      * Set the <code>OutputStream</code>
      */
     public void setOutputStream(OutputStream out) {
-        this.out=out;
+        this.out = new BufferedOutputStream(out);
     }
 
     /**

@@ -11,7 +11,6 @@ package org.apache.cocoon.util.url.context;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import javax.servlet.ServletContext;
@@ -21,7 +20,7 @@ import javax.servlet.ServletContext;
  *
  * @author: <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author: <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-31 15:03:59 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 05:55:25 $
  */
 public class Handler extends URLStreamHandler {
 

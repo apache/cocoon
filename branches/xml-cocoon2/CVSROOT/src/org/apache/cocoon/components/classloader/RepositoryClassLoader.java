@@ -11,7 +11,6 @@ import java.util.Vector;
 import java.util.Iterator;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import java.io.IOException;
 
@@ -34,7 +33,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-14 11:39:34 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 05:55:19 $
  */
 public class RepositoryClassLoader extends URLClassLoader implements Loggable {
 

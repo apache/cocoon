@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.util.Stack;
 import java.util.Map;
 import org.xml.sax.Attributes;
@@ -49,7 +51,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-23 14:01:28 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 05:55:25 $ $Author: bloritsch $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
 
@@ -198,7 +200,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 ((Loggable)object).setLogger(getLogger());
             }
             if (object instanceof Reader) {
-                Reader reader = (Reader)object;
+                Reader reader = new BufferedReader((Reader)object);
                 int read;
                 char ary[] = new char[1024];
                 if (reader != null) {
@@ -209,7 +211,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 }
             } else if (object instanceof InputStream) {
                 InputStream input = (InputStream)object;
-                InputStreamReader reader = new InputStreamReader(input);
+                Reader reader = new BufferedReader(new InputStreamReader(input));
                 int read;
                 char ary[] = new char[1024];
                 if (reader != null) {
@@ -234,9 +236,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 ((Loggable)object).setLogger(getLogger());
             }
             if (object instanceof Reader) {
-                input = new InputSource((Reader)object);
+                input = new InputSource(new BufferedReader((Reader)object));
             } else if (object instanceof InputStream) {
-                input = new InputSource((InputStream)object);
+                input = new InputSource(new BufferedInputStream((InputStream)object));
             } else {
                 throw new SAXException("Unknown object type: "+object);
             }
@@ -247,6 +249,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 parser.setContentHandler(builder);
                 parser.setLexicalHandler(builder);
                 parser.parse(input);
+
                 Document document = builder.getDocument();
                 try {
                     NodeList list = XPathAPI.selectNodeList(document,xpath);

@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
@@ -44,7 +46,7 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.7 $ $Date: 2001-02-12 13:30:43 $
+ * @version $Revision: 1.1.2.8 $ $Date: 2001-03-12 05:55:19 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {
@@ -217,22 +219,22 @@ public class XSPUtil {
 
     public static String getFileContents(String filename) throws IOException {
         return getContents(
-            new FileReader(filename));
+            new BufferedReader(new FileReader(filename)));
     }
 
     public static String getFileContents(String filename, String encoding) throws IOException {
         return getContents(
-            new FileInputStream(filename), encoding);
+            new BufferedInputStream(new FileInputStream(filename)), encoding);
     }
 
     public static String getContents(InputStream in, String encoding) throws IOException {
         return getContents(
-            new InputStreamReader(in, encoding));
+            new BufferedReader(new InputStreamReader(in, encoding)));
     }
 
     public static String getContents(InputStream in) throws IOException {
         return getContents(
-            new InputStreamReader(in));
+            new BufferedReader(new InputStreamReader(in)));
     }
 
     public static String getContents(Reader reader) throws IOException {

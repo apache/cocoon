@@ -10,7 +10,6 @@ package org.apache.cocoon.sitemap;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-03-12 05:18:07 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-12 05:55:23 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;

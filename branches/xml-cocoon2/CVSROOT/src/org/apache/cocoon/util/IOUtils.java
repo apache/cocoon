@@ -12,8 +12,10 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 
 import java.text.Collator;
@@ -28,7 +30,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-02 22:05:55 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-12 05:55:25 $
  */
 public class IOUtils {
 
@@ -86,7 +88,7 @@ public class IOUtils {
     throws IOException
   {
     FileOutputStream fos = new FileOutputStream(file);
-    ObjectOutputStream oos = new ObjectOutputStream(fos);
+    ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(fos));
     oos.writeObject(object);
     oos.flush();
     fos.close();
@@ -103,7 +105,7 @@ public class IOUtils {
    throws IOException, ClassNotFoundException
   {
     FileInputStream fis = new FileInputStream(file);
-    ObjectInputStream ois = new ObjectInputStream(fis);
+    ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(fis));
     Object object = ois.readObject();
     fis.close();
     return object;

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.BufferedOutputStream;
 import java.io.PrintStream;
 import java.io.OutputStream;
 
@@ -49,7 +50,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.25 $ $Date: 2001-02-24 20:04:18 $
+ * @version CVS $Revision: 1.1.4.26 $ $Date: 2001-03-12 05:55:18 $
  */
 
 public class Main {
@@ -367,7 +368,7 @@ public class Main {
         
         String filename = mangle(uri);
         File file = IOUtils.createFile(destDir, filename);
-        FileOutputStream output = new FileOutputStream(file);
+        OutputStream output = new BufferedOutputStream(new FileOutputStream(file));
         String type = getPage(uri, translatedLinks, output);
         output.close();
 
@@ -393,7 +394,7 @@ public class Main {
     }
 
     private void resourceUnavailable(File file) throws IOException {
-        PrintStream out = new PrintStream(new FileOutputStream(file));
+        PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(file)));
         out.println(
            "<html><head><title>Page Not Available</title></head>" +
            "<body><h1 align=\"center\">Page Not Available</h1>" +

@@ -8,7 +8,6 @@
 
 package org.apache.cocoon.sitemap;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.IOException;
 
@@ -30,7 +29,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-15 20:30:28 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 05:55:24 $
  */
 
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {

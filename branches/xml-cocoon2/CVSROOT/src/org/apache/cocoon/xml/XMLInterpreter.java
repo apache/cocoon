@@ -29,7 +29,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-23 17:20:45 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 05:55:27 $
  */
 
 public final class XMLInterpreter implements XMLReader {
@@ -102,7 +102,7 @@ public final class XMLInterpreter implements XMLReader {
     }
 
     public void parse(java.lang.String systemId) throws IOException, SAXException {
-        parse(new FileInputStream(systemId));
+        parse(new BufferedInputStream(new FileInputStream(systemId)));
     }
 
     public void parse(InputSource in) throws IOException, SAXException {

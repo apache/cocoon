@@ -11,7 +11,6 @@ package org.apache.cocoon.sitemap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import java.net.URL;
 
@@ -41,7 +40,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-03-12 04:39:06 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-12 05:55:23 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor {
     private Context context;

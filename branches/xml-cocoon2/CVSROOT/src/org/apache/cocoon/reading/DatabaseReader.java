@@ -29,7 +29,7 @@ import java.sql.Blob;
 import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Date;
 

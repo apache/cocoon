@@ -9,10 +9,8 @@
 package org.apache.cocoon;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -49,7 +47,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.62 $ $Date: 2001-03-12 05:17:59 $
+ * @version CVS $Revision: 1.4.2.63 $ $Date: 2001-03-12 05:55:17 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */

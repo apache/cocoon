@@ -9,6 +9,7 @@
 package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
+import java.io.BufferedOutputStream;
 import org.apache.avalon.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 
@@ -16,7 +17,7 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-16 22:07:42 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-12 05:55:23 $
  */
 
 public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer, Recyclable {
@@ -30,7 +31,7 @@ public abstract class AbstractSerializer extends AbstractXMLPipe implements Seri
      * Set the <code>OutputStream</code> where the XML should be serialized.
      */
     public void setOutputStream(OutputStream out) {
-        this.output = out;
+        this.output = new BufferedOutputStream(out);
     }
 
     /**

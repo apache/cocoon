@@ -30,8 +30,10 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.BufferedReader;
 import java.util.Map;
 import java.util.Hashtable;
 
@@ -318,9 +320,9 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
             ((Loggable)object).setLogger(getLogger());
         }
         if (object instanceof Reader) {
-            input = new InputSource((Reader)(object));
+            input = new InputSource(new BufferedReader((Reader)(object)));
         } else if (object instanceof InputStream) {
-            input = new InputSource((InputStream)(object));
+            input = new InputSource(new BufferedInputStream((InputStream)(object)));
         } else {
             throw new SAXException("Unknown object type: " + object);
         }
