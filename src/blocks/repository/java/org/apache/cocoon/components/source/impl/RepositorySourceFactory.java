@@ -36,8 +36,6 @@ import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Creates RepositorySources.
- * 
- * @author <a href="unico@apache.org">Unico Hommes</a>
  */
 public class RepositorySourceFactory extends AbstractLogEnabled
 implements SourceFactory, Serviceable, Configurable, ThreadSafe {
@@ -46,7 +44,6 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     private SourceResolver m_resolver;
     private SourceDescriptor m_descriptor;
     private String m_name;
-    private boolean m_useEventCaching;
     private boolean m_isInitialized;
     
     public RepositorySourceFactory() {
@@ -85,19 +82,10 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     }
     
     /**
-     * Read the <code>name</code> attribute and the <code>use-event-caching</code>
-     * configuration element.
+     * Read the <code>name</code> attribute.
      */
-    public void configure(final Configuration configuration) 
-        throws ConfigurationException {
-        
+    public void configure(final Configuration configuration) throws ConfigurationException {
         m_name = configuration.getAttribute("name");
-        m_useEventCaching = configuration.getChild("use-event-caching",true).
-            getValueAsBoolean(false);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Event caching is turned " + (m_useEventCaching ? "ON" : "OFF")
-            + " for " + m_name + ": protocol.");
-        }
     }
     
     /**
@@ -131,8 +119,7 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
             m_name,
             (ModifiableTraversableSource) source, 
             m_descriptor,
-            getLogger(),
-            m_useEventCaching
+            getLogger()
         );
     }
     

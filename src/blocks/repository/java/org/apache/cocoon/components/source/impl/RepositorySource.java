@@ -26,8 +26,6 @@ import java.util.List;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.caching.validity.EventValidity;
-import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
@@ -43,15 +41,12 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * 
  * <p>
  * Currently this Source optionally adds inspectability
- * through the InspectableSource interface and event caching
- * by handing out EventValidities based on the Source uri.
+ * through the InspectableSource interface.
  * </p>
  * 
  * <p>
  * Wrapped sources must implement ModifiableTraversableSource.
  * </p>
- * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public class RepositorySource extends AbstractLogEnabled 
 implements Source, ModifiableTraversableSource, InspectableSource {
@@ -61,7 +56,6 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     // the wrapped source
     final ModifiableTraversableSource m_delegate;
     private final SourceDescriptor m_descriptor;
-    private final boolean m_useEventCaching;
     
     // ---------------------------------------------------- Lifecycle
     
@@ -69,14 +63,12 @@ implements Source, ModifiableTraversableSource, InspectableSource {
         final String prefix,
         final ModifiableTraversableSource delegate, 
         final SourceDescriptor descriptor,
-        final Logger logger,
-        final boolean useEventCaching) throws SourceException {
+        final Logger logger) throws SourceException {
         
         m_prefix = prefix;
         m_delegate = delegate;
         m_descriptor = descriptor;
         enableLogging(logger);
-        m_useEventCaching = useEventCaching;
     }
     
     // ---------------------------------------------------- InspectableSource implementation
@@ -184,19 +176,10 @@ implements Source, ModifiableTraversableSource, InspectableSource {
      * the validity describing the source itself _and_ one describing
      * the validity of the SourceProperties managed by the SourceDescriptor.
      * </p>
-     * When using event caching the SourceValidity describing the Source itself
-     * is an EventValidity that contains a NamedEvent which name is the wrapped 
-     * Source URI.
      */
     public SourceValidity getValidity() {
         SourceValidity val1;
-        if (m_useEventCaching) {
-            val1 = new EventValidity(new NamedEvent(getURI()));
-        }
-        else {
-            val1 = m_delegate.getValidity();
-        }
-        
+        val1 = m_delegate.getValidity();
         if (val1 != null && m_descriptor != null) {
             SourceValidity val2 = m_descriptor.getValidity(m_delegate);
             if (val2 != null) {
@@ -225,8 +208,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
             m_prefix,
             child,
             m_descriptor,
-            getLogger(),
-            m_useEventCaching
+            getLogger()
         );
     }
 
@@ -242,8 +224,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
                     m_prefix,
                     child,
                     m_descriptor,
-    		        getLogger(),
-                    m_useEventCaching
+    		        getLogger()
                 )
             );
     	}
@@ -259,8 +240,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
             m_prefix,
             (ModifiableTraversableSource) m_delegate.getParent(),
         	m_descriptor, 
-            getLogger(),
-            m_useEventCaching
+            getLogger()
         );
     }
 
@@ -287,105 +267,5 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     public OutputStream getOutputStream() throws IOException {
         return m_delegate.getOutputStream();
     }
-    
-        
-    // ---------------------------------------------------- LockableSource implementation
-    
-//    public void addSourceLocks(SourceLock lock) throws SourceException {
-//        if (m_delegate instanceof LockableSource) {
-//            ((LockableSource) m_delegate).addSourceLocks(lock);
-//        }
-//    }
-//    
-//    public Enumeration getSourceLocks() throws SourceException {
-//        if (m_delegate instanceof LockableSource) {
-//            return ((LockableSource) m_delegate).getSourceLocks();
-//        }
-//        return null;
-//    }
-    
-    // ---------------------------------------------------- VersionableSource implementation
-    
-//    public String getLatestSourceRevision() throws SourceException {
-//        if (m_delegate instanceof VersionableSource) {
-//            return ((VersionableSource) m_delegate).getLatestSourceRevision();
-//        }
-//        return null;
-//    }
-//    
-//    public String getSourceRevision() throws SourceException {
-//        if (m_delegate instanceof VersionableSource) {
-//            return ((VersionableSource) m_delegate).getSourceRevision();
-//        }
-//        return null;
-//    }
-//    
-//    public String getSourceRevisionBranch() throws SourceException {
-//        if (m_delegate instanceof VersionableSource) {
-//            return ((VersionableSource) m_delegate).getSourceRevisionBranch();
-//        }
-//        return null;
-//    }
-//    
-//    public boolean isVersioned() throws SourceException {
-//        if (m_delegate instanceof VersionableSource) {
-//            return ((VersionableSource) m_delegate).isVersioned();
-//        }
-//        return false;
-//    }
-//    
-//    public void setSourceRevision(String revision) throws SourceException {
-//        if (m_delegate instanceof VersionableSource) {
-//            ((VersionableSource) m_delegate).setSourceRevision(revision);
-//        }
-//    }
-//    
-//    public void setSourceRevisionBranch(String branch) throws SourceException {
-//        if (m_delegate instanceof VersionableSource) {
-//            ((VersionableSource) m_delegate).setSourceRevisionBranch(branch);
-//        }
-//    }
-    
-    
-    // ---------------------------------------------------- RestrictableSource implementation
-    
-//    public void addSourcePermission(SourcePermission permission)
-//        throws SourceException {
-//        
-//        if (m_delegate instanceof RestrictableSource) {
-//            ((RestrictableSource) m_delegate).addSourcePermission(permission);
-//        }
-//    }
-//    
-//    public SourceCredential getSourceCredential() throws SourceException {
-//        if (m_delegate instanceof RestrictableSource) {
-//            return ((RestrictableSource) m_delegate).getSourceCredential();
-//        }
-//        return null;
-//    }
-//    
-//    public SourcePermission[] getSourcePermissions() throws SourceException {
-//        if (m_delegate instanceof RestrictableSource) {
-//            return ((RestrictableSource) m_delegate).getSourcePermissions();
-//        }
-//        return null;
-//    }
-//    
-//    public void removeSourcePermission(SourcePermission permission)
-//        throws SourceException {
-//        
-//        if (m_delegate instanceof RestrictableSource) {
-//            ((RestrictableSource) m_delegate).removeSourcePermission(permission);
-//        }
-//    }
-//    
-//    public void setSourceCredential(SourceCredential credential)
-//        throws SourceException {
-//        
-//        if (m_delegate instanceof RestrictableSource) {
-//            ((RestrictableSource) m_delegate).setSourceCredential(credential);
-//        }
-//    }
-    
 
 }
