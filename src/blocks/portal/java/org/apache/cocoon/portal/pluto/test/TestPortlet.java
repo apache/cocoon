@@ -61,7 +61,7 @@ import javax.portlet.RenderResponse;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: TestPortlet.java,v 1.3 2004/03/04 09:17:04 cziegeler Exp $
+ * @version CVS $Id: TestPortlet.java,v 1.4 2004/03/04 10:10:59 cziegeler Exp $
  */
 public class TestPortlet implements Portlet  {
     
@@ -96,6 +96,9 @@ public class TestPortlet implements Portlet  {
         Writer writer = res.getWriter();
         writer.write("<h1>Simple TestPortlet</h1>\n");
         writer.write("<p>This is a Cocoon test portlet.</p>\n");
+        writer.write("<p>I'm running in: " + req.getPortalContext().getPortalInfo());
+        writer.write("<p>Current portlet mode: " + req.getPortletMode() + "</p>");
+        writer.write("<p>Current window state: " + req.getWindowState() + "</p>");
     }
 
 }
