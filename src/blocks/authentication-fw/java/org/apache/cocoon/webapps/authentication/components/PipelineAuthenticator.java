@@ -81,7 +81,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.11 2004/01/27 11:42:51 joerg Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.12 2004/01/27 16:21:53 joerg Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -330,6 +330,7 @@ public class PipelineAuthenticator
                 // This allows arbitrary business logic to be called. Whatever is returned
                 // is ignored.
                 source = SourceUtil.getSource(logoutResourceName, null, parameters, this.resolver);
+                SourceUtil.toDOM(source);
             } catch (Exception ignore) {
                 this.getLogger().error("logout: " + ignore.getMessage(), ignore);
             } finally {
