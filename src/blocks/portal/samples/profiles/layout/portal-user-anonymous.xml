@@ -8,7 +8,7 @@
 		        </coplet-layout>
             </item>
             <item>
-		        <coplet-layout name="coplet">
+		        <coplet-layout name="coplet" layout-renderer-name="nowindow">
 		            <coplet-instance-data>Login-1</coplet-instance-data>
 		        </coplet-layout>
   	        </item>

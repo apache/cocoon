@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+<map:pipelines>
+    
+    <map:pipeline>	
+
+        <map:match pattern="live.rss">
+            <map:generate type="file" src="{request-param:feed}" label="content" />
+            <map:transform type="xslt" src="styles/rss2html.xsl">
+                <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
+            </map:transform>
+            <map:serialize type="xml"/>
+        </map:match>
+
+        <map:match pattern="live.weblog-rss">
+            <map:generate type="file" src="{request-param:feed}" label="content" />
+<!--
+            <map:transform type="rss"/>
+-->        
+            <map:transform type="xslt" src="styles/rss2html.xsl">
+                <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
+            </map:transform>
+            <map:serialize type="xml"/>
+        </map:match>
+
+        <map:match pattern="*.rss">
+            <map:generate type="file" src="offline/{1}.xml" label="content" />
+            <map:transform type="xslt" src="styles/rss2html.xsl">
+                 <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
+            </map:transform>
+            <map:serialize type="xml"/>
+        </map:match>
+
+        <map:match pattern="*.weblog-rss">
+            <map:generate type="file" src="offline/{1}.xml" label="content" />
+            <map:transform type="xslt" src="styles/rss2html.xsl">
+                 <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
+            </map:transform>
+            <map:serialize type="xml"/>
+        </map:match>
+
+    </map:pipeline>
+
+</map:pipelines>
+</map:sitemap>

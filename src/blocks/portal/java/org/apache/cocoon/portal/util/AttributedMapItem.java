@@ -52,20 +52,22 @@ package org.apache.cocoon.portal.util;
 
 
 /**
- * Used by the AspectDataFieldHandler for Castor.
+ * Used by the ParameterFieldHandler for Castor.
+ * This MapItem is used by the mapping each time key and value are
+ * mapped to attributes in the xml (as opposed to elements)
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: MapItem.java,v 1.2 2003/07/10 13:16:56 cziegeler Exp $
+ * @version CVS $Id: AttributedMapItem.java,v 1.1 2003/12/18 13:16:11 cziegeler Exp $
  */
-public class MapItem
+public class AttributedMapItem
 extends org.exolab.castor.mapping.MapItem {
 
-	public MapItem() {
+	public AttributedMapItem() {
 		super();
 	}
 
-	public MapItem(Object key, Object value) {
+	public AttributedMapItem(Object key, Object value) {
 		super(key, value);
 	}
 }

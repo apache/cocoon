@@ -213,26 +213,20 @@
         <coplet name="standard"
                 class="org.apache.cocoon.portal.coplet.CopletData">
             <coplet-data-aspects>
-                <aspect name="sizable"
-                        class="java.lang.Boolean"
-                        store="persistent"
-                        auto-create="true"
-                        value="true"/>
-                <aspect name="mandatory"
-                        class="java.lang.Boolean"
-                        store="persistent"
-                        auto-create="true"
-                        value="false"/>
+                <!-- Use only the 'memory' aspect store with aspect datas! -->
+                <aspect auto-create="true" class="java.lang.Boolean" name="sizable" store="memory" value="true"/>
+                <aspect auto-create="true" class="java.lang.Boolean" name="mandatory" store="memory" value="false"/>
                <!--         
                 <aspect name="maxpageable"
                         class="java.lang.Boolean"
-                        store="persistent"
+                        store="memory"
                         auto-create="true"
                         value="true"/>
                -->
             </coplet-data-aspects>
             
             <coplet-instance-data-aspects>
+                <!-- Choose from tempory, request and session aspect store: -->
                 <aspect name="size"
                         class="java.lang.Integer"
                         store="session"
