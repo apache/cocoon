@@ -140,10 +140,10 @@ public class MountTableMatcher extends AbstractLogEnabled implements Matcher, Th
             Configuration child = children[i];
             if ("mount".equals(child.getName())) {
                 String prefix = children[i].getAttribute("uri-prefix");
-                // Append a '/' at the end of the prefix
+                // Append a '/' at the end of a not-empty prefix
                 // this avoids flat uri matching which would cause
                 // exceptions in the sub sitemap!
-                if (!prefix.endsWith("/")) {
+                if (!prefix.endsWith("/") && prefix.length() != 0) {
                     prefix = prefix + '/';
                 }
                 mounts.put(prefix, children[i].getAttribute("src"));
