@@ -59,7 +59,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartOnDisk.java,v 1.2 2003/08/18 21:55:40 ghoward Exp $
+ * @version CVS $Id: PartOnDisk.java,v 1.3 2003/11/13 14:56:12 sylvain Exp $
  */
 public class PartOnDisk extends Part {
 
@@ -76,6 +76,10 @@ public class PartOnDisk extends Part {
     protected PartOnDisk(Map headers, File file) {
         super(headers);
         this.file = file;
+        
+        // Ensure the file will be deleted when we exit the JVM
+        this.file.deleteOnExit();
+        
         this.size = (int) file.length();
     }
 
@@ -106,7 +110,11 @@ public class PartOnDisk extends Part {
      * @throws Exception
      */
     public InputStream getInputStream() throws Exception {
-        return new FileInputStream(file);
+        if (this.file != null) {
+            return new FileInputStream(file);
+        } else {
+            throw new IllegalStateException("This part has already been disposed.");
+        }
     }
 
     /**
@@ -114,5 +122,19 @@ public class PartOnDisk extends Part {
      */
     public String toString() {
         return file.getPath();
+    }
+    
+    public void dispose() {
+        if (this.file != null) {
+            this.file.delete();
+            this.file = null;
+        }
+    }
+    
+    public void finalize() throws Throwable {
+        // Ensure the file has been deleted
+        dispose();
+        
+        super.finalize();
     }
 }
