@@ -67,7 +67,6 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Node;
 import org.apache.cocoon.components.jxdom.DocumentAdapter;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
@@ -93,17 +92,17 @@ public class TraxGenerator extends TraxTransformer implements Generator {
     public void setup(SourceResolver resolver, Map objectModel,
                       String src, Parameters parameters)
         throws ProcessingException, SAXException, IOException {
-	super.setup(resolver, objectModel, src, parameters);
+        super.setup(resolver, objectModel, src, parameters);
         // FIX ME: When we decide proper way to pass "bean" and "kont"
         Object bean = ((Environment)resolver).getAttribute("bean-dict");
         WebContinuation kont = 
-	    (WebContinuation)((Environment)resolver).getAttribute("kont");
-	Map map = new HashMap();
-	Request request = ObjectModelHelper.getRequest(objectModel);
-	Response response = ObjectModelHelper.getResponse(objectModel);
-	Context context = ObjectModelHelper.getContext(objectModel);
+            (WebContinuation)((Environment)resolver).getAttribute("kont");
+        Map map = new HashMap();
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        Response response = ObjectModelHelper.getResponse(objectModel);
+        Context context = ObjectModelHelper.getContext(objectModel);
         if (bean != null) {
-	    fillContext(bean, map);
+            fillContext(bean, map);
             map.put("flowContext", bean);
             map.put("continuation", kont);
         }
@@ -114,8 +113,7 @@ public class TraxGenerator extends TraxTransformer implements Generator {
         if (session != null) {
             map.put("session", session);
         }
-	doc = new DocumentAdapter(map, "document");
-        super.setup(resolver, objectModel, src, parameters);
+        doc = new DocumentAdapter(map, "document");
     }
 
     private void fillContext(Object contextObject, Map map) {
@@ -132,7 +130,7 @@ public class TraxGenerator extends TraxTransformer implements Generator {
                 for (int i = 0; i < result.length; i++) {
                     try {
                         map.put(result[i], 
-				(h.getProperty(contextObject, result[i])));
+                                (h.getProperty(contextObject, result[i])));
                     } catch (Exception exc) {
                         exc.printStackTrace();
                     }
@@ -158,24 +156,24 @@ public class TraxGenerator extends TraxTransformer implements Generator {
 
     public void generate()
         throws IOException, SAXException, ProcessingException {
-	DOMSource src = new DOMSource(doc);
-	javax.xml.transform.Transformer transformer = 
-	    transformerHandler.getTransformer();
-	SAXResult result = new SAXResult(xmlConsumer);
-	try {
-	    transformer.transform(src, result);
-	} catch (TransformerException exc) {
-	    throw new SAXException(exc.getMessage(), exc);
-	}
+        javax.xml.transform.Transformer transformer = 
+            transformerHandler.getTransformer();
+        DOMSource src = new DOMSource(doc);
+        SAXResult result = new SAXResult(xmlConsumer);
+        try {
+            transformer.transform(src, result);
+        } catch (TransformerException exc) {
+            throw new SAXException(exc.getMessage(), exc);
+        }
     }
 
     public void setConsumer(XMLConsumer consumer) {
-	xmlConsumer = consumer;
+        xmlConsumer = consumer;
     }
 
     public void recycle() {
-	super.recycle();
-	doc = null;
+        super.recycle();
+        doc = null;
     }
 
 }
