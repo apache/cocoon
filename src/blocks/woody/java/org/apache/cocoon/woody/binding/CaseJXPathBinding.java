@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * case of a union.</li>
  * </ol>
  *
- * CVS $Id: CaseJXPathBinding.java,v 1.2 2003/12/31 05:50:12 antonio Exp $
+ * CVS $Id: CaseJXPathBinding.java,v 1.3 2004/01/06 12:31:17 joerg Exp $
  * @author Timothy Larson
  */
 public class CaseJXPathBinding extends ComposedJXPathBindingBase {
@@ -93,7 +93,6 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
         Union unionWidget = (Union)frmModel;
         if (widgetId.equals(unionWidget.getValue())) {
-            JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
             Binding[] subBindings = getChildBindings();
             if (subBindings != null) {
                 int size = subBindings.length;
@@ -115,7 +114,6 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Union unionWidget = (Union)frmModel;
         if (widgetId.equals(unionWidget.getValue())) {
-            JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
             Binding[] subBindings = getChildBindings();
             if (subBindings != null) {
                 int size = subBindings.length;

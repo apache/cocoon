@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * CVS $Id: StructJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * CVS $Id: StructJXPathBinding.java,v 1.2 2004/01/06 12:31:17 joerg Exp $
  * @author Timothy Larson
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
@@ -91,7 +91,6 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
         Struct structWidget = (Struct)getWidget(frmModel, this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;
@@ -111,7 +110,6 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Struct structWidget = (Struct)frmModel.getWidget(this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;
