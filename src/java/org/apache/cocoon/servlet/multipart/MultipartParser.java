@@ -30,8 +30,6 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.avalon.excalibur.io.IOUtil;
-
 /**
  * This class is used to implement a multipart request wrapper.
  * It will parse the http post stream and and fill it's hashtable with values.
@@ -41,13 +39,11 @@ import org.apache.avalon.excalibur.io.IOUtil;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartParser.java,v 1.7 2004/03/11 15:32:41 sylvain Exp $
+ * @version CVS $Id: MultipartParser.java,v 1.8 2004/03/11 18:21:48 joerg Exp $
  */
 public class MultipartParser {
 
     private final static int FILE_BUFFER_SIZE = 4096;
-
-    private final static int INLINE_BUFFER_SIZE = 256;
 
     private static final int MAX_BOUNDARY_SIZE = 128;
 
