@@ -72,7 +72,7 @@
 		     component configuration :</p>
 		  <source>
 		    <![CDATA[
-  <map:generator type="html" src="org.apache.cocoon.generation.HTMLGenerator">
+  <map:generator name="html" src="org.apache.cocoon.generation.HTMLGenerator">
     <jtidy-config>jtidy.properties</jtidy-config>
   </map:generator>
 		    ]]>
