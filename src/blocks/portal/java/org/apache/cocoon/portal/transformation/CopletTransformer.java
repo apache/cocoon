@@ -17,15 +17,18 @@ package org.apache.cocoon.portal.transformation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.Attributes;
@@ -51,7 +54,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.17 2004/03/16 09:16:59 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.18 2004/04/01 09:36:55 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -249,9 +252,35 @@ extends AbstractCopletTransformer {
             this.stack.push("a");
         
         } else if ( "html-form".equals(format) ) {
+            boolean addParametersAsHiddenFields = false;
+            String parameters = null;
+            if ( newAttrs.getValue("enctype") != null )  {
+                final int pos = uri.indexOf('?');
+                if ( pos != -1 ) {
+                    parameters = uri.substring(pos+1);
+                    uri = uri.substring(0, pos);
+                    addParametersAsHiddenFields = true;
+                }
+            }
             newAttrs.addCDATAAttribute("action", uri);
             this.sendStartElementEvent("form", newAttrs);
             this.stack.push("form");
+            if ( addParametersAsHiddenFields ) {
+                // create hidden input fields
+                RequestParameters pars = new RequestParameters(parameters);
+                Enumeration enum = pars.getParameterNames();
+                while ( enum.hasMoreElements() ) {
+                    String pName = (String)enum.nextElement();
+                    String pValue = pars.getParameter(pName);
+                    AttributesImpl hiddenAttrs = new AttributesImpl();
+                    hiddenAttrs.addCDATAAttribute("type", "hidden");
+                    hiddenAttrs.addCDATAAttribute("name", pName);
+                    hiddenAttrs.addCDATAAttribute("value", pValue);
+                    this.startElement("", "input", "input", hiddenAttrs);
+                    this.endElement("", "input", "input");
+                }
+                
+            }
         } else if ( "text".equals(format) ) {
             this.sendTextEvent(uri);
             this.stack.push("");
