@@ -36,7 +36,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.8 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.9 2004/04/28 18:13:38 haul Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -105,10 +105,10 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                         this.input = obtainModule(this.defaultInput);
                     }
                     
-                    } else if (!(this.inputSelector instanceof ThreadSafe) ) {
-                        this.manager.release(this.inputSelector);
-                        this.inputSelector = null;
-                    }
+                } else if (!(this.inputSelector instanceof ThreadSafe) ) {
+                    this.manager.release(this.inputSelector);
+                    this.inputSelector = null;
+                }
                 
                 this.initialized = true;
             }
