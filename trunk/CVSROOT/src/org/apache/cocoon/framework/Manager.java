@@ -1,4 +1,4 @@
-/*-- $Id: Manager.java,v 1.9 2000-11-16 17:31:56 greenrd Exp $ --
+/*-- $Id: Manager.java,v 1.10 2000-12-03 19:54:48 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,18 +57,26 @@ import java.io.*;
  * This class is used to create and control software actors and resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-11-16 17:31:56 $
+ * @version $Revision: 1.10 $ $Date: 2000-12-03 19:54:48 $
  */
 
-public class Manager extends Hashtable implements Actor, Factory, Director {
+public class Manager 
+  extends Hashtable implements Actor, Factory, Director, DestroyListener {
 
-    private ClassLoader classloader;
+    static {
+        // Tomcat 3.1 classloader workaround
+        try {
+            Class.forName ("org.apache.cocoon.framework.DestroyListener");
+        }
+        catch (ClassNotFoundException ex) {
+            ex.printStackTrace ();
+        }
+    }
 
     /**
      * Initialize the actor by indicating their director.
      */
     public void init(Director director) {
-        this.classloader = this.getClass().getClassLoader();
     }
 
     /**
@@ -136,6 +144,10 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
          return v;
      }
 
+    public void destroy () {
+      destroyAll ();
+    }
+
     /**
      * Calls destroy() on all components that are instances of DestroyListener
      */
@@ -143,7 +155,7 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
        Enumeration e = elements ();
        while (e.hasMoreElements ()) {
           Object x = e.nextElement ();
-          if (x instanceof DestroyListener) {
+          if (x instanceof DestroyListener && x != this) {
             ((DestroyListener) x).destroy ();
           }
        }
