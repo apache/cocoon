@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.4 2000-01-15 11:19:17 ricardo Exp $ -- 
+/*-- $Id: Utils.java,v 1.5 2000-01-23 23:14:11 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-15 11:19:17 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-23 23:14:11 $
  */
 
 public final class Utils {
@@ -138,7 +138,8 @@ public final class Utils {
         
         while (nodes.hasMoreElements()) {
             String data = ((ProcessingInstruction) nodes.nextElement()).getData();
-            for (StringTokenizer st = new StringTokenizer(data, " \t="); st.hasMoreTokens();) {
+            StringTokenizer st = new StringTokenizer(data, " \t=");
+            while (st.hasMoreTokens()) {
                 String key = st.nextToken();
                 String token = st.nextToken();
                 token = token.substring(1, token.length() - 1);
@@ -158,7 +159,8 @@ public final class Utils {
         Hashtable attributes = new Hashtable();
         
         String data = pi.getData();
-        for (StringTokenizer st = new StringTokenizer(data, " \t="); st.hasMoreTokens();) {
+        StringTokenizer st = new StringTokenizer(data, " \t=");
+        while (st.hasMoreTokens()) {
             String key = st.nextToken();
             String token = st.nextToken();
             token = token.substring(1, token.length() - 1);
@@ -237,7 +239,7 @@ public final class Utils {
                 return request.getPathTranslated().replace('\\','/');
             } else {
                 // otherwise use the deprecated method on all other servlet engines.
-                return request.getRealPath(request.getRequestURI());
+                return request.getRealPath(request.getRequestURI()).replace('\\', '/');
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("Malformed request URL.");
