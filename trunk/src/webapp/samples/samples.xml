@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.11 2003/04/29 10:45:21 cziegeler Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.12 2003/05/03 17:53:11 gianugo Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -26,7 +26,7 @@
     content provided by other web sites.
    </sample>
    <sample name="Slides" href="slides/slides">
-    An example of more complex use of XSTL for navigation and content filtering.
+    An example of more complex use of XSLT for navigation and content filtering.
    </sample>   
    <sample name="Resource Catalog" href="catalog/">
     XML is handy but also very complex. Cocoon integrates a number of 
