@@ -7,6 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
+import org.apache.avalon.Poolable;
 import java.io.IOException;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
@@ -16,9 +17,9 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:11:44 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-08 21:05:51 $
  */
-public class FileGenerator extends ComposerGenerator {
+public class FileGenerator extends ComposerGenerator implements Poolable {
 
     /**
      * Generate XML data.
