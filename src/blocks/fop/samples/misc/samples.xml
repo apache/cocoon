@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS $Id: samples.xml,v 1.5 2003/08/21 18:31:17 vgritsenko Exp $ -->
+
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <group name="Main examples page.">
@@ -6,6 +9,9 @@
     </group>
 
     <group name="Simple FOP examples">
+        <note>
+            FOP block requires Batik block to be present for generating PDF with embedded images.
+        </note>   
         <sample name="Hello, PDF world!" href="hello.pdf">
             The well-known hello.xml document rendered as PDF.
         </sample>
@@ -33,4 +39,3 @@
     </group>
 
 </samples>
-
