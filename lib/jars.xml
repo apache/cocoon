@@ -74,7 +74,7 @@
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-component-20020916.jar</lib>
+	<lib>core/excalibur-component-complete-1.1.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
@@ -130,7 +130,7 @@
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-logger-20020820.jar</lib>
+	<lib>core/excalibur-logger-1.0.1.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
@@ -154,7 +154,7 @@
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-pool-20020820.jar</lib>
+	<lib>core/excalibur-pool-1.2.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
@@ -162,7 +162,7 @@
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-sourceresolve-20030130.jar</lib>
+	<lib>core/excalibur-sourceresolve-20030318.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
@@ -186,7 +186,7 @@
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/avalon-framework-4.1.3.jar</lib>
+	<lib>core/avalon-framework-4.1.4.jar</lib>
 	<homepage>http://avalon.apache.org/framework/</homepage>
  </file>
  <file>
