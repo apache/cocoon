@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: sitemap.xmap,v 1.9 2004/03/10 13:36:09 unico Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.10 2004/05/06 11:09:42 cziegeler Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -115,7 +115,7 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
       </map:match>               
 
       <map:match pattern="requestparam">
-        <map:redirect-to uri="requestparam.xml?foo=foo+param&amp;bar=bar+param"/>
+        <map:redirect-to uri="content/requestparam.xml?foo=foo+param&amp;bar=bar+param"/>
       </map:match>
       <map:match pattern="content/requestparam.xml">
         <map:generate type="jx" src="properties.xml">
