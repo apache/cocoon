@@ -1258,7 +1258,7 @@
       Delivery context library
     </description>
     <home nested="src/blocks/deli/lib"/>
-    <jar name="deli-x020904.jar"/>
+    <jar name="deli-x031104.jar"/>
   </project>
 
   <project name="jing">

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,7 +67,7 @@ import com.hp.hpl.deli.Workspace;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: DeliImpl.java,v 1.10 2004/03/05 13:01:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable, Deli, Serviceable, Disposable, Initializable,
@@ -178,23 +178,26 @@ public final class DeliImpl extends AbstractLogEnabled
                 attributeNode = document.createElementNS(null, p.getAttribute());
                 rootElement.appendChild(attributeNode);
                 Vector attributeValue = p.get();
-                Iterator complexValueIter = attributeValue.iterator();
-                if (p.getCollectionType().equals("Simple")) {
-                    // Simple attribute
-                    String value = (String)complexValueIter.next();
-                    text = document.createTextNode(value);
-                    attributeNode.appendChild(text);
-                } else {
-                    // Complex attribute e.g. Seq or Bag
-                    while (complexValueIter.hasNext()) {
-                        String value = (String)complexValueIter.next();
-                        complexAttributeNode = document.createElementNS(null, "li");
-                        attributeNode.appendChild(complexAttributeNode);
-                        text = document.createTextNode(value);
-                        complexAttributeNode.appendChild(text);
+		if (attributeValue != null)
+		{
+			Iterator complexValueIter = attributeValue.iterator();
+			if (p.getCollectionType().equals("Simple")) {
+				// Simple attribute
+				String value = (String)complexValueIter.next();
+				text = document.createTextNode(value);
+				attributeNode.appendChild(text);
+			} else {
+				// Complex attribute e.g. Seq or Bag
+				while (complexValueIter.hasNext()) {
+					String value = (String)complexValueIter.next();
+					complexAttributeNode = document.createElementNS(null, "li");
+					attributeNode.appendChild(complexAttributeNode);
+					text = document.createTextNode(value);
+					complexAttributeNode.appendChild(text);
+				}
+			}
                     }
                 }
-            }
         } catch (Exception e) {
             getLogger().error("DELI Exception while converting profile to DOM fragment: ", e);
             throw e;
@@ -327,3 +330,4 @@ public final class DeliImpl extends AbstractLogEnabled
     }
 
 }
+

@@ -314,7 +314,7 @@
       delivery context.
     </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/deli-x020904.jar</lib>
+    <lib>deli/lib/deli-x031104.jar</lib>
     <homepage>http://delicon.sourceforge.net</homepage>
   </file>
 
