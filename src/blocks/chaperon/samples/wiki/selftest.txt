@@ -13,7 +13,7 @@ Lines like -- THIS TEXT -- are comments about this test, they must appear as is.
 
 This must be followed by a section title and a bullet list with some items.
 
-! KNOWN PROBLEMS
+!!! KNOWN PROBLEMS
 Currently this test shows the following problems:
 
 * 0.1 This bullet list is invisible in the html output if there is no section title (3 bangs) before it
@@ -24,24 +24,24 @@ Currently this test shows the following problems:
 
 Test 1.1 headings in the usual order (from big to small): below you should see 3 headings, big, medium, small:
 
-! big heading #1
+!!! big heading #1
 
 !! medium heading #1
 
-!!! small heading #1
+! small heading #1
 
 Test 1.2 same headings with text in-between
 
-! big heading #2
+!!! big heading #2
 Text after big heading.
 
 !! medium heading #2
 Text after medium heading.
 
-!!! small heading #2
+! small heading #2
 Text after small heading.
 
-! new big heading
+!!! new big heading
 The above heading starts a new section in the xdocs version of this document.
 
 -- 2.NUMBERED LISTS --
