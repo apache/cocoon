@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.82 2001-06-13 22:07:47 giacomo Exp $-->
+<!-- $Id: esql.xsl,v 1.83 2001-06-19 20:27:14 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -359,7 +359,7 @@
           }
         }
       } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-        throw new RuntimeException("Error setting connection autocommit");
+        // do NOT: throw new RuntimeException("Error setting connection autocommit");
       }
       <xsl:if test="esql:use-limit-clause">
         {
