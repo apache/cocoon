@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.188 2003/11/07 14:28:27 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.189 2003/11/10 08:15:25 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix">
+     The CachingPointProcessingPipeline now uses Parameters instead of 
+     an own configuration scheme. See the demo sitemap for the changed configuration.
+   </action> 
    <action dev="JH" type="fix" fixes-bug="23299" due-to-email="simon.mieth@t-online.de" due-to="Simon Mieth">
      XMLByteStreamCompiler now handles also text nodes longer than 32 k.
    </action>
