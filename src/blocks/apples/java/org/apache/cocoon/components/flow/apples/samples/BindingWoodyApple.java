@@ -229,8 +229,7 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
     }
 
     private void completeResult(AppleResponse res, String uri, boolean finished) {
-        res.setData(getContextMap());
-        res.setURI(uri);        
+        res.sendPage(uri, getContextMap());
         // TODO think about transferring the fact that the use case has ended.
     }
 
