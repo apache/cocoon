@@ -112,7 +112,6 @@ public class Action extends AbstractWidget {
     }
 
     private static final String ACTION_EL = "action";
-    private static final String LABEL_EL = "label";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl buttonAttrs = new AttributesImpl();

@@ -36,7 +36,6 @@ public class Output extends AbstractWidget {
     }
 
     private static final String OUTPUT_EL = "output";
-    private static final String LABEL_EL = "label";
     private static final String VALUE_EL = "value";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {

@@ -229,7 +229,6 @@ public class AggregateField extends AbstractWidget {
     private static final String AGGREGATEFIELD_EL = "aggregatefield";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-    private static final String LABEL_EL = "label";
 
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {

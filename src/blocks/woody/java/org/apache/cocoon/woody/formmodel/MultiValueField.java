@@ -133,7 +133,6 @@ public class MultiValueField extends AbstractWidget {
     private static final String MULTIVALUEFIELD_EL = "multivaluefield";
     private static final String VALUES_EL = "values";
     private static final String VALUE_EL = "value";
-    private static final String LABEL_EL = "label";
     private static final String VALIDATION_MSG_EL = "validation-message";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {

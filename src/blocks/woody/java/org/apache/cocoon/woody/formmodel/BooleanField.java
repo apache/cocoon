@@ -105,7 +105,6 @@ public class BooleanField extends AbstractWidget {
 
     private static final String BOOLEAN_FIELD_EL = "booleanfield";
     private static final String VALUE_EL = "value";
-    private static final String LABEL_EL = "label";
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
