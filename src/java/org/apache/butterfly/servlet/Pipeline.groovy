@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-import org.apache.butterfly.xml.dom.DOMBuilder
 import org.apache.butterfly.components.pipeline.impl.NonCachingProcessingPipeline
 
+/**
+ * The Pipeline class is the base for all sitemaps.
+ *
+ * @version CVS $Id$
+ */
 class Pipeline {
     public beanFactory;
     private pipeline;
@@ -25,15 +29,17 @@ class Pipeline {
         this.pipeline = new NonCachingProcessingPipeline()
     }
             
-    protected void generate(src) {
-        generator = beanFactory.getBean("fileGenerator")
+    protected void generate(type, src, parameters) {
+        generator = beanFactory.getBean(type + "Generator")
         generator.inputSource = src
+        parameters.each { generator[it.key] = it.value }
         this.pipeline.generator = generator
     }
     
-    protected void transform(type, src) {
+    protected void transform(type, src, parameters) {
         factory = beanFactory.getBean(type + "TransformerFactory")
         transformer = factory.getTransformer(src)
+        parameters.each { transformer[it.key] = it.value }
         this.pipeline.addTransformer(transformer)
     }
     
@@ -43,9 +49,10 @@ class Pipeline {
         this.pipeline.serializer = serializer
     }
     
-    protected void read(src, type) {
+    protected void read(src, type, parameters) {
         reader = beanFactory.getBean("resourceReader");
         reader.inputSource = src;
+        parameters.each { reader[it.key] = it.value }
         this.pipeline.reader = reader;
     }
     

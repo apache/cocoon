@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+/**
+ * A sample sitemap.
+ *
+ * @version CVS $Id$
+ */
 class Sitemap extends Pipeline {
   
     boolean setup(String requestPath) {
         if (requestPath == "") {
-            generate "welcome.xml"
-            transform "trax", "welcome.xslt" 
+            generate "file", "welcome.xml", []
+            transform "trax", "welcome.xslt", [] 
             serialize "xml", [ 'encoding': 'UTF-8' ]
         } else if (m = (requestPath =~ "(.*)\.html")) {
-            generate m.group(1) + ".xml"
-            transform "trax", "welcome.xslt" 
+            generate "file", m.group(1) + ".xml", []
+            transform "trax", "welcome.xslt", []
             serialize "xml", [ 'encoding': 'UTF-8' ]
         } else if (m = (requestPath =~ "images/(.*)\.gif")) {
-            read "resources/images/" + m.group(1) + ".gif", "image/gif"
+            read "resources/images/" + m.group(1) + ".gif", "image/gif", []
         } else if (m = (requestPath =~ "styles/(.*)\.css")) {
-            read "resources/styles/" + m.group(1) + ".css", "text/css"
+            read "resources/styles/" + m.group(1) + ".css", "text/css", []
         } else {
             return false;
         }
