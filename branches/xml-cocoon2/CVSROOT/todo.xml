@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.22 2001-04-07 17:31:43 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.23 2001-04-13 09:20:32 giacomo Exp $
 -->
 
 
@@ -14,6 +14,7 @@
   <!-- in strict alphabetical order -->
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
   <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
+  <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
@@ -21,24 +22,51 @@
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
+  <person name="Volunteer needed" email="giacomo@apache.org" id="open"/>
  </devs>
 
  <actions priority="high">
-  <action context="code">
+  <action context="code" assigned-to="CZ">
+   Creating wrappers for Session and Cookie.
+   The creation of these wrapper classes would allow us to be independent
+   of the javax.servlet classes.
+  </action>
+
+  <action context="code" assigned-to="CZ">
+   Cleaning up the environment object like Request, Response for the
+   different environments.
+  </action>
+
+  <action context="code" assigned-to="CZ">
+   Synchron sitemap reloading.
+   The asynchron reloading of the
+   sitemap is a nice feature but not suitable for development.
+   Adding a configuration parameter for cocoon to
+   specify if the reloding is asynchron or synchron.
+  </action>
+
+  <action context="code" assigned-to="open">
+   Reloading of jar-files.
+   The class-path for the Cocoon-Servlet is only build once when the servlet
+   is initialised. If you want to deploy other jar files you have to restart
+   the servlet. A reloading of the Cocoon is not sufficient. This is not
+   very convenient. Suggestion: When Cocoon is reloaded (a new cocoon instance
+   is created then) the classpath is rebuild and used.
+  </action>
+
+  <action context="code" assigned-to="DM">
    Make the evaluation/application of logicsheets in the XSP system reliable
    and usable without hassle to the logicsheet programmer
   </action>
 
-  <action context="code">
-   Complete the cocoon.xconf file and put descriptions into it
+  <action context="code" assigned-to="open">
+   Complete (means put everything we know of into even if it has to be commented)
+   the cocoon.xconf file and put descriptions into it
   </action>
 
-  <action context="code">
-   Complete/write documentation in general
-  </action>
-
-  <action context="code">
-   Complete the web.xml file and put descriptions into it (similar to the
+  <action context="code" assigned-to="open">
+   Complete (means put everything we know of into even if it has to be commented)
+   the web.xml file and put descriptions into it (similar to the
    httpd.conf file of the web server or the server.xml of Catalina)
   </action>
 
@@ -46,24 +74,17 @@
    Implement content aggregation at the sitemap level.
   </action>
 
-  <action context="code">
-   Implement caching of intermediate SAX events between sitemap pipeline components.
+  <action context="code" assigned-to="PR">
+   Implement transparent content aggregation at the pipeline level.
   </action>
 
-  <action context="code">
-   Create a form validation Action that uses an external configuration file
-   to validate the form and make sure that values are within acceptable ranges.
+  <action context="code"  assigned-to="CZ">
+   Finish caching of intermediate SAX events between sitemap pipeline components.
   </action>
 
-  <action context="code">
-   Finish writing the command line interface and design the link rewriting
-   behavior that cannot work with views.
-  </action>
+ </actions>
 
-  <action context="code">
-   Write a better error handling code for CocoonServlet to avoid hardcoding
-   HTML inside the servlet which sucks big time.
-  </action>
+ <actions priority="medium">
 
   <action context="code">
    Check and fix xsl:import which doesn't seem to work expected... very strange..
@@ -76,9 +97,31 @@
    for SAX2 final.
   </action>
 
- </actions>
+  <action context="code">
+   Write a better error handling code for CocoonServlet to avoid hardcoding
+   HTML inside the servlet which sucks big time.
+  </action>
 
- <actions priority="medium">
+  <action context="code">
+   Finish writing the command line interface and design the link rewriting
+   behavior that cannot work with views.
+  </action>
+
+  <action context="code">
+   Create a form validation Action that uses an external configuration file
+   to validate the form and make sure that values are within acceptable ranges.
+   IIRC this has beed recently posted to the dev list.
+  </action>
+
+  <action context="code">
+   Complete/write documentation in general
+  </action>
+
+  <action context="code" assigned-to="CZ">
+   Caching of StreamPipelines.
+   The current caching algorithm caches only the event pipeline. For FOP and SVG it
+   would be very nice to cache the whole response.
+  </action>
 
   <action context="code">
    Implement a internal profiling tool that should indicate the load and history of
