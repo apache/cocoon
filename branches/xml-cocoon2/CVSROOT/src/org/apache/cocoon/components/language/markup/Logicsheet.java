@@ -48,7 +48,7 @@ import org.apache.cocoon.util.TraxErrorHandler;
  * transformed into an equivalent XSLT stylesheet anyway... This class should probably be based on an interface...
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:49:51 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-23 17:11:37 $
  */
 public class Logicsheet extends AbstractLoggable {
     /** The trax TransformerFactory */
@@ -72,6 +72,18 @@ public class Logicsheet extends AbstractLoggable {
     }
 
     /**
+     * Helper for TransformerFactory.
+     */
+    private synchronized SAXTransformerFactory getTransformerFactory()
+    {
+        if(tfactory == null)  {
+            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
+        }
+        return tfactory;
+    }
+
+    /**
      * The constructor. It does preserve the namespace from the stylesheet.
      * @param inputSource The stylesheet's input source
      * @exception IOException IOError processing input source
@@ -79,13 +91,10 @@ public class Logicsheet extends AbstractLoggable {
      */
     public void setInputSource(InputSource inputSource) throws SAXException, IOException {
         try {
-            tfactory = (SAXTransformerFactory)TransformerFactory.newInstance();
-            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
-
             // Create a Templates ContentHandler to handle parsing of the
             // stylesheet.
             javax.xml.transform.sax.TemplatesHandler templatesHandler =
-                                                tfactory.newTemplatesHandler();
+                                                getTransformerFactory().newTemplatesHandler();
 
             // Create an XMLReader and set its ContentHandler.
             org.xml.sax.XMLReader reader =
@@ -116,7 +125,7 @@ public class Logicsheet extends AbstractLoggable {
      */
     public TransformerHandler getTransformerHandler() {
         try {
-            TransformerHandler handler = tfactory.newTransformerHandler(templates);
+            TransformerHandler handler = getTransformerFactory().newTransformerHandler(templates);
             handler.getTransformer().setErrorListener(new TraxErrorHandler(getLogger()));
             return handler;
         } catch (TransformerConfigurationException e) {

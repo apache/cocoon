@@ -22,23 +22,37 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.sax.SAXTransformerFactory;
 
+import org.apache.cocoon.util.TraxErrorHandler;
+
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-17 15:33:18 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-23 17:11:45 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable, Cacheable {
 
     /**
      * The trax <code>TransformerFactory</code> used by this serializer.
      */
-    protected SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
+    private SAXTransformerFactory tfactory = null;
 
     /**
      * The <code>Properties</code> used by this serializer.
      */
     protected Properties format = new Properties();
+
+    /**
+     * Helper for TransformerFactory.
+     */
+    protected synchronized SAXTransformerFactory getTransformerFactory()
+    {
+        if(tfactory == null)  {
+            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
+        }
+        return tfactory;
+    }
 
     /**
      * Set the configurations for this serializer.

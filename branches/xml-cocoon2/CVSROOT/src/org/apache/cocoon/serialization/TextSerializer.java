@@ -20,7 +20,7 @@ import org.apache.excalibur.pool.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-20 20:50:12 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-23 17:11:49 $
  */
 
 public class TextSerializer extends AbstractTextSerializer implements Poolable {
@@ -33,7 +33,7 @@ public class TextSerializer extends AbstractTextSerializer implements Poolable {
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
-            handler = factory.newTransformerHandler();
+            handler = getTransformerFactory().newTransformerHandler();
             format.put(OutputKeys.METHOD,"text");
             handler.setResult(new StreamResult(out));
             handler.getTransformer().setOutputProperties(format);

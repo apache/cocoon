@@ -20,7 +20,7 @@ import javax.xml.transform.OutputKeys;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-20 20:50:11 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-23 17:11:47 $
  */
 
 public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
@@ -33,7 +33,7 @@ public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
-            handler = factory.newTransformerHandler();
+            handler = getTransformerFactory().newTransformerHandler();
             format.put(OutputKeys.METHOD,"html");
             handler.setResult(new StreamResult(out));
             handler.getTransformer().setOutputProperties(format);

@@ -68,7 +68,7 @@ import javax.xml.transform.sax.SAXResult;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-20 20:50:17 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-23 17:11:59 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
@@ -131,11 +131,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         }
         if(templates == null)
         {
-            if(tfactory == null)  {
-                tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
-                tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
-            }
-            templates = tfactory.newTemplates(new SAXSource(new InputSource(systemID)));
+            templates = getTransformerFactory().newTemplates(new SAXSource(new InputSource(systemID)));
             if (this.useStore == true)
             {
                 // Is this a local file
@@ -150,9 +146,21 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
                 }
             }
         }
-        TransformerHandler handler = tfactory.newTransformerHandler(templates);
+        TransformerHandler handler = getTransformerFactory().newTransformerHandler(templates);
         handler.getTransformer().setErrorListener(new TraxErrorHandler(getLogger()));
         return handler;
+    }
+
+    /**
+     * Helper for TransformerFactory.
+     */
+    private synchronized SAXTransformerFactory getTransformerFactory()
+    {
+        if(tfactory == null)  {
+            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
+        }
+        return tfactory;
     }
 
     /**

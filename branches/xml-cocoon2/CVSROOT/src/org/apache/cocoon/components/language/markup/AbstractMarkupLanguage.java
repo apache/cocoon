@@ -53,7 +53,7 @@ import org.apache.cocoon.util.IOUtils;
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-20 20:49:51 $
+ * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-04-23 17:11:35 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composable, Configurable {
     /** The supported language table */
@@ -264,6 +264,8 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             preprocessFilter.setParent(reader);
             // Create code generator
             LogicsheetCodeGenerator codeGenerator = new LogicsheetCodeGenerator();
+            codeGenerator.setLogger(getLogger());
+            codeGenerator.init();
             // set the transformer chain builder filter
             TransformerChainBuilderFilter tranBuilder = getTranformerChainBuilder(codeGenerator, resolver);
             tranBuilder.setLanguageDescriptor(language);

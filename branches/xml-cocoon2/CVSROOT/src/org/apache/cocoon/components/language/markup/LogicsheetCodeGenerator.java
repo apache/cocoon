@@ -28,7 +28,7 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
 import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.util.TraxErrorHandler;
 
@@ -37,11 +37,9 @@ import org.apache.cocoon.util.TraxErrorHandler;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-20 20:49:52 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-23 17:11:38 $
  */
-public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
-
-    protected Logger log;
+public class LogicsheetCodeGenerator extends AbstractLoggable implements MarkupCodeGenerator {
 
     private Logicsheet corelogicsheet;
 
@@ -53,21 +51,21 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
 
     private StringWriter writer;
 
-    /**
-    * The default constructor
-    */
-    public LogicsheetCodeGenerator() {
+    /** The trax TransformerFactory */
+    private SAXTransformerFactory tfactory = null;
 
-        SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
-        factory.setErrorListener(new TraxErrorHandler(log));
+    /**
+    * Initialize the LogicsheetCodeGenerator.
+    */
+    public void init() {
+
         Properties format = new Properties();
 
         try {
             // set the serializer which would act as ContentHandler for the last transformer
             // FIXME (SSA) change a home made content handler, that extract the PCDATA
             // from the last remaining element
-            TransformerHandler handler = factory.newTransformerHandler();
-            handler.getTransformer().setErrorListener(new TraxErrorHandler(log));
+            TransformerHandler handler = getTransformerFactory().newTransformerHandler();
 
             // Set the output properties
             format.put(OutputKeys.METHOD,"text");
@@ -79,14 +77,20 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
             handler.setResult(new StreamResult(writer));
             this.serializerContentHandler = handler;
         } catch (TransformerConfigurationException tce) {
-            log.error("LogicsheetCodeGenerator: unable to get TransformerHandler", tce);
+            getLogger().error("LogicsheetCodeGenerator: unable to get TransformerHandler", tce);
         }
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
+    /**
+     * Helper for TransformerFactory.
+     */
+    private synchronized SAXTransformerFactory getTransformerFactory()
+    {
+        if(tfactory == null)  {
+            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+            tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
         }
+        return tfactory;
     }
 
     /**
