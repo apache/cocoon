@@ -25,26 +25,24 @@
     <body>
       <h2><xsl:value-of select="xhtml:head/xhtml:title"/></h2>
       <ul>
-        <xsl:apply-templates select="xhtml:body/xhtml:table[position() > 3]"/>
+        <xsl:apply-templates select="//xhtml:div[@class='content']/xhtml:ul"/>
       </ul>
     </body>
   </html>
 </xsl:template>
 
-<xsl:template match="xhtml:table">
-  <li>
-    <xsl:apply-templates select="xhtml:tr/xhtml:td[last()]"/>
-  </li>
+<xsl:template match="xhtml:ul">
+    <ul>
+        <xsl:apply-templates select="xhtml:li"/>
+    </ul>
 </xsl:template>
 
-<xsl:template match="xhtml:td">
-  <xsl:apply-templates select="xhtml:a"/>
-  <br/>
-  <xsl:apply-templates select="xhtml:font/text()[normalize-space()][1]"/>
+<xsl:template match="xhtml:li">
+    <li><xsl:apply-templates/></li>
 </xsl:template>
 
 <xsl:template match="xhtml:a">
-    <a href="http://news.google.com{@href}" title="{@title}">
+    <a href="http://cocoon.apache.org/news/{@href}" title="{@title}">
       <xsl:value-of select="text()"/>
     </a>
 </xsl:template>

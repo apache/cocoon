@@ -17,7 +17,7 @@
 
 <!--+
     | HTML block samples sitemap
-    | CVS $Id: sitemap.xmap,v 1.5 2004/03/06 02:25:56 antonio Exp $
+    | CVS $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -59,11 +59,11 @@
 
       <!-- ================  TIDY  =========================== -->
 
-      <map:match pattern="googlenews">
-        <map:generate type="html" src="http://news.google.com/news/en/us/technology.html">
+      <map:match pattern="apache">
+        <map:generate type="html" src="http://cocoon.apache.org/news">
           <map:parameter name="xpath" value="/html"/>
         </map:generate>
-        <map:transform src="stylesheets/googlenews.xsl"/>
+        <map:transform src="stylesheets/apache.xsl"/>
         <map:serialize type="xhtml"/>
       </map:match>
 
