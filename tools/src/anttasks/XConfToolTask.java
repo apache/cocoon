@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
 /**
  * Ant task to patch xmlfiles.
  *
+ * 
  * replace-properties no|false,anything else
  * xpath: xpath expression for context node
  * unless-path: xpath expression that must return empty node set

@@ -96,12 +96,15 @@ public final class DocumentCache {
         return document;
     }
     
-    public static Document getDocument(String string) {
+    public static Document getDocument(String string, String systemURI) {
         try {
             final InputSource is = new InputSource(new StringReader(string));
+            if ( systemURI != null ) {
+                is.setSystemId(systemURI);
+            }
             return builder.parse(is);
         } catch (Exception e) {
-            throw new BuildException("Unable to parse string.");
+            throw new BuildException("Unable to parse string.", e);
         }
     }
     
