@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wi:selection-list
+  xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1"><wi:item value="org.apache.cocoon.woody.datatype.Sex.MALE"><wi:label><i18n:text>org.apache.cocoon.woody.datatype.Sex.MALE</i18n:text></wi:label></wi:item><wi:item value="org.apache.cocoon.woody.datatype.Sex.FEMALE"><wi:label><i18n:text>org.apache.cocoon.woody.datatype.Sex.FEMALE</i18n:text></wi:label></wi:item></wi:selection-list>
