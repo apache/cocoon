@@ -65,7 +65,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.4 2003/07/07 09:26:53 upayavira Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.5 2003/08/12 15:48:02 sylvain Exp $
  */
 
 public class SerializeNode extends PipelineEventComponentProcessingNode {
@@ -114,21 +114,18 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
                 }
             }
         }
-        // Perform link translation if requested
-        if (env.getObjectModel().containsKey(Constants.LINK_OBJECT)) {
-            context.getProcessingPipeline().addTransformer(
-                "<translator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS
-            );
-        }
-        if (env.getObjectModel().containsKey(Constants.LINK_COLLECTION_OBJECT) && env.isExternal()) {
-            context.getProcessingPipeline().addTransformer(
-                "<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS
-            );
-        }
-
+        
+        Map objectModel = env.getObjectModel();
         ProcessingPipeline pipeline = context.getProcessingPipeline();
 
-        Map objectModel = env.getObjectModel();
+        // Perform link translation if requested
+        if (objectModel.containsKey(Constants.LINK_OBJECT)) {
+            pipeline.addTransformer("<translator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
+        }
+        
+        if (objectModel.containsKey(Constants.LINK_COLLECTION_OBJECT) && env.isExternal()) {
+            pipeline.addTransformer("<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
+        }
 
         pipeline.setSerializer(
             this.serializerName,

@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.115 2003/08/12 11:37:44 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.116 2003/08/12 15:48:02 sylvain Exp $:-->
 <status>
 
  <developers>
@@ -202,7 +202,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
-   <action dev="CZ" type="add">DUMMY</action>
+   <action dev="SW" type="fix" fixes-bug="22239">
+     Views are now always loaded before resources, ensuring proper call of views from resources.
+     Redeclaring a component (e.g. file generator) with no "label" attribute was wrongly inheriting
+     view labels from the same component in the parent sitemap.
+   </action>
  </release>
  <release version="2.1" date="August 12 2003">
   <action dev="JH" type="update" fixes-bug="22288" due-to="Mark Leicester" due-to-email="mark.leicester@energyintellect.com">
