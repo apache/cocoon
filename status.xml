@@ -204,6 +204,13 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="add">
+     Taglib block: Initial implementation of BodyTag.
+   </action>
+   <action dev="VG" type="update">
+     Portal block: Changed pathInfo and servletPath logic. pathInfo always starts
+     with '/', while servletPath always has no '/' at the end.
+   </action>
    <action dev="AG" type="fix" fixes-bug="31134" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
      JXPathMetaModule incorrectly checks for null parameter (can't happen) instead of empty string.
    </action>
