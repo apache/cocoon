@@ -50,7 +50,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.19 2004/03/19 14:21:06 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.20 2004/06/07 10:29:10 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -306,8 +306,9 @@ public class AuthenticationProfileManager
 
 			Object result = this.checkValidity(key, parameters, forcedLoad, adapter);
             
-			if (!(result instanceof SourceValidity))
+			if ( result != null && !(result instanceof SourceValidity)) {
 				return new Object[]{result, Boolean.FALSE};
+            }
 			SourceValidity newValidity = (SourceValidity)result; 
 
 			this.lock.releaseReadLock();
@@ -316,8 +317,9 @@ public class AuthenticationProfileManager
 			// check validity again in case of another thread has already loaded
 			result = this.checkValidity(key, parameters, forcedLoad, adapter);
             
-			if (!(result instanceof SourceValidity))
+			if ( result != null && !(result instanceof SourceValidity) ) {
 				return new Object[]{result, Boolean.FALSE};
+            }
 			newValidity = (SourceValidity)result; 
 
 			Object object = adapter.loadProfile(key, parameters);
@@ -326,7 +328,7 @@ public class AuthenticationProfileManager
                 this.attributes.put(key, new Object[] {object, newValidity});
 			}
 
-			return new Object[]{object, Boolean.TRUE};
+			return new Object[] {object, Boolean.TRUE};
         } catch (ProfileException pe) {
             this.getLogger().error("Error loading profile: " + pe.getMessage(), pe);
             throw pe;

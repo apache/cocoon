@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.355 2004/06/07 09:53:33 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.356 2004/06/07 10:29:09 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="29373">
+     Portal: Fix NPE when non-caching pipelines are used for the portal profile.
+   </action>
    <action dev="CZ" type="fix">
      Portal: Fix transformation of non-external html links (HTMLEventLinkTransformer)
    </action>
