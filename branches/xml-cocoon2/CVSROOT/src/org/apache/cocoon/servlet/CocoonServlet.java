@@ -40,7 +40,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.21 $ $Date: 2000-09-22 20:27:36 $
+ * @version CVS $Revision: 1.1.4.22 $ $Date: 2000-09-22 22:17:59 $
  */
  
 public class CocoonServlet extends HttpServlet {
@@ -83,20 +83,7 @@ public class CocoonServlet extends HttpServlet {
         
         String configFileName = conf.getInitParameter("configurations");
         if (configFileName == null) {
-            ServletException fatalException =
-                new ServletException("Servlet initialization argument "
-                                     + "'configurations' not specified");
-            Notification n = new Notification(this, fatalException);
-            n.setType("cocoon-init-error");
-            n.setTitle("Cocoon error upon init.");
-            // FIXME (SM) We should use Servlet log channels for this
-            // since otherwise it might get lost or end up being in bad
-            // places if we are run under server frameworks such as avalon
-            // since our servlet container might hook to Avalon own loggin
-            // methods.
-            Notifier.notify(n, System.out);
-
-            throw fatalException;
+            throw new ServletException("Servlet initialization argument 'configurations' not specified");
         } else {
             this.context.log("Using configuration file: " + configFileName);
         }
@@ -104,19 +91,7 @@ public class CocoonServlet extends HttpServlet {
         try {
             this.configFile = new File(this.context.getResource(configFileName).getFile());
         } catch (java.net.MalformedURLException mue) {
-            ServletException fatalException =
-                new ServletException("Servlet initialization argument "
-                                     + "'configurations' not found at "
-                                     + configFileName);
-            Notification n = new Notification(this, fatalException);
-            n.setType("cocoon-init-error");
-            n.setTitle("Cocoon error upon init.");
-            n.addExtraDescription("requested-configuration-file",
-                                  this.configFile.toString());
-            // FIXME (SM) see above
-            Notifier.notify(n, System.out);
-
-            throw fatalException;
+            throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
         }
 
         this.cocoon = this.create();
@@ -285,15 +260,11 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             this.context.log("Reloading from: " + this.configFile);
-
             Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
-
             this.creationTime = System.currentTimeMillis();
-
             return c;
         } catch (Exception e) {
             this.context.log("Exception reloading: " + e.getMessage());
-
             this.exception = e;
         }
 

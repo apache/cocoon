@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.6 $ $Date: 2000-09-22 12:21:08 $
+ * @version CVS $Revision: 1.1.4.7 $ $Date: 2000-09-22 22:17:58 $
  */
 
 public class Main {
@@ -113,7 +113,7 @@ public class Main {
             File work = getDir(workDir, "working");
             File conf = getConfigurationFile(confFile);
             File root = conf.getParentFile();
-            Main main = new Main(new Cocoon(conf, null, work), conf, dest);
+            Main main = new Main(new Cocoon(conf, null, work.toString()), conf, dest);
             System.out.println("[main] Starting...");
             main.process(targets);
             System.out.println("[main] Done.");
