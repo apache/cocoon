@@ -34,6 +34,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.WrapperServiceManager;
+import org.apache.cocoon.util.log.DeprecationLogger;
 
 /**
  * JUnit TestCase for Cocoon Components.
@@ -139,9 +140,9 @@ public class ContainerTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
+        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_WARN);
         this.logger = new ConsoleLogger(Integer.parseInt(level));
-
+        DeprecationLogger.logger = this.logger;
         prepare();
     }
 
