@@ -105,8 +105,9 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
         }
         JXPathContext subContext = jxpc.getRelativeContext(ptr);
         super.saveFormToModel(frmModel, subContext);
-        if (getLogger().isDebugEnabled())
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("done saving " + toString());
+        }
     }
 
     public String toString() {

@@ -194,12 +194,11 @@ public class ValueJXPathBinding extends JXPathBindingBase {
     }
 
     public String toString() {
-        return "FieldJXPathBinding [widget=" + this.fieldId + ", xpath=" + this.xpath + "]";
+        return "ValueJXPathBinding [widget=" + this.fieldId + ", xpath=" + this.xpath + "]";
     }
 
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.updateBinding.enableLogging(logger);
     }
-
 }

@@ -166,8 +166,8 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
          */
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
-            if (JXPathBindingManager.this.getTheLogger().isDebugEnabled())
-                JXPathBindingManager.this.getTheLogger().debug("build binding for config elm " + bindingType);
+            //if (JXPathBindingManager.this.getTheLogger().isDebugEnabled())
+            //    JXPathBindingManager.this.getTheLogger().debug("build binding for config elm " + bindingType);
             JXpathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
             JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
             return childBinding;
