@@ -14,17 +14,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<xlog xpath="/logkit/targets" 
-      unless="cocoon[@id='portal']">
-    
-    <cocoon id="portal">
-      <filename>${context-root}/WEB-INF/logs/portal.log</filename>
-
-      <format type="cocoon">
-        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
-      </format>
-      <append>false</append>
+<!--+
+    |
+    | SVN $Id: cocoon-apples.xconf 125443 2005-01-17 20:39:52Z cziegeler $
+    +-->
+<logkit>
+  <targets>
+    <cocoon id="cron">
+        <filename>${context-root}/WEB-INF/logs/cron.log</filename>
+        <format type="cocoon">
+            %7.7{priority} %{time}   [%{category}] %{thread}/%{class:short}: %{message}\n%{throwable}
+        </format>
+        <append>true</append>
     </cocoon>
-    
-</xlog>
+  </targets>
+  <categories>
+    <category log-level="INFO" name="cron">
+        <log-target id-ref="cron" />
+        <log-target id-ref="error"/>
+    </category>
+  </categories>
+</logkit>

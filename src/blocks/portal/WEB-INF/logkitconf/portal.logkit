@@ -14,16 +14,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!--+
+    |
+    | SVN $Id: cocoon-apples.xconf 125443 2005-01-17 20:39:52Z cziegeler $
+    +-->
+<logkit>
+  <targets>
+    <cocoon id="portal">
+      <filename>${context-root}/WEB-INF/logs/portal.log</filename>
 
-<!-- mind how xpatch oddly requires the file extension to 
-	be equal to the root elm -->
-	
-<xlog xpath="/logkit/categories" 
-      unless="category[@name='portal']">
-    
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+      <append>false</append>
+    </cocoon>
+  </targets>
+  <categories>
     <category log-level="ERROR" name="portal">
       <log-target id-ref="portal" />
       <log-target id-ref="error"/>
     </category>
-    
-</xlog>
+  </categories>
+</logkit>
