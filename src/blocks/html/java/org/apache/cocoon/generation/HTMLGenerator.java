@@ -97,20 +97,20 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.3 2003/03/19 15:42:17 cziegeler Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.4 2003/04/01 08:27:28 bruno Exp $
  */
 public class HTMLGenerator extends ComposerGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
-    
+
     /** The parameter that specifies what request attribute to use, if any */
     public static final String FORM_NAME = "form-name";
-    
+
     /** The  source, if coming from a file */
     private Source inputSource;
-    
+
     /** The source, if coming from the request */
     private InputStream requestStream;
-    
+
     /** XPATH expression */
     private String xpath = null;
 
@@ -125,7 +125,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         super.compose( manager );
         this.processor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
-    
+
     public void configure(Configuration config) throws ConfigurationException {
 
         String configUrl = config.getChild("jtidy-config").getValue(null);
@@ -139,10 +139,10 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Loading configuration from " + configSource.getURI());
                 }
-                
+
                 this.properties = new Properties();
                 this.properties.load(configSource.getInputStream());
-                
+
             } catch (Exception e) {
                 getLogger().warn("Cannot load configuration from " + configUrl);
                 throw new ConfigurationException("Cannot load configuration from " + configUrl, e);
@@ -178,14 +178,14 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         super.setup(resolver, objectModel, src, par);
 
         HttpServletRequest request = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
-        
+
         if (src == null) {
             // Handle this request as the StreamGenerator does (from the POST
             // request or from a request parameter), but try to make sure
             // that the output will be well-formed
-                       
+
             String contentType = request.getContentType();
-            
+
             if (contentType == null ) {
                 throw new IOException("Content-type was not specified for this request");
             } else if (contentType.startsWith("application/x-www-form-urlencoded") ||
@@ -197,11 +197,11 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                         FORM_NAME + "' for handling form data"
                 );
                 }
-                
+
                 String sXml = request.getParameter(requested);
-                
+
                 requestStream = new ByteArrayInputStream(sXml.getBytes());
-                
+
             } else if (contentType.startsWith("text/plain") ||
                 contentType.startsWith("text/xml") ||
                 contentType.startsWith("application/xml")) {
@@ -214,9 +214,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 }
             } else {
                 throw new IOException("Unexpected getContentType(): " + request.getContentType());
-            }    
-                
-            
+            }
+
+
         }
 
         xpath = request.getParameter("xpath");
@@ -251,7 +251,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     public java.io.Serializable getKey() {
         if (this.inputSource == null)
             return null;
-            
+
         if (this.xpath != null) {
             StringBuffer buffer = new StringBuffer(this.inputSource.getURI());
             buffer.append(':').append(this.xpath);
@@ -285,7 +285,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
             // Setup an instance of Tidy.
             Tidy tidy = new Tidy();
             tidy.setXmlOut(true);
-            
+
             if (this.properties == null) {
                 tidy.setXHTML(true);
             } else {
@@ -302,10 +302,10 @@ implements Configurable, CacheableProcessingComponent, Disposable {
             tidy.setErrout(errorWriter);
 
             // Extract the document using JTidy and stream it.
-            
+
             if (inputSource != null)
                 requestStream = this.inputSource.getInputStream();
-                                
+
             org.w3c.dom.Document doc = tidy.parseDOM(new BufferedInputStream(requestStream), null);
 
             // FIXME: Jtidy doesn't warn or strip duplicate attributes in same
@@ -318,23 +318,21 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                getLogger().warn(stringWriter.toString());
             }
 
-            
+
             if(xpath != null)
             {
-                Transformer serializer = TransformerFactory.newInstance().newTransformer();
-                serializer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
 
+                contentHandler.startDocument();
                 NodeList nl = processor.selectNodeList(doc, xpath);
                 int length = nl.getLength();
                 for(int i=0;i<length;i++)
                 {
-                    SAXResult result = new SAXResult(this.contentHandler);
-                    result.setLexicalHandler(this.lexicalHandler);
-                    serializer.transform(new DOMSource(nl.item(i)), result);
+                    domStreamer.stream(nl.item(i));
                 }
+                contentHandler.endDocument();
             } else {
                 DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
-                streamer.setNormalizeNamespaces(false);
                 streamer.stream(doc);
             }
         } catch (IOException e){
@@ -346,7 +344,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
             throw new ProcessingException("Exception in HTMLGenerator.generate()",e);
         }
     }
-    
+
 
     public void dispose() {
         if (this.manager != null) {
