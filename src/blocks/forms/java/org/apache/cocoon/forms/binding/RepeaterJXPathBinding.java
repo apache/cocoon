@@ -34,7 +34,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.9 2004/05/11 08:22:54 bruno Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.10 2004/05/26 01:31:06 joerg Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -325,7 +325,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Get the identity of the given row. That's infact a list of all the values
      * of the fields in the form model that constitute the identity. 
-     * @param thisRow
+     * @param row
      * @return List the identity of the row
      */
     private List getIdentity(Repeater.RepeaterRow row) {

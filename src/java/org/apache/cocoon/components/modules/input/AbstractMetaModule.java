@@ -36,7 +36,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.9 2004/04/28 18:13:38 haul Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.10 2004/05/26 01:31:06 joerg Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -298,7 +298,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * The second module (dynamic) is preferred if it has an non null name. If
      * an exception is encountered, a warn message is printed and null is
      * returned.
-     * @param op Operation to perform ({@link OP_GET}, {@link OP_NAMES}, {@link OP_VALUES}).
+     * @param op Operation to perform ({@link #OP_GET}, {@link #OP_NAMES}, {@link #OP_VALUES}).
      *
      * @return Either an Object, an Object[], or an Iterator, depending on <code>op</code> param.
      */ 

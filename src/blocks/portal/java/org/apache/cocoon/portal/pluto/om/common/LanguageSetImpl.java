@@ -31,7 +31,7 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LanguageSetImpl.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id: LanguageSetImpl.java,v 1.4 2004/05/26 01:31:05 joerg Exp $
  */
 public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, java.io.Serializable, Support
 {
@@ -61,7 +61,7 @@ public class LanguageSetImpl extends AbstractSupportSet implements LanguageSet, 
     {
         LanguageImpl lang = new LanguageImpl(locale, bundle, title, shortTitle, castorKeywords);
 
-        return(Language)lang;
+        return lang;
     }
 
     /* never used

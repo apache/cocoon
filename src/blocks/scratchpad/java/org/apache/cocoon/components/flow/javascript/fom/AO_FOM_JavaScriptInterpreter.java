@@ -85,7 +85,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.9 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.10 2004/05/26 01:31:06 joerg Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Serviceable, Configurable, Initializable
@@ -294,7 +294,6 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * org.apache.cocoon.environment.Environment#getURIPrefix} method,
      * can have a scope associated with it.
      *
-     * @param environment an <code>Environment</code> value
      * @return a <code>Scriptable</code> value
      */
     private Scriptable getSessionScope()
@@ -330,7 +329,6 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * prefix of the current sitemap, as returned by the {@link
      * org.apache.cocoon.environment.Environment#getURIPrefix} method.
      *
-     * @param environment an <code>Environment</code> value
      * @param scope a <code>Scriptable</code> value
      */
     private Scriptable setSessionScope(Scriptable scope)
@@ -422,7 +420,6 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      * newly create Scriptable object in the user's session, where it
      * will be retrieved from at the next invocation of {@link #callFunction}.</p>
      *
-     * @param environment an <code>Environment</code> value
      * @exception Exception if an error occurs
      */
     private void setupContext(Redirector redirector,

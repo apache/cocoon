@@ -31,7 +31,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletEnvironment.java,v 1.4 2004/05/25 07:28:26 cziegeler Exp $
+ * @version CVS $Id: PortletEnvironment.java,v 1.5 2004/05/26 01:31:06 joerg Exp $
  */
 public class PortletEnvironment extends AbstractEnvironment {
 
@@ -250,7 +250,7 @@ public class PortletEnvironment extends AbstractEnvironment {
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
+     * This method replaces {@link #getOutputStream(int)}.
      */
     public OutputStream getOutputStream(final int bufferSize) throws IOException {
         if (this.outputStream == null) {

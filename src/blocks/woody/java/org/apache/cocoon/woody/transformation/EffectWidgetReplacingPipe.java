@@ -57,7 +57,7 @@ import java.util.Map;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.12 2004/03/09 13:54:12 reinhard Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.13 2004/05/26 01:31:06 joerg Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -65,7 +65,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * Form location attribute on <code>wt:form-template</code> element, containing
      * JXPath expression which should result in Form object.
      *
-     * @see WoodyPipelineConfig#findForm
+     * @see WoodyPipelineConfig#findForm(String)
      */
     private static final String LOCATION = "location";
 

@@ -18,7 +18,6 @@ package org.apache.cocoon.environment.mock;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -26,11 +25,7 @@ import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 public class MockEnvironment implements Environment {
 

@@ -18,7 +18,6 @@ package org.apache.cocoon.environment.background;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ import org.apache.cocoon.util.NullOutputStream;
  * for pipeline calls which are not externally triggered.
  * 
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: BackgroundEnvironment.java,v 1.5 2004/05/25 07:28:26 cziegeler Exp $
+ * @version CVS $Id: BackgroundEnvironment.java,v 1.6 2004/05/26 01:31:06 joerg Exp $
  *
  * @since 2.1.4
  */
@@ -93,7 +92,6 @@ public class BackgroundEnvironment extends AbstractEnvironment {
      * @param context
      * @param stream
      * @param log
-     * @throws MalformedURLException
      */
     public BackgroundEnvironment(String uri, String view, File context, OutputStream stream, Logger log) 
     {

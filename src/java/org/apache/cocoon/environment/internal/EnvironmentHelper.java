@@ -40,7 +40,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.1 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.2 2004/05/26 01:31:06 joerg Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -275,7 +275,7 @@ implements SourceResolver, Serviceable, Disposable {
 
     /**
      * This hook must be called by the sitemap each time a sitemap is left.
-     * It's the counterpart to {@link #enterProcessor(Processor)}.
+     * It's the counterpart to {@link #enterProcessor(Processor, ServiceManager, Environment)}.
      */
     public static void leaveProcessor() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
