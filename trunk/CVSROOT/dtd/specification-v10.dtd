@@ -71,7 +71,7 @@ COPYRIGHT:
     <!ATTLIST bl %common.att;>
 
         <!-- Book item -->
-        <!ELEMENT bi %empty;>
+        <!ELEMENT bi EMPTY>
         <!ATTLIST bi %common.att;
                      %name.att;
                      %title.att;
