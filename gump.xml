@@ -1475,8 +1475,8 @@
   </project>
 
   <project name="asm">
-    <jar name="lib/optional/asm-1.4.3.jar"/>
-    <jar name="lib/optional/asm-util-1.4.3.jar"/>
+    <jar name="lib/optional/asm-1.5.2.jar"/>
+    <jar name="lib/optional/asm-util-1.5.2.jar"/>
   </project>
 
   <project name="apache-garbage">
