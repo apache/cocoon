@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.5 2000-10-30 19:49:05 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.6 2000-10-31 02:43:20 balld Exp $-->
 <!--
 
  ============================================================================
@@ -285,8 +285,8 @@
 		<xsl:when test="esql:statement">
 		 _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
 		 _esql_session.statement = _esql_session.prepared_statement;
-		 <xsl:text>_esql_session.prepared_statement.</xsl:text>
 		 <xsl:for-each select=".//esql:parameter">
+		 <xsl:text>_esql_session.prepared_statement.</xsl:text>
 		  <xsl:choose>
 		   <xsl:when test="@type">
 		    <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,0,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,1))"/></xsl:variable>
