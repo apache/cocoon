@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
 "../../dtd/document-v10.dtd">
 <!--
-  <![CDATA[ CVS Version: $Id: script-generator.xml,v 1.5 2004/03/06 02:25:35 antonio Exp $ 
+  <![CDATA[ CVS Version: $Id: script-generator.xml,v 1.6 2004/04/04 04:44:09 antonio Exp $ 
   ]]>
 --><document>
   <header>
@@ -118,8 +118,8 @@
         associated with the extensions <code>foo</code>, and <code>bar</code>.</p>
         <source>&#60;add-language&#62;
   &#60;language name=&#34;foobar&#34; src=&#34;foo.bar.ScriptLanguage&#34;&#62;
-    &#60;extension=&#34;foo&#34;/&#62;
-    &#60;extension=&#34;bar&#34;/&#62;
+    &#60;extension&#62;foo&#60;/extension&#62;
+    &#60;extension&#62;bar&#60;/extension&#62;
   &#60;/language&#62;
   ...
 &#60;/add-language&#62;

@@ -15,18 +15,10 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='script']">
-
-    <map:generator name="script"
-         src="org.apache.cocoon.generation.ScriptGenerator"
-         logger="sitemap.generation.scriptgenerator">
-        <!-- Groovy support -->
-        <add-languages>
-            <language name="groovy" src="org.codehaus.groovy.bsf.GroovyEngine">
-              <extension>groovy</extension>
-              <extension>gy</extension>
-            </language>
-        </add-languages>
-    </map:generator>
-</xmap>
+<xsamples xpath="/samples" unless="group[@name='BSF']">
+  <group name="BSF">
+    <sample name="BSF Block" href="bsf/">
+      Examples using script generator and script action.
+    </sample>
+  </group>
+</xsamples>

@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.200 2004/04/03 01:32:32 antonio Exp $
+    | CVS $Id: jars.xml,v 1.201 2004/04/04 04:44:09 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -385,9 +385,34 @@
       supports additional languages, the application will automatically
       support the additional languages.
     </description>
-    <used-by>Script generator, script action (bsf block)</used-by>
+    <used-by>BSF Block (Script generator, script action)</used-by>
     <lib>bsf/lib/bsf-2.3.0.jar</lib>
     <homepage>http://jakarta.apache.org/bsf/</homepage>
+  </file>
+
+  <file>
+    <title>Groovy language engine</title>
+    <description>
+      Groovy is a new agile dynamic language for the JVM combining lots of great
+      features from languages like Python, Ruby and Smalltalk and making them
+      available to the Java developers using a Java-like syntax.
+    </description>
+    <used-by>BSF Block (Script generator, script action)</used-by>
+    <lib>bsf/lib/groovy-1.0-beta-4.jar</lib>
+    <homepage>http://groovy.codehaus.org/</homepage>
+  </file>
+
+  <file>
+    <title>ASM </title>
+    <description>
+      ASM is a Java bytecode manipulation framework. It can be used to
+	  dynamically generate stub classes or other proxy classes, directly in
+	  binary form, or to dynamically modify classes at load time, i.e., just
+	  before they are loaded into the Java Virtual Machine.
+    </description>
+    <used-by>BSF Block (Script generator, script action)</used-by>
+    <lib>bsf/lib/asm-1.4.2.jar</lib>
+    <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
   <file>
