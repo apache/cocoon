@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.16 2000-03-25 01:39:02 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.17 2000-03-30 00:37:18 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,12 +56,14 @@ import java.net.*;
 import java.util.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.cocoon.*;
 import org.apache.cocoon.store.*;
+import org.apache.cocoon.logger.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.transformer.*;
 import org.apache.cocoon.processor.*;
@@ -73,14 +75,13 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.16 $ $Date: 2000-03-25 01:39:02 $
+ * @version $Revision: 1.17 $ $Date: 2000-03-30 00:37:18 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
 {
   public static final String DEFAULT_LANGUAGE = "java";
   public static final String LOGICSHEET_PI = "xml-logicsheet";
-  public static final String XSP_ROOT = "org/apache/cocoon/processor/xsp/";
 
   protected Factory factory;
   protected Parser parser;
@@ -92,6 +93,8 @@ public class XSPProcessor extends AbstractActor
   protected Store store;
   protected Monitor monitor;
   protected Hashtable byNamespace;
+  
+  protected Logger logger;
 
   protected XSPGlobal global;
   protected ServletContext servletContext;
@@ -121,94 +124,57 @@ public class XSPProcessor extends AbstractActor
     // Initialize XSLT processor
     this.transformer = (Transformer) director.getActor("transformer");
 
+    // Initialize XSLT processor
+    this.logger = (Logger) director.getActor("logger");
+
     // Initialize the logicsheet hashtable indexed by language
-    this.byNamespace = new Hashtable();
+    this.byNamespace = new Hashtable(5);
 
-    try {
-      // Load configuration
-      Document document = this.parser.parse(
-        new InputSource(
-          new InputStreamReader(
-            this.getClass().getResourceAsStream("xsp.xml")
-          )
-        ), false
-      );
-
-      Element root = document.getDocumentElement();
-
-      // Load languages and XSP built-in logicsheet
-      this.languages = new Hashtable();
-      NodeList languageList = root.getElementsByTagName("language");
-      int languageCount = languageList.getLength();
-
-      // Don't forget to set repository later, on init(conf)!
-      Hashtable xspLogicsheets = new Hashtable();
-      for (int i = 0; i < languageCount; i++) {
-        Element languageElement = (Element) languageList.item(i);
-
-        // Do language
-        String languageName = languageElement.getAttribute("name");
-
-        String processorName = languageElement.getAttribute("processor");
-        XSPLanguageProcessor languageProcessor =
-          (XSPLanguageProcessor) this.factory.create(processorName);
-
-        boolean formatOption =
-          languageElement.getAttribute("format-code").equals("true");
-        languageProcessor.setFormatOption(formatOption);
-
-        this.languages.put(languageName, languageProcessor);
-
-        // Do logicsheet
-/* START: Build XSP parameter dictionary */
-/* Add manager role key/value pairs */
-/* Add global XSP objects */
-/* END: Build XSP parameter dictionary */
-
-/* START: Create a new XSP core logicsheet given URI  */
-/* Pass global XSP parameter dictionary */
-
-        XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, null);
-
-        String logicsheetName = languageElement.getAttribute("template");
-        Document logicsheetStylesheet = this.parser.parse(
-          new InputSource(
-            new InputStreamReader(
-              this.getClass().getResourceAsStream(logicsheetName)
-            )
-          ), false
-        );
-        logicsheet.setStylesheet(logicsheetStylesheet);
-
-        String preprocessorName =
-          languageElement.getAttribute("dom-preprocessor");
-        if (preprocessorName.length() > 0) {
-          XSPPreprocessor domPreprocessor =
-            (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
-          logicsheet.setPreprocessor(domPreprocessor);
-        }
-
-        xspLogicsheets.put(languageName, logicsheet);
-/* END: Create a new XSP core logicsheet given URI  */
-      }
-
-          // Add to namespace logicsheet list
-      this.byNamespace.put("xsp", xspLogicsheets);
-    } catch (Exception e) {
-      throw new RuntimeException("Error during initialization: " + e.getMessage());
-    }
+    // Initialize the logicsheet hashtable indexed by language
+    this.languages = new Hashtable(1);
   }
 
   public void init(Configurations conf) {
 
-    // Initialize repository
+    // Get Configurations
     conf = conf.getConfigurations("xsp");
 
-/* How to use Cocoon's Object Store for compiled classes? */
-    // FIXME: the XSP processor should use the Cocoon internal object store
-    // rather than providing its own. This is a quick and dirty hack to
-    // make it work with Ricardo's code. But we'll create smoother integration
-    // in future versions (SM)
+    // create a repository for xsp logicsheets
+    Hashtable xspLogicsheets = new Hashtable(10);
+
+    // Set properties and actors for each supported language
+    Tokenizer t = new Tokenizer((String) conf.get("languages"));
+    while (t.hasMoreTokens()) {
+        try {
+            String languageName = t.nextToken();
+            Configurations c = conf.getConfigurations(languageName);
+            XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, null);
+    
+            String processorName = (String) c.get("processor");
+            XSPLanguageProcessor languageProcessor = (XSPLanguageProcessor) this.factory.create(processorName);
+            this.languages.put(languageName, languageProcessor);
+
+            String logicsheetName = (String) c.get("logicsheet");
+            InputStream logicsheetInputStream = this.getClass().getResourceAsStream(logicsheetName);
+            if (logicsheetInputStream == null) throw new Exception("Resource '" + logicsheetName + "' could not be found.");
+            logicsheet.setStylesheet(this.parser.parse(new InputSource(logicsheetInputStream)));
+   
+            String preprocessorName = (String) c.get("preprocessor");
+            if (processorName != null) {
+                XSPPreprocessor domPreprocessor = (XSPPreprocessor) this.factory.create(preprocessorName);
+                logicsheet.setPreprocessor(domPreprocessor);
+            }
+    
+            xspLogicsheets.put(languageName, logicsheet);
+        } catch (SAXException e) {
+            throw new RuntimeException(Utils.getStackTraceAsString(e.getException()));
+        } catch (Exception e) {
+            throw new RuntimeException("Error while initializing XSP engine: " + Utils.getStackTraceAsString(e));
+        }
+    }
+
+    // Add to namespace logicsheet list
+    this.byNamespace.put("xsp", xspLogicsheets);
 
     String repositoryName = (String) conf.get("repository");
     this.repositoryFile = new File(repositoryName);
@@ -241,14 +207,10 @@ public class XSPProcessor extends AbstractActor
         );
       }
     }
-/* START: Load namespace-mapped logicsheets */
+
     // Load namespace-mapped logicsheets
-    Configurations lsConf = conf.getConfigurations("library");
+    Configurations lsConf = conf.getConfigurations("logicsheet");
     Enumeration e = lsConf.keys();
-    if (!e.hasMoreElements()) {
-      lsConf = conf.getConfigurations("logicsheet");
-      e = lsConf.keys();
-    }
 
     while (e.hasMoreElements()) {
       String str = (String) e.nextElement();
@@ -264,31 +226,28 @@ public class XSPProcessor extends AbstractActor
       }
 
       Hashtable byLanguage = (Hashtable) this.byNamespace.get(namespace);
-      if (byLanguage == null) {
-        byLanguage = new Hashtable();
-      }
+      if (byLanguage == null) byLanguage = new Hashtable(1);
 
       try {
-                // FIXME: This works only with resources and absolute filenames!!!
-                Object resource = this.getLocationResource(location);
-
+        Object resource = Utils.getLocationResource(location);
+        if (resource == null) throw new Exception("Resource not found or retrieving error.");
+        
         XSPPreprocessor preprocessor = null;
         String preprocessorName =
           (String) lsConf.get(namespace + "." + language + ".preprocessor");
         if (preprocessorName != null) {
-          preprocessor = (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
+          preprocessor = (XSPPreprocessor) this.factory.create(preprocessorName);
         }
 
-                // Store only after initialization completes successfully
-                this.refreshLogicsheet(resource, preprocessor);
+        this.refreshLogicsheet(resource, preprocessor);
         byLanguage.put(language, this.store.get(resource.toString()));
       } catch (Exception ex) {
-        throw new RuntimeException ("Error loading logicsheet: " + location + ". " + ex);
+        // should we consider this fatal and throw an exception? (SM)
+        logger.log(this, "Logicsheet for namespace '" + namespace + "' not found at '" + location + "' due to " + ex, Logger.WARNING);
       }
 
       this.byNamespace.put(namespace, byLanguage);
     }
-/* END: Load namespace-mapped logicsheets */
   }
 
   public Document process(Document document, Dictionary parameters)
@@ -526,9 +485,9 @@ public class XSPProcessor extends AbstractActor
               (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
           }
 
-                  Object resource = getLocationResource(location, request);
+          Object resource = Utils.getLocationResource(location, request, servletContext);
 
-                  this.refreshLogicsheet(resource, preprocessor);
+          this.refreshLogicsheet(resource, preprocessor);
 
           vector.addElement(resource);
 
@@ -647,54 +606,5 @@ public class XSPProcessor extends AbstractActor
     public XSPPage getPage() {
       return this.page;
     }
-  }
-
-  // FIXME: Utils.java. Reuse in XSLTProcessor
-  private static Object getLocationResource(String location)
-    throws MalformedURLException
-  {
-        Object resource = null;
-
-    if (location.indexOf("://") < 0) {
-      resource = new File(location);
-    } else if (location.startsWith("resource://")) {
-      resource = ClassLoader.getSystemResource(
-        location.substring("resource://".length())
-      );
-    } else {
-      resource = new URL(location);
-    }
-
-        return resource;
-  }
-
-  private Object getLocationResource(String location, HttpServletRequest request)
-    throws Exception
-  {
-    Object resource = null;
-
-    if (location.indexOf("://") < 0) {
-      if (location.charAt(0) == '/') {
-        // Location is relative to webserver's root
-        location = this.servletContext.getRealPath(location);
-      } else {
-        // Location is relative to requested page's virtual directory
-        // FIXME: Should be in Utils.java, not here on in ProducerFromFile
-        String basename = Utils.getBasename(request, this.servletContext);
-        String path = basename.substring(0, basename.lastIndexOf('/') + 1);
-
-        location = path + location;
-      }
-
-      resource = new File(location);
-    } else if (location.startsWith("resource://")) {
-      resource = ClassLoader.getSystemResource(
-        location.substring("resource://".length())
-      );
-    } else {
-      resource = new URL(location);
-    }
-
-        return resource;
   }
 }
