@@ -72,7 +72,6 @@
 
                 <map:generate src="docs/protected.xml"/>
                 <map:transform type="session"/>
-                <map:transform type="log"/>
          	    <map:transform src="stylesheets/simple-page2html.xsl"/>
 	    	    <map:transform type="encodeURL"/>
                 <map:serialize/>
