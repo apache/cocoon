@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.layout.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.CompositeLayout;
@@ -117,12 +116,12 @@ public class CompositeLayoutImpl
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Layout#copy(java.util.Map)
      */
-    public Layout copy(Map copletInstanceDatas) {
-        CompositeLayoutImpl clone = (CompositeLayoutImpl)super.copy(copletInstanceDatas);
+    public Layout copy() {
+        CompositeLayoutImpl clone = (CompositeLayoutImpl)super.copy();
         final Iterator i = this.items.iterator();
         while ( i.hasNext() ) {
             final Item current = (Item)i.next();
-            final Item clonedItem = current.copy(clone, copletInstanceDatas);
+            final Item clonedItem = current.copy(clone);
             clone.addItem(clonedItem);
         }
         return clone;
