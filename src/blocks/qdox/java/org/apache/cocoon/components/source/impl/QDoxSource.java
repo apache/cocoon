@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.source.impl;
 
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -91,12 +90,11 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-
 /**
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.5 $ $Date: 2004/02/29 05:29:09 $
+ * @version CVS $Id: QDoxSource.java,v 1.6 2004/02/29 05:55:34 antonio Exp $ $Date: 2004/02/29 05:55:34 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -105,6 +103,7 @@ public final class QDoxSource
     protected final static String ROOT_CLASSNAME = "java.lang.Object";
 
     protected final static String EMPTY = "";
+    protected final static String PROTOCOL = "qdox:";
     protected final static String NS_URI = "http://apache.org/cocoon/javadoc/1.0";
     protected final static String NS_PREFIX = "jd";
     protected final static String ATTR_TYPE = "NMTOKEN";
@@ -477,7 +476,7 @@ public final class QDoxSource
             classPart = javadocClass.getFullyQualifiedName();
         } else if (classPart.equals("Object")) {
             // Fastest way to identify the root object - otherwise the next, *expensive* 'if' block is executed!
-            classPart = "java.lang.Object";
+            classPart = ROOT_CLASSNAME;
         } else if (classPart.indexOf('.') < 0) {
             // No qualified name specified:
             String[] imports = javadocClass.getParentSource().getImports();
@@ -517,7 +516,7 @@ public final class QDoxSource
                         }
 
                         // Test whether the classname 'name' is valid:
-                        Source source = resolver.resolveURI("javadoc:" + name);
+                        Source source = resolver.resolveURI(PROTOCOL + name);
                         found = source != null && source instanceof QDoxSource;
                         if (found) {
                             classPart = name;
@@ -751,7 +750,7 @@ public final class QDoxSource
 
         try {
             resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-            Source source = resolver.resolveURI("qdox:" + className);
+            Source source = resolver.resolveURI(PROTOCOL + className);
             if (source instanceof QDoxSource) {
                 QDoxSource javadocSource = (QDoxSource) source;
                 jClass = javadocSource.getJavadocClass();
