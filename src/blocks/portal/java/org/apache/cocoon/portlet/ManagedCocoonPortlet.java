@@ -39,6 +39,7 @@ import org.apache.cocoon.environment.portlet.PortletContext;
 import org.apache.cocoon.environment.portlet.PortletEnvironment;
 import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
 import org.apache.cocoon.portlet.multipart.RequestFactory;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 
 import org.apache.log.ContextMap;
@@ -61,7 +62,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.SocketException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.HashMap;
 
 /**
@@ -71,7 +71,7 @@ import java.util.HashMap;
  * first create and initialize an instance of the Cocoon object, and this
  * Portlet will use this instance to process requests.</p>
  *
- * @version CVS $Id: ManagedCocoonPortlet.java,v 1.2 2004/07/06 22:38:28 vgritsenko Exp $
+ * @version CVS $Id: ManagedCocoonPortlet.java,v 1.3 2004/07/11 17:23:29 antonio Exp $
  */
 public class ManagedCocoonPortlet extends GenericPortlet {
 
@@ -379,7 +379,7 @@ public class ManagedCocoonPortlet extends GenericPortlet {
 
         Environment env;
         try{
-            env = getEnvironment(servletPath, URLDecoder.decode(uri, "UTF-8"), request, res);
+            env = getEnvironment(servletPath, NetUtils.decode(uri, "UTF-8"), request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon portlet", e);
@@ -530,7 +530,7 @@ public class ManagedCocoonPortlet extends GenericPortlet {
 
         Environment env;
         try{
-            env = getEnvironment(servletPath, URLDecoder.decode(uri, "UTF-8"), request, res);
+            env = getEnvironment(servletPath, NetUtils.decode(uri, "UTF-8"), request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon portlet", e);
