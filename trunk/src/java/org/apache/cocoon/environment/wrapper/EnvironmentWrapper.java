@@ -74,7 +74,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.16 2004/01/06 12:49:26 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.17 2004/01/31 16:56:50 unico Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -141,13 +141,13 @@ public class EnvironmentWrapper
         
     }
     
-    private void init(Environment      env,
-                              String           requestURI,
-                              String           queryString,
-                              Logger           logger,
-                              ServiceManager manager,
-                              boolean          rawMode,
-                              String           view)
+    private void init(Environment    env,
+                      String         requestURI,
+                      String         queryString,
+                      Logger         logger,
+                      ServiceManager manager,
+                      boolean        rawMode,
+                      String         view)
     throws MalformedURLException {
 
         this.enableLogging(logger);
