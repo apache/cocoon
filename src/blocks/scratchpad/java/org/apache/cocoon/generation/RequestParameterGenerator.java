@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,10 +33,10 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * <p>The {@link RequestParameterGenerator} is a simple generator producing as an
  * output a subset of what the {@link RequestGenerator} produces.</p>
- * 
+ *
  * <p>This generator limits its output to the production of request parameters,
  * completely ignoring things like headers and configurations. An example:</p>
- * 
+ *
  * <pre>
  * &lt;req:request xmlns:req="http://apache.org/cocoon/request/2.0"&gt;
  *   &lt;req:requestParameters&gt;
@@ -51,16 +51,16 @@ import org.xml.sax.helpers.AttributesImpl;
  *   &lt;/req:requestParameters&gt;
  * &lt;/req:request&gt;
  * </pre>
- * 
+ *
  * <p>The benefits of this simplified version of {@link RequestGenerator} is that
  * it is <b>cacheable</b>. The cacheability is achieved by crafting a very specific
- * {@link getKey() key} to be passed to Cocoon, so that the caching pipeline can
+ * {@link #getKey key} to be passed to Cocoon, so that the caching pipeline can
  * actually identify the differences in parameters.</p>
- * 
+ *
  * <p><b>NOTE:</b> given the nature of this generator, and the strain it might put
  * onto the cache system, it is <i>strongly</i> suggested to limit its use to
  * internal pipelines only, with a controlled number of parameter and values passed
- * to it.</p> 
+ * to it.</p>
  *
  * @author <a href="mailto:pier_fumagalli@vnu.co.uk">Pier Fumagalli</a>
  */
@@ -68,35 +68,35 @@ public class RequestParameterGenerator extends AbstractGenerator
 implements CacheableProcessingComponent  {
 
     /* == CONSTANTS ============================================================== */
-    
+
     /** <p>The namespace prefix of this generator.</p> */
     public static final String PREFIX = "req";
     /** <p>The namespace URI of this generator.</p> */
     private final static String URI = "http://apache.org/cocoon/request/2.0";
-    /** <p>The local name of the root &lt;req:request/&gt; element.</p> */ 
+    /** <p>The local name of the root &lt;req:request/&gt; element.</p> */
     private final static String E_REQ_L = "request";
-    /** <p>The qualified name of the root &lt;req:request/&gt; element.</p> */ 
+    /** <p>The qualified name of the root &lt;req:request/&gt; element.</p> */
     private final static String E_REQ_Q = PREFIX + ":" + E_REQ_L;
-    /** <p>The local name of the &lt;req:requestParameters/&gt; element.</p> */ 
+    /** <p>The local name of the &lt;req:requestParameters/&gt; element.</p> */
     private final static String E_PARAMS_L = "requestParameters";
-    /** <p>The qualified name of the &lt;req:requestParameters/&gt; element.</p> */ 
+    /** <p>The qualified name of the &lt;req:requestParameters/&gt; element.</p> */
     private final static String E_PARAMS_Q = PREFIX + ":" + E_PARAMS_L;
-    /** <p>The local name of the &lt;req:parameter/&gt; element.</p> */ 
+    /** <p>The local name of the &lt;req:parameter/&gt; element.</p> */
     private final static String E_PARAM_L = "parameter";
-    /** <p>The qualified name of the &lt;req:parameter/&gt; element.</p> */ 
+    /** <p>The qualified name of the &lt;req:parameter/&gt; element.</p> */
     private final static String E_PARAM_Q = PREFIX + ":" + E_PARAM_L;
-    /** <p>The local name of the &lt;req:value/&gt; element.</p> */ 
+    /** <p>The local name of the &lt;req:value/&gt; element.</p> */
     private final static String E_VALUE_L = "value";
-    /** <p>The qualified name of the &lt;req:value/&gt; element.</p> */ 
+    /** <p>The qualified name of the &lt;req:value/&gt; element.</p> */
     private final static String E_VALUE_Q = PREFIX + ":" + E_VALUE_L;
 
     /* == INSTANCE VARIABLES ===================================================== */
-    
-    /** <p>The current {@link Validity} instance.</p> */
+
+    /** <p>The current {@link Parameters} instance.</p> */
     private Parameters parameters = null;
 
     /* == CONSTRUCTORS =========================================================== */
-    
+
     /**
      * <p>Create a new {@link RequestParameterGenerator} instance.</p>
      */
@@ -105,7 +105,7 @@ implements CacheableProcessingComponent  {
     }
 
     /* == IMPLEMENTATION METHODS ================================================= */
-    
+
     /**
      * <p>Recycle this instance by wiping all locally held references.</p>
      *
@@ -134,7 +134,7 @@ implements CacheableProcessingComponent  {
      */
     public SourceValidity getValidity() {
         if (this.parameters != null) return(this.parameters);
-        this.parameters = new Parameters(ObjectModelHelper.getRequest(this.objectModel)); 
+        this.parameters = new Parameters(ObjectModelHelper.getRequest(this.objectModel));
         return(this.parameters);
     }
 
@@ -157,7 +157,7 @@ implements CacheableProcessingComponent  {
         int offset = 0;
         int chunks = (int)parameters[offset++];
         for (int chunk = 0; chunk < chunks; chunk++) {
-        
+
             /* How many strings do we have in this chunk? */
             int strings = (int)parameters[offset++];
             if (strings == 0) continue;
@@ -191,14 +191,14 @@ implements CacheableProcessingComponent  {
     }
 
     /* == INNER CLASSES ========================================================== */
-    
+
     /**
      * <p>This class encodes a varying number of request parameters into a characters
-     * array, and gives this character array a {@link SourceValidity} view.</p> 
+     * array, and gives this character array a {@link SourceValidity} view.</p>
      *
      * <p>Parameters are encoded using a count-prefix format (each array is prefixed
      * by its length), or roughly outlined as follows:</p>
-     * 
+     *
      * <p>
      *   <code>
      *     <b>count(parameters)</b><br>
@@ -220,7 +220,7 @@ implements CacheableProcessingComponent  {
      * </p>
      */
     private static class Parameters implements SourceValidity {
-        
+
         /** <p>An array of characters holding our NULL-separated parameters.</p> */
         private char array[] = null;
         /** <p>The {@link String} representation of this instance.</p> */
@@ -238,7 +238,7 @@ implements CacheableProcessingComponent  {
             Set sort2 = new TreeSet();
             Enumeration enum = request.getParameterNames();
             while (enum.hasMoreElements()) sort1.add(enum.nextElement());
-            
+
             /* Declare how many parameters we have */
             if (sort1.size() > Character.MAX_VALUE) {
                 throw new IllegalArgumentException("Too many parameters");
@@ -246,7 +246,7 @@ implements CacheableProcessingComponent  {
                 buff.append((char)sort1.size());
             }
 
-            /* Run through the sorted parameter names to get the values */ 
+            /* Run through the sorted parameter names to get the values */
             Iterator iter1 = sort1.iterator();
             while (iter1.hasNext()) {
                 /* Access the parameter name and values */
@@ -293,7 +293,7 @@ implements CacheableProcessingComponent  {
 
         /**
          * <p>Check the validity of this instance</p>
-         * 
+         *
          * <p>Given that the key returned by the {@link RequestParameterGenerator}
          * is the string representation of this object, we can safely assume that
          * Cocoon will select us only when the appropriate parameters are passed
@@ -311,10 +311,10 @@ implements CacheableProcessingComponent  {
 
         /**
          * <p>Compare the validity against another {@link SourceValidity}.</p>
-         * 
+         *
          * <p>This method will return {@link SourceValidity.VALID} if and only if
-         * this instance {@link equals() equals} the specified validity, and
-         * {@link SourceValidity.INVALID} in all other cases.</p> 
+         * this instance {@link #equals equals} the specified validity, and
+         * {@link SourceValidity.INVALID} in all other cases.</p>
          *
          * @see SourceValidity#isValid(SourceValidity)
          */
@@ -327,7 +327,7 @@ implements CacheableProcessingComponent  {
          *
          * <p>This method will calculate the hash code in the same way the standard
          * {@link String} does, but operating on the encoded parameters.</p>
-         * 
+         *
          * @see String#hashCode()
          */
         public boolean equals(Object object) {
@@ -343,7 +343,7 @@ implements CacheableProcessingComponent  {
             for (int x = 0; x < this.array.length; x++) {
                 if (this.array[x] != parameters.array[x]) return(false);
             }
-            
+
             /* Should be the same now! */
             return(true);
         }
@@ -353,7 +353,7 @@ implements CacheableProcessingComponent  {
          *
          * <p>This method will calculate the hash code in the same way the standard
          * {@link String} does, but operating on the encoded parameters.</p>
-         * 
+         *
          * @see String#hashCode()
          */
         public int hashCode() {
