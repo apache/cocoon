@@ -387,17 +387,29 @@
        <map:redirect-to uri="binding-{1}-JS.flow" />
      </map:match>
      
-     <map:match pattern="binding.form">
-       <map:generate type="forms">
-         <map:parameter name="form-action" value="#\{$continuation/id}.continue" />
-       </map:generate>
-       <!--TODO: fix xsl for use with FormGenerator -->
+     <map:match pattern="binding.form.*">
+       <map:select type="resource-exists" >
+         <map:when test="forms/binding/{1}-template.xml">
+           <map:generate type="file" src="forms/binding/{1}-template.xml" />
+           <map:transform type="forms" >
+             <map:parameter name="form-action" value="{flow-continuation:id}.continue" />
+             <map:parameter name="form-method" value="POST" />
+           </map:transform>
+         </map:when>
+         <map:otherwise>       
+           <map:generate type="forms">
+             <map:parameter name="form-action" value="{flow-continuation:id}.continue" />
+             <map:parameter name="form-method" value="POST" />
+           </map:generate>
+         </map:otherwise>
+       </map:select>
+
        <map:transform src="resources/forms-samples-styling.xsl" />
        <map:serialize type="html" />
      </map:match>
 
      <map:match pattern="binding.done">
-       <map:generate type="jx" src="forms/binding/done.jx"/> <!-- generic dump of flow env via jx? -->
+       <map:generate type="jx" src="forms/binding/done.jx"/> <!-- generic dump of flow data via jx? -->
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/binding/done.jx"/>
        </map:call>
