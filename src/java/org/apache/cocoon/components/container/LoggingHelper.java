@@ -63,9 +63,15 @@ public class LoggingHelper {
     public LoggingHelper(Settings settings, 
                          LogTarget defaultTarget, 
                          Context context) {
-        final String logLevel = settings.get(settings.getBootstrapLogLevel(), "INFO");
+        String logLevel = settings.getBootstrapLogLevel();
+        if ( logLevel == null ) {
+            logLevel = "INFO";
+        }
         
-        final String accesslogger = settings.get(settings.getAccessLogger(), "cocoon");
+        String accesslogger = settings.getAccessLogger();
+        if ( accesslogger == null ) {
+            accesslogger = "cocoon";
+        }
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
@@ -95,8 +101,10 @@ public class LoggingHelper {
         if ( value != null ) {
             ((DefaultContext)context).put("context-root", value);
         }
-        final String loggerManagerClass =
-            settings.get(settings.getLoggerClassName(), LogKitLoggerManager.class.getName());
+        String loggerManagerClass = settings.getLoggerClassName();
+        if ( loggerManagerClass == null ) {
+            loggerManagerClass = LogKitLoggerManager.class.getName();
+        }
 
         // the log4j support requires currently that the log4j system is already configured elsewhere
 
@@ -109,7 +117,10 @@ public class LoggingHelper {
 
             if (loggerManager instanceof Configurable) {
                 //Configure the logkit management
-                String logkitConfig = settings.get(settings.getLoggingConfiguration(), "/WEB-INF/logkit.xconf");
+                String logkitConfig = settings.getLoggingConfiguration();
+                if ( logkitConfig == null ) {
+                    logkitConfig = "/WEB-INF/logkit.xconf";
+                }
 
                 Source source = null;
                 try {

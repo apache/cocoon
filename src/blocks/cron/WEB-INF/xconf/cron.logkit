@@ -31,7 +31,6 @@
   <categories>
     <category log-level="INFO" name="cron">
         <log-target id-ref="cron" />
-        <log-target id-ref="error"/>
     </category>
   </categories>
 </logkit>

@@ -32,8 +32,7 @@
   </targets>
   <categories>
     <category log-level="ERROR" name="forms">
-    	<log-target id-ref="forms" />
-      <log-target id-ref="error"/>
+      <log-target id-ref="forms" />
     </category>
   </categories>
 </logkit>
