@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.43 2004/05/06 19:30:09 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.44 2004/05/10 12:26:12 sylvain Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -322,6 +322,7 @@ public class CocoonBean extends CocoonWrapper {
                 getComponentManager().release(this.sourceResolver);
                 this.sourceResolver = null;
             }
+            super.dispose();
         }
     }
 
