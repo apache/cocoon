@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.170 2004/07/08 19:43:44 upayavira Exp $
+    | CVS $Id: gump.xml,v 1.171 2004/07/11 07:54:30 antonio Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -143,6 +143,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="castor"/>
+    <depend project="ehcache"/>
     <depend project="commons-jexl" inherit="all"/>
     <depend project="commons-betwixt" inherit="all"/>
     <depend project="commons-beanutils-core" inherit="all"/>
@@ -1272,4 +1273,12 @@
     <jar name="lib/core/javacImpl-0.9.jar" id="impl"/>
   </project>
 
+  <project name="ehcache">
+    <url href="http://ehcache.sourceforge.net"/>
+    <description>
+      A simple, fast and thread safe cache for Java
+    </description>
+    <home nested="src/blocks/scratchpad/lib"/>
+    <jar name="ehcache-0.9.jar"/>
+  </project>
 </module>
