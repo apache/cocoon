@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 
-<page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="#{accountForm/signOn}" view="jxpath">
         <backpointer name="#{product/name}" do="viewProduct.do?productId=#{product/productId}"/>
         <item id="#{item/itemId}">
-            <product-desc><jxpath:value-of select="product/descn"/></product-desc>
-            <product-name><jxpath:value-of select="product/name"/></product-name>
+            <product-desc>#{product/descn}</product-desc>
+            <product-name>#{product/name}</product-name>
             <desc>
-                <jxpath:value-of select="item/attr1"/> 
-                <jxpath:value-of select="item/attr2"/> 
-                <jxpath:value-of select="item/attr3"/> 
-                <jxpath:value-of select="item/attr4"/> 
-                <jxpath:value-of select="item/attr5"/> 
-                <jxpath:value-of select="item/product/name"/> 
+                #{item/attr1}
+                #{item/attr2}
+                #{item/attr3}
+                #{item/attr4}
+                #{item/attr5}
+                #{item/product/name}
             </desc>
-            <instock><jxpath:value-of select="quantity"/></instock>
-            <price><jxpath:value-of select="item/listPrice"/></price>
+            <instock>#{quantity}</instock>
+            <price>#{item/listPrice}</price>
         </item>
 
     </site>

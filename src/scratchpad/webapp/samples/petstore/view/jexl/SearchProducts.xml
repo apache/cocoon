@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="Main Menu" do="index.do" />
         <search>
-            <jexl:forEach var="item" items="${searchResultsProductList}" >
+            <c:forEach var="item" items="${searchResultsProductList}" >
                 <product name="${item.name} id="${item.productId}">
-                    <product-desc><jexl:out value="${descn}"/></product-desc>
+                    <product-desc>${descn}</product-desc>
                 </product>
-            </jexl:forEach>
+            </c:forEach>
             <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${continuation.id}"/>
         </search>
     </site>

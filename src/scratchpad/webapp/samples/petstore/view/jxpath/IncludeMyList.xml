@@ -1,4 +1,4 @@
-<t:template xmlns:t="http://cocoon.apache.org/transformation/jxpath/1.0">
+<t:template xmlns:t="http://cocoon.apache.org/generation/jx/1.0">
 <t:if test="#{myList}">
 <p> </p>
 <table align="right" bgcolor="#008800" border="0" cellspacing="2" cellpadding="3">
@@ -8,13 +8,13 @@
   </td></tr>
   <tr bgcolor="#FFFF88">
   <td>
-<t:for-each select="#{myList}"> 
+<t:forEach select="#{myList}"> 
     <a href="viewProduct.do?productId=#{product/productId}">
         #{product/name}</a>
     <br />
     <font size="2">#{product/productId}</font>
     <br />
-</t:for-each>
+</t:forEach>
   </td>
   </tr>
   <tr>

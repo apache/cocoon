@@ -112,7 +112,7 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
 /**
- *
+ *  <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>)</p>
  *  <p>Provides a generic page template with embedded JSTL and XPath expression substitution
  *  to access data sent by Cocoon Flowscripts.</p>
  *  The embedded expression language allows a page author to access an 
@@ -256,7 +256,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * </pre></p>
  */
 
-public class JexlTemplate extends AbstractGenerator {
+public class JXTemplate extends AbstractGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
@@ -673,7 +673,7 @@ public class JexlTemplate extends AbstractGenerator {
 
 
     final static String NS = 
-        "http://cocoon.apache.org/transformation/jexl/1.0";
+        "http://cocoon.apache.org/generation/jx/1.0";
 
     final static String TEMPLATE = "template";
     final static String FOR_EACH = "forEach";
@@ -823,76 +823,72 @@ public class JexlTemplate extends AbstractGenerator {
             try {
                 top: while ((ch = in.read()) != -1) {
                     char c = (char)ch;
-                    if (inExpr) {
-                        if (c == '\\') {
-                            ch = in.read();
-                            if (ch == -1) {
-                                buf.append('\\');
-                            } else {
-                                buf.append((char)ch);
-                            } 
-                        } else if (c == '}') {
-                            String str = buf.toString();
-                            Object compiledExpression;
-                            try {
-                                if (xpath) {
-                                    compiledExpression = 
-                                        JXPathContext.compile(str);
-                                } else {
-                                    compiledExpression = 
-                                        ExpressionFactory.createExpression(str);
-                                }
-                            } catch (Exception exc) {
-                                throw new SAXParseException(exc.getMessage(),
-                                                            location,
-                                                            exc);
-                            }
-                            substitutions.add(compiledExpression);
-                            buf.setLength(0);
-                            inExpr = false;
-                        } else {
-                            buf.append(c);
-                        }
-                    } else {
-                        if (c == '\\') {
-                            ch = in.read();
-                            if (ch == -1) {
-                                buf.append('\\');
-                            } else {
-                                buf.append((char)ch);
-                            }
-                        } else if (c == '$' || c == '#') {
-                            ch = in.read();
-                            if (ch == '\\') {
+                    processChar: while (true) {
+                        if (inExpr) {
+                            if (c == '\\') {
                                 ch = in.read();
-                                buf.append(c);
-                                if (ch != -1) {
-                                    buf.append((char)ch);
-                                } else {
+                                if (ch == -1) {
                                     buf.append('\\');
+                                } else {
+                                    buf.append((char)ch);
+                                } 
+                            } else if (c == '}') {
+                                String str = buf.toString();
+                                Object compiledExpression;
+                                try {
+                                    if (xpath) {
+                                        compiledExpression = 
+                                            JXPathContext.compile(str);
+                                    } else {
+                                        compiledExpression = 
+                                            ExpressionFactory.createExpression(str);
+                                    }
+                                } catch (Exception exc) {
+                                    throw new SAXParseException(exc.getMessage(),
+                                                                location,
+                                                                exc);
                                 }
-                            } else if (ch == '{') {
-                                xpath = c == '#';
-                                inExpr = true;
-                                if (buf.length() > 0) {
-                                    char[] charArray = 
-                                        new char[buf.length()];
-                                    
-                                    buf.getChars(0, buf.length(),
-                                                 charArray, 0);
-                                    substitutions.add(charArray);
-                                    buf.setLength(0);
-                                }
-                                continue top;
+                                substitutions.add(compiledExpression);
+                                buf.setLength(0);
+                                inExpr = false;
                             } else {
                                 buf.append(c);
-                                if (ch != -1) {
-                                    buf.append((char)ch);
-                                }
                             }
                         } else {
-                            buf.append(c);
+                            if (c == '\\') {
+                                ch = in.read();
+                                if (ch == -1) {
+                                    buf.append('\\');
+                                } else {
+                                    buf.append((char)ch);
+                                }
+                            } else if (c == '$' || c == '#') {
+                                ch = in.read();
+                                if (ch == '{') {
+                                    xpath = c == '#';
+                                    inExpr = true;
+                                    if (buf.length() > 0) {
+                                        char[] charArray = 
+                                            new char[buf.length()];
+                                        
+                                        buf.getChars(0, buf.length(),
+                                                     charArray, 0);
+                                        substitutions.add(charArray);
+                                        buf.setLength(0);
+                                    }
+                                    continue top;
+                                } else {
+                                    buf.append(c);
+                                    if (ch != -1) {
+                                        c = (char)ch;
+                                        continue processChar;
+                                    }
+                                }
+                            } else {
+                                buf.append(c);
+                            }
                         }
+                        break;
                     }
                 }
             } catch (IOException ignored) {
@@ -1057,72 +1053,68 @@ public class JexlTemplate extends AbstractGenerator {
                 try {
                     top: while ((ch = in.read()) != -1) {
                         char c = (char)ch;
-                        if (inExpr) {
-                            if (c == '\\') {
-                                ch = in.read();
-                                if (ch == -1) {
-                                    buf.append('\\');
-                                } else {
-                                    buf.append((char)ch);
-                                }
-                            } else if (c == '}') {
-                                String str = buf.toString();
-                                Object compiledExpression;
-                                try {
-                                    compiledExpression =
-                                        compile(str, xpath);
-                                } catch (Exception exc) {
-                                    throw new SAXParseException(exc.getMessage(),
-                                                                location,
-                                                                exc);
-                                } catch (Error err) {
-                                    throw new SAXParseException(err.getMessage(),
-                                                                location,
-                                                                null);
-                                                                
-                                } 
-                                substEvents.add(new Expression(compiledExpression));
-                                buf.setLength(0);
-                                inExpr = false;
-                            } else {
-                                buf.append(c);
-                            }
-                        } else {
-                            if (c == '\\') {
-                                ch = in.read();
-                                if (ch == -1) {
-                                    buf.append('\\');
-                                } else {
-                                    buf.append((char)ch);
-                                }
-                            } if (c == '$' || c == '#') {
-                                ch = in.read();
-                                if (ch == '\\') {
-                                    buf.append(c);
+                        processChar: while (true) {
+                            if (inExpr) {
+                                if (c == '\\') {
                                     ch = in.read();
-                                    if (ch != -1) {
-                                        buf.append((char)ch);
-                                    } else {
+                                    if (ch == -1) {
                                         buf.append('\\');
+                                    } else {
+                                        buf.append((char)ch);
                                     }
-                                } else if (ch == '{') {
-                                    if (buf.length() > 0) {
-                                        substEvents.add(new Literal(buf.toString()));
-                                        buf.setLength(0);
-                                    }
-                                    inExpr = true;
-                                    xpath = c == '#';
-                                    continue top;
+                                } else if (c == '}') {
+                                    String str = buf.toString();
+                                    Object compiledExpression;
+                                    try {
+                                        compiledExpression =
+                                            compile(str, xpath);
+                                    } catch (Exception exc) {
+                                        throw new SAXParseException(exc.getMessage(),
+                                                                    location,
+                                                                    exc);
+                                    } catch (Error err) {
+                                        throw new SAXParseException(err.getMessage(),
+                                                                    location,
+                                                                    null);
+                                        
+                                    } 
+                                    substEvents.add(new Expression(compiledExpression));
+                                    buf.setLength(0);
+                                    inExpr = false;
                                 } else {
                                     buf.append(c);
-                                    if (ch != -1) {
-                                        buf.append((char)ch);
-                                    }
                                 }
                             } else {
-                                buf.append(c);
+                                if (c == '\\') {
+                                    ch = in.read();
+                                    if (ch == -1) {
+                                        buf.append('\\');
+                                    } else {
+                                        buf.append((char)ch);
+                                    }
+                                } if (c == '$' || c == '#') {
+                                    ch = in.read();
+                                    if (ch == '{') {
+                                        if (buf.length() > 0) {
+                                            substEvents.add(new Literal(buf.toString()));
+                                            buf.setLength(0);
+                                        }
+                                        inExpr = true;
+                                        xpath = c == '#';
+                                        continue top;
+                                    } else {
+                                        buf.append(c);
+                                        if (ch != -1) {
+                                            c = (char)ch;
+                                            continue processChar;
+                                        }
+                                    }
+                                } else {
+                                    buf.append(c);
+                                }
                             }
-                        }
+                            break;
+                        } 
                     }
                 } catch (IOException ignored) {
                     ignored.printStackTrace();
@@ -2107,7 +2099,7 @@ public class JexlTemplate extends AbstractGenerator {
                 }
             } else if (ev instanceof StartForEach) {
                 StartForEach startForEach = (StartForEach)ev;
-                Object items = startForEach.items;
+                final Object items = startForEach.items;
                 Iterator iter = null;
                 boolean xpath = false;
                 try {
@@ -2119,7 +2111,7 @@ public class JexlTemplate extends AbstractGenerator {
                         iter = 
                             compiledExpression.iteratePointers(jxpathContext);
                         xpath = true;
-                    } else {
+                    } else if (items instanceof org.apache.commons.jexl.Expression) {
                         org.apache.commons.jexl.Expression e = 
                             (org.apache.commons.jexl.Expression)items;
                         Object result = e.evaluate(jexlContext);
@@ -2133,6 +2125,25 @@ public class JexlTemplate extends AbstractGenerator {
                         if (iter == null) {
                             iter = EMPTY_ITER;
                         }
+                    } else {
+                        // literal value
+                        iter = new Iterator() {
+
+                                Object val = items;
+
+                                public boolean hasNext() {
+                                    return val != null;
+                                }
+
+                                public Object next() {
+                                    Object res = val;
+                                    val = null;
+                                    return res;
+                                }
+
+                                public void remove() {
+                                }
+                            };
                     }
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(),

@@ -1,4 +1,4 @@
-<c:template xmlns:c="http://cocoon.apache.org/transformation/jxpath/1.0">
+<c:template xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
 <br />
 <c:if test="#{accountForm/account}">
   <c:if test="#{accountForm/account/username}">
@@ -8,7 +8,7 @@
 <c:if test="#{accountForm/account/bannerName}"> 
       <center>
           <image>
-          <c:value-of select="#{accountForm/account/bannerName}"/>
+          #{accountForm/account/bannerName}
 	  </image>
       </center>
 </c:if>

@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="${product.name}" do="viewProduct.do?productId=${product.productId}"/>
         <item id="${item.itemId}">
-            <product-desc><jexl:out value="${product.descn}"/></product-desc>
-            <product-name><jexl:out value="${product.name}"/></product-name>
+            <product-desc>${product.descn}</product-desc>
+            <product-name>${product.name}</product-name>
             <desc>
-                <jexl:out value="${item.attr1}"/> 
-                <jexl:out value="${item.attr2}"/> 
-                <jexl:out value="${item.attr3}"/> 
-                <jexl:out value="${item.attr4}"/> 
-                <jexl:out value="${item.attr5}"/> 
-                <jexl:out value="${item.product.name}"/> 
+                ${item.attr1} 
+                ${item.attr2} 
+                ${item.attr3} 
+                ${item.attr4} 
+                ${item.attr5} 
+                ${item.product.name} 
             </desc>
-            <instock><jexl:out value="${quantity}"/></instock>
-            <price><jexl:out value="${item.listPrice}"/></price>
+            <instock>${quantity}</instock>
+            <price>${item.listPrice}</price>
         </item>
     </site>
 </page>

@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
-<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+<page xmlns:c="http://cocoon.apache.org/generation/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
         <form method="POST" styleId="workingOrderForm" action="${continuation.id}.kont">
         <panel>
             <panel label="Payment Details">
                 <select name="order.cardType" label="Card Type">
-                    <jexl:forEach var="card" items="${creditCardTypes}" >
-                        <option value="${card}"><jexl:out value="${card}" /></option>
-                    </jexl:forEach>
+                    <c:forEach var="card" items="${creditCardTypes}" >
+                        <option value="${card}">${card}</option>
+                    </c:forEach>
                 </select>
                 <input type="text" name="creditCard" label="Card Number" />
                 <input type="text" name="expiryDate" label="Expiry Date (MM/YYYY)" />
