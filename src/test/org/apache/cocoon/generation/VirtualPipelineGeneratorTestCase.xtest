@@ -53,6 +53,9 @@
     <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
           shorthand="input-modules"
           default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+    <role name="org.apache.cocoon.components.fam.SitemapMonitor"
+          shorthand="fam"
+          default-class="org.apache.cocoon.components.fam.SitemapMonitorImpl"/>
   </roles>
  
   <components>
@@ -67,7 +70,7 @@
     <xmlizer/>
 
     <input-modules>
-      <component-instance class="org.apache.cocoon.components.modules.input.AvalonContextModule" name="avalon-context"/>
+      <component-instance class="org.apache.cocoon.components.modules.input.EnvironmentAttributeModule" name="environment-attribute"/>
     </input-modules>
 
     <source-factories>

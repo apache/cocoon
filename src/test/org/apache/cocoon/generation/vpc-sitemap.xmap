@@ -92,7 +92,7 @@
       </map:match>
 
       <map:match pattern="sub/**">
-	<map:mount uri-prefix="sub"
+        <map:mount uri-prefix="sub"
                    src="resource://org/apache/cocoon/generation/sub/"/>
       </map:match>
 
