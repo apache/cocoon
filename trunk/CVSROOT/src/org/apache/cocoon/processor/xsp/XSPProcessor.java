@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.13 2000-03-17 00:02:01 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.14 2000-03-17 16:48:05 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.13 $ $Date: 2000-03-17 00:02:01 $
+ * @version $Revision: 1.14 $ $Date: 2000-03-17 16:48:05 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -129,7 +129,7 @@ public class XSPProcessor extends AbstractActor
       Document document = this.parser.parse(
         new InputSource(
           new InputStreamReader(
-            this.factory.createResource(XSP_ROOT + "xsp.xml")
+            this.getClass().getResourceAsStream("xsp.xml")
           )
         ), false
       );
@@ -151,7 +151,7 @@ public class XSPProcessor extends AbstractActor
 
         String processorName = languageElement.getAttribute("processor");
         XSPLanguageProcessor languageProcessor =
-          (XSPLanguageProcessor) Class.forName(processorName).newInstance();
+          (XSPLanguageProcessor) this.factory.create(processorName);
 
         boolean formatOption =
           languageElement.getAttribute("format-code").equals("true");
@@ -174,7 +174,7 @@ public class XSPProcessor extends AbstractActor
         Document logicsheetStylesheet = this.parser.parse(
           new InputSource(
             new InputStreamReader(
-              this.factory.createResource(XSP_ROOT + logicsheetName)
+              this.getClass().getResourceAsStream(logicsheetName)
             )
           ), false
         );

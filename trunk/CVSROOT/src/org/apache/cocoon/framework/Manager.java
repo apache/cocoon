@@ -1,4 +1,4 @@
-/*-- $Id: Manager.java,v 1.7 2000-03-17 00:02:01 stefano Exp $ --
+/*-- $Id: Manager.java,v 1.8 2000-03-17 16:49:44 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import java.io.*;
  * This class is used to create and control software actors and resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-03-17 00:02:01 $
+ * @version $Revision: 1.8 $ $Date: 2000-03-17 16:49:44 $
  */
 
 public class Manager extends Hashtable implements Actor, Factory, Director {
@@ -84,7 +84,14 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
      */
     public Object create(String name, Configurations conf) throws RuntimeException {
         try {
-            Object object = Class.forName(name).newInstance();
+            Object object = null;
+            ClassLoader cl = this.getClass().getClassLoader();
+
+            if (cl != null) {
+                object = cl.loadClass(name).newInstance();
+            } else {
+                object = Class.forName(name).newInstance();
+            }
 
             if (object instanceof Actor) {
                 ((Actor) object).init((Director) this);
@@ -141,22 +148,6 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
      */
     public void setRole(String role, Object actor) {
         this.put(role, actor);
-    }
-
-    /**
-     * Creates the requested resource.
-     */
-    public InputStream createResource(String resource) {
-        InputStream is = null;
-
-        if (this.classloader != null) {
-            is = this.classloader.getResourceAsStream(resource);
-        } else {
-            is = ClassLoader.getSystemResourceAsStream(resource);
-        }
-
-        if (is == null) throw new RuntimeException("resource " + resource + " was not found.");
-        else return is;
     }
 
     /**

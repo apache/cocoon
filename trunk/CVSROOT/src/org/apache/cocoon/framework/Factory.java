@@ -1,4 +1,4 @@
-/*-- $Id: Factory.java,v 1.5 2000-03-17 00:02:01 stefano Exp $ --
+/*-- $Id: Factory.java,v 1.6 2000-03-17 16:49:44 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import java.io.*;
  * classes and the actors.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-03-17 00:02:01 $
+ * @version $Revision: 1.6 $ $Date: 2000-03-17 16:49:44 $
  */
 
 public interface Factory extends Actor {
@@ -86,10 +86,5 @@ public interface Factory extends Actor {
      * Create a vector of instances with given configurations.
      */
     Vector create(Vector names, Configurations conf);
-
-    /**
-     * Creates a resource.
-     */
-    InputStream createResource(String resource);
 
 }
