@@ -338,11 +338,13 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 <faq>
 <question>Why is my Internet Explorer not showing PDF or VRML samples?</question>
 <answer>
-  <p>This is a long-time problem with internet explorer which, illegally,
-  reacts on URI extention rathen than returned MIME type. The only think you can
-  do for now is to map .pdf or .wrl to Cocoon for handling, but we know that
-  sucks. Don't worry, in the future, the sitemap proposal will allow you
-  to work around this magically. For now, just don't use IE :)</p>
+  <p>This is a long-time problem with internet explorer which doesn't look for
+  the MIME type sent by the http response, but rather parsers the file extention
+  to determine what program should open it (unlike other browsers which are much
+  smarter). There is a trick that forces IE to look at the MIME type, this is
+  adding a <em>'?'</em> at the end of your URI. Even if Cocoon is ignoring
+  this, IE won't and will react on the MIME type and will trigger the right
+  plugin/application for that content.</p>
 </answer>
 </faq>
 
