@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-31 17:13:33 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-16 17:03:47 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -72,7 +72,7 @@
     <xsl:variable name="location">
       <xsl:choose>
         <xsl:when test="@location">"<xsl:value-of select="@location"/>"</xsl:when>
-        <xsl:when test="location">
+        <xsl:when test="xsp-response:location">
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="xsp-response:location"/>
           </xsl:call-template>
