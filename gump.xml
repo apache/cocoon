@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.125 2004/03/11 16:25:46 stephan Exp $
+    | CVS $Id: gump.xml,v 1.126 2004/03/13 13:13:11 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1248,7 +1248,7 @@
     <description>
       An expression language interpreter.
     </description>
-    <home nested="src/blocks/forms/lib"/>
+    <home nested="lib/optional"/>
     <jar name="xreporter-expression-20030725.jar"/>
   </project>
 
