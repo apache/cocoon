@@ -171,7 +171,7 @@ public class AggregateField extends AbstractWidget {
     }
 
     /**
-     * Returns true if their is at least one field which has a value.
+     * Returns false if their is at least one field which has no value.
      */
     private boolean fieldsHaveValues() {
         Iterator fieldsIt = fields.iterator();
