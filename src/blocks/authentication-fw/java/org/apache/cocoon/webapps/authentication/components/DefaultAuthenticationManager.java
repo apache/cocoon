@@ -51,25 +51,17 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
@@ -84,7 +76,6 @@ import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -95,45 +86,31 @@ import org.xml.sax.SAXException;
 
 /**
  * This is the basis authentication component.
- * This is not a true Avalon component as for example this component is interface
- * and implementation at the same time.
- * But using Avalon allows offers some required features that are used here.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationManager.java,v 1.4 2003/03/20 15:27:05 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.1 2003/03/20 15:27:05 cziegeler Exp $
 */
-public final class AuthenticationManager
+public final class DefaultAuthenticationManager
 extends AbstractSessionComponent
-implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
-
-    /** The Avalon Role */
-    public static final String ROLE = AuthenticationManager.class.getName();
-
-    /** The handler manager */
-    private HandlerManager handlerManager = new HandlerManager();
-
-    /** The application name of the current pipeline */
-    private String applicationName;
-
-    /** The application */
-    private ApplicationHandler application;
-
-    /** The handler name of the current pipeline */
-    private String handlerName;
-
-    /** The handler of the current pipeline */
-    private Handler handler;
+implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent {
 
     /** The media Types */
-    private MediaType[] allMediaTypes;
+    private PreparedMediaType[] allMediaTypes;
+    
+    /** The default media type (usually this is html) */
     private String      defaultMediaType;
+    
+    /** All media type names */
     private String[]    mediaTypeNames;
+
+    /** The manager for the authentication handlers */
+    private DefaultHandlerManager handlerManager;
+    
+    /** The context provider */
+    private static SessionContextProviderImpl contextProvider;
 
     /** media type */
     private String mediaType;
-
-    /** The context provider */
-    private static SessionContextProviderImpl contextProvider;
 
     /** Init the class,
      *  add the provider for the authentication context
@@ -146,57 +123,6 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
         } catch (ProcessingException local) {
             throw new CascadingRuntimeException("Unable to register provider for authentication context.", local);
         }
-    }
-
-    /**
-     * Recyclable
-     */
-    public void recycle() {
-        super.recycle();
-        this.applicationName = null;
-        this.application = null;
-        this.handler = null;
-        this.handlerName = null;
-
-        // clear handlers
-        this.handlerManager.clearAvailableHandlers();
-    }
-
-    /**
-     * Set the <code>Configuration</code>.
-     */
-    public void configure(SitemapConfigurationHolder holder)
-    throws ConfigurationException {
-        this.handlerManager.addConfiguration( holder.getConfiguration(), this.resolver, this.request );
-        this.handlerManager.addAvailableHandlers( holder.getConfiguration() );
-    }
-
-    /**
-     * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
-     * used to process the request.
-     *  This method is automatically called for each request. Do not invoke
-     *  this method by hand.
-     */
-    public void setup(SourceResolver resolver, Map objectModel)
-    throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel);
-
-        // get the media of the current request
-        String useragent = request.getHeader("User-Agent");
-        MediaType media = null;
-        if (useragent != null) {
-            int i, l;
-            i = 0;
-            l = this.allMediaTypes.length;
-            while (i < l && media == null) {
-                if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
-                    i++;
-                } else {
-                    media = this.allMediaTypes[i];
-                }
-            }
-        }
-        this.mediaType = (media == null ? this.defaultMediaType : media.name);
     }
 
     /**
@@ -219,17 +145,17 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
         String  name;
 
         Configuration[] childs = mediaConf.getChildren("media");
-        MediaType[] array = new MediaType[0];
-        MediaType[] copy;
+        PreparedMediaType[] array = new PreparedMediaType[0];
+        PreparedMediaType[] copy;
         Configuration current;
         if (childs != null) {
             for(int x = 0; x < childs.length; x++) {
                 current = childs[x];
-                copy = new MediaType[array.length + 1];
+                copy = new PreparedMediaType[array.length + 1];
                 System.arraycopy(array, 0, copy, 0, array.length);
                 array = copy;
                 name = current.getAttribute("name");
-                array[array.length-1] = new MediaType(name, current.getAttribute("useragent"));
+                array[array.length-1] = new PreparedMediaType(name, current.getAttribute("useragent"));
                 found = false;
                 i = 0;
                 while ( i < this.mediaTypeNames.length && found == false) {
@@ -248,35 +174,79 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
     }
 
     /**
-     * Test if the media of the current request is the given value
+     * Set the sitemap configuration containing the handlers
      */
-    public boolean testMedia(Map objectModel, String value) {
-        // synchronized
-        Request req = ObjectModelHelper.getRequest( objectModel );
-        boolean result = false;
+    public void configure(SitemapConfigurationHolder holder)
+    throws ConfigurationException {
+        if ( null == this.handlerManager ) {
+            this.handlerManager = new DefaultHandlerManager( holder );
+        }
+    }
 
-        if (req != null) {
-            String useragent = request.getHeader("User-Agent");
-            MediaType theMedia = null;
+    /**
+     * Recyclable
+     */
+    public void recycle() {
+        super.recycle();
+        this.handlerManager.recycle();
+    }
+    
+    /**
+     * @see org.apache.cocoon.components.RequestLifecycleComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map)
+     */
+    public void setup(SourceResolver resolver, Map objectModel)
+    throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel);
+        this.handlerManager.setup( resolver, objectModel );
+        // get the media of the current request
+        String useragent = request.getHeader("User-Agent");
+        PreparedMediaType media = null;
+        if (useragent != null) {
             int i, l;
             i = 0;
             l = this.allMediaTypes.length;
-            while (i < l && theMedia == null) {
+            while (i < l && media == null) {
                 if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
                     i++;
                 } else {
-                    theMedia = this.allMediaTypes[i];
+                    media = this.allMediaTypes[i];
                 }
             }
-            if (theMedia != null) {
-                result = theMedia.name.equals(value);
+        }
+        this.mediaType = (media == null ? this.defaultMediaType : media.name);
+    }
+
+    /**
+     * Test if the media of the current request is the given value
+     */
+    public boolean testMedia(String value) {
+        // synchronized
+        boolean result = false;
+
+        String useragent = this.request.getHeader("User-Agent");
+        PreparedMediaType theMedia = null;
+        int i, l;
+        i = 0;
+        l = this.allMediaTypes.length;
+        while (i < l && theMedia == null) {
+            if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
+                i++;
             } else {
-                result = this.defaultMediaType.equals(value);
+                theMedia = this.allMediaTypes[i];
             }
         }
+        if (theMedia != null) {
+            result = theMedia.name.equals(value);
+        } else {
+            result = this.defaultMediaType.equals(value);
+        }
+
         return result;
     }
 
+    /**
+     * Get all media type names
+     */
     public String[] getMediaTypes() {
         // synchronized
         return this.mediaTypeNames;
@@ -291,32 +261,16 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
     }
 
     /**
-     * Return the current handler
+     * Get the handler
      */
-    public Handler getHandler() {
-        return this.handler;
-    }
-
-    /**
-     * Return the current handler name
-     */
-    public String getHandlerName() {
-        return this.handlerName;
-    }
-
-    /**
-     * Return the name of the current application
-     */
-    public String getApplicationName() {
-        return this.applicationName;
-    }
-    
-    /**
-     * Is the current user authenticated for the given handler?
-     */
-    public boolean isAuthenticated()
-    throws IOException, ProcessingException {
-        return this.isAuthenticated(this.handlerName);
+    private Handler getHandler(String name) 
+    throws ProcessingException {
+        // synchronized
+        try {
+            return this.handlerManager.getHandler( name );
+        } catch (ConfigurationException ce) {
+            throw new ProcessingException("Unable to get handler " + name, ce);
+        }
     }
 
     /**
@@ -332,92 +286,13 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
 
         // if no handler: authenticated
         if (name != null) {
-            isAuthenticated = this.handlerManager.hasUserHandler( name, this.request );
+            isAuthenticated = this.handlerManager.hasUserHandler( name );
         }
 
         if (this.getLogger().isDebugEnabled() == true) {
             this.getLogger().debug("END isAuthenticated authenticated=" + isAuthenticated);
         }
         return isAuthenticated;
-    }
-
-    /**
-     * Checks authentication and generates a redirect, if not authenticated
-     */
-    public boolean checkAuthentication(Redirector redirector, 
-                                         final String newHandlerName,
-                                         final String newAppName)
-    throws IOException, ProcessingException {
-        // synchronized not needed
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN checkAuthentication");
-        }
-        boolean isAuthenticated = true;
-
-        // set the configuration for the handler
-        if (this.handlerName == null) this.handlerName = "";
-        if (this.applicationName == null) this.applicationName = "";
-        if (this.handlerName.equals(newHandlerName) == false
-            || this.applicationName.equals(newAppName) == false) {
-            this.handlerName = newHandlerName;
-            this.applicationName = newAppName;
-            this.handler = null;
-            this.application = null;
-
-            if (this.handlerName != null) {
-                this.handler = this.getHandler(this.handlerName);
-
-                if (this.handler == null) {
-                    throw new ProcessingException("Handler not found: " + this.handlerName);
-                }
-                if (this.applicationName != null) {
-                    this.application = (ApplicationHandler)this.handler.getApplications().get(this.applicationName);
-                    if (this.application == null) {
-                        throw new ProcessingException("Application not found: " + this.applicationName);
-                    }
-                }
-            } else {
-                throw new ProcessingException("Handler information not found.");
-            }
-        } else {
-            if (this.handlerName.equals("")) this.handlerName = null;
-            if (this.applicationName.equals("")) this.applicationName = null;
-        }
-
-        if (this.handler != null) {
-            isAuthenticated = this.isAuthenticated(this.handlerName);
-
-            if (isAuthenticated == false) {
-                // create parameters
-                SourceParameters parameters = handler.getRedirectParameters();
-                if (parameters == null) parameters = new SourceParameters();
-                String resource = this.request.getRequestURI();
-                if (this.request.getQueryString() != null) {
-                    resource += '?' + this.request.getQueryString();
-                }
-
-                parameters.setSingleParameterValue("resource", resource);
-                final String redirectURI = handler.getRedirectURI();
-                redirector.globalRedirect(false, SourceUtil.appendParameters(redirectURI, parameters));
-            } else {
-                // load application data if we are not inside a resource loading of authentication
-                this.checkLoaded((SessionContextImpl)this.getSessionManager().getContext(AuthenticationConstants.SESSION_CONTEXT_NAME),
-                                     "/");
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END checkAuthentication authenticated=" + isAuthenticated);
-        }
-        return isAuthenticated;
-    }
-
-    /**
-     * Get the handler
-     */
-    private Handler getHandler(String name) {
-        // synchronized
-        return this.handlerManager.getHandler( name, this.request);
     }
 
     /**
@@ -504,8 +379,7 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
                         this.getLogger().debug("session created");
                     }
 
-                    myHandler = this.handlerManager.storeUserHandler(myHandler,
-                                                                     this.request);
+                    myHandler = this.handlerManager.storeUserHandler( myHandler );
 
                     synchronized(context) {
                         // add special nodes to the authentication block:
@@ -691,131 +565,6 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
     }
 
     /**
-     * Logout from the given handler and eventually terminate session.
-     * @param logoutHandlerName The authentication handler
-     * @param mode              This mode defines how the termination of
-     *                           the session is handled.
-     */
-    public void logout(String  logoutHandlerName,
-                        int     mode)
-    throws ProcessingException {
-        // synchronized via context
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN logout handler=" + logoutHandlerName +
-                                   ", mode="+mode);
-        }
-        SessionContext context = this.getAuthenticationSessionContext(false);
-
-        if (context != null && logoutHandlerName != null) {
-
-            // remove context
-            context.removeXML(logoutHandlerName);
-            // FIXME (CZ): The sessionContextImpl should not be null, but
-            //             it is sometimes. Why?
-            SessionContextImpl sessionContextImpl = (SessionContextImpl)
-                        (this.getSessionManager().getContext(AuthenticationConstants.SESSION_CONTEXT_NAME));
-            if (sessionContextImpl != null) {
-                sessionContextImpl.cleanParametersCache(logoutHandlerName);
-            } else if (this.getLogger().isWarnEnabled()) {
-                this.getLogger().warn("AuthenticationManager:logout() - sessionContextImpl is null");
-            }
-            Handler logoutHandler = (Handler)this.getHandler(logoutHandlerName);
-
-            final List handlerContexts = logoutHandler.getHandlerContexts();
-            final Iterator iter = handlerContexts.iterator();
-            while ( iter.hasNext() ) {
-                final SessionContext deleteContext = (SessionContext) iter.next();
-                this.getSessionManager().deleteContext( deleteContext.getName() );
-            }
-            logoutHandler.clearHandlerContexts();
-            this.handlerManager.removeUserHandler( logoutHandler, this.request );
-            if (logoutHandlerName.equals(this.handlerName)) {
-                this.handlerName = null;
-                this.handler = null;
-                this.applicationName = null;
-                this.application = null;
-            }
-        }
-
-        if ( mode == AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY ) {
-            this.getSessionManager().terminateSession(true);
-        } else if (!this.handlerManager.hasUserHandler( this.request )) {
-            if (mode == AuthenticationConstants.LOGOUT_MODE_IF_UNUSED) {
-                this.getSessionManager().terminateSession(false);
-            } else {
-                this.getSessionManager().terminateSession(true);
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END logout");
-        }
-    }
-
-    /**
-     * Get the configuration if available
-     */
-    public Configuration getModuleConfiguration(String name)
-    throws ProcessingException  {
-        // synchronized not needed
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN getModuleConfiguration module="+name);
-        }
-        Configuration conf = null;
-
-        if (this.handler != null && this.application != null) {
-            conf = this.application.getConfiguration(name);
-        }
-        if (this.handler != null && conf == null) {
-            conf = this.handler.getConfiguration(name);
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END getModuleConfiguration conf="+conf);
-        }
-        return conf;
-    }
-
-    /**
-     * Create Application Context.
-     * This context is destroyed when the user logs out of the handler
-     */
-    public SessionContext createHandlerContext(String name,
-                                               String loadURI,
-                                               String saveURI)
-    throws ProcessingException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN createHandlerContext name="+name);
-        }
-
-        SessionContext context = null;
-
-        if (this.handler != null) {
-
-            final Session session = this.getSessionManager().getSession(false);
-            synchronized(session) {
-
-                try {
-                    // create new context
-                    context = this.getSessionManager().createContext(name, loadURI, saveURI);
-                    this.handler.addHandlerContext( context );
-                } catch (IOException ioe) {
-                    throw new ProcessingException("Unable to create session context.", ioe);
-                } catch (SAXException saxe) {
-                    throw new ProcessingException("Unable to create session context.", saxe);
-                }
-
-            } // end synchronized
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END createHandlerContext context="+context);
-        }
-        return context;
-    }
-
-    /**
      * Load XML of an application
      */
     private void loadApplicationXML(SessionContextImpl context,
@@ -883,80 +632,6 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
     }
 
     /**
-     * Check if application for path is loaded
-     */
-    private void checkLoaded(SessionContextImpl context,
-                             String             path)
-    throws ProcessingException {
-        // synchronized as loadApplicationXML is synced
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN checkLoaded path="+path);
-        }
-        if (path.equals("/") == true || path.startsWith("/application") == true) {
-            if (this.application != null) {
-                this.loadApplicationXML(context, this.application, "/");
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END checkLoaded");
-        }
-    }
-
-    /**
-     * Build parameters for loading and saving of application data
-     */
-    public SourceParameters createParameters(String path)
-    throws ProcessingException {
-        // synchronized
-        if (this.handler == null) {
-            return new SourceParameters();
-        }
-        if (path == null) {
-            SessionContext context = this.getAuthenticationSessionContext(false);
-            SourceParameters pars = (SourceParameters)context.getAttribute("cachedparameters_" + this.handler.getName());
-            if (pars == null) {
-                 pars = this.createParameters(null, this.handlerName, path, this.applicationName);
-                 context.setAttribute("cachedparameters_" + this.handler.getName(), pars);
-            }
-            return pars;
-        }
-        return this.createParameters(null, this.handlerName, path, this.applicationName);
-    }
-
-    protected static final Map EMPTY_MAP = Collections.unmodifiableMap(new TreeMap());
-
-    /**
-     * Create a map for the actions
-     * The result is cached!
-     */
-    public Map createMap()
-    throws ProcessingException {
-        if (this.handler == null) {
-            // this is only a fallback
-            return EMPTY_MAP;
-        }
-        SessionContext context = this.getAuthenticationSessionContext(false);
-        Map map = (Map)context.getAttribute("cachedmap_" + this.handler.getName());
-        if (map == null) {
-            map = new HashMap();
-            Parameters pars = this.createParameters(null).getFirstParameters();
-            String[] names = pars.getNames();
-            if (names != null) {
-                String key;
-                String value;
-                for(int i=0;i<names.length;i++) {
-                    key = names[i];
-                    value = pars.getParameter(key, null);
-                    if (value != null) map.put(key, value);
-                }
-            }
-            context.setAttribute("cachedmap_" + this.handler.getName(), map);
-        }
-        return map;
-    }
-
-    /**
      * Build parameters for loading and saving of application data
      */
     private SourceParameters createParameters(SourceParameters parameters,
@@ -982,19 +657,18 @@ implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
         }
         return parameters;
     }
-
 }
 
 
 /**
  * This class stores the media type configuration
  */
-final class MediaType {
+final class PreparedMediaType {
 
     String name;
     String useragent;
 
-    MediaType(String name, String useragent) {
+    PreparedMediaType(String name, String useragent) {
         this.name = name;
         this.useragent = useragent;
     }
