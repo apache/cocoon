@@ -108,7 +108,7 @@ by the main ones.
     <property name="fullname" value="Apache Cocoon"/>
     <property name="Name"     value="Cocoon"/>
     <property name="name"     value="cocoon"/>
-    <property name="version"  value="2.0a3"/>
+    <property name="version"  value="2.0a4"/>
     <property name="year"     value="1999-2001"/>
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
