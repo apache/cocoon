@@ -5,9 +5,16 @@
     <factory type="priority-filter" class="org.apache.avalon.excalibur.logger.factory.PriorityFilterTargetFactory"/>
     <factory type="servlet" class="org.apache.avalon.excalibur.logger.factory.ServletTargetFactory"/>
     <factory type="cocoon" class="org.apache.cocoon.util.log.CocoonTargetFactory"/>
+    <factory type="lf5" class="org.apache.avalon.excalibur.logger.factory.LF5TargetFactory"/>
   </factories>
 
   <targets>
+
+    <!-- To enable the LogFactor5 graphical logkit browser, replace the cocoon factory 
+         below with the following.
+    <lf5 id="core"/>
+    -->
+
     <cocoon id="core">
       <filename>${context-root}/WEB-INF/logs/core.log</filename>
       <format type="cocoon">

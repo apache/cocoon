@@ -237,12 +237,20 @@
 	<homepage>http://jakarta.apache.org/regexp/</homepage>
  </file>
  <file>
-	<title>Jakarta Logkit</title>
-	<description>jakarta-avalon-logkit is a logging toolkit designed for secure
+	<title>Avalon Logkit</title>
+	<description>avalon-logkit is a logging toolkit designed for secure
        performance orientated logging in applications.</description>
 	<used-by>Cocoon logging</used-by>
-	<lib>core/logkit-1.1.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/logkit/</homepage>
+	<lib>core/logkit-1.2.jar</lib>
+	<homepage>http://avalon.apache.org/logkit/</homepage>
+ </file>
+ <file>
+	<title>LogFactor5</title>
+	<description>LogFactor5 is a graphical logkit browser, distributed
+	as a part of Log4J.</description>
+	<used-by>Cocoon logging</used-by>
+	<lib>optional/logfactor5-1.2.8.jar</lib>
+	<homepage>http://jakarta.apache.org/log4j/docs/index.html</homepage>
  </file>
  <file>
 	<title>The XSLT processor</title>
