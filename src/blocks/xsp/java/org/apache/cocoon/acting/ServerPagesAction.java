@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -35,6 +39,12 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServerPagesGenerator;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
 
+/**
+ * @author CZiegeler
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
 /**
  * Allows actions to be written in XSP. This allows to use XSP to produce
  * XML fragments that are later reused in generators.<br/>
@@ -69,20 +79,33 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.2 2004/05/24 12:37:52 cziegeler Exp $
  */
 public class ServerPagesAction
-        extends ConfigurableComposerAction
-        implements Disposable, ThreadSafe {
+        extends AbstractAction
+        implements Disposable, ThreadSafe, Configurable, Composable {
 
     public static final String REDIRECTOR_OBJECT = "xsp-action:redirector";
     public static final String ACTION_RESULT_OBJECT = "xsp-action:result";
     public static final String ACTION_SUCCESS_OBJECT = "xsp-action:success";
 
-    ComponentHandler generatorHandler;
+    private ComponentHandler generatorHandler;
 
+    /** The component manager instance */
+    private ComponentManager manager;
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager=manager;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration conf)
-      throws ConfigurationException {
+    throws ConfigurationException {
         try {
             this.generatorHandler = ComponentHandler.getComponentHandler(
                 ServerPagesGenerator.class,
@@ -103,6 +126,9 @@ public class ServerPagesAction
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.generatorHandler != null) {
             this.generatorHandler.dispose();
@@ -110,6 +136,9 @@ public class ServerPagesAction
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel,
         String source, Parameters parameters)
       throws Exception {

@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.reading;
+package org.apache.cocoon.generation;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 
 /**
- * The <code>ComposerReader</code> will allow any <code>Reader</code>
- * that extends this to access SitemapComponents.
- *
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * A default implementation that can be used for writing own generators.
  * 
- * @deprecated Use the ServiceableReader instead
- * @version CVS $Id: ComposerReader.java,v 1.2 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @deprecated Use the {@link ServiceableGenerator} instead.
+ * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
+ *         (Apache Software Foundation)
+ * @version CVS $Id: ComposerGenerator.java,v 1.1 2004/05/24 12:37:52 cziegeler Exp $
  */
-public abstract class ComposerReader extends AbstractReader
-    implements Composable {
+public abstract class ComposerGenerator extends AbstractGenerator
+implements Composable, Disposable {
 
     /** The component manager instance */
     protected ComponentManager manager;
@@ -39,7 +38,14 @@ public abstract class ComposerReader extends AbstractReader
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composable</code>.
      */
-    public void compose(final ComponentManager manager) throws ComponentException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
+    }
+
+    /**
+     * Release all resources.
+     */
+    public void dispose() {
+        this.manager = null;
     }
 }

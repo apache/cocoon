@@ -22,7 +22,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.environment.Redirector;
@@ -43,9 +43,9 @@ import java.util.Map;
  * from the input component to the output component or, if a specific
  * parameter is specified through parameter-name, just one parameter.
  *
- * @version CVS $Id: TestAction.java,v 1.3 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: TestAction.java,v 1.4 2004/05/24 12:42:44 cziegeler Exp $
  */
-public class TestAction extends ComposerAction 
+public class TestAction extends ServiceableAction 
     implements Configurable, ThreadSafe {
 
     String INPUT_MODULE_ROLE = InputModule.ROLE;
@@ -64,6 +64,9 @@ public class TestAction extends ComposerAction
     String outputHint = "request-attr"; // default to request attributes
 
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
 
         this.inputConf  = config.getChild("input-module");
@@ -76,6 +79,9 @@ public class TestAction extends ComposerAction
 
 
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, 
                     String source, Parameters param ) throws Exception {
 

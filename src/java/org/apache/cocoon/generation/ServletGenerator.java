@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.generation;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
@@ -30,16 +34,40 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * @author CZiegeler
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+/**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.3 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: ServletGenerator.java,v 1.4 2004/05/24 12:37:52 cziegeler Exp $
  */
-public abstract class ServletGenerator extends ComposerGenerator {
+public abstract class ServletGenerator extends AbstractGenerator 
+implements Composable, Disposable {
 
     protected Request request;
     protected Response response;
     protected Context context;
 
+    /** The component manager instance */
+    protected ComponentManager manager;
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+    }
+
+    public void dispose() {
+        this.manager = null;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
 
@@ -49,8 +77,8 @@ public abstract class ServletGenerator extends ComposerGenerator {
         this.context = ObjectModelHelper.getContext(objectModel);
     }
 
-    /**
-     * Recycle the generator by removing references
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
         super.recycle();
