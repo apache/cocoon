@@ -64,7 +64,7 @@ import java.util.Iterator;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.19 $ $Date: 2004/03/11 15:13:02 $
+ * @version CVS $Revision: 1.20 $ $Date: 2004/03/14 10:34:34 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -151,10 +151,11 @@ public final class XConfToolTask extends MatchingTask {
 
             DirectoryScanner scanner = getDirectoryScanner(this.srcdir);
             String[] list = scanner.getIncludedFiles();
-            boolean hasChanged = false;
+            boolean modified = false;
             // process recursive
             File patchfile;
             ArrayList suspended = new ArrayList();
+            boolean hasChanged = false;
             for (int i = 0; i < list.length; i++) {
                 patchfile = new File(this.srcdir, list[i]);
                 try {
@@ -168,6 +169,7 @@ public final class XConfToolTask extends MatchingTask {
                     log("Ignoring: "+patchfile+"\n(not a valid XML)");
                 }
             }
+            modified = hasChanged;
 
             if (hasChanged && !suspended.isEmpty()) {
                 log("Try to apply suspended patch files");
@@ -200,7 +202,7 @@ public final class XConfToolTask extends MatchingTask {
                 }
             }
 
-            if (hasChanged) {
+            if (modified) {
                 log("Writing: " + this.file);
                 // Set the DOCTYPE output option on the transformer 
                 // if we have any DOCTYPE declaration in the input xml document
