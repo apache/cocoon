@@ -135,7 +135,6 @@ public class CoreServiceManager
         this.roleManager.enableLogging(logger);
         String msg = "Lazy mode: " + this.lazyMode;
         logger.debug(msg);
-        System.out.println(msg);
     }
 
     /* (non-Javadoc)
