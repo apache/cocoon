@@ -116,7 +116,7 @@ by the main ones.
     <property name="debug"          value="on"/>
     <property name="optimize"       value="off"/>
     <property name="deprecation"    value="off"/>
-    <property name="build.compiler" value="classic"/>
+   <property name="build.compiler" value="classic"/>
     <property name="target.vm"      value="1.2"/>
 
     <property name="src.dir"      value="./src"/>
@@ -174,15 +174,6 @@ by the main ones.
       <classpath refid="classpath"/>
     </available>
     <available property="fop.present" classname="org.apache.fop.apps.Driver">
-      <classpath refid="classpath"/>
-    </available>
-    <available property="jpeg.present" classname="com.sun.image.codec.jpeg.JPEGCodec">
-      <classpath refid="classpath"/>
-    </available>
-    <available property="png.present" classname="com.keypoint.PngEncoder">
-      <classpath refid="classpath"/>
-    </available>
-    <available property="jai.present" classname="com.sun.media.jai.codec.ImageCodec">
       <classpath refid="classpath"/>
     </available>
     <available property="tidy.present" classname="org.w3c.tidy.Tidy">
@@ -285,9 +276,6 @@ by the main ones.
       <exclude name="**/Jstyle*"             unless="jstyle.present"/>
       <exclude name="**/FOP*"                unless="fop.present"/>
       <exclude name="**/Php*"                unless="php.present"/>
-      <exclude name="**/JPEGEncoder*.java"   unless="jpeg.present"/>
-      <exclude name="**/PNGEncoder*.java"    unless="png.present"/>
-      <exclude name="**/JAI*.java"           unless="jai.present"/>
       <exclude name="**/HTMLGenerator.java"  unless="tidy.present"/>
       <exclude name="**/J2eeDataSource.java" unless="j2ee.present"/>
       <exclude name="**/XIncludeTransformer.java" unless="xpath.present"/>
