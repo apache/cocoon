@@ -479,6 +479,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="VG" type="update">
+     OJB Block: Integrated OJB logging with Cocoon logging.
+   </action>
    <action dev="CZ" type="update">
      Add a deprecation logger that gives hint about used deprecated stuff.
    </action>
