@@ -89,7 +89,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.19 2003/08/29 14:05:50 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.20 2003/09/09 17:32:36 joerg Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -363,7 +363,6 @@ public class CocoonBean extends CocoonWrapper {
      */
     private Collection processTarget(Target target) throws Exception {
 
-        long startTimeMillis = System.currentTimeMillis();
         int status = 0;
         
         String uri = target.getSourceURI();
