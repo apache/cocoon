@@ -102,7 +102,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * {@link org.apache.cocoon.acting.LocaleAction#getLocaleAttribute(Map, String) } for details.
  * It then attempts to find a <strong>message catalogue</strong> that satisifies
  * the particular locale, and use it for for text replacement within i18n markup.
- * 
+ *
  * <p>Catalogues are maintained in separate files, with a naming convention
  * similar to that of ResourceBundle (See java.util.ResourceBundle).
  * ie.
@@ -155,6 +155,21 @@ import org.xml.sax.helpers.AttributesImpl;
  * This allows the developer to write a hierarchy of message catalogues,
  * at each defining messages with increasing depth of variation.
  *
+ * In addition, catalogues can be split across multiple locations. For example,
+ * there can be a default catalogue in one directory with a user or client specific
+ * catalogue in another directory. The catalogues will be searched in the order of
+ * the locations specified still following the locale ordering specified above.
+ * eg: Assuming a basename of <i>messages</i> and a locale of <i>en_AU</i>
+ * (no variant) and locations of <i>translations/client</i> and <i>translations</i>,
+ * the following search will occur:
+ * <ul>
+ *   <li><i>translations/client/</i><strong>messages</strong>_<i>en</i>_<i>AU</i>.xml
+ *   <li><i>translations/</i><strong>messages</strong>_<i>en</i>_<i>AU</i>.xml
+ *   <li><i>translations/client/</i><strong>messages</strong>_<i>en</i>.xml
+ *   <li><i>translations/</i><strong>messages</strong>_<i>en</i.xml
+ *   <li><i>translations/client/</i><strong>messages</strong>.xml
+ *   <li><i>translations/</i><strong>messages</strong>.xml
+ *
  * <p>The i18n:text element can optionally take an attribute <strong>i18n:catalogue</strong>
  * to specify a specific catalogue to use. The value of this attribute should be
  * the id of the catalogue to use (see sitemap configuration).
@@ -165,7 +180,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *     src="org.apache.cocoon.transformation.I18nTransformer"&gt;
  *
  *     &lt;catalogues default="someId"&gt;
- *       &lt;catalogue id="someId" name="messages" location="translations"&gt;
+ *       &lt;catalogue id="someId" name="messages" [location="translations"]&gt;
+ *         [&lt;location&gt;translations/client&lt;/location&gt;]
+ *         [&lt;location&gt;translations&lt;/location&gt;]
+ *       &lt;/catalogue&gt;
  *     &lt;/catalogues&gt;
  *     &lt;untranslated-text&gt;untranslated&lt;/untranslated-text&gt;
  *     &lt;cache-at-startup&gt;true&lt;/cache-at-startup&gt;
@@ -175,19 +193,26 @@ import org.xml.sax.helpers.AttributesImpl;
  *  <li><strong>catalogues</strong>: container element in which the catalogues
  *      are defined. It must have an attribute 'default' whose value is one
  *      of the id's of the catalogue elements. (<i>mandatory</i>).
- *  <li><strong>catalogue</strong>: specifies a catalogue. It takes 3 required
- *      attributes: id (can be wathever you like), name (base name of the catalogue)
- *      and location (location of the message catalogue). The name and location attributes
- *      can contain references to inputmodules (same syntax as in other places in the
+ *  <li><strong>catalogue</strong>: specifies a catalogue. It takes 2 required
+ *      attributes: id (can be wathever you like) and name (base name of the catalogue).
+ *      The location (location of the message catalogue) is also required, but can be
+ *      specified either as an attribute or as one or more subelements, but not both.
+ *      If more than one location is specified the catalogues will be searched in the
+ *      order they appear in the configuration. The name and location can contain
+ *      references to inputmodules (same syntax as in other places in the
  *      sitemap). They are resolved on each usage of the transformer, so they can
  *      refer to e.g. request parameters. (<i>at least 1 catalogue
- *      element required</i>).
+ *      element required</i>).  After input module references are resolved the location
+ *      string can be the root of a URI. For example, specifying a location of
+ *      cocoon:/test with a name of messages and a locale of en_GB will cause the
+ *      sitemap to try to process cocoon:/test/messages_en_GB.xml,
+ *      cocoon:/test/messages_en.xml and cocoon:/test/messages.xml.
  *  <li><strong>untranslated-text</strong>: text used for
  *      untranslated keys (default is to output the key name).
  *  <li><strong>cache-at-startup</strong>: flag whether to cache
  *      messages at startup (false by default).
  * </ul>
- * 
+ *
  * <p><strong>NOTE:</strong> before using multiple catalogues was supported,
  * the catalogue name and location was specified using elements named
  * <code>catalogue-name</code> and <code>catalogue-location</code>. This syntax is
@@ -248,7 +273,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.22 2004/01/14 00:51:15 joerg Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.23 2004/01/15 15:24:31 kpiroumian Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -305,8 +330,8 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_TRANSLATE_ELEMENT       = "translate";
 
     /**
-     * <strong>i18n:choose<strong> element is used to translate elements in-place.
-     * The first <strong>i18n:when<strong> element matching the current locale
+     * <strong>i18n:choose</strong> element is used to translate elements in-place.
+     * The first <strong>i18n:when</strong> element matching the current locale
      * is selected and the others are discarded.
      *
      * <p>To specify what to do if no locale matched, simply add a node with
@@ -526,7 +551,7 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_NUMBER_ELEMENT      = "number";
 
     /**
-     * Currency element name 
+     * Currency element name
      */
     public static final String I18N_CURRENCY_ELEMENT    = "currency";
 
@@ -721,7 +746,7 @@ public class I18nTransformer extends AbstractTransformer
     //
     // States of the transformer
     //
-    
+
     private static final int STATE_OUTSIDE                       = 0;
     private static final int STATE_INSIDE_TEXT                   = 10;
     private static final int STATE_INSIDE_PARAM                  = 20;
@@ -817,7 +842,7 @@ public class I18nTransformer extends AbstractTransformer
     //
     // Current state of the transformer
     //
-    
+
     protected Map objectModel;
 
     /**
@@ -905,7 +930,7 @@ public class I18nTransformer extends AbstractTransformer
         CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(defaultCatalogueId);
         StringBuffer key = new StringBuffer();
         if (catalogueInfo != null) {
-            key.append(catalogueInfo.resolvedLocation);
+            key.append(catalogueInfo.getLocation()[0]);
         }
         key.append("?");
         if (locale != null) {
@@ -956,10 +981,46 @@ public class I18nTransformer extends AbstractTransformer
         for (int i = 0; i < catalogueConfs.length; i++) {
             String id = catalogueConfs[i].getAttribute("id");
             String name = catalogueConfs[i].getAttribute("name");
-            String location = catalogueConfs[i].getAttribute("location");
+            String[] locations = null;
+            String location = catalogueConfs[i].getAttribute("location", null);
+            Configuration[] locationConf =
+                catalogueConfs[i].getChildren("location");
+            if (location != null) {
+                if (locationConf.length > 0) {
+                    String msg = "I18nTransformer: location attribute cannot be " +
+                                 "specified with location elements";
+                    getLogger().error(msg);
+                    throw new ConfigurationException(msg);
+                }
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("I18nTransformer: name=" + name + ", location=" +
+                                  location);
+                }
+                locations = new String[1];
+                locations[0] = location;
+            }
+            else
+            {
+                if (locationConf.length == 0) {
+                    String msg = "I18nTransformer: A location attribute or location " +
+                        "elements must be specified";
+                    getLogger().error(msg);
+                    throw new ConfigurationException(msg);
+                }
+
+                locations = new String[locationConf.length];
+                for (int j=0; j < locationConf.length; ++j) {
+                    locations[j] = locationConf[j].getValue();
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("I18nTransformer: name=" + name + ", location=" +
+                                      locations[j]);
+                    }
+                }
+
+            }
             CatalogueInfo newCatalogueInfo;
             try {
-                newCatalogueInfo = new CatalogueInfo(name, location);
+                newCatalogueInfo = new CatalogueInfo(name, locations);
             } catch (PatternException e) {
                 throw new ConfigurationException("I18nTransformer: error in name or location " +
                                                  "attribute on catalogue element with id " + id, e);
@@ -1161,7 +1222,7 @@ public class I18nTransformer extends AbstractTransformer
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Start i18n element: " + name);
-        } 
+        }
 
         if (I18N_TEXT_ELEMENT.equals(name)) {
             if (current_state != STATE_OUTSIDE
@@ -1575,7 +1636,7 @@ public class I18nTransformer extends AbstractTransformer
                         if (getLogger().isDebugEnabled()) {
                             getLogger().debug("Translation not found for key '" + current_key + "'");
                         }
-                        
+
                         // Use the untranslated-text only when the content of the i18n:text
                         // element was empty
                         if (text_recorder.isEmpty() && untranslatedRecorder != null) {
@@ -2020,6 +2081,9 @@ public class I18nTransformer extends AbstractTransformer
      * @return SaxBuffer containing message, or null if not found.
      */
     private ParamSaxBuffer getMessage(String catalogueID, String key) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Getting key " + key + " from catalogue " + catalogueID);
+        }
         try {
             Bundle catalogue = defaultCatalogue;
             if (catalogueID != null) {
@@ -2068,7 +2132,7 @@ public class I18nTransformer extends AbstractTransformer
      * A default value is returned if message is not found.
      *
      * @return SaxBuffer containing message, or defaultValue if not found.
-     */ 
+     */
     private ParamSaxBuffer getMessage(String key, ParamSaxBuffer defaultValue) {
         SaxBuffer value = getMessage(currentCatalogueId, key);
         if (value == null) {
@@ -2111,27 +2175,47 @@ public class I18nTransformer extends AbstractTransformer
      */
     private final class CatalogueInfo {
         PreparedVariableResolver name;
-        PreparedVariableResolver location;
+        PreparedVariableResolver[] locations;
         String resolvedName;
-        String resolvedLocation;
+        String[] resolvedLocations;
         Bundle catalogue;
 
-        public CatalogueInfo(String name, String location) throws PatternException {
+        public CatalogueInfo(String name, String[] locations) throws PatternException {
             this.name = new PreparedVariableResolver(name, manager);
-            this.location = new PreparedVariableResolver(location, manager);
+            this.locations = new PreparedVariableResolver[locations.length];
+            for (int i=0; i < locations.length; ++i) {
+                this.locations[i] = new PreparedVariableResolver(locations[i], manager);
+            }
         }
 
         public String getName() {
+            try {
+                if (resolvedName == null) {
+                    resolve();
+                }
+            } catch (Exception e) {
+                // Ignore the error for now
+            }
             return resolvedName;
         }
 
-        public String getLocation() {
-            return resolvedLocation;
+        public String[] getLocation() {
+            try {
+                if (resolvedName == null) {
+                    resolve();
+                }
+            } catch (Exception e) {
+                // Ignore the error for now
+            }
+            return resolvedLocations;
         }
 
         private void resolve() throws Exception {
-            if (resolvedLocation == null) {
-                resolvedLocation = location.resolve(null, objectModel);
+            if (resolvedLocations == null) {
+                resolvedLocations = new String[locations.length];
+                for (int i=0; i < resolvedLocations.length; ++i) {
+                    resolvedLocations[i] = locations[i].resolve(null, objectModel);
+                }
             }
             if (resolvedName == null) {
                 resolvedName = name.resolve(null, objectModel);
@@ -2141,7 +2225,7 @@ public class I18nTransformer extends AbstractTransformer
         public Bundle getCatalogue() throws Exception {
             if (catalogue == null) {
                 resolve();
-                catalogue = factory.select(resolvedLocation, resolvedName, locale);
+                catalogue = factory.select(resolvedLocations, resolvedName, locale);
             }
             return catalogue;
         }
@@ -2152,7 +2236,7 @@ public class I18nTransformer extends AbstractTransformer
             }
             catalogue = null;
             resolvedName = null;
-            resolvedLocation = null;
+            resolvedLocations = null;
         }
     }
 }

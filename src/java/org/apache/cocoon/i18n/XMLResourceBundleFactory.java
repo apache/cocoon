@@ -68,6 +68,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -78,7 +79,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.8 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.9 2004/01/15 15:24:31 kpiroumian Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -121,7 +122,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     public void enableLogging(Logger logger) {
         this.logger = logger;
     }
-    
+
     public Logger getLogger() {
         return this.logger;
     }
@@ -232,7 +233,24 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @exception     ComponentException if a bundle is not found
      */
     public Bundle select(String directory, String name, Locale locale) throws ComponentException {
-        Bundle bundle = _select(directory, name, locale);
+        String []directories = new String[1];
+        directories[0] = directory;
+        return select(directories, name, locale);
+    }
+
+    /**
+     * Select a bundle based on the catalogue base location, bundle name,
+     * and the locale.
+     *
+     * @param directories catalogue base location (URI)
+     * @param name    bundle name
+     * @param locale  locale
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    public Bundle select(String[] directories, String name, Locale locale)
+            throws ComponentException {
+        Bundle bundle = _select(directories, 0, name, locale);
         if (bundle == null) {
             throw new ComponentException(name, "Unable to locate resource: " + name);
         }
@@ -240,48 +258,50 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     }
 
     /**
-     * Select the parent bundle of the current bundle, based on
-     * bundle name and locale.
-     *
-     * @param name              bundle name
-     * @param locale            locale
-     * @return                  the bundle
-     */
-    protected Component selectParent(String name, Locale locale) {
-        return _select(getDirectory(), name, getParentLocale(locale));
-    }
-
-    /**
      * Select a bundle based on bundle name and locale.
      *
-     * @param base              catalogue location
+     * @param directories       catalogue location(s)
      * @param name              bundle name
      * @param locale            locale
      * @return                  the bundle
      */
-    private Bundle _select(String base, String name, Locale locale) {
-        String fileName = getFileName(base, name, locale);
+    private XMLResourceBundle _select(String[] directories, int index, String name,
+                                      Locale locale) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("selecting from: " + name + ", locale: " + locale +
+                              ", directory: " + directories[index]);
+        }
+        String fileName = getFileName(directories[index], name, locale);
         XMLResourceBundle bundle = (XMLResourceBundle)selectCached(fileName);
-        if (bundle == null && !isNotFoundBundle(fileName)) {
+        if (bundle == null) {
             synchronized (this) {
                 bundle = (XMLResourceBundle)selectCached(fileName);
-                if (bundle == null && !isNotFoundBundle(fileName)) {
-                    bundle = _loadBundle(name, fileName, locale);
-
-                    while (bundle == null && locale != null && !locale.getLanguage().equals("")) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Bundle '" + fileName + "' not found; trying parent");
+                if (bundle == null) {
+                    XMLResourceBundle parentBundle = null;
+                    if (locale != null && !locale.getLanguage().equals("")) {
+                        if (++index == directories.length)
+                        {
+                            parentBundle = _select(directories, 0, name, getParentLocale(locale));
                         }
-                        locale = getParentLocale(locale);
-                        String parentFileName = getFileName(base, name, locale);
-                        bundle = _loadBundle(name, parentFileName, locale);
+                        else
+                        {
+                            parentBundle = _select(directories, index, name, locale);
+                        }
                     }
-                    
-                    updateCache(fileName, bundle);
+
+                    if (!isNotFoundBundle(fileName)) {
+                        bundle = _loadBundle(name, fileName, locale, parentBundle);
+
+                        updateCache(fileName, bundle);
+                    }
+
+                    if (bundle == null) {
+                        return parentBundle;
+                    }
                 }
             }
         }
-        
+
         return bundle;
     }
 
@@ -293,26 +313,26 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param locale            locale
      * @return                  the bundle, null if loading failed
      */
-    private XMLResourceBundle _loadBundle(String name, String fileName, Locale locale) {
+    private XMLResourceBundle _loadBundle(String name, String fileName, Locale locale,
+                                          XMLResourceBundle parentBundle) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Loading bundle: " + name + ", locale: " + locale +
                               ", uri: " + fileName);
         }
 
         XMLResourceBundle bundle = null;
-        XMLResourceBundle parentBundle = null;
         try {
-            if (locale != null && !locale.getLanguage().equals("")) {
-                parentBundle = (XMLResourceBundle)selectParent(name, locale);
-            }
             bundle = new XMLResourceBundle();
             bundle.enableLogging(this.logger);
             bundle.service(this.manager);
             bundle.init(name, fileName, locale, parentBundle);
             return bundle;
+        } catch (ResourceNotFoundException e) {
+            getLogger().info("Resource not found: " + name + ", locale: " + locale +
+                             ", bundleName: " + fileName + ". Exception: " + e.toString());
         } catch (SourceNotFoundException e) {
             getLogger().info("Resource not found: " + name + ", locale: " + locale +
-                             ", bundleName: " + fileName + ". Exception: " + e.getMessage());
+                             ", bundleName: " + fileName + ". Exception: " + e.toString());
         } catch (SAXParseException e) {
             getLogger().error("Incorrect resource format", e);
         } catch (Exception e) {
@@ -359,7 +379,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         if (base == null) {
             base = "";
         }
-        
+
         StringBuffer sb = new StringBuffer(base);
         if (!base.endsWith("/")) {
             sb.append('/').append(name);

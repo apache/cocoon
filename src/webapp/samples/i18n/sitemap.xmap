@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.7 2003/12/12 14:48:43 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.8 2004/01/15 15:24:31 kpiroumian Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -17,6 +17,10 @@
         <catalogues default="messages">
           <catalogue id="messages" name="messages" location="translations"/>
           <catalogue id="menu" name="menu" location="translations"/>
+          <catalogue id="tiered" name="messages" location="translations/tiered">
+        <location>translations/tiered</location>
+        <location>translations</location>
+      </catalogue>
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
@@ -98,6 +102,16 @@
         <!-- Generate dynamic output (simple.xsp) -->
         <map:match pattern="*.xsp">
           <map:call resource="composite"/>
+        </map:match>
+
+        <!-- A helper matcher for static content translation and generation -->
+        <map:match pattern="content/tiered.xml">
+          <map:generate src="tiered.xml"/>
+          <map:transform type="i18n">
+        <map:parameter name="default-catalogue-id" value="tiered"/>
+            <map:parameter name="locale" value="{../locale}"/>
+          </map:transform>
+          <map:serialize/>
         </map:match>
 
         <!-- A helper matcher for static content translation and generation -->

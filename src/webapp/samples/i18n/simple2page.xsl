@@ -59,7 +59,7 @@
         <xsl:value-of select="@title"/>
       </font>
       <br/>
-      <xsl:apply-templates select="text() | strong"/>
+      <xsl:apply-templates select="text() | strong | i"/>
     </p>
   </xsl:template>
 

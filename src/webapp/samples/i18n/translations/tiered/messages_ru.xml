@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--+
+    | Russian override message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_ru.xml,v 1.1 2004/01/15 15:24:32 kpiroumian Exp $
+    +-->
+
+<catalogue xml:lang="ru">
+    <message key="a_key">Это локально перекрытое значение по ключу.</message>
+</catalogue>
