@@ -77,7 +77,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.9 2003/12/10 17:22:47 unico Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.10 2003/12/14 15:25:02 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type="SourceFactory"
@@ -156,7 +156,6 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
         }
         
         SourceCredential credential;
-        credential = new SourceCredential(principal);
         
         NamespaceAccessToken nat = m_repository.getNamespaceToken(namespace);
         if (nat == null) {
@@ -184,7 +183,7 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
             getLogger().debug("scope: " + scope);
         }
 
-        SlideSource source = new SlideSource(nat,scheme,scope,path,credential,version);
+        SlideSource source = new SlideSource(nat,scheme,scope,path,principal,version);
 
         source.enableLogging(getLogger());
         source.contextualize(m_context);
