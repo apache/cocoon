@@ -129,7 +129,7 @@
   <h1>Guess the Number Between 1 and 10</h1>
   <h2>${hint}</h2>
   <h3>You've guessed ${guesses} times.</h3>
-  <form method="post" action="${cocoon.continuation.id}.kont">
+  <form method="post" action="${continuation.id}.kont">
     <input type="text" name="guess"/>
     <input type="submit"/>
   </form>
@@ -261,10 +261,10 @@ cocoon.sendPageAndWait("guess.jx", { "foo" : random } );
         player submits the guess:
       </p>
       <source><![CDATA[
-<form method="post" action="${cocoon.continuation.id}.kont">
+<form method="post" action="${continuation.id}.kont">
 ]]></source>
       <p>
-        Here, ${cocoon.continuation.id} is resolved to a unique identifier which points
+        Here, ${continuation.id} is resolved to a unique identifier which points
         to the current continuation. One can think of this somewhat of a session ID.
       </p>
       <p>
