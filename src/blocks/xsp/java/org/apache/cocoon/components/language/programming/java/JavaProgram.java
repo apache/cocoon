@@ -47,13 +47,15 @@ public class JavaProgram extends AbstractLogEnabled implements Program {
     public ComponentHandler getHandler(ServiceManager manager,
                                        Context context)
     throws Exception {
-
+        DefaultConfiguration config = new DefaultConfiguration("", "GeneratorSelector");
+        // Instruct the core to avoid proxying this class
+        config.setAttribute("model", "non-thread-safe-pooled");
         return AbstractComponentHandler.getComponentHandler(
                 program,
                 getLogger(),
                 context,
                 manager,
-                new DefaultConfiguration("", "GeneratorSelector"));
+                config);
     }
 
     public CompiledComponent newInstance() throws Exception {
