@@ -5,13 +5,17 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+ 
 package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import org.apache.avalon.Modifiable;
 
+import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Configurable;
@@ -20,6 +24,8 @@ import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.NamedComponentManager;
 
 import org.apache.avalon.utils.Parameters;
+
+import org.apache.cocoon.Cocoon;
 
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.store.FilesystemStore;
@@ -35,20 +41,15 @@ import org.apache.cocoon.util.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
 
-
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
-import org.apache.avalon.Component;
-
-import java.io.IOException;
 import org.xml.sax.SAXException;
-import java.io.FileNotFoundException;
 
 /**
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-04 21:11:09 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-17 17:04:09 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -56,14 +57,14 @@ public class ProgramGeneratorImpl
   /** The in-memory store */
   protected MemoryStore cache = new MemoryStore();
 
-  /** The filesystem-based store */
-  protected String repositoryName;
-
   /** The component manager */
   protected ComponentManager manager;
 
   /** The named component manager */
   protected NamedComponentManager factory;
+
+  /** The filesystem-based store */
+  protected String repositoryName = null;
 
   /** The auto-reloading option */
   protected boolean autoReload = true;
@@ -78,8 +79,7 @@ public class ProgramGeneratorImpl
   public void setComponentManager(ComponentManager manager) {
     this.manager = manager;
 
-    this.factory =
-      (NamedComponentManager) this.manager.getComponent("factory");
+    this.factory = (NamedComponentManager) this.manager.getComponent("factory");
   }
 
   /**
@@ -94,8 +94,11 @@ public class ProgramGeneratorImpl
   {
     Parameters params = Parameters.fromConfiguration(conf);
 
-    this.repositoryName = params.getParameter("repository", "./repository");
-    this.autoReload = params.getParameterAsBoolean("auto-reload", true);
+    //this.repositoryName = params.getParameter("repository");
+    if (this.repositoryName == null) {
+        this.repositoryName = System.getProperty(Cocoon.TEMPDIR_PROPERTY, "./repository");
+    }
+    this.autoReload = params.getParameterAsBoolean("auto-reload", autoReload);
   }
 
   /**
@@ -140,56 +143,56 @@ public class ProgramGeneratorImpl
       try {
         if (program == null) {
           /*
-	     FIXME: Passing null as encoding may result in invalid
-	     recompilation under certain circumstances!
-	  */
+             FIXME: Passing null as encoding may result in invalid
+             recompilation under certain circumstances!
+          */
           program = programmingLanguage.load(
             normalizedName, this.repositoryName, null
           );
   
           // Store loaded program in cache
           this.cache.store(filename, program);
-	}
+        }
 
-	// Instantiate program
+        // Instantiate program
         programInstance = programmingLanguage.instantiate(program);
       } catch (LanguageException e) { }
       
       /*
          FIXME: It's the program (not the instance) that must
-	 be queried for changes!!!
+         be queried for changes!!!
       */
       if (
-	  this.autoReload &&
+          this.autoReload &&
           programInstance != null &&
-	  programInstance instanceof Modifiable &&
-	  ((Modifiable) programInstance).modifiedSince(file.lastModified())
+          programInstance instanceof Modifiable &&
+          ((Modifiable) programInstance).modifiedSince(file.lastModified())
       )
       {
         // Unload program
         programmingLanguage.unload(
-	  program, normalizedName, this.repositoryName
+          program, normalizedName, this.repositoryName
         );
   
         // Invalidate previous program/instance pair
         program = null;
-	programInstance = null;
+        programInstance = null;
       }
   
       if (program == null) {
         // Generate code
         Document document =
-	  DOMUtils.DOMParse(new InputSource(new FileReader(file)));
+          DOMUtils.DOMParse(new InputSource(new FileReader(file)));
         String encoding = markupLanguage.getEncoding(document);
         String code = markupLanguage.generateCode(
           document, normalizedName, programmingLanguage, resolver
         );
   
-	// Format source code if applicable
-	CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
-	if (codeFormatter != null) {
-	  code = codeFormatter.format(code, encoding);
-	}
+        // Format source code if applicable
+        CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
+        if (codeFormatter != null) {
+          code = codeFormatter.format(code, encoding);
+        }
   
         // Store generated code
         String sourceFilename = filename + "." + sourceExtension;
@@ -199,14 +202,14 @@ public class ProgramGeneratorImpl
         File sourceFile = (File) repository.get(sourceFilename);
         if (sourceFile == null) {
           throw new IOException(
-	    "Error creating source file: " + sourceFilename
-	  );
+            "Error creating source file: " + sourceFilename
+          );
         }
   
         // [Compile]/Load generated program
         program = programmingLanguage.load(
-	  normalizedName, this.repositoryName, encoding
-	);
+          normalizedName, this.repositoryName, encoding
+        );
 
         // Store generated program in cache
         this.cache.store(filename, program);
