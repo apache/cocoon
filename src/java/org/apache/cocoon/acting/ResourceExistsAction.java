@@ -64,9 +64,13 @@ import java.util.Map;
  * The action returns empty <code>Map</code> if it exists, null otherwise.
  * <p>Instead of src attribute, source can be specified using
  * parameter named 'url' (this is old syntax).
+ * <p>
+ * <b>Note:</b> {@link org.apache.cocoon.selection.ResourceExistsSelector}
+ * should be preferred to this component, as the semantics of a Selector better
+ * match the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.2 2003/03/19 06:19:38 jefft Exp $
  */
 public class ResourceExistsAction extends ComposerAction implements ThreadSafe {
 
