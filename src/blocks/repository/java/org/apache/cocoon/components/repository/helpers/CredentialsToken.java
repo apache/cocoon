@@ -26,7 +26,7 @@ public class CredentialsToken {
     /**
      * creates a CredentialsToken
      *
-     * @param name  the principal belonging to the credentials token.
+     * @param principal  the principal belonging to the credentials token.
      * @param credentials  the credentials of the credentials token.
      */
     public CredentialsToken(Principal principal, String credentials) {
