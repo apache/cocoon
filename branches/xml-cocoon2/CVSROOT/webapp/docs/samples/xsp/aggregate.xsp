@@ -3,7 +3,7 @@
 <xsp:page
         language="java"
         xmlns:xsp="http://apache.org/xsp"
-        xmlns:xinclude="http://www.w3.org/1999/XML/xinclude"
+        xmlns:xinclude="http://apache.org/cocoon/include/1.0"
 >
     <xsp:logic>
         /**
@@ -20,13 +20,13 @@
         <title>A Simple XSP Page using Content Aggregation</title>
         <content>
             <para>
-                <xinclude:include src="slashdot/slashdot.xml" element="slashdot" ns="http://foo.bar.com/slashdot"/>
+                <cinclude:include src="slashdot/slashdot.xml" element="slashdot" ns="http://foo.bar.com/slashdot"/>
             </para>
             <para>
-                <xinclude:include src="moreover/moreover.xml" element="moreover" ns="http://foo.bar.com/moreover"/>
+                <cinclude:include src="moreover/moreover.xml" element="moreover" ns="http://foo.bar.com/moreover"/>
             </para>
             <para>
-                <xinclude:include src="isyndicate/news.xml" element="isyndicate" ns="http://foo.bar.com/isyndicate"/>
+                <cinclude:include src="isyndicate/news.xml" element="isyndicate" ns="http://foo.bar.com/isyndicate"/>
             </para>
             <para>Brought to you by Cocoon2 at <xsp:expr>new Date()</xsp:expr>.</para>
         </content>

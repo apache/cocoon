@@ -141,7 +141,7 @@
   <!-- this component is used as a PoolController for the sitemap component pools  -->
   <pool-controller class="org.apache.avalon.excalibur.component.DefaultComponentPoolController"/>
 
-  <sax-connector class="org.apache.cocoon.components.saxconnector.XIncludeSAXConnector"/>
+  <sax-connector class="org.apache.cocoon.components.saxconnector.CIncludeSAXConnector"/>
 
   <stream-pipeline class="org.apache.cocoon.components.pipeline.CachingStreamPipeline"/>
 
