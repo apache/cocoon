@@ -62,15 +62,19 @@
   <ul>
    <li><link href="release.html">Release Plan</link>
     - major things to do before the next release</li>
+   <li><link href="review-sitemap-docs.html">Review Sitemap Docs</link>
+    - a coordinated review of the generated documentation for sitemap
+     components
+   </li>
   </ul>
 
   <ul>
-   <li><link href="doc.html">Documentation</link>
+   <li>Not maintained: <link href="doc.html">Documentation</link>
     - revisions and additions are required</li>
-   <li><link href="changes-doc.html">Documentation History of Changes</link></li>
-   <li><link href="todo-doc.html">Documentation To Do List</link></li>
-   <li><link href="issues-doc.html">Documentation Issues</link></li>
-   <li><link href="linkstatus.html">Linkstatus</link>
+   <li>Not maintained: <link href="changes-doc.html">Documentation History of Changes</link></li>
+   <li>Not maintained: <link href="todo-doc.html">Documentation To Do List</link></li>
+   <li>Not maintained: <link href="issues-doc.html">Documentation Issues</link></li>
+   <li>Not recent: <link href="linkstatus.html">Linkstatus</link>
     - Tools to assess and mend any broken hyperlinks</li>
   </ul>
 

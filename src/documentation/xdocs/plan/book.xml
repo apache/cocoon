@@ -31,6 +31,7 @@
 
   <menu label="Documentation">
     <menu-item label="Overview" href="doc.html"/>
+    <menu-item label="Review docs" href="review-sitemap-docs.html"/>
     <menu-item label="Changes" href="changes-doc.html"/>
     <menu-item label="To Do" href="todo-doc.html"/>
     <menu-item label="Issues" href="issues-doc.html"/>
