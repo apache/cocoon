@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import org.apache.cocoon.environment.Environment;
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.5 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @deprecated This class is not used anymore and will be removed with 2.2
+ * @version CVS $Id$
  */
 public final class ProcessorWrapper
 implements Processor, Component, Disposable, ThreadSafe {
