@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Patch Queue</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+
+ <body>
+
+ <s1 title="Introduction">
+
+  <p>
+   This is an <strong>informal</strong> list - in chronological order -
+   of some of the noteworthy patches that have been posted
+   to the <link href="mailto:cocoon-dev@xml.apache.org">cocoon-dev</link> mailing list.
+   These patches are not (yet) part of the Cocoon project, but need reviewing for possible
+   inclusion. This system was instituted because, due to the large volume of mail and
+   the lack of time of the committers, some patches tended to get forgetten about. This
+   queue does not guarantee that any patch will be reviewed within a reasonable time frame,
+   but it does at least make them easier to find!
+  </p>
+
+  <p><strong>Reviewers wanted!</strong> - If you have time to review and/or test these patches,
+   we would be grateful for your time. Please post comments to the cocoon-dev mailing lists.
+  </p>
+
+  <p>
+   Before submitting a patch, please read the page on <link href="contrib.xml">Third-Party
+   Contributions</link>. The preferred submission method for patches is:
+  </p>
+
+  <ul>
+   <li>Post to cocoon-dev@xml.apache.org</li>
+   <li>Describe the patch, the reason for it and (if necessary) why this is important.</li>
+   <li>Generate the patch in <code>diff -u</code> format from CVS</li>
+   <li>Also generate a documentation patch or new file, if this is something that should be documented.
+   </li>
+   <li>Post as an attachment rather than inline (unless it is trivially small).</li>
+  </ul>
+
+  <p>Following the above guidelines will facilitate your patch being reviewed
+   and applied efficiently.</p>
+
+ </s1>
+
+ <s1 title="Patch Queue">
+  
+  <p><strong> [Under Construction] </strong> Archive links will be added later.
+   <strong>Please do not bother the patch submitters/authors</strong> without first reading the 
+    relevant post(s) in the <connect href="mail-archives.xml">mailing list archives.</connect>
+  </p>
+
+  <p>Vapourware will not be listed.</p>
+
+  <table>
+   <tr>
+    <th>Date Posted</th>
+    <th>Subject <!--and Link--></th>
+    <th>Brief Description/Comments <!--(click link for more)--></th>
+    <th>Submitted/Written By</th>
+    <th>Patch Against Version (mandatory)</th>
+   </tr>
+   <tr>
+    <td>Unknown, 2000</td>
+    <td><link href="http://sourcery.linuxave.net/">Pipeline debugging</link></td>
+    <td>This is not actually a patch, but a slightly forked version of Cocoon with
+     ability to output what is the results of each stage of the pipeline to files.
+     Needs work to merge it!
+    </td>
+    <td><link href="mailto:greenrd@hotmail.com">Robin Green</link></td>
+    <td>1.7.1-dev</td>
+   </tr>
+   <tr>
+    <td>Unknown, 2000</td>
+    <td>session.xsl</td>
+    <td>JSDK2.0/2.1 HttpSession objects removeValue() method doesn't have a tag. +more...</td>
+    <td>Corey O'Donovan</td>
+    <td>1.?</td>
+   </tr>
+   <tr>
+    <td>28 Oct 2000</td>
+    <td>resource URL: handling</td>
+    <td>Allows resource: URLs to be used everywhere, e.g. can read from JARs in XSLT.
+     NOTE: This particular approach was discouraged in an earlier cocoon-dev discussion because of
+     possible security manager problems.
+    </td>
+    <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
+    <td>1.?</td>
+   </tr>
+   <tr>
+    <td>29 Oct 2000</td>
+    <td>Browser database capabilities</td>
+    <td>Extensive changes to user agent recognition and a capabilities map.</td>
+    <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
+    <td>1.?</td>
+   </tr>
+   <tr>
+    <td>31 Oct 2000</td>
+    <td>User Agent support in cmd line</td>
+    <td>Support for specifying user agent in the command line and outputting to stdout.</td>
+    <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
+    <td>1.?</td>
+   </tr>
+   <tr>
+    <td>4 Nov 2000</td>
+    <td>Classloader conflicts (XSP)</td>
+    <td>Fixes classloader conflicts with XSP and some servlet engines (Resin).
+     NOTE: patch requires JDK1.2, Cocon 1.x must not require JDK1.2 so patch
+     must be made reflective.</td>
+    <td><link href="mailto:sergei_ivanov@mail.ru">Sergei Ivanov</link></td>
+    <td>1.?</td>
+   </tr>
+   <tr>
+    <td>8 Nov 2000</td>
+    <td>XSP Debugger</td>
+    <td>Alternative patch to "pipeline debugger" at top of this queue.
+     Ideally the best of both solutions should be extracted.
+    </td>
+    <td><link href="mailto:MHussey@Saba.com">Michael Hussey</link></td>
+    <td>1.8</td>
+   </tr>
+  </table>
+
+  <p>See also additional list of patches to be added in <connect href="todo.xml">To Do</connect>.
+  </p>
+
+ </s1>
+</body>
+</document>

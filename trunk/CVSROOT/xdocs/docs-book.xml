@@ -16,6 +16,7 @@
   <external label="XML Links" href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/"/>
 <separator/>
   <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
+  <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
   <page id="sqltaglib" label="SQL XSP Taglib" source="sqltaglib.xml"/>
   <page id="fp" label="FP XSP Taglib" source="fptaglib.xml"/>
   <page id="connection-pool" label="SQL Conn Pool" source="connection-pool.xml"/>
@@ -23,7 +24,9 @@
   <page id="ldap" label="LDAP Processor" source="ldapprocessor.xml"/>
   <page id="dcp" label="DCP Processor" source="dcpprocessor.xml"/>
 <separator/>
-  <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
+  <page id="contrib" label="Contributing" source="contrib.xml"/>
+  <external label="3rd Party" href="http://xml.apache.org/cocoon/3rdparty.xml"/>
+  <external label="Patch Queue" href="http://xml.apache.org/cocoon/patches.xml"/>
 <separator/>
   <external label="Javadocs" href="./api/index.html"/>
 <separator/>

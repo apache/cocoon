@@ -99,7 +99,7 @@
    to make changes directly in CVS. If you submit many good patches, you may be 
    nominated as a committer yourself!)</p>
 
-  <p>If your contribution requires changing more than a few lines of Cocon (code or
+  <p>If your contribution requires changing more than a few lines of Cocoon (code or
    documentation), then it counts as a <strong>patch</strong>. If you have a patch and
    would like to see it incorporated into the Cocoon distribution, take note of the Licensing
    Requirements listed below, and then read the <connect href="patches.xml">Patch management
@@ -116,23 +116,24 @@
    applied by users who wish to use them.
   </p>
 
-  <p>A typical contribution (not a patch) may go through the following stages:
+  <p>A typical contribution (not a patch) may go through the following stages:</p>
+
   <ol>
    <li>Posted to cocoon-users with a URL to download it from.</li>
    <li>Listed on 3rdparty.html by a maintainer. [No requirements, other than relevance (at the moment).]</li>
    <li>Inclusion into the <code>contrib</code> directory,
     which is for 3rd-party contributions that have been tested, but are not necessarily
     mature enough or general enough for the main distribution. [Must be tested at least as
-    specified below. See also Licensing Requirements below.]
+    specified below. See also Licensing Requirements below.]</li>
    <li>Inclusion into the main distribution. [Committers must be confident that it should work properly in 
-    most/all environments, and it must be considered sufficiently useful and general to go into Cocoon. See also
-    Licensing Requirements below].</li>
+    most/all environments, it must be documented as appropriate, and it must be considered sufficiently
+    useful and general to go into Cocoon. See also  Licensing Requirements below].</li>
   </ol>
   
   <s2 title="Testing Requirements for Cocoon Contrib and Distribution">
    <note>These tests do not apply to Cocoon 2 because it is designed
-    to have different minimum requirements. As Cocoon 2 is still alpha we are not at a rigourous
-    test stage yet. Stay tuned!</note>
+    to have different minimum requirements. As Cocoon 2 is still alpha (at the time of this writing),
+    we are not at a rigourous test stage yet. Stay tuned!</note>
 
    <p>All new code should be tested under the following servlet engines:</p>
    <ul>
@@ -154,17 +155,28 @@
     the contributor is not required to do the testing - indeed it is probably better
     if someone else tests it, because the contributor might be tempted to do less
     than thorough testing!</p>
-  </s2>
+ </s2>
+
+ <s2 title="Documentation Requirements for Cocoon Distribution">
+  <p>All new features (processor, logicsheets, config options etc.) should be documented
+   appropriately (in XML or in cocoon.properties in the case of config options).</p>
+
+  <p>Use something like <code>xdocs/index.xml</code> as a rough guide, add
+   the new page(s) to <code>xdocs/site-book.xml</code> and <code>xdocs/docs-book.xml</code>,
+   and type <code>build.sh docs</code> or <code>build.bat docs</code> to test the
+   documentation build.
+  </p>
+ </s2>
 
  <s2 title="Licensing Requirements for the Cocoon Distribution">
   <p>To avoid legal problems, the Apache Project Management Committe (PMC) have agreed on
    a policy for under what licensing code can be accepted into Apache projects:</p>
   <ul>
-   <ol>Source code files must be under the Apache license and must have copyright assigned to
-    the Apache Software Foundation.</ol>
-   <ol>Jar files need only be released under a license that permits free redistribution
+   <li>Source code files must be under the Apache license and must have copyright assigned to
+    the Apache Software Foundation.</li>
+   <li>Jar files need only be released under a license that permits free redistribution
     and does not cover new files added to the jar/library (so the GPL and LGPL are not allowed,
-    but MPL and Apache licenses are, for example).</ol>
+    but MPL and Apache licenses are, for example).</li>
   </ul>
   <p><strong>By submitting a patch, you signify your understanding and acceptance of these
    conditions</strong> - like most open source projects, 
