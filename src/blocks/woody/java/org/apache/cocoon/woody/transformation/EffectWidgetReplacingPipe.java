@@ -50,28 +50,30 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Map;
-
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.formmodel.AggregateField;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Struct;
 import org.apache.cocoon.woody.formmodel.Union;
 import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.cocoon.woody.formmodel.Field;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.commons.jxpath.JXPathException;
+
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
 
 // TODO: Reduce the Element creation and deletion churn by using startElement
 // and endElement methods which do not create or use Elements on the stack.
@@ -90,7 +92,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.8 2004/02/04 17:25:58 sylvain Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.9 2004/02/29 06:09:46 vgritsenko Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -109,6 +111,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String REPEATER_SIZE = "repeater-size";
     private static final String REPEATER_WIDGET = "repeater-widget";
     private static final String REPEATER_WIDGET_LABEL = "repeater-widget-label";
+    private static final String AGGREGATE_WIDGET = "aggregate-widget";
     private static final String STRUCT = "struct";
     private static final String STYLING_EL = "styling";
     private static final String UNION = "union";
@@ -122,21 +125,22 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     protected Widget widget;
     protected Map classes;
 
-    private final DocHandler                 docHandler            = new DocHandler();
-    private final FormHandler                formHandler           = new FormHandler();
-    private final NestedHandler              nestedHandler         = new NestedHandler();
-    private final WidgetLabelHandler         widgetLabelHandler    = new WidgetLabelHandler();
-    private final WidgetHandler              widgetHandler         = new WidgetHandler();
-    private final RepeaterSizeHandler        repeaterSizeHandler   = new RepeaterSizeHandler();
+    private final DocHandler                 docHandler             = new DocHandler();
+    private final FormHandler                formHandler            = new FormHandler();
+    private final NestedHandler              nestedHandler          = new NestedHandler();
+    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
+    private final WidgetHandler              widgetHandler          = new WidgetHandler();
+    private final RepeaterSizeHandler        repeaterSizeHandler    = new RepeaterSizeHandler();
     private final RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
-    private final RepeaterWidgetHandler      repeaterWidgetHandler = new RepeaterWidgetHandler();
-    private final StructHandler              structHandler         = new StructHandler();
-    private final UnionHandler               unionHandler          = new UnionHandler();
-    private final UnionPassThruHandler       unionPassThruHandler  = new UnionPassThruHandler();
-    private final NewHandler                 newHandler            = new NewHandler();
-    private final ClassHandler               classHandler          = new ClassHandler();
-    private final ContinuationIdHandler      continuationIdHandler = new ContinuationIdHandler();
-    private final StylingContentHandler      stylingHandler        = new StylingContentHandler();
+    private final RepeaterWidgetHandler      repeaterWidgetHandler  = new RepeaterWidgetHandler();
+    private final AggregateWidgetHandler     aggregateWidgetHandler = new AggregateWidgetHandler();
+    private final StructHandler              structHandler          = new StructHandler();
+    private final UnionHandler               unionHandler           = new UnionHandler();
+    private final UnionPassThruHandler       unionPassThruHandler   = new UnionPassThruHandler();
+    private final NewHandler                 newHandler             = new NewHandler();
+    private final ClassHandler               classHandler           = new ClassHandler();
+    private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
+    private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
     private final ValidationErrorHandler     validationErrorHandler = new ValidationErrorHandler();
 
     /**
@@ -162,6 +166,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         templates.put(WIDGET, widgetHandler);
         templates.put(WIDGET_LABEL, widgetLabelHandler);
         templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
+        templates.put(AGGREGATE_WIDGET, aggregateWidgetHandler);
         templates.put(REPEATER_SIZE, repeaterSizeHandler);
         templates.put(REPEATER_WIDGET_LABEL, repeaterWidgetLabelHandler);
         templates.put(STRUCT, structHandler);
@@ -260,7 +265,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     // Handler classes to transform Woody templates
     //==============================================
 
-    public class DocHandler extends Handler {
+    protected class DocHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_SET_DOCUMENT_LOCATOR:
@@ -290,7 +295,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class FormHandler extends Handler {
+    protected class FormHandler extends Handler {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_START_ELEMENT:
@@ -354,7 +359,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class NestedHandler extends Handler {
+    protected class NestedHandler extends Handler {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_ELEMENT:
@@ -366,7 +371,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class WidgetLabelHandler extends Handler {
+    protected class WidgetLabelHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
@@ -386,7 +391,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class WidgetHandler extends Handler {
+    protected class WidgetHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
@@ -492,7 +497,31 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class StructHandler extends Handler {
+    protected class AggregateWidgetHandler extends Handler {
+        public Handler process() throws SAXException {
+            switch(event) {
+            case EVENT_START_ELEMENT:
+                widgetId = getWidgetId(input.attrs);
+                widget = getWidget(widgetId);
+                if (!(widget instanceof AggregateField)) {
+                    throwWrongWidgetType("AggregateWidgetHandler", input.loc, "aggregate");
+                }
+                contextWidgets.addFirst(contextWidget);
+                contextWidget = widget;
+                return this;
+            case EVENT_ELEMENT:
+                return nestedTemplate();
+            case EVENT_END_ELEMENT:
+                contextWidget = (Widget)contextWidgets.removeFirst();
+                return this;
+            default:
+                out.copy();
+                return this;
+            }
+        }
+    }
+
+    protected class StructHandler extends Handler {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_START_ELEMENT:
@@ -520,13 +549,15 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class UnionHandler extends Handler {
+    protected class UnionHandler extends Handler {
         public Handler process() throws SAXException {
             switch(event) {
             case EVENT_START_ELEMENT:
                 widgetId = getWidgetId(input.attrs);
                 widget = getWidget(widgetId);
-                if (!(widget instanceof Union)) throwWrongWidgetType("UnionHandler", input.loc, "union");
+                if (!(widget instanceof Union)) {
+                    throwWrongWidgetType("UnionHandler", input.loc, "union");
+                }
                 contextWidgets.addFirst(contextWidget);
                 contextWidget = widget;
                 out.element(Constants.WI_PREFIX, Constants.WI_NS, "union");
@@ -588,14 +619,15 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class NewHandler extends Handler {
+    protected class NewHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
                 widgetId = getWidgetId(input.attrs);
                 SaxBuffer classBuffer = (SaxBuffer)classes.get(widgetId);
-                if (classBuffer == null)
+                if (classBuffer == null) {
                     throwSAXException("New: Class \"" + widgetId + "\" does not exist.");
+                }
                 handlers.addFirst(handler);
                 handler = nestedHandler;
                 classBuffer.toSAX(EffectWidgetReplacingPipe.this);
@@ -612,7 +644,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    public class ClassHandler extends Handler {
+    protected class ClassHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
@@ -664,7 +696,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * This ContentHandler helps in inserting SAX events before the closing tag of the root
      * element.
      */
-    public class StylingContentHandler extends AbstractXMLPipe implements Recyclable {
+    protected class StylingContentHandler extends AbstractXMLPipe implements Recyclable {
         private int elementNesting;
         private SaxBuffer saxBuffer;
 
@@ -705,7 +737,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     /**
      * Inserts validation errors (if any) for the Field widgets
      */
-    public class ValidationErrorHandler extends Handler {
+    protected class ValidationErrorHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
             case EVENT_START_ELEMENT:
@@ -718,9 +750,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 return bufferHandler;
 
             case EVENT_END_ELEMENT:
-                // FIXME: Use to-be-introduced interface instead of Field class
-                if (widget instanceof Field) {
-                    ValidationError error = ((Field)widget).getValidationError();
+                if (widget instanceof ValidationErrorAware) {
+                    ValidationError error = ((ValidationErrorAware)widget).getValidationError();
                     if (error != null) {
                         out.startElement(Constants.WI_NS, VALIDATION_ERROR, Constants.WI_PREFIX_COLON + VALIDATION_ERROR, Constants.EMPTY_ATTRS);
                         error.generateSaxFragment(stylingHandler);
