@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.180 2004/03/03 09:42:24 antonio Exp $
+    | CVS $Id: jars.xml,v 1.181 2004/03/03 22:28:08 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -495,12 +495,21 @@
     <homepage>http://oss.software.ibm.com/icu4j/index.html</homepage>
   </file>
 
+
   <file>
     <title>JISP</title>
     <description>Java Indexed Serialization Package</description>
     <used-by>JISP file storage</used-by>
     <lib>core/jisp-2.5.1.jar</lib>
     <homepage>http://www.coyotegulch.com/jisp/</homepage>
+  </file>
+
+  <file>
+    <title>JCS</title>
+    <description>Java Caching System</description>
+    <used-by>JCS Store</used-by>
+    <lib>scratchpad/lib/jcs-1.0-dev-20040303.jar</lib>
+    <homepage>http://jakarta.apache.org/turbine/jcs</homepage>
   </file>
 
   <file>
