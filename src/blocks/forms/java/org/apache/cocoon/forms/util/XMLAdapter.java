@@ -80,6 +80,8 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
     private Locale locale;
     /** Is a <code>MultiValueField</code> handled? */
     private boolean isMultiValueItem = false;
+    /** The buffer used to receive character events */
+    private StringBuffer textBuffer;
 
 
     /**
@@ -133,6 +135,7 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
+        handleText();
         if (this.currentWidget == null) {
             // The name of the root element is ignored
             this.currentWidget = this.widget;
@@ -175,6 +178,7 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
      */
     public void endElement(String uri, String loc, String raw)
     throws SAXException {
+        handleText();
         if (this.currentWidget == null)
             throw new SAXException("Wrong state");
 
@@ -208,11 +212,45 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
      */
     public void characters(char ch[], int start, int len)
     throws SAXException {
-        String input = new String(ch, start, len);
-        if ("".equals(input.trim()))
+        // Buffer text, as a single text node can be sent in several chunks.
+        if (this.textBuffer == null) {
+            this.textBuffer = new StringBuffer();
+        } 
+        this.textBuffer.append(ch, start, len);
+    }
+    
+    /**
+     * Handle text nodes, if any. Called on every potential text node boundary,
+     * i.e. start and end element events.
+     * 
+     * @throws SAXException
+     */
+    private void handleText() throws SAXException {
+        if (this.textBuffer == null)
+            return;
+        
+        String input = this.textBuffer.toString().trim();
+        this.textBuffer = null; // clear buffer
+        if (input.length() == 0)
             return;
 
-        if (this.currentWidget instanceof DataWidget) {
+        if (this.currentWidget instanceof MultiValueField && isMultiValueItem) {
+            MultiValueField field = (MultiValueField)this.currentWidget;
+            Datatype type = field.getDatatype();
+            ConversionResult conv =
+                type.convertFromString(input, this.locale);
+            if (conv.isSuccessful()) {
+                Object[] values = (Object[])field.getValue();
+                int valLen = values == null ? 0 : values.length;
+                Object[] newValues = new Object[valLen + 1];
+                for (int i = 0; i < valLen; i++)
+                    newValues[i] = values[i];
+                newValues[valLen] = conv.getResult();
+                field.setValues(newValues);
+            } else
+                throw new SAXException("Could not convert: " + input +
+                                       " to " + type.getTypeClass());
+        } else if (this.currentWidget instanceof DataWidget) {
             DataWidget data = (DataWidget)this.currentWidget;
             Datatype type = data.getDatatype();
             ConversionResult conv =
@@ -231,24 +269,9 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
                 this.currentWidget.setValue(Boolean.FALSE);
             else
                 throw new SAXException("Unkown boolean: " + input);
-        } else if (this.currentWidget instanceof MultiValueField && isMultiValueItem) {
-            MultiValueField field = (MultiValueField)this.currentWidget;
-            Datatype type = field.getDatatype();
-            ConversionResult conv =
-                type.convertFromString(input, this.locale);
-            if (conv.isSuccessful()) {
-                Object[] values = (Object[])field.getValue();
-                int valLen = values == null ? 0 : values.length;
-                Object[] newValues = new Object[valLen + 1];
-                for (int i = 0; i < valLen; i++)
-                    newValues[i] = values[i];
-                newValues[valLen] = conv.getResult();
-                field.setValues(newValues);
-            } else
-                throw new SAXException("Could not convert: " + input +
-                                       " to " + type.getTypeClass());
-        } else
+        } else {
             throw new SAXException("Unknown widget type: " + this.currentWidget);
+        }
     }
 
 
@@ -299,7 +322,16 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
         start(id, attr);
         // Placing the handling DataWidget before ContainerWidget
         // means that an AggregateField is handled like a DataWidget
-        if (widget instanceof DataWidget) {
+        if (widget instanceof MultiValueField) {
+            Datatype datatype = ((MultiValueField)widget).getDatatype();
+            Object[] values = (Object[])widget.getValue();
+            if (values != null)
+                for (int i = 0; i < values.length; i++) {
+                    start(ITEM, attr);
+                    data(datatype.convertToString(values[i], this.locale));
+                    end(ITEM);
+                }
+        } else if (widget instanceof DataWidget) {
             Datatype datatype = ((DataWidget)widget).getDatatype();
             if (widget.getValue() != null)
                 data(datatype.convertToString(widget.getValue(), this.locale));
@@ -309,15 +341,6 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
             if (widget.getValue() != null) {
                 data(widget.getValue().toString());
             }
-        } else if (widget instanceof MultiValueField) {
-            Datatype datatype = ((MultiValueField)widget).getDatatype();
-            Object[] values = (Object[])widget.getValue();
-            if (values != null)
-                for (int i = 0; i < values.length; i++) {
-                    start(ITEM, attr);
-                    data(datatype.convertToString(values[i], this.locale));
-                    end(ITEM);
-                }
         } else if (widget instanceof ContainerWidget) {
             Iterator children = ((ContainerWidget)widget).getChildren();
             while (children.hasNext())
