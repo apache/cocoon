@@ -55,7 +55,7 @@ package org.apache.cocoon.components.language.markup.xsp;
  * generation stylesheet to escape XML characters to make a valid Java strings.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSLTExtension.java,v 1.2 2003/10/07 15:13:20 tcurdt Exp $
+ * @version CVS $Id: XSLTExtension.java,v 1.3 2003/10/24 01:10:56 vgritsenko Exp $
  */
 public class XSLTExtension {
 
@@ -156,6 +156,9 @@ public class XSLTExtension {
      * Counts amount of spaces in the input line from the beginning
      * to the first new line symbol and returns a string with this
      * amount of spaces.
+     *
+     * Used by the Python XSP core logicsheet.
+     */
     public String prefix(String string) {
         char chr[] = string.toCharArray();
         int i;
@@ -185,12 +188,14 @@ public class XSLTExtension {
         }
         return buffer.toString();
     }
-     */
 
     /**
      * Counts amount of spaces in the input line from the end
      * to the last new line symbol and returns a string with this
      * amount of spaces.
+     *
+     * Used by the Python XSP core logicsheet.
+     */
     public String suffix(String string) {
         char chr[] = string.toCharArray();
 
@@ -210,6 +215,4 @@ public class XSLTExtension {
         }
         return buffer.toString();
     }
-     */
-
- }
+}
