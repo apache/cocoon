@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.34 2000-09-27 23:31:04 greenrd Exp $
+  $Id: todo.xml,v 1.35 2000-10-15 23:04:07 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -18,11 +18,25 @@
  <actions priority="high">
   <action context="code">
    Work out how to integrate inline XSP docs (such as inline esql docs)
-   into the build docs procedure.
+   into the build docs procedure. This will fix a dead link which leads
+   on to the next item...
+  </action>
+  <action context="docs" assigned-to="RDG">
+   Fix dead links in docs.
+  </action>
+  <action context="docs" assigned-to="RDG">
+   Write a full guide to logicsheets, including: (1) What they are and how
+   they work - explaining why XSP results can't be assigned to XSLT variables;
+   (2) What all the supplied logicsheets do (long-term aim: document every tag
+   and every attribute); (3) How to write your own and use it; (4) How to
+   specify logicsheet execution order with the as-yet-undocumented 
+   &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
   </action>
   <action context="code" assigned-to="RDG">
-   Workaround redirect problem with Tomcat and IE
-   (code written; just needs to be merged in.)
+   Workaround redirect problem with Tomcat and IE and Cocoon
+   (code written; just needs to be merged in.) I marked this high-priority
+   because the only known workarounds are stop using Tomcat 3.1 or stop using
+   IE(!) - both of which are unacceptable.
   </action>
  </actions>
 
@@ -45,18 +59,49 @@
    Class auto-reloading for XSP pages
    (code written; just needs to be merged in and documented.)
   </action>
+  <action context="docs">
+   Ensure that all HTML docs are not too wide for screen/printer width
+   (as appropriate - there are separate directories for screen and
+   printer docs).
+  </action>
+  <action context="docs">
+   FAQ (particularly) and XSP docs are too long lengthwise. Split them
+   up. Their length (or complexity)
+   causes extremely slow rendering on Netscape 4.x and recent Mozilla builds.
+  </action>
  </actions>
 
- <actions priority="wish">
-  <action context="design">
-   Work out best way of breaking the 64K method barrier in XSP.
+ <actions priority="low">
+  <action context="docs">
+   Make &lt;connect&gt; tags work correctly when xdocs are transformed to HTML docs.
+  </action>
+  <action context="docs">
+   Make authors appear on all HTML docs (where appropriate).
+  </action>
+  <action context="code">
+   Fix Jikes compilation error reporting bug.
+  </action>
+  <action context="code">
+   Make cache more configurable (e.g. to turn off per-user-agent caching,
+   maybe for specific pages only). However, Mark Washeim thinks that this
+   offers only "trivial" overhead reduction, even on large sites.
   </action>
   <action context="code">
    Better error reporting for typos in stylesheet URIs.
   </action>
+ </actions>
+
+ <actions priority="wish">
   <action context="code">
-   Prepared statements for ESQL for speed and to avoid escaping problems
-   (for both security and bug-preventing reasons).
+   Automated test suite - maybe build upon samples and JMeter??
+  </action>
+  <action context="design">
+   Work out best way of breaking the 64K method barrier in XSP.
+   (The ESQL logicsheet already tries to address this by executing queries
+   in separate methods.)
+  </action>
+  <action context="code">
+   More logicsheets for common requirements.
   </action>
  </actions>
 
