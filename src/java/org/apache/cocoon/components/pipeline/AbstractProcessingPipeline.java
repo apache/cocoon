@@ -89,7 +89,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.15 2004/02/11 13:59:39 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.16 2004/02/11 14:00:47 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -151,8 +151,6 @@ public abstract class AbstractProcessingPipeline
     
     /** Output Buffer Size */
     protected int  outputBufferSize;
-    
-    private boolean internal;
 
     /**
      * Composable Interface
