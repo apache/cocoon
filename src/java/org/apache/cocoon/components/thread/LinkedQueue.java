@@ -32,11 +32,6 @@ public class LinkedQueue
     extends EDU.oswego.cs.dl.util.concurrent.LinkedQueue
     implements Queue
 {
-    //~ Instance fields --------------------------------------------------------
-
-    /** The size */
-    protected int m_size = 0;
-
     //~ Methods ----------------------------------------------------------------
 
     /**
@@ -44,31 +39,6 @@ public class LinkedQueue
      */
     public int getQueueSize(  )
     {
-        return m_size;
-    }
-
-    /**
-     * @see EDU.oswego.cs.dl.util.concurrent.LinkedQueue#extract()
-     */
-    protected synchronized Object extract(  )
-    {
-        synchronized( head_ )
-        {
-            if( head_.next != null )
-            {
-                --m_size;
-            }
-
-            return super.extract(  );
-        }
-    }
-
-    /**
-     * @see EDU.oswego.cs.dl.util.concurrent.LinkedQueue#insert(java.lang.Object)
-     */
-    protected void insert( final Object object )
-    {
-        super.insert( object );
-        ++m_size;
+        return -1;
     }
 }
