@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.1//EN" "document-v11.dtd">
+<document>
+<header>
+<title>Cocoon Source Resolving</title>
+    <authors>
+      <person name="Sylvain Wallez" email="sylvain@apache.org"/>
+    </authors>
+</header>
+<body>
+  <section>
+    <title>The Store Components in Cocoon</title>
+    <p>
+      To keep cached data, Cocoon uses components implementing the 
+      <em>org.apache.excalibur.Store</em> interface. Cocoon uses two 
+      implementations of this interface, the "transient store" and the "store", 
+      and optionnally a third one, the "persistent store".
+    </p>
+
+    <section>
+      <title>The Transient store</title>
+      <p>
+        The transient store (role <em>Store.TRANSIENT_STORE</em> is used for objects 
+        that are not serializable, or whose storage doesn't make sense across server 
+        restart. The transient store lives on its own and has no relation with other 
+        stores. This is a mandatory component within Cocoon (i.e. used by Cocoon's code).
+      </p>
+      <p>
+        Cocoon uses the transient store to cache XSLT style sheets, XSP logicsheets, etc.
+      </p>
+    </section>
+    <section>
+      <title>The Store (aka "main Store")</title>
+      <p>
+        The store (role <em>Store.ROLE</em>) is used to store objects that are 
+        serializable. As the transient store, it is a mandatory component. For 
+        efficiency reasons, implementations of the main store should keep most-often 
+        used objects in memory and swap older ones to disk.
+      </p>
+      <p>
+        Cocoon uses the main store to cache pipeline output.
+      </p>
+    </section>
+    <section>
+      <title>Persistent store (optional)</title>
+      <p>
+        Some store (<em>Store.ROLE</em>) implementations (but not all) 
+        may actually be just an in-memory cache that swap objects by calling 
+        the persistent store (<em>Store.PERSISTENT_STORE</em>) when needed. So 
+        the persistent store is an <em>optional</em> component which is used only 
+        by MRUMemoryStore, and nowhere else in the code.
+      </p>
+      <p>
+        Two examples to illustrate this:
+      </p>
+      <ul>
+        <li>when using JISP, we had this mechanism : the store was a MRUMemoryStore 
+            swapping to the persistent store which was a JISPStore.</li>
+        <li>JCS has its own in-memory front end to its own persistent storage. 
+             In this configuration Store.ROLE will be a JCSStore and 
+             Store.PERSISTENT_STORE will have no implementation, because we don't 
+             need it.
+        </li>
+      </ul>
+    </section>
+  </section>
+  <section>
+    <title>Summary</title>
+    <ul>
+      <li>Store.TRANSIENT_STORE : used by Cocoon to store non-serializable objects</li>
+      <li>Store.ROLE : used by Cocoon to store serializable objects</li>
+      <li>Store.PERSISTENT_STORE : optional component that may be used by in-memory implementations of Store.ROLE to delegate persistent storage.</li>
+    </ul>
+  </section>
+</body>
+</document>
