@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.20 2003/03/31 14:08:16 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.21 2003/04/01 16:34:17 stephan Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -620,11 +620,11 @@
  <file>
   <title>Chaperon Text Parser</title>
   <description>
-    chaperon is parser which could parse text files, and convert those
-    to XML files.
+    The chaperon project is parser which could parse text files, and 
+    convert those to XML files.
   </description>
   <used-by>Chaperon block</used-by>
-  <lib>chaperon/lib/chaperon-20030208.jar</lib>
+  <lib>chaperon/lib/chaperon-20030401.jar</lib>
   <homepage>http://chaperon.sourceforge.net</homepage>
  </file>
 
