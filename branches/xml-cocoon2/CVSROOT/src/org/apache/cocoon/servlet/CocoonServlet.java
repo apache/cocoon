@@ -60,21 +60,21 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.60 $ $Date: 2001-02-20 21:32:47 $
+ * @version CVS $Revision: 1.1.4.61 $ $Date: 2001-02-21 07:36:19 $
  */
 
 public class CocoonServlet extends HttpServlet {
 
-    private Logger log;
+    protected Logger log;
 
     static final long second = 1000;
     static final long minute = 60 * second;
     static final long hour   = 60 * minute;
 
-    private long creationTime = 0;
-    private Cocoon cocoon;
-    private Exception exception;
-    private DefaultContext appContext = new DefaultContext();
+    protected long creationTime = 0;
+    protected Cocoon cocoon;
+    protected Exception exception;
+    protected DefaultContext appContext = new DefaultContext();
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
@@ -383,7 +383,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Create the environment for the request
      */
-    private Environment getEnvironment(String uri,
+    protected Environment getEnvironment(String uri,
                                        HttpServletRequest req,
                                        HttpServletResponse res)
     throws Exception {
