@@ -66,6 +66,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
@@ -91,7 +92,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletPortalManager.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: PortletPortalManager.java,v 1.3 2004/02/06 13:07:17 cziegeler Exp $
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
@@ -116,6 +117,10 @@ public class PortletPortalManager
      */
     public void contextualize(Context context) throws ContextException {
         this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+        // we have to somehow pass this component down to other components!
+        // This is ugly, but it's the only chance for sofisticated component containers
+        // that wrap component implementations!
+        this.servletConfig.getServletContext().setAttribute(PortalManager.ROLE, this);
         this.context = context;
     }
 
@@ -146,6 +151,10 @@ public class PortletPortalManager
             this.portletContainerEnvironment = null;
         } catch (Throwable t) {
             this.getLogger().error("Destruction failed!", t);
+        }
+        if ( this.servletConfig != null ) {
+            this.servletConfig.getServletContext().removeAttribute(PortalManager.ROLE);
+            this.servletConfig = null;
         }
     }
 

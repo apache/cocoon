@@ -52,11 +52,14 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -69,6 +72,7 @@ import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.pluto.om.portlet.PortletDefinition;
 import org.apache.pluto.om.window.PortletWindow;
@@ -83,9 +87,26 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowAspect.java,v 1.1 2004/01/22 14:01:22 cziegeler Exp $
+ * @version CVS $Id: PortletWindowAspect.java,v 1.2 2004/02/06 13:07:17 cziegeler Exp $
  */
-public final class PortletWindowAspect extends AbstractAspect {
+public final class PortletWindowAspect 
+extends AbstractAspect 
+implements Contextualizable {
+
+    /** The environment */
+    protected PortletContainerEnvironment environment;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        // now get the portal manager
+        ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+        PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
+        if ( portalManager != null ) {
+            this.environment = portalManager.getPortletContainerEnvironment();
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
@@ -118,19 +139,8 @@ public final class PortletWindowAspect extends AbstractAspect {
             XMLUtils.createElement(contenthandler, "title", title);            
         
 
-            PortletContainerEnvironment env = null;
-            PortletPortalManager portalManager = null;
-            try {
-                portalManager = (PortletPortalManager) this.manager.lookup(PortalManager.ROLE);
-                env = portalManager.getPortletContainerEnvironment();
-            } catch (ServiceException ignore) {
-                // if this fails something is *really* wrong, so we ignore it
-            } finally {
-                this.manager.release(portalManager);
-            }
-
-            if ( env != null ) {
-                InformationProviderService ips = (InformationProviderService) env.getContainerService(InformationProviderService.class);
+            if ( this.environment != null ) {
+                InformationProviderService ips = (InformationProviderService) this.environment.getContainerService(InformationProviderService.class);
                 DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) context.getObjectModel().get("portlet-request"));
                 
                 Event event;    
