@@ -18,9 +18,7 @@
 <xmap xpath="/sitemap/components/generators"
       unless="generator[@name='script']">
 
-    <map:generator name="script"
-         src="org.apache.cocoon.generation.ScriptGenerator"
-         logger="sitemap.generation.scriptgenerator">
+    <map:generator name="script" src="org.apache.cocoon.generation.ScriptGenerator" logger="sitemap.generation.scriptgenerator">
         <!-- Groovy support -->
         <add-languages>
             <language name="groovy" src="org.codehaus.groovy.bsf.GroovyEngine">
