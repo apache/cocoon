@@ -55,12 +55,13 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import java.sql.Connection;
 import java.util.Properties;
 import java.sql.SQLException;
+import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.1 2003/03/19 08:52:26 cziegeler Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.1 2003/03/20 21:51:43 tcurdt Exp $
  */
-public abstract class AbstractEsqlConnection extends AbstractLogEnabled implements Connection {
+public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
     private String url = null;
     private Properties properties = null;
@@ -107,7 +108,13 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled implemen
         setProperty("password", password);
     }
 
+    public void setAutoCommit(final boolean autocommit) throws SQLException {
+        getConnection().setAutoCommit(autocommit);
+    }
 
+    public boolean getAutoCommit() throws SQLException {
+        return (getConnection().getAutoCommit());
+    }
 
     public String getURL() throws SQLException {
         if (this.url == null) {
@@ -119,6 +126,24 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled implemen
     public void setURL(final String url) {
         this.url = url;
     }
+
+
+    public DatabaseMetaData getMetaData() throws SQLException {
+        return (getConnection().getMetaData());
+    }
+
+    public void commit() throws SQLException {
+        getConnection().commit();
+    }
+
+    public void rollback() throws SQLException {
+        getConnection().rollback();
+    }
+
+    public void close() throws SQLException {
+        getConnection().close();
+    }
+
 
 
     /**
@@ -138,45 +163,45 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled implemen
             String url = getURL();
 
             if (url.startsWith("jdbc:postgresql:")) {
-                query = new PostgresEsqlQuery(this,queryString);
+                query = new PostgresEsqlQuery(getConnection(),queryString);
             }
             else if (url.startsWith("jdbc:mysql:")) {
-                query = new MysqlEsqlQuery(this,queryString);
+                query = new MysqlEsqlQuery(getConnection(),queryString);
             }
             else if (url.startsWith("jdbc:sybase:")) {
-                query = new SybaseEsqlQuery(this,queryString);
+                query = new SybaseEsqlQuery(getConnection(),queryString);
             }
             else if (url.startsWith("jdbc:oracle:")) {
-                query = new OracleEsqlQuery(this,queryString);
+                query = new OracleEsqlQuery(getConnection(),queryString);
             }
             else if (url.startsWith("jdbc:pervasive:")) {
-                query = new PervasiveEsqlQuery(this,queryString);
+                query = new PervasiveEsqlQuery(getConnection(),queryString);
             }
             else {
                 getLogger().warn("Cannot guess database type from jdbc url: " + String.valueOf(url) +" - Defaulting to JDBC");
-                query = new JdbcEsqlQuery(this,queryString);
+                query = new JdbcEsqlQuery(getConnection(),queryString);
             }
         }
         else if ("sybase".equalsIgnoreCase(type)) {
-            query = new SybaseEsqlQuery(this,queryString);
+            query = new SybaseEsqlQuery(getConnection(),queryString);
         }
         else if ("postgresql".equalsIgnoreCase(type)) {
-            query = new PostgresEsqlQuery(this,queryString);
+            query = new PostgresEsqlQuery(getConnection(),queryString);
         }
         else if ("postgresql-old".equalsIgnoreCase(type)) {
-            query = new PostgresOldEsqlQuery(this,queryString);
+            query = new PostgresOldEsqlQuery(getConnection(),queryString);
         }
         else if ("mysql".equalsIgnoreCase(type)) {
-            query = new MysqlEsqlQuery(this,queryString);
+            query = new MysqlEsqlQuery(getConnection(),queryString);
         }
         else if ("oracle".equalsIgnoreCase(type)) {
-            query = new OracleEsqlQuery(this,queryString);
+            query = new OracleEsqlQuery(getConnection(),queryString);
         }
         else if ("pervasive".equalsIgnoreCase(type)) {
-            query = new PervasiveEsqlQuery(this,queryString);
+            query = new PervasiveEsqlQuery(getConnection(),queryString);
         }
         else if ("jdbc".equalsIgnoreCase(type)) {
-            query = new JdbcEsqlQuery(this,queryString);
+            query = new JdbcEsqlQuery(getConnection(),queryString);
         }
         else {
             getLogger().error("Unknown database type: " + String.valueOf(type));
@@ -185,107 +210,5 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled implemen
         setupLogger(query);
         return(query);
     }
-
-
-
-    /* just wrap methods below */
-
-    public java.sql.Statement createStatement() throws SQLException {
-        return (getConnection().createStatement());
-    }
-
-    public java.sql.Statement createStatement(int i1, int i2) throws SQLException {
-        return (getConnection().createStatement(i1, i2));
-    }
-
-    public java.sql.PreparedStatement prepareStatement(String s) throws SQLException {
-        return (getConnection().prepareStatement(s));
-    }
-
-    public java.sql.PreparedStatement prepareStatement(String s, int i1, int i2) throws SQLException {
-        return (getConnection().prepareStatement(s, i1, i2));
-    }
-
-
-    public void close() throws SQLException {
-        getConnection().close();
-    }
-
-    public void commit() throws SQLException {
-        getConnection().commit();
-    }
-
-    public void rollback() throws SQLException {
-        getConnection().rollback();
-    }
-
-    public boolean getAutoCommit() throws SQLException {
-        return (getConnection().getAutoCommit());
-    }
-
-    public void setAutoCommit(boolean autocommit) throws SQLException {
-        getConnection().setAutoCommit(autocommit);
-    }
-
-    public void setTransactionIsolation(int i) throws SQLException {
-        getConnection().setTransactionIsolation(i);
-    }
-
-    public int getTransactionIsolation() throws SQLException {
-        return (getConnection().getTransactionIsolation());
-    }
-
-    public String getCatalog() throws SQLException {
-        return (getConnection().getCatalog());
-    }
-
-    public java.sql.SQLWarning getWarnings() throws SQLException {
-        return (getConnection().getWarnings());
-    }
-
-    public java.util.Map getTypeMap() throws SQLException {
-        return (getConnection().getTypeMap());
-    }
-
-    public boolean isClosed() throws SQLException {
-        return (getConnection().isClosed());
-    }
-
-    public java.sql.DatabaseMetaData getMetaData() throws SQLException {
-        return (getConnection().getMetaData());
-    }
-
-    public void setCatalog(String s) throws SQLException {
-        getConnection().setCatalog(s);
-    }
-
-    public void setTypeMap(java.util.Map m) throws SQLException {
-        getConnection().setTypeMap(m);
-    }
-
-    public void setReadOnly(boolean b) throws SQLException {
-        getConnection().setReadOnly(b);
-    }
-
-    public void clearWarnings() throws SQLException {
-        getConnection().clearWarnings();
-    }
-
-    public boolean isReadOnly() throws SQLException {
-        return (getConnection().isReadOnly());
-    }
-
-    public String nativeSQL(String s) throws SQLException {
-        return (getConnection().nativeSQL(s));
-    }
-
-    public java.sql.CallableStatement prepareCall(String s) throws SQLException {
-        return (getConnection().prepareCall(s));
-    }
-
-    public java.sql.CallableStatement prepareCall(String s, int i1, int i2) throws SQLException {
-        return (getConnection().prepareCall(s, i1, i2));
-    }
-
 }
 

@@ -53,14 +53,15 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Connection;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: PostgresOldEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
+ * @version CVS $Id: PostgresOldEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
  */
 final public class PostgresOldEsqlQuery extends AbstractEsqlQuery {
 
-    public PostgresOldEsqlQuery(AbstractEsqlConnection connection, String query) {
+    public PostgresOldEsqlQuery(Connection connection, String query) {
         super(connection, query);
     }
 
