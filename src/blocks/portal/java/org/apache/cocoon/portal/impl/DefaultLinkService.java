@@ -44,7 +44,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.14 2004/06/07 09:53:34 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.15 2004/07/11 17:23:29 antonio Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -255,7 +255,7 @@ public class DefaultLinkService
     public void addUniqueParameterToLink(String name, String value) {
         final Info info = this.getInfo();
         if ( info.hasParameters ) {
-            final int pos = info.linkBase.indexOf("?");
+            final int pos = info.linkBase.toString().indexOf("?");
             final String queryString = info.linkBase.substring(pos + 1);
             final RequestParameters params = new RequestParameters(queryString);
             if ( params.getParameter(name) != null ) {
