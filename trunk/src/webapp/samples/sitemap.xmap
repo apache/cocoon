@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.19 2004/03/10 10:05:07 cziegeler Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.20 2004/03/10 16:26:19 unico Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -28,13 +28,7 @@
   <map:transformers default="xslt"/>
   <map:readers default="resource"/>
   <map:serializers default="html"/>
-  <map:matchers default="wildcard">
-     <map:matcher logger="sitemap.matcher.header" name="filename" src="org.apache.cocoon.matching.modular.CachingRegexpMatcher">
-        <input-module name="request-param">
-           <parameter>filename</parameter>
-        </input-module>
-     </map:matcher>
-  </map:matchers>
+  <map:matchers default="wildcard"/>
   <map:selectors default="browser"/>
  </map:components>
 
@@ -143,9 +137,9 @@
    <map:match pattern="clearcache.html">
     <map:act type="clear-cache">
      <map:generate src="status" type="status"/>
-    <map:transform src="context://stylesheets/system/status2html.xslt">
+     <map:transform src="context://stylesheets/system/status2html.xslt">
       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+     </map:transform>
      <map:serialize/>
     </map:act>
    </map:match>
@@ -153,9 +147,9 @@
    <map:match pattern="clearpersistentstore.html">
     <map:act type="clear-persistent-store">
      <map:generate src="status" type="status"/>
-    <map:transform src="context://stylesheets/system/status2html.xslt">
+     <map:transform src="context://stylesheets/system/status2html.xslt">
       <map:parameter name="contextPath" value="{request:contextPath}"/>
-    </map:transform>
+     </map:transform>
      <map:serialize/>
     </map:act>
    </map:match>
@@ -172,18 +166,6 @@
      <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
    </map:match>
 
-  </map:pipeline>
-
-  <map:pipeline internal-only="true">
-   <map:match pattern="view-source">
-    <!-- colourize files that are known to be XML -->
-    <map:match type="filename" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
-       <map:generate src="common/view-source.xsp" type="serverpages"/>
-       <map:serialize/>
-    </map:match>
-    <!-- all other files are just send as text -->
-    <map:read mime-type="text/plain" src="../{request-param:filename}"/>
-   </map:match>
   </map:pipeline>
 
  </map:pipelines>
