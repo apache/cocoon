@@ -49,5 +49,8 @@ public final class Constants {
 
     /** I18n catalogue containing the built-in messages. */
     public static final String I18N_CATALOGUE = "forms";
+    public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
+    public static final String I18N_PREFIX = "i18n";
+    public static final String I18N_PREFIX_COLON = "i18n:";
 
 }

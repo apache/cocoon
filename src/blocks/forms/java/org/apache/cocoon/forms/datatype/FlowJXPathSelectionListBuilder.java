@@ -18,8 +18,11 @@ package org.apache.cocoon.forms.datatype;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
+
+import java.util.Map;
 
 /**
  * Builds a selection list that will take its values from the flow page data.
@@ -56,10 +59,37 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Con
     public SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
 
         String listPath = DomHelper.getAttribute(selectionListElement, "list-path");
-        String keyPath = DomHelper.getAttribute(selectionListElement, "value-path");
-        String valuePath = DomHelper.getAttribute(selectionListElement, "label-path");
+        String valuePath = DomHelper.getAttribute(selectionListElement, "value-path");
+        Map nspfx = DomHelper.getInheritedNSDeclarations(selectionListElement);
+        String i18nPfx = (String)nspfx.get( Constants.I18N_NS );
+        String labelPath = DomHelper.getAttribute(selectionListElement, "label-path", null);
+        boolean labelIsI18nKey = false;
+        if( labelPath == null )
+        {
+            labelPath = DomHelper.getAttribute(selectionListElement, i18nPfx + ":label-path");
+            labelIsI18nKey = true;
+        }
+        String nullText = DomHelper.getAttribute(selectionListElement, "null-text", null);
+        boolean nullTextIsI18nKey = false;
+        if( nullText == null ) {
+            nullText = DomHelper.getAttribute(selectionListElement, i18nPfx + ":null-text", null);
+            if( nullText != null ) {
+                nullTextIsI18nKey = true;
+            }
+        }
+        
+        String i18nCatalog = DomHelper.getAttribute(selectionListElement, "catalogue", null);
 
-        return new FlowJXPathSelectionList(context, listPath, keyPath, valuePath, datatype);
+
+        return new FlowJXPathSelectionList(context, 
+                                           listPath, 
+                                           valuePath, 
+                                           labelPath, 
+                                           datatype, 
+                                           nullText, 
+                                           nullTextIsI18nKey, 
+                                           i18nCatalog, 
+                                           labelIsI18nKey);
     }
 
 }

@@ -75,6 +75,11 @@
           <convertor name="enum" src="org.apache.cocoon.forms.datatype.convertor.EnumConvertorBuilder"/>
         </convertors>
       </datatype>
+      <datatype name="bean" src="org.apache.cocoon.forms.datatype.typeimpl.BeanTypeBuilder">
+        <convertors default="bean" plain="bean">
+          <convertor name="bean" src="org.apache.cocoon.forms.datatype.convertor.BeanConvertorBuilder"/>
+        </convertors>
+      </datatype>
     </datatypes>
     <validation-rules>
       <!-- old-style datatype validators (deprecated) -->
