@@ -27,7 +27,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:42:05 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-23 00:04:13 $
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer {
 
@@ -62,7 +62,7 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer {
      */
     public void setDocumentHandler(DocumentHandler document)
     throws IllegalStateException {
-        if (this.documentHandler!=null) throw new IllegalStateException();
+        //FIXME: why this line? -> if (this.documentHandler!=null) throw new IllegalStateException();
         this.documentHandler=document;
     }
 

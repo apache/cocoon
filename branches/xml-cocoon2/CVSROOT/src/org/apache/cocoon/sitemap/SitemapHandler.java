@@ -28,7 +28,7 @@ import org.apache.avalon.ComponentManager;
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:57 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-23 00:04:12 $
  */
 public class SitemapHandler implements Runnable, Configurable, Composer {
 
@@ -50,6 +50,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
  
     /** the regenerating thread */ 
     private Thread regeneration = null; 
+    private boolean isRegenerationRunning = false;
  
     /** the sitemaps base path */ 
     private String basePath = null; 
@@ -86,6 +87,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
 
     protected void throwError () 
     throws ProcessingException, SAXException, IOException, InterruptedException {
+        System.out.println("SitemapHandler.throwError()");
         Exception e = exception;
         exception = null;
         if (e instanceof ProcessingException) {
@@ -100,27 +102,33 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
             throw new ProcessingException ("Unknown Exception raised: "
                                          + exception.toString());
         }
+        System.out.println("SitemapHandler.throwError() no Exception to throw");
     }
 
     protected boolean available () {
+        System.out.println("SitemapHandler.available() = "+(sitemap!=null?"true":"false"));
         return (sitemap != null);
     }
 
     protected boolean hasChanged () {
+        System.out.print("SitemapHandler.hasChanged() = ");
         if (sitemap != null) {
+            System.out.println((sitemap.modifiedSince(this.changeDate)?"true":"false"));
             return sitemap.modifiedSince(this.changeDate);
         }
+        System.out.println("true");
         return true;
     }
 
     protected boolean isRegenerating () {
-        if (regeneration == null)
-            return false;
-        return regeneration.isAlive();
+        System.out.print("SitemapHandler.isRegenerating() = "+(isRegenerationRunning?"true":"false"));
+        return isRegenerationRunning; 
     }
 
     protected void regenerateAsynchroniously () {
-        if (!isRegenerating()) {
+        System.out.println("SitemapHandler.regenerateAsynchroniously()");
+        if (!this.isRegenerationRunning) {
+            isRegenerationRunning = true;
             regeneration = new Thread (this);
             regeneration.start();
         }
@@ -128,22 +136,29 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
 
     protected void regenerate () 
     throws ProcessingException, SAXException, IOException, InterruptedException { 
-        if (!isRegenerating()) {
+        System.out.println("SitemapHandler.regenerate()");
+        if (!this.isRegenerationRunning) {
+            System.out.println("SitemapHandler.regenerate(): regenerating");
+            isRegenerationRunning = true;
             regeneration = new Thread (this);
             regeneration.start();
             regeneration.join();
             throwError();
+        }else {
+            System.out.println("SitemapHandler.regenerate(): regenerating already in progress");
         }
     }
 
     public boolean process (Environment environment, OutputStream out) 
     throws ProcessingException, SAXException, IOException, InterruptedException {
+        System.out.println("SitemapHandler.process()");
         this.throwError();
         return sitemap.process (environment, out);
     }
 
     /** Generate the Sitemap class */
     public void run() {
+        System.out.println("SitemapHandler.run()");
 /*
     private void generateSitemap (String sitemapName) 
             throws java.net.MalformedURLException, IOException, 
@@ -178,7 +193,9 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
                 this.exception = e;
             }
         } finally {
+            System.out.println("SitemapHandler.run(): finally");
             regeneration = null;
+            isRegenerationRunning = false;
         }
     }
 

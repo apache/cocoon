@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.12 $ $Date: 2000-07-22 20:41:29 $
+ * @version CVS $Revision: 1.4.2.13 $ $Date: 2000-07-23 00:04:09 $
  */
 public class Cocoon
 implements Component, Configurable, ComponentManager, Modifiable, Processor,
@@ -198,6 +198,7 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor,
      */
     public InputSource resolveEntity(String publicId, String systemId)
     throws SAXException, IOException {
+        System.out.println ("Cocoon.resolveEntity(\""+publicId+"\",\""+systemId+"\")");
         if (systemId==null) throw new SAXException("Invalid System ID");
 
         if (systemId.length()==0)

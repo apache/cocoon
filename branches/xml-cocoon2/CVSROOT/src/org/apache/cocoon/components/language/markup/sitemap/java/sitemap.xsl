@@ -53,11 +53,14 @@
 /**
  *
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-07-22 20:41:35 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-07-23 00:04:10 $
  *
 /
 -->
 public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
+    static { 
+        dateCreated = <xsl:value-of select="@creation-date"/>L; 
+    } 
     
     private Parameters emptyParam = new Parameters(); 
 
