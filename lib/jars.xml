@@ -1000,7 +1000,7 @@
        Database Connection Pool API
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/commons-dbcp-1.1.jar</lib>
+    <lib>ojb/lib/commons-dbcp-1.2.1.jar</lib>
     <homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
   </file>
 
@@ -1011,7 +1011,7 @@
        may be useful when creating new pool implementations.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/commons-pool-1.1.jar</lib>
+    <lib>ojb/lib/commons-pool-1.2.jar</lib>
     <homepage>http://jakarta.apache.org/commons/pool/</homepage>
   </file>
 
@@ -1022,7 +1022,7 @@
         for Java Objects against relational databases.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/db-ojb-1.0.rc6.jar</lib>
+    <lib>ojb/lib/db-ojb-1.0.0.jar</lib>
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
