@@ -1,5 +1,7 @@
 // XML Form Feedback Wizard Application
 
+cocoon.load("resource://org/apache/cocoon/components/flow/javascript/xmlForm.js");
+
 function feedbackWizard(xform) {
     var bean = {
         firstName: "Donald",
