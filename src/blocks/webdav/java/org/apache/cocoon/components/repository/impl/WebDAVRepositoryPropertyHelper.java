@@ -172,10 +172,10 @@ implements RepositoryPropertyHelper, Serviceable, Disposable, Component {
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.repository.helpers.RepositoryPropertyHelper#setProperties(java.lang.String, java.util.Map)
      */
-    public boolean setProperties(String uri, Map properties) {
+    public boolean setProperties(final String uri, final Map properties) {
 
         try {
-            WebDAVUtil.setProperties(uri, properties);
+            WebDAVUtil.setProperties(this.repo.getAbsoluteURI(uri), properties);
             return true;
 
         } catch (HttpException he) {
