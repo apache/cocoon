@@ -50,37 +50,32 @@
 */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Stack;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.Generator;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Variables;
 import org.apache.commons.jxpath.Pointer;
-
+import org.apache.commons.jxpath.Variables;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.w3c.dom.DocumentFragment;
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Iterator;
 /**
  * JXPath Transformer
  *
@@ -579,7 +574,6 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         if (ignoreEventsCount == 0) {
             DocumentFragment frag = endRecording();
             Iterator iter = (Iterator)foreachStack.pop();
-            String variable = (String)foreachStack.pop();
             while (iter.hasNext()) {
                 Pointer ptr = (Pointer)iter.next();
                 pushContext(ptr.getNode());
