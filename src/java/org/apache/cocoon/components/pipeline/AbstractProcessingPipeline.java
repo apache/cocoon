@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.pipeline;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -64,7 +63,7 @@ import java.util.StringTokenizer;
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable, Component {
+  implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable {
 
     // Generator stuff
     protected Generator generator;

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -57,7 +56,7 @@ import org.apache.excalibur.source.SourceUtil;
  */
 public abstract class AbstractInterpreter
         extends AbstractLogEnabled
-        implements Component, Serviceable, Contextualizable, Interpreter,
+        implements Serviceable, Contextualizable, Interpreter,
                    SingleThreaded, Configurable, Disposable {
 
     // The instance ID of this interpreter, used to identify user scopes

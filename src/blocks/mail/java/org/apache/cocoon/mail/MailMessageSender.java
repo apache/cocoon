@@ -17,7 +17,6 @@ package org.apache.cocoon.mail;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -74,7 +73,7 @@ import java.util.Properties;
  */
 public class MailMessageSender
         extends AbstractLogEnabled
-        implements MailSender, Configurable, Serviceable, Initializable, Component {
+        implements MailSender, Configurable, Serviceable, Initializable {
 
     private ServiceManager manager;
 

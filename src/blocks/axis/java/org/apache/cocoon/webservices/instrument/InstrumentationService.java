@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webservices.instrument;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.excalibur.instrument.InstrumentManageable;
 
 /**
@@ -25,7 +24,7 @@ import org.apache.excalibur.instrument.InstrumentManageable;
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @version CVS $Id$
  */
-public interface InstrumentationService extends InstrumentManageable, Component {
+public interface InstrumentationService extends InstrumentManageable {
 
     /**
      * Component ROLE name

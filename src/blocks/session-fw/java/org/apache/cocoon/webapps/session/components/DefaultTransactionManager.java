@@ -18,7 +18,6 @@ package org.apache.cocoon.webapps.session.components;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -35,11 +34,11 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  * This is the default implementation for the transaction manager.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultTransactionManager.java,v 1.4 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public final class DefaultTransactionManager
 extends AbstractLogEnabled
-implements Component, ThreadSafe, TransactionManager, Contextualizable {
+implements ThreadSafe, TransactionManager, Contextualizable {
 
     protected Context context;
 

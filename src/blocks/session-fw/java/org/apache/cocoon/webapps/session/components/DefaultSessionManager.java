@@ -16,7 +16,6 @@
 package org.apache.cocoon.webapps.session.components;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -46,11 +45,11 @@ import org.xml.sax.SAXException;
  *  This is the default implementation of the session manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSessionManager.java,v 1.7 2004/06/18 14:28:56 vgritsenko Exp $
+ * @version CVS $Id$
 */
 public final class DefaultSessionManager
 extends AbstractLogEnabled
-implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Contextualizable {
+implements Serviceable, ThreadSafe, SessionManager, Disposable, Contextualizable {
 
     /** The context */
     private Context context;

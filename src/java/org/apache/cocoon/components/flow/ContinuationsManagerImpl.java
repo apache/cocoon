@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
@@ -54,7 +53,7 @@ import java.util.TreeSet;
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
-        implements ContinuationsManager, Component, Configurable,
+        implements ContinuationsManager, Configurable,
                    ThreadSafe, Contextualizable, Instrumentable {
 
     static final int CONTINUATION_ID_LENGTH = 20;

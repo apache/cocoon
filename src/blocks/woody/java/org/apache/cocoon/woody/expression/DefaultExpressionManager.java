@@ -16,7 +16,6 @@
 
 package org.apache.cocoon.woody.expression;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -36,10 +35,10 @@ import org.outerj.expression.ParseException;
  *   &lt;function name="MyFunction" class="net.foo.MyFunction"/&gt;
  * </pre>
  * 
- * @version CVS $Id: DefaultExpressionManager.java,v 1.6 2004/03/09 13:54:24 reinhard Exp $
+ * @version CVS $Id$
  */
 public class DefaultExpressionManager
-        implements ExpressionManager, Component, Configurable, ThreadSafe {
+        implements ExpressionManager, Configurable, ThreadSafe {
     
     private DefaultFunctionFactory factory;
     

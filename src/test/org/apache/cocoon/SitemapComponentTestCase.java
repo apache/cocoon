@@ -249,7 +249,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             fail("Could not retrieve action: " + ce.toString());
         } finally {
             if (action != null) {
-                selector.release(action);
+                selector.release((Component)action);
             }
             this.manager.release(selector);
             this.manager.release(resolver);

@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.search;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Hits;
@@ -32,10 +31,9 @@ import org.apache.lucene.store.Directory;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: LuceneCocoonSearcher.java,v 1.4 2004/06/21 09:43:22 jeremy Exp $
+ * @version CVS $Id$
  */
-public interface LuceneCocoonSearcher extends Component
-{
+public interface LuceneCocoonSearcher {
     /**
      * The ROLE name of this avalon component.
      * <p>
@@ -45,7 +43,7 @@ public interface LuceneCocoonSearcher extends Component
      *
      * @since
      */
-    String ROLE = "org.apache.cocoon.components.search.LuceneCocoonSearcher";
+    String ROLE = LuceneCocoonSearcher.class.getName();
 
 
     /**

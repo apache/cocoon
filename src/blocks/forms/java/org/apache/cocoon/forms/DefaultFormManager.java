@@ -18,7 +18,6 @@ package org.apache.cocoon.forms;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -49,7 +48,7 @@ import org.xml.sax.InputSource;
  */
 public class DefaultFormManager
   extends AbstractLogEnabled
-  implements FormManager, Contextualizable, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
+  implements FormManager, Contextualizable, ThreadSafe, Serviceable, Disposable, Configurable, Initializable {
 
     protected static final String PREFIX = "CocoonForm:";
     protected ServiceManager manager;

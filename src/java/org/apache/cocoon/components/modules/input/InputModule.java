@@ -16,7 +16,6 @@
 
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
@@ -29,9 +28,9 @@ import java.util.Map;
  * attributes, session attributes &c.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface InputModule extends Component {
+public interface InputModule {
 
     String ROLE = InputModule.class.getName();
 

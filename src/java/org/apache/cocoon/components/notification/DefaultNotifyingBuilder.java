@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.notification;
 
-import org.apache.avalon.framework.component.Component;
-
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xml.sax.SAXParseException;
@@ -35,7 +33,7 @@ import java.util.Map;
  * @author Marc Liyanage (futureLAB AG)
  * @version CVS $Id$
  */
-public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
+public class DefaultNotifyingBuilder implements NotifyingBuilder {
 
     /**
      * Builds a Notifying object (SimpleNotifyingBean in this case)

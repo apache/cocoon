@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * A generator factory is the factory of {@link Generator}s.
  *
@@ -38,7 +36,7 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public interface GeneratorFactory extends Component {
+public interface GeneratorFactory {
 
     String ROLE = Generator.ROLE;
 

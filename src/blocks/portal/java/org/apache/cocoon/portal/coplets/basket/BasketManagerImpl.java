@@ -29,7 +29,6 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -67,11 +66,11 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: BasketManagerImpl.java,v 1.3 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class BasketManagerImpl
 extends AbstractLogEnabled
-implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializable, Parameterizable, ThreadSafe, Component  {
+implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializable, Parameterizable, ThreadSafe {
     
     /** The service manager */
     protected ServiceManager manager;

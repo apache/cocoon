@@ -42,11 +42,9 @@ import java.io.IOException;
  * endProcessing method.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: ElementProcessor.java,v 1.3 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface ElementProcessor
-                    extends org.apache.avalon.framework.component.Component
-{
+public interface ElementProcessor {
 
     String ROLE = ElementProcessor.class.getName();
     

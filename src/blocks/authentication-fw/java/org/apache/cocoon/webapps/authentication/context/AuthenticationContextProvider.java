@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webapps.authentication.context;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -34,11 +33,11 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.8 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public final class AuthenticationContextProvider
 extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Component, Serviceable {
+implements SessionContextProvider, ThreadSafe, Serviceable {
 
     protected ServiceManager manager;
     

@@ -17,7 +17,6 @@ package org.apache.cocoon.caching;
 
 import java.io.Serializable;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 
 /**
@@ -28,10 +27,9 @@ import org.apache.cocoon.ProcessingException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cache.java,v 1.5 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Cache
-extends Component {
+public interface Cache {
 
     /** The Avalon Role **/
     String ROLE = Cache.class.getName();

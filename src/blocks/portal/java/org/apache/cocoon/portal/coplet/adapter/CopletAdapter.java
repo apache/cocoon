@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.coplet.adapter;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -50,10 +49,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletAdapter.java,v 1.7 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface CopletAdapter 
-    extends Component {
+public interface CopletAdapter {
 
     String ROLE = CopletAdapter.class.getName();
     

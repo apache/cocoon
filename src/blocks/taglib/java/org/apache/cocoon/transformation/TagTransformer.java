@@ -17,7 +17,6 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -171,7 +170,7 @@ public class TagTransformer
             Tag tag = (Tag) tagStack.pop();
             if (tag == null)
                 continue;
-            ComponentSelector tagSelector = (ComponentSelector)tagSelectorStack.pop();
+            ServiceSelector tagSelector = (ServiceSelector)tagSelectorStack.pop();
             tagSelector.release(tag);
 
             tagNamespaceSelector.release(tagSelector);
@@ -315,9 +314,9 @@ public class TagTransformer
         Tag tag = null;
         if (namespaceURI != null && namespaceURI.length() > 0) {
             // Try to find Tag corresponding to this element
-            ComponentSelector tagSelector = null;
+            ServiceSelector tagSelector = null;
             try {
-                tagSelector = (ComponentSelector) tagNamespaceSelector.select(namespaceURI);
+                tagSelector = (ServiceSelector) tagNamespaceSelector.select(namespaceURI);
                 tagSelectorStack.push(tagSelector);
 
                 // namespace matches tag library, lookup tag now.
@@ -383,7 +382,7 @@ public class TagTransformer
 
         Tag tag = (Tag) tagStack.pop();
         if (tag != null) {
-            ComponentSelector tagSelector = (ComponentSelector)tagSelectorStack.pop();
+            ServiceSelector tagSelector = (ServiceSelector)tagSelectorStack.pop();
             try {
                 if (saxFragment != null) {
                     // Start Iteration

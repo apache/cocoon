@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.search;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
@@ -26,16 +25,11 @@ import java.net.URL;
  * The avalon behavioural component interface of an indexer.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: LuceneCocoonIndexer.java,v 1.3 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface LuceneCocoonIndexer extends Component
-{
-    /**
-     *Description of the Field
-     *
-     * @since
-     */
-    String ROLE = "org.apache.cocoon.components.search.LuceneCocoonIndexer";
+public interface LuceneCocoonIndexer {
+    
+    String ROLE = LuceneCocoonIndexer.class.getName();
 
 
     /**

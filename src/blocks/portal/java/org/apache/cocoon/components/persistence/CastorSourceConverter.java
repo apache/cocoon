@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -63,7 +62,7 @@ import org.xml.sax.InputSource;
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
-    implements Component, Serviceable, Configurable, Initializable, ThreadSafe {
+    implements Serviceable, Configurable, Initializable, ThreadSafe {
         
     public static final String ROLE = CastorSourceConverter.class.getName();
 

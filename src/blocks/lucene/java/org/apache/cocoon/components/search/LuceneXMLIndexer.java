@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.search;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 
 import java.net.URL;
@@ -39,10 +38,9 @@ import java.util.List;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: LuceneXMLIndexer.java,v 1.3 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface LuceneXMLIndexer extends Component
-{
+public interface LuceneXMLIndexer {
 
     /**
      * The ROLE name of this avalon component.
@@ -53,7 +51,7 @@ public interface LuceneXMLIndexer extends Component
      *
      * @since
      */
-    String ROLE = "org.apache.cocoon.components.search.LuceneXMLIndexer";
+    String ROLE = LuceneXMLIndexer.class.getName();
 
     /**
      * A Lucene document field name, containing xml content text of all xml elements.

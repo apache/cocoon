@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -74,8 +73,7 @@ public class DefaultAuthenticationManager
                    Serviceable,
                    Disposable,
                    ThreadSafe,
-                   Contextualizable,
-                   Component {
+                   Contextualizable {
 
     /** The name of the session attribute storing the user status */
     public final static String SESSION_ATTRIBUTE_USER_STATUS = DefaultAuthenticationManager.class.getName() + "/UserStatus";

@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.Map;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
@@ -29,9 +28,9 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * attribute columns.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AutoIncrementModule.java,v 1.4 2004/03/05 13:01:54 bdelacretaz Exp $
+ * @version CVS $Id$
  * */
-public interface AutoIncrementModule extends Component {
+public interface AutoIncrementModule {
 
     String ROLE = AutoIncrementModule.class.getName();
 

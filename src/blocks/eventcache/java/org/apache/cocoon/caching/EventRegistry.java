@@ -17,7 +17,6 @@ package org.apache.cocoon.caching;
 
 import java.io.Serializable;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.caching.validity.Event;
 
 /**
@@ -36,9 +35,9 @@ import org.apache.cocoon.caching.validity.Event;
  *  
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistry.java,v 1.6 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface EventRegistry extends Component {
+public interface EventRegistry {
     
     /**
      * The Avalon ROLE for this component
