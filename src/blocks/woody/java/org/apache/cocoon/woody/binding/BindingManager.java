@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.excalibur.source.Source;
 
 /**
@@ -73,6 +72,6 @@ public interface BindingManager {
      * Creates a binding from the XML config found at source parameter.
      */
     public Binding createBinding(Source bindingFile)
-        throws ProcessingException;
+        throws BindingException;
 
 }
