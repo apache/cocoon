@@ -53,7 +53,6 @@ package org.apache.cocoon.components.modules.input;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -64,9 +63,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * BaseLinkModule returns a relative link (<code>../</code>,
- * <code>../../</code> etc) to the base of the current request URI.  For
+ * <code>../../</code> etc) to the base of the current request or sitemap URI.  For
  * instance, if called within a &lt;map:match pattern="a/b/c.xsp"> pipeline,
- * <code>{baselink:}</code> would evaluate to <code>../../</code>.
+ * <code>{baselink:SitemapBaseLink}</code> would evaluate to <code>../../</code>.
  *
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
  * based on RequestURIModule
@@ -74,50 +73,53 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  */
 public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
 
-
-    final static Vector returnNames;
-    static {
-        Vector tmp = new Vector();
-        tmp.add("baseLink");
-        returnNames = tmp;
-    }
-
-    public Object getAttribute( String name, Configuration modeConf, Map objectModel ) throws ConfigurationException {
-
-        String uri = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-
+    final static Vector returnNames = new Vector() {
+            {
+                add("RequestBaseLink");
+                add("SitemapBaseLink");
+            }
+        };
+    
+    public Object getAttribute(final String name, final Configuration modeConf, final Map objectModel ) throws ConfigurationException {
+        
+	String uri;
+	if (name.equals("SitemapBaseLink"))
+            uri = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
+	else if (name.equals("RequestBaseLink"))
+            uri = ObjectModelHelper.getRequest(objectModel).getRequestURI();
+	else uri = "";
+        
         if (uri.startsWith("/")) {
             uri = uri.substring(1);
         }
-
+        
         StringBuffer result = new StringBuffer(uri.length());
-
+        
         int nextIndex = 0;
         while ((nextIndex = uri.indexOf ('/', nextIndex) + 1) > 0) {
-          result.append("../");
+            result.append("../");
         }
-
+        
         if (getLogger().isDebugEnabled())
-          getLogger().debug ("Returns " + result + " for uri " + uri);
-
+            getLogger().debug ("Returns " + result + " for uri " + uri + " and attribute " + name);
+        
         return result.toString();
     }
-
-
-    public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) throws ConfigurationException {
-
+    
+    
+    public Iterator getAttributeNames(final Configuration modeConf, final Map objectModel) throws ConfigurationException {
+        
         return RequestURIModule.returnNames.iterator();
     }
-
-
-    public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
+    
+    public Object[] getAttributeValues(final String name, final Configuration modeConf, final Map objectModel )
         throws ConfigurationException {
-
-            List values = new LinkedList();
-            values.add( this.getAttribute(name, modeConf, objectModel) );
-
-            return values.toArray();
-            
+        
+        return (new LinkedList() {
+                {
+                    add(getAttribute(name, modeConf, objectModel) );
+                }
+            }).toArray();
     }
-
+    
 }
