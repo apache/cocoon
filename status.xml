@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.239 2004/02/10 15:15:34 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.240 2004/02/13 00:34:05 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -196,19 +196,25 @@
   <changes>
 
  <release version="@version@" date="@date@">
-    <action dev="AG" type="update">
+   <action dev="VG" type="remove">
+     Remove non-FOM flow classes and system.js
+   </action>
+ </release>
+ <release version="2.1.4" date="February 12 2004">
+   <action dev="AG" type="update">
      Updated iText to 1.02
    </action>
    <action dev="SW" type="add">
-   	 Woody block: every widget can now have a validator. This allows for example repeaters to perform
-   	 inter-row validation or overall form-level validation.
+     Woody block: every widget can now have a validator. This allows for example
+     repeaters to perform inter-row validation or overall form-level validation.
    </action>
    <action dev="UC" type="add">
-   	 Woody block: added support for rich text editing using InteractiveTools' HTMLArea.
+     Woody block: added support for rich text editing using InteractiveTools' HTMLArea.
    </action>
    <action dev="CZ" type="update">
-     ResourceReader: Is now configurable as well. All parameters can be defined during configuration
-     of the reader. Fixed also a minor bug in the last-modified detection.
+     ResourceReader: Is now configurable as well. All parameters can be defined
+     during configuration of the reader. Fixed also a minor bug in the last-modified
+     detection.
    </action>
    <action dev="GP" type="add" >
      OJB-Block: Added our own OJB ConnectionFactory which uses the
