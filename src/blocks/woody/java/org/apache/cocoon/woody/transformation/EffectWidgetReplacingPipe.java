@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -64,6 +62,7 @@ import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Struct;
 import org.apache.cocoon.woody.formmodel.Union;
 import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.transformation.EffectPipe.Handler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.commons.jxpath.JXPathException;
@@ -87,7 +86,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  *
- * CVS $Id: EffectWidgetReplacingPipe.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: EffectWidgetReplacingPipe.java,v 1.2 2003/12/29 15:37:28 mpo Exp $
  * @author Timothy Larson
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
@@ -281,14 +280,16 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 //TODO pull this locale stuff also up in the Config object?
                 String localeAttr = input.attrs.getValue("locale");
                 if (localeAttr != null) { // first use value of locale attribute if any
-                    localeAttr = translateText(localeAttr);
+                    localeAttr = pipeContext.translateText(localeAttr);
                     pipeContext.setLocale(I18nUtils.parseLocale(localeAttr));
                 } else if (pipeContext.getLocaleParameter() != null) { // then use locale specified as transformer parameter, if any
                     pipeContext.setLocale(pipeContext.getLocaleParameter());
-                } else { // use locale specified in bizdata supplied for form
+                } else { 
+                    //TODO pull this locale stuff also up in the Config object?
+                    // use locale specified in bizdata supplied for form
                     Object locale = null;
                     try {
-                        locale = pipeContext.getJXPathContext().getValue("/locale");
+                        locale = pipeContext.evaluateExpression("/locale");
                     } catch (JXPathException e) {}
                     if (locale != null) {
                         pipeContext.setLocale((Locale)locale);
@@ -597,7 +598,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 // Insert the continuation id
                 // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
-                Object idObj = pipeContext.getJXPathContext().getValue("$continuation/id");
+                Object idObj = pipeContext.evaluateExpression("$continuation/id");
                 if (idObj == null) {
                     throwSAXException("No continuation found");
                 }
@@ -625,62 +626,62 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             for (int i = 0; i < names.length; i++) {
                 String name = names[i];
                 int position = newAtts.getIndex(name);
-                String newValue = translateText(newAtts.getValue(position));
+                String newValue = pipeContext.translateText(newAtts.getValue(position));
                 newAtts.setValue(position, newValue);                
             }
         }
         return newAtts;
     }
 
-    /**
-     * Replaces JXPath expressions embedded inside #{ and } by their value.
-     */
-    private String translateText(String original) {
-        StringBuffer expression;
-        StringBuffer translated = new StringBuffer();
-        StringReader in = new StringReader(original);
-        int chr;
-        try {
-            while ((chr = in.read()) != -1) {
-                char c = (char) chr;
-                if (c == '#') {
-                    chr = in.read();
-                    if (chr != -1) {
-                        c = (char) chr;
-                        if (c == '{') {
-                            expression = new StringBuffer();
-                            boolean more = true;
-                            while ( more ) {
-                                more = false;
-                                if ((chr = in.read()) != -1) {
-                                    c = (char)chr;
-                                    if (c != '}') {
-                                        expression.append(c);
-                                        more = true;
-                                    } else {
-                                        translated.append(evaluateExpression(expression.toString()));
-                                    }
-                                } else {
-                                    translated.append('#').append('{').append(expression);
-                                }
-                            }
-                        }
-                    } else {
-                        translated.append((char) chr);
-                    }
-                } else {
-                    translated.append(c);
-                }
-            }
-        } catch (IOException ignored) {
-            ignored.printStackTrace();
-        }
-        return translated.toString();
-    }
+//    /**
+//     * Replaces JXPath expressions embedded inside #{ and } by their value.
+//     */
+//    private String translateText(String original) {
+//        StringBuffer expression;
+//        StringBuffer translated = new StringBuffer();
+//        StringReader in = new StringReader(original);
+//        int chr;
+//        try {
+//            while ((chr = in.read()) != -1) {
+//                char c = (char) chr;
+//                if (c == '#') {
+//                    chr = in.read();
+//                    if (chr != -1) {
+//                        c = (char) chr;
+//                        if (c == '{') {
+//                            expression = new StringBuffer();
+//                            boolean more = true;
+//                            while ( more ) {
+//                                more = false;
+//                                if ((chr = in.read()) != -1) {
+//                                    c = (char)chr;
+//                                    if (c != '}') {
+//                                        expression.append(c);
+//                                        more = true;
+//                                    } else {
+//                                        translated.append(evaluateExpression(expression.toString()));
+//                                    }
+//                                } else {
+//                                    translated.append('#').append('{').append(expression);
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        translated.append((char) chr);
+//                    }
+//                } else {
+//                    translated.append(c);
+//                }
+//            }
+//        } catch (IOException ignored) {
+//            ignored.printStackTrace();
+//        }
+//        return translated.toString();
+//    }
 
-    private String evaluateExpression(String expression) {
-        return pipeContext.getJXPathContext().getValue(expression).toString();
-    }
+//    private String evaluateExpression(String expression) {
+//        return pipeContext.evaluateExpression(expression).toString();
+//    }
 
     public void recycle() {
         super.recycle();
