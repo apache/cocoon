@@ -76,6 +76,11 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
             getLogger().debug("done saving " + toString());
         }
     }
+    
+    /** To allow child classes to know which path they bind to */
+    protected String getXPath() {
+        return this.xpath;
+    }
 
     public String toString() {
         return "ContextJXPathBinding [xpath=" + this.xpath + "]";
