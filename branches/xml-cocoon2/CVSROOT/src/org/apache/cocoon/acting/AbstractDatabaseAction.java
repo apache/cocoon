@@ -168,7 +168,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-07 15:52:51 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-07 20:30:55 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -231,8 +231,22 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
         String value = request.getParameter(attribute);
 
         if (value == null) {
-            statement.setNull(position, typeObject.intValue());
-            return;
+            switch (typeObject.intValue()) {
+                case Types.DISTINCT:
+                    statement.setNull(position, Types.BINARY);
+                    return;
+                case Types.ARRAY:
+                case Types.BIT:
+                case Types.CHAR:
+                    File imageFile = (File) request.get(attribute);
+                    if (imageFile == null) {
+                        statement.setNull(position, Types.INTEGER);
+                    }
+                    break;
+                default:
+                    statement.setNull(position, typeObject.intValue());
+                    return;
+            }
         }
 
         switch (typeObject.intValue()) {
