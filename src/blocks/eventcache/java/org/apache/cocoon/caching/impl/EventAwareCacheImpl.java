@@ -27,6 +27,7 @@ import org.apache.cocoon.caching.EventAware;
 import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.validity.Event;
 import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.components.source.impl.SitemapSource;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
@@ -174,6 +175,8 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
             handleAggregatedValidity((AbstractAggregatedValidity)val, key);
         } else if (val instanceof EventValidity) {
             handleEventValidity((EventValidity)val, key);
+        } else if (val instanceof SitemapSource.SitemapSourceValidity) {
+            examineValidity(((SitemapSource.SitemapSourceValidity) val).getNestedValidity(), key);
         }
     }
 
