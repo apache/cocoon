@@ -32,7 +32,7 @@
     Please take your time to read this document completely before trying to upgrade from
     a Cocoon 2.1.x installation to 2.2 (or above). You can also read it if you want to
     know what was going on in the development of Cocoon. If you want to upgrade from
-    an 2.0.x installation, please read the instructions 
+    an 2.0.x installation, please read the instructions
     <link href="../installing/updating.html">here</link>, first.
    </p>
    <note>THIS DOCUMENTATION IS ALPHA AS WELL AS THE CURRENT DEVELOPMENT FOR 2.2,
@@ -49,16 +49,16 @@
    </p>
    <p>
     In general, a good advice is that you avoid any calls to private or deprecated
-    API. If you are calling deprecated API, look up for an alternative. In most 
+    API. If you are calling deprecated API, look up for an alternative. In most
     case this is documented in the java docs. If not or if you are calling private
-    API please ask on the mailing lists for a the "right way".
+    API please ask on the mailing lists for the "right way".
    </p>
   </s1>
   <s1 title="Updating Your Application">
     <p>Currently, updating your application from an older version to the latest
      version of Cocoon has to be done manually (but we are working on a better
      solution!).</p>
-    <p>We suggest you, that you start from a clean Cocoon installation and 
+    <p>We suggest you, that you start from a clean Cocoon installation and
     incorporate your changes into the cocoon.xconf, the sitemap etc. This
     is in most cases much easier than starting with your old application
     and adapting it for Cocoon 2.2.x.</p>
@@ -88,7 +88,7 @@
       deprecated methods have been removed to clean up the code.
     </p>
     <s2 title="Environment Interface">
-      <p>The deprecated <em>getOutputStream</em> method of the <em>Environment</em> 
+      <p>The deprecated <em>getOutputStream</em> method of the <em>Environment</em>
       interface has been removed. Use the <em>getOutputStream(int)</em> method
       instead.</p>
       <p>
@@ -98,14 +98,14 @@
       </p>
     </s2>
     <s2 title="Cocoon Source Resolver Interface">
-      <p>The deprecated <em>resolve</em> method of the 
-        <em>org.apache.cocoon.environment.SourceResolver</em> 
+      <p>The deprecated <em>resolve</em> method of the
+        <em>org.apache.cocoon.environment.SourceResolver</em>
         interface has been removed. Use the <em>resolveURI</em> and
         the <em>release</em> method instead.</p>
-      <p>In addition the following interfaces and implementations have been 
+      <p>In addition the following interfaces and implementations have been
         removed in favour of their new versions:</p>
       <ul>
-        <li><em>org.apache.cocoon.environment.Source</em> : Use the 
+        <li><em>org.apache.cocoon.environment.Source</em> : Use the
           <em>org.apache.excalibur.source.Source</em> interface instead.</li>
         <li><em>org.apache.cocoon.environment.ModifiableSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.environment.URLFactorySourceResolver</em> - Not needed anymore</li>
@@ -203,7 +203,7 @@
      <li><em>Cacheable</em> : Use the <em>CacheableProcessingComponent</em> interface that is very similar.</li>
      <li><em>CacheValidity</em> : Is replaced by <em>SourceValidity</em>.</li>
      <li><em>AggregatedCacheValidity</em> - Excalibur SourceResolver</li>
-     <li><em>CompositeCacheValidity</em> - Excalibur SourceResolver</li> 
+     <li><em>CompositeCacheValidity</em> - Excalibur SourceResolver</li>
      <li><em>DeltaTimeCacheValidity</em> - Excalibur SourceResolver</li>
      <li><em>IncludeCacheValidity</em> - Excalibur SourceResolver</li>
      <li><em>NOPCacheValidity</em> - Excalibur SourceResolver</li>
@@ -214,7 +214,7 @@
      <li><em>CachedEventObject</em> : Is replaced by <em>CachedResponse</em>.</li>
      <li><em>CachedStreamObject</em> : Is replaced by <em>CachedResponse</em>.</li>
      </ul>
-    <p>Some other interfaces and implementations, like the validity of the cached 
+    <p>Some other interfaces and implementations, like the validity of the cached
       information have moved to the source packacke in Avalon Excalibur.</p>
   </s1>
 
@@ -276,7 +276,7 @@
    <s2 title="Stores">
     <p>The Store and StoreJanitor components and implementations have been moved to
        Avalon Excalibur.</p>
-    <p>To make upgrading easier, the class attributes of the store janitor 
+    <p>To make upgrading easier, the class attributes of the store janitor
        component have been removed in <em>cocoon.xconf</em> as the class names have changed.
        The <em>cache-transient</em> and <em>cache-persistent</em> components do
        not exist anymore, so any reference to them must be removed from cocoon.xconf.
