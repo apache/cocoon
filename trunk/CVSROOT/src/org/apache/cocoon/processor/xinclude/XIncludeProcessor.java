@@ -44,7 +44,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.5 $ $Date: 2000-05-11 03:27:48 $ $Author: balld $
+ * @version CVS $Revision: 1.6 $ $Date: 2000-05-23 06:00:11 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -122,9 +122,6 @@ class XIncludeProcessorWorker {
 		HttpServletRequest request = (HttpServletRequest)parameters.get("request");
 		monitor_key = Utils.encode(request);
 		String basename = Utils.getBasename(request,context);
-		if (debug) {
-			System.err.println("basename: "+basename);
-		}
 		base_file = new File((new File(basename)).getParent());
 	}
 
@@ -142,29 +139,13 @@ class XIncludeProcessorWorker {
 				namespace_table.put(prefix,uri);
 			}
 		}
-		process(element);
+		process(element,null);
 	}
 
-	void process(Element element) throws Exception {
-		/**
-			String name = element.getTagName();
-			String uri = element.getNamespaceURI();
-			String prefix = element.getPrefix();
-		**/
-		/** FIXME - why doesn't Xerces let us use node.getNamespaceURI()??/ **/
-		String name = element.getTagName();
-		String uri = "";
-		int index;
-		if ((index = name.indexOf(':')) >= 0) {
-			String prefix = name.substring(0,index);
-			name = name.substring(index+1);
-			uri = (String)namespace_table.get(prefix);
-		}
-		if (debug) {
-			System.err.println("Processing element: "+element);
-			System.err.println("Name: "+name);
-			System.err.println("URI: "+uri);
-		}
+	void process(Element element, Element parent) throws Exception {
+		String name = element.getLocalName();
+		String uri = element.getNamespaceURI();
+		String prefix = element.getPrefix();
 		String value;
 		boolean xmlbase_attribute = false;
 		if ((value = element.getAttributeNS(processor.XMLBASE_NAMESPACE_URI,processor.XMLBASE_ATTRIBUTE)) != null) {
@@ -174,16 +155,39 @@ class XIncludeProcessorWorker {
 		if (uri != null && uri.equals(processor.XINCLUDE_NAMESPACE_URI) && name.equals(processor.XINCLUDE_INCLUDE_ELEMENT)) {
 			String href = element.getAttribute(processor.XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
 			String parse = element.getAttribute(processor.XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-			processXIncludeElement(element, href, parse);
+			Object object = processXIncludeElement(element, href, parse);
+			if (object instanceof Node) {
+				Node node = (Node)object;
+				parent.replaceChild(node,element);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					element = (Element)node;
+				} else {
+					return;
+				}
+			} else if (object instanceof Node[]) {
+				Node ary[] = (Node[])object;
+				for (int i=0; i<ary.length; i++) {
+					parent.insertBefore(ary[i],element);
+				}
+				parent.removeChild(element);
+				for (int i=0; i<ary.length ;i++) {
+					if (ary[i].getNodeType() == Node.ELEMENT_NODE) {
+						process((Element)ary[i],parent);
+					}
+				}
+				return;
+			}
 		}
-		NodeList child_nodes = element.getElementsByTagName("*");
+		NodeList child_nodes = element.getChildNodes();
 		int length = child_nodes.getLength();
-		Element ary[] = new Element[length];
+		Node ary[] = new Node[length];
 		for (int i=0; i<length; i++) {
-			ary[i] = (Element)child_nodes.item(i);
+			ary[i] = child_nodes.item(i);
 		}
 		for (int i=0; i<length; i++) {
-			process(ary[i]);
+			if (ary[i].getNodeType() == Node.ELEMENT_NODE) {
+				process((Element)ary[i],element);
+			}
 		}
 		if (xmlbase_attribute) {
 			endXMLBaseAttribute();
@@ -201,15 +205,13 @@ class XIncludeProcessorWorker {
 		current_xmlbase_uri = (URL)xmlbase_stack.pop();
 	}
 
-	void processXIncludeElement(Element element, String href, String parse) throws Exception {
-		if (debug) { System.err.println("Processing XInclude element: href="+href+", parse="+parse); }
+	Object processXIncludeElement(Element element, String href, String parse) throws Exception {
 		String suffix;
 		int index = href.indexOf('#');
 		if (index < 0) {
 			suffix = "";
 		} else {
 			suffix = href.substring(index+1);
-			if (debug) { System.err.println("Suffix: "+suffix); }
 			href = href.substring(0,index);
 		}
 		Object object;
@@ -217,19 +219,15 @@ class XIncludeProcessorWorker {
 			URL url = new URL(current_xmlbase_uri,href);
 			processor.monitored_table.put(monitor_key,"");
 			processor.monitor.watch(monitor_key,url);
-			if (debug) { System.err.println("URL: "+url); }
 			object = url.getContent();
 		} else {
 			File file = new File(base_file,href);
 			processor.monitored_table.put(monitor_key,"");
 			processor.monitor.watch(monitor_key,file);
-			if (debug) { System.err.println("File: "+file); }
 			object = new FileReader(file);
 		}
-		if (debug) { System.err.println("Object: "+object); }
-		DocumentFragment result_fragment = document.createDocumentFragment();
+		Object result = null;
 		if (parse.equals("text")) {
-			if (debug) { System.err.println("Parse type is text"); }
 			if (object instanceof Reader) {
 				Reader reader = (Reader)object;
 				int read;
@@ -241,7 +239,7 @@ class XIncludeProcessorWorker {
 					}
 					reader.close();
 				}
-				result_fragment.appendChild(document.createTextNode(sb.toString()));
+				result = document.createTextNode(sb.toString());
 			} else if (object instanceof InputStream) {
 				InputStream input = (InputStream)object;
 				InputStreamReader reader = new InputStreamReader(input);
@@ -254,10 +252,9 @@ class XIncludeProcessorWorker {
 					}
 					reader.close();
 				}
-				result_fragment.appendChild(document.createTextNode(sb.toString()));
+				result = document.createTextNode(sb.toString());
 			}
 		} else if (parse.equals("xml")) {
-			if (debug) { System.err.println("Parse type is XML"); }
 			InputSource input;
 			if (object instanceof Reader) {
 				input = new InputSource((Reader)object);
@@ -272,19 +269,18 @@ class XIncludeProcessorWorker {
 			} catch (Exception e) {}
 			if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
 				String xpath = suffix.substring(9,suffix.length()-1);
-				if (debug) { System.err.println("XPath is "+xpath); }
 				NodeList list = XPathAPI.selectNodeList(included_document,xpath);
 				int length = list.getLength();
-				if (debug) { System.err.println("Found "+length+" nodes"); }
+				Node ary[] = new Node[length];
 				for (int i=0; i<length; i++) {
-					result_fragment.appendChild(document.importNode(list.item(i),true));
+					ary[i] = document.importNode(list.item(i),true);
 				}
+				result = ary;
 			} else {
-				result_fragment.appendChild(document.importNode(included_document.getDocumentElement(),true));
+				result = document.importNode(included_document.getDocumentElement(),true);
 			}
 		}
-		Node parent_node = element.getParentNode();
-		parent_node.replaceChild(result_fragment,element);
+		return result;
 	}
 
 }
