@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * TODO: Support target attribute
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.12 2004/05/06 11:03:44 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.13 2004/06/07 08:50:37 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -72,7 +72,7 @@ extends AbstractCopletTransformer {
             boolean convert = false;
             final boolean isRemoteAnchor = this.isRemoteAnchor(attr);
             if ( isRemoteAnchor ) {
-                convert = this.isExternalLink(attr);
+                convert = !this.isExternalLink(attr);
             }
             this.stack.push(convert ? Boolean.TRUE: Boolean.FALSE);
             if ( convert ) {
