@@ -157,7 +157,6 @@ public class SettingsHelper {
             return;
         }
         StringTokenizer tokenizer = new StringTokenizer(param, " \t\r\n\f;,", false);
-        String[] array = null;    
         while (tokenizer.hasMoreTokens()) {
             final String value = tokenizer.nextToken().trim();
             s.addToLoadClasses(value);
@@ -200,9 +199,7 @@ public class SettingsHelper {
      */
     private static void handleExtraClassPath(String extraClassPath, Settings settings) {
         if (extraClassPath != null) {
-            StringBuffer sb = new StringBuffer();
             StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
-            int i = 0;
             while (st.hasMoreTokens()) {
                 String s = st.nextToken();
                 settings.addToExtraClasspaths(s);
