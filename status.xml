@@ -221,7 +221,8 @@
      commons-jxpath to 1.2, commons-httpclient to 2.0.1, jdtcore to 3.0.0,
      xreporter-expression to 20040701, lucene to 1.4, quartz to 1.4.2, ehcache to 0.9
      commons-beanutils to 1.7, commons-betwixt to 0.5, commons-digester to 1.5
-     commons-dbcp to 1.2.1, commons-pool to 1.2, db-ojb to 1.0.0, poi to 2.1.5-final-20040804
+     commons-dbcp to 1.2.1, commons-pool to 1.2, db-ojb to 1.0.0, poi to 2.1.5-final-20040804,
+     asm to 1.4.3, asm-util to 1.4.3, groovy to 1.0-beta-6
    </action>
    <action dev="CZ" type="fix" fixes-bug="26854">
      A redirect is now possible, if it's called from flow. This also fixes bug #26571.
