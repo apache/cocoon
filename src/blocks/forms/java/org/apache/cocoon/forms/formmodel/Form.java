@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,15 +30,15 @@ import org.apache.commons.collections.list.CursorableLinkedList;
 /**
  * A widget that serves as a container for other widgets, the top-level widget in
  * a form description file.
- * 
+ *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.15 2004/05/07 16:43:42 mpo Exp $
+ * @version CVS $Id: Form.java,v 1.16 2004/07/11 17:18:26 vgritsenko Exp $
  */
 public class Form extends AbstractContainerWidget {
-    
+
     private final FormDefinition definition;
-    
+
     private Boolean endProcessing;
     private Locale locale = Locale.getDefault();
     private FormHandler formHandler;
@@ -59,20 +59,20 @@ public class Form extends AbstractContainerWidget {
     protected WidgetDefinition getDefinition() {
         return this.definition;
     }
-    
+
     /**
      * Events produced by child widgets should not be fired immediately, but queued in order to ensure
      * an overall consistency of the widget tree before being handled.
-     * 
+     *
      * @param event the event to queue
      */
     public void addWidgetEvent(WidgetEvent event) {
-        
+
         if (this.bufferEvents) {
             if (this.events == null) {
                 this.events = new CursorableLinkedList();
             }
-            
+
             // FIXME: limit the number of events to detect recursive event loops ?
             this.events.add(event);
         } else {
@@ -80,7 +80,7 @@ public class Form extends AbstractContainerWidget {
             event.getSourceWidget().broadcastEvent(event);
         }
     }
-    
+
     /**
      * Fire the widget events that have been queued. Note that event handling can fire new
      * events.
@@ -95,14 +95,14 @@ public class Form extends AbstractContainerWidget {
                     formHandler.handleEvent(event);
             }
             cursor.close();
-        
+
             this.events.clear();
         }
     }
 
     /**
      * Get the locale to be used to process this form.
-     * 
+     *
      * @return the form's locale.
      */
     public Locale getLocale() {
@@ -112,16 +112,16 @@ public class Form extends AbstractContainerWidget {
     /**
      * Get the widget that triggered the current processing. Note that it can be any widget, and
      * not necessarily an action or a submit.
-     * 
+     *
      * @return the widget that submitted this form.
      */
     public Widget getSubmitWidget() {
         return this.submitWidget;
     }
-    
+
     /**
      * Set the widget that triggered the current form processing.
-     * 
+     *
      * @param widget the widget
      */
     public void setSubmitWidget(Widget widget) {
@@ -151,7 +151,7 @@ public class Form extends AbstractContainerWidget {
 //        if (this.phase != ProcessingPhase.VALIDATE) {
 //            throw new IllegalStateException("Cannot save model in phase " + this.phase);
 //        }
-//        
+//
 //        if (!isValid()) {
 //            throw new IllegalStateException("Cannot save an invalid form.");
 //        }
@@ -162,7 +162,7 @@ public class Form extends AbstractContainerWidget {
     public void addProcessingPhaseListener(ProcessingPhaseListener listener) {
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
     }
-    
+
     public void removeProcessingPhaseListener(ProcessingPhaseListener listener) {
         this.listener = WidgetEventMulticaster.remove(this.listener, listener);
     }
@@ -184,21 +184,21 @@ public class Form extends AbstractContainerWidget {
      * {@link #endProcessing(boolean)}.
      */
     public boolean process(FormContext formContext) {
-        
+
         // Fire the binding phase events
         fireWidgetEvents();
-        
+
         // setup processing
         this.submitWidget = null;
         this.locale = formContext.getLocale();
         this.endProcessing = null;
         this.isValid = false;
-        
+
         // Notify the end of the current phase
         if (this.listener != null) {
             this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
         }
-        
+
         this.phase = ProcessingPhase.READ_FROM_REQUEST;
         // Find the submit widget, if not an action
         this.submitWidget = null;
@@ -212,16 +212,16 @@ public class Form extends AbstractContainerWidget {
                     throw new IllegalArgumentException("Invalid submit id (no such widget): " + submitId);
                 }
             }
-            
+
             setSubmitWidget(submit);
         }
-        
+
         try {
             // Start buffering events
             this.bufferEvents = true;
-            
+
             doReadFromRequest(formContext);
-            
+
             // Fire events, still buffering them: this ensures they will be handled in the same
             // order as they were added.
             fireWidgetEvents();
@@ -229,51 +229,30 @@ public class Form extends AbstractContainerWidget {
             // No need for buffering in the following phases
             this.bufferEvents = false;
         }
-        
+
         // Notify the end of the current phase
         if (this.listener != null) {
             this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
         }
-
         if (this.endProcessing != null) {
             return this.endProcessing.booleanValue();
         }
 
-        // Validate the form
-        this.phase = ProcessingPhase.VALIDATE;
-        this.isValid = doValidate();
-
-        if (this.endProcessing != null) {
-            return this.endProcessing.booleanValue();
-        }
-        
-        // Notify the end of the current phase
-        if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
-        }
-        
-        if (this.endProcessing != null) {
-            // De-validate the form if one of the listeners asked to end the processing
-            // This allows for additional application-level validation.
-            this.isValid = false;
-            return this.endProcessing.booleanValue();
-        }
-
-        return this.isValid;
+        return validate();
     }
-    
+
     /**
      * End the current form processing after the current phase.
-     * 
+     *
      * @param redisplayForm indicates if the form should be redisplayed to the user.
      */
     public void endProcessing(boolean redisplayForm) {
         this.endProcessing = new Boolean(!redisplayForm);
     }
-    
+
     /**
      * Was form validation successful ?
-     * 
+     *
      * @return <code>true</code> if the form was successfully validated.
      */
     public boolean isValid() {
@@ -286,15 +265,34 @@ public class Form extends AbstractContainerWidget {
 
     private void doReadFromRequest(FormContext formContext) {
         // let all individual widgets read their value from the request object
-        super.readFromRequest(formContext); 
+        super.readFromRequest(formContext);
     }
 
+    /**
+     * Performs validation phase of form processing.
+     */
     public boolean validate() {
-        throw new UnsupportedOperationException("Please use Form.process()");
-    }
+        // Validate the form
+        this.phase = ProcessingPhase.VALIDATE;
+        this.isValid = super.validate();
 
-    public boolean doValidate() {
-        return super.validate();
+        // FIXME: Is this check needed, before invoking the listener?
+        if (this.endProcessing != null) {
+            return this.endProcessing.booleanValue();
+        }
+
+        // Notify the end of the current phase
+        if (this.listener != null) {
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+        }
+        if (this.endProcessing != null) {
+            // De-validate the form if one of the listeners asked to end the processing
+            // This allows for additional application-level validation.
+            this.isValid = false;
+            return this.endProcessing.booleanValue();
+        }
+
+        return this.isValid;
     }
 
     private static final String FORM_EL = "form";
@@ -302,5 +300,4 @@ public class Form extends AbstractContainerWidget {
     public String getXMLElementName() {
         return FORM_EL;
     }
-    
 }
