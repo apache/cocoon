@@ -90,7 +90,7 @@
 %token OP_SHRR  "\>\>\>";
 %token ASS_OP   "\+= | \-= | \*= | /= | &= | \|= | \^= | \%= | \<\<= | \>\>= | \>\>\>=";
 
-%token EQ    "\=";
+%right EQ    "\=";
 %token GT    "\>";
 %token LT    "\<";
 %token NOT   "\!";
@@ -457,7 +457,8 @@ ConstructorDeclarator
 	;
 
 StaticInitializer
-	: STATIC Block
+	:         STATIC Block
+  | JAVADOC STATIC Block
 	;
 
 NonStaticInitializer
@@ -583,7 +584,7 @@ Finally
 	;
 
 PrimaryExpression
-	: QualifiedName 
+	: QualifiedName %prec DOPEN
 	| NotJustName 
 	;
 

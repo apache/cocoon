@@ -1,21 +1,11 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
+                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/2.0"
                 version="1.0">
 
  <xsl:template match="st:output">
   <p>
-   <!--<xsl:apply-templates select="*[name()!='error']"/>-->
-   <xsl:for-each select="*[name()!='error']">
-    <xsl:apply-templates select="."/><br/>
-   </xsl:for-each>
-   <xsl:if test="st:error">
-    <ul>
-     <xsl:for-each select="st:error">
-      <li><font color="#ff0000"><xsl:value-of select="."/></font></li>
-     </xsl:for-each>
-    </ul>
-   </xsl:if>
+   <xsl:apply-templates/>
   </p>
  </xsl:template>
 
@@ -74,6 +64,12 @@
     <xsl:apply-templates/>
    </xsl:otherwise>
   </xsl:choose>
+ </xsl:template>
+
+ <xsl:template match="st:number|st:id|st:plus|st:mult|st:dopen|st:dclose">
+  <font size="3">
+   <xsl:value-of select="."/>
+  </font>
  </xsl:template>
 
  <xsl:template match="@*|*|text()|processing-instruction()" priority="-1">

@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE lexicon PUBLIC "-//Chaperon//DTD lexicon 2.0//EN" "lexicon-v20.dtd">
-
-<lexicon>
+<lexicon xmlns="http://chaperon.sourceforge.net/schema/lexicon/1.0">
  <!-- (([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))? -->
  <lexeme symbol="link">
   <concat>

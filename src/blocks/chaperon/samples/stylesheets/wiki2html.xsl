@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
+                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/2.0"
                 xmlns="http://www.w3.org/1999/xhtml">
 
  <xsl:output indent="yes" method="html"/>

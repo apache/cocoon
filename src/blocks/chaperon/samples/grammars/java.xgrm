@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="US-ASCII"?>
+
 <grammar xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0">
+<!--This file was generated! Don't edit!-->
 <priority>
 <terminal symbol="DOPEN"/>
 <terminal symbol="DCLOSE"/>
@@ -104,8 +106,6 @@
 <terminal symbol="MULTILINECOMMENT"/>
 <terminal symbol="SINGLELINECOMMENT"/>
 </priority>
-<associativity type="right" symbol="DOT"/>
-<associativity type="right" symbol="ELSE"/>
 <production symbol="TypeSpecifier">
 <nonterminal symbol="TypeName"/>
 </production>
@@ -116,7 +116,7 @@
 <production symbol="TypeName">
 <nonterminal symbol="PrimitiveType"/>
 </production>
-<production symbol="TypeName" precedence="DOT">
+<production symbol="TypeName">
 <nonterminal symbol="QualifiedName"/>
 </production>
 <production symbol="ClassNameList">

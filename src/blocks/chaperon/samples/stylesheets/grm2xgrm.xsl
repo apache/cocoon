@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
-                xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0"
                 xmlns:text="http://chaperon.sourceforge.net/schema/text/1.0"
+                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/2.0"
+                xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0"
                 exclude-result-prefixes="st text">
 
  <xsl:output indent="yes" method="xml" encoding="ASCII"/>
 
- <xsl:template match="st:grammar" >
+ <xsl:template match="st:output/st:grammar" >
   <grammar><xsl:comment>This file was generated! Don't edit!</xsl:comment>
    <priority>
     <xsl:apply-templates select="st:token_decls/st:token_decl" mode="priority"/>
@@ -49,7 +49,7 @@
  <xsl:template match="st:id" >
   <xsl:variable name="symbol" select="text()"/>
   <xsl:choose>
-   <xsl:when test="/st:grammar/st:token_decls/st:token_decl/st:id[.=$symbol]">
+   <xsl:when test="/st:output/st:grammar/st:token_decls/st:token_decl/st:id[.=$symbol]">
     <terminal symbol="{.}"/>
    </xsl:when>
    <xsl:otherwise>
