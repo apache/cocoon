@@ -27,7 +27,7 @@ import org.apache.log.LogKit;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-15 19:29:37 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-07 17:10:46 $
  */
 public abstract class AbstractProgrammingLanguage
   implements ProgrammingLanguage, Configurable
@@ -98,18 +98,17 @@ public abstract class AbstractProgrammingLanguage
    * @exception LanguageException If an error occurs during unloading
    */
   protected abstract void doUnload(
-    Object program, String filename, String baseDirectory
+    Object program, String filename, File baseDirectory
   )
     throws LanguageException;
 
   public final void unload(
-    Object program, String filename, String baseDirectory
+    Object program, String filename, File baseDirectory
   )
     throws LanguageException
   {
     File file = new File (
-      baseDirectory + File.separator +
-      filename + "." + this.getSourceExtension()
+      baseDirectory, filename + "." + this.getSourceExtension()
     );
 
     file.delete();

@@ -31,7 +31,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-11-29 12:17:31 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-07 17:10:58 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
@@ -110,7 +110,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
    * @return The loaded object program
    * @exception LanguageException If an error occurs during loading
    */
-  protected Object loadProgram(String name, String baseDirectory)
+  protected Object loadProgram(String name, File baseDirectory)
     throws LanguageException
   {
     try {
@@ -132,7 +132,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
    * @exception LanguageException If an error occurs during compilation
    */
   protected void compile(
-    String name, String baseDirectory, String encoding
+    String name, File baseDirectory, String encoding
   ) throws LanguageException {
 
     try {
@@ -142,7 +142,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
       int pos = name.lastIndexOf(File.separatorChar);
       String filename = name.substring(pos + 1);
       String pathname =
-        baseDirectory + File.separator +
+        baseDirectory.getCanonicalPath() + File.separator +
         name.substring(0, pos).replace(File.separatorChar, '/');
 
       compiler.setFile(
@@ -152,12 +152,12 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
 
       compiler.setSource(pathname);
 
-      compiler.setDestination(baseDirectory);
+      compiler.setDestination(baseDirectory.getCanonicalPath());
 
       String systemClasspath = System.getProperty("java.class.path");
       String systemExtDirs = System.getProperty("java.ext.dirs");
       compiler.setClasspath(
-        baseDirectory +
+        baseDirectory.getCanonicalPath() +
         ((classpath != null) ? File.pathSeparator + classpath : "") +
         ((systemClasspath != null) ? File.pathSeparator + systemClasspath : "") +
         ((systemExtDirs != null) ? File.pathSeparator + expandDirs(systemExtDirs) : "")
@@ -241,7 +241,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
           buffer.append("\\n");
           break;
         case '"':
-	    case '\\':
+        case '\\':
           buffer.append('\\');
           // Fall through
         default:

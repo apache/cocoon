@@ -26,7 +26,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-10 22:38:54 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-07 17:10:47 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -58,7 +58,7 @@ public abstract class CompiledProgrammingLanguage
     if (compilerClass == null) {
       throw new LanguageException(
         "Missing 'compiler' parameter for compiled language '" +
-	this.getLanguageName() + "'"
+    this.getLanguageName() + "'"
       );
     }
     this.compilerClass = ClassUtils.loadClass(compilerClass);
@@ -106,13 +106,12 @@ public abstract class CompiledProgrammingLanguage
    * @exception EXCEPTION_NAME If an error occurs
    */
   protected final void doUnload(
-    Object program, String filename, String baseDirectory
+    Object program, String filename, File baseDirectory
   )
     throws LanguageException
   {
     File file = new File (
-      baseDirectory + File.separator +
-      filename + "." + this.getObjectExtension()
+      baseDirectory, filename + "." + this.getObjectExtension()
     );
 
     file.delete();
@@ -128,7 +127,7 @@ public abstract class CompiledProgrammingLanguage
    * @return The loaded object program
    * @exception LanguageException If an error occurs during loading
    */
-  protected abstract Object loadProgram(String filename, String baseDirectory)
+  protected abstract Object loadProgram(String filename, File baseDirectory)
     throws LanguageException;
 
   /**
@@ -141,7 +140,7 @@ public abstract class CompiledProgrammingLanguage
    * @exception LanguageException If an error occurs during compilation
    */
   protected abstract void compile(
-    String filename, String baseDirectory, String encoding
+    String filename, File baseDirectory, String encoding
   ) throws LanguageException;
 
   /**
@@ -155,14 +154,12 @@ public abstract class CompiledProgrammingLanguage
    * @return The loaded object program
    * @exception LanguageException If an error occurs during compilation
    */
-  public Object load(String filename, String baseDirectory, String encoding)
+  public Object load(String filename, File baseDirectory, String encoding)
     throws LanguageException
   {
-
     // Does object file exist? Load and return instance
     File objectFile = new File(
-      baseDirectory + File.separator +
-      filename + "." + this.getObjectExtension()
+      baseDirectory, filename + "." + this.getObjectExtension()
     );
 
     if (objectFile.exists() && objectFile.isFile() && objectFile.canRead()) {
@@ -171,8 +168,7 @@ public abstract class CompiledProgrammingLanguage
 
     // Does source file exist?
     File sourceFile = new File(
-      baseDirectory + File.separator +
-      filename + "." + this.getSourceExtension()
+      baseDirectory, filename + "." + this.getSourceExtension()
     );
 
     if (sourceFile.exists() && sourceFile.isFile() && sourceFile.canRead()) {
@@ -187,7 +183,7 @@ public abstract class CompiledProgrammingLanguage
 
     throw new LanguageException(
       "Can't load program: " +
-      baseDirectory + File.separator + filename
+      baseDirectory.toString() + File.separator + filename
     );
   }
 }

@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-11-26 21:48:03 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-12-07 17:10:42 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable, ThreadSafe
@@ -76,10 +76,10 @@ public class ProgramGeneratorImpl
   protected ComponentSelector languageSelector;
 
   /** The working directory */
-  protected String workDir;
+  protected File workDir;
 
   /**
-   * Set the global component manager. This method also sets the
+   * Set the global component manager. This metod also sets the
    * <code>ComponentSelector</code> used as language factory for both
    * markup and programming languages.
    *
@@ -91,9 +91,9 @@ public class ProgramGeneratorImpl
       try {
           log.debug("Lookup " + Roles.MARKUP_LANGUAGE);
           this.markupSelector = (ComponentSelector) this.manager.lookup(Roles.MARKUP_LANGUAGE);
-	  log.debug("Lookup " + Roles.PROGRAMMING_LANGUAGE);
+      log.debug("Lookup " + Roles.PROGRAMMING_LANGUAGE);
           this.languageSelector = (ComponentSelector) this.manager.lookup(Roles.PROGRAMMING_LANGUAGE);
-	  log.debug("Lookup " + Roles.COCOON);
+      log.debug("Lookup " + Roles.COCOON);
           this.workDir = ((Cocoon) this.manager.lookup(Roles.COCOON)).getWorkDir();
       } catch (Exception e) {
           log.error("Could not lookup Component", e);

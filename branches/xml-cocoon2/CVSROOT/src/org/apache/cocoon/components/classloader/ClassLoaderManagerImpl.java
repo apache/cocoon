@@ -8,6 +8,7 @@
 package org.apache.cocoon.components.classloader;
 
 import java.io.IOException;
+import java.io.File;
 
 import org.apache.avalon.ThreadSafe;
 
@@ -15,7 +16,7 @@ import org.apache.avalon.ThreadSafe;
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-26 21:48:02 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-07 17:10:35 $
  */
 public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**
@@ -39,7 +40,7 @@ public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
    * @param directoryName The repository name
    * @exception IOException If the directory is invalid
    */
-  public void addDirectory(String directoryName) throws IOException {
+  public void addDirectory(File directoryName) throws IOException {
     instance.addDirectory(directoryName);
   }
 

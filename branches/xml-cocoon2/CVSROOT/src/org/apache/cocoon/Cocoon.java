@@ -46,7 +46,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.37 $ $Date: 2000-11-30 21:40:28 $
+ * @version CVS $Revision: 1.4.2.38 $ $Date: 2000-12-07 17:10:29 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -60,7 +60,7 @@ public class Cocoon
     private HashMap configurations = new HashMap();
 
     /** The configuration file */
-    private File configurationFile;
+    private URL configurationFile;
 
     /** The sitemap file */
     private String sitemapFileName;
@@ -78,7 +78,7 @@ public class Cocoon
     private String classpath;
 
     /** The working directory (null if not available) */
-    private String workDir;
+    private File workDir;
 
     /** The component manager. */
     private DefaultComponentManager componentManager = new DefaultComponentManager();
@@ -109,7 +109,7 @@ public class Cocoon
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(File configurationFile, String classpath, String workDir)
+    public Cocoon(final URL configurationFile, final String classpath, File workDir, final String root)
     throws SAXException, IOException, ConfigurationException,
     ComponentNotFoundException, ComponentNotAccessibleException {
         this();
@@ -118,25 +118,20 @@ public class Cocoon
         log.debug("Classpath = " + classpath);
 
         this.workDir = workDir;
-        log.debug("Work directory = " + workDir);
+        log.debug("Work directory = " + workDir.getCanonicalPath());
 
         this.configurationFile = configurationFile;
-        if (!configurationFile.isFile()) {
-            log.error("Could not open configuration file, Cocoon object not created");
-            throw new FileNotFoundException(configurationFile.toString());
-        }
 
         Parser p = (Parser) this.lookup(Roles.PARSER);
         SAXConfigurationHandler b = new SAXConfigurationHandler();
-        String path = this.configurationFile.getPath();
-        InputSource is = new InputSource(new FileReader(path));
+        InputSource is = new InputSource(this.configurationFile.openStream());
 
         p.setContentHandler(b);
-        is.setSystemId(path);
+        is.setSystemId(this.configurationFile.toExternalForm());
         p.parse(is);
 
         this.configure(b.getConfiguration());
-        this.root = this.configurationFile.getParentFile().toURL();
+        this.root = new File(root).toURL();
     }
 
     /**
@@ -160,7 +155,7 @@ public class Cocoon
      * Get the local workpath
      * @return the workpath available to this instance or null if not available.
      */
-    public String getWorkDir() {
+    public File getWorkDir() {
         return this.workDir;
     }
 
@@ -227,7 +222,16 @@ public class Cocoon
      * Queries the class to estimate its ergodic period termination.
      */
     public boolean modifiedSince(long date) {
-        return(date < this.configurationFile.lastModified());
+        boolean answer;
+
+        try {
+            answer = date < this.configurationFile.openConnection().getLastModified();
+        } catch (IOException ioe) {
+            log.warn("Problem checking the date on the Configuration File.", ioe);
+            answer = false;
+        }
+
+        return answer;
     }
 
     /**

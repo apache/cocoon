@@ -52,7 +52,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.36 $ $Date: 2000-12-06 23:52:41 $
+ * @version CVS $Revision: 1.1.4.37 $ $Date: 2000-12-07 17:11:06 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -65,11 +65,12 @@ public class CocoonServlet extends HttpServlet {
 
     private long creationTime = 0;
     private Cocoon cocoon;
-    private File configFile;
+    private URL configFile;
     private Exception exception;
     private ServletContext context;
     private String classpath;
-    private String workDir;
+    private File workDir;
+    private String root;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
@@ -96,9 +97,11 @@ public class CocoonServlet extends HttpServlet {
 
         this.forceLoad(conf.getInitParameter("force-load"));
 
-        this.setWorkDir((File) this.context.getAttribute("javax.servlet.context.tempdir"));
+        this.workDir = (File) this.context.getAttribute("javax.servlet.context.tempdir");
 
         this.setConfigFile(conf.getInitParameter("configurations"), this.context);
+
+        this.root = this.context.getRealPath("/");
 
         this.createCocoon();
     }
@@ -211,23 +214,11 @@ public class CocoonServlet extends HttpServlet {
         log.info("Using configuration file: " + configFileName);
 
         try {
-            this.configFile = new File(context.getResource(configFileName).getFile());
+            this.configFile = context.getResource(configFileName);
         } catch (Exception mue) {
             log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
             throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
         }
-    }
-
-    /**
-     *  Set up the Work Directory (where things get compiled).
-     *
-     * @param workDir the File handle for the work directory
-     *
-     * @throws ServletException
-     */
-    private void setWorkDir(final File workDir)
-    throws ServletException {
-        this.workDir = workDir.toString();
     }
 
     /**
@@ -351,7 +342,7 @@ public class CocoonServlet extends HttpServlet {
 
         ServletOutputStream out = res.getOutputStream();
 
-        long end = System.currentTimeMillis();
+        long end = new Date().getTime();
         String timeString = processTime(end - start);
         log.debug("'" + uri + "' " + timeString);
 
@@ -374,8 +365,8 @@ public class CocoonServlet extends HttpServlet {
      */
     private void createCocoon() {
         try {
-            log.info("Reloading from: " + this.configFile);
-            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
+            log.info("Reloading from: " + this.configFile.toExternalForm());
+            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir, this.root);
             this.creationTime = new Date().getTime();
             this.cocoon = c;
         } catch (Exception e) {

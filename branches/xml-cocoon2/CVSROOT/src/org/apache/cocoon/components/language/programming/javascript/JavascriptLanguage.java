@@ -20,7 +20,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * The compiled Javascript (Rhino) programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:32 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-07 17:11:02 $
  */
 public class JavascriptLanguage extends JavaLanguage
 {
@@ -52,19 +52,19 @@ public class JavascriptLanguage extends JavaLanguage
    * @exception LanguageException If an error occurs during compilation
    */
   protected void compile(
-    String name, String baseDirectory, String encoding
+    String name, File baseDirectory, String encoding
   ) throws LanguageException {
     try {
       Main compiler = (Main) this.compilerClass.newInstance();
-  
+
       int pos = name.lastIndexOf(File.separatorChar);
       String filename = name.substring(pos + 1);
       String pathname =
-        baseDirectory + File.separator +
+        baseDirectory.getCanonicalPath() + File.separator +
         name.substring(0, pos).replace(File.separatorChar, '/');
       String packageName =
         name.substring(0, pos).replace(File.separatorChar, '.');
-  
+
       String[] args = {
         "-extends",
         "org.apache.cocoon.components.language.markup.xsp.javascript.JSGenerator",
@@ -73,7 +73,7 @@ public class JavascriptLanguage extends JavaLanguage
         "-package", packageName,
         pathname + File.separator + filename + "." + this.getSourceExtension()
       };
-  
+
       compiler.main(args);
     } catch (Exception e) {
       throw new LanguageException(e.getMessage());

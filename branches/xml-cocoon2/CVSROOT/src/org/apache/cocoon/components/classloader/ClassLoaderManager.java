@@ -10,6 +10,7 @@ package org.apache.cocoon.components.classloader;
 import org.apache.avalon.Component;
 
 import java.io.IOException;
+import java.io.File;
 
 /**
  * A class loader manager acting as a proxy for a <b>single</b>
@@ -18,7 +19,7 @@ import java.io.IOException;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:26 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-07 17:10:34 $
  */
 public interface ClassLoaderManager extends Component {
   /**
@@ -27,7 +28,7 @@ public interface ClassLoaderManager extends Component {
    * @param directoryName The repository name
    * @exception IOException If the directory is invalid
    */
-  public void addDirectory(String directoryName) throws IOException;
+  public void addDirectory(File directoryName) throws IOException;
 
   /**
    * Load a class through the proxied class loader

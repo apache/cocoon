@@ -21,7 +21,7 @@ import org.apache.cocoon.util.ClassUtils;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-14 11:07:11 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-07 17:10:36 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -54,8 +54,8 @@ class RepositoryClassLoader extends ClassLoader {
    * @exception IOException Non-existent, non-readable or non-directory
    * repository
    */
-  public void addDirectory(String directoryName) throws IOException {
-    File repository = new File(directoryName);
+  public void addDirectory(File repository) throws IOException {
+    String directoryName = repository.getCanonicalPath();
 
     // Ensure the same directory isn't specified twice
     int count = this.repositories.size();
@@ -142,14 +142,14 @@ class RepositoryClassLoader extends ClassLoader {
       if (file.exists() && file.isFile() && file.canRead()) {
         byte[] buffer = null;
         FileInputStream in = null;
-    
+
         int n = 0;
         int pos = 0;
         buffer = new byte [(int) file.length ()];
-  
+
         try {
           in = new FileInputStream(file);
-  
+
           while (
             pos < buffer.length &&
             (n = in.read (buffer, pos, buffer.length - pos)) != -1
@@ -157,8 +157,8 @@ class RepositoryClassLoader extends ClassLoader {
             pos += n;
           }
 
-	  return buffer;
-	} catch (IOException e) {
+      return buffer;
+    } catch (IOException e) {
         } finally {
           if (in != null) {
             try { in.close(); }

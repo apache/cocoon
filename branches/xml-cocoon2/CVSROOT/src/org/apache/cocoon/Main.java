@@ -48,7 +48,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.15 $ $Date: 2000-11-30 21:40:34 $
+ * @version CVS $Revision: 1.1.4.16 $ $Date: 2000-12-07 17:10:30 $
  */
 
 public class Main {
@@ -191,7 +191,7 @@ public class Main {
             File work = getDir(workDir, "working");
             File context = getDir(contextDir, "context");
             File conf = getConfigurationFile(context);
-            Main main = new Main(new Cocoon(conf, null, work.toString()), context, dest);
+            Main main = new Main(new Cocoon(conf.toURL(), null, work, context.getCanonicalPath()), context, dest);
             main.warmup();
             main.process(targets);
             log.info("Done");

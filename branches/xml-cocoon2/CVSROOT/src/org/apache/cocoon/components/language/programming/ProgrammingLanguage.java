@@ -7,6 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.programming;
 
+import java.io.File;
+
 import org.apache.avalon.Component;
 
 import org.apache.cocoon.components.language.LanguageException;
@@ -15,7 +17,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:43:36 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-07 17:10:49 $
  */
 public interface ProgrammingLanguage extends Component {
   /**
@@ -35,7 +37,7 @@ public interface ProgrammingLanguage extends Component {
    * @return The loaded program
    * @exception LanguageException If an error occurs during loading
    */
-  public Object load(String filename, String baseDirectory, String encoding)
+  public Object load(String filename, File baseDirectory, String encoding)
     throws LanguageException;
 
   /**
@@ -55,7 +57,7 @@ public interface ProgrammingLanguage extends Component {
    * @param baseDirectory The directory containing the program file
    * @exception LanguageException If an error occurs
    */
-  public void unload (Object program, String filename, String baseDirectory)
+  public void unload (Object program, String filename, File baseDirectory)
     throws LanguageException;
 
   /**
