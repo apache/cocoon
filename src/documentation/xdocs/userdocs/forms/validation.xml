@@ -144,7 +144,7 @@
         combination with the I18nTransformer.</p>
 
         <p>Often the values that validators will check are specified as
-        expressions. CForms uses for this the <link href="http://xreporter.cocoondev.org/en/expressions.html">xReporter expression interpreter</link>.</p>
+        expressions. CForms uses for this the <link href="http://cocoondev.org/xreporter/docs/core/91.html">xReporter expression interpreter</link>.</p>
 
         <p>Note that you cannot use each validator with each widget. Most validators
         only work with certain types of widgets, in case of field widgets
