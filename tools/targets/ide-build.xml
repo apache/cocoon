@@ -9,7 +9,7 @@
       <pathelement path="${build.context}/WEB-INF/classes"/>
     </path>
     <property name="jar.files" refid="jar.files"/>
-    <copy file="${resources}/dev/emacs/prj.el.in" tofile="prj.el" filtering="yes">
+    <copy file="${tools}/ide/emacs/prj.el.in" tofile="prj.el" filtering="yes">
       <filterset>
         <filter token="jar.files" value="${jar.files}"/>
         <filter token="src" value="${java}"/>
@@ -74,7 +74,7 @@
     <property name="libs" refid="libs"/>
 
     <!-- expand properties in the template file -->
-    <copy file="${resources}/dev/eclipse/classpath-tmpl.xml"
+    <copy file="${tools}/ide/eclipse/classpath-tmpl.xml"
           tofile="${build.temp}/classpath-temp.xml"
           filtering="yes"
           overwrite="yes">
@@ -103,10 +103,10 @@
     <!-- now build the .classpath file -->
     <xslt in="${build.temp}/classpath-temp.xml" out="${basedir}/.classpath"
           processor="trax"
-          style="${resources}/dev/eclipse/make-classpath.xsl"/>
+          style="${tools}/ide/eclipse/make-classpath.xsl"/>
 
     <!-- copy the project file (expand version) -->
-    <copy file="${resources}/dev/eclipse/project"
+    <copy file="${tools}/ide/eclipse/project"
           tofile="${basedir}/.project"
           overwrite="yes">
       <filterset>
