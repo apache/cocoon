@@ -77,9 +77,12 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
+ * 
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.12 2003/11/16 18:57:40 antonio Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
          
+    private static final String CONTINUATION_ID = "continuation-id";
     protected static final String FORM_TEMPLATE_EL = "form-template";
     protected static final String STYLING_EL = "styling";
     /** Default key under which the woody form is stored in the JXPath context. */
@@ -121,27 +124,26 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
             throws SAXException {
         elementNestingCounter++;
-        if (!inWidgetElement && namespaceURI.equals(Constants.WT_NS)
-                && (localName.equals("widget") || localName.equals("repeater-widget"))) {
-            checkContextWidgetAvailable(qName);
-            inWidgetElement = true;
-            widgetElementNesting = elementNestingCounter;
-            gotStylingElement = false;
-            saxBuffer = new SaxBuffer();
 
-            // retrieve widget here, but its XML will only be streamed in the endElement call
-            widget = getWidget(attributes);
-            repeaterWidget = localName.equals("repeater-widget");
-            if (repeaterWidget && !(widget instanceof Repeater))
-                throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
-        } else if (inWidgetElement) {
+        if (inWidgetElement) {
             if (elementNestingCounter == widgetElementNesting + 1 &&
                 Constants.WI_NS.equals(namespaceURI) && STYLING_EL.equals(localName)) {
                 gotStylingElement = true;
             }
             saxBuffer.startElement(namespaceURI, localName, qName, attributes);
         } else if (namespaceURI.equals(Constants.WT_NS)) {
-            if (localName.equals("widget-label")) {
+            if (localName.equals("widget") || localName.equals("repeater-widget")) {
+				checkContextWidgetAvailable(qName);
+				inWidgetElement = true;
+				widgetElementNesting = elementNestingCounter;
+				gotStylingElement = false;
+				saxBuffer = new SaxBuffer();
+				// retrieve widget here, but its XML will only be streamed in the endElement call
+				widget = getWidget(attributes);
+				repeaterWidget = localName.equals("repeater-widget");
+				if (repeaterWidget && !(widget instanceof Repeater))
+					throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
+            } else if (localName.equals("widget-label")) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 widget.generateLabel(contentHandler);
@@ -223,7 +225,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 Attributes transAtts = translateAttributes(attributes, namesToTranslate);
                 contentHandler.startElement(Constants.WI_NS , FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL, transAtts);
 
-            } else if (localName.equals("continuation-id")){
+            } else if (localName.equals(CONTINUATION_ID)){
                 // Insert the continuation id
                 // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
                 Object idObj = pipeContext.getJXPathContext().getValue("$continuation/id");
@@ -233,9 +235,9 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 
                 String id = idObj.toString();
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
-                contentHandler.startElement(Constants.WI_NS, "continuation-id", Constants.WI_PREFIX_COLON + "continuation-id", attributes);
+                contentHandler.startElement(Constants.WI_NS, CONTINUATION_ID, Constants.WI_PREFIX_COLON + CONTINUATION_ID, attributes);
                 contentHandler.characters(id.toCharArray(), 0, id.length());
-                contentHandler.endElement(Constants.WI_NS, "continuation-id", Constants.WI_PREFIX_COLON + "continuation-id");
+                contentHandler.endElement(Constants.WI_NS, CONTINUATION_ID, Constants.WI_PREFIX_COLON + CONTINUATION_ID);
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
             } else {
                 throw new SAXException("Unsupported WoodyTemplateTransformer element: " + localName);
@@ -364,7 +366,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             contextWidget = null;
             contentHandler.endElement(Constants.WI_NS, FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
             contentHandler.endPrefixMapping(Constants.WI_PREFIX);
-        } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals("continuation-id")) {
+        } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals(CONTINUATION_ID)) {
             // nothing
         } else {
             super.endElement(namespaceURI, localName, qName);
