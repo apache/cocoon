@@ -107,7 +107,7 @@ import org.apache.excalibur.source.SourceValidity;
  * table, but not fail if it does not exist.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MountTableMatcher.java,v 1.3 2003/11/18 11:11:12 crafterm Exp $
+ * @version CVS $Id: MountTableMatcher.java,v 1.4 2003/12/22 13:48:46 joerg Exp $
  */
 public class MountTableMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Parameterizable {
 
@@ -118,7 +118,7 @@ public class MountTableMatcher extends AbstractLogEnabled implements Matcher, Th
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     public void parameterize(Parameters params) throws ParameterException {
