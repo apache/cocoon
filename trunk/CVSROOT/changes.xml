@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.18 2000-01-08 13:03:16 stefano Exp $
+  $Id: changes.xml,v 1.19 2000-01-09 23:45:05 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,18 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="SM" type="update">
+  	Cleaned up XSLTProcessor code.
+  </action>
+  <action dev="SM" type="fix">
+  	Added samples about external entities and XSLT import.
+  </action>
+  <action dev="SM" type="fix">
+  	Fixed ability to include/import from stylesheets.
+  </action>
+  <action dev="SM" type="fix">
+  	Fixed ability to include external entities with relative paths.
+  </action>
   <action dev="SM" type="fix" due-to="Axel M\u00fcller" due-to-email="axel.mueller@i2c-systems.com">
   	Fixed Servlet API illegal state when setting the content type after acquiring the 
   	servlet response instance.
