@@ -119,7 +119,7 @@ import java.util.jar.Attributes;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.1 2003/03/09 00:09:37 pier Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.2 2003/03/16 14:25:31 stefano Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1000,7 +1000,7 @@ public class CocoonServlet extends HttpServlet {
         if (this.cocoon == null) {
             manageException(request, res, null, null,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Internal servlet error",
+                            "Initialization Problem",
                             null /* "Cocoon was not initialized" */,
                             null /* "Cocoon was not initialized, cannot process request" */,
                             this.exception);
@@ -1074,13 +1074,14 @@ public class CocoonServlet extends HttpServlet {
                 if (this.cocoon.process(env)) {
                     contentType = env.getContentType();
                 } else {
-                    // NKB Should not get here?
-                    log.fatalError("The Cocoon engine said it failed to process the request for an unknown reason.");
+                    // We reach this when there is nothing in the processing change that matches
+                    // the request. For example, no matcher matches.
+                    log.fatalError("The Cocoon engine failed to process the request.");
                     manageException(request, res, env, uri,
                                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                    "Cocoon confusion",
-                                    "Cocoon engine failed in process.",
-                                    "The Cocoon engine said it failed to process the request for an unknown reason.",
+                                    "Request Processing Failed",
+                                    "Cocoon engine failed in process the request",
+                                    "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
                                     null);
                     return;
                 }
@@ -1091,9 +1092,9 @@ public class CocoonServlet extends HttpServlet {
 
                 manageException(request, res, env, uri,
                                 HttpServletResponse.SC_NOT_FOUND,
-                                "Resource not found",
-                                "Resource not found",
-                                "The requested URI \"" + request.getRequestURI() + "\" was not found",
+                                "Resource Not Found",
+                                "Resource Not Found",
+                                "The requested resource \"" + request.getRequestURI() + "\" could not be found",
                                 rse);
                 return;
             } catch (ConnectionResetException cre) {
@@ -1105,12 +1106,12 @@ public class CocoonServlet extends HttpServlet {
 
             } catch (Exception e) {
                 if (log.isErrorEnabled()) {
-                    log.error("Problem with Cocoon servlet", e);
+                    log.error("Internal Cocoon Problem", e);
                 }
 
                 manageException(request, res, env, uri,
                                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                "Internal server error", null, null, e);
+                                "Internal Server Error", null, null, e);
                 return;
             }
 
@@ -1144,7 +1145,7 @@ public class CocoonServlet extends HttpServlet {
                 out.flush();
                 out.close();
             } catch(Exception e) {
-                log.error("Cocoon servlet got an Exception while trying to close stream.", e);
+                log.error("Cocoon got an Exception while trying to close stream.", e);
             }
         }
     }
@@ -1161,49 +1162,45 @@ public class CocoonServlet extends HttpServlet {
                 res.reset();
             }
 
-            HashMap extraDescriptions = new HashMap(3);
-            extraDescriptions.put(Notifying.EXTRA_REQUESTURI, req.getRequestURI());
-            if (uri != null) {
-                extraDescriptions.put("path-info", uri);
-            }
+			String type = Notifying.FATAL_NOTIFICATION;
+			HashMap extraDescriptions = null;
+			
+			if (errorStatus == HttpServletResponse.SC_NOT_FOUND) {
+				type = "resource-not-found";
+				// Do not show the exception stacktrace for such common errors.
+				e = null;
+			} else {
+				extraDescriptions = new HashMap(2);
+				extraDescriptions.put(Notifying.EXTRA_REQUESTURI, req.getRequestURI());
+				if (uri != null) {
+					 extraDescriptions.put("Request URI", uri);
+				}
 
-            String type = Notifying.FATAL_NOTIFICATION;
-            if (errorStatus == HttpServletResponse.SC_NOT_FOUND) {
-                type = "resource-not-found";
+				// Do not show exception stack trace when log level is WARN or above. Show only message.
+				if (!log.isInfoEnabled()) {
+					Throwable t = DefaultNotifyingBuilder.getRootCause(e);
+					if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
+					e = null;
+				}
+			}
 
-                // VG: Do not show exception trace on NotFound error, add only exception message.
-                if (e != null) {
-                    Throwable t = DefaultNotifyingBuilder.getRootCause(e);
-                    if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
-                    e = null;
-                }
-            }
-
-            // Do not show exception stack trace when log level is WARN or above. Show only message.
-            if (!log.isInfoEnabled()) {
-                Throwable t = DefaultNotifyingBuilder.getRootCause(e);
-                if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
-                e = null;
-            }
-
-            Notifying n = new DefaultNotifyingBuilder().build(this,
-                                                              e,
-                                                              type,
-                                                              title,
-                                                              "Cocoon servlet",
-                                                              message,
-                                                              description,
-                                                              extraDescriptions);
-
-            res.setContentType("text/html");
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            Notifier.notify(n, res.getOutputStream(), "text/html");
+			Notifying n = new DefaultNotifyingBuilder().build(this,
+															   e,
+															   type,
+															   title,
+															   "Cocoon Servlet",
+															   message,
+															   description,
+															   extraDescriptions);
+			
+			res.setContentType("text/html");
+			res.setStatus(errorStatus);
+			Notifier.notify(n, res.getOutputStream(), "text/html");
         } else {
             res.sendError(errorStatus, title);
             res.flushBuffer();
         }
     }
-
 
     /**
      * Create the environment for the request
