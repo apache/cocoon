@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Group} widget.
  *
- * @version $Id: GroupDefinition.java 56582 2004-11-04 10:16:22Z sylvain $
+ * @version $Id$
  */
 public class GroupDefinition extends AbstractContainerDefinition {
 

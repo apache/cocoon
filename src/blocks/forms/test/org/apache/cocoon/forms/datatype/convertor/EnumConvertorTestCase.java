@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 /**
  * Test case for the {@link EnumConvertor} class.
  * 
- * @version CVS $Id: EnumConvertorTestCase.java,v 1.3 2004/05/06 14:59:45 bruno Exp $
+ * @version CVS $Id$
  */
 public class EnumConvertorTestCase extends TestCase {
 

@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * A container {@link Widget} which can hold zero or more child widgets.
  *
- * @version $Id: Group.java 56582 2004-11-04 10:16:22Z sylvain $
+ * @version $Id$
  */
 public class Group extends AbstractContainerWidget {
     private static final String GROUP_EL = "group";

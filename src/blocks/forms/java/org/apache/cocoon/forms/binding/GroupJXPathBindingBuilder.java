@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:group&gt;
  * </code></pre>
  *
- * @version CVS $Id: GroupJXPathBindingBuilder.java 56582 2004-11-04 10:16:22Z sylvain $
+ * @version CVS $Id$
  */
 public class GroupJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

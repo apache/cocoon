@@ -15,7 +15,7 @@
 */
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
-// CVS $Id: form_model_gui.js,v 1.3 2004/04/12 14:05:09 tim Exp $
+// CVS $Id$
 
 function form_model_gui(form) {
 

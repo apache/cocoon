@@ -19,7 +19,7 @@
     | CForms aggregate sample binding. Loads/stores values of two aggregate
     | fields as two values.
     |
-    | CVS $Id: binding-split.xml,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+    | CVS $Id$
     +-->
 
 <fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
