@@ -91,7 +91,7 @@
     <map:match pattern="jms-invalidate">
         <map:match type="host-matcher" pattern="localhost">
             <map:act type="jmsevent">
-                <map:parameter name="event" value="action|{request-param:table}"/>
+                <map:parameter name="message" value="action|{request-param:table}"/>
             </map:act>
             <map:read src="invalidated.xml"/>
         </map:match>
