@@ -53,6 +53,10 @@ package org.apache.cocoon.xml.xlink;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class extends the XLink semantic capabilities to understand those
@@ -68,66 +72,82 @@ import org.xml.sax.helpers.AttributesImpl;
  * be a way to remove this, that will be a happy day for XML and for Cocoon too.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: ExtendedXLinkPipe.java,v 1.1 2003/03/09 00:09:48 pier Exp $
+ * @author <a href="mailto:torstenknodt@datas-world.de">Torsten Knodt</a>
+ * @version CVS $Id: ExtendedXLinkPipe.java,v 1.2 2003/05/16 14:39:02 stephan Exp $
  */
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
-    public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
-        if (uri != null) {
-            // Get namespaced attributes
+    private static Set arrayToSet(Object[] array) {
+        final Set set = new HashSet(array.length);
 
-            String href = attr.getValue(uri, "href");
-            if (href != null) {
-                simpleLink(href, null, null, null, null, null, uri, name, raw, attr);
-                return;
-            }
+        for (int i = 0; i<array.length; i++)
+            set.add(array[i]);
+        return set;
+    }
 
-            String src = attr.getValue(uri, "src");
-            if (src != null) {
-                simpleLink(src, null, null, null, null, null, uri, name, raw, attr);
-                return;
-            }
-
-            String background = attr.getValue(uri, "background");
-            if (background != null) {
-                simpleLink(background, null, null, null, null, null, uri, name, raw, attr);
-                return;
-            }
-        } else {
-            uri = "";
+    private final Map MAP = new HashMap() {
+        {
+            put("", arrayToSet(new String[] {
+                "about", "action", "background", "data", "discuri", "href",
+                "longdesc", "src"
+            }));
+            put("http://www.w3.org/1999/xhtml", arrayToSet(new String[] {
+                "action", "background", "data", "href", "longdesc", "src"
+            }));
+            put("http://www.w3.org/2002/01/P3Pv1",
+                arrayToSet(new String[]{ "about",
+                                         "discuri" }));
         }
+    };
 
-        // Get attributes without namespace too
+    private int attrIndex = -1;
 
-        String href = attr.getValue("", "href");
-        if (href != null) {
-            simpleLink(href, null, null, null, null, null, uri, name, raw, attr);
-            return;
-        }
+    public void startElement(String uri, final String name, final String raw,
+                             final Attributes attr) throws SAXException {
+        final Set attrList = (Set) MAP.get((uri==null) ? "" : uri);
 
-        String src = attr.getValue("", "src");
-        if (src != null) {
-            simpleLink(src, null, null, null, null, null, uri, name, raw, attr);
-            return;
-        }
+        if (attrList!=null) {
+            for (int i = 0; i<attr.getLength(); i++)
+                if (attr.getURI(i).equals("") &&
+                    attrList.contains(attr.getLocalName(i))) {
+                    final String att = attr.getValue(i);
 
-        String background = attr.getValue("", "background");
-        if (background != null) {
-            simpleLink(background, null, null, null, null, null, uri, name, raw, attr);
-            return;
+                    if (att!=null) {
+                        final String str = ": URI="+uri+" NAME="+name+" RAW="+
+                                           raw+" ATT="+attr.getLocalName(i)+
+                                           " NS="+uri+" VALUE="+att;
+
+                        if (attrIndex!=-1) {
+                            getLogger().warn("Possible internal error"+str);
+                        }
+                        getLogger().debug("Transforming to XLink"+str);
+                        attrIndex = i;
+                        simpleLink(att, null, null, null, null, null, uri,
+                                   name, raw, attr);
+                        return;
+                    }
+                }
         }
 
         super.startElement(uri, name, raw, attr);
     }
 
-    public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr) throws SAXException {
-        AttributesImpl newattr = new AttributesImpl(attr);
-        int hrefIndex = attr.getIndex(uri, "href");
-        if (hrefIndex > -1) newattr.setValue(hrefIndex, href);
-        int srcIndex = attr.getIndex(uri, "src");
-        if (srcIndex > -1) newattr.setValue(srcIndex, href);
-        int backgroundIndex = attr.getIndex(uri, "background");
-        if (backgroundIndex > -1) newattr.setValue(backgroundIndex, href);
-        super.startElement(uri, name, raw, newattr);
+    public void simpleLink(final String href, final String role,
+                           final String arcrole, final String title,
+                           final String show, final String actuate,
+                           final String uri, final String name,
+                           final String raw,
+                           final Attributes attr) throws SAXException {
+        if (attrIndex!=-1) {
+            AttributesImpl newattr = new AttributesImpl(attr);
+
+            newattr.setValue(attrIndex, href);
+            attrIndex = -1;
+            super.startElement(uri, name, raw, newattr);
+        } else {
+            super.simpleLink(href, role, arcrole, title, show, actuate, uri,
+                             name, raw, attr);
+        }
+
     }
 }

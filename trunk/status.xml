@@ -180,6 +180,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="SMS" type="update" fixes-bug="19786" due-to="Torsten Knodt" due-to-email="torstenknodt@datas-world.de">
+   Extended the ExtendedXLinkPipe to be more extensible. Prepared is html and p3p.
+  </action>
   <action dev="SMS" type="update" fixes-bug="14986" due-to="Michael Homeijer" due-to-email="m.homeijer@devote.nl">
    Patch velocity generator, so that the scope of objects can be specified (request, session, sitemap).
   </action>
