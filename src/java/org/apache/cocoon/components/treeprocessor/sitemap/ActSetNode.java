@@ -28,7 +28,7 @@ import java.util.Map;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActSetNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ActSetNode.java,v 1.3 2004/05/25 13:48:12 cziegeler Exp $
  */
 
 public class ActSetNode extends SimpleParentProcessingNode
@@ -62,7 +62,7 @@ public class ActSetNode extends SimpleParentProcessingNode
 
         Map result = this.actionSet.call(env, context, resolvedParams);
 
-        if (PipelinesNode.getRedirector(env).hasRedirected()) {
+        if (context.getRedirector().hasRedirected()) {
             return true;
 
         } else if (result == null) {

@@ -39,7 +39,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.6 2004/05/25 13:30:10 cziegeler Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.7 2004/05/25 13:48:12 cziegeler Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -89,7 +89,7 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
         // Prepare data needed by the action
         Map objectModel = env.getObjectModel();
-        Redirector redirector = PipelinesNode.getRedirector(env);
+        Redirector redirector = context.getRedirector();
         SourceResolver resolver = EnvironmentHelper.getCurrentProcessor().getSourceResolver();
         String resolvedSource = source.resolve(context, objectModel);
         Parameters resolvedParams =

@@ -53,6 +53,7 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
@@ -63,7 +64,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.29 2004/05/25 13:42:51 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.30 2004/05/25 13:48:12 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -77,7 +78,6 @@ public class TreeProcessor
                Disposable,
                Initializable {
 
-    public static final String REDIRECTOR_ATTR = "sitemap:redirector";
     public static final String COCOON_REDIRECT_ATTR = "sitemap:cocoon-redirect";
 
     private static final String XCONF_URL =
@@ -333,15 +333,13 @@ public class TreeProcessor
         // and now process
         EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
 
-        Map objectModel = environment.getObjectModel();
-
-        Object oldRedirector = environment.getAttribute(REDIRECTOR_ATTR);
+        final Redirector oldRedirector = context.getRedirector();
 
         // Build a redirector
         TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
         setupLogger(redirector);
+        context.setRedirector(redirector);
 
-        environment.setAttribute(REDIRECTOR_ATTR, redirector);
         try {
             boolean success = this.rootNode.invoke(environment, context);
             
@@ -349,8 +347,8 @@ public class TreeProcessor
 
         } finally {
             EnvironmentHelper.leaveProcessor();
-            // Restore old redirector and resolver
-            environment.setAttribute(REDIRECTOR_ATTR, oldRedirector);
+            // Restore old redirector 
+            context.setRedirector(oldRedirector);
         }
     }
         

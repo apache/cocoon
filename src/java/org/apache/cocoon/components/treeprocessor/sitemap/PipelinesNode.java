@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.9 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.10 2004/05/25 13:48:12 cziegeler Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
@@ -74,10 +74,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         ((PipelineNode)nodes[nodes.length - 1]).setLast(true);
 
         super.setChildren(nodes);
-    }
-
-    public static Redirector getRedirector(Environment env) {
-        return (Redirector)env.getAttribute(TreeProcessor.REDIRECTOR_ATTR);
     }
 
     /**
