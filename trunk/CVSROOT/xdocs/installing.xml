@@ -1420,6 +1420,12 @@ You could also make these three configuration changes via
    <td>Linux JDK 1.2.2</td>
   </tr>
   <tr>
+   <td>FreeBSD 4.2 (RELEASE)</td>
+   <td>Apache 1.3.14</td>
+   <td>Tomcat 3.2.1</td>
+   <td>Linux JDK 1.2.2</td>
+  </tr>
+  <tr>
    <td>SCO OpenServer 5</td>
    <td colspan="2">WebLogic 4.5.1</td>
    <td>SCO JDK 1.1.7A</td>
