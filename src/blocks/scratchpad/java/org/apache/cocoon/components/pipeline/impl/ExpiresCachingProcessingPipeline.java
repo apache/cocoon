@@ -20,9 +20,9 @@ import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
@@ -48,7 +48,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.5 2004/04/15 08:05:55 cziegeler Exp $
+ * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
  */
 public class ExpiresCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -182,7 +182,7 @@ public class ExpiresCachingProcessingPipeline
                         super.connectPipeline( environment );
         
                         this.lastConsumer = old;
-                    } catch ( ComponentException e ) {
+                    } catch ( ServiceException e ) {
                         throw new ProcessingException("Could not connect pipeline.", e);
                     }
                 } else {
@@ -192,7 +192,7 @@ public class ExpiresCachingProcessingPipeline
                 // we use the cache, so we need an xml deserializer
                 try {
                     this.xmlDeserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
-                } catch ( ComponentException e ) {
+                } catch ( ServiceException e ) {
                     throw new ProcessingException("Could not connect pipeline.", e);
                 }
             }

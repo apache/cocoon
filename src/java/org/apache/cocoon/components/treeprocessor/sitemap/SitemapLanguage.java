@@ -54,7 +54,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.13 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.14 2004/07/16 12:36:45 sylvain Exp $
  */
 public class SitemapLanguage extends DefaultTreeBuilder {
 
@@ -79,21 +79,15 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             config = new DefaultConfiguration("", "");
         }
 
-        CocoonComponentManager newManager = new CocoonComponentManager(new WrapperComponentManager(this.parentProcessorManager));
-
-        newManager.enableLogging(getLogger());
-
         final LoggerManager loggerManager = (LoggerManager) this.parentProcessorManager.lookup(LoggerManager.ROLE);
+
+        CocoonComponentManager newManager = new CocoonComponentManager(new WrapperComponentManager(this.parentProcessorManager));
+        
+        // Go through the component lifecycle
+        newManager.enableLogging(getLogger());
         newManager.setLoggerManager(loggerManager);
-
-        if (null != this.context ) {
-            newManager.contextualize(this.context);
-        }
-
-        if (null != this.processorRoleManager) {
-            newManager.setRoleManager(this.processorRoleManager);
-        }
-
+        newManager.contextualize(this.context);
+        newManager.setRoleManager(this.ownRoleManager);
         newManager.configure(config);
         newManager.initialize();
 

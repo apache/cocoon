@@ -19,12 +19,12 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -37,19 +37,19 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.regexp.RE;
 
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.39 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.40 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -78,9 +78,6 @@ public class TreeProcessor
     /** The root role manager */
     protected RoleManager rootRoleManager;
 
-    /** Sitemap TreeBuilder */
-    protected TreeBuilder treeBuilder;
-
     /** Last modification time */
     protected long lastModified = 0;
 
@@ -90,12 +87,9 @@ public class TreeProcessor
     /** Delay for <code>sourceLastModified</code>. */
     protected long lastModifiedDelay;
 
-    /** The current language configuration */
-    protected Configuration currentLanguage;
-
     /** The file to process */
     protected String fileName;
-
+    
     /** Check for reload? */
     protected boolean checkReload;
 
@@ -146,7 +140,6 @@ public class TreeProcessor
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
         ContainerUtil.service(this.environmentHelper, this.parentServiceManager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
-        this.createTreeBuilder();
     }
 
     /**
@@ -225,31 +218,6 @@ public class TreeProcessor
             throw new ConfigurationException(msg, e);
         }
 
-        this.createTreeBuilder();
-    }
-
-    /**
-     * Create a new tree builder for this sitemap
-     */
-    protected void createTreeBuilder()
-    throws ConfigurationException {
-        // Create a builder for the sitemap language
-        try {
-            this.treeBuilder = (TreeBuilder)Thread.currentThread()
-                    .getContextClassLoader()
-                    .loadClass("org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage").newInstance();
-
-            LifecycleHelper.setupComponent(this.treeBuilder,
-                                           getLogger(),
-                                           this.context,
-                                           this.parentServiceManager,
-                                           this.rootRoleManager,
-                                           this.treeBuilderConfiguration);
-        } catch(ConfigurationException ce) {
-            throw ce;
-        } catch(Exception e) {
-            throw new ConfigurationException("Could not setup sitemap builder.", e);
-        }
     }
 
     /**
@@ -331,7 +299,41 @@ public class TreeProcessor
     public EnvironmentHelper getEnvironmentHelper() {
         return this.environmentHelper;
     }
+    
+    /**
+     * Get the tree builder role from the sitemap program (as a configuration object).
+     * This method should report very any problem very clearly, as it is the entry point of any
+     * Cocoon application.
+     * 
+     * @param sitemapProgram the sitemap
+     * @return the treebuilder role
+     * @throws ConfigurationException if a suitable role could not be found
+     */
+    private TreeBuilder getTreeBuilder(Configuration sitemapProgram) throws ConfigurationException {
+        
+        String ns = sitemapProgram.getNamespace();
+        
+        RE re = new RE("http://apache.org/cocoon/sitemap/(\\d\\.\\d)");
+        
+        if (!re.match(ns)) {
+            throw new ConfigurationException("Unknown sitemap namespace (" + ns + ") at " +
+                    this.source.getURI());
+        }
+        
+        String version = re.getParen(1);
+        String result = TreeBuilder.ROLE + "/sitemap-" + version;
+        
+        try {
+            return (TreeBuilder)this.parentServiceManager.lookup(result);
+        } catch(Exception ex) {
+            throw new ConfigurationException("This version of Cocoon does not handle sitemap version " +
+                    version + " at " + this.source.getURI(), ex);
+        }
+    }
 
+    /**
+     * Sets up the concrete processor, building or rebuilding it if necessary.
+     */
     private void setupConcreteProcessor(Environment env) throws Exception {
         // first, check for sitemap changes
         if (this.concreteProcessor == null ||
@@ -340,6 +342,10 @@ public class TreeProcessor
         }
     }
 
+    /**
+     * Build the concrete processor (i.e. loads the sitemap). Should be called
+     * only by setupProcessor();
+     */
     private synchronized void buildConcreteProcessor(Environment env) throws Exception {
 
         // Now that we entered the synchronized area, recheck what's already
@@ -350,12 +356,9 @@ public class TreeProcessor
         }
 
         long startTime = System.currentTimeMillis();
-
-        // Get a builder
-        ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this);
         long newLastModified;
-        this.setupLogger(newProcessor);
-
+        ConcreteTreeProcessor newProcessor;
+        
         // We have to do a call to enterProcessor() here as during building
         // of the tree, components (e.g. actions) are already instantiated
         // (ThreadSafe ones mostly).
@@ -363,34 +366,46 @@ public class TreeProcessor
         // current service manager they must get this one - which is currently
         // in the process of initialization.
         EnvironmentHelper.enterProcessor(this, this.parentServiceManager, env);
+        
         try {
-            if (this.treeBuilder instanceof Recyclable) {
-                ((Recyclable)this.treeBuilder).recycle();
-            }
             
-            this.treeBuilder.setProcessor(newProcessor);
-            this.treeBuilder.setParentProcessorManager(this.parentServiceManager);
+            // Load the sitemap file
             if (this.fileName == null) {
                 this.fileName = "sitemap.xmap";
             }
-
             if (this.source == null) {
                 this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
                                                               lastModifiedDelay);
             }
-
-            newLastModified = this.source.getLastModified();
-
-            ProcessingNode root = this.treeBuilder.build(this.source);
-
-            newProcessor.setProcessorData(root, this.treeBuilder.getDisposableNodes());
             
+            // Build a namespace-aware configuration object
+            NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
+            SourceUtil.toSAX(this.source, handler );
+            Configuration sitemapProgram = handler.getConfiguration();
+            newLastModified = this.source.getLastModified();
+            
+            newProcessor = new ConcreteTreeProcessor(this);
+            this.setupLogger(newProcessor);
+    
+            // Get the treebuilder that can handle this version of the sitemap.
+            TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
+    
+            try {
+                treeBuilder.setProcessor(newProcessor);
+                treeBuilder.setParentProcessorManager(this.parentServiceManager);
+    
+                ProcessingNode root = treeBuilder.build(sitemapProgram);
+                newProcessor.setProcessorData(root, treeBuilder.getDisposableNodes());
+
+            } finally {
+                this.parentServiceManager.release(treeBuilder);                
+            }                
         } finally {
             EnvironmentHelper.leaveProcessor();
         }
 
         if (getLogger().isDebugEnabled()) {
-            double time = (this.lastModified - startTime) / 1000.0;
+            double time = (System.currentTimeMillis() - startTime) / 1000.0;
             getLogger().debug("TreeProcessor built in " + time + " secs from " + source.getURI());
         }
 
@@ -414,9 +429,6 @@ public class TreeProcessor
         // are none when a TreeProcessor is disposed.
         ContainerUtil.dispose(this.concreteProcessor);
         this.concreteProcessor = null;
-
-        ContainerUtil.dispose(this.treeBuilder);
-        this.treeBuilder = null;
 
         if (this.parentServiceManager != null) {
             if (this.source != null) {

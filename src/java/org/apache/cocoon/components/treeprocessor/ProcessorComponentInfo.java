@@ -29,7 +29,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  * <code>OutputComponentSelector</code>), which led to a strong dependency on the chosen component
  * container implementation.
  * 
- * @version CVS $Id: ProcessorComponentInfo.java,v 1.1 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: ProcessorComponentInfo.java,v 1.2 2004/07/16 12:36:45 sylvain Exp $
  */
 public class ProcessorComponentInfo {
     
@@ -41,12 +41,6 @@ public class ProcessorComponentInfo {
     
     /** Lock that prevents further modification */
     private boolean locked = false;
-    
-//    /**
-//     * Does this processor have mount instructions? If yes, we must keep this data to
-//     * build child processors, else we can discard it.
-//     */
-//    private boolean hasMount;
     
     /**
      * Component-related data (see methods below for key names). We use a single Map
@@ -66,14 +60,6 @@ public class ProcessorComponentInfo {
     public ServiceManager getServiceManager() {
         return this.manager;
     }
-    
-//    public void foundMountInstruction() {
-//        this.hasMount = true;
-//    }
-//    
-//    public boolean hasMountInstruction() {
-//        return this.hasMount;
-//    }
     
     /** Store some data, creating the storage map if needed */
     private void setData(String key, Object value) {

@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.10 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.11 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -98,28 +98,17 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
             }
         }
 
-        // If action is ThreadSafe, avoid select() and try/catch block (faster !)
-        if (this.hasThreadSafeComponent()) {
-            actionResult = this.executor.invokeAction(this, 
+        Action action = (Action)getComponent();
+        try {
+            actionResult = this.executor.invokeAction(this,
                                              objectModel, 
-                                             (Action)this.getThreadSafeComponent(), 
+                                             action, 
                                              redirector, 
                                              resolver, 
                                              resolvedSource, 
                                              resolvedParams);
-        } else {
-            Action action = (Action)this.selector.select(this.componentName);
-            try {
-                actionResult = this.executor.invokeAction(this,
-                                                 objectModel, 
-                                                 action, 
-                                                 redirector, 
-                                                 resolver, 
-                                                 resolvedSource, 
-                                                 resolvedParams);
-            } finally {
-                this.selector.release(action);
-            }
+        } finally {
+            releaseComponent(action);
         }
 
         if (redirector.hasRedirected()) {

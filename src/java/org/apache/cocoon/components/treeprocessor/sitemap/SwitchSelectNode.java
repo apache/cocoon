@@ -32,7 +32,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelectNode.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: SwitchSelectNode.java,v 1.8 2004/07/16 12:36:45 sylvain Exp $
  */
 public class SwitchSelectNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode {
@@ -72,19 +72,18 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         final Map objectModel = env.getObjectModel();
         Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
-        // If selector is ThreadSafe, avoid select() and try/catch block (faster !)
-        if (this.hasThreadSafeComponent()) {
+        SwitchSelector switchSelector = (SwitchSelector)getComponent();
 
-            SwitchSelector switchSelector = (SwitchSelector)this.getThreadSafeComponent();
-            Object ctx = switchSelector.getSelectorContext(objectModel, resolvedParams);
-
+        Object ctx = switchSelector.getSelectorContext(objectModel, resolvedParams);
+       
+        try {
             for (int i = 0; i < this.whenTests.length; i++) {
                 if (this.executor.invokeSwitchSelector(this, 
-                                                       objectModel, 
-                                                       switchSelector, 
-                                                       whenTests[i].resolve(context, objectModel), 
-                                                       resolvedParams, 
-                                                       ctx)) {
+                        objectModel, 
+                        switchSelector, 
+                        whenTests[i].resolve(context, objectModel), 
+                        resolvedParams, 
+                        ctx)) {
                     return invokeNodes(this.whenNodes[i], env, context);
                 }
             }
@@ -94,32 +93,8 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
             }
 
             return false;
-
-        } else {
-            SwitchSelector switchSelector = (SwitchSelector)this.selector.select(this.componentName);
-
-            Object ctx = switchSelector.getSelectorContext(objectModel, resolvedParams);
-           
-            try {
-                for (int i = 0; i < this.whenTests.length; i++) {
-                    if (this.executor.invokeSwitchSelector(this, 
-                            objectModel, 
-                            switchSelector, 
-                            whenTests[i].resolve(context, objectModel), 
-                            resolvedParams, 
-                            ctx)) {
-                        return invokeNodes(this.whenNodes[i], env, context);
-                    }
-                }
-
-                if (this.otherwhiseNodes != null) {
-                    return invokeNodes(this.otherwhiseNodes, env, context);
-                }
-
-                return false;
-            } finally {
-                this.selector.release(selector);
-            }
+        } finally {
+            releaseComponent(switchSelector);
         }
     }
 }

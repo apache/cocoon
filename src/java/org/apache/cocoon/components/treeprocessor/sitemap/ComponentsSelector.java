@@ -15,11 +15,8 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentException;
@@ -28,7 +25,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.ExtendedComponentSelector;
-import org.apache.cocoon.components.container.ComponentLocatorImpl;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
@@ -42,7 +38,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.12 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.13 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector {

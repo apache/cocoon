@@ -31,7 +31,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: SelectNode.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
  */
 public class SelectNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode {
@@ -74,12 +74,12 @@ public class SelectNode extends SimpleSelectorProcessingNode
         final Map objectModel = env.getObjectModel();
         final Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
-        // If selector is ThreadSafe, avoid select() and try/catch block (faster !)
-        if (this.getThreadSafeComponent() != null) {
+        final Selector selector = (Selector)getComponent();
+        try {
 
             for (int i = 0; i < this.whenTests.length; i++) {
                 if ( this.executor.invokeSelector(this, objectModel,
-                        (Selector)this.getThreadSafeComponent(),
+                        selector,
                         whenTests[i].resolve(context, objectModel),
                         resolvedParams)) {
                     return invokeNodes(this.whenNodes[i], env, context);
@@ -91,28 +91,8 @@ public class SelectNode extends SimpleSelectorProcessingNode
             }
 
             return false;
-
-        } else {
-            final Selector selector = (Selector)this.selector.select(this.componentName);
-            try {
-
-                for (int i = 0; i < this.whenTests.length; i++) {
-                    if ( this.executor.invokeSelector(this, objectModel,
-                            selector,
-                            whenTests[i].resolve(context, objectModel),
-                            resolvedParams)) {
-                        return invokeNodes(this.whenNodes[i], env, context);
-                    }
-                }
-
-                if (this.otherwhiseNodes != null) {
-                    return invokeNodes(this.otherwhiseNodes, env, context);
-                }
-
-                return false;
-            } finally {
-                this.selector.release(selector);
-            }
+        } finally {
+            releaseComponent(selector);
         }
     }
 }

@@ -30,20 +30,16 @@ import org.apache.cocoon.sitemap.SitemapParameters;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.7 2004/07/16 12:36:45 sylvain Exp $
  */
 
 
 public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
-  implements ProcessingNodeBuilder /*, Serviceable*/ {
+  implements ProcessingNodeBuilder {
 
     protected TreeBuilder treeBuilder;
     
     protected ServiceManager manager;
-
-//    public void service(ServiceManager manager) throws ServiceException {
-//        this.manager = manager;
-//    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#setBuilder(org.apache.cocoon.components.treeprocessor.TreeBuilder)
