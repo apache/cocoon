@@ -87,7 +87,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.22 2004/01/09 08:36:37 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.23 2004/01/09 08:39:54 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -410,7 +410,7 @@ implements Source, XMLizable {
      */
     private void reset() {
         if (this.processingPipeline != null) {
-            this.processor.releasePipeline(null, this.processingPipeline);
+            this.processor.releasePipeline(this.environment, this.processingPipeline);
             this.processingPipeline = null;
         }
         if (this.processKey != null) {
