@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.17 2000-09-29 04:25:19 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.18 2000-09-29 19:32:57 balld Exp $-->
 <!--
 
  ============================================================================
@@ -276,8 +276,18 @@
 		</xsl:when>
 		<xsl:when test="esql:statement">
 		 _esql_session.prepared_statement = _esql_session.connection.prepareStatement(String.valueOf(<xsl:copy-of select="$statement"/>));
+		 <xsl:text>_esql_session.prepared_statement.</xsl:text>
 		 <xsl:for-each select=".//esql:parameter">
-		  _esql_session.prepared_statement.setString(<xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+		  <xsl:choose>
+		   <xsl:when test="@type">
+		    <xsl:variable name="type"><xsl:value-of select="concat(translate(substring(@type,0,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring(@type,1))"/></xsl:variable>
+                    <xsl:text>set<xsl:value-of select="$type"/>(<xsl:value-of select="position()"/>,<xsl:call-template name="get-nested-content"><xsl:with-param name="content" select="."/></xsl:call-template>);</xsl:text>
+		   </xsl:when>
+		   <xsl:otherwise>
+		  <xsl:text>setString(<xsl:value-of select="position()"/>,String.valueOf(<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+		  </xsl:text>
+		   </xsl:otherwise>
+		  </xsl:choose>
 		 </xsl:for-each>
 	         _esql_session.resultset = _esql_session.prepared_statement.executeQuery();
 		</xsl:when>
