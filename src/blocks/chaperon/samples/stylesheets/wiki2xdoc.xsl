@@ -110,7 +110,7 @@
        <xsl:value-of select="$text"/>
       </link>
      </xsl:when>
-     <xsl:when test="starts-with(@href,'http')">
+     <xsl:when test="starts-with($href,'http')">
       <link href="{$href}">
        <xsl:value-of select="$text"/>
       </link>
