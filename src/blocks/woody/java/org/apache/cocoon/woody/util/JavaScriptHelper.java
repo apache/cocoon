@@ -69,7 +69,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.1 2003/10/03 13:40:41 sylvain Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.2 2003/10/09 09:34:37 sylvain Exp $
  */
 public class JavaScriptHelper {
     
@@ -163,7 +163,7 @@ public class JavaScriptHelper {
                 throw new CascadingRuntimeException("Cannont create script scope", e);
             }
             
-            scope.setPrototype(parentScope);
+            scope.setParentScope(parentScope);
             
             // Populate the scope
             Iterator iter = values.entrySet().iterator();
