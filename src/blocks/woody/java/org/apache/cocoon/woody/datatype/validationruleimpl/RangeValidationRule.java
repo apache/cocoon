@@ -60,7 +60,9 @@ import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionContext;
 
 /**
- * Checks numeric ranges. Works for Integer, Long and BigDecimal values.
+ * Checks numeric ranges.
+ * Works for Integer, Long, BigDecimal, Float, Double, and Date values.
+ * Numbers are converted to the BigDecimal before comparing.
  *
  * <p>This validation rule can perform 3 different checks:
  * <ul>
@@ -87,11 +89,16 @@ public class RangeValidationRule extends AbstractValidationRule {
     }
 
     public ValidationError validate(Object value, ExpressionContext expressionContext) {
+        // HACK: JDK's Comparable can't even compare Decimal to Integer
         Comparable decimal;
         if (value instanceof Integer) {
             decimal = new BigDecimal(((Integer) value).intValue());
         } else if (value instanceof Long) {
             decimal = new BigDecimal(((Long) value).longValue()); 
+        } else if (value instanceof Float) {
+            decimal = new BigDecimal(((Float) value).floatValue()); 
+        } else if (value instanceof Double) {
+            decimal = new BigDecimal(((Double) value).doubleValue()); 
         } else {
             decimal = (Comparable) value;
         }
