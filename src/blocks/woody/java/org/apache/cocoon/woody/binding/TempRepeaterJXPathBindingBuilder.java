@@ -50,44 +50,61 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * An experimental simple repeater binding that will replace
+ * (i.e. delete then re-add all) its content.
+ * Based on SimpleRepeater code. 
+ * <pre>
+ * &lt;wb:temp-repeater
+ *   id="contacts"
+ *   parent-path="contacts"&gt;
+ *   &lt;<em>... child bindings ...</em>
+ * &lt;/wb:temp-repeater&gt;
+ * </pre>
+ *
+ * CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class TempRepeaterJXPathBindingBuilder
+    extends JXpathBindingBuilderBase {
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    public JXPathBindingBase buildBinding(
+        Element bindingElem,
+        JXPathBindingManager.Assistant assistant) throws BindingException {
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
+        try {
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem); 
+            
+            String repeaterId = DomHelper.getAttribute(bindingElem, "id");
+            String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
+            String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
+            String rowPathInsert = DomHelper.getAttribute(bindingElem, "row-path-insert", rowPath);
+            boolean clearOnLoad = DomHelper.getAttributeAsBoolean(bindingElem, "clear-before-load", true);
+            boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(bindingElem, "delete-parent-if-empty", false);
 
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
+            Element childWrapElement =
+                DomHelper.getChildElement(bindingElem, BindingManager.NAMESPACE, "on-bind");
+            JXPathBindingBase[] childBindings = assistant.makeChildBindings(childWrapElement);
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+            Element insertWrapElement =
+                DomHelper.getChildElement(
+                    bindingElem,
+                    BindingManager.NAMESPACE,
+                    "on-insert-row");
+            JXPathBindingBase[] insertBindings = null;
+            if (insertWrapElement != null)
+                insertBindings = assistant.makeChildBindings(insertWrapElement);
+
+            return new TempRepeaterJXPathBinding( commonAtts, repeaterId, parentPath, rowPath, rowPathInsert, clearOnLoad, deleteIfEmpty,
+                new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings),
+                new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, insertBindings));
+        } catch (BindingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BindingException("Error building temp-repeater binding defined at " + DomHelper.getLocation(bindingElem), e);
+        }
+    }
 }

@@ -65,9 +65,9 @@ import org.xml.sax.SAXException;
 /**
  * See description of {@link WidgetReplacingPipe}.
  * 
- * @version CVS $Id: WoodyTemplateTransformer.java,v 1.8 2003/12/23 08:46:17 mpo Exp $
+ * @version CVS $Id: WoodyTemplateTransformer.java,v 1.9 2003/12/29 06:14:49 tim Exp $
  */
-public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer {
+public class WoodyTemplateTransformer extends EffectWidgetReplacingPipe implements Transformer {
 
     /** Name of the request attribute under which the Woody form is stored (optional). */
     private String attributeName;

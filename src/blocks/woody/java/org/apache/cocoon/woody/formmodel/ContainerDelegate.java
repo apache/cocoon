@@ -50,32 +50,90 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
-import org.w3c.dom.Element;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.xml.AttributesImpl;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
+import java.util.*;
 
 /**
- * Builds {@link RepeaterDefinition}s.
+ * Helper class for the implementation of widgets containing other widgets.
+ *
+ * CVS $Id: ContainerDelegate.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public class ContainerDelegate {
+    private WidgetDefinition definition;
+    private List widgets;
+    private Map widgetsById;
 
-    public WidgetDefinition buildWidgetDefinition(Element repeaterElement) throws Exception {
-        
-        int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
-        
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize);
-        setLocation(repeaterElement, repeaterDefinition);
-        setId(repeaterElement, repeaterDefinition);
-        setDisplayData(repeaterElement, repeaterDefinition);
+    public ContainerDelegate(WidgetDefinition definition) {
+        widgets = new ArrayList();
+        widgetsById = new HashMap();
+        this.definition = definition;
+    }
 
-        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.WD_NS, "widgets", true);
-        // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
-        for (int i = 0; i < widgetElements.length; i++) {
-            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
-            repeaterDefinition.addWidgetDefinition(widgetDefinition);
+    public void addWidget(Widget widget) {
+        widgets.add(widget);
+        widgetsById.put(widget.getId(), widget);
+    }
+
+    public void readFromRequest(FormContext formContext) {
+        Iterator widgetIt = widgets.iterator();
+        while (widgetIt.hasNext()) {
+            Widget widget = (Widget)widgetIt.next();
+            widget.readFromRequest(formContext);
         }
+    }
 
-        return repeaterDefinition;
+    public boolean validate(FormContext formContext) {
+        boolean valid = true;
+        Iterator widgetIt = widgets.iterator();
+        while (widgetIt.hasNext()) {
+            Widget widget = (Widget)widgetIt.next();
+            valid = valid & widget.validate(formContext);
+        }
+        return valid;
+    }
+
+    public boolean hasWidget(String id) {
+        return widgetsById.containsKey(id);
+    }
+
+    public Widget getWidget(String id) {
+        return (Widget)widgetsById.get(id);
+    }
+
+    public Iterator iterator() {
+        return widgets.iterator();
+    }
+
+    /**
+     * Returns false if there is at least one field which has no value.
+     */
+    public boolean widgetsHaveValues() {
+        Iterator widgetsIt = widgets.iterator();
+        while(widgetsIt.hasNext()) {
+            Widget widget = (Widget)widgetsIt.next();
+            if (widget.getValue() == null)
+                return false;
+        }
+        return true;
+    }
+
+    private static final String CONTAINER_EL = "container";
+    private static final String WIDGETS_EL = "widgets";
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        contentHandler.startElement(Constants.WI_NS, WIDGETS_EL, Constants.WI_PREFIX_COLON + WIDGETS_EL, Constants.EMPTY_ATTRS);
+        Iterator widgetIt = widgets.iterator();
+        while (widgetIt.hasNext()) {
+            Widget widget = (Widget)widgetIt.next();
+            widget.generateSaxFragment(contentHandler, locale);
+        }
+        contentHandler.endElement(Constants.WI_NS, WIDGETS_EL, Constants.WI_PREFIX_COLON + WIDGETS_EL);
     }
 }
+

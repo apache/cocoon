@@ -21,6 +21,7 @@
   <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
   <sample name="Custom validation" href="customvalidationdemo">Shows custom validation and messages widget.</sample>
+  <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
  </group>
 
  <group name="Binding Samples">

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<xsp:page language="java"
+  xmlns:xsp="http://apache.org/xsp">
+
+  <!--
+    CVS $Id: form_model_gui_success.xsp,v 1.1 2003/12/29 06:14:50 tim Exp $
+    Author: Timothy Larson
+  -->
+
+  <xsp:structure>
+    <xsp:include>org.apache.cocoon.woody.formmodel.*</xsp:include>
+  </xsp:structure>
+
+  <page>
+    <title>Sample form result</title>
+    <content>
+      <xsp:logic>
+        // get reference to form and some of the widgets on it
+        Form form = (Form)request.getAttribute("form_model_gui");
+        Repeater repeater = (Repeater)form.getWidget("widgets");
+      </xsp:logic>
+
+      Repeater has <xsp:expr>repeater.getSize()</xsp:expr> row(s).
+    </content>
+  </page>
+</xsp:page>

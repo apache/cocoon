@@ -51,43 +51,60 @@
 package org.apache.cocoon.woody.binding;
 
 import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * ClassJXPathBinding provides an implementation of a {@link Binding} 
+ * that that allows the specification of a class of reusable bindings.
+ * <p>
+ * NOTES: <ol>
+ * <li>This Binding uses the provided widget-id as the name for the class.</li>
+ * </ol>
+ *
+ * CVS $Id: ClassJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class ClassJXPathBinding extends ComposedJXPathBindingBase {
+
+    private final String widgetId;
 
     /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
+     * Constructs ClassJXPathBinding
+     * @param commonAtts
+     * @param widgetId
+     * @param childBindings
      */
-    void setParent(Binding binding);
+    public ClassJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, JXPathBindingBase[] childBindings) {
+        super(commonAtts, childBindings);
+        this.widgetId = widgetId;
+    }
 
     /**
-     * Gets binding definition id.
+     * Returns binding definition id.
      */
-    String getId();
+    public String getId() {
+        return widgetId;
+    }
 
     /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
+     * Narrows the scope on the form-model to the member widget-field, and
+     * narrows the scope on the object-model to the member xpath-context 
+     * before continuing the binding over the child-bindings.
      */
-    Binding getClass(String id);
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+        // Do nothing
+    }
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
     /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
+     * Narrows the scope on the form-model to the member widget-field, and
+     * narrows the scope on the object-model to the member xpath-context 
+     * before continuing the binding over the child-bindings.
      */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
+        // Do nothing
+    }
+
+    public String toString() {
+        return "ClassJXPathBinding [widget=" + this.widgetId + "]";
+    }
 }

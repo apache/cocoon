@@ -59,27 +59,22 @@ import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 /**
  * The {@link WidgetDefinition} part of a Form widget, see {@link Form} for more information.
  */
-public class FormDefinition extends AbstractWidgetDefinition {
-    private List widgetDefinitions = new ArrayList();
-    private Map widgetDefinitionsById = new HashMap();
+public class FormDefinition extends AbstractContainerDefinition {
     private ProcessingPhaseListener listener;
 
-    public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {
-        if (widgetDefinitionsById.containsKey(widgetDefinition.getId()))
-            throw new DuplicateIdException("Duplicate widget id detected: form " + getId() + " already has a widget with id \"" + widgetDefinition.getId() + "\"");
-        widgetDefinitions.add(widgetDefinition);
-        widgetDefinitionsById.put(widgetDefinition.getId(), widgetDefinition);
+    public FormDefinition() {
+        super();
+    }
+
+    public void resolve() throws Exception {
+        List parents = new ArrayList();
+        parents.add(this);
+        resolve(parents, this);
     }
 
     public Widget createInstance() {
         Form form = new Form(this);
-
-        Iterator widgetDefinitionIt = widgetDefinitions.iterator();
-        while (widgetDefinitionIt.hasNext()) {
-            WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionIt.next();
-            form.addWidget(widgetDefinition.createInstance());
-        }
-
+        createWidgets(form);
         return form;
     }
     

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wd:form
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  <wd:widgets>
+
+    <wd:action id="samp-action"><wd:label>Sample Action</wd:label></wd:action>
+
+    <wd:aggregatefield id="samp-aggregatefield">
+      <wd:label>Sample AggregateField</wd:label>
+      <wd:widgets>
+        <wd:field id="samp-aggregate-field-1" required="true"><wd:label>Sample Aggregate Field 1</wd:label></wd:field>
+        <wd:field id="samp-aggregate-field-2" required="true"><wd:label>Sample Aggregate Field 2</wd:label></wd:field>
+      </wd:widgets>
+    </wd:aggregatefield>
+
+    <wd:booleanfield id="samp-booleanfield"><wd:label>Sample BooleanField</wd:label></wd:booleanfield>
+
+    <wd:class id="samp-class">
+      <wd:label>Sample Class</wd:label>
+      <wd:widgets>
+        <wd:booleanfield id="samp-class-booleanfield"><wd:label>Sample Class BooleanField</wd:label></wd:booleanfield>
+        <wd:field id="samp-class-field"><wd:label>Sample Class Field</wd:label></wd:field>
+      </wd:widgets>
+    </wd:class>
+
+    <wd:field id="samp-field" required="true"><wd:label>Sample Field</wd:label></wd:field>
+
+    <wd:new id="samp-class"/>
+
+    <wd:output id="samp-output"><wd:label>Sample Output</wd:label></wd:output>
+
+    <wd:repeater id="samp-repeater" initial-size="2">
+      <wd:label>Sample Repeater</wd:label>
+      <wd:widgets>
+        <wd:field id="samp-repeater-field"><wd:label>Sample Repeater Field</wd:label></wd:field>
+      </wd:widgets>
+    </wd:repeater>
+
+    <wd:row-action id="samp-row-action"><wd:label>Sample RowAction</wd:label></wd:row-action>
+
+    <wd:struct id="samp-struct">
+      <wd:label>Sample Struct</wd:label>
+      <wd:widgets>
+        <wd:booleanfield id="samp-struct-booleanfield"><wd:label>Sample Struct BooleanField</wd:label></wd:booleanfield>
+        <wd:field id="samp-struct-field" required="true"><wd:label>Sample Struct Field</wd:label></wd:field>
+      </wd:widgets>
+    </wd:struct>
+
+    <wd:submit id="samp-submit"><wd:label>Sample Submit</wd:label></wd:submit>
+
+    <wd:union id="samp-union">
+      <wd:label>Sample Union</wd:label>
+      <wd:widgets>
+        <wd:booleanfield id="samp-union-booleanfield"><wd:label>Sample Union BooleanField</wd:label></wd:booleanfield>
+        <wd:field id="samp-union-field"><wd:label>Sample Union Field</wd:label></wd:field>
+      </wd:widgets>
+    </wd:union>
+
+  </wd:widgets>
+</wd:form>

@@ -48,46 +48,27 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import java.util.Locale;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * A container {@link Widget} which can hold zero or more child widgets.
+ *
+ * CVS $Id: Struct.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class Struct extends AbstractContainerWidget {
+    private static final String ELEMENT = "struct";
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    public Struct(StructDefinition definition) {
+        super(definition);
+    }
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
-
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
-
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        generateSaxFragment(contentHandler, locale, ELEMENT);
+    }
 }

@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.20 2003/12/26 18:12:18 vgritsenko Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.21 2003/12/29 06:14:49 tim Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -126,7 +126,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
      */
     protected boolean repeaterWidget;
 
-    protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
+    protected WidgetReplacingPipe.InsertStylingContentHandler stylingHandler = new WidgetReplacingPipe.InsertStylingContentHandler();
     protected WoodyPipelineConfig pipeContext;
 
     /**

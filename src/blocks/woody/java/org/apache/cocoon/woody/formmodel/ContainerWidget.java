@@ -48,46 +48,39 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.SelectionList;
+import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.event.WidgetEvent;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
+import java.util.Locale;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * Interface to be implemented by Widgets which contain other widgets.
+ *
+ * CVS $Id: ContainerWidget.java,v 1.3 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
-
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
-
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
-
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
-
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
+public interface ContainerWidget extends Widget {
     
     /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
+     * Adds a child widget.
      */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public void addWidget(Widget widget);
+
+    /**
+     * Checks if there is a child widget with the given id.
+     */
+    public boolean hasWidget(String id);
+
+    /**
+     * Gets the child widget with the given id.
+     * Returns null if there is no child with the given id.
+     */
+    public Widget getWidget(String id);
 }

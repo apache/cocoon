@@ -118,8 +118,11 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.uniqueRowIdConvertor = convertor;
         this.uniqueRowIdConvertorLocale = convertorLocale;
         this.rowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings);
+        this.rowBinding.setParent(this);
         this.insertRowBinding = insertBinding;
+        this.insertRowBinding.setParent(this);
         this.deleteRowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, deleteBindings);
+        this.deleteRowBinding.setParent(this);
     }
 
 
