@@ -47,7 +47,7 @@ import org.apache.log.Priority;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.25 $ $Date: 2000-11-10 22:38:55 $
+ * @version CVS $Revision: 1.1.4.26 $ $Date: 2000-11-13 21:17:31 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -72,7 +72,7 @@ public class CocoonServlet extends HttpServlet {
     public void init(ServletConfig conf) throws ServletException {
 
         try {
-            log = LogKit.createLogger("cocoon", new URL("file:../logs/cocoon.log"), Priority.INFO);
+            log = LogKit.createLogger("cocoon", new URL("file:logs/cocoon.log"), Priority.INFO);
         } catch (MalformedURLException mue) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", mue);
         }
