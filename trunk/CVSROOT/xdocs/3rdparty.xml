@@ -94,18 +94,10 @@ System (CMS), based on Oracle CMS."</td>
     <td><link href="mailto:mochoa@ieee.org">Marcelo F. Ochoa</link></td>
    </tr>
    <tr>
-    <td><link href="http://perso.club-internet.fr/pedron/ejb/index.html">EJB Taglib</link></td>
-    <td>Logicsheet</td>
-    <td>An experimental logicsheet to faciliate the use of Enterprise Java Beans from an XSP page</td>
-    <td>?</td>
-    <td>Freeware</td>
-    <td><link href="mailto:pedron@club-internet.fr">Yvon Pedron</link></td>
-   </tr>
-   <tr>
-    <td><link href="http://kenny.socialchange.net.au/~jeff/ldaptaglib/">LDAP Taglib</link></td>
+    <td><link href="http://socialchange.net.au/~jeff/ldaptaglib/">LDAP Taglib</link></td>
     <td>Logicsheet</td>
     <td>Performs LDAP queries and serializes their results as XML. Alternative to Cocoon's LDAP Processor.</td>
-    <td>?</td>
+    <td>Obsolete - see Cocoon 2 alternatives</td>
     <td>Freeware</td>
     <td><link href="mailto:jeff@socialchange.net.au">Jeff Turner</link></td>
    </tr>
