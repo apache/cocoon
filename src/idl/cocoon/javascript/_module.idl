@@ -217,7 +217,7 @@
  * <p>
  *   An example of such an application is the user login and preferences
  *   sample I've just checked into the
- *   <a href="http://cvs.apache.org/viewcvs.cgi/xml-cocoon2/src/webapp/samples/flow/examples/prefs"
+ *   <a href="http://cvs.apache.org/viewcvs.cgi/cocoon-2.1/src/webapp/samples/flow/examples/prefs"
  *   >Cocoon CVS</a>
  * </p>
  *
