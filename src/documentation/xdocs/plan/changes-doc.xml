@@ -17,7 +17,7 @@
 <!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "changes-v10.dtd">
 <!--
   History of Cocoon Documentation changes
-  $Id: changes-doc.xml,v 1.8 2004/05/08 08:57:55 crossley Exp $
+  $Id: changes-doc.xml,v 1.9 2004/05/17 08:08:40 cziegeler Exp $
 -->
 <changes title="Documentation History of Changes">
   <devs>
@@ -34,8 +34,7 @@
       removed XMLForm and JXForms
     </action>
     <action dev="DS" type="add" due-to="Mohamed El-Refaey" due-to-email="m.refaey@imkenberg.de">
-      New How-To:
-      <link href="../howto/howto-i18n-xmlform.html">i18n within the XMLForm Framework</link>
+      New How-To: i18n within the XMLForm Framework
     </action>
     <action dev="DC" type="add" due-to="Geoff Howard" due-to-email="javageoff@yahoo.com">
       New tutorial:
@@ -85,8 +84,7 @@
       Provide a <link href="samples.html">refactoring guidelines</link> document.
     </action>
     <action dev="DC" type="add" due-to="Andrew Savory" due-to-email="andrew@luminas.co.uk">
-      Added overview documentation for
-      <link href="../userdocs/concepts/xmlform.html">XMLForm Handling</link>.
+      Added overview documentation for XMLForm Handling
     </action>
     <action dev="DS" type="add">
       New <link href="../snippet/index.html">Snippet</link> section added, along
