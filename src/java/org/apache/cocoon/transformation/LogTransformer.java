@@ -90,7 +90,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Id: LogTransformer.java,v 1.1 2003/03/09 00:09:39 pier Exp $
+ * @version CVS $Id: LogTransformer.java,v 1.2 2003/05/20 20:48:44 bruno Exp $
  *
  */
 public class LogTransformer
@@ -154,7 +154,7 @@ public class LogTransformer
      * Receive an object for locating the origin of SAX document events.
      */
     public void setDocumentLocator(Locator locator) {
-        this.log("setDocumentLocator","");
+        this.log("setDocumentLocator", locator != null ? "systemid="+locator.getSystemId()+",publicid="+locator.getPublicId() : "(locator is null)");
         if (super.contentHandler!=null) {
             super.contentHandler.setDocumentLocator(locator);
         }
