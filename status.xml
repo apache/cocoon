@@ -206,6 +206,10 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="VG" type="fix">
+     Cron block: JobScheduler's fireJob method now supports jobs calling Cocoon
+     pipelines.
+   </action>
+   <action dev="VG" type="fix">
      Allow recursive Flow invocations with processPipelineTo.
    </action>
    <action dev="SW" type="fix">
