@@ -108,4 +108,11 @@ public class MockContext implements Context {
     public InputStream getResourceAsStream(String path) {
         return null;
     }
+
+    public void reset() {
+        attributes.clear();
+        resources.clear();
+        mappings.clear();
+        initparameters.clear();
+    }
 }
