@@ -1890,7 +1890,7 @@ public class LDAPTransformer extends AbstractTransformer {
 
                                             /* confirm of success */
                                             transformer.start(attrID, attr);
-                                            transformer.data(new String("replaced"));
+                                            transformer.data("replaced");
                                             transformer.end(attrID);
                                         }
                                     }

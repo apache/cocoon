@@ -126,7 +126,7 @@ public class Tokenizer implements Enumeration {
       if (previous == -1 || (returnTokens && previous != current
         && delim.indexOf(str.charAt(previous)) >= 0)) {
 
-        result = new String();
+        result = "";
       }
       else if (returnTokens)
         result = str.substring(start, ++current);
