@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.1 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: Form.js,v 1.2 2004/03/13 03:24:44 joerg Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -176,7 +176,7 @@ Form.prototype.removeAttribute = function(name) {
     this.form.removeAttribute(name);
 }
 
-function forms() {
+function handleForm() {
     var form = new Form(cocoon.parameters["form-definition"]);
 
     var args = [form];
