@@ -71,7 +71,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
     /** The store janitor */
     private StoreJanitor storeJanitor;
     
-    /* (non-Javadoc)
+    /*
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
@@ -132,7 +132,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
     
     // ---------------------------------------------------- Store implementation
     
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#free()
      */
     public Object get(Object key) {
@@ -157,7 +157,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         return value;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#free()
      */
     public void store(Object key, Object value) throws IOException {
@@ -168,14 +168,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         this.cache.put(element);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
-        // FIXME - we have to implement this!
+        // FIXME: we have to implement this!
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#remove(java.lang.Object)
      */
     public void remove(Object key) {
@@ -185,7 +185,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         this.cache.remove((Serializable) key);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#clear()
      */
     public void clear() {
@@ -200,7 +200,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
      */
     public boolean containsKey(Object key) {
@@ -213,14 +213,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
         return Collections.enumeration(this.cache.getKeys());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.apache.excalibur.store.Store#size()
      */
     public int size() {
