@@ -84,7 +84,8 @@
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf"
             srcdir="${deprecated.conf}" 
-            includes="**/*.xconf"/>
+            includes="**/*.xconf"
+            addComments="true"/>
   </target>
 
   <target name="prepare-webapp-idldocs" depends="idldocs" unless="unless.exclude.webapp.idldocs">
@@ -166,7 +167,7 @@
        <include name="${customconf}/*.xmap" />
        <include name="${customconf}/*.xpipe" />
     </xpatch>
-    <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf" srcdir="">
+    <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf" srcdir="" addComments="true">
        <include name="${customconf}/*.xconf" />
     </xpatch>
     <xpatch file="${build.webapp}/WEB-INF/logkit.xconf" srcdir="">

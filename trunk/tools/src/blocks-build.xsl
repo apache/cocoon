@@ -77,7 +77,8 @@
 
       <target name="patch-conf" depends="init">
          <xpatch file="{string('${build.webapp}')}/sitemap.xmap"
-                 srcdir="{string('${blocks}')}">
+                 srcdir="{string('${blocks}')}"
+                 addcomments="true">
             <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
                <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
                <include name="{$block-name}/conf/**/*.xmap" unless="unless.exclude.block.{$block-name}"/>
