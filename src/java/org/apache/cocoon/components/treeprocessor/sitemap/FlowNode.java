@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
@@ -33,15 +35,16 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.4 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: FlowNode.java,v 1.5 2004/06/08 13:09:27 cziegeler Exp $
  */
 public class FlowNode extends AbstractProcessingNode
-        implements Composable, Contextualizable {
+        implements Composable, Contextualizable, Disposable {
 
     ComponentManager manager;
     String language;
     Context context;
     Interpreter interpreter;
+    ComponentSelector interpreterSelector;
 
     public FlowNode(String language) {
         this.language = language;
@@ -79,13 +82,31 @@ public class FlowNode extends AbstractProcessingNode
         this.manager = manager;
 
         try {
-            ComponentSelector selector = (ComponentSelector)manager.lookup(Interpreter.ROLE);
+            this.interpreterSelector = (ComponentSelector)manager.lookup(Interpreter.ROLE);
             // Obtain the Interpreter instance for this language
-            interpreter = (Interpreter)selector.select(language);
+            this.interpreter = (Interpreter)this.interpreterSelector.select(language);
+        } catch (ComponentException ce) {
+            throw ce;
         } catch (Exception ex) {
             throw new ComponentException(language,
                 "ScriptNode: Couldn't obtain a flow interpreter for " + language + ": " + ex);
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            if ( this.interpreterSelector != null ) {
+                this.interpreterSelector.release( (Component)this.interpreter );
+                this.interpreter = null;
+                this.manager.release( this.interpreterSelector );
+                this.interpreterSelector = null;
+            }
+            this.manager = null;
+        }
+
     }
 
     public Interpreter getInterpreter() {

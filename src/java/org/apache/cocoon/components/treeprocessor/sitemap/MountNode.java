@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -31,9 +32,10 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.13 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.14 2004/06/08 13:09:27 cziegeler Exp $
  */
-public class MountNode extends AbstractProcessingNode {
+public class MountNode extends AbstractProcessingNode 
+implements Disposable {
 
     /** The 'uri-prefix' attribute */
     private final VariableResolver prefix;
@@ -125,7 +127,10 @@ public class MountNode extends AbstractProcessingNode {
         return processor;
     }
 
-    public void dispose() {
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {       
         Iterator iter = this.processors.values().iterator();
         while(iter.hasNext()) {
             ((TreeProcessor)iter.next()).dispose();
