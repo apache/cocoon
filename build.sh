@@ -39,6 +39,7 @@ ANT_OPTS="-Xms32M -Xmx512M -Djava.endorsed.dirs=lib/endorsed"
 export ANT_HOME ANT_OPTS
 
 "$ANT_HOME/bin/ant" -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
+ERR=$?
 
 # ----- Restore ANT_HOME and ANT_OPTS
 ANT_HOME="$OLD_ANT_HOME"
@@ -51,3 +52,4 @@ unset OLD_ANT_OPTS
 CLASSPATH="$OLD_CLASSPATH"
 export CLASSPATH
 unset OLD_CLASSPATH
+exit $ERR
