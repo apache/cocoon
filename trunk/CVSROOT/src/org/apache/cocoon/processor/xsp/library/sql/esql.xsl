@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.72 2001-03-26 20:14:02 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.73 2001-03-26 20:26:10 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -257,9 +257,11 @@
             asciiStream.read(buffer);
             asciiStream.close();
         } catch (Exception e) {
-            // ignore exception
+            throw new RuntimeException("Error getting clob data: " + e.getMessage());
         } finally {
-            if (asciiStream != null) try {asciiStream.close();} catch (Exception ase) {/*ignore*/}
+            if (asciiStream != null) try {asciiStream.close();} catch (Exception ase) {
+                throw new RuntimeException("Error closing clob stream: " + e.getMessage());
+            }
         }
 
         if (buffer == null) return "";
