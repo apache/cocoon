@@ -51,6 +51,8 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 
@@ -60,7 +62,9 @@ import org.apache.excalibur.store.Store;
 
 import org.xml.sax.SAXException;
 
-/** The generation half of FragmentExtractor.
+/**
+ * The generation half of FragmentExtractor.
+ *
  * FragmentExtractor is a transformer-generator pair which is designed to allow
  * sitemap managers to extract certain nodes from a SAX stream and move them
  * into a separate pipeline. The main use for this is to extract inline SVG
@@ -69,13 +73,12 @@ import org.xml.sax.SAXException;
  *
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
- * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorGenerator.java,v 1.3 2003/09/04 09:38:35 cziegeler Exp $
+ * @version CVS $Id: FragmentExtractorGenerator.java,v 1.4 2004/01/22 00:02:34 vgritsenko Exp $
  */
 public class FragmentExtractorGenerator extends ServiceableGenerator
-        implements CacheableProcessingComponent {
+                                        implements CacheableProcessingComponent {
 
     /**
      * Generate the unique key.
@@ -97,9 +100,11 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
         return NOPValidity.SHARED_INSTANCE;
     }
 
-    public void generate() throws SAXException {
+    public void generate() throws SAXException, ProcessingException {
         // Obtain the fragmentID  (which is simply the filename portion of the source)
-        getLogger().debug("FragmentExtractorGenerator retrieving document " + source + ".");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Retrieving fragment " + source + ".");
+        }
 
         Store store = null;
         XMLDeserializer deserializer = null;
@@ -107,9 +112,9 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
         try {
             store = (Store) this.manager.lookup(Store.TRANSIENT_STORE);
             fragment = store.get(source);
-
-            if (fragment==null)
-              throw new SAXException("Could not find frament with id " + source + " in store");
+            if (fragment == null) {
+                throw new ResourceNotFoundException("Could not find fragment " + source + " in store");
+            }
 
             deserializer = (XMLDeserializer) this.manager.lookup(XMLDeserializer.ROLE);
             deserializer.setConsumer(this.xmlConsumer);
@@ -118,11 +123,9 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
         } catch (ServiceException ce) {
             getLogger().error("Could not lookup for component.", ce);
             throw new SAXException("Could not lookup for component.", ce);
-        } finally
-        {
+        } finally {
             this.manager.release(store);
             this.manager.release(deserializer);
         }
     }
 }
-
