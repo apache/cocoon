@@ -483,7 +483,7 @@
       searching of documents.
     </description>
     <used-by>Lucene block</used-by>
-    <lib>lucene/lib/lucene-1.4.1.jar</lib>
+    <lib>lucene/lib/lucene-1.4.3.jar</lib>
     <homepage>http://jakarta.apache.org/lucene/</homepage>
   </file>
 
