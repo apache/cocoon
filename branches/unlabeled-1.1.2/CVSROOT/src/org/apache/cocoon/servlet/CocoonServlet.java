@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 13:14:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-12 00:32:26 $
  * @since Cocoon 2.0
  */
 public class CocoonServlet extends HttpServlet {
@@ -120,7 +120,7 @@ public class CocoonServlet extends HttpServlet {
             out.flush();
         }
         os.flush();
-        os.close();
+        //os.close();
     }
 
     private Cocoon create() {
