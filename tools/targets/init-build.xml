@@ -162,6 +162,11 @@
     <taskdef name="xpatch" classname="XConfToolTask"
            classpath="${tools.tasks.dest}"/>
 
+    <!-- A task for sitemap components -->
+    <taskdef name="sitemap-components" 
+            classname="SitemapTask"
+            classpathref="tasks.classpath"/>
+
     <!-- Jing is used in various targets for XML validation with RELAX NG -->
     <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"
            classpathref="tasks.classpath"/>

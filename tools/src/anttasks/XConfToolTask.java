@@ -14,37 +14,27 @@
  * limitations under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.xml.transform.TransformerException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.xpath.XPathAPI;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Ant task to patch xmlfiles.
@@ -66,15 +56,12 @@ import java.util.Map;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.23 $ $Date: 2004/03/18 10:56:53 $
+ * @version CVS $Revision: 1.24 $ $Date: 2004/04/30 07:20:34 $
  */
 public final class XConfToolTask extends MatchingTask {
 
     private static final String NL=System.getProperty("line.separator");
     private static final String FSEP=System.getProperty("file.separator");
-    
-    /** Cache the read configuration files (Documents) */
-    private static Map fileCache = new HashMap();
     
     private File file;
     //private File directory;
@@ -82,8 +69,6 @@ public final class XConfToolTask extends MatchingTask {
     private boolean addComments;
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
-    private DocumentBuilder builder;
-    private Transformer transformer;
 
     /**
      * Set file, which should be patched.
@@ -125,22 +110,7 @@ public final class XConfToolTask extends MatchingTask {
      */
     public void init() throws BuildException {
         super.init();
-        try {
-            xmlCatalog.setProject(project);
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            builderFactory.setValidating(false);
-            builderFactory.setExpandEntityReferences(false);
-            builderFactory.setNamespaceAware(false);
-            builderFactory.setAttribute(
-               "http://apache.org/xml/features/nonvalidating/load-external-dtd",
-               Boolean.FALSE);
-            builder = builderFactory.newDocumentBuilder();
-            transformer = TransformerFactory.newInstance().newTransformer();
-        } catch (TransformerException e) {
-            throw new BuildException("TransformerException: "+e);
-        } catch (ParserConfigurationException e) {
-            throw new BuildException("ParserConfigurationException: "+e);
-        }  
+        xmlCatalog.setProject(this.getProject());
     }
 
     /**
@@ -148,23 +118,14 @@ public final class XConfToolTask extends MatchingTask {
      */
     public void execute() throws BuildException {
         if (this.file == null) {
-            throw new BuildException("file attribute is required", location);
+            throw new BuildException("file attribute is required", this.getLocation());
         }
         try {
             final String fileName = this.file.toURL().toExternalForm();
-            Document document = (Document)this.fileCache.get(fileName);
-            if ( document != null ) {
-                log("Using file from cache: " + this.file, Project.MSG_DEBUG);
-                this.fileCache.remove(fileName);
-            } else {
-
-                // load xml
-                log("Reading: " + this.file, Project.MSG_DEBUG);
-                document = builder.parse(fileName);
-            }
+            Document document = DocumentCache.getDocument(fileName, this);
             
             if (this.srcdir == null) {
-                this.srcdir = project.resolveFile(".");
+                this.srcdir = this.getProject().resolveFile(".");
             }
 
             DirectoryScanner scanner = getDirectoryScanner(this.srcdir);
@@ -221,24 +182,15 @@ public final class XConfToolTask extends MatchingTask {
             }
 
             if (modified) {
-                log("Writing: " + this.file);
-                // Set the DOCTYPE output option on the transformer 
-                // if we have any DOCTYPE declaration in the input xml document
-                final DocumentType doctype = document.getDoctype();
-                if (null != doctype && null != doctype.getPublicId()) {
-                    transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
-                    transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
-                }
-                transformer.transform(new DOMSource(document),
-                                      new StreamResult(this.file));
+                DocumentCache.writeDocument(this.file, document, this);
             } else {
                 log("No Changes: " + this.file, Project.MSG_DEBUG);
             }
-            this.fileCache.put(fileName, document);
+            DocumentCache.storeDocument(fileName, document, this);
         } catch (TransformerException e) {
             throw new BuildException("TransformerException: "+e);
         } catch (SAXException e) {
-            throw new BuildException("SAXException: "+e);
+            throw new BuildException("SAXException:" +e);           
         } catch (DOMException e) {
             throw new BuildException("DOMException:" +e);           
         } catch (UnknownHostException e) {
@@ -264,7 +216,7 @@ public final class XConfToolTask extends MatchingTask {
                           final File file)
                           throws TransformerException, IOException, DOMException, SAXException {
 
-        Document component = builder.parse(file.toURL().toExternalForm());
+        Document component = DocumentCache.getDocument(file.toURL().toExternalForm(), this);
         String filename = file.toString();
                             
         // Check to see if Document is an xconf-tool document
@@ -305,7 +257,7 @@ public final class XConfToolTask extends MatchingTask {
         String ifProp = getAttribute(elem, "if-prop", replaceProperties);
         boolean ifValue = false;
         if (ifProp != null && !ifProp.equals("")) {
-            ifValue = Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
+            ifValue = Boolean.valueOf(this.getProject().getProperty(ifProp)).booleanValue();
         }
 
         if (ifProp != null && ifProp.length() > 0 && !ifValue ) {
@@ -318,7 +270,6 @@ public final class XConfToolTask extends MatchingTask {
         } else {
             // Test if component wants us to remove a list of nodes first
             xpath = getAttribute(elem, "remove", replaceProperties);
-            Node remove = null;
 
             if (xpath != null && xpath.length() > 0) {
                 nodes = XPathAPI.selectNodeList(configuration, xpath);
