@@ -60,7 +60,7 @@ import java.io.IOException;
  * Wrapper for sitemap redirection
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapRedirector.java,v 1.2 2003/09/05 11:40:41 cziegeler Exp $
+ * @version CVS $Id: SitemapRedirector.java,v 1.3 2003/10/24 13:45:10 vgritsenko Exp $
  */
 public class SitemapRedirector implements Redirector {
     private boolean hasRedirected = false;
@@ -83,10 +83,9 @@ public class SitemapRedirector implements Redirector {
     
     public void globalRedirect(boolean sessionMode, String url) throws IOException {
         if (e instanceof EnvironmentWrapper) {
-          ((EnvironmentWrapper)e).globalRedirect(sessionMode,url);
-        }
-        else {
-          e.redirect(sessionMode, url);
+            ((EnvironmentWrapper)e).globalRedirect(sessionMode,url);
+        } else {
+            e.redirect(sessionMode, url);
         }
         this.hasRedirected = true;
     }
