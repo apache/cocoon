@@ -84,7 +84,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.1 2003/03/09 00:08:46 pier Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.2 2003/03/12 12:55:16 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -151,6 +151,7 @@ implements SourceResolver
 		stack.push(new Object[] {env, processor, manager});
         final EnvironmentDescription desc = (EnvironmentDescription)env.getObjectModel().get(PROCESS_KEY);
         desc.addSitemapConfiguration(processor.getComponentConfigurations());
+        env.setAttribute("CocoonComponentManager.processor", processor);
     }
 
     /**
@@ -223,6 +224,13 @@ implements SourceResolver
      */
     public static EnvironmentStack getCurrentEnvironmentStack() {
         return (EnvironmentStack)environmentStack.get();
+    }
+
+    /**
+     * Return the processor that is actually processing the request
+     */
+    public static Processor getLastProcessor(Environment env) {
+        return (Processor)env.getAttribute("CocoonComponentManager.processor");
     }
 
     /**
