@@ -57,8 +57,8 @@ import java.net.URLEncoder;
 import org.hsqldb.Trigger;
 
 /**
- * @version CVS $Id: HTTPTrigger.java,v 1.4 2003/11/07 14:25:07 vgritsenko Exp $
- * @author <a href="mailto:chaul@informatik.tu-darmstadt.de">chaul</a>
+ * @version CVS $Id: HTTPTrigger.java,v 1.5 2004/02/15 21:30:00 haul Exp $
+ * @author <a href="mailto:chaul@apache.org">chaul</a>
  */
 public class HTTPTrigger implements Trigger {
 

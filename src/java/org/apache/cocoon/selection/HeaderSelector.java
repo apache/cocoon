@@ -71,9 +71,9 @@ import java.util.Map;
  * match against</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: HeaderSelector.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: HeaderSelector.java,v 1.2 2004/02/15 21:29:59 haul Exp $
  */
 public class HeaderSelector extends AbstractLogEnabled
   implements Configurable, ThreadSafe, Selector {

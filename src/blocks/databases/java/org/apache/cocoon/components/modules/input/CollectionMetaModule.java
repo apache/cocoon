@@ -79,8 +79,8 @@ import java.util.TreeSet;
  *                                           </table>                       </td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: CollectionMetaModule.java,v 1.1 2003/03/09 00:03:10 pier Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: CollectionMetaModule.java,v 1.2 2004/02/15 21:30:00 haul Exp $
  */
 public class CollectionMetaModule extends AbstractMetaModule implements ThreadSafe {
 

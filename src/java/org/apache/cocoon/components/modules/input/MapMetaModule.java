@@ -66,8 +66,8 @@ import java.util.Map;
  *
  * <p>Configuration: "input-module", "object", "parameter"</p>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: MapMetaModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: MapMetaModule.java,v 1.2 2004/02/15 21:30:00 haul Exp $
  */
 public class MapMetaModule extends AbstractMetaModule implements ThreadSafe {
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><!-- -*- xsl -*- -->
 
-<!-- $Id: form-validator.xsl,v 1.1 2003/03/09 00:08:56 pier Exp $ -->
+<!-- $Id: form-validator.xsl,v 1.2 2004/02/15 21:30:00 haul Exp $ -->
 <!--
 
  ============================================================================
@@ -55,8 +55,8 @@
 <!--
  * XSP Form-Validator logicsheet for the Java language
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de>Christian Haul</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:56 $
+ * @author <a href="mailto:haul@apache.org>Christian Haul</a>
+ * @version CVS $Revision: 1.2 $ $Date: 2004/02/15 21:30:00 $
 -->
 
 <xsl:stylesheet

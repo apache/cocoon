@@ -74,8 +74,8 @@ import java.util.TreeSet;
  *  ...
  * &lt;/values&gt;
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: DefaultsModule.java,v 1.2 2003/03/20 07:31:51 jefft Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: DefaultsModule.java,v 1.3 2004/02/15 21:30:00 haul Exp $
  */
 public class DefaultsModule extends AbstractLogEnabled
     implements InputModule, Configurable, ThreadSafe {

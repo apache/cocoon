@@ -68,8 +68,8 @@ import java.util.Map;
  * @see org.apache.cocoon.acting.AbstractValidatorAction
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: FormValidatorAction.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: FormValidatorAction.java,v 1.4 2004/02/15 21:30:00 haul Exp $
  */
 public class FormValidatorAction extends AbstractValidatorAction implements ThreadSafe {
 

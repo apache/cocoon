@@ -69,9 +69,9 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the session attribute.</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionAttributeSelector.java,v 1.1 2003/03/09 00:09:36 pier Exp $
+ * @version CVS $Id: SessionAttributeSelector.java,v 1.2 2004/02/15 21:29:59 haul Exp $
  */
 public class SessionAttributeSelector extends AbstractLogEnabled
   implements Configurable, ThreadSafe, Selector {

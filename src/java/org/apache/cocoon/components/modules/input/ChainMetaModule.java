@@ -94,8 +94,8 @@ import java.util.Iterator;
  * be treated the same as null values
  * (<code>&lt;empty-as-null/&gt;</code>).</p>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: ChainMetaModule.java,v 1.2 2004/02/15 19:08:53 haul Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: ChainMetaModule.java,v 1.3 2004/02/15 21:30:00 haul Exp $
  */
 public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
 

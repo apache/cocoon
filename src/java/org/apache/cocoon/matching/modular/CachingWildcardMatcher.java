@@ -78,10 +78,10 @@ import java.util.Map;
  * <tr><td><code>parameter-name</code></td><td>Name of the parameter to match * against</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CachingWildcardMatcher.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: CachingWildcardMatcher.java,v 1.2 2004/02/15 21:30:00 haul Exp $
  */
 public class CachingWildcardMatcher extends AbstractWildcardMatcher
     implements Configurable,  Initializable, Composable, Disposable

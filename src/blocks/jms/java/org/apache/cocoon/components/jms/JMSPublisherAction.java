@@ -93,8 +93,8 @@ import org.apache.cocoon.environment.SourceResolver;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSPublisherAction.java,v 1.3 2003/10/20 07:19:33 cziegeler Exp $
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
+ * @version CVS $Id: JMSPublisherAction.java,v 1.4 2004/02/15 21:30:00 haul Exp $
+ * @author <a href="mailto:haul@apache.org">haul</a>
  */
 public class JMSPublisherAction
     extends AbstractLogEnabled

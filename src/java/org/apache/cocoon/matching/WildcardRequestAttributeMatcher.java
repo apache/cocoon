@@ -67,10 +67,10 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the request attribute</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardRequestAttributeMatcher.java,v 1.1 2003/03/09 00:09:34 pier Exp $
+ * @version CVS $Id: WildcardRequestAttributeMatcher.java,v 1.2 2004/02/15 21:30:00 haul Exp $
  */
 public class WildcardRequestAttributeMatcher extends AbstractWildcardMatcher
     implements Configurable

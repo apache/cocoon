@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2004 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -80,12 +80,24 @@ import java.net.UnknownHostException;
 /**
  * Ant task to patch xmlfiles.
  *
+ * 
+ * replace-properties no|false,anything else
+ * xpath: xpath expression for context node
+ * unless-path: xpath expression that must return empty node set
+ * unless: (deprecated) xpath expression that must return empty node set
+ * if-prop: use path file only when project property is set
+ * remove: xpath expression to remove before adding nodes
+ * add-attribute: name of attribute to add to context node (requires value)
+ * value: value of attribute to add to context node (requires add-attribute)
+ * insert-before: xpath expression, add new nodes before
+ * insert-after: xpath expression, add new nodes after
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.12 $ $Date: 2004/01/31 15:55:06 $
+ * @version CVS $Revision: 1.13 $ $Date: 2004/02/15 21:28:51 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -224,7 +236,7 @@ public final class XConfToolTask extends MatchingTask {
 
     /**
      * Patch XML document with a given patch file.
-     *
+     * 
      * @param configuration Orginal document
      * @param component Patch document
      * @param file Patch file
