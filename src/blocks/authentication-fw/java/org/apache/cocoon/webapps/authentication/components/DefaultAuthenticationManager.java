@@ -92,7 +92,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.12 2003/05/27 12:19:30 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.13 2003/06/16 16:04:06 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -448,6 +448,8 @@ implements AuthenticationManager,
             } finally {
                 manager.release( (Component)contextManager);
             }
+        } else {
+            throw new ProcessingException("No handler defined. Unable to create application context.");
         }
 
         return context;
