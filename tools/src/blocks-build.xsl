@@ -241,16 +241,14 @@
         <xsl:for-each select="$cocoon-blocks">
           <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
           <include name="{$block-name}/conf/*.xmap" unless="unless.exclude.block.{$block-name}"/>
-          <include name="{$block-name}/conf/*.xpipe" unless="unless.exclude.block.{$block-name}"/>
         </xsl:for-each>
       </xpatch>
-         <!-- This is much slower, but preserves the dependencies -->
-      <xsl:for-each select="$cocoon-blocks">
-        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-        <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
+      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
+        <xsl:for-each select="$cocoon-blocks">
+          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
           <include name="{$block-name}/conf/*.xconf" unless="unless.exclude.block.{$block-name}"/>
-        </xpatch>
-      </xsl:for-each>
+        </xsl:for-each>
+      </xpatch>
       <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
         <xsl:for-each select="$cocoon-blocks">
           <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
