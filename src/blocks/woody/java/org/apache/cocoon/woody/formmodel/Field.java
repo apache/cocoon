@@ -53,9 +53,9 @@ package org.apache.cocoon.woody.formmodel;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.Locale;
 
@@ -141,8 +141,8 @@ public class Field extends AbstractWidget {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
-        fieldAttrs.addAttribute("", "id", "id", "CDATA", getFullyQualifiedId());
-        fieldAttrs.addAttribute("", "required", "required", "CDATA", String.valueOf(definition.isRequired()));
+        fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
+        fieldAttrs.addCDATAAttribute("required", String.valueOf(definition.isRequired()));
         contentHandler.startElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL, fieldAttrs);
 
         if (enteredValue != null || value != null) {

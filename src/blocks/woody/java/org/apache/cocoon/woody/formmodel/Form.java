@@ -52,9 +52,9 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.*;
 
@@ -134,7 +134,7 @@ public class Form extends AbstractWidget implements ContainerWidget {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl formAttrs = new AttributesImpl();
-        formAttrs.addAttribute("", "id", "id", "CDATA", definition.getId());
+        formAttrs.addCDATAAttribute("id", definition.getId());
 
         contentHandler.startElement(Constants.WI_NS, FORM_EL, Constants.WI_PREFIX_COLON + FORM_EL, Constants.EMPTY_ATTRS);
         definition.generateLabel(contentHandler);
