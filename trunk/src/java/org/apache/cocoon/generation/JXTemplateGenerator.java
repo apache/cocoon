@@ -103,7 +103,7 @@ import org.xml.sax.helpers.LocatorImpl;
 /**
  * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> 
  * and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>).</p>
- * <p>Uses the namespace <code>http://cocoon.apache.org/templates/jx/1.0</code></p>
+ * <p>Uses the namespace <code>http://apache.org/cocoon/templates/jx/1.0</code></p>
  * <p>Provides a generic page template with embedded JSTL and XPath 
  * expression substitution to access data sent by Cocoon Flowscripts.</p>
  * The embedded expression language allows a page author to access an 
