@@ -70,12 +70,14 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContextProvider;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.authentication.user.UserState;
-import org.apache.cocoon.webapps.session.components.SessionManager;
+import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.SessionManager;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
@@ -84,11 +86,11 @@ import org.apache.excalibur.source.SourceUtil;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.7 2003/05/01 09:49:14 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.8 2003/05/04 20:19:40 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractLogEnabled
-implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Component {
+implements AuthenticationManager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Component {
 
     /** The name of the session attribute storing the user status */
     public final static String SESSION_ATTRIBUTE_USER_STATUS = DefaultAuthenticationManager.class.getName() + "/UserStatus";
@@ -105,21 +107,6 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
     /** The Source Resolver */
     private SourceResolver resolver;
     
-    /** Init the class,
-     *  add the provider for the authentication context
-     */
-    static {
-        // add the provider for the authentication context
-        AuthenticationContextProvider contextProvider = new AuthenticationContextProvider();
-        // FIXME - TODO
-   /*     try {
-            // FIXME - this is static!!!
-            SessionManager.addSessionContextProvider(contextProvider, AuthenticationConstants.SESSION_CONTEXT_NAME);
-        } catch (ProcessingException local) {
-            throw new CascadingRuntimeException("Unable to register provider for authentication context.", local);
-        }*/
-    }
-
     /**
      * Set the sitemap configuration containing the handlers
      */
@@ -241,7 +228,6 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
             RequestState state = new RequestState( handler, applicationName, this.resolver );
             RequestState.setState( state );
             
-            handler.getContext().setApplicationName( applicationName );
         }
         
  		return handler;
@@ -304,6 +290,7 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
         UserHandler handler = this.getUserHandler( handlerName );
         // we don't throw an exception if we are already logged out!
         if ( handler != null ) {
+            handler.terminate();
             UserState status = this.getUserState();
             status.removeHandler( handlerName );
             this.updateUserState();
@@ -347,6 +334,17 @@ implements Manager, SitemapConfigurable, Serviceable, Disposable, ThreadSafe, Co
         this.authenticator.enableLogging( this.getLogger() );
         this.authenticator.service( this.manager );
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        
+        ContextManager contextManager;
+        
+        contextManager = (ContextManager) this.manager.lookup(ContextManager.ROLE);
+        // add the provider for the authentication context
+        try {
+            AuthenticationContextProvider contextProvider = new AuthenticationContextProvider();
+            contextManager.addSessionContextProvider(contextProvider, AuthenticationConstants.SESSION_CONTEXT_NAME);
+        } catch (ProcessingException local) {
+            throw new ServiceException("Unable to register provider for authentication context.", local);
+        }
 	}
 
 	/* (non-Javadoc)

@@ -48,90 +48,53 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.acting;
+package org.apache.cocoon.webapps.session.selection;
 
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.components.Manager;
-import org.apache.cocoon.webapps.authentication.user.UserHandler;
-import org.apache.excalibur.source.SourceParameters;
+import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.webapps.session.MediaManager;
 
 /**
- *  This action logs the current user into a given handler. If the
- *  authentication is successful, a map is returned with the authentication
- *  information and a session is created (if it not already exists).
- *  If the authentication is not successful, the error information is stored
- *  into the temporary context.
+ *  This selector uses the media management.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NewLoginAction.java,v 1.2 2003/05/01 09:49:14 cziegeler Exp $
+ * @version CVS $Id: MediaSelector.java,v 1.1 2003/05/04 20:19:42 cziegeler Exp $
 */
-public final class NewLoginAction
-extends ComposerAction
-implements ThreadSafe {
+public final class MediaSelector
+implements Composable, Selector, ThreadSafe {
 
-    public Map act(Redirector redirector,
-                   SourceResolver resolver,
-                   Map objectModel,
-                   String source,
-                   Parameters par)
-    throws Exception {
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN act resolver="+resolver+
-                                   ", objectModel="+objectModel+
-                                   ", source="+source+
-                                   ", par="+par);
-        }
+    private ComponentManager manager;
 
-        final String handlerName = par.getParameter("handler", null);
-        if ( handlerName == null ) {
-            throw new ProcessingException("LoginAction requires at least the handler parameter.");
-        }
-
-        // build authentication parameters
-        SourceParameters authenticationParameters = new SourceParameters();
-        String[] enum = par.getNames();
-        if (enum != null) {
-            for(int i = 0; i < enum.length; i++) {
-                final String key = enum[i];
-                if ( key.startsWith("parameter_") ) {
-                    authenticationParameters.setParameter( key.substring("parameter_".length()),
-                                                           par.getParameter(key));
-                }
-            }
-
-        }
-
-        Map map = null;
-
-        // authenticate
-        Manager authManager = null;
-        try {
-            authManager = (Manager) this.manager.lookup(Manager.ROLE);
-            UserHandler handler = authManager.login( handlerName, 
-                                       par.getParameter("application", null),
-                                       authenticationParameters);
-            if ( handler != null) {
-                // success
-                map = handler.getContext().getContextInfo();
-
-            }
-        } finally {
-            this.manager.release( (Component)authManager);
-        }
-
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END act map="+map);
-        }
-
-        return map;
+    /**
+     * Composable
+     */
+    public void compose(ComponentManager manager) {
+        this.manager = manager;
     }
 
+    /**
+     * Selector
+     */
+    public boolean select (String expression, Map objectModel, Parameters parameters) {
+        MediaManager mediaManager = null;
+        boolean result;
+        try {
+            mediaManager = (MediaManager) this.manager.lookup( MediaManager.ROLE );
+            result = mediaManager.testMedia(expression);
+        } catch (Exception local) {
+            // ignore me
+            result = false;
+        } finally {
+            this.manager.release( (Component)mediaManager );
+        }
+        return result;
+    }
 }
+
+

@@ -52,19 +52,21 @@ package org.apache.cocoon.webapps.portal.generation;
 
 import java.io.IOException;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ComposerGenerator;
 import org.apache.cocoon.webapps.portal.components.PortalManager;
+import org.apache.cocoon.webapps.session.FormManager;
 import org.xml.sax.SAXException;
 
 /**
  * This generator generates the portal for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalGenerator.java,v 1.1 2003/03/09 00:05:19 pier Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.2 2003/05/04 20:19:42 cziegeler Exp $
 */
 public final class PortalGenerator
 extends ComposerGenerator {
@@ -77,8 +79,16 @@ extends ComposerGenerator {
             portal = (PortalManager) this.manager.lookup(PortalManager.ROLE);
             this.xmlConsumer.startDocument();
 
-            Request request = ObjectModelHelper.getRequest(this.objectModel);
+            final Request request = ObjectModelHelper.getRequest(this.objectModel);
             if (request.getSession(false) != null) {
+                // FIXME - workaround for form handling
+                FormManager formManager = null;
+                try {
+                    formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
+                    // no need do to anything here :)
+                } finally {
+                    this.manager.release( (Component)formManager);
+                }
                 portal.showPortal(this.xmlConsumer, false, false);
             }
             this.xmlConsumer.endDocument();

@@ -50,23 +50,28 @@
 */
 package org.apache.cocoon.webapps.session.transformation;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
-import org.apache.cocoon.webapps.session.components.SessionManager;
+import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.FormManager;
+import org.apache.cocoon.webapps.session.SessionManager;
 
 /**
  *  This class is the basis for all session transformers.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSessionTransformer.java,v 1.1 2003/03/09 00:06:11 pier Exp $
+ * @version CVS $Id: AbstractSessionTransformer.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
 */
 public abstract class AbstractSessionTransformer
 extends AbstractSAXTransformer {
 
     private SessionManager     sessionManager;
-
+    private FormManager        formManager;
+    private ContextManager     contextManager;
+    
     /**
      * Get the SessionManager component
      */
@@ -83,12 +88,46 @@ extends AbstractSAXTransformer {
     }
 
     /**
+     * Get the ContextManager component
+     */
+    protected ContextManager getContextManager()
+    throws ProcessingException {
+        if (this.contextManager == null) {
+            try {
+                this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Error during lookup of ContextManager component.", ce);
+            }
+        }
+        return this.contextManager;
+    }
+
+    /**
+     * Get the FormManager component
+     */
+    protected FormManager getFormManager()
+    throws ProcessingException {
+        if (this.formManager == null) {
+            try {
+                this.formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Error during lookup of FormManager component.", ce);
+            }
+        }
+        return this.formManager;
+    }
+
+    /**
      *  Recycle this component.
      */
     public void recycle() {
         super.recycle();
-        this.manager.release(this.sessionManager);
+        this.manager.release( (Component)this.sessionManager);
+        this.manager.release( (Component)this.formManager);
+        this.manager.release( (Component)this.contextManager);
         this.sessionManager = null;
+        this.formManager = null;
+        this.contextManager = null;
     }
 
     /**

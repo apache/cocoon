@@ -48,52 +48,30 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.selection;
+package org.apache.cocoon.webapps.session;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.selection.Selector;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
+import org.apache.cocoon.ProcessingException;
+import org.w3c.dom.DocumentFragment;
 
 /**
- *  This selector uses the authentication media management.
+ * Form manager
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: MediaSelector.java,v 1.1 2003/03/09 00:02:21 pier Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: FormManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
 */
-public final class MediaSelector
-implements Composable, Selector, ThreadSafe {
+public interface FormManager {
 
-    private ComponentManager manager;
-
-    /**
-     * Composable
-     */
-    public void compose(ComponentManager manager) {
-        this.manager = manager;
-    }
+    /** Avalon role */
+    String ROLE = FormManager.class.getName();;
 
     /**
-     * Selector
+     * Register input field and return the current value of the field.
+     * This is a private method and should not be invoked directly.
      */
-    public boolean select (String expression, Map objectModel, Parameters parameters) {
-        AuthenticationManager authManager = null;
-        boolean result;
-        try {
-            authManager = (AuthenticationManager) this.manager.lookup( AuthenticationManager.ROLE );
-            result = authManager.testMedia(objectModel, expression);
-        } catch (Exception local) {
-            // ignore me
-            result = false;
-        } finally {
-            this.manager.release( authManager );
-        }
-        return result;
-    }
+    DocumentFragment registerInputField(String contextName,
+                                        String path,
+                                        String name,
+                                        String formName)
+    throws ProcessingException;
+
 }
-
-

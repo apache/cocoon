@@ -48,76 +48,75 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.acting;
+package org.apache.cocoon.webapps.session;
 
-import java.util.Map;
+import java.io.IOException;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
-import org.apache.cocoon.webapps.authentication.components.Manager;
-import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.session.context.SessionContext;
+import org.apache.cocoon.webapps.session.context.SessionContextProvider;
+import org.xml.sax.SAXException;
 
 /**
- *  This action logs the current user out of a given handler
+ *  This is the context manager.
+ *
+ *  The main purpose of this component is maintaining contexts. Each
+ *  application can have one or more session contexts.
+ *  A context is a data container that can hold arbitrary information.
+ *  The contained information can either be an XML tree or custom
+ *  objects.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NewLogoutAction.java,v 1.1 2003/04/27 14:45:03 cziegeler Exp $
+ * @version CVS $Id: ContextManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
 */
-public final class NewLogoutAction
-extends ComposerAction
-implements ThreadSafe {
+public interface ContextManager {
 
-    public Map act(Redirector redirector,
-                   SourceResolver resolver,
-                   Map objectModel,
-                   String source,
-                   Parameters par)
-    throws Exception {
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN act resolver="+resolver+
-                                   ", objectModel="+objectModel+
-                                   ", source="+source+
-                                   ", par="+par);
-        }
+    /** Avalon role */
+    String ROLE = ContextManager.class.getName();;
 
-        int mode;
-        final String modeString = par.getParameter("mode", "if-not-authenticated");
-        if ( modeString.equals("if-not-authenticated") ) {
-            mode = AuthenticationConstants.LOGOUT_MODE_IF_NOT_AUTHENTICATED;
-        } else if ( modeString.equalsIgnoreCase("if-unused") ) {
-            mode = AuthenticationConstants.LOGOUT_MODE_IF_UNUSED;
-        } else if ( modeString.equalsIgnoreCase("immediately") ) {
-            mode = AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY;
-        } else {
-           throw new ProcessingException("Unknown mode " + modeString);
-        }
+    /**
+     * Add a context provider.
+     */
+    void addSessionContextProvider(SessionContextProvider provider,
+                                  String                 contextName)
+    throws ProcessingException;
 
-        // logout
-        Manager authManager = null;
-        try {
-            RequestState state = RequestState.getState();
-            
-            authManager = (Manager) this.manager.lookup(Manager.ROLE);
-            final String handlerName = par.getParameter("handler",
-                                                         (state == null ? null : state.getHandlerName()));
-            if ( null == handlerName )
-                throw new ProcessingException("LogoutAction requires at least the handler parameter.");
-            authManager.logout( handlerName , mode );
-        } finally {
-            this.manager.release( (Component)authManager );
-        }
+    /**
+     *  Create a new public context in the session.
+     *  Create a new public session context for this user. If this context
+     *  already exists no new context is created and the old one will be used
+     *  instead.
+     */
+    SessionContext createContext(String name, String loadURI, String saveURI)
+    throws IOException, SAXException, ProcessingException;
 
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END act map={}");
-        }
+    /**
+     *  Delete a public context in the session.
+     *  If the context exists for this user, it and all of its information
+     *  is deleted.
+     */
+    void deleteContext(String name)
+    throws ProcessingException;
 
-        return EMPTY_MAP;
-    }
+    /**
+     *  Get a public context.
+     *  The session context with the given name is returned. If the context does
+     *  not exist <CODE>null</CODE> is returned.
+     */
+    SessionContext getContext(String name)
+    throws ProcessingException;
 
+    /**
+     * Check if a context exists
+     */
+    boolean hasSessionContext() 
+    throws ProcessingException;
+
+    /**
+     *  Check if a public context exists.
+     *  If the session context with the given name exists, <CODE>true</CODE> is
+     *  returned.
+     */
+    boolean existsContext(String name) 
+    throws ProcessingException;
 }

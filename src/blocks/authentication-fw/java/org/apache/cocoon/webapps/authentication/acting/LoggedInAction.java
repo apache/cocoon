@@ -52,18 +52,20 @@ package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 
 /**
  *  This action tests if the user is logged in for a given handler.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: LoggedInAction.java,v 1.1 2003/03/09 00:02:17 pier Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: LoggedInAction.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
 */
 public final class LoggedInAction
 extends ComposerAction
@@ -75,7 +77,7 @@ implements ThreadSafe {
                    String source,
                    Parameters par)
     throws Exception {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN act resolver="+resolver+
                                    ", objectModel="+objectModel+
                                    ", source="+source+
@@ -88,14 +90,15 @@ implements ThreadSafe {
 
         try {
             authManager = (AuthenticationManager) this.manager.lookup(AuthenticationManager.ROLE);
-            if (authManager.isAuthenticated(handlerName) == true) {
-                map = authManager.createMap();
+            UserHandler handler = authManager.isAuthenticated(handlerName);
+            if ( handler != null ) {
+                map = handler.getContext().getContextInfo();
             }
         } finally {
-            this.manager.release(authManager);
+            this.manager.release( (Component)authManager);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END act map="+map);
         }
 

@@ -52,6 +52,8 @@ package org.apache.cocoon.webapps.portal.context;
 
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.webapps.portal.PortalConstants;
 import org.apache.cocoon.webapps.portal.components.PortalManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
@@ -93,7 +95,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.1 2003/03/09 00:05:19 pier Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.2 2003/05/04 20:19:41 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -138,6 +140,9 @@ implements SessionContext {
     /** The media type */
     private String mediaType;
 
+    /** The current request */
+    private Request request;
+    
     public SessionContextImpl(String  name,
                               Map     objectModel,
                               PortalManager portal)
@@ -174,6 +179,7 @@ implements SessionContext {
             }
         }
         this.getConfigurationDOM(portal);
+        this.request = ObjectModelHelper.getRequest( objectModel );
     }
 
     /**
@@ -183,6 +189,10 @@ implements SessionContext {
         return this.name;
     }
 
+    public Request getRequest() {
+        return this.request;
+    }
+    
     /**
      * Get the layout DOM
      */

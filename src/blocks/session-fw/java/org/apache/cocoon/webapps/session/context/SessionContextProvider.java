@@ -50,36 +50,33 @@
 */
 package org.apache.cocoon.webapps.session.context;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.excalibur.source.SourceResolver;
 
 /**
- *  Interface for a context provider.
- *  Objects of this class provide special context, e.g. authentication or portal.
- *  The context is (if used) got once by the <code>SessionManager</code> component
- *  for each request.
+ * Interface for a context provider.
+ * Objects of this class provide special context, e.g. authentication or portal.
+ * The provider has to take care that the context is instantiated and managed
+ * correctly: for example a request context object should only created once
+ * per request, an authentication context once per session etc.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProvider.java,v 1.1 2003/03/09 00:06:10 pier Exp $
+ * @version CVS $Id: SessionContextProvider.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
 */
 public interface SessionContextProvider {
 
     /**
      * Get the context
      * @param name The name of the context
-     * @param objectModel The objectModel of the current request.
-     * @param resolver    The source resolver
-     * @param componentManager manager
      * @return The context
      * @throws ProcessingException If the context is not available.
      */
-    SessionContext getSessionContext(String           name,
-                                     Map              objectModel,
-                                     SourceResolver   resolver,
-                                     ComponentManager manager)
+    SessionContext getSessionContext(String name)
+    throws ProcessingException;
+    
+    /**
+     * Does the context exist?
+     */
+    boolean existsSessionContext(String name)
     throws ProcessingException;
 
 }

@@ -52,6 +52,7 @@ package org.apache.cocoon.webapps.authentication.user;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
@@ -64,7 +65,7 @@ import org.apache.excalibur.source.SourceResolver;
  * is currently used for this request.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestState.java,v 1.2 2003/04/27 14:45:03 cziegeler Exp $
+ * @version CVS $Id: RequestState.java,v 1.3 2003/05/04 20:19:39 cziegeler Exp $
 */
 public final class RequestState
 implements java.io.Serializable {
@@ -101,7 +102,7 @@ implements java.io.Serializable {
         if ( this.application != null && !this.handler.getApplicationsLoaded()) {
             ApplicationConfiguration conf = (ApplicationConfiguration) this.handler.getHandlerConfiguration().getApplications().get(this.application);
             if ( !this.handler.isApplicationLoaded( conf ) ) {
-                this.handler.createContext().loadApplicationXML( conf, resolver );
+                this.handler.getContext().loadApplicationXML( conf, resolver );
             }
         }
     }
@@ -124,4 +125,21 @@ implements java.io.Serializable {
         }
         return null;
     }
+    
+    /**
+     * Get the configuration if available
+     */
+    public Configuration getModuleConfiguration(String name)
+    throws ProcessingException  {
+        Configuration conf = null;
+
+        if (this.handler != null && this.application != null) {
+            conf = this.getApplicationConfiguration().getConfiguration(name);
+        }
+        if (this.handler != null && conf == null) {
+            conf = this.handler.getHandlerConfiguration().getConfiguration(name);
+        }
+
+        return conf;
+    }    
 }

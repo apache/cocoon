@@ -2,12 +2,10 @@
 
 <xconf xpath="/cocoon" unless="authentication-manager">
 
-    <authentication-manager logger="core.authentication-manager"
-                            pool-max="32" pool-min="8" pool-grow="4">
-      <mediatypes default="html">
-        <media name="wap" useragent="Nokia"/>
-        <media name="wap" useragent="UP"/>
-        <media name="wap" useragent="Wapalizer"/>
-      </mediatypes>
+    <!--+
+        + The authentication manager
+        +-->
+    <authentication-manager logger="core.authentication-manager">
     </authentication-manager>
+    
 </xconf>

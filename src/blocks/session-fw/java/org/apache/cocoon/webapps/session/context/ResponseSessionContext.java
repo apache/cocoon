@@ -91,7 +91,7 @@ import org.xml.sax.ext.LexicalHandler;
  * both have the same effect.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ResponseSessionContext.java,v 1.1 2003/03/09 00:06:10 pier Exp $
+ * @version CVS $Id: ResponseSessionContext.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
 */
 public final class ResponseSessionContext
 implements SessionContext {
@@ -112,6 +112,12 @@ implements SessionContext {
      */
     public String getName() {
         return this.name;
+    }
+    /**
+     * Get the request object
+     */
+    public Response getResponse() {
+        return this.response;
     }
 
     /**

@@ -54,19 +54,20 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.webapps.authentication.MediaManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.MediaManager;
 import org.apache.cocoon.webapps.session.SessionConstants;
-import org.apache.cocoon.webapps.session.components.SessionManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
@@ -87,7 +88,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.4 2003/05/01 09:49:14 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.5 2003/05/04 20:19:40 cziegeler Exp $
 */
 public final class Authenticator 
     extends AbstractLogEnabled
@@ -304,15 +305,15 @@ public final class Authenticator
             }
             
             // now set this information in the temporary context
-            SessionManager sessionManager = null;
+            ContextManager sessionManager = null;
             try {
-                sessionManager = (SessionManager) this.manager.lookup( SessionManager.ROLE );
+                sessionManager = (ContextManager) this.manager.lookup( ContextManager.ROLE );
                 SessionContext temp = sessionManager.getContext( SessionConstants.TEMPORARY_CONTEXT );
                 temp.appendXML("/", authenticationFragment);
             } catch ( ServiceException se ) {
                 throw new ProcessingException("Unable to lookup session manager.", se);
             } finally {
-                this.manager.release( sessionManager );
+                this.manager.release( (Component)sessionManager );
             }
         }
             

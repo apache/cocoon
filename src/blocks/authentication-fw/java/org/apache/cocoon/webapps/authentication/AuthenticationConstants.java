@@ -55,13 +55,9 @@ package org.apache.cocoon.webapps.authentication;
  * framework.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationConstants.java,v 1.3 2003/04/27 14:45:04 cziegeler Exp $
+ * @version CVS $Id: AuthenticationConstants.java,v 1.4 2003/05/04 20:19:42 cziegeler Exp $
 */
 public interface AuthenticationConstants {
-
-    /** The name of the session attribute storing the context 
-     * FIXME - Remove me*/
-    String SESSION_ATTRIBUTE_CONTEXT_NAME = "org.apache.cocoon.webapps.authentication.SessionContext";
 
     /** The name of the authentication context. */
     String SESSION_CONTEXT_NAME = "authentication";

@@ -63,7 +63,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.SessionConstants;
-import org.apache.cocoon.webapps.session.components.SessionManager;
 import org.apache.cocoon.util.Tokenizer;
 
 import java.util.HashMap;
@@ -131,7 +130,7 @@ import java.util.Map;
  * where "session-form" is configured as SessionFormAction
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SessionFormAction.java,v 1.3 2003/04/27 15:03:25 cziegeler Exp $
+ * @version CVS $Id: SessionFormAction.java,v 1.4 2003/05/04 20:19:42 cziegeler Exp $
 */
 public class SessionFormAction extends AbstractValidatorAction implements ThreadSafe
 {
@@ -142,12 +141,10 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
             Parameters parameters) throws Exception {
         Request req = ObjectModelHelper.getRequest(objectModel);
 
-        SessionManager sessionManager = null;
         // read local settings
         try {
 
-            sessionManager = (SessionManager)this.manager.lookup(SessionManager.ROLE);
-            Session session = sessionManager.getSession(true);
+            Session session = req.getSession(true);
 
             Configuration conf = (Configuration)session.getAttribute(
                                   req.getParameter(SessionConstants.SESSION_FORM_PARAMETER));
@@ -337,8 +334,6 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug ("exception: ", ignore);
             }
-        } finally {
-            this.manager.release( sessionManager );
         }
         return null;
     }

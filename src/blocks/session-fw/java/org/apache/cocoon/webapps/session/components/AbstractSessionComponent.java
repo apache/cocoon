@@ -66,19 +66,26 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.FormManager;
+import org.apache.cocoon.webapps.session.SessionManager;
+import org.apache.cocoon.webapps.session.TransactionManager;
 import org.xml.sax.SAXException;
 
 /**
  * The base class for all components
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSessionComponent.java,v 1.1 2003/03/09 00:06:08 pier Exp $
+ * @version CVS $Id: AbstractSessionComponent.java,v 1.2 2003/05/04 20:19:41 cziegeler Exp $
 */
 public abstract class AbstractSessionComponent extends AbstractLogEnabled
     implements Component, Composable, Recomposable, Recyclable, RequestLifecycleComponent {
 
-    private SessionManager    sessionManager;
-
+    private SessionManager     sessionManager;
+    private FormManager        formManager;
+    private ContextManager     contextManager;
+    private TransactionManager transactionManager;
+    
     protected ComponentManager manager;
 
     /** The current object model */
@@ -94,7 +101,8 @@ public abstract class AbstractSessionComponent extends AbstractLogEnabled
     /**
      * Composer interface. Get the Avalon ComponentManager.
      */
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager) 
+    throws ComponentException {
         this.manager = manager;
     }
 
@@ -138,13 +146,64 @@ public abstract class AbstractSessionComponent extends AbstractLogEnabled
     }
 
     /**
+     * Get the ContextManager component
+     */
+    protected ContextManager getContextManager()
+    throws ProcessingException {
+        if (this.contextManager == null) {
+            try {
+                this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Error during lookup of ContextManager component.", ce);
+            }
+        }
+        return this.contextManager;
+    }
+
+    /**
+     * Get the ContextManager component
+     */
+    protected TransactionManager getTransactionManager()
+    throws ProcessingException {
+        if (this.transactionManager == null) {
+            try {
+                this.transactionManager = (TransactionManager)this.manager.lookup(TransactionManager.ROLE);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Error during lookup of TransactionManager component.", ce);
+            }
+        }
+        return this.transactionManager;
+    }
+
+    /**
+     * Get the FormManager component
+     */
+    protected FormManager getFormManager()
+    throws ProcessingException {
+        if (this.formManager == null) {
+            try {
+                this.formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Error during lookup of FormManager component.", ce);
+            }
+        }
+        return this.formManager;
+    }
+
+    /**
      * Recycle
      */
     public void recycle() {
         if (this.manager != null) {
-            this.manager.release(this.sessionManager);
+            this.manager.release( (Component)this.sessionManager);
+            this.manager.release( (Component)this.formManager);
+            this.manager.release( (Component)this.contextManager);
+            this.manager.release( (Component)this.transactionManager);
         }
+        this.transactionManager = null;
         this.sessionManager = null;
+        this.formManager = null;
+        this.contextManager = null;
         this.objectModel = null;
         this.resolver = null;
         this.request = null;

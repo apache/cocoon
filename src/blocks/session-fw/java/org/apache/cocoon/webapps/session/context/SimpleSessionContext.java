@@ -81,7 +81,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.4 2003/05/01 09:37:30 cziegeler Exp $
+ * @version CVS $Id: SimpleSessionContext.java,v 1.5 2003/05/04 20:19:40 cziegeler Exp $
 */
 public final class SimpleSessionContext
 implements SessionContext {
@@ -270,9 +270,9 @@ implements SessionContext {
      */
     private String createPath(String path) {
         if (path == null) path ="/";
-        if (path.startsWith("/") == false) path = "/" + path;
+        if (!path.startsWith("/") ) path = "/" + path;
         path = "context" + path;
-        if (path.endsWith("/") == true) path = path.substring(0, path.length() - 1);
+        if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
         return path;
     }
 
@@ -357,9 +357,15 @@ implements SessionContext {
      */
     public synchronized void setNode(String path, Node node)
     throws ProcessingException {
-        path = this.createPath(path);
-        Node removeNode = DOMUtil.selectSingleNode(data, path);
-        removeNode.getParentNode().replaceChild(data.importNode(node, true), removeNode);
+        if ( path == null || path.equals("/")) {
+            data = DOMUtil.createDocument();
+            data.appendChild(data.createElementNS(null, "context"));
+            data.getFirstChild().appendChild(data.importNode(node, true));
+        } else {
+            path = this.createPath(path);        
+            Node removeNode = DOMUtil.selectSingleNode(data, path);
+            removeNode.getParentNode().replaceChild(data.importNode(node, true), removeNode);
+        }
     }
 
 

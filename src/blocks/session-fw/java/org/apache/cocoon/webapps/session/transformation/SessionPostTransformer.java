@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * implementation of the SessionTransformer would be very unperformant.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPostTransformer.java,v 1.1 2003/03/09 00:06:11 pier Exp $
+ * @version CVS $Id: SessionPostTransformer.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
 */
 public class SessionPostTransformer
 extends SessionPreTransformer {
@@ -167,7 +167,7 @@ extends SessionPreTransformer {
                                    ", name=" + name + ", raw=" + raw + ", attr=" + attr);
         }
         if (name.equals(DELETECONTEXT_ELEMENT) == true) {
-            this.getSessionManager().deleteContext(attr.getValue(DELETECONTEXT_NAME_ATTRIBUTE));
+            this.getContextManager().deleteContext(attr.getValue(DELETECONTEXT_NAME_ATTRIBUTE));
 
         } else if (name.equals(SETXML_ELEMENT) == true) {
             this.startRecording();
@@ -314,11 +314,11 @@ extends SessionPreTransformer {
             pars.setSingleParameterValue("contextname", contextName);
             pars.setSingleParameterValue("path", path);
 
-            this.getSessionManager().getContext(contextName).saveXML(path,
-                                                                        pars,
-                                                                        this.objectModel,
-                                                                        this.resolver,
-                                                                        this.manager);
+            this.getContextManager().getContext(contextName).saveXML(path,
+                                                                     pars,
+                                                                     this.objectModel,
+                                                                     this.resolver,
+                                                                     this.manager);
 
         // Element: inputxml
         } else if (name.equals(INPUTXML_ELEMENT) == true) {
@@ -330,7 +330,7 @@ extends SessionPreTransformer {
             if (this.formName == null) {
                 throw new ProcessingException("The inputxml must be contained inside a form.");
             }
-            DocumentFragment value = this.getSessionManager().registerInputField(contextname, path, fieldname, formName);
+            DocumentFragment value = this.getFormManager().registerInputField(contextname, path, fieldname, formName);
             if (value == null) value = defaultFragment;
             this.sendEvents(value);
             super.endTransformingElement("", name, name);
