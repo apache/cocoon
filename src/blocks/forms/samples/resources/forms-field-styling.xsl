@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.4 2004/03/11 19:18:40 reinhard Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.5 2004/03/30 12:19:44 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -32,6 +32,7 @@
   </xsl:template>
 
   <xsl:template match="body" mode="forms-field">
+    <xsl:copy-of select="@*"/>
     <xsl:attribute name="onload">forms_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
   </xsl:template>
 
