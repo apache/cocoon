@@ -202,6 +202,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+  <action dev="BRD" type="fix">
+    Multipart requests: use container encoding for decoding requests, in order to have consistent
+    handling between normal requests and multipart requests.
+  </action>
   <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
     I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
   </action>
