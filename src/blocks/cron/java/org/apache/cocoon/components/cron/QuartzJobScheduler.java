@@ -572,8 +572,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
         jobDataMap.put(DATA_MAP_CONTEXT, this.context);
         jobDataMap.put(DATA_MAP_MANAGER, this.manager);
-        jobDataMap.put(DATA_MAP_RUN_CONCURRENT,
-            concurent? Boolean.TRUE.booleanValue(): Boolean.FALSE.booleanValue());
+        jobDataMap.put(DATA_MAP_RUN_CONCURRENT, (Object)(concurent? Boolean.TRUE: Boolean.FALSE));
         if (null != params) {
             jobDataMap.put(DATA_MAP_PARAMETERS, params);
         }
