@@ -14,46 +14,83 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!--+
+    | $Id$
+    +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- =========================== Components ================================ -->
+  <!-- ========================== Components =============================== -->
   <map:components>
     <map:generators default="file">
-      <!-- JspGenerator is used to get result of a JSP page 
-           then output it as XML (SAX events)
-      -->
-      <map:generator logger="sitemap.generator.jsp" name="jsp"
+      <!--+
+          | JSPGenerator is used to get output of a JSP page 
+          | and parse as XML SAX events.
+          +-->
+      <map:generator name="jsp"
+                     label="content"
+                     logger="sitemap.generator.jsp"
                      src="org.apache.cocoon.generation.JSPGenerator"/>
     </map:generators>
+
     <map:readers default="resource">
-      <!-- JSPReader is used to serve direct output from 
-           a JSP page. Note, that JSP result can be non XML  -->
-      <map:reader logger="sitemap.reader.jsp" name="jsp" 
+      <!--+
+          | JSPReader is used to send output of a JSP page
+          | directly into the response stream. Note, that JSP
+          | can produce non XML, or even binary, result.
+          +-->
+      <map:reader name="jsp" 
+                  logger="sitemap.reader.jsp"
                   src="org.apache.cocoon.reading.JSPReader">
-      <!-- The configuration for the JSPReader with its default values:
+        <!--+
+            | The configuration for the JSPReader with its default values:
         <buffer-size>8192</buffer-size>
         <output-encoding>UTF-8</output-encoding>
-      -->
+            +-->
       </map:reader>
     </map:readers>
   </map:components>
 
-  <!-- =========================== Pipelines ================================= -->
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- ========================== Pipelines ================================ -->
   <map:pipelines>
     <map:pipeline>
-      <!-- This works only if TreeProcessor is used -->
       <map:match pattern="">
-        <map:redirect-to uri="welcome.htm" />
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+   
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="*.htm">
-        <map:read type="jsp" src="{1}.jsp" mime-type="text/html" />
+        <map:read type="jsp" src="{1}.jsp" mime-type="text/html"/>
       </map:match>
 
       <!-- Use this to debug your JSPs -->
       <map:match pattern="*.xml">
         <map:generate type="jsp" src="{1}.jsp"/>
-        <map:serialize type="xml"/>
+        <map:serialize type="xml" mime-type="text/xml"/>
       </map:match>
 
       <map:match pattern="*.jsp">
@@ -69,5 +106,5 @@
 
     </map:pipeline>
   </map:pipelines>
+
 </map:sitemap>
-<!-- end of file -->
