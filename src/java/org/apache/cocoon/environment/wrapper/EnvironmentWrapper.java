@@ -29,6 +29,7 @@ import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.util.BufferedOutputStream;
 
 
@@ -39,7 +40,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.15 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -163,7 +164,10 @@ public class EnvironmentWrapper
                                           queryString,
                                           this,
                                           rawMode);
+        Response response = new ResponseWrapper(ObjectModelHelper.getResponse(oldObjectModel));
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
+        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
+        
     }
    
     public EnvironmentWrapper(Environment env, ComponentManager manager, String uri,  Logger logger)  throws MalformedURLException {
