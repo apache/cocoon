@@ -61,7 +61,7 @@ import java.io.PrintStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSerializer.java,v 1.2 2003/10/06 16:36:15 stefano Exp $
+ * @version CVS $Id: LinkSerializer.java,v 1.3 2003/10/07 16:39:47 vgritsenko Exp $
  */
 
 public class LinkSerializer 
@@ -87,13 +87,17 @@ public class LinkSerializer
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr)
     throws SAXException {
-        if (traversable(href)) this.print(href);
+        if (traversable(href)) {
+            print(href);
+        }
         super.simpleLink(href, role, arcrole, title, show, actuate, uri, name, raw, attr);
     }
 
     public void startLocator(String href, String role, String title, String label, String uri, String name, String raw, Attributes attr)
     throws SAXException {
-        if (traversable(href)) this.print(href);
+        if (traversable(href)) {
+            print(href);
+        }
         super.startLocator(href, role, title, label, uri, name, raw, attr);
     }
 
@@ -110,6 +114,7 @@ public class LinkSerializer
     private void print(String href) {
         int ankerPos = href.indexOf('#');
         if (ankerPos == -1) {
+            // TODO: Xalan encodes international characters into URL encoding
             out.println(href);
         } else {
             out.println(href.substring(0, ankerPos));
