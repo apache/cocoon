@@ -58,7 +58,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
-    
+
     /**
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
@@ -77,7 +77,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         }
 
         CocoonServiceManager newManager = new CocoonServiceManager(this.parentProcessorManager, null);
-        
+
         // Go through the component lifecycle
         newManager.enableLogging(getLogger());
         newManager.contextualize(this.context);
@@ -94,26 +94,26 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         setupDefaultType(config, Serializer.ROLE, "serializers");
         setupDefaultType(config, Reader.ROLE, "readers");
         setupDefaultType(config, ProcessingPipeline.ROLE, "pipes");
-        
+
         // Labels and pipeline hints
         setupLabelsAndPipelineHints(config, Generator.ROLE, "generators");
         setupLabelsAndPipelineHints(config, Transformer.ROLE, "transformers");
         setupLabelsAndPipelineHints(config, Serializer.ROLE, "serializers");
-        
+
         // Mime types
         setupMimeTypes(config, Serializer.ROLE, "serializers");
         setupMimeTypes(config, Reader.ROLE, "readers");
-        
+
         // Register manager and prevent further modifications
         getProcessor().getComponentInfo().setServiceManager(newManager);
         getProcessor().getComponentInfo().lock();
-        
+
         return newManager;
     }
-    
+
     /**
      * Setup the default compnent type for a given role.
-     * 
+     *
      * @param componentsConfig the &lt;map:components&gt; configuration
      * @param role the compomonent role
      * @param childName the name of the configuration element defining <code>role</code>'s selector
@@ -124,13 +124,13 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             getProcessor().getComponentInfo().setDefaultType(role, selectorConfig.getAttribute("default", null));
         }
     }
-    
+
     /**
      * Setup view labels and pipeline hints for the components of a given role
      */
     private void setupLabelsAndPipelineHints(Configuration componentsConfig, String role, String childName)
         throws ConfigurationException {
-        
+
         Configuration selectorConfig = componentsConfig.getChild(childName, false);
         ProcessorComponentInfo info = getProcessor().getComponentInfo();
         if (selectorConfig != null) {
@@ -138,7 +138,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             for (int configIdx = 0; configIdx < configs.length; configIdx++) {
                 Configuration config = configs[configIdx];
                 String name = config.getAttribute("name");
-                
+
                 // Labels
                 String label = config.getAttribute("label", null);
                 if (label != null) {
@@ -159,7 +159,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             }
         }
     }
-    
+
     /**
      * Setup mime types for components of a given role
      */
@@ -493,5 +493,5 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         } else {
             return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
         }
-    }    
+    }
 }
