@@ -67,35 +67,14 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * Makes accessible coplet instance data by using JXPath expressions.<br><br>
+ * This input module gives access to information stored in a layout object
+ * by using JXPathExpressions.
+ * The syntax to use is LAYOUT_ID/PATH or LAYOUT_KEY:LAYOUT_ID/PATH
  *
- * Example:<br><br>
- * 
- * <pre>&lt;map:action type="foo"&gt;
- * 	&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
- * &lt;/map:action&gt;<br></pre>
- * 
- * The module will insert the boolean value specifying whether the coplet is 
- * maxpageable or not as value of attribute "value" in &lt;map:parameter&gt;. 
- * There are two possibilities how the module obtains the information required for 
- * getting the coplet instance data:<br><br>
- * 1) If it is used within a coplet pipeline and this pipeline is called using the "cocoon:" protocol,
- * all required information are passed automatically.<br>
- * 2) Otherwise the portal name and the coplet id must be passed in the object model 
- * which can be done by using the ObjectModelAction:
- *
- * <pre>&lt;map:action type="objectModel"&gt;
- *	&lt;map:parameter name="portalName" value="exampleportal"/&gt;
- *	&lt;map:parameter name="copletId" value="examplecoplet"/&gt;
- *	&lt;map:action type="foo"&gt;
- *		&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
- *	&lt;/map:action&gt;
- * &lt;/map:action&gt;</pre>
- *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.7 2003/12/11 10:27:35 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: LayoutModule.java,v 1.1 2003/12/11 10:27:35 cziegeler Exp $
  */
-public class CopletModule 
+public class LayoutModule 
 implements InputModule, Serviceable, ThreadSafe {
     
     /**
@@ -110,9 +89,9 @@ implements InputModule, Serviceable, ThreadSafe {
         this.manager = manager;
     }
 
-    /**
-     * Overridden from superclass.
-     */
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+	 */
 	public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
     throws ConfigurationException {
         PortalService portalService = null;
@@ -120,31 +99,38 @@ implements InputModule, Serviceable, ThreadSafe {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            // determine coplet id
-            String copletId = null;            
-            Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-            if (context != null) {
-                copletId = (String)context.get(Constants.COPLET_ID_KEY);
-            } else {
-                copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
-                
+            // are we running inside a coplet?
+            final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+            if (context == null) {
                 // set portal name
                 portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
             }
             
-            if (copletId == null) {
-                throw new ConfigurationException("copletId must be passed in the object model either directly (e.g. by using ObjectModelAction) or within the parent context.");
+            int pos = name.indexOf('/');
+            String path;
+            if ( pos == -1 ) {
+                path = null;
+            } else {
+                path = name.substring(pos + 1);
+                name = name.substring(0, pos);
             }
-            
-            JXPathContext jxpathContext = JXPathContext.newContext(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId));
-            Object value = jxpathContext.getValue(name);
-                
-            if (value == null) {
-                return null;
-                //throw new ConfigurationException("Could not find value for expression "+name);
+            // is the layout key specified?
+            pos = name.indexOf(':');
+            String layoutKey = null;
+            String layoutId = name;
+            if ( pos != -1 ) {
+                layoutKey = name.substring(0, pos);
+                layoutId = name.substring(pos + 1);
             }
-                
-            return value.toString();
+
+            // get the layout
+            final Object layout = portalService.getComponentManager().getProfileManager().getPortalLayout(layoutKey, layoutId);
+            Object value = layout;
+            if ( layout != null && path != null ) {
+                final JXPathContext jxpathContext = JXPathContext.newContext(layout);
+                value = jxpathContext.getValue(path);
+            }
+            return value;
             
         } catch (ServiceException e) {
             throw new ConfigurationException("ComponentException ", e);
@@ -153,17 +139,18 @@ implements InputModule, Serviceable, ThreadSafe {
         }
 	}
 
-    /**
-     * Overridden from superclass.
-     */
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+	 */
 	public Iterator getAttributeNames(Configuration modeConf, Map objectModel) {
         return Collections.EMPTY_LIST.iterator();
 	}
 
-    /**
-     * Overridden from superclass.
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
      */
-	public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
+    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
         Object[] result = new Object[1];
         result[0] = this.getAttribute(name, modeConf, objectModel);
