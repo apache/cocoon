@@ -59,13 +59,12 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.session.SessionManager;
 
 import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Node;
 
 /**
  * The <code>Session-fw</code> object helper
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.6 2003/12/18 13:30:15 antonio Exp $
+ * @version CVS $Id: XSPSessionFwHelper.java,v 1.7 2003/12/26 23:47:50 antonio Exp $
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
@@ -102,8 +101,8 @@ public class XSPSessionFwHelper {
      * @param path The parameter path
      **/
     public static String getXMLAsString(ComponentManager cm, String context, String path) throws ProcessingException {
-        Node node = getXML(cm, context, path).getFirstChild();
-        return node != null ? node.getNodeValue() : "";
+        DocumentFragment df = getXML(cm, context, path);
+        return df != null ? df.getFirstChild().getNodeValue() : "";
     }
 }
 
