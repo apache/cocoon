@@ -15,21 +15,10 @@
  */
 package org.apache.cocoon;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.avalon.excalibur.component.ComponentProxyGenerator;
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -46,6 +35,7 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -59,8 +49,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
-import org.apache.commons.lang.SystemUtils;
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.instrument.InstrumentManageable;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.source.Source;
@@ -68,8 +58,16 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
 import org.apache.excalibur.xml.impl.XercesParser;
 import org.apache.excalibur.xml.sax.SAXParser;
-
 import org.xml.sax.InputSource;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -91,6 +89,9 @@ public class Cocoon
                    Composable,
                    InstrumentManageable {
     static Cocoon instance;
+
+    /** The root Cocoon logger */
+    private Logger rootLogger;
 
     /** The application context */
     private Context context;
@@ -119,13 +120,13 @@ public class Cocoon
     /** The parent component manager. */
     private ComponentManager parentComponentManager;
 
-    /** flag for disposed or not */
-    private boolean disposed = false;
+    /** Flag for disposed or not */
+    private boolean disposed;
 
-    /** active request count */
-    private volatile int activeRequestCount = 0;
+    /** Active request count */
+    private volatile int activeRequestCount;
 
-    /** the Processor if it is ThreadSafe */
+    /** The Processor if it is ThreadSafe */
     private Processor threadSafeProcessor;
 
     /** The source resolver */
@@ -146,6 +147,11 @@ public class Cocoon
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
         instance = this;
+    }
+
+    public void enableLogging(Logger logger) {
+        this.rootLogger = logger;
+        super.enableLogging(logger.getChildLogger("cocoon"));
     }
 
     /**
@@ -220,13 +226,10 @@ public class Cocoon
         } else {
             this.componentManager = new CocoonComponentManager((ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
         }
-        ContainerUtil.enableLogging(this.componentManager, getLogger().getChildLogger("manager"));
+        ContainerUtil.enableLogging(this.componentManager, this.rootLogger.getChildLogger("manager"));
         ContainerUtil.contextualize(this.componentManager, this.context);
         this.componentManager.setInstrumentManager(this.instrumentManager);
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("New Cocoon object.");
-        }
+        getLogger().debug("New Cocoon object.");
 
         // Log the System Properties.
         dumpSystemProperties();
@@ -250,13 +253,13 @@ public class Cocoon
             parser = getSystemProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Using parser: " + parser);
-            getLogger().debug("Classpath = " + classpath);
-            getLogger().debug("Work directory = " + workDir.getCanonicalPath());
+            getLogger().debug("Parser: " + parser);
+            getLogger().debug("Classpath: " + classpath);
+            getLogger().debug("Work directory: " + workDir.getCanonicalPath());
         }
 
         ExcaliburComponentManager startupManager = new ExcaliburComponentManager((ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
-        ContainerUtil.enableLogging(startupManager, getLogger().getChildLogger("startup"));
+        ContainerUtil.enableLogging(startupManager, this.rootLogger.getChildLogger("startup"));
         ContainerUtil.contextualize(startupManager, this.context);
         startupManager.setLoggerManager(this.loggerManager);
 
@@ -349,7 +352,7 @@ public class Cocoon
         }
 
         DefaultRoleManager drm = new DefaultRoleManager();
-        ContainerUtil.enableLogging(drm, getLogger().getChildLogger("roles"));
+        ContainerUtil.enableLogging(drm, this.rootLogger.getChildLogger("roles"));
         ContainerUtil.configure(drm, roleConfig);
         roleConfig = null;
 
@@ -401,7 +404,7 @@ public class Cocoon
             }
 
             DefaultRoleManager urm = new DefaultRoleManager(drm);
-            ContainerUtil.enableLogging(urm, getLogger().getChildLogger("roles").getChildLogger("user"));
+            ContainerUtil.enableLogging(urm, this.rootLogger.getChildLogger("roles").getChildLogger("user"));
             ContainerUtil.configure(urm, roleConfig);
             roleConfig = null;
             drm = urm;
@@ -410,9 +413,7 @@ public class Cocoon
         this.componentManager.setRoleManager(drm);
         this.componentManager.setLoggerManager(this.loggerManager);
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Setting up components...");
-        }
+        getLogger().debug("Setting up components...");
         ContainerUtil.configure(this.componentManager, conf);
     }
 
@@ -686,7 +687,7 @@ public class Cocoon
         try {
             if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
-                this.debug(environment, true);
+                debug(environment, true);
             }
 
             if (this.threadSafeProcessor != null) {
