@@ -9,6 +9,11 @@
    </para>
    <para>You're are logged in now, and can read this protected document containing very important
          and secret information.</para>
+   <para xmlns:session="http://apache.org/cocoon/session/1.0">
+       <source>
+           <session:getxml context="authentication" path="/"/>
+       </source>
+   </para>
  </content>
 </page>
 

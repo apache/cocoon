@@ -54,5 +54,20 @@
     </center>
   </xsl:template>
 
+ <xsl:template match="source">
+  <div style="background: #b9d3ee; border: thin; border-color: black; border-style: solid; padding-left: 0.8em; 
+              padding-right: 0.8em; padding-top: 0px; padding-bottom: 0px; margin: 0.5ex 0px; clear: both;">
+  <textarea name="context" cols="80" rows="20" readonly="true">
+   <xsl:apply-templates/>
+  </textarea>
+  </div>
+ </xsl:template>
+
+  <xsl:template match="@*|node()" priority="-1" name="copy">
+   <xsl:copy>
+    <xsl:apply-templates select="@*|node()"/>
+   </xsl:copy>
+  </xsl:template>
+
 </xsl:stylesheet>
 <!-- vim: set et ts=2 sw=2: -->
