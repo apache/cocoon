@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.98 2003/09/25 03:06:06 antonio Exp $
+    | CVS $Id: jars.xml,v 1.99 2003/09/25 05:15:00 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -286,12 +286,11 @@
   <file>
     <title>LogFactor5</title>
     <description>
-      LogFactor5 is a graphical logkit browser, distributed
-      as a part of Log4J.
+      LogFactor5 is a graphical logkit browser, distributed as a part of Log4J.
     </description>
     <used-by>Cocoon logging</used-by>
     <lib>optional/logfactor5-1.2.8.jar</lib>
-    <homepage>http://jakarta.apache.org/log4j/docs/index.html</homepage>
+    <homepage>http://jakarta.apache.org/log4j/docs/lf5/overview.html</homepage>
   </file>
 
   <file>
@@ -388,7 +387,7 @@
     <title>iText XML to PDF/HTML/RTF converter (Renderer)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
-    <lib>itext/lib/itext-0.99.jar</lib>
+    <lib>itext/lib/itext-1.00.jar</lib>
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
@@ -396,7 +395,7 @@
     <title>iText XML to PDF/HTML/RTF converter (XML APIs)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
-    <lib>itext/lib/itext-xml-0.99.jar</lib>
+    <lib>itext/lib/itext-xml-1.00.jar</lib>
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
