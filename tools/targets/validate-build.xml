@@ -55,9 +55,12 @@
     </xslt>
   </target>
 
-  <!-- Validate configuration files. -->
+  <!-- Validate configuration files.
+    This needs to be done at the end of the build, because the cocoon.xconf
+    and cocoon.roles are automatically constructed.
+  -->
   <target name="validate-config" depends="prepare" unless="exclude.validate.config">
-    <echo message="Validating configuration files"/>
+    <echo message="Validating some important configuration files"/>
 
     <echo message="Validating cocoon.xconf using a very basic RELAX NG grammar ..."/>
     <jing rngfile="${build.webapp}/WEB-INF/entities/any.rng">
