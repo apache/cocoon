@@ -28,6 +28,7 @@ import org.odmg.ODMGException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.HashMap;
 
 /**
  * Implementation of the OdmgImplementation. Create a ODMG Implementation and store it for future use
@@ -40,9 +41,17 @@ public class OdmgImplementationImpl extends AbstractLogEnabled
 
     private final static String DEFAULT_CONNECTION ="default";
     private final static int DEFAULT_MODE = Database.OPEN_READ_WRITE;
-    private Implementation odmg;
 
-    private Hashtable databases = new Hashtable();
+    private Implementation odmg;
+    private HashMap databases = new HashMap();
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        // Get the Implementation
+        this.odmg = OJB.getInstance();
+    }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
@@ -61,68 +70,36 @@ public class OdmgImplementationImpl extends AbstractLogEnabled
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        // Get the Implementation
-        this.odmg = OJB.getInstance();
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.cocoon.ojb.odmg.components.Odmg#getInstance()
      */
     public Implementation getInstance() throws ODMGException {
-        Database db = (Database) this.databases.get(DEFAULT_CONNECTION);
-        if (null == db) {
-            db = this.odmg.newDatabase();
-            db.open(DEFAULT_CONNECTION, DEFAULT_MODE);
-            synchronized (this.databases) {
-                this.databases.put(DEFAULT_CONNECTION + DEFAULT_MODE, db);
-            }
-        }
-        return this.odmg;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.ojb.odmg.components.Odmg#getInstance(java.lang.String, int)
-     */
-    public Implementation getInstance(String connection, int mode) throws ODMGException {
-        Database db = (Database) this.databases.get(connection + mode);
-        if (null == db) {
-            db = this.odmg.newDatabase();
-            db.open(connection, mode);
-            synchronized (this.databases) {
-                this.databases.put(connection + mode, db);
-            }
-        }
-        return this.odmg;
+        return getInstance(DEFAULT_CONNECTION, DEFAULT_MODE);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.ojb.odmg.components.Odmg#getInstance(java.lang.String)
      */
     public Implementation getInstance(String connection) throws ODMGException {
-        Database db = (Database) this.databases.get(connection + DEFAULT_MODE);
-        if (null == db) {
-            db = this.odmg.newDatabase();
-            db.open(connection, DEFAULT_MODE);
-            synchronized (this.databases) {
-                this.databases.put(connection + DEFAULT_MODE, db);
-            }
-        }
-        return this.odmg;
+        return getInstance(connection, DEFAULT_MODE);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.ojb.odmg.components.OdmgImplementation#getInstance(int)
      */
     public Implementation getInstance(int mode) throws ODMGException {
-        Database db = (Database) this.databases.get(DEFAULT_CONNECTION + mode);
-        if (null == db) {
-            db = this.odmg.newDatabase();
-            db.open(DEFAULT_CONNECTION, mode);
-            synchronized (this.databases) {
-                this.databases.put(DEFAULT_CONNECTION + mode, db);
+        return getInstance(DEFAULT_CONNECTION, mode);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.ojb.odmg.components.Odmg#getInstance(java.lang.String, int)
+     */
+    public Implementation getInstance(String connection, int mode) throws ODMGException {
+        synchronized (this.databases) {
+            Database db = (Database) this.databases.get(connection + ":" + mode);
+            if (null == db) {
+                db = this.odmg.newDatabase();
+                db.open(connection, mode);
+                    this.databases.put(connection + ":" + mode, db);
             }
         }
         return this.odmg;
