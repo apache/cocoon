@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.4 2000-01-05 19:38:12 ricardo Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.5 2000-01-06 23:32:38 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-05 19:38:12 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-06 23:32:38 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -137,6 +137,20 @@ public class XSPUtil {
   ) throws IOException
   {
     return relativeFilename(filename, request, null);
+  }
+
+  public static String getFileContents(String filename) throws IOException {
+    return getFileContents(new FileReader(filename));
+  }
+
+  public static String getFileContents(Reader reader) throws IOException {
+    int len;
+    char[] chr = new char[4096];
+    StringBuffer buffer = new StringBuffer();
+    while ((len = reader.read(chr)) > 0) {
+      buffer.append(chr, 0, len);
+    }
+    return buffer.toString();
   }
 
   public static String requestRealPath(
