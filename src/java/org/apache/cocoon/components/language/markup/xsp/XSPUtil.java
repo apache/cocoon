@@ -53,7 +53,6 @@ package org.apache.cocoon.components.language.markup.xsp;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
@@ -65,9 +64,15 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -78,7 +83,7 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.2 2003/03/10 23:03:53 stefano Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.3 2003/03/11 03:00:19 vgritsenko Exp $
  */
 public class XSPUtil {
     
@@ -158,11 +163,6 @@ public class XSPUtil {
         return result;
     }
 
-    public static void include(InputSource is, ContentHandler parentContentHandler, SAXParser parser)
-        throws SAXException, IOException {
-            parser.parse(is,new IncludeXMLConsumer(parentContentHandler));
-    }
-
     public static String encodeMarkup(String string) {
         char[] array = string.toCharArray();
         StringBuffer buffer = new StringBuffer();
@@ -194,46 +194,7 @@ public class XSPUtil {
     	return URLDecoder.decode (s);
     }
 
-  /* Logicsheet Utility Methods */
-
-    // Inclusion
-    public static String getURLContents(String url, URLFactory urlFactory) throws IOException {
-        return getContents(urlFactory.getURL(url).openStream());
-    }
-
-    public static String getURLContents(String url, String encoding, URLFactory urlFactory) throws IOException {
-        return getContents(urlFactory.getURL(url).openStream(), encoding);
-    }
-
-    public static String getFileContents(String filename) throws IOException {
-        return getContents(
-            new BufferedReader(new FileReader(filename)));
-    }
-
-    public static String getFileContents(String filename, String encoding) throws IOException {
-        return getContents(
-            new BufferedInputStream(new FileInputStream(filename)), encoding);
-    }
-
-    public static String getContents(InputStream in, String encoding) throws IOException {
-        return getContents(
-            new BufferedReader(new InputStreamReader(in, encoding)));
-    }
-
-    public static String getContents(InputStream in) throws IOException {
-        return getContents(
-            new BufferedReader(new InputStreamReader(in)));
-    }
-
-    public static String getContents(Reader reader) throws IOException {
-        int len;
-        char[] chr = new char[4096];
-        StringBuffer buffer = new StringBuffer();
-        while ((len = reader.read(chr)) > 0) {
-            buffer.append(chr, 0, len);
-        }
-        return buffer.toString();
-    }
+    /* Logicsheet Utility Methods */
 
     // Date
     public static String formatDate(Date date, String pattern) {
@@ -268,67 +229,82 @@ public class XSPUtil {
         }
     }
 
-    public static Object getContextAttribute(Map objectModel, String name)
-    {
+    public static Object getContextAttribute(Map objectModel, String name) {
         Context context = ObjectModelHelper.getContext(objectModel);
         return context.getAttribute(name);
     }
 
-    public static String getSourceAsString(String uri, SourceResolver resolver) throws RuntimeException {
-
-        StringBuffer result = new StringBuffer();
-        InputStream stream = null;
-        Source resource = null;
+    // Inclusion
+    public static String getSourceContents(String url, SourceResolver resolver) throws IOException {
+        Source source = resolver.resolveURI(url);
         try {
-            resource = resolver.resolveURI(uri);
-            long length = resource.getContentLength();
-            stream = new BufferedInputStream(resource.getInputStream());
-            if (length != -1) {
-                byte[] buffer = new byte[(new Long(length)).intValue()];
-                stream.read(buffer);
-                stream.close();
-                if (buffer != null) result.append(new String(buffer));
-            } else {
-                int readBytes = 0;
-                do {
-                    byte[] buffer = new byte[4*1024];
-                    readBytes = stream.read(buffer);
-                    if (readBytes == -1) break;
-                    if (readBytes > 0) result.append(new String(buffer,0,readBytes));
-                } while (true);
-                stream.close();
-            }
-        } catch (Exception e) {
-            throw new CascadingRuntimeException("Cannot get source " + uri, e);
+            return getContents(source.getInputStream());
         } finally {
-            if ( stream != null ) {
-                try {
-                    stream.close();
-                } catch (Exception ase) {
-                    throw new CascadingRuntimeException("Cannot close stream", ase);
-                }
-            }
-            if ( resource != null )
-                resolver.release(resource);
+            resolver.release(source);
         }
-        return result.toString();
     }
 
+    public static String getSourceContents(String uri, String base, SourceResolver resolver) throws IOException {
+        if (base != null && base.length() == 0) {
+            base = null;
+        }
+        Source source = resolver.resolveURI(uri, base, null);
+        try {
+            return getContents(source.getInputStream());
+        } finally {
+            if (source != null) {
+                resolver.release(source);
+            }
+        }
+    }
 
-    public static void includeSource(String uri, String base, SourceResolver resolver, ContentHandler contentHandler) 
+    public static String getFileContents(String filename) throws IOException {
+        return getContents(new FileReader(filename));
+    }
+
+    public static String getFileContents(String filename, String encoding) throws IOException {
+        return getContents(new FileInputStream(filename), encoding);
+    }
+
+    public static String getContents(InputStream in, String encoding) throws IOException {
+        return getContents(new InputStreamReader(in, encoding));
+    }
+
+    public static String getContents(InputStream in) throws IOException {
+        return getContents(new InputStreamReader(in));
+    }
+
+    public static String getContents(Reader reader) throws IOException {
+        int len;
+        char[] chr = new char[4096];
+        StringBuffer buffer = new StringBuffer();
+        try {
+            while ((len = reader.read(chr)) > 0) {
+                buffer.append(chr, 0, len);
+            }
+        } finally {
+            reader.close();
+        }
+        return buffer.toString();
+    }
+
+    public static void includeSource(String uri, String base, SourceResolver resolver, ContentHandler contentHandler)
         throws RuntimeException {
         
-        if (base != null) base = (base != "" ? base : null);
+        if (base != null && base.length() == 0) {
+            base = null;
+        }
         Source source = null;
         try {
             source = resolver.resolveURI(uri, base, null);
-            resolver.toSAX(source, new org.apache.cocoon.xml.IncludeXMLConsumer(contentHandler));
-          } catch (Exception e) {
-              throw new CascadingRuntimeException("Error including source " + base + " " + uri, e);
-          } finally {
-              if (source != null)
-                 resolver.release(source);
-          }
+            resolver.toSAX(source, new IncludeXMLConsumer(contentHandler));
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("Error including source " + base + " " + uri, e);
+        } finally {
+            if (source != null) {
+                resolver.release(source);
+            }
+        }
     }
 
     public static void includeString(String string, ComponentManager manager, ContentHandler contentHandler) 
@@ -351,15 +327,17 @@ public class XSPUtil {
     public static void includeInputSource(InputSource source, ComponentManager manager, ContentHandler contentHandler) 
         throws RuntimeException {
         
-        SAXParser newParser = null;
-        
+        SAXParser parser = null;
         try {
-            newParser = (SAXParser) manager.lookup(SAXParser.ROLE);
-            XSPUtil.include(source, contentHandler, newParser);
+            parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+            IncludeXMLConsumer consumer = new IncludeXMLConsumer(contentHandler);
+            parser.parse(source, consumer, consumer);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not include page", e);
         } finally {
-            if (newParser != null) manager.release((Component) newParser);
+            if (parser != null) {
+                manager.release((Component) parser);
+            }
         }
     }
 }
