@@ -17,10 +17,7 @@ package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormContext;
-import org.apache.cocoon.forms.event.ActionEvent;
-import org.apache.cocoon.forms.event.WidgetEvent;
-import org.apache.cocoon.forms.event.ActionListener;
-import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+import org.apache.cocoon.forms.event.*;
 
 /**
  * An Action widget. An Action widget can cause an {@link ActionEvent} to be triggered
@@ -31,9 +28,9 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.7 2004/04/27 09:17:01 bruno Exp $
+ * @version $Id: Action.java,v 1.8 2004/04/28 13:11:10 bruno Exp $
  */
-public class Action extends AbstractWidget {
+public class Action extends AbstractWidget implements ActionListenerEnabled {
     private final ActionDefinition definition;
     /** Additional listeners to those defined as part of the widget definition (if any). */
     private ActionListener listener;

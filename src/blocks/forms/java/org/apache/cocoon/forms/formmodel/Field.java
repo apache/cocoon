@@ -41,9 +41,10 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.10 2004/04/27 09:17:01 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.11 2004/04/28 13:11:10 bruno Exp $
  */
-public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
+public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
+        ValueChangedListenerEnabled {
     /** Overrides selection list defined in FieldDefinition, if any. */
     protected SelectionList selectionList;
     /** Additional listeners to those defined as part of the widget definition (if any). */

@@ -19,10 +19,7 @@ import java.util.Locale;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
-import org.apache.cocoon.forms.event.ValueChangedEvent;
-import org.apache.cocoon.forms.event.WidgetEvent;
-import org.apache.cocoon.forms.event.ValueChangedListener;
-import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+import org.apache.cocoon.forms.event.*;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -38,9 +35,9 @@ import org.xml.sax.SAXException;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.7 2004/04/27 09:17:01 bruno Exp $
+ * @version $Id: BooleanField.java,v 1.8 2004/04/28 13:11:10 bruno Exp $
  */
-public class BooleanField extends AbstractWidget {
+public class BooleanField extends AbstractWidget implements ValueChangedListenerEnabled {
     // FIXME(SW) : should the initial value be false or null ? This would allow
     // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
@@ -72,7 +69,7 @@ public class BooleanField extends AbstractWidget {
     /**
      * Always return <code>true</code> (an action has no validation)
      * 
-     * @todo is there a use case for boolean fields having validators?
+     * TODO is there a use case for boolean fields having validators?
      */
     public boolean validate(FormContext formContext) {
         // a boolean field is always valid
