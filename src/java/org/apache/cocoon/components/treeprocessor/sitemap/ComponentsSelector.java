@@ -79,7 +79,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.3 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.4 2003/07/29 07:41:26 cziegeler Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector
@@ -343,6 +343,10 @@ implements OutputComponentSelector, SitemapComponentSelector {
         return pipelineHint;
     }
 
+    public void dispose() {
+        super.dispose();
+        this.parentSitemapSelector = null;
+    }
 }
 
 
