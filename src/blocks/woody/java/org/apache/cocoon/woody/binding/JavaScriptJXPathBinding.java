@@ -66,7 +66,7 @@ import org.mozilla.javascript.Script;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.6 2004/01/17 14:55:17 vgritsenko Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
@@ -84,8 +84,9 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     }
 
     public void doLoad(Widget frmModel, JXPathContext jctx) {
-
-        if (this.loadScript == null) return;
+        if (this.loadScript == null) {
+            return;
+        }
 
         Widget widget = frmModel.getWidget(this.id);
 
@@ -115,7 +116,9 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     }
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
-        if (this.saveScript == null) return;
+        if (this.saveScript == null) {
+            return;
+        }
 
         Widget widget = frmModel.getWidget(this.id);
 
