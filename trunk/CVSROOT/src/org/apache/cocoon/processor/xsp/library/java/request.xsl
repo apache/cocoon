@@ -1,7 +1,60 @@
 <?xml version="1.0"?>
+<!--
+
+ ============================================================================
+                   The Apache Software License, Version 1.1
+ ============================================================================
+
+    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without modifica-
+ tion, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of  source code must  retain the above copyright  notice,
+    this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+ 3. The end-user documentation included with the redistribution, if any, must
+    include  the following  acknowledgment:  "This product includes  software
+    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
+    Alternately, this  acknowledgment may  appear in the software itself,  if
+    and wherever such third-party acknowledgments normally appear.
+
+ 4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
+    endorse  or promote  products derived  from this  software without  prior
+    written permission. For written permission, please contact
+    apache@apache.org.
+
+ 5. Products  derived from this software may not  be called "Apache", nor may
+    "Apache" appear  in their name,  without prior written permission  of the
+    Apache Software Foundation.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
+ APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+ DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
+ ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
+ (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
+
+-->
+
+<!-- written by Ricardo Rocha "ricardo@apache.org" -->
+
 
 <xsl:stylesheet
-  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://apache.org/DTD/XSP/Layer1"
   xmlns:request="http://apache.org/DTD/XSP/request"
 >
@@ -9,56 +62,12 @@
 
   <!-- Import Global XSP Templates -->
   <!-- <xsl:import href="base-library.xsl"/> -->
-  <!-- Default copy-over's -->
-  <xsl:template match="@*|node()" priority="-1">
-    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
-  </xsl:template>
 
-  <!-- *** Utility Templates *** -->
-  <!-- Retrieve "name" parameter as either attribute or element -->
-  <xsl:template name="value-for-name">
-    <xsl:choose>
-      <!-- As attribute (String constant) -->
-      <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
-      <!-- As nested (presumably dynamic) element -->
-      <xsl:when test="name">
-        <!-- Recursively evaluate nested expression -->
-        <xsl:call-template name="get-nested-content">
-          <xsl:with-param name="content" select="name"/>
-        </xsl:call-template>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Return nested element content as expression or constant -->
-  <xsl:template name="get-nested-content">
-    <xsl:choose>
-      <!-- Nested element -->
-      <xsl:when test="$content/*">
-        <xsl:apply-templates select="$content/*"/>
-      </xsl:when>
-      <!-- Plain Text -->
-      <xsl:otherwise>"<xsl:value-of select="normalize($content)"/>"</xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Ensure attribute "as" has a value -->
-  <xsl:template name="value-for-as">
-    <xsl:choose>
-      <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-  <!-- request.getAttribute -->
   <xsl:template match="request:get-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -84,9 +93,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getAttributeNames -->
   <xsl:template match="request:get-attribute-names">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -105,9 +112,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getCharacterEncoding -->
   <xsl:template match="request:get-character-encoding">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -126,9 +131,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getContentLength -->
   <xsl:template match="request:get-content-length">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -150,9 +153,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getContentType -->
   <xsl:template match="request:get-content-type">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -171,9 +172,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getLocale -->
   <xsl:template match="request:get-locale">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'object'"/>
@@ -195,9 +194,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getLocales -->
   <xsl:template match="request:get-locales">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -216,14 +213,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getParameter -->
   <xsl:template match="request:get-parameter">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -246,9 +240,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getParameterNames -->
   <xsl:template match="request:get-parameter-names">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -267,14 +259,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getParameterValues -->
   <xsl:template match="request:get-parameter-values">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -299,9 +288,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getProtocol -->
   <xsl:template match="request:get-protocol">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -320,9 +307,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getRemoteAddr -->
   <xsl:template match="request:get-remote-addr">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -341,9 +326,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getRemoteHost -->
   <xsl:template match="request:get-remote-host">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -362,9 +345,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getScheme -->
   <xsl:template match="request:get-scheme">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -383,9 +364,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getServerName -->
   <xsl:template match="request:get-server-name">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -404,9 +383,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getServerPort -->
   <xsl:template match="request:get-server-port">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -428,9 +405,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.isSecure -->
   <xsl:template match="request:is-secure">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'boolean'"/>
@@ -452,9 +427,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.removeAttribute -->
   <xsl:template match="request:remove-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
@@ -466,14 +439,11 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- request.setAttribute -->
   <xsl:template match="request:set-attribute">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Recursively evaluate nested attribute value -->
     <xsl:variable name="content">
       <xsl:call-template name="get-nested-content">
         <xsl:with-param name="content">
@@ -490,9 +460,7 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- request.getMethod -->
   <xsl:template match="request:get-method">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -511,9 +479,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getPathInfo -->
   <xsl:template match="request:get-path-info">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -532,9 +498,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getPathTranslated -->
   <xsl:template match="request:get-path-translated">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -553,9 +517,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getQueryString -->
   <xsl:template match="request:get-query-string">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -574,9 +536,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getRemoteUser -->
   <xsl:template match="request:get-remote-user">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -595,9 +555,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getRequestedSessionId -->
   <xsl:template match="request:get-requested-session-id">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -616,9 +574,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getRequestURI -->
   <xsl:template match="request:get-request-uri">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -637,9 +593,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getServletPath -->
   <xsl:template match="request:get-servlet-path">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -658,9 +612,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getUserPrincipal -->
   <xsl:template match="request:get-user-principal">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'object'"/>
@@ -682,11 +634,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- *** HttpServletRequest *** -->
-
-  <!-- request.getAuthType -->
   <xsl:template match="request:get-auth-type">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -705,9 +653,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getContextPath -->
   <xsl:template match="request:get-context-path">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -726,9 +672,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getCookies -->
   <xsl:template match="request:get-cookies">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -747,28 +691,21 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getDateHeader -->
   <xsl:template match="request:get-date-header">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'long'"/>
       </xsl:call-template>
     </xsl:variable>
 
-    <!-- Get "format" parameter as either attribute or nested element -->
     <xsl:variable name="format">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@format">"<xsl:value-of select="@format"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="format">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="format"/>
           </xsl:call-template>
@@ -815,14 +752,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getHeader -->
   <xsl:template match="request:get-header">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -845,9 +779,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getHeaderNames -->
   <xsl:template match="request:get-header-names">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -866,14 +798,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getHeaders -->
   <xsl:template match="request:get-headers">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'array'"/>
@@ -899,14 +828,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.getIntHeader -->
   <xsl:template match="request:get-int-header">
-    <!-- Get "name" parameter as either attribute or nested element -->
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'int'"/>
@@ -938,9 +864,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.isRequestedSessionIdFromCookie -->
   <xsl:template match="request:is-requested-session-id-from-cookie">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'boolean'"/>
@@ -962,9 +886,7 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.isRequestedSessionIdFromURL -->
   <xsl:template match="request:is-requested-session-id-from-url">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'boolean'"/>
@@ -987,9 +909,7 @@
   </xsl:template>
 
 
-  <!-- request.isRequestedSessionIdValid -->
   <xsl:template match="request:is-requested-session-id-valid">
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'boolean'"/>
@@ -1011,16 +931,11 @@
     </xsp:expr>
   </xsl:template>
 
-  <!-- request.isUserInRole -->
   <xsl:template match="request:is-user-in-role">
-    <!-- Get "role" parameter as either attribute or nested element -->
     <xsl:variable name="role">
       <xsl:choose>
-        <!-- As attribute (String constant) -->
         <xsl:when test="@role">"<xsl:value-of select="@role"/>"</xsl:when>
-        <!-- As nested (presumably dynamic) element -->
         <xsl:when test="role">
-          <!-- Recursively evaluate nested expression -->
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="role"/>
           </xsl:call-template>
@@ -1028,7 +943,6 @@
       </xsl:choose>
     </xsl:variable>
 
-    <!-- Ensure attribute "as" has a value -->
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'boolean'"/>
@@ -1059,4 +973,40 @@
       </xsl:choose>
     </xsp:expr>
   </xsl:template>
+
+  <xsl:template name="value-for-name">
+    <xsl:choose>
+      <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
+      <xsl:when test="name">
+        <xsl:call-template name="get-nested-content">
+          <xsl:with-param name="content" select="name"/>
+        </xsl:call-template>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="get-nested-content">
+    <xsl:param name="content"/>
+    <xsl:choose>
+      <xsl:when test="$content/*">
+        <xsl:apply-templates select="$content/*"/>
+      </xsl:when>
+      <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="value-for-as">
+    <xsl:param name="default"/>
+    <xsl:choose>
+      <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@*|*|text()|processing-instruction()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
+    </xsl:copy>
+  </xsl:template>
+
 </xsl:stylesheet>
