@@ -219,7 +219,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.3 2003/08/15 20:00:57 vgritsenko Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.4 2003/08/16 02:27:35 joerg Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -335,14 +335,12 @@ public abstract class AbstractValidatorAction
         Map params,
         boolean isString) {
         String type = null;
-        int i = 0;
 
         if (getLogger().isDebugEnabled())
             getLogger().debug("Validating parameter: " + name + " using rule: " + rule);
 
         /* try to find matching param description in conf tree */
         try {
-            boolean found = false;
             Configuration theConf = (Configuration) conf.get(rule);
             type = theConf.getAttribute("type");
 
