@@ -3,7 +3,7 @@
 <!--+
     | Apples block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.4 2003/09/07 06:11:39 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.5 2003/09/25 21:18:49 mpo Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -89,7 +89,6 @@
         <map:call function="org.apache.cocoon.components.flow.apples.samples.BindingWoodyApple">
           <map:parameter name="form-src" value="context://samples/woody/forms/form2_model.xml"/>
           <map:parameter name="binding-src" value="context://samples/woody/forms/form2_bind_xml.xml"/>
-          <map:parameter name="formhandler" value="org.apache.cocoon.woody.samples.Form1Handler"/>
           <map:parameter name="documentURI" value="context://samples/woody/forms/form2_data.xml"/>
           <map:parameter name="form-pipe" value="/samples/woody/form2-display-pipeline"/>
           <map:parameter name="valid-pipe" value="/samples/woody/form2-success-pipeline"/>

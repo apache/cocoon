@@ -67,7 +67,6 @@ import org.apache.cocoon.components.flow.apples.AppleController;
 import org.apache.cocoon.components.flow.apples.AppleRequest;
 import org.apache.cocoon.components.flow.apples.AppleResponse;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.woody.FormManager;
 import org.apache.cocoon.woody.binding.Binding;
 import org.apache.cocoon.woody.binding.BindingManager;
@@ -128,7 +127,6 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
         String formURI = req.getSitemapParameter("form-src");
         String bindURI = req.getSitemapParameter("binding-src");
         this.backendURI = req.getSitemapParameter("documentURI");
-        String formHandlerClassName = req.getSitemapParameter("formhandler");
         this.formPipeURI = req.getSitemapParameter("form-pipe");
         this.validPipeURI = req.getSitemapParameter("valid-pipe");
 
@@ -138,7 +136,6 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
         Source formSource = null;
         Source bindSource = null;
         Source documentSource = null;
-        FormHandler formHandler = null;
 
         try {
             formManager = (FormManager) this.serviceManager.lookup(FormManager.ROLE);
@@ -147,10 +144,6 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
 
             formSource = resolver.resolveURI(formURI);
             this.form = formManager.createForm(formSource);
-            formHandler = (FormHandler) this.makeInstance(formHandlerClassName);
-            // FIX THIS
-            // formHandler.setup(this.form);
-            this.form.setFormHandler(formHandler);
 
             bindSource = resolver.resolveURI(bindURI);
             this.binding = binderManager.createBinding(bindSource);
