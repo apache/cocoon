@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.52 2001-01-17 20:20:21 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.53 2001-01-22 23:45:06 balld Exp $-->
 <!--
 
  ============================================================================
@@ -266,8 +266,15 @@
     try {
       <xsl:choose>
         <xsl:when test="esql:pool and $environment = 'cocoon1'">
-          _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
-          _esql_connection.connection = _esql_connection.db_connection.getConnection();
+          try {
+            _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
+            _esql_connection.connection = _esql_connection.db_connection.getConnection();
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("Error opening pooled connection: "+String.valueOf(<xsl:copy-of select="$pool"/>)+": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage());
+          }
+          if (_esql_connection.connection == null) {
+            throw new RuntimeException("Could not open pooled connection: "+String.valueOf(<xsl:copy-of select="$pool"/>));
+          }
         </xsl:when>
         <xsl:when test="esql:pool and $environment = 'cocoon2'">
           try {
