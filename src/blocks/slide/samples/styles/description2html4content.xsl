@@ -33,13 +33,6 @@
   <xsl:template match="collection:collection|collection:resource">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
-        <xsl:if test="@parent">
-          <tr>
-            <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="../content/">Back</a>
-            </td>
-          </tr>
-        </xsl:if>
         <tr>
           <td width="100%" bgcolor="#ffffff" align="left">
             <br/>

@@ -1,47 +1,46 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:source="http://apache.org/cocoon/description/2.0" xmlns:dav="DAV:" xmlns:pl="http://apache.org/cocoon/principal/1.0" version="1.0">
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  xmlns:collection="http://apache.org/cocoon/collection/1.0" 
+  xmlns:dav="DAV:" 
+  xmlns:pl="http://apache.org/cocoon/principal/1.0" 
+  version="1.0">
 
   <xsl:output indent="yes"/>
-
+  <xsl:param name="path" />
+  
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
         <tab title="users" href="../users/"/>
-        <tab title="content" href="../content/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="properties" href="../properties/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="permissions" href="../permissions/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="locks" href="../locks/{substring-after(source:source/@uri,'://')}"/>
+        <tab title="content" href="../content/{$path}"/>
+        <tab title="properties" href="../properties/{$path}"/>
+        <tab title="permissions" href="../permissions/{$path}"/>
+        <tab title="locks" href="../locks/{$path}"/>
         <tab title="logout" href="../logout.html"/>
       </header>
       <body>
         <row>
-          <xsl:apply-templates select="document/source:source"/>
+          <xsl:apply-templates select="/document/collection:collection|/document/collection:resource"/>
         </row>
       </body>
     </document>
   </xsl:template>
 
-  <xsl:template match="source:source">
+  <xsl:template match="collection:collection|collection:resource">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
-        <xsl:if test="@parent">
-          <tr>
-            <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="../permissions/{substring-after(@parent,'://')}">Back</a>
-            </td>
-          </tr>
-        </xsl:if>
         <tr>
           <td width="100%" bgcolor="#ffffff" align="left">
             <br/>
           </td>
         </tr>
-        <xsl:for-each select="source:children/source:source">
+        <xsl:for-each select="collection:collection|collection:resource">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="../permissions/{substring-after(@uri,'://')}">
+                <a href="../permissions/{$path}">
                   <xsl:value-of select="@name"/>
                 </a>
               </font>
@@ -69,7 +68,7 @@
             </td>
             <td align="right"/>
           </tr>
-          <xsl:for-each select="source:permissions/source:permission[@principal]">
+          <xsl:for-each select="collection:permissions/collection:permission[@principal]">
             <tr>
               <td align="left">
                 <xsl:value-of select="@principal"/>
@@ -84,22 +83,22 @@
                 <xsl:value-of select="@negative"/>
               </td>
               <td align="right">
-                <form action="" method="post">
-                  <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
-                  <input type="hidden" name="cocoon-source-permission-principal" value="{@principal}"/>
-                  <input type="hidden" name="cocoon-source-permission-privilege" value="{@privilege}"/>
-                  <input type="hidden" name="cocoon-source-permission-inheritable" value="{@inheritable}"/>
-                  <input type="hidden" name="cocoon-source-permission-negative" value="{@negative}"/>
+                <form action="removeUserPermission" method="post">
+                  <input type="hidden" name="resourcePath" value="{$path}"/>
+                  <input type="hidden" name="principal" value="{@principal}"/>
+                  <input type="hidden" name="privilege" value="{@privilege}"/>
+                  <input type="hidden" name="inheritable" value="{@inheritable}"/>
+                  <input type="hidden" name="negative" value="{@negative}"/>
                   <input type="submit" name="doRemovePrincipalPermission" value="Delete"/>
                 </form>
               </td>
             </tr>
           </xsl:for-each>
           <tr>
-            <form action="" method="post">
+            <form action="addUserPermission" method="post">
               <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
               <td align="left">
-                <select name="cocoon-source-permission-principal">
+                <select name="principal">
                   <option>ALL</option>
                   <option>SELF</option>
                   <option>GUEST</option>
@@ -111,7 +110,7 @@
                 </select>
               </td>
               <td align="left">
-                <select name="cocoon-source-permission-privilege">
+                <select name="privilege">
                   <option>all</option>
                   <option>read</option>
                   <option>write</option>
@@ -135,13 +134,13 @@
                 </select>
               </td>
               <td align="left">
-                <select name="cocoon-source-permission-inheritable">
+                <select name="inheritable">
                   <option>true</option>
                   <option>false</option>
                 </select>
               </td>
               <td align="left">
-                <select name="cocoon-source-permission-negative">
+                <select name="negative">
                   <option>true</option>
                   <option>false</option>
                 </select>
@@ -172,7 +171,7 @@
           </td>
           <td align="right"/>
         </tr>
-        <xsl:for-each select="source:permissions/source:permission[@group]">
+        <xsl:for-each select="collection:permissions/collection:permission[@group]">
           <tr>
             <td align="left">
               <xsl:value-of select="@group"/>
@@ -187,22 +186,22 @@
               <xsl:value-of select="@negative"/>
             </td>
             <td align="right">
-              <form action="" method="post">
-                <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
-                <input type="hidden" name="cocoon-source-permission-principal-group" value="{@group}"/>
-                <input type="hidden" name="cocoon-source-permission-privilege" value="{@privilege}"/>
-                <input type="hidden" name="cocoon-source-permission-inheritable" value="{@inheritable}"/>
-                <input type="hidden" name="cocoon-source-permission-negative" value="{@negative}"/>
+              <form action="removeGroupPermission" method="post">
+                <input type="hidden" name="resourcePath" value="{$path}"/>
+                <input type="hidden" name="group" value="{@group}"/>
+                <input type="hidden" name="privilege" value="{@privilege}"/>
+                <input type="hidden" name="inheritable" value="{@inheritable}"/>
+                <input type="hidden" name="negative" value="{@negative}"/>
                 <input type="submit" name="doRemovePrincipalGroupPermission" value="Delete"/>
               </form>
             </td>
           </tr>
         </xsl:for-each>
         <tr>
-          <form action="" method="post">
-            <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
+          <form action="addUserPermission" method="post">
+            <input type="hidden" name="resourcePath" value="{$path}"/>
             <td align="left">
-              <select name="cocoon-source-permission-principal-group">
+              <select name="group">
                 <xsl:for-each select="/document/pl:list/pl:group">
                   <option>
                     <xsl:value-of select="@pl:name"/>
@@ -211,7 +210,7 @@
               </select>
             </td>
             <td align="left">
-              <select name="cocoon-source-permission-privilege">
+              <select name="privilege">
                 <option>all</option>
                 <option>read</option>
                 <option>write</option>
@@ -235,13 +234,13 @@
               </select>
             </td>
             <td align="left">
-              <select name="cocoon-source-permission-inheritable">
+              <select name="inheritable">
                 <option>true</option>
                 <option>false</option>
               </select>
             </td>
             <td align="left">
-              <select name="cocoon-source-permission-negative">
+              <select name="negative">
                 <option>true</option>
                 <option>false</option>
               </select>
