@@ -15,12 +15,14 @@
  */
 package org.apache.cocoon.bean;
 
+import java.util.List;
+
 /**
  * Interface allowing caller to install a listener so that it can be informed
  * as the bean makes progress through the links to be called.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanListener.java,v 1.5 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface BeanListener {
 
@@ -72,6 +74,7 @@ public interface BeanListener {
      * @param message        A reason why the link was not generated
      */
     public void brokenLinkFound(String uri, String parentURI, String message, Throwable t);
+    public void brokenLinkFound(String uri, List parentURIs, String message, Throwable t);
     
     /**
      * Signals completion of the generation process. This method can

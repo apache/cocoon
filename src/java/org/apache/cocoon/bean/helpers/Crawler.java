@@ -28,17 +28,17 @@ import org.apache.cocoon.ProcessingException;
  *   A simple Cocoon crawler
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Crawler.java,v 1.4 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class Crawler {
 
     private Map allTranslatedLinks;
     private Map stillNotVisited;
-    private Set visitedAlready;
+    private Map visitedAlready;
     
     public Crawler() {
-        visitedAlready = new HashSet();
+        visitedAlready = new HashMap();
         stillNotVisited = new HashMap();
         allTranslatedLinks = new HashMap();
     }
@@ -48,10 +48,13 @@ public class Crawler {
      */
     public boolean addTarget(Target target) {
         String targetString = target.toString();
-        if (!visitedAlready.contains(targetString)) {
+        if (!visitedAlready.containsKey(targetString)) {
             if (!stillNotVisited.containsKey(targetString)) {
                 stillNotVisited.put(targetString, target);
                 return true;
+            } else {
+                Target existingTarget = (Target)stillNotVisited.get(targetString);
+                existingTarget.addReferringURI(target.getReferringURI());
             }
         }
         return false;
@@ -94,9 +97,9 @@ public class Crawler {
     public class CrawlingIterator implements Iterator {
 
         private Map stillNotVisited;
-        private Set visitedAlready;
+        private Map visitedAlready;
         
-        public CrawlingIterator(Set visitedAlready, Map stillNotVisited) {
+        public CrawlingIterator(Map visitedAlready, Map stillNotVisited) {
             this.visitedAlready = visitedAlready;
             this.stillNotVisited = stillNotVisited;
         }
@@ -128,7 +131,7 @@ public class Crawler {
             // could this be simpler:
             Object nextKey = stillNotVisited.keySet().toArray()[0];
             Object nextElement = stillNotVisited.remove(nextKey);
-            visitedAlready.add(nextKey);
+            visitedAlready.put(nextKey, nextElement);
             return nextElement;
         }
     }

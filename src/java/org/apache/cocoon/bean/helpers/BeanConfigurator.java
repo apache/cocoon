@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.8 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class BeanConfigurator {
 
@@ -67,6 +67,7 @@ public class BeanConfigurator {
     private static final String ATTR_BROKEN_LINK_REPORT_FILE = "file";
     private static final String ATTR_BROKEN_LINK_GENERATE = "generate";
     private static final String ATTR_BROKEN_LINK_EXTENSION = "extension";
+    private static final String ATTR_BROKEN_LINK_SHOW_REFERRERS="show-referrers";
 
     private static final String NODE_AGENT = "user-agent";
     private static final String NODE_ACCEPT = "accept";
@@ -257,10 +258,13 @@ public class BeanConfigurator {
             listener.setReportType(getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_TYPE));
         }
         if (hasAttribute(node, ATTR_BROKEN_LINK_GENERATE)) {
-        cocoon.setBrokenLinkGenerate(getBooleanAttributeValue(node, ATTR_BROKEN_LINK_GENERATE));
+            cocoon.setBrokenLinkGenerate(getBooleanAttributeValue(node, ATTR_BROKEN_LINK_GENERATE));
         }
         if (hasAttribute(node, ATTR_BROKEN_LINK_EXTENSION)) {
-        cocoon.setBrokenLinkExtension(getAttributeValue(node, ATTR_BROKEN_LINK_EXTENSION));
+            cocoon.setBrokenLinkExtension(getAttributeValue(node, ATTR_BROKEN_LINK_EXTENSION));
+        }
+        if (hasAttribute(node, ATTR_BROKEN_LINK_SHOW_REFERRERS)) {
+            listener.setIsShowingReferrers(getBooleanAttributeValue(node, ATTR_BROKEN_LINK_SHOW_REFERRERS));
         }
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength()!=0) {

@@ -60,7 +60,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.45 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -309,6 +309,14 @@ public class CocoonBean extends CocoonWrapper {
         }
     }
 
+    public void sendBrokenLinkWarning(String uri, List referrers, String warning, Throwable t) {
+        Iterator i = listeners.iterator();
+        while (i.hasNext()) {
+            BeanListener l = (BeanListener) i.next();
+            l.brokenLinkFound(uri, referrers, warning, t);
+        }
+    }
+
     public void pageSkipped(String uri, String message) {
         Iterator i = listeners.iterator();
         while (i.hasNext()) {
@@ -460,7 +468,7 @@ public class CocoonBean extends CocoonWrapper {
                             newLinkCount++;
                         }
                     } catch (ProcessingException pe) {
-                        this.sendBrokenLinkWarning(linkTarget.getSourceURI(), pe.getMessage());
+                        this.sendBrokenLinkWarning(linkTarget.getSourceURI(), linkTarget.getReferringURIs(), pe.getMessage(), pe);
                         if (this.brokenLinkGenerate) {
                            if (crawler.addTarget(linkTarget)) {
                                newLinkCount++;
@@ -530,7 +538,9 @@ public class CocoonBean extends CocoonWrapper {
                 output = null;
                 this.resourceUnavailable(target);
                 this.sendBrokenLinkWarning(target.getSourceURI(),
-                    DefaultNotifyingBuilder.getRootCause(pe).getMessage());
+                    target.getReferringURIs(),
+                    DefaultNotifyingBuilder.getRootCause(pe).getMessage(),
+                    DefaultNotifyingBuilder.getRootCause(pe));
             } finally {
                 if (output != null && status != -1) {
 

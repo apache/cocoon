@@ -22,8 +22,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cocoon.bean.BeanListener;
 
@@ -32,18 +34,19 @@ import org.apache.cocoon.bean.BeanListener;
  * with file destination.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OutputStreamListener.java,v 1.8 2004/05/10 12:28:27 sylvain Exp $
+ * @version CVS $Id$
  */
 public class OutputStreamListener implements BeanListener {
 
     private final PrintWriter writer;
-    private final List brokenLinks = new ArrayList();
+    private final Map brokenLinks = new HashMap();
     private final long startTimeMillis;
     private String reportFile = null;
     private String reportType = "text";
     private long siteSize = 0L;
     private int sitePages = 0;
-
+    private boolean isShowingReferrers = false;
+    
     public OutputStreamListener(OutputStream os) {
         writer = new PrintWriter(os);
         startTimeMillis = System.currentTimeMillis();
@@ -57,6 +60,10 @@ public class OutputStreamListener implements BeanListener {
         reportType = type;
     }
 
+    public void setIsShowingReferrers(boolean isShowingReferrers) {
+        this.isShowingReferrers = isShowingReferrers;
+    }
+    
     public void pageGenerated(String sourceURI,
                               String destinationURI,
                               int pageSize,
@@ -96,13 +103,18 @@ public class OutputStreamListener implements BeanListener {
         this.print("Warning: "+warning + " when generating " + uri);
     }
 
+    /**
+     * @deprecated use brokenLinkFound(String, List, String, Throwable) instead
+     */
     public void brokenLinkFound(String uri, String parentURI, String message, Throwable t) {
-        this.print(pad(42,"X [0] ")+uri+"\tBROKEN: "+message);
-        brokenLinks.add(uri + "\t" + message);
+        List parents = new ArrayList(1);
+        parents.add(parentURI);
+        brokenLinkFound(uri, parents, message, t);
+    }
 
-//            StringWriter sw = new StringWriter();
-//            t.printStackTrace(new PrintWriter(sw));
-//            System.out.println(sw.toString());
+    public void brokenLinkFound(String uri, List parentURIs, String message, Throwable t) {
+        this.print(pad(42,"X [0] ")+uri+"\tBROKEN: "+message);
+        brokenLinks.put(uri + "\t" + message, parentURIs);
 
     }
 
@@ -145,7 +157,7 @@ public class OutputStreamListener implements BeanListener {
                     new PrintWriter(
                             new FileWriter(new File(reportFile)),
                             true);
-            for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
+            for (Iterator i = brokenLinks.keySet().iterator(); i.hasNext();) {
                 writer.println((String) i.next());
             }
             writer.close();
@@ -161,11 +173,21 @@ public class OutputStreamListener implements BeanListener {
                             new FileWriter(new File(reportFile)),
                             true);
             writer.println("<broken-links>");
-            for (Iterator i = brokenLinks.iterator(); i.hasNext();) {
+            for (Iterator i = brokenLinks.keySet().iterator(); i.hasNext();) {
                 String linkMsg = (String) i.next();
                 String uri = linkMsg.substring(0,linkMsg.indexOf('\t'));
                 String msg = linkMsg.substring(linkMsg.indexOf('\t')+1);
-                writer.println("  <link message=\"" + msg + "\">" + uri + "</link>");
+                if (!isShowingReferrers) {
+                    writer.println("  <link message=\"" + msg + "\">" + uri + "</link>");
+                } else {
+                    writer.println("  <link message=\"" + msg + "\" uri=\"" + uri + "\">");
+                    List referrers = (List)brokenLinks.get(linkMsg);
+                    for (Iterator j = referrers.iterator(); j.hasNext();) {
+                        String referrer=(String) j.next();
+                        writer.println("    <referrer uri=\"" + referrer + "\"/>");
+                    }
+                    writer.println("  </link>");
+                }
             }
             writer.println("</broken-links>");
             writer.close();
