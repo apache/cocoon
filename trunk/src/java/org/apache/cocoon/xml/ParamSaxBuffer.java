@@ -26,10 +26,10 @@ import org.xml.sax.SAXException;
  *
  * Any <code>{name}</code> expression inside of the character events can be
  * replaced by the content of another SaxBuffer if it is present in the map
- * passed to the {@link toSAX(ContentHandler, Map)} method.
+ * passed to the {@link #toSAX(ContentHandler, Map)} method.
  * 
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.2 2004/03/08 14:04:00 cziegeler Exp $
+ * @version CVS $Id: ParamSaxBuffer.java,v 1.3 2004/03/17 16:37:18 vgritsenko Exp $
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -51,7 +51,7 @@ public class ParamSaxBuffer extends SaxBuffer {
      * substitution.
      */
     public void characters(char ch[], int start, int length) throws SAXException {
-        int end = start + length;
+        final int end = start + length;
         for (int i = start; i < end; i++) {
             if (ch[i] == '{') {
                 // Send any collected characters so far
@@ -68,7 +68,7 @@ public class ParamSaxBuffer extends SaxBuffer {
                     }
                     name.append(ch[j]);
                 }
-                if (j == length) {
+                if (j == end) {
                     throw new SAXException("Unclosed '}'");
                 }
                 addBit(new Parameter(name.toString()));
