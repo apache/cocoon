@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
-    <site signOn="${accountForm/signOn}" view="jexl">
+    <site signOn="${accountForm.signOn}" view="jexl">
         <backpointer name="Main Menu" do="index.do" />
         <form method="POST" styleId="workingOrderForm" action="${continuation.id}.kont">
         <panel>
