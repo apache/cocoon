@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.288 2004/03/23 19:29:01 tcurdt Exp $:-->
+<!-- CVS $Id: status.xml,v 1.289 2004/03/28 00:09:02 antonio Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated batik to 1.5.1
+   </action>
    <action dev="TC" type="remove">
      Removed xmlform and jxforms blocks as confirmed by a users poll.
    </action>
