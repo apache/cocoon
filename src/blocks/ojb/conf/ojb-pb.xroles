@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.ojb.broker.components.PBFactory']">
+
+  <role name="org.apache.cocoon.ojb.broker.components.PBFactory" shorthand="ojb-pb" default-class="org.apache.cocoon.ojb.broker.components.PBFactoryImpl"/>
+</xroles>
