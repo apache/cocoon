@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,44 +27,44 @@ import org.apache.cocoon.environment.Source;
 import org.xml.sax.SAXException;
 
 /**
- * Enviroment facade, whose delegate object can be changed. This class is required to handle internal redirects
- * in sitemap sources ("cocoon:"). This is because {@link org.apache.cocoon.components.source.SitemapSource} keeps
- * the environment in which the internal request should be processed. But internal redirects create a new
- * processing environment and there's no way to change the one held by the <code>SitemapSource</code>. So the
- * processing of internal redirects actually changes the delegate of this class, transparently for the 
- * <code>SitemapSource</code>.
- * 
- * @see org.apache.cocoon.components.source.impl.SitemapSource
- * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+ * Enviroment facade, whose delegate object can be changed. This class is
+ * required to handle internal redirects in sitemap sources ("cocoon:").
+ * This is because {@link org.apache.cocoon.components.source.impl.SitemapSource}
+ * keeps the environment in which the internal request should be processed.
+ * But internal redirects create a new processing environment and there's
+ * no way to change the one held by the <code>SitemapSource</code>. So the
+ * processing of internal redirects actually changes the delegate of this
+ * class, transparently for the <code>SitemapSource</code>.
  *
+ * @see org.apache.cocoon.components.source.impl.SitemapSource
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.7 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
-    
+
     // Track the first values set for prefix and uri
-    private String prefix = null;
-    private String uri = null;
-    
+    private String prefix;
+    private String uri;
+
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
     }
-    
+
     public EnvironmentWrapper getDelegate() {
         return this.env;
     }
-    
+
     public void setDelegate(EnvironmentWrapper env) {
         this.env = env;
     }
-    
+
     //----------------------------------
     // EnvironmentWrapper-specific method (SW:still have to understand why SitemapSource needs them)
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
-        
+
         if (this.uri == null) {
             // First call : keep the values to restore them on the wrapped
             // enviromnent in reset()
@@ -80,12 +80,12 @@ public class MutableEnvironmentFacade implements Environment {
     public void changeToLastContext() {
         this.env.changeToLastContext();
     }
-    
+
     // Move this to the Environment interface ?
     public String getRedirectURL() {
         return this.env.getRedirectURL();
     }
-    
+
     public void reset() {
         this.env.reset();
         // TODO - If we remove the line below, do we break something
@@ -295,21 +295,24 @@ public class MutableEnvironmentFacade implements Environment {
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.SourceResolver#resolve(java.lang.String)
      */
-    public Source resolve(String systemID) throws ProcessingException, SAXException, IOException {
+    public Source resolve(String systemID)
+    throws ProcessingException, SAXException, IOException {
         return env.resolve(systemID);
     }
 
     /* (non-Javadoc)
      * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
      */
-    public org.apache.excalibur.source.Source resolveURI(String arg0) throws MalformedURLException, IOException {
+    public org.apache.excalibur.source.Source resolveURI(String arg0)
+    throws MalformedURLException, IOException {
         return env.resolveURI(arg0);
     }
 
     /* (non-Javadoc)
      * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
      */
-    public org.apache.excalibur.source.Source resolveURI(String arg0, String arg1, Map arg2) throws MalformedURLException, IOException {
+    public org.apache.excalibur.source.Source resolveURI(String arg0, String arg1, Map arg2)
+    throws MalformedURLException, IOException {
         return env.resolveURI(arg0, arg1, arg2);
     }
 
