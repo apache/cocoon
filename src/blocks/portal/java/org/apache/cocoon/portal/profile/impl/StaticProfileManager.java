@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.4 2003/07/10 13:16:59 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.5 2003/07/11 07:49:57 cziegeler Exp $
  */
 public class StaticProfileManager
     extends AbstractProfileManager
@@ -143,7 +143,7 @@ public class StaticProfileManager
             parameters.put("profiletype", "layout");
             
             Map map = new SequencedHashMap();
-            map.put("base", "context://" + this.profilesPath);
+            map.put("base", this.profilesPath);
             map.put("portalname", service.getPortalName());
             map.put("profile", "layout");
             map.put("groupKey", layoutKey);
@@ -324,7 +324,7 @@ public class StaticProfileManager
             this.profilesPath = child.getValue();
         }
         if ( this.profilesPath == null ) {
-            this.profilesPath = "samples/simple-portal/profiles";
+            this.profilesPath = "context://samples/simple-portal/profiles";
         }
     }
 
