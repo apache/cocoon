@@ -180,6 +180,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="VG" type="fix" fixes-bug="20159" due-to="Hugh Leather" due-to-email="hughleat@hotmail.com">
+   Logicsheets:
+   Changed scope of and renamed temporary 'soap:call' XScript variable in &lt;soap:call&gt;.
+   Fixed compilation problem with &lt;xscript-get as="object"&gt; expression.
+  </action>
   <action dev="BRD" type="add" fixes-bug="19894" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
     I18nTransformer: support a currency attribute on i18n:number. This allows
     to take the currency symbol and formatting from one locale and the decimal
