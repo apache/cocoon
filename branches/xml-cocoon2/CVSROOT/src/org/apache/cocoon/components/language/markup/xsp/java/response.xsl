@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-25 22:21:43 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-18 12:05:51 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -50,7 +50,7 @@
       XSPResponseHelper.setHeader(objectModel, <xsl:value-of select="$name"/>, <xsl:value-of select="$value"/>);
     </xsp:logic>
   </xsl:template>
-
+<!--
   <xsl:template match="xsp-response:set-content-type">
     <xsl:variable name="type">
       <xsl:choose>
@@ -83,7 +83,7 @@
       XSPResponseHelper.sendRedirect(objectModel, <xsl:value-of select="$location"/>);
     </xsp:logic>
   </xsl:template>
-
+-->
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
     <xsl:choose>

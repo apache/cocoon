@@ -20,14 +20,15 @@ import org.apache.cocoon.environment.AbstractEnvironment;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-21 12:17:10 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 12:05:56 $
  */
 
 public abstract class AbstractCommandLineEnvironment extends AbstractEnvironment {
 
     protected String contentType;
     protected OutputStream stream;
-    
+    protected int contentLength;
+
     public AbstractCommandLineEnvironment(String uri, String view, File context, OutputStream stream)
     throws MalformedURLException {
         super(uri, view, context);
@@ -40,12 +41,19 @@ public abstract class AbstractCommandLineEnvironment extends AbstractEnvironment
     public void redirect(boolean sessionmode, String newURL) throws IOException {
         throw new RuntimeException (this.getClass().getName() + ".redirect(String url) method not yet implemented!");
     }
-    
+
     /**
      * Set the ContentType
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    /**
+     * Set the ContentLength
+     */
+    public void setContentLength(int contentLength) {
+        this.contentLength = contentLength;
     }
 
     /**

@@ -9,8 +9,6 @@
 
 package org.apache.cocoon.components.language.markup.xsp;
 
-import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -35,6 +33,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.Tokenizer;
@@ -47,7 +46,7 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.10 $ $Date: 2001-03-30 17:14:21 $
+ * @version $Revision: 1.1.2.11 $ $Date: 2001-04-18 12:05:49 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {
@@ -98,7 +97,7 @@ public class XSPUtil {
         return buffer.toString();
     }
 
-    public static String relativeFilename(String filename, Map objectModel) 
+    public static String relativeFilename(String filename, Map objectModel)
         throws IOException {
             File file = new File(filename);
             if (file.isAbsolute()) {
@@ -265,7 +264,7 @@ public class XSPUtil {
         return ++count;
     }
 
-    public static synchronized int getSessionCount(HttpSession session) {
+    public static synchronized int getSessionCount(Session session) {
         Integer integer = (Integer)session.getAttribute("util.counter");
         if (integer == null) {
             integer = new Integer(0);

@@ -15,16 +15,16 @@ import java.net.MalformedURLException;
  * Defines an interface to provide client context information .  
  * 
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-30 17:14:24 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-18 12:05:53 $
  *
  */
 
 public interface Context {
 
-    public Object getAttribute(String name);
+    Object getAttribute(String name);
 
-	public URL getResource(String path) throws MalformedURLException;
+    URL getResource(String path) throws MalformedURLException;
 
-	public java.lang.String getMimeType(String file);
+    String getMimeType(String file);
 
 }

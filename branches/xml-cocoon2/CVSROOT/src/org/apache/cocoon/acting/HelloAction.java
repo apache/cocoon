@@ -9,8 +9,6 @@ package org.apache.cocoon.acting;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.configuration.Configuration;
@@ -22,13 +20,14 @@ import org.xml.sax.EntityResolver;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 
 /**
  * A simple Action that tracks if a <code>Session</code> object
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:10 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-18 12:05:47 $
  */
 public class HelloAction extends ComposerAction {
 
@@ -39,7 +38,7 @@ public class HelloAction extends ComposerAction {
     public Map act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
         Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
         if (request != null) {
-            HttpSession session = request.getSession (false);
+            Session session = request.getSession (false);
 
             if (session != null) {
                 if (session.isNew()) {

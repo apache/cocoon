@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.26 2001-04-18 06:13:55 cziegeler Exp $
+  $Id: todo.xml,v 1.6.2.27 2001-04-18 12:05:45 cziegeler Exp $
 -->
 
 
@@ -26,12 +26,6 @@
  </devs>
 
  <actions priority="high">
-  <action context="code" assigned-to="CZ">
-   Creating wrappers for Session and Cookie.
-   The creation of these wrapper classes would allow us to be independent
-   of the javax.servlet classes.
-  </action>
-
   <action context="code" assigned-to="CZ">
    Cleaning up the environment object like Request, Response for the
    different environments.

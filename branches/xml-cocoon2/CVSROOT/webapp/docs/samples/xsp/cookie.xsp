@@ -8,7 +8,7 @@
 >
 	
 	<xsp:structure>
-		<xsp:include>javax.servlet.http.Cookie</xsp:include>		
+		<xsp:include>org.apache.cocoon.environment.Cookie</xsp:include>		
 	</xsp:structure>
 	
 	<page>

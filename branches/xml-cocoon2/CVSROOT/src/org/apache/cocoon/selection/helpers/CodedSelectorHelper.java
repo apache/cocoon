@@ -11,11 +11,10 @@ import org.apache.cocoon.Constants;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.Session;
 
 /**
  * This abstract class provides the basis for testing the environment with
@@ -24,7 +23,7 @@ import org.apache.cocoon.environment.Context;
  * variables for developer ease.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-30 17:14:37 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-18 12:06:04 $
  */
 public abstract class CodedSelectorHelper
 {
@@ -46,5 +45,5 @@ public abstract class CodedSelectorHelper
     protected Context context;
     protected Request request;
     protected Response response;
-    protected HttpSession session;
+    protected Session session;
 }

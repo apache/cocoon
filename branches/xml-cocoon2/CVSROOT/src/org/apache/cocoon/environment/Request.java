@@ -14,14 +14,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
-
 /**
- * Defines an interface to provide client request information .  
- * 
+ * Defines an interface to provide client request information .
+ *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-09 11:15:47 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 12:05:54 $
  *
  */
 
@@ -30,217 +28,217 @@ public interface Request {
     /**
      *
      * Returns the value of the named attribute as an <code>Object</code>,
-     * or <code>null</code> if no attribute of the given name exists. 
+     * or <code>null</code> if no attribute of the given name exists.
      *
-     * @param name	a <code>String</code> specifying the name of 
+     * @param name	a <code>String</code> specifying the name of
      *			the attribute
      *
-     * @return		an <code>Object</code> containing the value 
+     * @return		an <code>Object</code> containing the value
      *			of the attribute, or <code>null</code> if
      *			the attribute does not exist
      *
      */
-    public Object get(String name);
+    Object get(String name);
 
     /**
      *
      * Returns the value of the named attribute as an <code>Object</code>,
-     * or <code>null</code> if no attribute of the given name exists. 
+     * or <code>null</code> if no attribute of the given name exists.
      *
-     * @param name	a <code>String</code> specifying the name of 
+     * @param name	a <code>String</code> specifying the name of
      *			the attribute
      *
-     * @return		an <code>Object</code> containing the value 
+     * @return		an <code>Object</code> containing the value
      *			of the attribute, or <code>null</code> if
      *			the attribute does not exist
      *
      */
 
-    public Object getAttribute(String name);
-    
+    Object getAttribute(String name);
+
     /**
      * Returns an <code>Enumeration</code> containing the
-     * names of the attributes available to this request. 
+     * names of the attributes available to this request.
      * This method returns an empty <code>Enumeration</code>
      * if the request has no attributes available to it.
-     * 
      *
-     * @return		an <code>Enumeration</code> of strings 
-     *			containing the names 
+     *
+     * @return		an <code>Enumeration</code> of strings
+     *			containing the names
      * 			of the request's attributes
      *
      */
 
-    public Enumeration getAttributeNames();
-    
+    Enumeration getAttributeNames();
+
     /**
      * Returns the name of the character encoding used in the body of this
      * request. This method returns <code>null</code> if the request
      * does not specify a character encoding
-     * 
      *
-     * @return		a <code>String</code> containing the name of 
+     *
+     * @return		a <code>String</code> containing the name of
      *			the chararacter encoding, or <code>null</code>
      *			if the request does not specify a character encoding
      *
      */
 
-    public String getCharacterEncoding();
-    
+    String getCharacterEncoding();
+
     /**
-     * Returns the length, in bytes, of the request body 
+     * Returns the length, in bytes, of the request body
      *
-     * @return		an integer containing the length of the 
+     * @return		an integer containing the length of the
      * 			request body or -1 if the length is not known
      *
      */
 
-    public int getContentLength();
-    
+    int getContentLength();
+
     /**
      * Returns the MIME type of the body of the request
      *
-     * @return		a <code>String</code> containing the name 
-     *			of the MIME type of 
+     * @return		a <code>String</code> containing the name
+     *			of the MIME type of
      * 			the request, or -1 if the type is not known
      *
      */
 
-    public String getContentType();
-    
+    String getContentType();
+
     /**
      * Returns the value of a request parameter as a <code>String</code>,
      *
-     * @param name 	a <code>String</code> specifying the 
+     * @param name 	a <code>String</code> specifying the
      *			name of the parameter
      *
-     * @return		a <code>String</code> representing the 
+     * @return		a <code>String</code> representing the
      *			single value of the parameter
      *
      * @see 		#getParameterValues
      *
      */
 
-    public String getParameter(String name);
-    
+    String getParameter(String name);
+
     /**
      *
      * Returns an <code>Enumeration</code> of <code>String</code>
      * objects containing the names of the parameters contained
-     * in this request. If the request has 
-     * no parameters, the method returns an 
-     * empty <code>Enumeration</code>. 
+     * in this request. If the request has
+     * no parameters, the method returns an
+     * empty <code>Enumeration</code>.
      *
      * @return		an <code>Enumeration</code> of <code>String</code>
      *			objects, each <code>String</code> containing
-     * 			the name of a request parameter; or an 
+     * 			the name of a request parameter; or an
      *			empty <code>Enumeration</code> if the
      *			request has no parameters
      *
      */
-     
-    public Enumeration getParameterNames();
-    
+
+    Enumeration getParameterNames();
+
     /**
-     * Returns an array of <code>String</code> objects containing 
-     * all of the values the given request parameter has, or 
+     * Returns an array of <code>String</code> objects containing
+     * all of the values the given request parameter has, or
      * <code>null</code> if the parameter does not exist.
      *
      * <p>If the parameter has a single value, the array has a length
      * of 1.
      *
-     * @param name	a <code>String</code> containing the name of 
+     * @param name	a <code>String</code> containing the name of
      *			the parameter whose value is requested
      *
-     * @return		an array of <code>String</code> objects 
+     * @return		an array of <code>String</code> objects
      *			containing the parameter's values
      *
      * @see		#getParameter
      *
      */
 
-    public String[] getParameterValues(String name);
-    
-    
+    String[] getParameterValues(String name);
+
+
     /**
      * Returns the name and version of the protocol the request uses
-     * in the form <i>protocol/majorVersion.minorVersion</i>, for 
+     * in the form <i>protocol/majorVersion.minorVersion</i>, for
      * example, HTTP/1.1. For HTTP servlets, the value
-     * returned is the same as the value of the CGI variable 
+     * returned is the same as the value of the CGI variable
      * <code>SERVER_PROTOCOL</code>.
      *
-     * @return		a <code>String</code> containing the protocol 
+     * @return		a <code>String</code> containing the protocol
      *			name and version number
      *
      */
-    
-    public String getProtocol();
-    
+
+    String getProtocol();
+
     /**
-     * Returns the name of the scheme used to make this request, 
+     * Returns the name of the scheme used to make this request,
      * for example,
      * <code>http</code>, <code>https</code>, or <code>ftp</code>.
      * Different schemes have different rules for constructing URLs,
      * as noted in RFC 1738.
      *
-     * @return		a <code>String</code> containing the name 
+     * @return		a <code>String</code> containing the name
      *			of the scheme used to make this request
      *
      */
 
-    public String getScheme();
-    
+    String getScheme();
+
     /**
      * Returns the host name of the server that received the request.
-     * For HTTP servlets, same as the value of the CGI variable 
+     * For HTTP servlets, same as the value of the CGI variable
      * <code>SERVER_NAME</code>.
      *
-     * @return		a <code>String</code> containing the name 
+     * @return		a <code>String</code> containing the name
      *			of the server to which the request was sent
      */
 
-    public String getServerName();
-    
+    String getServerName();
+
     /**
      * Returns the port number on which this request was received.
-     * For HTTP servlets, same as the value of the CGI variable 
+     * For HTTP servlets, same as the value of the CGI variable
      * <code>SERVER_PORT</code>.
      *
      * @return		an integer specifying the port number
      *
      */
 
-    public int getServerPort();
-    
+    int getServerPort();
+
     /**
-     * Returns the Internet Protocol (IP) address of the client 
-     * that sent the request.  For HTTP servlets, same as the value of the 
+     * Returns the Internet Protocol (IP) address of the client
+     * that sent the request.  For HTTP servlets, same as the value of the
      * CGI variable <code>REMOTE_ADDR</code>.
      *
-     * @return		a <code>String</code> containing the 
+     * @return		a <code>String</code> containing the
      *			IP address of the client that sent the request
      *
      */
-    
-    public String getRemoteAddr();
-    
+
+    String getRemoteAddr();
+
     /**
      * Returns the fully qualified name of the client that sent the
      * request, or the IP address of the client if the name cannot be
-     * determined. For HTTP servlets, same as the value of the CGI variable 
+     * determined. For HTTP servlets, same as the value of the CGI variable
      * <code>REMOTE_HOST</code>.
      *
-     * @return		a <code>String</code> containing the fully qualified name 
+     * @return		a <code>String</code> containing the fully qualified name
      *			of the client
      *
      */
 
-    public String getRemoteHost();
-    
+    String getRemoteHost();
+
     /**
      *
      * Stores an attribute in this request.
-     * Attributes are reset between requests.  
+     * Attributes are reset between requests.
      *
      * <p>Attribute names should follow the same conventions as
      * package names. Names beginning with <code>java.*</code>,
@@ -248,15 +246,15 @@ public interface Request {
      * reserved for use by Sun Microsystems.
      *
      *
-     * @param name			a <code>String</code> specifying 
+     * @param name			a <code>String</code> specifying
      *					the name of the attribute
      *
      * @param o				the <code>Object</code> to be stored
      *
      */
 
-    public void setAttribute(String name, Object o);
-    
+    void setAttribute(String name, Object o);
+
     /**
      *
      * Removes an attribute from this request.  This method is not
@@ -269,16 +267,16 @@ public interface Request {
      * reserved for use by Sun Microsystems.
      *
      *
-     * @param name			a <code>String</code> specifying 
+     * @param name			a <code>String</code> specifying
      *					the name of the attribute to remove
      *
      */
 
-    public void removeAttribute(String name);
-    
+    void removeAttribute(String name);
+
     /**
      *
-     * Returns the preferred <code>Locale</code> that the client will 
+     * Returns the preferred <code>Locale</code> that the client will
      * accept content in, based on the Accept-Language header.
      * If the client request doesn't provide an Accept-Language header,
      * this method returns the default locale for the server.
@@ -288,8 +286,8 @@ public interface Request {
      *
      */
 
-    public Locale getLocale();
-    
+    Locale getLocale();
+
     /**
      *
      * Returns an <code>Enumeration</code> of <code>Locale</code> objects
@@ -297,17 +295,17 @@ public interface Request {
      * locales that are acceptable to the client based on the Accept-Language
      * header.
      * If the client request doesn't provide an Accept-Language header,
-     * this method returns an <code>Enumeration</code> containing one 
+     * this method returns an <code>Enumeration</code> containing one
      * <code>Locale</code>, the default locale for the server.
      *
      *
-     * @return		an <code>Enumeration</code> of preferred 
+     * @return		an <code>Enumeration</code> of preferred
      *                  <code>Locale</code> objects for the client
      *
      */
 
-    public Enumeration getLocales();
-    
+    Enumeration getLocales();
+
     /**
      *
      * Returns a boolean indicating whether this request was made using a
@@ -319,8 +317,8 @@ public interface Request {
      *
      */
 
-    public boolean isSecure();
-    
+    boolean isSecure();
+
     /**
      *
      * Returns an array containing all of the <code>Cookie</code>
@@ -334,15 +332,15 @@ public interface Request {
      *
      */
 
-    public Cookie[] getCookies();
-    
+    Cookie[] getCookies();
+
     /**
      *
      * Returns the value of the specified request header
-     * as a <code>long</code> value that represents a 
+     * as a <code>long</code> value that represents a
      * <code>Date</code> object. Use this method with
      * headers that contain dates, such as
-     * <code>If-Modified-Since</code>. 
+     * <code>If-Modified-Since</code>.
      *
      * <p>The date is returned as
      * the number of milliseconds since January 1, 1970 GMT.
@@ -371,8 +369,8 @@ public interface Request {
      *
      */
 
-    public long getDateHeader(String name);
-    
+    long getDateHeader(String name);
+
     /**
      *
      * Returns the value of the specified request header
@@ -390,9 +388,9 @@ public interface Request {
      *				if the request does not
      *				have a header of that name
      *
-     */			
+     */
 
-    public String getHeader(String name); 
+    String getHeader(String name);
 
     /**
      *
@@ -418,10 +416,10 @@ public interface Request {
      *				if the request does not
      *				have any headers of that name
      *
-     */			
+     */
 
-    public Enumeration getHeaders(String name); 
-    
+    Enumeration getHeaders(String name);
+
     /**
      *
      * Returns an enumeration of all the header names
@@ -442,23 +440,23 @@ public interface Request {
      *
      */
 
-    public Enumeration getHeaderNames();
-    
+    Enumeration getHeaderNames();
+
     /**
      *
-     * Returns the name of the HTTP method with which this 
+     * Returns the name of the HTTP method with which this
      * request was made, for example, GET, POST, or PUT.
      * Same as the value of the CGI variable REQUEST_METHOD.
      *
-     * @return			a <code>String</code> 
+     * @return			a <code>String</code>
      *				specifying the name
      *				of the method with which
      *				this request was made
      *
      */
- 
-    public String getMethod();
-    
+
+    String getMethod();
+
     /**
      *
      * Returns any extra path information associated with
@@ -471,7 +469,7 @@ public interface Request {
      * <p>Same as the value of the CGI variable PATH_INFO.
      *
      *
-     * @return		a <code>String</code> specifying 
+     * @return		a <code>String</code> specifying
      *			extra path information that comes
      *			after the servlet path but before
      *			the query string in the request URL;
@@ -479,9 +477,9 @@ public interface Request {
      *			any extra path information
      *
      */
-     
-    public String getPathInfo();
-    
+
+    String getPathInfo();
+
     /**
      *
      * Returns any extra path information after the servlet name
@@ -500,8 +498,8 @@ public interface Request {
      *
      */
 
-    public String getPathTranslated();
-    
+    String getPathTranslated();
+
     /**
      *
      * Returns the portion of the request URI that indicates the context
@@ -518,8 +516,8 @@ public interface Request {
      *
      */
 
-    public String getContextPath();
-    
+    String getContextPath();
+
     /**
      *
      * Returns the query string that is contained in the request
@@ -528,20 +526,20 @@ public interface Request {
      * of the CGI variable QUERY_STRING.
      *
      * @return		a <code>String</code> containing the query
-     *			string or <code>null</code> if the URL 
+     *			string or <code>null</code> if the URL
      *			contains no query string
      *
      */
 
-    public String getQueryString();
-    
+    String getQueryString();
+
     /**
      *
      * Returns the login of the user making this request, if the
-     * user has been authenticated, or <code>null</code> if the user 
+     * user has been authenticated, or <code>null</code> if the user
      * has not been authenticated.
      * Whether the user name is sent with each subsequent request
-     * depends on the browser and type of authentication. Same as the 
+     * depends on the browser and type of authentication. Same as the
      * value of the CGI variable REMOTE_USER.
      *
      * @return		a <code>String</code> specifying the login
@@ -550,8 +548,8 @@ public interface Request {
      *
      */
 
-    public String getRemoteUser();
-    
+    String getRemoteUser();
+
     /**
      *
      * Returns the session ID specified by the client. This may
@@ -571,8 +569,8 @@ public interface Request {
      *
      */
 
-    public String getRequestedSessionId();
-    
+    String getRequestedSessionId();
+
     /**
      *
      * Returns the part of this request's URL from the protocol
@@ -591,37 +589,37 @@ public interface Request {
      * </blockquote>
      *
      * @return		a <code>String</code> containing
-     *			the part of the URL from the 
+     *			the part of the URL from the
      *			protocol name up to the query string
      *
      *
      */
 
-    public String getRequestURI();
-    
+    String getRequestURI();
+
     /**
      *
      * Returns the part of this request's URL that calls
      * the servlet. This includes either the servlet name or
      * a path to the servlet, but does not include any extra
-     * path information or a query string. Same as the value 
+     * path information or a query string. Same as the value
      * of the CGI variable SCRIPT_NAME.
      *
      *
      * @return		a <code>String</code> containing
      *			the name or path of the servlet being
-     *			called, as specified in the request URL 
+     *			called, as specified in the request URL
      *
      *
      */
 
-    public String getServletPath();
-    
+    String getServletPath();
+
     /**
      *
      * Returns the current <code>HttpSession</code>
      * associated with this request or, if if there is no
-     * current session and <code>create</code> is true, returns 
+     * current session and <code>create</code> is true, returns
      * a new session.
      *
      * <p>If <code>create</code> is <code>false</code>
@@ -629,19 +627,19 @@ public interface Request {
      * this method returns <code>null</code>.
      *
      * <p>To make sure the session is properly maintained,
-     * you must call this method before 
+     * you must call this method before
      * the response is committed.
      *
      *
      *
      *
      * @param		<code>true</code> to create
-     *			a new session for this request if necessary; 
+     *			a new session for this request if necessary;
      *			<code>false</code> to return <code>null</code>
      *			if there's no current session
-     *			
      *
-     * @return 		the <code>HttpSession</code> associated 
+     *
+     * @return 		the <code>HttpSession</code> associated
      *			with this request or <code>null</code> if
      * 			<code>create</code> is <code>false</code>
      *			and the request has no valid session
@@ -651,13 +649,13 @@ public interface Request {
      *
      */
 
-    public HttpSession getSession(boolean create);
-    
+    Session getSession(boolean create);
+
     /**
      *
      * Returns the current session associated with this request,
      * or if the request does not have a session, creates one.
-     * 
+     *
      * @return		the <code>HttpSession</code> associated
      *			with this request
      *
@@ -665,8 +663,8 @@ public interface Request {
      *
      */
 
-    public HttpSession getSession();
-    
+     Session getSession();
+
     /**
      *
      * Checks whether the requested session ID is still valid.
@@ -681,8 +679,8 @@ public interface Request {
      *
      */
 
-    public boolean isRequestedSessionIdValid();
-    
+    boolean isRequestedSessionIdValid();
+
     /**
      *
      * Checks whether the requested session ID came in as a cookie.
@@ -694,13 +692,13 @@ public interface Request {
      *
      * @see			#getSession
      *
-     */ 
+     */
 
-    public boolean isRequestedSessionIdFromCookie();
-    
+    boolean isRequestedSessionIdFromCookie();
+
     /**
      *
-     * Checks whether the requested session ID came in as part of the 
+     * Checks whether the requested session ID came in as part of the
      * request URL.
      *
      * @return			<code>true</code> if the session ID
@@ -711,6 +709,6 @@ public interface Request {
      * @see			#getSession
      *
      */
-    
-    public boolean isRequestedSessionIdFromURL();
+
+    boolean isRequestedSessionIdFromURL();
 }

@@ -1,4 +1,4 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.3 2001-04-17 18:18:06 dims Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.4 2001-04-18 12:05:46 cziegeler Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
@@ -16,6 +16,7 @@ import org.xml.sax.InputSource;
 import org.apache.cocoon.*;
 import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -23,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.SQLException;
 
-import javax.servlet.http.HttpSession;
 
 /**
  * This action is used to authenticate user by comparing several request
@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  * 	&lt;/table&gt;
  * &lt;/root&gt;
  * </pre>
- * The values specified via "request-param" describe the name of HTTP request 
+ * The values specified via "request-param" describe the name of HTTP request
  * parameter, "dbcol" indicates matching database column and finally
  * "to-session" attribute indicates under which name the value obtained from
  * database should stored in the session. Of course new session is created
@@ -53,7 +53,7 @@ import javax.servlet.http.HttpSession;
  * expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-17 18:18:06 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-18 12:05:46 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -73,7 +73,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
             Request req = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
             /* check request validity */
-            if (req == null) 
+            if (req == null)
                 return null;
 
 
@@ -88,11 +88,11 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                 ResultSet rs = st.executeQuery (query);
                 if (rs.next ()) {
                     getLogger ().debug ("DBAUTH: authorized successfully");
-                    HttpSession session = req.getSession (false);
-                    if (session != null) 
+                    Session session = req.getSession (false);
+                    if (session != null)
                         session.invalidate ();
                     session = req.getSession (true);
-                    if (session == null) 
+                    if (session == null)
                         return null;
                     HashMap actionMap = this.propagateParameters (conf, rs,
                             session);
@@ -120,20 +120,20 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
         Configuration[] select = table.getChildren ("select");
         try {
             for (int i = 0; i < select.length; i ++) {
-                if (i != 0) 
+                if (i != 0)
                     queryBuffer.append (", ");
                 dbcol = select[i].getAttribute ("dbcol");
                 queryBuffer.append (dbcol);
                 try {
                     request_param = select[i].getAttribute ("request-param");
-                    if (request_param == null || 
+                    if (request_param == null ||
                             request_param.trim().equals ("")) {
                         continue;
                     }
                 } catch (Exception e) {
                     continue;
                 }
-                /* if there is a request parameter name, 
+                /* if there is a request parameter name,
                  * but not the value, we exit immediately do
                  * that authorization fails authomatically */
                 request_value = req.getParameter (
@@ -157,7 +157,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 
     private HashMap propagateParameters (Configuration conf, ResultSet rs,
-            HttpSession session) {
+            Session session) {
         Configuration table = conf.getChild ("table");
         Configuration[] select = table.getChildren ("select");
         String dbcol, session_param, type;
@@ -167,7 +167,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                 dbcol = select[i].getAttribute ("dbcol");
                 try {
                     session_param = select[i].getAttribute ("to-session");
-                    if (session_param != null && 
+                    if (session_param != null &&
                             !session_param.trim().equals ("")) {
                         String s = rs.getString (i + 1);
                         getLogger ().debug ("DBAUTH: propagating param "
@@ -183,13 +183,13 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                         }
                         Object o = null;
                         if ("string".equals (type)) {
-                            o = s; 
+                            o = s;
                         } else if ("long".equals (type)) {
                             Long l = Long.decode (s);
-                            o = l; 
+                            o = l;
                         } else if ("double".equals (type)) {
                             Double d = Double.valueOf (s);
-                            o = d; 
+                            o = d;
                         }
                         session.setAttribute (session_param, o);
                         map.put (session_param, o);
@@ -205,5 +205,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.3 2001-04-17 18:18:06 dims Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.4 2001-04-18 12:05:46 cziegeler Exp $
 // vim: set et ts=4 sw=4:

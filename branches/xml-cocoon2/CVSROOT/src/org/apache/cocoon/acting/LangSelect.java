@@ -17,12 +17,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Session;
 
 import org.apache.avalon.configuration.Parameters;
 
@@ -79,7 +78,7 @@ public class LangSelect extends java.lang.Object implements Action {
         Request request =
                 (Request)(objectModel.get(Constants.REQUEST_OBJECT));
 
-        HttpSession session = request.getSession();
+        Session session = request.getSession();
         if (session != null) {
             if (session.getAttribute("lang") == null) {
                 session.setAttribute("lang", lang);
@@ -128,7 +127,7 @@ public class LangSelect extends java.lang.Object implements Action {
         lang = request.getParameter("lang");
 
         if (lang == null) {
-            HttpSession session = request.getSession(false);
+            Session session = request.getSession(false);
             if (session != null) {
                 Object session_lang = session.getAttribute("lang");
                 if (session_lang != null) {

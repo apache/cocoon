@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-23 14:01:26 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-18 12:05:57 $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {

@@ -13,11 +13,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
 import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.Cookie;
 
 /**
  *
@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.Response;
  * to access HTTP headers and cookies.
  */
 
-public class HttpResponse implements HttpServletResponse, Response {
+public class HttpResponse implements Response {
 
     /** The real HttpServletResponse object */
     private HttpServletResponse res = null;
@@ -39,10 +39,27 @@ public class HttpResponse implements HttpServletResponse, Response {
         this.res = res;
     }
 
-    /* The HttpServletResponse interface methods */
+    /**
+     * Create a new cookie which is not added to the response
+     */
+    public Cookie createCookie(String name, String value) {
+        return new HttpCookie(name, value);
+    }
 
     public void addCookie(Cookie cookie) {
-        this.res.addCookie(cookie);
+        if (cookie instanceof HttpCookie) {
+            this.res.addCookie(((HttpCookie)cookie).getServletCookie());
+        } else {
+            javax.servlet.http.Cookie newCookie;
+            newCookie = new javax.servlet.http.Cookie(cookie.getName(), cookie.getValue());
+            newCookie.setComment(cookie.getComment());
+            newCookie.setDomain(cookie.getDomain());
+            newCookie.setMaxAge(cookie.getMaxAge());
+            newCookie.setPath(cookie.getPath());
+            newCookie.setSecure(cookie.getSecure());
+            newCookie.setVersion(cookie.getVersion());
+            this.res.addCookie(newCookie);
+        }
     }
 
     public boolean containsHeader(String name) {

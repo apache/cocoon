@@ -18,10 +18,10 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.environment.Session;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -50,9 +50,9 @@ public class HttpEnvironment extends AbstractEnvironment {
     throws MalformedURLException, IOException {
         super(uri, req.getParameter(Constants.VIEW_PARAM), servletContext.getRealPath("/"), req.getParameter(Constants.ACTION_PARAM));
 
-		this.request = new HttpRequest (req, this);
-		this.response = new HttpResponse (res);
-		this.context = new HttpContext (servletContext);
+        this.request = new HttpRequest (req, this);
+        this.response = new HttpResponse (res);
+        this.context = new HttpContext (servletContext);
         this.outputStream = response.getOutputStream();
         this.objectModel.put(Constants.REQUEST_OBJECT, this.request);
         this.objectModel.put(Constants.RESPONSE_OBJECT, this.response);
@@ -69,8 +69,8 @@ public class HttpEnvironment extends AbstractEnvironment {
         }
         // check if session mode shall be activated
         if (sessionmode) {
-            // The session 
-            HttpSession session = null;
+            // The session
+            Session session = null;
             getLogger().debug("redirect: entering session mode");
             String s = request.getRequestedSessionId();
             if (s != null) {
@@ -109,6 +109,13 @@ public class HttpEnvironment extends AbstractEnvironment {
      */
     public void setContentType(String contentType) {
         this.response.setContentType(contentType);
+    }
+
+    /**
+     * Set the length of the generated content
+     */
+    public void setContentLength(int length) {
+        this.response.setContentLength(length);
     }
 
     /**

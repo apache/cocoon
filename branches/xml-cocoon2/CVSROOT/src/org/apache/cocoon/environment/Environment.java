@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-21 12:17:06 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-18 12:05:54 $
  */
 
 public interface Environment extends EntityResolver {
@@ -54,6 +54,11 @@ public interface Environment extends EntityResolver {
      * Set the content type of the generated resource
      */
     void setContentType(String mimeType);
+
+    /**
+     * Set the length of the generated content
+     */
+    void setContentLength(int length);
 
     /**
      * Set the response status code

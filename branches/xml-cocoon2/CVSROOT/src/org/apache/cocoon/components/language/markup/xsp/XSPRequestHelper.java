@@ -10,7 +10,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 import java.util.Enumeration;
 
 import org.apache.cocoon.environment.Request;
-import javax.servlet.http.HttpSession;
+import org.apache.cocoon.environment.Session;
 import java.util.Map;
 import java.util.Vector;
 
@@ -24,7 +24,7 @@ import org.apache.cocoon.Constants;
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-17 18:18:32 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-18 12:05:49 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -258,7 +258,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     String name) {
 
     Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
-    HttpSession session = request.getSession(false);
+    Session session = request.getSession(false);
     return session.getAttribute(name);
   }
 
@@ -276,7 +276,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     String defaultValue) {
 
     Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
-    HttpSession session = request.getSession(false);
+    Session session = request.getSession(false);
     Object value = null;
 
     if (session != null) {

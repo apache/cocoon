@@ -250,13 +250,13 @@ by the main ones.
   <!-- Prepares the servlet 2.3 source code                                -->
   <!-- =================================================================== -->
   <target name="prepare-src-23" depends="prepare-src-main" if="servlet23.present">
-    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest23.java"
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest22.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
         filtering="on"/>
     <copy file="${src.dir}/org/apache/cocoon/environment/http/RequestWrapper23.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/RequestWrapper.java"
         filtering="on"/>
-    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse23.java"
+    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse22.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
         filtering="on"/>
   </target>

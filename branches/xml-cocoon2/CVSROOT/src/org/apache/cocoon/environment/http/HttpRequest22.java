@@ -17,21 +17,21 @@ import java.util.Vector;
 import javax.servlet.ServletInputStream;
 import javax.servlet.RequestDispatcher;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Session;
 
 /**
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest22.java,v 1.1.2.7 2001-04-12 06:33:31 giacomo Exp $
+ * @version CVS $Id: HttpRequest22.java,v 1.1.2.8 2001-04-18 12:05:59 cziegeler Exp $
  */
 
-public class HttpRequest implements HttpServletRequest, Request {
+public class HttpRequest implements Request {
 
     /** The real HttpServletRequest object */
     private HttpServletRequest req = null;
@@ -80,8 +80,18 @@ public class HttpRequest implements HttpServletRequest, Request {
         return this.req.getAuthType();
     }
 
+    private Cookie[] wrappedCookies = null;
     public Cookie[] getCookies() {
-        return this.req.getCookies();
+        if (this.wrappedCookies == null) {
+            javax.servlet.http.Cookie[] cookies = this.req.getCookies();
+            if (cookies != null) {
+                this.wrappedCookies = new Cookie[cookies.length];
+                for(int i=0; i<cookies.length;i++) {
+                    this.wrappedCookies[i] = new HttpCookie(cookies[i]);
+                }
+            }
+        }
+        return this.wrappedCookies;
     }
 
     public long getDateHeader(String name) {
@@ -148,12 +158,19 @@ public class HttpRequest implements HttpServletRequest, Request {
         return this.req.getServletPath();
     }
 
-    public HttpSession getSession(boolean create) {
-        return this.req.getSession(create);
+    private HttpSession cachedSession = null;
+    public Session getSession(boolean create) {
+        if (this.cachedSession == null) {
+            javax.servlet.http.HttpSession session = this.req.getSession(create);
+            if (session != null) {
+                this.cachedSession = new HttpSession(session);
+            }
+        }
+        return this.cachedSession;
     }
 
-    public HttpSession getSession() {
-        return this.req.getSession();
+    public Session getSession() {
+        return this.getSession(true);
     }
 
     public boolean isRequestedSessionIdValid() {

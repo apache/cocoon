@@ -13,54 +13,30 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
 
+import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
 
 /**
  * Creates a specific servlet response simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-30 17:14:27 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-18 12:05:56 $
  */
 
 public class CommandLineResponse implements Response {
-    
-    public PrintWriter getWriter() throws IOException {
-        throw new IllegalStateException ("you are not a serializer or reader");
-    }
 
-    public void setContentLength(int len) {}
-    public void setContentType(String type) {}
     public String getCharacterEncoding() { return null; }
+    public Cookie createCookie(String name, String value) { return null; }
     public void addCookie(Cookie cookie) {}
     public boolean containsHeader(String name) { return false; }
-    public void setStatus(int sc) {}
     public void setHeader(String name, String value) {}
     public void setIntHeader(String name, int value) {}
     public void setDateHeader(String name, long date) {}
-    public void sendError(int sc, String msg) throws IOException {}
-    public void sendError(int sc) throws IOException {}
-    public void sendRedirect(String location) throws IOException {}
     public String encodeURL (String url) { return url; }
-    public String encodeRedirectURL (String url) { return url; }
-    public void setBufferSize(int size) { }
-    public int getBufferSize() { return 0; }
-    public void flushBuffer() { }
-    public boolean isCommitted() { return false; }
-    public void reset() { }
     public void setLocale(Locale locale) { }
     public Locale getLocale() { return null; }
     public void addDateHeader(String name, long date) { }
     public void addHeader(String name, String value) { }
     public void addIntHeader(String name, int value) { }
-
-    /** @deprecated */
-    public void setStatus(int sc, String sm) {}
-    /** @deprecated */
-    public String encodeUrl(String url) { return url; }
-    /** @deprecated */
-    public String encodeRedirectUrl(String url) { return url; }
-
-    public void resetBuffer() {};
 }

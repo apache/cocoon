@@ -18,16 +18,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Iterator;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
-
+import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-12 06:32:56 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-18 12:05:56 $
  */
 
 /*
@@ -152,7 +151,6 @@ public class CommandLineRequest implements Request {
             return new EmptyEnumeration();
     }
 
-    public BufferedReader getReader() throws IOException { return null; }
     public String getCharacterEncoding() { return characterEncoding; }
     public int getContentLength() { return -1; }
 
@@ -167,8 +165,8 @@ public class CommandLineRequest implements Request {
     public String getRemoteUser() { return System.getProperty("user.name"); }
 
     public Cookie[] getCookies() { return null; }
-    public HttpSession getSession() { return null; }
-    public HttpSession getSession(boolean create) { return null; }
+    public Session getSession() { return null; }
+    public Session getSession(boolean create) { return null; }
     public String getRequestedSessionId() { return null; }
     public boolean isRequestedSessionIdValid() { return false; }
     public boolean isRequestedSessionIdFromCookie() { return false; }
@@ -184,12 +182,8 @@ public class CommandLineRequest implements Request {
     public boolean isUserInRole(String role) { return false; }
     public java.security.Principal getUserPrincipal() { return null; }
 
-    /** @deprecated */
-    public String getRealPath(String path) { return null; }
-    /** @deprecated */
-    public boolean isRequestedSessionIdFromUrl() { return false; }
     public java.util.Map getParameterMap() { return parameters; }
     public void setCharacterEncoding(java.lang.String env)
                           throws java.io.UnsupportedEncodingException { characterEncoding = env; }
-    public java.lang.StringBuffer getRequestURL() { return null; }
+    public StringBuffer getRequestURL() { return null; }
 }

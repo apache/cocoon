@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-12 12:30:35 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-18 12:06:02 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -64,7 +64,7 @@ public class ResourceReader extends AbstractReader implements Composer {
     /**
      * Generates the requested resource.
      */
-    public void generate() throws IOException, ProcessingException {
+    public int generate() throws IOException, ProcessingException {
         Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
         Response response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
 
@@ -97,7 +97,7 @@ public class ResourceReader extends AbstractReader implements Composer {
                 conn = url.openConnection();
 
                 if (!modified (conn.getLastModified(), request, response)) {
-                    return;
+                    return 0;
                 }
 
                 len = conn.getContentLength();
@@ -108,7 +108,7 @@ public class ResourceReader extends AbstractReader implements Composer {
                 file = new File (url.getFile());
 
                 if (!modified (file.lastModified(), request, response)) {
-                    return;
+                    return 0;
                 }
 
                 len = file.length();
@@ -127,12 +127,6 @@ public class ResourceReader extends AbstractReader implements Composer {
         }
 
         try {
-            String mimeType = this.getMimeType();
-            if (mimeType != null) {
-                response.setContentType(mimeType);
-            }
-
-            response.setContentLength((int) len);
             long expires = parameters.getParameterAsInteger("expires", -1);
 
             if (expires > 0) {
@@ -152,6 +146,7 @@ public class ResourceReader extends AbstractReader implements Composer {
         } catch (IOException ioe) {
             getLogger().debug("Received an IOException, assuming client severed connection on purpose");
         }
+        return (int)len;
     }
 
     /**
@@ -160,13 +155,15 @@ public class ResourceReader extends AbstractReader implements Composer {
     private boolean modified (long lastModified, Request request, Response response) {
         response.setDateHeader("Last-Modified", lastModified);
         long if_modified_since = request.getDateHeader("if-modified-since");
+        boolean isHttpResponse = response instanceof org.apache.cocoon.environment.http.HttpResponse;
 
-        if (if_modified_since >= lastModified) {
-            response.setStatus(org.apache.cocoon.environment.http.HttpResponse.SC_NOT_MODIFIED);
+        if (if_modified_since >= lastModified && isHttpResponse == true) {
+            ((org.apache.cocoon.environment.http.HttpResponse)response).setStatus(
+                javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED);
         }
 
         getLogger().debug("ResourceReader: resource has " + ((if_modified_since < lastModified) ? "" : "not ") + "been modified");
-        return (if_modified_since < lastModified);
+        return (if_modified_since < lastModified || isHttpResponse == false);
     }
 
     /**

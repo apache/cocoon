@@ -15,15 +15,14 @@ import org.xml.sax.EntityResolver;
 
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-19 21:20:37 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-18 12:06:01 $
  */
-public abstract class AbstractReader extends AbstractLoggable implements Poolable, Reader, Recyclable {
+public abstract class AbstractReader extends AbstractLoggable implements Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
     /** The current <code>Map</code> of the object model. */

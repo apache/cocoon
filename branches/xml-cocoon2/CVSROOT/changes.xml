@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.33 2001-04-18 06:13:55 cziegeler Exp $
+  $Id: changes.xml,v 1.9.2.34 2001-04-18 12:05:44 cziegeler Exp $
 -->
 
 <changes title="History of Changes">
@@ -24,6 +24,11 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+   Creating wrappers for Session and Cookie.
+   The creation of these wrapper classes allow us to be independent
+   of the javax.servlet classes.
+  </action>
   <action dev="CZ" type="add">
     Added reload-method and check-reload configuration attributes for
     the sitemap to allow asynchron/synchron sitemap reloading.

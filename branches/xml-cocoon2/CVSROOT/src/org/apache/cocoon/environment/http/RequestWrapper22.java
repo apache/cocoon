@@ -30,7 +30,7 @@ import org.apache.cocoon.environment.Request;
  * to provide request information for HTTP servlets.
  */
 
-public class RequestWrapper extends MaybeUploadRequestWrapper implements HttpServletRequest, Request {
+public class RequestWrapper extends MaybeUploadRequestWrapper {
 
     public RequestWrapper(HttpServletRequest httpservletrequest, File file, boolean flag, boolean flag1)
         throws Exception {

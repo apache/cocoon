@@ -19,7 +19,7 @@ import org.apache.cocoon.environment.Request;
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest23.java,v 1.1.2.6 2001-04-12 06:33:31 giacomo Exp $
+ * @version CVS $Id: HttpRequest23.java,v 1.1.2.7 2001-04-18 12:05:59 cziegeler Exp $
  */
 
 public class HttpRequest extends HttpServletRequestWrapper implements Request {

@@ -95,9 +95,10 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
      * Lastly, the <code>key</code> value is derived from the value of
      * the <code>source</code> string.
      */
-    public void generate() throws ProcessingException, SAXException, IOException {
+    public int generate() throws ProcessingException, SAXException, IOException {
         DataSourceComponent datasource = null;
         Connection con = null;
+        int contentLength = 0;
 
         try {
             datasource = (DataSourceComponent) dbselector.select(dsn);
@@ -122,8 +123,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
                     throw new ResourceNotFoundException("There is no image with that key");
                 }
 
-                response.setContentType(this.parameters.getParameter("content-type", ""));
-                this.serialize(object, response);
+                contentLength = this.serialize(object, response);
             }
 
             con.commit();
@@ -148,6 +148,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
 
             if (datasource != null) this.dbselector.release((Component) datasource);
         }
+        return contentLength; // length is unknown
     }
 
     /**
@@ -211,7 +212,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
     /**
      * This method actually performs the serialization.
      */
-    public void serialize(Blob object, Response response)
+    public int serialize(Blob object, Response response)
     throws IOException, SQLException {
         if (object == null) {
             throw new SQLException("The Blob is empty!");
@@ -219,7 +220,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
 
         InputStream is = new BufferedInputStream(object.getBinaryStream());
 
-        response.setContentLength((int) object.length());
+        int contentLength = (int) object.length();
         long expires = parameters.getParameterAsInteger("expires", -1);
 
         if (expires > 0) {
@@ -236,6 +237,8 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         }
         is.close();
         out.flush();
+
+        return contentLength;
     }
 
     /**
@@ -245,4 +248,9 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
     {
         if (this.dbselector != null) this.manager.release((Component)this.dbselector);
     }
+
+    public String getMimeType() {
+        return this.parameters.getParameter("content-type", super.getMimeType());
+    }
+
 }

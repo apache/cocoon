@@ -25,7 +25,7 @@ import org.apache.log.LogKit;
  * The XSP <code>Response</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-30 17:14:19 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-18 12:05:49 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -70,25 +70,25 @@ public class XSPResponseHelper extends XSPObjectHelper {
    * @param objectModel The Map objectModel
    * @param type The content type
    */
-  public static void setContentType(Map objectModel, String type) {
+/*  public static void setContentType(Map objectModel, String type) {
     Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
     response.setContentType(type);
   }
-
+*/
   /**
    * Send an HTTP redirect
    *
    * @param objectModel The Map objectModel
    * @param location The location URL
    */
-  public static void sendRedirect(Map objectModel, String location) {
+/*  public static void sendRedirect(Map objectModel, String location) {
     try {
       Response response = (Response)objectModel.get(Constants.RESPONSE_OBJECT);
       response.sendRedirect(response.encodeRedirectURL(location));
     }
     catch (IOException e) {LogKit.getLoggerFor("cocoon").warn("XSPResponseHelper.sendRedirect", e);}
   }
-
+*/
   /**
    * Encode the URL
    *

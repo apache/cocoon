@@ -1,4 +1,4 @@
-// $Id: SessionValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:12 dims Exp $
+// $Id: SessionValidatorAction.java,v 1.1.2.3 2001-04-18 12:05:47 cziegeler Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
@@ -16,8 +16,8 @@ import org.xml.sax.InputSource;
 import org.apache.cocoon.*;
 import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 
-import javax.servlet.http.HttpSession;
 
 /**
  * This is the action used to validate HTTP session parameters.
@@ -38,7 +38,7 @@ import javax.servlet.http.HttpSession;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 18:18:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 12:05:47 $
  */
 public class SessionValidatorAction extends AbstractValidatorAction
 {
@@ -47,14 +47,14 @@ public class SessionValidatorAction extends AbstractValidatorAction
      */
     public Map act (EntityResolver resolver, Map objectModel, String src,
             Parameters parameters) throws Exception {
-        Request req = (Request) 
+        Request req = (Request)
             objectModel.get (Constants.REQUEST_OBJECT);
 
-        if (req == null) 
+        if (req == null)
             return null;
 
         /* check session validity */
-        HttpSession session = req.getSession (false);
+        Session session = req.getSession (false);
         if (session == null)
             return null;
 
@@ -72,7 +72,7 @@ public class SessionValidatorAction extends AbstractValidatorAction
             Object result;
             for (int i = 0; i < rparams.length; i ++) {
                 rparams[i] = rparams[i].trim ();
-                result = validateParameter (rparams[i], desc, 
+                result = validateParameter (rparams[i], desc,
                         session.getAttribute (rparams[i]), false);
                 if (result == null) {
                     return null;
@@ -89,5 +89,5 @@ public class SessionValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: SessionValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:12 dims Exp $
+// $Id: SessionValidatorAction.java,v 1.1.2.3 2001-04-18 12:05:47 cziegeler Exp $
 // vim: set et ts=4 sw=4:
