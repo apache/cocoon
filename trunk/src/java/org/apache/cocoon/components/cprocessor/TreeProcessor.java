@@ -390,7 +390,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
             environment = facade.getDelegate();
         }
         
-        Environment newEnv = new ForwardEnvironmentWrapper(environment, m_manager, uri, getLogger());
+        Environment newEnv = new ForwardEnvironmentWrapper(environment, uri, getLogger());
         ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
         
         if (facade != null) {
@@ -556,8 +556,8 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
 
         public ForwardEnvironmentWrapper(Environment env,
-            ServiceManager manager, String uri, Logger logger) throws MalformedURLException {
-            super(env, manager, uri, logger);
+            String uri, Logger logger) throws MalformedURLException {
+            super(env, uri, logger);
         }
 
         public void setStatus(int statusCode) {

@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
@@ -39,7 +38,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.20 2004/03/18 15:15:10 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.21 2004/03/19 11:10:06 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -71,9 +70,8 @@ public class EnvironmentWrapper
     public EnvironmentWrapper(Environment env,
                               String      requestURI,
                               String      queryString,
-                              Logger      logger)
-    throws MalformedURLException {
-        this(env, requestURI, queryString, logger, null, false, null);
+                              Logger      logger) {
+        this(env, requestURI, queryString, logger,  false, null);
     }
 
     /**
@@ -84,12 +82,10 @@ public class EnvironmentWrapper
                               String           requestURI,
                               String           queryString,
                               Logger           logger,
-                              ServiceManager manager,
                               boolean          rawMode,
-                              String           view)
-    throws MalformedURLException {
+                              String           view) {
         super(env.getURI(), view, env.getAction());
-        init(env, requestURI, queryString, logger, manager, rawMode, view);
+        init(env, requestURI, queryString, logger, rawMode, view);
     }
 
     /**
@@ -100,12 +96,12 @@ public class EnvironmentWrapper
      * @param logger
      * @throws MalformedURLException
      */
-    public EnvironmentWrapper(Environment env, ServiceManager manager, String uri,  Logger logger)  throws MalformedURLException {
+    public EnvironmentWrapper(Environment env, String uri,  Logger logger)  throws MalformedURLException {
         super(env.getURI(), env.getView(), env.getAction());
 
         SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
 
-        this.init(env, info.requestURI, info.queryString, logger, manager, info.rawMode, info.view);
+        this.init(env, info.requestURI, info.queryString, logger, info.rawMode, info.view);
         this.setURI(info.prefix, info.uri);
         
     }
@@ -114,10 +110,8 @@ public class EnvironmentWrapper
                       String         requestURI,
                       String         queryString,
                       Logger         logger,
-                      ServiceManager manager,
                       boolean        rawMode,
-                      String         view)
-    throws MalformedURLException {
+                      String         view){
 
         this.enableLogging(logger);
         this.environment = env;
