@@ -1,10 +1,45 @@
 <?xml version="1.0"?>
 <!DOCTYPE status [
+<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT developers (person+)>
+<!ELEMENT person EMPTY>
+<!ATTLIST person
+	name CDATA #REQUIRED
+	email CDATA #REQUIRED
+	id CDATA #REQUIRED
+>
+<!ELEMENT todo (actions+)>
+<!ELEMENT actions (action+)>
+<!ATTLIST actions
+	priority (high | medium | low) #REQUIRED
+>
+<!ELEMENT action (#PCDATA | link | br | code)*>
+<!ATTLIST action
+	context (build | code | docs) #IMPLIED
+	assigned-to CDATA #IMPLIED
+	dev CDATA #IMPLIED
+	type (add | fix | remove | update) #IMPLIED
+	fixes-bug CDATA #IMPLIED
+	due-to CDATA #IMPLIED
+	due-to-email CDATA #IMPLIED
+>
+<!ELEMENT changes (release+)>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT br EMPTY>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link
+	href CDATA #REQUIRED
+>
+<!ELEMENT release (action+)>
+<!ATTLIST release
+	version CDATA #REQUIRED
+	date CDATA #REQUIRED
+>
 <!ENTITY eacute           "&#x000E9;">
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.112 2003/08/09 18:21:49 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.113 2003/08/11 09:09:22 cziegeler Exp $:-->
 <status>
 
  <developers>
