@@ -65,6 +65,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
+import org.apache.cocoon.xml.dom.DOMUtil;
+import org.w3c.dom.DocumentFragment;
 
 /**
  * This input module provides access to the information of a session
@@ -77,7 +79,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  * using the session transformer.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextInputModule.java,v 1.1 2003/08/28 19:08:23 cziegeler Exp $
+ * @version CVS $Id: ContextInputModule.java,v 1.2 2003/09/01 11:30:20 cziegeler Exp $
  */
 public class ContextInputModule
     implements ThreadSafe, Serviceable, Disposable, InputModule {
@@ -99,12 +101,13 @@ public class ContextInputModule
         int pos = name.indexOf('/');
         if ( pos != -1 ) {
             final String contextName = name.substring(0, pos);
-            final String path = name.substring(pos+1);
+            final String path = name.substring(pos);
             
             try {
                 SessionContext context = this.contextManager.getContext(contextName);
                 if ( context != null ) {
-                    return context.getValueOfNode(path);
+                    DocumentFragment frag = context.getXML(path);
+                    return DOMUtil.getValueOfNode(frag);
                 }
             } catch (ProcessingException pe) {
                 throw new ConfigurationException("Unable to get information from context.", pe);
