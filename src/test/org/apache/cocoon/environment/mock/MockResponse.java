@@ -134,4 +134,11 @@ public class MockResponse implements Response {
     public Map getHeader() {
         return header;
     }
+
+    public void reset() {
+        encoding = null;
+        locale = null;
+        cookies.clear();
+        header.clear();
+    }
 }
