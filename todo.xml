@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.6 2003/03/20 15:09:33 stephan Exp $
+  CVS $Id: todo.xml,v 1.7 2003/03/20 15:37:25 stephan Exp $
 -->
 
 <todo title="Things To Do">
@@ -142,6 +142,8 @@
   <action context="code">
    For 2.1: Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
    server : store fragments in the session rather than in a local store. <br/>
+   This couldn't work, because if you working with caching pipelines, you cannot be sure
+   that the entries are in the session(Stephan).
   </action>
 
  </actions>
