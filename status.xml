@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.203 2003/11/28 01:23:09 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.204 2003/11/28 01:46:41 crossley Exp $:-->
 
 <status>
  <developers>
@@ -220,7 +220,7 @@
      Woody: new upload widget. This required some modification on multipart.Part
      objects that can now survice the end of processing of the current request.
    </action>
-   <action dev="DC" type="update" context="core">
+   <action dev="DC" type="update">
      Updated Entity Resolver from pre-release to official
      xml-commons-resolver-1.1 release.
    </action>
