@@ -32,8 +32,9 @@ import org.apache.cocoon.components.language.programming.CodeFormatter;
  * Tal Davidson's (davidsont@bigfoot.com) <i>Jstyle</i> Java
  * beautifier. This implementation is very improvised...
  *
+ * @deprecated
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JstyleFormatter.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: JstyleFormatter.java,v 1.5 2004/03/09 13:20:45 cziegeler Exp $
  */
 public class JstyleFormatter extends AbstractLogEnabled implements CodeFormatter {
   /**
