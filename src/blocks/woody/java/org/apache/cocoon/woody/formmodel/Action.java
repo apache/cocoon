@@ -122,6 +122,11 @@ public class Action extends AbstractWidget {
         getForm().endProcessing(true);
     }
 
+    /**
+     * Always return <code>true</code> (an action has no validation)
+     * 
+     * @todo is there a use case for actions having validators?
+     */
     public boolean validate(FormContext formContext) {
         return true;
     }

@@ -48,45 +48,54 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.validation.impl;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.event.ValueChangedListener;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.datatype.ValidationRule;
+import org.apache.cocoon.woody.formmodel.ExpressionContextImpl;
+import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
+import org.apache.cocoon.woody.validation.WidgetValidator;
 
 /**
- * Builds {@link MultiValueFieldDefinition}s.
+ * An adapter to transform a {@link org.apache.cocoon.woody.datatype.ValidationRule} into a
+ * {@link org.apache.cocoon.woody.validation.WidgetValidator}.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ValidationRuleValidator.java,v 1.1 2004/02/04 17:25:58 sylvain Exp $
  */
-public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
-        setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
+public class ValidationRuleValidator implements WidgetValidator {
+    
+    private ValidationRule rule;
+    
+    public ValidationRuleValidator(ValidationRule rule) {
+        this.rule = rule;
+    }
 
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
-
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
-        definition.setDatatype(datatype);
-
-        boolean hasSelectionList = buildSelectionList(widgetElement, definition);
-        if (!hasSelectionList)
-            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
-
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        definition.setRequired(required);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addValueChangedListener((ValueChangedListener)iter.next());
+    public boolean validate(Widget widget, FormContext context)
+    {
+        if (! (widget instanceof ValidationErrorAware)) {
+            // Invalid widget type
+            throw new IllegalArgumentException("Widget '" + widget.getFullyQualifiedId() + "' is not ValidationErrorAware");
         }
-        return definition;
+
+        Object value = widget.getValue();
+        if (value == null) {
+            // No value. Consider it as correct (required="true" will set an error if present)
+            return true;
+            
+        } else {
+            // Non-null value: perform validation
+            ValidationError error = this.rule.validate(value, new ExpressionContextImpl(widget));
+            if (error != null) {
+                // Validation failed
+                ((ValidationErrorAware)widget).setValidationError(error);
+                return false;
+            } else {
+                // Validation succeeded
+                return true;
+            }
+        }
     }
 }

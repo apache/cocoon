@@ -56,8 +56,9 @@ import java.util.StringTokenizer;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationError;
 import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -68,9 +69,9 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.2 2003/12/19 21:28:39 tim Exp $
+ * @version CVS $Id: Upload.java,v 1.3 2004/02/04 17:25:57 sylvain Exp $
  */
-public class Upload extends AbstractWidget {
+public class Upload extends AbstractWidget implements ValidationErrorAware {
     private UploadDefinition definition;
     private Part part;
     private ValidationError validationError;
@@ -147,7 +148,7 @@ public class Upload extends AbstractWidget {
             }
         }
         
-        return validationError == null;
+        return validationError == null ? super.validate(formContext) : false;
     }
 
     /**

@@ -64,6 +64,7 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setLocation(formElement, formDefinition);
         formDefinition.setId("");
         setDisplayData(formElement, formDefinition);
+        setValidators(formElement, formDefinition);
 
         Element widgetsElement = DomHelper.getChildElement(formElement, Constants.WD_NS, "widgets", true);
         // All child elements of the widgets element are widgets

@@ -61,13 +61,13 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * CVS $Id: AbstractContainerWidget.java,v 1.3 2004/01/29 16:36:17 coliver Exp $
+ * CVS $Id: AbstractContainerWidget.java,v 1.4 2004/02/04 17:25:57 sylvain Exp $
  * @author Timothy Larson
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     protected ContainerDelegate widgets;
 
-    public AbstractContainerWidget(WidgetDefinition definition) {
+    public AbstractContainerWidget(AbstractWidgetDefinition definition) {
         setDefinition(definition);
         setLocation(definition.getLocation());
         widgets = new ContainerDelegate(definition);
@@ -95,7 +95,12 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     }
 
     public boolean validate(FormContext formContext) {
-        return widgets.validate(formContext);
+        // Validate self only if child widgets are valid
+        if (widgets.validate(formContext)) {
+            return super.validate(formContext);
+        } else {
+            return false;
+        }
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String element) throws SAXException {

@@ -58,7 +58,7 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationError;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Struct;
 import org.apache.cocoon.woody.formmodel.Union;
@@ -90,7 +90,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.7 2004/01/31 16:49:54 bruno Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.8 2004/02/04 17:25:58 sylvain Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 

@@ -53,7 +53,8 @@ package org.apache.cocoon.woody.formmodel;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.util.I18nMessage;
-import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.woody.event.DeferredValueChangedEvent;
@@ -76,11 +77,11 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.21 2003/12/31 11:41:41 antonio Exp $
+ * @version CVS $Id: Field.java,v 1.22 2004/02/04 17:25:57 sylvain Exp $
  */
-public class Field extends AbstractWidget {
+public class Field extends AbstractWidget implements ValidationErrorAware {
     private SelectionList selectionList;
-    private FieldDefinition definition;
+    private FieldDefinition fieldDefinition;
     
     private String enteredValue = null;
     private Object value = null;
@@ -91,17 +92,17 @@ public class Field extends AbstractWidget {
     private boolean needsParse = true;
     private boolean needsValidate = true;
     private boolean isValidating = false;
-
     private ValidationError validationError;
 
 
     public Field(FieldDefinition fieldDefinition) {
-        this.definition = fieldDefinition;
+        this.fieldDefinition = fieldDefinition;
+        super.setDefinition(fieldDefinition);
         setLocation(fieldDefinition.getLocation());
     }
 
     public FieldDefinition getFieldDefinition() {
-        return this.definition;
+        return this.fieldDefinition;
     }
 
     public String getId() {
@@ -149,13 +150,14 @@ public class Field extends AbstractWidget {
         if (this.needsValidate) {
             isValidating = true;
             try {
-                // Clear error, it will be recomputed
-                this.validationError = null;
-                if (this.value != null) {
-                    this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
-                } else {        // No value : is it required ?
-                    if (this.definition.isRequired()) {
-                        this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
+                if (super.validate(null)) {
+                    // New-style validators were successful. Check the old-style ones.
+                    if (this.value != null) {
+                        this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
+                    } else {        // No value : is it required ?
+                        if (this.fieldDefinition.isRequired()) {
+                            this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
+                        }
                     }
                 }
                 this.needsValidate = false;
@@ -250,7 +252,7 @@ public class Field extends AbstractWidget {
     }
 
     public boolean isRequired() {
-        return definition.isRequired();
+        return fieldDefinition.isRequired();
     }
 
     private static final String FIELD_EL = "field";
@@ -260,7 +262,7 @@ public class Field extends AbstractWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
         fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        fieldAttrs.addCDATAAttribute("required", String.valueOf(definition.isRequired()));
+        fieldAttrs.addCDATAAttribute("required", String.valueOf(fieldDefinition.isRequired()));
         contentHandler.startElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL, fieldAttrs);
 
         if (enteredValue != null || value != null) {
@@ -285,8 +287,8 @@ public class Field extends AbstractWidget {
         // the selection list, if any
         if (selectionList != null) {
             selectionList.generateSaxFragment(contentHandler, locale);
-        } else if (definition.getSelectionList() != null) {
-            definition.getSelectionList().generateSaxFragment(contentHandler, locale);
+        } else if (fieldDefinition.getSelectionList() != null) {
+            fieldDefinition.getSelectionList().generateSaxFragment(contentHandler, locale);
         }
         contentHandler.endElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL);
     }
@@ -318,7 +320,7 @@ public class Field extends AbstractWidget {
      * @param uri The URI of the source. 
      */
     public void setSelectionList(String uri) {
-        setSelectionList(this.definition.buildSelectionList(uri));
+        setSelectionList(this.fieldDefinition.buildSelectionList(uri));
     }
     
     /**
@@ -338,14 +340,14 @@ public class Field extends AbstractWidget {
      * to populate the labels of the list's items.
      */
     public void setSelectionList(Object model, String valuePath, String labelPath) {
-        setSelectionList(this.definition.buildSelectionListFromModel(model, valuePath, labelPath));
+        setSelectionList(this.fieldDefinition.buildSelectionListFromModel(model, valuePath, labelPath));
     }
 
     public Datatype getDatatype() {
-        return definition.getDatatype();
+        return fieldDefinition.getDatatype();
     }
     
     public void broadcastEvent(WidgetEvent event) {
-        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+        this.fieldDefinition.fireValueChangedEvent((ValueChangedEvent)event);
     }
 }

@@ -71,6 +71,8 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
         setLocation(widgetElement, definition);
         setId(widgetElement, definition);
         setDisplayData(widgetElement, definition);
+//FIXME: these are currently type-related validators
+//        setValidators(widgetElement, definition);
 
         // make childfields
         Element widgetsElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "widgets", true);

@@ -50,12 +50,17 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.WidgetValidator;
 import org.apache.excalibur.xml.sax.XMLizable;
 
 /**
@@ -67,6 +72,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private String location = null;
     private String id;
     private Map displayData;
+    private List validators;
 
     public FormDefinition getFormDefinition() {
         if (this.formDefinition == null) {
@@ -125,6 +131,14 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         this.displayData = displayData;
     }
     
+    public void addValidator(WidgetValidator validator) {
+        if (this.validators == null) {
+            this.validators = new ArrayList();
+        }
+        
+        this.validators.add(validator);
+    }
+    
     public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException {
         Object data = this.displayData.get(name);
         if (data != null) {
@@ -149,7 +163,33 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
                 contentHandler.endElement(Constants.WI_NS, name, Constants.WI_PREFIX_COLON + name);
             }
+        }   
+    }
+    
+    /**
+     * Validate a widget using the validators that were defined in its definition. If validation
+     * fails, the validator has set a validation error on the widget or one of its children.
+     * 
+     * @param widget the widget
+     * @param context the form context
+     * @return <code>true</code> if validation was successful.
+     */
+    public boolean validate(Widget widget, FormContext context) {
+        if (this.validators == null) {
+            // No validators
+            return true;
+            
+        } else {
+            Iterator iter = this.validators.iterator();
+            while(iter.hasNext()) {
+                WidgetValidator validator = (WidgetValidator)iter.next();
+                if (! validator.validate(widget, context)) {
+                    // Stop at the first validator that fails
+                    return false;
+                }
+            }
+            // All validators were sucessful
+            return true;
         }
-        
     }
 }

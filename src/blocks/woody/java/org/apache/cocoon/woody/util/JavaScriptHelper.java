@@ -56,9 +56,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.environment.Request;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
@@ -69,7 +71,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.3 2003/12/31 03:25:14 antonio Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.4 2004/02/04 17:25:58 sylvain Exp $
  */
 public class JavaScriptHelper {
 
@@ -106,11 +108,49 @@ public class JavaScriptHelper {
     }
 
     /**
+     * Build a function with the content of a DOM element.
+     * 
+     * @param element the element containing the function body
+     * @param argumentNames names of the function arguments
+     * @return the compiled function
+     * @throws IOException
+     */
+    public static Function buildFunction(Element element, String[] argumentNames) throws IOException {
+        // Enclose the script text with a function declaration
+        StringBuffer buffer = new StringBuffer("function foo(");
+        for (int i = 0; i < argumentNames.length; i++) {
+            if (i > 0) {
+                buffer.append(',');
+            }
+            buffer.append(argumentNames[i]);
+        }
+        buffer.append(") {\n").append(DomHelper.getElementText(element)).append("\n}");
+        
+        String jsText = buffer.toString();
+        String sourceName = DomHelper.getSystemIdLocation(element);
+
+        Context ctx = Context.enter();
+        Function func;
+        try {
+            func = ctx.compileFunction(
+                getRootScope(), //scope
+                jsText, // in
+                sourceName == null ? "<unknown>" : sourceName, // sourceName
+                DomHelper.getLineLocation(element) - 1, // lineNo, "-1" because we added "function..."
+                null // securityDomain
+             );
+        } finally {
+            Context.exit();
+        }
+        return func;
+    }
+
+    /**
      * Get a root scope for building child scopes.
      * 
      * @return an appropriate root scope
      */
-    private static Scriptable getRootScope() {
+    public static Scriptable getRootScope() {
         if (_rootScope == null) {
             // Create it if never used up to now
             Context ctx = Context.enter();
@@ -150,7 +190,7 @@ public class JavaScriptHelper {
         try {
             Scriptable parentScope = getParentScope(request);
 
-            // Create a new local scope for the event listener variables
+            // Create a new local scope
             Scriptable scope;
             try {
                 scope = ctx.newObject(parentScope);
@@ -168,7 +208,45 @@ public class JavaScriptHelper {
                 Object value = entry.getValue();
                 scope.put(key, scope, Context.toObject(value, scope));
             }
-            return script.exec(ctx, scope);
+            
+            if (request != null) {
+                Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
+                if (viewData != null) {
+                    scope.put("viewData", scope, Context.toObject(viewData, scope));
+                }
+            }
+
+            Object result = script.exec(ctx, scope);
+            return FlowHelper.unwrap(result);
+        } finally {
+            Context.exit();
+        }
+    }
+    
+    public static Object callFunction(Function func, Object thisObject, Object[] arguments, Request request) throws JavaScriptException {
+        Context ctx = Context.enter();
+        try {
+            Scriptable scope = getParentScope(request);
+
+            if (request != null) {
+                Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
+                if (viewData != null) {
+                    // Create a new local scope to hold the view data
+                    Scriptable newScope;
+                    try {
+                        newScope = ctx.newObject(scope);
+                    } catch (Exception e) {
+                        // Should normally not happen
+                        throw new CascadingRuntimeException("Cannont create function scope", e);
+                    }
+                    newScope.setParentScope(scope);
+                    scope = newScope;
+            
+                    scope.put("viewData", scope, Context.toObject(viewData, scope));
+                }
+            }
+            Object result = func.call(ctx, scope, thisObject == null? null: Context.toObject(thisObject, scope), arguments);
+            return FlowHelper.unwrap(result);
         } finally {
             Context.exit();
         }

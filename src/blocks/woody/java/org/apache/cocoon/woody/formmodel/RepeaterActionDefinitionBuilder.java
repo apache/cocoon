@@ -70,7 +70,7 @@ import org.w3c.dom.Element;
  * </ul>
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RepeaterActionDefinitionBuilder.java,v 1.4 2003/12/19 21:28:39 tim Exp $
+ * @version CVS $Id: RepeaterActionDefinitionBuilder.java,v 1.5 2004/02/04 17:25:57 sylvain Exp $
  */
 public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     
@@ -81,6 +81,7 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
         setLocation(widgetElement, definition);
         setId(widgetElement, definition);
         setDisplayData(widgetElement, definition);
+        setValidators(widgetElement, definition);
 
         definition.setActionCommand(actionCommand);
 

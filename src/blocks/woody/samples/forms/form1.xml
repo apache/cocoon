@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--+
-    | CVS $Id: form1.xml,v 1.18 2003/12/30 20:44:47 vgritsenko Exp $
+    | CVS $Id: form1.xml,v 1.19 2004/02/04 17:25:58 sylvain Exp $
     +-->
 
 <wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
@@ -13,11 +13,11 @@
     </wd:field>
   
     <wd:field id="email" required="true">
-      <wd:datatype base="string">
-        <wd:validation>
-          <wd:email/>
-        </wd:validation>
-      </wd:datatype>
+      <wd:datatype base="string"/>
+      <!-- new-style validation, outside of the datatype -->
+	  <wd:validation>
+	    <wd:email/>
+	  </wd:validation>
       <wd:label>Enter an <b>email</b> address:</wd:label>
       <wd:help>
         An email address must be in <i>[name]@[domain].[tld]</i> format.
@@ -41,11 +41,10 @@
   
     <wd:field id="fourchars">
       <wd:label>Select something that's 4 characters long:</wd:label>
-      <wd:datatype base="string">
-        <wd:validation>
-          <wd:length exact='2*2'/>
-        </wd:validation>
-      </wd:datatype>
+      <wd:datatype base="string"/>
+      <wd:validation>
+        <wd:length exact='2*2'/>
+      </wd:validation>
       <wd:selection-list src="forms/a-choices.xml"/>
     </wd:field>
   
@@ -97,22 +96,20 @@
   
     <wd:field id="number2" required="true">
       <wd:label>Enter another number, larger than the other number:</wd:label>
-      <wd:datatype base="long">
-        <wd:validation>
-          <wd:range min="number1 + 1">
-            <wd:failmessage>This number should be larger than the first number.</wd:failmessage>
-          </wd:range>
-        </wd:validation>
-      </wd:datatype>
+      <wd:datatype base="long"/>
+	  <wd:validation>
+	    <wd:range min="number1 + 1">
+		  <wd:failmessage>This number should be larger than the first number.</wd:failmessage>
+	    </wd:range>
+	  </wd:validation>
     </wd:field>
   
     <wd:multivaluefield id="drinks">
       <wd:label>Indicate which 2 of the following drinks you'd like to receive:</wd:label>
-      <wd:datatype base="string">
-        <wd:validation>
-          <wd:value-count exact="2"/>
-        </wd:validation>
-      </wd:datatype>
+      <wd:datatype base="string"/>
+      <wd:validation>
+        <wd:value-count exact="2"/>
+      </wd:validation>
       <wd:selection-list>
         <wd:item value="Maes"/>
         <wd:item value="Jupiler"/>
@@ -158,13 +155,12 @@
   
     <wd:field id="ipaddress" required="true">
       <wd:label>Please enter your IP address</wd:label>
-      <wd:datatype base="string">
-        <wd:validation>
-          <wd:regexp pattern="^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])$">
-            <wd:failmessage>Invalid IP address.</wd:failmessage>
-          </wd:regexp>
-        </wd:validation>
-      </wd:datatype>
+      <wd:datatype base="string"/>
+      <wd:validation>
+        <wd:regexp pattern="^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])$">
+          <wd:failmessage>Invalid IP address.</wd:failmessage>
+        </wd:regexp>
+      </wd:validation>
     </wd:field>
   
     <wd:field id="birthdate" required="true">
@@ -178,12 +174,12 @@
             here, with a locale attribute on them. -->
           </wd:patterns>
         </wd:convertor>
-        <wd:validation>
-          <wd:range min="Date(1850, 1, 1)" max="Date(2150, 1, 1)">
-            <wd:failmessage>Dead and not born yet should not bother filling this form</wd:failmessage>
-          </wd:range>
-        </wd:validation>
       </wd:datatype>
+      <wd:validation>
+        <wd:range min="Date(1850, 1, 1)" max="Date(2150, 1, 1)">
+          <wd:failmessage>Dead and not born yet should not bother filling this form</wd:failmessage>
+        </wd:range>
+      </wd:validation>
     </wd:field>
   
     <wd:field id="altbirthdate" required="true">
@@ -221,6 +217,34 @@
     </wd:field>
   
     <wd:repeater id="contacts">
+      <wd:validation>
+      	<!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
+      		 A validator cannot itself display a validation error, and therefore sets a validation
+      		 error on a field in the offenting row. -->
+        <wd:javascript>
+          var list = new java.util.ArrayList();
+          var success = true;
+          // Iterate on all rows
+      	  for (var i = 0; i &lt; widget.size; i++) {
+      	    // Get the row
+      	    var row = widget.getRow(i);
+      	    // Compute a key combining the first and last name
+      	    var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
+      	    if (list.contains(key)) {
+      	      // already in the list
+      	      row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.woody.datatype.ValidationError("Duplicate contact name", false));
+      	      success = false;
+      	      break; // no need to continue
+      	    }
+      	    // Add the current row's key to the list
+      	    list.add(key);
+      	  }
+      	  
+      	  // Must return true/false
+      	  return success;
+      	  
+        </wd:javascript>
+      </wd:validation>
       <wd:widgets>
         <wd:field id="firstname">
           <wd:label>Firstname</wd:label>
@@ -236,11 +260,10 @@
         </wd:field>
         <wd:field id="email">
           <wd:label>Email</wd:label>
-          <wd:datatype base="string">
-            <wd:validation>
-              <wd:email/>
-            </wd:validation>
-          </wd:datatype>
+          <wd:datatype base="string"/>
+          <wd:validation>
+            <wd:email/>
+          </wd:validation>
         </wd:field>
         <wd:booleanfield id="select">
           <wd:label>Select</wd:label>

@@ -54,6 +54,7 @@
       </datatype>
     </datatypes>
     <validation-rules>
+      <!-- old-style datatype validators (deprecated) -->
       <validation-rule name="length" src="org.apache.cocoon.woody.datatype.validationruleimpl.LengthValidationRuleBuilder"/>
       <validation-rule name="email" src="org.apache.cocoon.woody.datatype.validationruleimpl.EmailValidationRuleBuilder"/>
       <validation-rule name="value-count" src="org.apache.cocoon.woody.datatype.validationruleimpl.ValueCountValidationRuleBuilder"/>
@@ -69,5 +70,17 @@
     <selection-list name="flow-jxpath" class="org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder"/>
     <selection-list name="enum" class="org.apache.cocoon.woody.datatype.EnumSelectionListBuilder"/>
   </woody-selection-lists>
+  
+  <woody-validators>
+    <!-- new-style validators -->
+    <validator name="javascript" class="org.apache.cocoon.woody.validation.impl.JavaScriptValidatorBuilder"/>
+    <validator name="length" class="org.apache.cocoon.woody.validation.impl.LengthValidatorBuilder"/>
+    <validator name="email" class="org.apache.cocoon.woody.validation.impl.EmailValidatorBuilder"/>
+    <validator name="value-count" class="org.apache.cocoon.woody.validation.impl.ValueCountValidatorBuilder"/>
+    <validator name="range" class="org.apache.cocoon.woody.validation.impl.RangeValidatorBuilder"/>
+    <validator name="assert" class="org.apache.cocoon.woody.validation.impl.AssertValidatorBuilder"/>
+    <validator name="mod10" class="org.apache.cocoon.woody.validation.impl.Mod10ValidatorBuilder"/>
+    <validator name="regexp" class="org.apache.cocoon.woody.validation.impl.RegExpValidatorBuilder"/>
+  </woody-validators>
 
 </xconf>

@@ -48,45 +48,45 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.validation.impl;
 
-import java.util.Iterator;
-
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.woody.formmodel.WidgetDefinition;
+import org.apache.cocoon.woody.util.JavaScriptHelper;
+import org.apache.cocoon.woody.validation.WidgetValidator;
+import org.apache.cocoon.woody.validation.WidgetValidatorBuilder;
+import org.mozilla.javascript.Function;
 import org.w3c.dom.Element;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.event.ValueChangedListener;
 
 /**
- * Builds {@link MultiValueFieldDefinition}s.
+ * Builds a JavaScript validator.
+ * 
+ * @see org.apache.cocoon.woody.validation.impl.JavaScriptValidator
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: JavaScriptValidatorBuilder.java,v 1.1 2004/02/04 17:25:58 sylvain Exp $
  */
-public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
-        setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
+public class JavaScriptValidatorBuilder implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
+    
+    private Context avalonContext;
+    
+    private static final String[] ARG_NAMES = {"widget"};
 
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.avalonContext = context;
+    }
 
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
-        definition.setDatatype(datatype);
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.woody.validation.ValidatorBuilder#build(org.apache.cocoon.woody.formmodel.WidgetDefinition, org.w3c.dom.Element)
+     */
+    public WidgetValidator build(Element element, WidgetDefinition definition) throws Exception {
+            Function function = JavaScriptHelper.buildFunction(element, ARG_NAMES);
 
-        boolean hasSelectionList = buildSelectionList(widgetElement, definition);
-        if (!hasSelectionList)
-            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
-
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        definition.setRequired(required);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addValueChangedListener((ValueChangedListener)iter.next());
-        }
-        return definition;
+            return new JavaScriptValidator(this.avalonContext, function);
     }
 }
