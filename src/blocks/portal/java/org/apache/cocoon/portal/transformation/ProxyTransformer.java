@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -137,6 +138,9 @@ public class ProxyTransformer
      */
     protected String userAgent;
 
+    /** The sitemap parameters */
+    protected Parameters parameters;
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -146,17 +150,11 @@ public class ProxyTransformer
     }
 
     /**
-     * For the proxy transformer the envelope-tag and the protocol-handler (for https) parameter can be specified.
+     * For the proxy transformer the envelope-tag parameter can be specified.
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(Parameters)
      */
     public void parameterize(Parameters parameters) {
         this.defaultEnvelopeTag = parameters.getParameter(ENVELOPE_TAG_PARAMETER, null);
-        String protocolHandler = parameters.getParameter(PROTOCOL_HANDLER_PARAMETER, null);
-        if (protocolHandler != null) {
-            if (System.getProperty("java.protocol.handler.pkgs") == null) {
-                System.setProperty("java.protocol.handler.pkgs", protocolHandler);
-            }
-        }
     }
 
     /**
@@ -167,7 +165,7 @@ public class ProxyTransformer
                       String src,
                       Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-
+        this.parameters = parameters;
         this.request = ObjectModelHelper.getRequest(objectModel);
 
         this.copletInstanceData = getInstanceData(this.manager, objectModel, parameters);
@@ -208,6 +206,7 @@ public class ProxyTransformer
         this.documentBase = null;
         this.link = null;
         this.request = null;
+        this.parameters = null;
     }
 
     /**
@@ -252,30 +251,31 @@ public class ProxyTransformer
                 remoteURI = remoteURI.substring(0, pos);
             }
 
-            Enumeration enumeration = request.getParameterNames();
-
+            // append all parameters of the current request, except those where
+            // the name of the request parameter starts with "cocoon-portal-"
+            final Enumeration enumeration = request.getParameterNames();
             while (enumeration.hasMoreElements()) {
                 String paramName = (String) enumeration.nextElement();
 
                 if (!paramName.startsWith("cocoon-portal-")) {
-                    String[] paramValues =
-                        request.getParameterValues(paramName);
+                    String[] paramValues = request.getParameterValues(paramName);
                     for (int i = 0; i < paramValues.length; i++) {
-                        if (firstparameter) {
-                            if (!post) {
-                                query.append('?');
-                            }
-                            firstparameter = false;
-                        }
-                        else {
-                            query.append('&');
-                        }
-
-                        query.append(NetUtils.encode(paramName, "utf-8"));
-                        query.append('=');
-                        query.append(NetUtils.encode(paramValues[i], "utf-8"));
+                        firstparameter = this.appendParameter(query, firstparameter, post, paramName, paramValues[i]);
                     }
                 }
+            }
+            
+            // now append parameters from the sitemap - if any
+            final String[] names = this.parameters.getNames();
+            for(int i=0; i<names.length; i++) {
+                if ( names[i].startsWith("add:") ) {
+                    final String value = this.parameters.getParameter(names[i]);
+                    if ( value != null && value.trim().length() > 0 ) {
+                        final String pName = names[i].substring(4);
+                        firstparameter = this.appendParameter(query, firstparameter, post, pName, value.trim());                        
+                    }
+                }
+                
             }
 
             Document result = null;
@@ -313,6 +313,27 @@ public class ProxyTransformer
         }
     }
 
+    protected boolean appendParameter(StringBuffer buffer,
+                                      boolean firstparameter, 
+                                      boolean post, 
+                                      String name, 
+                                      String value) 
+    throws UnsupportedEncodingException {
+        if (firstparameter) {
+            if (!post) {
+                buffer.append('?');
+            }
+            firstparameter = false;
+        } else {
+            buffer.append('&');
+        }
+
+        buffer.append(NetUtils.encode(name, "utf-8"));
+        buffer.append('=');
+        buffer.append(NetUtils.encode(value, "utf-8"));
+
+        return firstparameter;
+    }
     /**
      * Check the http status code of the http response to detect any redirects.
      * @param connection The HttpURLConnection

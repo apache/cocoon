@@ -83,7 +83,7 @@ public class LayoutActions {
 					
 					Item itemElem = (Item) iter.next();
 					
-					if(itemElem.equals(((NamedItem)layoutObj))) {
+					if (itemElem.equals(layoutObj)) {
 						items.remove (iter.nextIndex()-1);
 						return true;
 					}

@@ -463,6 +463,10 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="CZ" type="fix">
+    CForms: template generator and transformer now use the same object model as the JXTG: access
+            to objects have to use the "cocoon" object, like "cocoon/continuation/id".
+   </action>
    <action dev="CZ" type="fix" fixes-bug="32987" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
      Apply patch for a better exception handling in the Meta-InputModule when an input module is not found.
    </action>

@@ -159,7 +159,7 @@ public class CocoonWrapper {
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
             appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, "ISO-8859-1");
-            appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.context.toURL().toExternalForm());
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.context.toURL());
             // FIXME - add settings
             appContext.put(Core.CONTEXT_SETTINGS, new Settings());
 

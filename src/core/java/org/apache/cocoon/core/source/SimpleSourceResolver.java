@@ -92,18 +92,11 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
                 contextBase = ((File)context.get("context-root")).toURL().toExternalForm();
             }
         } catch(ContextException ce) {
-            //FIXME: Cocoon's CONTEXT_ROOT_URL context entry should be made consistent with Excalibur
+            // set the base URL to the current directory
             try {
-                contextBase = new URL((String)context.get("root-url")).toExternalForm();
-            } catch (MalformedURLException mue) {
-                throw new ContextException("Malformed URL for root-url", mue);
-            } catch (ContextException e) {
-                // set the base URL to the current directory
-                try {
-                    contextBase = new File(System.getProperty("user.dir")).toURL().toExternalForm();
-                } catch( MalformedURLException mue) {
-                    throw new ContextException( "Malformed URL for user.dir, and no context-root exists", mue);
-                }
+                contextBase = new File(System.getProperty("user.dir")).toURL().toExternalForm();
+            } catch( MalformedURLException mue) {
+                throw new ContextException( "Malformed URL for user.dir, and no context-root exists", mue);
             }
         } catch( MalformedURLException mue) {
             throw new ContextException("Malformed URL for context-root", mue);

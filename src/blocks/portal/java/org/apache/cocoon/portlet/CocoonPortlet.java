@@ -273,6 +273,7 @@ public class CocoonPortlet extends GenericPortlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // ignore
             }
         }
 
@@ -374,7 +375,11 @@ public class CocoonPortlet extends GenericPortlet {
                 getLogger().debug("Using default work-directory " + this.workDir);
             }
         }
-        this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.portletContextURL);
+        try {
+            this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.portletContextURL));
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
