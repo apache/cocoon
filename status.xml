@@ -203,6 +203,16 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="update">
+     Reworked LocaleAction and I18nMatcher to have similar logic and
+     configuration.
+     <br/><strong>NOTE:</strong> Sitemap variable "lang" renamed to
+     "language", removed configuration parameters: "language-attribute",
+     "country-attribute", "variant-attribute".
+   </action>
+   <action dev="UV" type="add">
+     Added I18nMatcher for file based internationalization.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="27260">
      Make implementation of Cocoon protocol compliant with the Source interface.
    </action>
@@ -212,7 +222,8 @@
      hsqldb to 1.7.2, jcs to 1.1-dev-20040811 and quartz to 1.4.2.
    </action>
    <action dev="CZ" type="fix">
-     Mail block: The mail transformer ignored configured toAddresses from a pipeline parameter. This is fixed now.
+     Mail block: The mail transformer ignored configured toAddresses from a
+     pipeline parameter. This is fixed now.
    </action>
    <action dev="SW" type="update">
      Move the sitemap engine to Serviceable (in replacement of Composable) and remove

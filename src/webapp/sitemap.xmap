@@ -244,11 +244,19 @@
       <map:parameter name="ignore-missing-tables" value="true"/>
     </map:matcher>
     <map:matcher name="i18n" src="org.apache.cocoon.matching.I18nMatcher">
-      <locale-attribute>lang</locale-attribute>
+      <!--+
+          | Default configuration:
+      <locale-attribute>locale</locale-attribute>
+      <negotiate>false</negotiate>
       <use-locale>true</use-locale>
-      <use-locales>true</use-locales>
-      <default-locale lang="en" country="US"/>
-      <test-blank-locale>true</test-blank-locale>
+      <use-locales>false</use-locales>
+      <use-blank-locale>true</use-blank-locale>
+      <default-locale language="en" country="US"/>
+      <create-session>false</create-session>
+      <store-in-request>false</store-in-request>
+      <store-in-session>false</store-in-session>
+      <store-in-cookie>false</store-in-cookie>
+          +-->
     </map:matcher>
   </map:matchers>
 
@@ -340,16 +348,14 @@
     <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
     <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
     <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction">
-      <!-- Default configuration:
+      <!--+
+          | Default configuration:
+      <locale-attribute>locale</locale-attribute>
       <create-session>false</create-session>
       <store-in-request>false</store-in-request>
       <store-in-session>false</store-in-session>
       <store-in-cookie>false</store-in-cookie>
-      <locale-attribute>locale</locale-attribute>
-      <language-attribute>lang</language-attribute>
-      <country-attribute>country</country-attribute>
-      <variant-attribute>variant</variant-attribute>
-      -->
+          +-->
     </map:action>
   </map:actions>
 
