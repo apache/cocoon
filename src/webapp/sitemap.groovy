@@ -38,7 +38,7 @@ class Sitemap extends Pipeline {
         } else if (m = (uri == "sitemap.groovy")) {
             generate "file", "sitemap.xmap", []
             transform "trax", "sitemap.xslt", [] 
-            serialize "text", []
+            serialize "text", [ "mime-type": "text/plain" ]
         } else {
             return false;
         }

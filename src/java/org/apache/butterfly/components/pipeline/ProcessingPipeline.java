@@ -36,7 +36,7 @@ import org.apache.butterfly.xml.XMLConsumer;
  *  </li>
  * </ul>
  *
- * @version CVS $Id: ProcessingPipeline.java,v 1.2 2004/07/24 20:21:33 ugo Exp $
+ * @version CVS $Id$
  */
 public interface ProcessingPipeline {
 

@@ -46,7 +46,7 @@ class Pipeline {
     protected void serialize(type, parameters) {
         serializer = beanFactory.getBean(type + "Serializer")
         parameters.each { serializer[it.key] = it.value }
-        this.pipeline.serializer = serializer
+        this.pipeline.setSerializer(serializer);
     }
     
     protected void read(src, type, parameters) {

@@ -35,13 +35,12 @@ import org.apache.butterfly.transformation.Transformer;
 import org.apache.butterfly.xml.XMLConsumer;
 import org.apache.butterfly.xml.XMLProducer;
 
-
 /**
  * Implementation of the non-caching pipeline.
  * 
  * TODO: change InvalidPipelineExceptions with PipelineExceptions
  * 
- * @version CVS $Id: NonCachingProcessingPipeline.java,v 1.7 2004/07/25 21:55:20 ugo Exp $
+ * @version CVS $Id$
  */
 public class NonCachingProcessingPipeline implements ProcessingPipeline {
     
@@ -164,13 +163,11 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
      */
     public boolean process(Environment environment) {
         // If this is an internal request, lastConsumer was reset!
-        /*
         if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
         } else {
             this.preparePipeline(environment);
         }
-        */
         if ( this.reader != null ) {
             // TODO: implement this.preparePipeline(environment);   
             reader.setObjectModel(environment.getObjectModel());
@@ -207,6 +204,32 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
     public void prepareInternal(Environment environment) {
         // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * Prepare the pipeline 
+     */
+    protected void preparePipeline(Environment environment) {
+        if (! checkPipeline()) {
+            throw new PipelineProcessingException("Attempted to process incomplete pipeline.");
+        }
+        if (this.reader != null) {
+            // TODO setupReader(environment);
+        } else {
+            setupPipeline(environment);
+        }
+    }
+
+    /**
+     * Setup pipeline components.
+     */
+    protected void setupPipeline(Environment environment) {
+        if (this.lastConsumer == null) {
+            // internal processing: text/xml
+            environment.setContentType("text/xml");
+        } else {
+            environment.setContentType(this.serializer.getMimeType());
+        }
     }
 
     /**
