@@ -20,9 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <!--   NO DEPENDENCIES --> 
-
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/axis/axis.roles"/>
 

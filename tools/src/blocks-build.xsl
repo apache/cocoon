@@ -702,6 +702,13 @@
         </xsl:if>
       </xsl:attribute>
       <block-patch name="{$block-name}" dir="{@dir}"/>
+      <block-config file="${{build.webapp}}/WEB-INF/xconf/cocoon-{$block-name}.xconf">
+        <xsl:attribute name="depends">
+          <xsl:for-each select="depend[contains(@project,'cocoon-block-')]">
+            <xsl:text>cocoon-</xsl:text><xsl:value-of select="substring-after(@project,'cocoon-block-')"/><xsl:text>,</xsl:text>
+          </xsl:for-each>
+        </xsl:attribute>
+      </block-config>
     </target>
                                                                                                                                                                                
     <target name="{@name}-roles" unless="internal.exclude.block.{$block-name}">

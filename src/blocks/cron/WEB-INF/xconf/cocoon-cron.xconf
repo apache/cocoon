@@ -20,9 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <!--   NO DEPENDENCIES --> 
-
     <component role="org.apache.cocoon.components.cron.JobScheduler"
                class="org.apache.cocoon.components.cron.CocoonQuartzJobScheduler"
                logger="cron" preload="true">

@@ -20,9 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <!--   NO DEPENDENCIES --> 
-
   <source-factories>
     <component-instance
         class="org.apache.cocoon.components.source.impl.QDoxSourceFactory"

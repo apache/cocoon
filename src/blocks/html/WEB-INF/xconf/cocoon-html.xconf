@@ -20,9 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <!--   NO DEPENDENCIES --> 
-
   <component-instance
       role="org.apache.excalibur.xml.sax.SAXParser/HTML"
       class="org.apache.excalibur.xml.sax.JTidyHTMLParser"

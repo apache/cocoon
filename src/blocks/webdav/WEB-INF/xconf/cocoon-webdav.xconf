@@ -20,9 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-repository.xconf"/>
-  
   <component role="org.apache.cocoon.components.repository.RepositoryManager"
              class="org.apache.cocoon.components.repository.RepositoryManager"
              logger="core.repository">

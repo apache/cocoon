@@ -20,6 +20,5 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <!--   NO DEPENDENCIES --> 
+  <!-- Dummy config that other blocks can import -->
 </components>

@@ -20,15 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-batik.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-cron.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-velocity.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-xsp.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-javaflow.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-repository.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-faces.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-axis.xconf"/>
   <!-- Include different scratchpad projects -->
   <include src="context://WEB-INF/xconf/cocoon-scratchpad-caching-source.xconf"/>
   <include src="context://WEB-INF/xconf/cocoon-scratchpad-groovyflow.xconf"/>
