@@ -62,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.71 $ $Date: 2001-03-19 17:08:44 $
+ * @version CVS $Revision: 1.1.4.72 $ $Date: 2001-03-23 16:15:21 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -187,7 +187,22 @@ public class CocoonServlet extends HttpServlet {
      throws ServletException {
          String extraClassPath = getInitParameter("extra-classpath");
          if ((extraClassPath != null) && (extraClassPath.trim().equals("") == false)) {
-            return extraClassPath;
+             StringBuffer sb = new StringBuffer();
+             StringTokenizer st = new StringTokenizer(extraClassPath, System.getProperty("path.separator"), false);
+             int i = 0;
+             while (st.hasMoreTokens()) {
+                 String s = st.nextToken();
+                 if (i++ > 0)
+                     sb.append(System.getProperty("path.separator"));
+                 if (s.charAt(0) == System.getProperty("file.separator").charAt(0)) {
+                     log.debug ("extraClassPath is absolute: " + extraClassPath);
+                     sb.append(s);
+                 } else {
+                     log.debug ("extraClassPath is not absolute: " + context.getRealPath("/") + extraClassPath);
+                     sb.append(context.getRealPath("/") + extraClassPath);
+                 }
+             }
+             return sb.toString();
          }
          return "";
      }
