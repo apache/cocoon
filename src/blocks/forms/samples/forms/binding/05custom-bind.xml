@@ -45,5 +45,15 @@
       factorymethod="createBinding" >
       <fb:config prefixchar="[" suffixchar="]" />      
   </fb:custom>
-
+  
+  <!-- This works??? -->
+  <fb:value id="test" path="test-value" direction="load"/>
+  <fb:javascript id="test" path="test-value" direction="save">
+    <fb:save-form>
+      var formValue = widget.getValue();
+      // you can call a function from anywhere in the flowscript
+      var appValue = doSaveConversion(formValue, "-");
+      jxpathPointer.setValue(appValue);   
+    </fb:save-form>
+  </fb:javascript>
 </fb:context>

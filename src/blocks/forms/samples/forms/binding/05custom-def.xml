@@ -18,22 +18,25 @@
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
 
   <fd:widgets>
-  
-    <fd:field id="jswrap" >
+    <fd:field id="jswrap">
       <fd:label>1st Value</fd:label>
-      <fd:datatype base="string" />
+      <fd:datatype base="string"/>
     </fd:field>
 
-    <fd:field id="custom" >
+    <fd:field id="custom">
       <fd:label>2nd Value</fd:label>
-      <fd:datatype base="string" />
+      <fd:datatype base="string"/>
     </fd:field>
     
-    <fd:field id="config" >
+    <fd:field id="config">
       <fd:label>3rd Value</fd:label>
-      <fd:datatype base="string" />
+      <fd:datatype base="string"/>
     </fd:field>
     
+    <fd:field id="test">
+      <fd:label>4th Value</fd:label>
+      <fd:datatype base="string"/>
+    </fd:field>
   </fd:widgets>
   
 </fd:form>

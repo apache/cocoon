@@ -19,4 +19,5 @@
   <jswrap-value>--something--</jswrap-value>
   <custom-value>**something more**</custom-value>
   <config-value>[[something else]]</config-value>
+  <test-value></test-value>
 </root>
