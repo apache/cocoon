@@ -37,7 +37,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -51,7 +50,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.36 2004/06/09 09:41:15 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.37 2004/06/09 09:47:47 cziegeler Exp $
  */
 
 public class TreeProcessor
