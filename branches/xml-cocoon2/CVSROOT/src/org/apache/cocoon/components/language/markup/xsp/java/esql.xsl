@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.35 2001-01-22 21:56:37 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.36 2001-01-22 23:48:03 balld Exp $-->
 <!--
 
  ============================================================================
@@ -266,15 +266,22 @@
     try {
       <xsl:choose>
         <xsl:when test="esql:pool and $environment = 'cocoon1'">
-          _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
-          _esql_connection.connection = _esql_connection.db_connection.getConnection();
+          try {
+            _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
+            _esql_connection.connection = _esql_connection.db_connection.getConnection();
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("Error opening pooled connection: "+String.valueOf(<xsl:copy-of select="$pool"/>)+": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage());
+          }
+          if (_esql_connection.connection == null) {
+            throw new RuntimeException("Could not open pooled connection: "+String.valueOf(<xsl:copy-of select="$pool"/>));
+          }
         </xsl:when>
         <xsl:when test="esql:pool and $environment = 'cocoon2'">
           try {
             _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
             _esql_connection.connection = _esql_connection.datasource.getConnection();
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-            log.error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
+            cocoonLogger.error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
             throw new RuntimeException("Could not get the datasource "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
           }
         </xsl:when>
