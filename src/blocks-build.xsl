@@ -353,8 +353,8 @@
 
       <path id="{$block-name}.classpath">
         <path refid="classpath"/>
-        <fileset dir="{string('${blocks}')}/{$block-name}/lib">
-          <include name="*.jar"/>
+        <fileset dir="{string('${blocks}')}/{$block-name}">
+          <include name="lib/*.jar"/>
         </fileset>
         <pathelement location="{string('${build.blocks}')}/{$block-name}/mocks"/>
         <xsl:for-each select="$cocoon-block-dependencies">
