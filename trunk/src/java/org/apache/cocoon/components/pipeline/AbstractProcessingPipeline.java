@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.11 2003/10/27 08:09:36 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.12 2003/10/29 14:42:59 vgritsenko Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -181,7 +181,7 @@ public abstract class AbstractProcessingPipeline
         this.configuration = params;
         final String expiresValue = params.getParameter("expires", null);
         if (expiresValue != null) {
-            this.configuredExpires = this.parseExpires(expiresValue);
+            this.configuredExpires = parseExpires(expiresValue);
         }
         this.configuredOutputBufferSize = params.getParameterAsInteger("outputBufferSize", -1);
     }
@@ -193,7 +193,7 @@ public abstract class AbstractProcessingPipeline
         this.parameters = params;
         final String expiresValue = params.getParameter("expires", null);
         if (expiresValue != null) {
-            this.expires = this.parseExpires(expiresValue);
+            this.expires = parseExpires(expiresValue);
         } else {
             this.expires = this.configuredExpires;
         }
@@ -209,10 +209,10 @@ public abstract class AbstractProcessingPipeline
      */
     public void release() {
         try {
-            CocoonComponentManager.removeFromAutomaticRelease( this );
+            CocoonComponentManager.removeFromAutomaticRelease(this);
         } catch (ProcessingException pe) {
             // ignore this
-            this.getLogger().error("Unabled to release processing component.", pe);
+            getLogger().error("Unabled to release processing component.", pe);
         }
     }
 
@@ -395,14 +395,12 @@ public abstract class AbstractProcessingPipeline
             Iterator transformerSourceItt = this.transformerSources.iterator();
             Iterator transformerParamItt = this.transformerParams.iterator();
 
-            while ( transformerItt.hasNext() ) {
+            while (transformerItt.hasNext()) {
                 Transformer trans = (Transformer)transformerItt.next();
-                trans.setup(
-                    this.processor.getSourceResolver(),
-                    environment.getObjectModel(),
-                    (String)transformerSourceItt.next(),
-                    (Parameters)transformerParamItt.next()
-                );
+                trans.setup(this.processor.getSourceResolver(),
+                            environment.getObjectModel(),
+                            (String)transformerSourceItt.next(),
+                            (Parameters)transformerParamItt.next());
             }
 
             String mimeType = this.serializer.getMimeType();
@@ -451,17 +449,17 @@ public abstract class AbstractProcessingPipeline
      */
     protected void connectPipeline(Environment environment)
     throws ProcessingException {
-        XMLProducer prev = (XMLProducer)this.generator;
+        XMLProducer prev = this.generator;
 
         Iterator itt = this.transformers.iterator();
-        while ( itt.hasNext() ) {
-            Transformer trans = (Transformer) itt.next();
-            this.connect( environment, prev, trans );
-            prev = trans;
+        while (itt.hasNext()) {
+            Transformer next = (Transformer) itt.next();
+            connect(environment, prev, next);
+            prev = next;
         }
 
         // insert the serializer
-        this.connect( environment, prev, this.lastConsumer);
+        connect(environment, prev, this.lastConsumer);
     }
 
     /**
@@ -470,25 +468,25 @@ public abstract class AbstractProcessingPipeline
     public boolean process(Environment environment)
     throws ProcessingException {
         // If this is an internal request, lastConsumer was reset!
-        if ( null == this.lastConsumer ) {
+        if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
         }
         this.preparePipeline(environment);
-
 
         // See if we need to set an "Expires:" header
         if (this.expires != 0) {
             Response res = ObjectModelHelper.getResponse(environment.getObjectModel());
             res.setDateHeader("Expires", System.currentTimeMillis() + expires);
             res.setHeader("Cache-Control", "max-age=" + expires/1000 + ", public");
-            if (this.getLogger().isDebugEnabled())
-                this.getLogger().debug("Setting a new Expires object for this resource");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Setting a new Expires object for this resource");
+            }
             environment.getObjectModel().put(ObjectModelHelper.EXPIRES_OBJECT,
-                 new Long(expires + System.currentTimeMillis()));
+                                             new Long(expires + System.currentTimeMillis()));
         }
 
-        if ( this.reader != null ) {
-            if (this.checkIfModified( environment, this.reader.getLastModified() )) {
+        if (this.reader != null) {
+            if (checkIfModified(environment, this.reader.getLastModified())) {
                 return true;
             }
 
@@ -559,6 +557,7 @@ public abstract class AbstractProcessingPipeline
         } catch ( ProcessingException e ) {
             throw e;
         } catch ( Exception e ) {
+            // TODO: Unwrap SAXException ?
             throw new ProcessingException("Failed to execute pipeline.", e);
         }
         return true;
@@ -712,17 +711,16 @@ public abstract class AbstractProcessingPipeline
         // get <base>
         String current = tokens.nextToken();
         if (current.equals("modification")) {
-
-            this.getLogger().warn("the \"modification\" keyword is not yet" +
-
-                " implemented. Assuming \"now\" as the base attribute");
+            getLogger().warn("the \"modification\" keyword is not yet" +
+                             " implemented. Assuming \"now\" as the base attribute");
             current = "now";
         }
 
         if (!current.equals("now") && !current.equals("access")) {
-            this.getLogger().error("bad <base> attribute, Expires header will not be set");
+            getLogger().error("bad <base> attribute, Expires header will not be set");
             return -1;
         }
+
         long number = 0;
         long modifier = 0;
         long expires = 0;
@@ -731,15 +729,16 @@ public abstract class AbstractProcessingPipeline
             current = tokens.nextToken();
 
             // get rid of the optional <plus> keyword
-            if (current.equals("plus"))
+            if (current.equals("plus")) {
                 current = tokens.nextToken();
+            }
 
             // We're expecting a sequence of <number> and <modification> here
             // get <number> first
             try {
                 number = Long.parseLong(current);
             } catch (NumberFormatException nfe) {
-                this.getLogger().error("state violation: a number was expected here");
+                getLogger().error("state violation: a number was expected here");
                 return -1;
             }
 
@@ -747,26 +746,26 @@ public abstract class AbstractProcessingPipeline
             try {
                 current = tokens.nextToken();
             } catch (NoSuchElementException nsee) {
-                this.getLogger().error("state violation: expecting a modifier" +
-                    " but no one found: Expires header will not be set");
+                getLogger().error("State violation: expecting a modifier" +
+                                  " but no one found: Expires header will not be set");
             }
-            if (current.equals("years"))
+            if (current.equals("years")) {
                 modifier = 365L * 24L * 60L * 60L * 1000L;
-            else if (current.equals("months"))
+            } else if (current.equals("months")) {
                 modifier = 30L * 24L * 60L * 60L * 1000L;
-            else if (current.equals("weeks"))
+            } else if (current.equals("weeks")) {
                 modifier = 7L * 24L * 60L * 60L * 1000L;
-            else if (current.equals("days"))
+            } else if (current.equals("days")) {
                 modifier = 24L * 60L * 60L * 1000L;
-            else if (current.equals("hours"))
+            } else if (current.equals("hours")) {
                 modifier = 60L * 60L * 1000L;
-            else if (current.equals("minutes"))
+            } else if (current.equals("minutes")) {
                 modifier = 60L * 1000L;
-            else if (current.equals("seconds"))
+            } else if (current.equals("seconds")) {
                 modifier = 1000L;
-            else {
-                this.getLogger().error("bad modifier (" + current +
-                   "): ignoring expires configuration");
+            } else {
+                getLogger().error("Bad modifier (" + current +
+                                  "): ignoring expires configuration");
                 return -1;
             }
             expires += number * modifier;
