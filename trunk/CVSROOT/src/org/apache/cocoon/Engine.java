@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.14 2000-02-03 18:19:08 balld Exp $ --
+/*-- $Id: Engine.java,v 1.15 2000-02-09 21:27:58 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.14 $ $Date: 2000-02-03 18:19:08 $
+ * @version $Revision: 1.15 $ $Date: 2000-02-09 21:27:58 $
  */
 
 public class Engine implements Defaults {
@@ -118,11 +118,6 @@ public class Engine implements Defaults {
             // register the context
             manager.setRole("context", context);
         }
-
-        // Create the URLHandler factory and register it
-        URL.setURLStreamHandlerFactory(
-            new URLHandlerFactory((String) configurations.get(HOME))
-        );
 
         // Create the parser and register it
         parser = (Parser) manager.create((String) configurations.get(PARSER_PROP,
