@@ -14,14 +14,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<fb:context 
-  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
-  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
-	path="/" >
 
-<!-- 
-   | This file shows a sample of using the javascript binding. 
-   -->
+<fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+            xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	    path="/" >
+
+  <!--+ 
+      | This file shows a sample of using the javascript binding. 
+      +-->
   <fb:javascript id="jswrap" path="jswrap-value" >
     <fb:save-form>
       var formValue = widget.getValue();

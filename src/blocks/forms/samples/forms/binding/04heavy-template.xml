@@ -15,37 +15,31 @@
   limitations under the License.
 -->
 
-<!--+
-    | CForms aggregate sample binding. Represent values of two aggregate
-    | fields as single input fields.
-    |
-    | CVS $Id: 03aggregate-template.xml,v 1.2 2004/04/14 14:27:45 vgritsenko Exp $
-    +-->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-  <title>Aggregate Field Binding</title>
+  <title>Heavy Form</title>
   <content>
-    <p>
-      On this form, you can enter a date, either split over it's parts or as one entry.
-    </p>
+    <h3>Lots of select boxes</h3>
 
     <ft:form-template>
-      <fi:group>
-        <fi:styling layout="columns" />
-        <fi:items>
-          <ft:widget id="date-combined"/>
-      
-          <ft:aggregate-widget id="date-split">
-            <ft:widget id="day"/>
-            <ft:widget id="month"/>
-            <ft:widget id="year"/>
-          </ft:aggregate-widget>
-        </fi:items>
-      </fi:group>
-      
-      <input type="submit" value="Submit"/>
-      
+      <div>
+        <ft:repeater-widget id="outer">
+        <fi:group>
+          <fi:styling type="fieldset" style="border: 2px solid gray; float: left;" layout="columns" />
+          <fi:label>Group <ft:widget id="id"/></fi:label>
+          <fi:items>
+              <ft:repeater-widget id="inner">
+                <ft:widget id="select"/>
+              </ft:repeater-widget>
+          </fi:items>
+        </fi:group>
+        </ft:repeater-widget>
+      </div>
+
+      <p style="float: left; clear: both;">
+        <input type="submit" value="Submit"/>
+      </p>
     </ft:form-template>
   </content>
 </page>

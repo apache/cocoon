@@ -14,11 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<fb:context 
-  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
-  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
-	path="/" 
-	direction="load" >
+
+<fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+            xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+	    path="/" 
+	    direction="load" >
 
 <!-- 
    | This file shows the inheritance behaviour of the @lenient setting 
