@@ -1,4 +1,4 @@
-/*-- $Id: ServletLogger.java,v 1.2 2000-04-08 00:47:03 stefano Exp $ --
+/*-- $Id: StdioLogger.java,v 1.1 2000-04-08 00:47:03 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -51,21 +51,17 @@
 
 package org.apache.cocoon.logger;
 
-import javax.servlet.*;
 import java.lang.reflect.*;
 import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2000-04-08 00:47:03 $
+ * @version $Revision: 1.1 $ $Date: 2000-04-08 00:47:03 $
  */
 
-public class ServletLogger extends AbstractLogger implements Status {
+public class StdioLogger extends AbstractLogger implements Status {
 
-    private ServletContext context;
-
-    public ServletLogger(ServletContext context, String level) {
-        this.context = context;
+    public StdioLogger(String level) {
         try {
             Field field = this.getClass().getField(level.toUpperCase());
             this.setLevel(field.getInt(this));
@@ -73,14 +69,14 @@ public class ServletLogger extends AbstractLogger implements Status {
     }
 
     protected void log(String message) {
-        this.context.log(message);
+        System.out.println(message);
     }
 
     protected void log(Exception exception, String message) {
-        this.context.log(exception, message);
+        System.out.println(exception + ": " + message);
     }
 
     public String getStatus() {
-        return "Cocoon Servlet Logger";
+        return "Cocoon STDIO Logger";
     }
 }
