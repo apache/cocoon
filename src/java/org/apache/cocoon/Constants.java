@@ -100,10 +100,14 @@ public final class Constants {
      */
     public static final String ACTION_PARAM_PREFIX = "cocoon-action-";
 
-    /** The name of the property holding the class for a XML parser */
+    /** The name of the property holding the class for a XML parser
+     * @deprecated Cocoon now uses the system's JAXP parser to load its configuration 
+     */
     public static final String PARSER_PROPERTY = "org.apache.excalibur.xml.sax.SAXParser";
 
-    /** The name of the class for the default XML parser to use */
+    /** The name of the class for the default XML parser to use
+     * @deprecated Cocoon now uses the system's JAXP parser to load its configuration 
+     */
     public static final String DEFAULT_PARSER  = "org.apache.excalibur.xml.impl.JaxpParser";
 
     /** The namespace for the XSP core logicsheet. */
