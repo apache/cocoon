@@ -18,14 +18,14 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.ThreadSafe;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-11 16:06:26 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-22 21:56:32 $
  */
-public class ComponentFactory implements ObjectFactory, ThreadSafe {
-    private Logger log = LogKit.getLoggerFor("cocoon");
+public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
+    private Logger log;
 
     /** The class which this <code>ComponentFactory</code>
      * should create.
@@ -51,12 +51,22 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe {
         this.manager = manager;
     }
 
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
+
     public Poolable newInstance() throws Exception {
         Poolable comp = (Poolable)componentClass.newInstance();
 
         log.debug("ComponentFactory creating new instance of "
             + componentClass.getName() + "."
         );
+
+        if ( comp instanceof Loggable) {
+            ((Loggable)comp).setLogger(this.log);
+        }
 
         if ( comp instanceof Configurable ) {
             ((Configurable)comp).configure(this.conf);

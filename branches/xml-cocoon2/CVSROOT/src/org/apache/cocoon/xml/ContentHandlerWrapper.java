@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml;
 
 import java.util.Vector;
@@ -19,7 +19,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributeListImpl;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -30,11 +30,11 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-07 00:13:05 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:55 $
  */
-public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable {
+public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     /** The current <code>ContentHandler</code>. */
     protected ContentHandler documentHandler=null;
@@ -52,6 +52,12 @@ public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recycl
     public ContentHandlerWrapper(ContentHandler document) {
         this();
         this.setContentHandler(document);
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**
@@ -77,26 +83,26 @@ public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recycl
         if (this.documentHandler==null) return;
         else this.documentHandler.setDocumentLocator(locator);
     }
-    
+
     /**
      * Receive notification of the beginning of a document.
      */
     public void startDocument ()
-	throws SAXException {
+    throws SAXException {
         if (this.documentHandler==null)
             throw new SAXException("ContentHandler not set");
         this.documentHandler.startDocument();
-    }    
-    
+    }
+
     /**
      * Receive notification of the end of a document.
      */
     public void endDocument ()
-	throws SAXException {
+    throws SAXException {
         if (this.documentHandler==null)
             throw new SAXException("ContentHandler not set");
         this.documentHandler.endDocument();
-    }    
+    }
 
     /**
      * Begin the scope of a prefix-URI Namespace mapping.

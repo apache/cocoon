@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ComponentHolderFactory;
 import org.apache.cocoon.util.ClassUtils;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 import org.xml.sax.SAXException;
@@ -35,10 +35,10 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-12 09:50:40 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-22 21:56:48 $
  */
-public abstract class AbstractSitemap implements Sitemap {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public abstract class AbstractSitemap implements Sitemap, Loggable {
+    protected Logger log;
 
     /** The component manager instance */
     protected ComponentManager manager;
@@ -58,6 +58,12 @@ public abstract class AbstractSitemap implements Sitemap {
      */
     public void setParentSitemapComponentManager(ComponentManager parentSitemapComponentManager) {
         this.sitemapComponentManager = new DefaultComponentManager (parentSitemapComponentManager);
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**
@@ -102,7 +108,7 @@ public abstract class AbstractSitemap implements Sitemap {
         }
         this.sitemapComponentManager.put(
             type, ComponentHolderFactory.getComponentHolder(
-                classURL, configuration, this.manager, mime_type
+                this.log, classURL, configuration, this.manager, mime_type
             )
         );
     }

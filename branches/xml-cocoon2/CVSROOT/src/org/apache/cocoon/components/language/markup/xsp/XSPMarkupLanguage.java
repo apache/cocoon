@@ -30,7 +30,7 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.Constants;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -41,9 +41,17 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-12 15:31:26 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-22 21:56:35 $
  */
-public class XSPMarkupLanguage extends AbstractMarkupLanguage {
+public class XSPMarkupLanguage extends AbstractMarkupLanguage implements Loggable {
+    private Logger log;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
+
 
     /**
     * store the dependencies.
@@ -105,10 +113,10 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
     /**
     * Add a dependency on an external file to the document for inclusion in
-    * generated code. This is used to populate a list of <code>File</code>'s 
-	* tested for change on each invocation; this information is used to assert 
-	* whether regeneration is necessary. XSP uses &lt;xsp:dependency&gt; 
-	* elements for this purpose.
+    * generated code. This is used to populate a list of <code>File</code>'s
+    * tested for change on each invocation; this information is used to assert
+    * whether regeneration is necessary. XSP uses &lt;xsp:dependency&gt;
+    * elements for this purpose.
     *
     * @param location The file path of the dependent file
     * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
@@ -184,8 +192,8 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
     * programming language.
     *
     */
-    protected class PreProcessFilter extends XMLFilterImpl {
-        protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected class PreProcessFilter extends XMLFilterImpl implements Loggable {
+        protected Logger log;
 
         private Stack stack;
 
@@ -206,6 +214,12 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
             this.filename = filename;
             this.language = language;
         }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
         /**
          * @see org.xml.sax.ContentHandler
@@ -302,9 +316,9 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
     * &lt;xsp:dependency;&gt;...&lt;/xsp:dependency;&gt;
     *
     */
-    protected  class XSPTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
+    protected  class XSPTransformerChainBuilderFilter extends TransformerChainBuilderFilter implements Loggable {
 
-        protected Logger log = LogKit.getLoggerFor("cocoon");
+        protected Logger log;
 
         private List startPrefix;
 
@@ -330,6 +344,12 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         ) {
             super(logicsheetMarkupGenerator, resolver);
         }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
         /**
          * @see org.xml.sax.ContentHandler

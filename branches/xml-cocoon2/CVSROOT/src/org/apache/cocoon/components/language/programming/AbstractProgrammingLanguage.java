@@ -19,7 +19,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * Base implementation of <code>ProgrammingLanguage</code>. This class sets the
@@ -27,17 +27,23 @@ import org.apache.log.LogKit;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-07 17:10:46 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-22 21:56:37 $
  */
 public abstract class AbstractProgrammingLanguage
-  implements ProgrammingLanguage, Configurable
+  implements ProgrammingLanguage, Configurable, Loggable
 {
-  protected Logger log = LogKit.getLoggerFor("cocoon");
+  protected Logger log;
 
   /** The source code formatter */
   protected Class codeFormatter;
 
   protected String languageName;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
   /**
    * Configure the language

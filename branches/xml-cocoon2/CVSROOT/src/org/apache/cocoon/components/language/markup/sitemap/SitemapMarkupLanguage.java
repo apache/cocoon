@@ -29,7 +29,7 @@ import org.apache.cocoon.components.language.markup.sitemap.*;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -39,9 +39,9 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-12 15:31:23 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-22 21:56:35 $
  */
-public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
+public class SitemapMarkupLanguage extends AbstractMarkupLanguage implements Loggable {
 
     /**
     * the dependencies' list
@@ -101,9 +101,9 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
     /**
     * Add a dependency on an external file to the document for inclusion in
-    * generated code. This is used to populate a list of <code>File</code>'s 
-	* tested for change on each invocation; this information is used to assert 
-	* whether regeneration is necessary.
+    * generated code. This is used to populate a list of <code>File</code>'s
+    * tested for change on each invocation; this information is used to assert
+    * whether regeneration is necessary.
     *
     * @param location The file path of the dependent file
     * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
@@ -130,10 +130,13 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         LogicsheetCodeGenerator logicsheetMarkupGenerator,
         EntityResolver resolver
     ) {
-        return new SitemapTransformerChainBuilderFilter(
-            logicsheetMarkupGenerator,
-            resolver
-        );
+        SitemapTransformerChainBuilderFilter filter =
+            new SitemapTransformerChainBuilderFilter(
+                logicsheetMarkupGenerator,
+                resolver
+             );
+        filter.setLogger(this.log);
+        return filter;
     }
 
 
@@ -152,7 +155,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
     *
     */
     protected class PreProcessFilter extends XMLFilterImpl {
-        protected Logger log = LogKit.getLoggerFor("cocoon");
+        protected Logger log;
 
         private String filename;
 
@@ -170,6 +173,12 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         reader.setContentHandler(this);
         super.setParent(reader);
     }
+
+  public void setLogger(Logger logger) {
+      if (this.log == null) {
+          this.log = logger;
+      }
+  }
 
         public void startDocument() throws SAXException {
             super.startDocument();
@@ -223,8 +232,8 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
     * &lt;map:dependency;&gt;...&lt;/map:dependency;&gt;
     *
     */
-    protected  class SitemapTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
-        protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected  class SitemapTransformerChainBuilderFilter extends TransformerChainBuilderFilter implements Loggable {
+        protected Logger log;
 
         private Object[] rootElement;
 
@@ -239,6 +248,12 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         private boolean insideRootElement;
 
         private boolean finished;
+
+  public void setLogger(Logger logger) {
+      if (this.log == null) {
+          this.log = logger;
+      }
+  }
 
         /**
          * default constructor

@@ -27,6 +27,7 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.SAXConfigurationHandler;
 import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.Initializable;
 
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.Environment;
@@ -37,7 +38,7 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.DefaultComponentManager;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
@@ -46,12 +47,12 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.44 $ $Date: 2001-01-17 18:33:35 $
+ * @version CVS $Revision: 1.4.2.45 $ $Date: 2001-01-22 21:56:32 $
  */
 public class Cocoon
-  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
+  implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Loggable {
 
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
 
     /** The table of role-class */
     private HashMap components = new HashMap();
@@ -87,22 +88,8 @@ public class Cocoon
      * Create a new <code>Cocoon</code> instance.
      */
     protected Cocoon() throws ConfigurationException {
-        log.debug("New Cocoon object.");
         // Set the system properties needed by Xalan2.
         setSystemProperties();
-
-        // Setup the default parser, for parsing configuration.
-        // If one need to use a different parser, set the given system property
-        String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
-        log.debug("Using parser: " + parser);
-
-        try {
-            this.componentManager.addComponent(Roles.PARSER, ClassUtils.loadClass(parser),null);
-        } catch ( Exception e ) {
-            log.error("Could not load parser, Cocoon object not created.", e);
-            throw new ConfigurationException("Could not load parser " + parser, e);
-        }
-        this.componentManager.addComponentInstance(Roles.COCOON, this);
     }
 
     /**
@@ -117,12 +104,40 @@ public class Cocoon
         this();
 
         this.classpath = classpath;
+        this.workDir = workDir;
+        this.configurationFile = configurationFile;
+
+        File rootFile = new File(root);
+        NetUtils.setRoot(rootFile);
+        this.root = rootFile.toURL();
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+            this.componentManager.setLogger(this.log);
+        }
+    }
+
+    public void init() throws Exception {
+        log.debug("New Cocoon object.");
+
+        // Setup the default parser, for parsing configuration.
+        // If one need to use a different parser, set the given system property
+        String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
+        log.debug("Using parser: " + parser);
+
+        try {
+            this.componentManager.addComponent(Roles.PARSER, ClassUtils.loadClass(parser),null);
+        } catch ( Exception e ) {
+            log.error("Could not load parser, Cocoon object not created.", e);
+            throw new ConfigurationException("Could not load parser " + parser, e);
+        }
+        this.componentManager.addComponentInstance(Roles.COCOON, this);
+
         log.debug("Classpath = " + classpath);
 
-        this.workDir = workDir;
         log.debug("Work directory = " + workDir.getCanonicalPath());
-
-        this.configurationFile = configurationFile;
 
         Parser p = (Parser) this.lookup(Roles.PARSER);
         SAXConfigurationHandler b = new SAXConfigurationHandler();
@@ -133,10 +148,6 @@ public class Cocoon
         p.parse(is);
 
         this.configure(b.getConfiguration());
-
-        File rootFile = new File(root);
-        NetUtils.setRoot(rootFile);
-        this.root = rootFile.toURL();
     }
 
     /**
@@ -191,6 +202,7 @@ public class Cocoon
         Configuration sconf = conf.getChild("sitemap");
 
         this.sitemapManager = new Manager(null);
+        this.sitemapManager.setLogger(this.log);
         this.sitemapManager.compose(this);
         this.sitemapManager.configure(conf);
         this.sitemapFileName = sconf.getAttribute("file");

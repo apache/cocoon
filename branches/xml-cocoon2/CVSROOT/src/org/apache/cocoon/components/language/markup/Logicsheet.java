@@ -39,7 +39,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -51,13 +51,13 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-11 15:05:56 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:34 $
  */
-public class Logicsheet {
+public class Logicsheet implements Loggable {
     /**
      * The logger.
      */
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     /**
     * The trax TransformerFactory
@@ -67,6 +67,12 @@ public class Logicsheet {
     * The trax templates
     */
     protected Templates templates;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     /**
     * The constructor. It does preserve the namespace from the stylesheet.

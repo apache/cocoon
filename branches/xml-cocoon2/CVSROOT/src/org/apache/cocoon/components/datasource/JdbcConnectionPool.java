@@ -11,9 +11,9 @@ import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
-
+import org.apache.avalon.Loggable;
+import org.apache.avalon.Initializable;
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,9 +26,9 @@ import java.util.List;
  * thread to manage the number of SQL Connections.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-10 13:44:00 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:34 $
  */
-public class JdbcConnectionPool implements Pool, Runnable, Disposable {
+public class JdbcConnectionPool implements Pool, Runnable, Disposable, Loggable, Initializable {
     private final String dburl;
     private final String username;
     private final String password;
@@ -37,7 +37,7 @@ public class JdbcConnectionPool implements Pool, Runnable, Disposable {
     private int currentCount = 0;
     private List active = new ArrayList();
     private List ready = new ArrayList();
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
     private boolean monitoring = true;
 
     public JdbcConnectionPool(String url, String username, String password, int min, int max) {
@@ -58,11 +58,15 @@ public class JdbcConnectionPool implements Pool, Runnable, Disposable {
         } else {
             this.max = max;
         }
-
-        initPool();
     }
 
-    private void initPool() {
+    public void setLogger (Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
+
+    public void init() {
         for (int i = 0; i < min; i++) {
             this.ready.add(this.createJdbcConnection());
         }
@@ -76,9 +80,11 @@ public class JdbcConnectionPool implements Pool, Runnable, Disposable {
         try {
             if (username == null) {
                 conn = new JdbcConnection(DriverManager.getConnection(this.dburl), this);
+                conn.setLogger(this.log);
                 currentCount++;
             } else {
                 conn = new JdbcConnection(DriverManager.getConnection(this.dburl, this.username, this.password), this);
+                conn.setLogger(this.log);
                 currentCount++;
             }
         } catch (SQLException se) {

@@ -32,7 +32,7 @@ import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.util.ClassUtils;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -47,12 +47,12 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-01-08 15:29:45 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-22 21:56:51 $ $Author: bloritsch $
  */
 
-public class SQLTransformer extends AbstractTransformer implements Composer {
+public class SQLTransformer extends AbstractTransformer implements Composer, Loggable {
 
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
 
     /** The SQL namespace **/
     public static final String my_uri = "http://apache.org/cocoon/SQL";
@@ -109,6 +109,12 @@ public class SQLTransformer extends AbstractTransformer implements Composer {
             this.dbSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
         } catch (ComponentManagerException cme) {
             this.log.warn("Could not get the DataSource Selector", cme);
+        }
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
         }
     }
 

@@ -9,12 +9,12 @@ package org.apache.cocoon.util;
 
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.util.pool.AbstractPool;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.PoolController;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
 
 /**
  * This is a implementation of <code>Pool</code> for SitemapComponents
@@ -22,11 +22,11 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  */
-public class ComponentPool extends AbstractPool implements ThreadSafe {
+public class ComponentPool extends AbstractPool implements ThreadSafe, Loggable {
 
     public final static int DEFAULT_POOL_SIZE = 16;
 
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
 
     public ComponentPool(final ObjectFactory factory,
                          final PoolController controller) throws Exception {
@@ -46,6 +46,12 @@ public class ComponentPool extends AbstractPool implements ThreadSafe {
         super(factory, controller, initial, maximum);
     }
 
+    public void setLogger(Logger log) {
+        if (this.log == null) {
+            this.log = log;
+        }
+    }
+
     /**
      * Retrieve an object from pool.
      *
@@ -53,12 +59,12 @@ public class ComponentPool extends AbstractPool implements ThreadSafe {
      */
     public final Poolable get() throws Exception {
         synchronized(m_pool) {
-			Poolable component = super.get();
-			log.debug(
-				"ComponentPool retrieved " 
-				+ component.getClass().getName() 
-				+ " (" + component.toString() + ")"
-			);
+            Poolable component = super.get();
+            log.debug(
+                "ComponentPool retrieved "
+                + component.getClass().getName()
+                + " (" + component.toString() + ")"
+            );
             return component;
         }
     }
@@ -71,11 +77,11 @@ public class ComponentPool extends AbstractPool implements ThreadSafe {
     public final void put(final Poolable poolable) {
         synchronized(m_pool) {
             super.put(poolable);
-			log.debug(
-				"ComponentPool returned "
-				+ poolable.getClass().getName()
-				+ " (" + poolable.toString() + ")"
-			);
+            log.debug(
+                "ComponentPool returned "
+                + poolable.getClass().getName()
+                + " (" + poolable.toString() + ")"
+            );
         }
     }
 }

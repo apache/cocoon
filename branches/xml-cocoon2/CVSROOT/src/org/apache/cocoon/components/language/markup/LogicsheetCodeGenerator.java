@@ -28,18 +28,18 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.TransformerException;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-30 21:40:58 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:34 $
  */
-public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
+public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     private Logicsheet corelogicsheet;
 
@@ -74,6 +74,12 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
             this.serializerContentHandler = this.serializer.asContentHandler();
         } catch (IOException ioe) {
             log.error("This should never happen, because we're not dealing with IO file, but rather with StringWriter", ioe);
+        }
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
         }
     }
 

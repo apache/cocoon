@@ -14,6 +14,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.SingleThreaded;
+import org.apache.log.Logger;
 
 import org.apache.cocoon.util.ClassUtils;
 /**
@@ -21,25 +22,25 @@ import org.apache.cocoon.util.ClassUtils;
  * interfaces the passed component implements.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-13 04:14:42 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:48 $
  */
 public class ComponentHolderFactory {
 
-    public static ComponentHolder getComponentHolder (String componentName, Configuration configuration, ComponentManager manager)
+    public static ComponentHolder getComponentHolder (Logger logger, String componentName, Configuration configuration, ComponentManager manager)
     throws Exception {
-        return (getComponentHolder(componentName, configuration, manager, null));
+        return (getComponentHolder(logger, componentName, configuration, manager, null));
     }
 
-    public static ComponentHolder getComponentHolder (String componentName, Configuration configuration, ComponentManager manager, String mime_type)
+    public static ComponentHolder getComponentHolder (Logger logger, String componentName, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
         if (ClassUtils.implementsInterface (componentName, Poolable.class.getName())) {
-            return new PoolableComponentHolder (componentName, configuration, manager, mime_type);
+            return new PoolableComponentHolder (logger, componentName, configuration, manager, mime_type);
         } else if (ClassUtils.implementsInterface (componentName, SingleThreaded.class.getName())) {
-            return new DefaultComponentHolder (componentName, configuration, manager, mime_type);
+            return new DefaultComponentHolder (logger, componentName, configuration, manager, mime_type);
         } else if (ClassUtils.implementsInterface (componentName, ThreadSafe.class.getName())) {
-            return new ThreadSafeComponentHolder (componentName, configuration, manager, mime_type);
+            return new ThreadSafeComponentHolder (logger, componentName, configuration, manager, mime_type);
         } else  {
-            return new DefaultComponentHolder (componentName, configuration, manager, mime_type);
+            return new DefaultComponentHolder (logger, componentName, configuration, manager, mime_type);
         }
     }
 }

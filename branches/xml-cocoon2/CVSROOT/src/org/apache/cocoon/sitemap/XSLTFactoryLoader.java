@@ -16,7 +16,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.w3c.dom.traversal.NodeIterator;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * This class is used as a XSLT extension class. It is used by the sitemap
@@ -25,11 +25,11 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 15:06:07 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:49 $
  */
 
-public class XSLTFactoryLoader {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class XSLTFactoryLoader implements Loggable {
+    protected Logger log;
 
     private HashMap obj = new HashMap();
 
@@ -39,6 +39,9 @@ public class XSLTFactoryLoader {
         if (factory == null) factory = ClassUtils.newInstance(className);
         obj.put(className, factory);
 
+        if (factory instanceof Loggable) {
+            ((Loggable)factory).setLogger(this.log);
+        }
         if (factory instanceof CodeFactory) {
             return ((CodeFactory) factory).generateClassSource(prefix, pattern, conf);
         }
@@ -47,12 +50,21 @@ public class XSLTFactoryLoader {
                             + "\". Should implement the CodeFactory interface");
     }
 
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
+
     public String getParameterSource(String className, NodeIterator conf)
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
         Object factory = obj.get(className);
     if (factory == null) factory = ClassUtils.newInstance(className);
     obj.put (className, factory);
 
+    if (factory instanceof Loggable) {
+        ((Loggable)factory).setLogger(this.log);
+    }
     if (factory instanceof CodeFactory) {
         return ((CodeFactory) factory).generateParameterSource(conf);
     }
@@ -67,6 +79,9 @@ public class XSLTFactoryLoader {
         if (factory == null) factory = ClassUtils.newInstance(className);
         obj.put (className, factory);
 
+        if (factory instanceof Loggable) {
+            ((Loggable)factory).setLogger(this.log);
+        }
         if (factory instanceof CodeFactory) {
             return ((CodeFactory) factory).generateMethodSource(conf);
         }

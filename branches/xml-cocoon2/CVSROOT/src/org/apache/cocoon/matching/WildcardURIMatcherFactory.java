@@ -15,7 +15,7 @@ import org.apache.avalon.ConfigurationException;
 import org.w3c.dom.traversal.NodeIterator;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -24,11 +24,11 @@ import org.apache.log.LogKit;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2000-12-15 20:44:35 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-01-22 21:56:46 $
  */
 
-public class WildcardURIMatcherFactory implements CodeFactory {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
+    protected Logger log;
 
     /** The int representing '*' in the pattern <code>int []</code>. */
     protected static final int MATCH_FILE	= -1;
@@ -50,6 +50,12 @@ public class WildcardURIMatcherFactory implements CodeFactory {
     public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "int []";
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**

@@ -30,7 +30,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -38,14 +38,14 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.css.CSSDocumentHandler;
 
 /**
- * The <code>SVGBuilder</code> is a utility class that will generate a 
+ * The <code>SVGBuilder</code> is a utility class that will generate a
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-08 16:32:56 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:56 $
  */
-public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Loggable {
+    protected Logger log;
 
     private static final String SAX_PARSER
         = "org.apache.xerces.parsers.SAXParser";
@@ -53,15 +53,21 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer {
     private final static String CSS_PARSER_CLASS_NAME =
         "org.w3c.flute.parser.Parser";
 
-	static {
+    static {
         CSSDocumentHandler.setParserClassName(CSS_PARSER_CLASS_NAME);
-	}
+    }
 
     /**
      * Construct a new instance of this TreeGenerator.
      */
     protected SVGBuilder() {
         super(SAX_PARSER);
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**
@@ -78,16 +84,16 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer {
      */
     public void startDocument()
     throws SAXException {
-		try {
-			// Create SVG Document
-			String namespaceURI = SVGDOMImplementation.SVG_NAMESPACE_URI;
-			this.document = implementation.createDocument(namespaceURI, "svg", null);
-			super.startDocument();	
-		} catch (Exception ex){
+        try {
+            // Create SVG Document
+            String namespaceURI = SVGDOMImplementation.SVG_NAMESPACE_URI;
+            this.document = implementation.createDocument(namespaceURI, "svg", null);
+            super.startDocument();
+        } catch (Exception ex){
             log.error("SVGBuilder: startDocument", ex);
-			ex.printStackTrace();
+            ex.printStackTrace();
             throw new SAXException("SVGBuilder: startDocument", ex);
-		}
+        }
     }
 
     /**
@@ -97,18 +103,18 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer {
      */
     public void endDocument ()
     throws SAXException {
-		try {
-			super.endDocument();
+        try {
+            super.endDocument();
 
-			// FIXME: Hack.
-			((org.apache.batik.dom.svg.SVGOMDocument)this.document).setURLObject(new java.net.URL("http://xml.apache.org"));
+            // FIXME: Hack.
+            ((org.apache.batik.dom.svg.SVGOMDocument)this.document).setURLObject(new java.net.URL("http://xml.apache.org"));
 
-			this.notify(this.document);
-		} catch (Exception ex){
+            this.notify(this.document);
+        } catch (Exception ex){
             log.error("SVGBuilder: endDocument", ex);
-			ex.printStackTrace();
+            ex.printStackTrace();
             throw new SAXException("SVGBuilder: endDocument", ex);
-		}
+        }
     }
 
     /**

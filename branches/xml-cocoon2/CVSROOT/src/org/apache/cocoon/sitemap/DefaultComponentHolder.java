@@ -13,21 +13,21 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Configurable;
+import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.util.ClassUtils;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
 
 /**
  * This class holds a sitemap component which is not specially marked as having
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:40:31 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:48 $
  */
 public class DefaultComponentHolder implements ComponentHolder {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     protected String className;
     protected Configuration configuration;
@@ -39,7 +39,8 @@ public class DefaultComponentHolder implements ComponentHolder {
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public DefaultComponentHolder(String className, Configuration configuration, ComponentManager manager, String mime_type) {
+    public DefaultComponentHolder(Logger log, String className, Configuration configuration, ComponentManager manager, String mime_type) {
+        this.log = log;
         this.className = className;
         this.configuration = configuration;
         this.manager = manager;
@@ -51,6 +52,9 @@ public class DefaultComponentHolder implements ComponentHolder {
      */
     public Component get() throws Exception {
         Component comp = (Component) ClassUtils.newInstance (this.className);
+        if (comp instanceof Loggable) {
+            ((Loggable) comp).setLogger(this.log);
+        }
         if (comp instanceof Composer) {
             ((Composer) comp).compose (this.manager);
         }

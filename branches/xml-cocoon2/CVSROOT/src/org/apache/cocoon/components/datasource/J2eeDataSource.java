@@ -9,7 +9,7 @@ package org.apache.cocoon.components.datasource;
 
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 import javax.naming.Context;
@@ -25,12 +25,18 @@ import java.sql.SQLException;
  * J2EE container pools the datasources properly.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-10 22:07:03 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-22 21:56:33 $
  */
-public class J2eeDataSource implements DataSourceComponent {
+public class J2eeDataSource implements DataSourceComponent, Loggable {
     final static String JDBC_NAME = "java:comp/env/jdbc/";
-    Logger log = LogKit.getLoggerFor("cocoon");
+    Logger log;
     DataSource ds = null;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     /**
      *  Configure and set up DB connection.  Here we set the connection

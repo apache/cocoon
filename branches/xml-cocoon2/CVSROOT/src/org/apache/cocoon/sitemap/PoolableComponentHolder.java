@@ -17,6 +17,7 @@ import org.apache.avalon.Poolable;
 import org.apache.avalon.util.pool.ObjectFactory;
 import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.util.pool.PoolController;
+import org.apache.log.Logger;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.ComponentPool;
@@ -27,7 +28,7 @@ import org.apache.cocoon.Roles;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-08 20:40:32 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:49 $
  */
 public class PoolableComponentHolder extends DefaultComponentHolder implements ObjectFactory {
 
@@ -48,9 +49,9 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public PoolableComponentHolder(String className, Configuration configuration, ComponentManager manager, String mime_type)
+    public PoolableComponentHolder(Logger log, String className, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
-        super(className, configuration, manager, mime_type);
+        super(log, className, configuration, manager, mime_type);
         try {
             this.clazz = ClassUtils.loadClass (super.className);
         } catch (Exception e) {
@@ -58,7 +59,10 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
             this.clazz = null;
         }
         PoolController pc = (PoolController)super.manager.lookup (Roles.POOL_CONTROLLER);
-        this.pool = new ComponentPool (this, pc, amount, DEFAULT_AMOUNT);
+        ComponentPool cp = new ComponentPool (this, pc, amount, DEFAULT_AMOUNT);
+        cp.setLogger(this.log);
+        cp.init();
+        this.pool = cp;
     }
 
     /** Creates a new instance of the <CODE>Component</CODE>

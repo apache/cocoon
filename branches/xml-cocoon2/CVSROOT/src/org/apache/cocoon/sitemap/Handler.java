@@ -28,17 +28,17 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-21 09:05:41 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:48 $
  */
-public class Handler implements Runnable, Configurable, Composer, Processor {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class Handler implements Runnable, Configurable, Composer, Processor, Loggable {
+    protected Logger log;
 
     /** the configuration */
     private Configuration conf;
@@ -74,6 +74,12 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
 
     public void configure (Configuration conf) {
         this.conf = conf;
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     protected Handler (ComponentManager sitemapComponentManager, String source, boolean check_reload)
@@ -125,11 +131,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
 
     protected synchronized void regenerate (Environment environment)
     throws Exception {
-		log.debug("Beginning sitemap regeneration");
+        log.debug("Beginning sitemap regeneration");
         regenerateAsynchronously(environment);
         if (regeneration != null)
             regeneration.join();
-		log.debug("Sitemap regeneration complete");
+        log.debug("Sitemap regeneration complete");
     }
 
     public boolean process (Environment environment)
@@ -161,6 +167,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage, environment);
             smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
+            if (smap instanceof Loggable) ((Loggable) smap).setLogger(this.log);
             if (smap instanceof Composer) smap.compose(this.manager);
             if (smap instanceof Configurable) smap.configure(this.conf);
             this.sitemap = smap;
@@ -172,8 +179,8 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         } catch (Exception e) {
             log.error("Error compiling sitemap", e);
             this.exception = e;
-		} catch (Throwable t) {
-			log.error("Error compiling sitemap", t);
+        } catch (Throwable t) {
+            log.error("Error compiling sitemap", t);
         } finally {
             this.regeneration = null;
             this.environment = null;

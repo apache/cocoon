@@ -35,7 +35,7 @@ import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.xpath.XPathAPI;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 import javax.xml.transform.TransformerException;
@@ -48,11 +48,11 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-11 15:06:10 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-01-22 21:56:51 $ $Author: bloritsch $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composer {
+public class XIncludeTransformer extends AbstractTransformer implements Composer, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     protected ComponentManager manager = null;
 
@@ -81,6 +81,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
     protected String last_xmlbase_element_name = "";
 
     protected Stack xmlbase_element_name_stack = new Stack();
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters)
@@ -188,6 +194,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         log.debug("Object: "+object);
         if (parse.equals("text")) {
             log.debug("Parse type is text");
+            if (object instanceof Loggable) {
+                ((Loggable)object).setLogger(this.log);
+            }
             if (object instanceof Reader) {
                 Reader reader = (Reader)object;
                 int read;
@@ -221,6 +230,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 return;
             }
             InputSource input;
+            if (object instanceof Loggable) {
+                ((Loggable)object).setLogger(this.log);
+            }
             if (object instanceof Reader) {
                 input = new InputSource((Reader)object);
             } else if (object instanceof InputStream) {

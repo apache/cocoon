@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.environment.commandline;
 
 import java.util.Iterator;
@@ -30,19 +30,19 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 
 /**
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-30 21:36:46 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-22 21:56:42 $
  */
 
-public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
+public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment implements Loggable {
 
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
 
     private boolean skip = false;
 
@@ -52,6 +52,12 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
         log.debug("LinkSamplingEnvironment: uri=" + uri);
         this.objectModel.put(Cocoon.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
         this.objectModel.put(Cocoon.RESPONSE_OBJECT, new CommandLineResponse());
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**

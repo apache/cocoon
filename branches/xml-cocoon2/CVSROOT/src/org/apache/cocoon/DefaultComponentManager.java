@@ -34,15 +34,15 @@ import org.apache.cocoon.util.ComponentPoolController;
 import org.apache.cocoon.CocoonComponentSelector;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-01-18 22:02:16 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-01-22 21:56:32 $
  */
-public class DefaultComponentManager implements ComponentManager, Configurable {
+public class DefaultComponentManager implements ComponentManager, Configurable, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     /** Hashmap of all components which this ComponentManager knows about.
      */
@@ -68,6 +68,12 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
         configurations = Collections.synchronizedMap(new HashMap());
         pools = Collections.synchronizedMap(new HashMap());
         instances = Collections.synchronizedMap(new HashMap());
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /** Return an instance of a component.
@@ -102,9 +108,9 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
 
             this.components.put(role, componentClass);
 
-	    if (Configurable.class.isAssignableFrom(componentClass)) {
-	        this.configurations.put(role, new DefaultConfiguration("", "-"));
-	    }
+        if (Configurable.class.isAssignableFrom(componentClass)) {
+            this.configurations.put(role, new DefaultConfiguration("", "-"));
+        }
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
@@ -244,10 +250,12 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
         if ( pool == null ) {
             try {
                 log.debug("Creating new component pool for " + componentClass.getName() + ".");
-                pool = new ComponentPool(
-                    new ComponentFactory(componentClass, (Configuration)configurations.get(role), this),
-                    new ComponentPoolController()
-                    );
+                ComponentFactory cf = new ComponentFactory(componentClass, (Configuration)configurations.get(role), this);
+                cf.setLogger(this.log);
+
+                pool = new ComponentPool(cf, new ComponentPoolController());
+                pool.setLogger(this.log);
+                pool.init();
             } catch (Exception e) {
                 log.error("Could not create pool for component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
@@ -278,6 +286,10 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
      */
     private void setupComponent(String role, Component c)
     throws ComponentManagerException {
+        if ( c instanceof Loggable ) {
+            ((Loggable)c).setLogger(this.log);
+        }
+
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(

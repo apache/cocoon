@@ -8,17 +8,23 @@
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.Configurable;
+import org.apache.avalon.Loggable;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-12-06 22:54:09 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-22 21:56:33 $
  */
-public abstract class AbstractAction implements Action, Configurable {
+public abstract class AbstractAction implements Action, Configurable, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
 }

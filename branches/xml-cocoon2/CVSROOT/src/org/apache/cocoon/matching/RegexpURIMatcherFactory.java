@@ -18,7 +18,7 @@ import org.apache.avalon.ConfigurationException;
 import org.w3c.dom.traversal.NodeIterator;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -26,15 +26,21 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-12-15 20:35:12 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-01-22 21:56:46 $
  */
 
-public class RegexpURIMatcherFactory implements CodeFactory {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
+    protected Logger log;
 
     public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "RE";
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     public String generateClassSource (String prefix, String pattern,

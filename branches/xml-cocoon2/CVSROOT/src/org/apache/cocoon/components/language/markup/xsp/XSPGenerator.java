@@ -13,7 +13,7 @@ import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.components.parser.Parser;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.generation.AbstractServerPage;
 
@@ -21,12 +21,18 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-10 22:38:54 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:35 $
  */
-public abstract class XSPGenerator extends AbstractServerPage {
+public abstract class XSPGenerator extends AbstractServerPage implements Loggable {
 
   protected Parser parser;
-  protected Logger log = LogKit.getLoggerFor("cocoon");
+  protected Logger log;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
   /**
    * Set the current <code>ComponentManager</code> instance used by this

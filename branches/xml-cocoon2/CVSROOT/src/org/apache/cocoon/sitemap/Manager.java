@@ -19,6 +19,8 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
+import org.apache.avalon.Loggable;
+import org.apache.log.Logger;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -32,9 +34,10 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-30 21:42:24 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:49 $
  */
-public class Manager implements Configurable, Composer {
+public class Manager implements Configurable, Composer, Loggable {
+    private Logger log;
 
     /** The vectors of sub sitemaps */
     private HashMap sitemaps = new HashMap();
@@ -50,6 +53,12 @@ public class Manager implements Configurable, Composer {
 
     public Manager (ComponentManager sitemapComponentManager) {
         this.parentSitemapComponentManager = sitemapComponentManager;
+    }
+
+    public void setLogger (Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     public void configure (Configuration conf) {
@@ -77,8 +86,9 @@ public class Manager implements Configurable, Composer {
             }
         } else {
             sitemapHandler = new Handler(parentSitemapComponentManager, source, check_reload);
-            if (sitemapHandler instanceof Composer) sitemapHandler.compose(this.manager);
-            if (sitemapHandler instanceof Configurable) sitemapHandler.configure(this.conf);
+            sitemapHandler.setLogger(this.log);
+            sitemapHandler.compose(this.manager);
+            sitemapHandler.configure(this.conf);
             sitemaps.put(source, sitemapHandler);
             sitemapHandler.regenerate(environment);
         }

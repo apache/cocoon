@@ -40,7 +40,7 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.util.IOUtils;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
@@ -53,13 +53,13 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-12-11 17:09:40 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-01-22 21:56:34 $
  */
 public class ProgramGeneratorImpl
-  implements ProgramGenerator, Composer, Configurable, ThreadSafe
+  implements ProgramGenerator, Composer, Configurable, ThreadSafe, Loggable
 {
 
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
   /** The auto-reloading option */
   protected boolean autoReload = true;
 
@@ -77,6 +77,12 @@ public class ProgramGeneratorImpl
 
   /** The working directory */
   protected File workDir;
+
+  public void setLogger(Logger logger) {
+      if (this.log == null) {
+          this.log = logger;
+      }
+  }
 
   /**
    * Set the global component manager. This metod also sets the
@@ -140,8 +146,16 @@ public class ProgramGeneratorImpl
 
     programmingLanguage.setLanguageName(programmingLanguageName);
 
+    if (markupLanguage instanceof Loggable) {
+        ((Loggable) markupLanguage).setLogger(this.log);
+    }
+
     if (markupLanguage instanceof Composer) {
         ((Composer) markupLanguage).compose(this.manager);
+    }
+
+    if (programmingLanguage instanceof Loggable) {
+       ((Loggable) programmingLanguage).setLogger(this.log);
     }
 
     if (programmingLanguage instanceof Composer) {
@@ -180,6 +194,9 @@ public class ProgramGeneratorImpl
 
         // Instantiate program
         programInstance = programmingLanguage.instantiate(program);
+        if (programInstance instanceof Loggable) {
+            ((Loggable)programInstance).setLogger(this.log);
+        }
       } catch (LanguageException e) { log.warn("Language Exception", e); }
 
       /*
@@ -240,6 +257,7 @@ public class ProgramGeneratorImpl
 
       // Instantiate
       programInstance = programmingLanguage.instantiate(program);
+
     }
 
     return programInstance;

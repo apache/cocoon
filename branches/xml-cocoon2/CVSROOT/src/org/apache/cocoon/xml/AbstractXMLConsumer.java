@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * This abstract class provides default implementation of the methods specified
@@ -22,11 +22,17 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-10 22:38:56 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-22 21:56:54 $
  */
-public abstract class AbstractXMLConsumer implements XMLConsumer {
+public abstract class AbstractXMLConsumer implements XMLConsumer, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     /**
      * Receive an object for locating the origin of SAX document events.

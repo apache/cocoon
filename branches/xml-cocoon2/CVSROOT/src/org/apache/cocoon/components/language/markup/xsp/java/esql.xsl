@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.34 2001-01-17 20:21:08 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.35 2001-01-22 21:56:37 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -274,7 +274,7 @@
             _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
             _esql_connection.connection = _esql_connection.datasource.getConnection();
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-            cocoonLogger.error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
+            log.error("Could not get the datasource",_esql_exception_<xsl:value-of select="generate-id(.)"/>);
             throw new RuntimeException("Could not get the datasource "+_esql_exception_<xsl:value-of select="generate-id(.)"/>);
           }
         </xsl:when>

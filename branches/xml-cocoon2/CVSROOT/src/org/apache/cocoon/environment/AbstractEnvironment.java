@@ -23,14 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.cocoon.environment.Environment;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public abstract class AbstractEnvironment implements Environment {
+public abstract class AbstractEnvironment implements Environment, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     /** The current uri in progress */
     protected String uri = null;
@@ -84,6 +84,12 @@ public abstract class AbstractEnvironment implements Environment {
         this.context = context.toURL();
         this.action = action;
         this.objectModel = new HashMap();
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     // Sitemap methods

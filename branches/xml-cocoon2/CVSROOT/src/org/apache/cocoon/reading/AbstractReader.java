@@ -15,16 +15,16 @@ import org.apache.avalon.Parameters;
 import org.xml.sax.EntityResolver;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-08 20:39:58 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-22 21:56:47 $
  */
-public abstract class AbstractReader implements Reader {
+public abstract class AbstractReader implements Reader, Loggable {
     /** The logger */
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
     /** The current <code>Map</code> of the object model. */
@@ -45,6 +45,12 @@ public abstract class AbstractReader implements Reader {
         this.objectModel=objectModel;
         this.source=src;
         this.parameters=par;
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**

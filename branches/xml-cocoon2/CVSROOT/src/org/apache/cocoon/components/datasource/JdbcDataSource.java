@@ -10,7 +10,7 @@ package org.apache.cocoon.components.datasource;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Disposable;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 import java.sql.Connection;
@@ -22,11 +22,17 @@ import java.sql.SQLException;
  * <code>java.sql.DriverManager</code>.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-12 15:26:00 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:34 $
  */
-public class JdbcDataSource implements DataSourceComponent {
-    Logger log = LogKit.getLoggerFor("cocoon");
+public class JdbcDataSource implements DataSourceComponent, Loggable {
+    Logger log;
     JdbcConnectionPool pool = null;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     /**
      *  Configure and set up DB connection.  Here we set the connection
@@ -60,6 +66,8 @@ public class JdbcDataSource implements DataSourceComponent {
             int max = controler.getAttributeAsInt("max", 3);
 
             this.pool = new JdbcConnectionPool(dburl, user, passwd, min, max);
+            this.pool.setLogger(this.log);
+            this.pool.init();
         }
     }
 

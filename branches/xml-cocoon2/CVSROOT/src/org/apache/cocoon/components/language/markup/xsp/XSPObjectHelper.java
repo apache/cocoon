@@ -16,9 +16,6 @@ import org.xml.sax.SAXException;
 
 import org.w3c.dom.Node;
 
-import org.apache.log.Logger;
-import org.apache.log.LogKit;
-
 import org.apache.cocoon.xml.XMLFragment;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 
@@ -28,7 +25,7 @@ import org.apache.cocoon.xml.dom.DOMStreamer;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
  *         (Cocoon1 <code>xspExpr()</code> methods port)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-03 15:38:02 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:36 $
  */
 public class XSPObjectHelper {
   /**
@@ -165,7 +162,7 @@ public class XSPObjectHelper {
   }
 
   // <xsp:expr> methods
-  
+
   /**
    * Implementation of &lt;xsp:expr&gt; for <code>char</code> :
    * outputs characters representing the value.
@@ -311,7 +308,7 @@ public class XSPObjectHelper {
       Iterator iterator = v.iterator();
       while (iterator.hasNext())
       {
-      	xspExpr(contentHandler, iterator.next());
+        xspExpr(contentHandler, iterator.next());
       }
     }
   }

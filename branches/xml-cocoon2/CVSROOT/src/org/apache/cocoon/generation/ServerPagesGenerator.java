@@ -30,13 +30,14 @@ import org.xml.sax.SAXException;
 import java.net.MalformedURLException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
+import org.apache.avalon.Loggable;
 
 /**
  * This class acts as a proxy to a dynamically loaded<code>Generator</code>
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-08 20:39:39 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:43 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -130,6 +131,10 @@ public class ServerPagesGenerator
     } catch (Exception e) {
       log.warn("ServerPagesGenerator.generate()", e);
       throw new ProcessingException(e.getMessage());
+    }
+
+    if (generator instanceof Loggable) {
+        ((Loggable)generator).setLogger(this.log);
     }
 
     // Delegate XML production to loaded generator

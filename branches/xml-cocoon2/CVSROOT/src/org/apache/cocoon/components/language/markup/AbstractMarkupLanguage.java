@@ -41,7 +41,7 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -50,15 +50,15 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-16 17:04:22 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-22 21:56:34 $
  */
 public abstract class AbstractMarkupLanguage
-     implements MarkupLanguage, Composer, Configurable
+     implements MarkupLanguage, Composer, Configurable, Loggable
 {
     /**
      * The logger for AbstractMarkupLanguage
      */
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
     /**
     * The supported language table
     */
@@ -100,6 +100,12 @@ public abstract class AbstractMarkupLanguage
 
         // Initialize logicsheet cache
         this.logicsheetCache = new MemoryStore();
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml;
 
 import java.util.Vector;
@@ -21,25 +21,25 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributeListImpl;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * This class is an utility class &quot;wrapping&quot; around a SAX version 1.0
  * <code>DocumentHandler</code> and forwarding it those events received throug
  * its <code>XMLConsumers</code> interface.
  * <br>
- * This class fully supports XML namespaces, converting 
+ * This class fully supports XML namespaces, converting
  * <code>startPrefixMapping(...)</code> and <code>endPrefixMapping(...)</code>
  * calls into appropriate <code>xmlns</code> and <code>xmlns:...</code> element
  * attributes.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-08 20:40:58 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:55 $
  */
-public class DocumentHandlerWrapper extends AbstractXMLConsumer /*implements Recyclable*/ {
+public class DocumentHandlerWrapper extends AbstractXMLConsumer implements Loggable /*, Recyclable*/ {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
 
     /** The current namespaces table. */
     private NamespacesTable namespaces=new NamespacesTable();
@@ -62,6 +62,12 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer /*implements Rec
     public DocumentHandlerWrapper(DocumentHandler document) {
         this();
         this.setDocumentHandler(document);
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**
@@ -90,26 +96,26 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer /*implements Rec
         if (this.documentHandler==null) return;
         else this.documentHandler.setDocumentLocator(locator);
     }
-    
+
     /**
      * Receive notification of the beginning of a document.
      */
     public void startDocument ()
-	throws SAXException {
+    throws SAXException {
         if (this.documentHandler==null)
             throw new SAXException("DocumentHandler not set");
         this.documentHandler.startDocument();
-    }    
-    
+    }
+
     /**
      * Receive notification of the end of a document.
      */
     public void endDocument ()
-	throws SAXException {
+    throws SAXException {
         if (this.documentHandler==null)
             throw new SAXException("DocumentHandler not set");
         this.documentHandler.endDocument();
-    }    
+    }
 
     /**
      * Begin the scope of a prefix-URI Namespace mapping.

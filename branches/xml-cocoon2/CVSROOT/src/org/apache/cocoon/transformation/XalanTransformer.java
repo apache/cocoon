@@ -25,6 +25,7 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Roles;
@@ -54,7 +55,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-01-05 16:21:04 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-01-22 21:56:51 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -203,6 +204,9 @@ implements Transformer, Composer, Poolable, Configurable {
         }
 
         super.setContentHandler(transformerHandler);
+        if(transformerHandler instanceof Loggable) {
+            ((Loggable)transformerHandler).setLogger(this.log);
+        }
         if(transformerHandler instanceof org.xml.sax.ext.LexicalHandler)
             this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)transformerHandler);
     }

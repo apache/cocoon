@@ -20,7 +20,7 @@ import org.apache.avalon.Recyclable;
 import org.apache.avalon.util.pool.Pool;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * The Connection object used in conjunction with the JdbcDataSource
@@ -31,16 +31,21 @@ import org.apache.log.LogKit;
  * total number of Connection objects that are created.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-11 21:01:45 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-22 21:56:33 $
  */
-public class JdbcConnection implements Connection, Recyclable {
+public class JdbcConnection implements Connection, Recyclable, Loggable {
     private Connection conn;
     private Pool pool;
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    private Logger log;
 
     public JdbcConnection(Connection realConn, Pool parent) {
         this.conn = realConn;
         this.pool = parent;
+    }
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
     public Statement createStatement() throws SQLException {
         return this.conn.createStatement();

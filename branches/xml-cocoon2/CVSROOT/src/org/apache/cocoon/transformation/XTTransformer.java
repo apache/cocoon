@@ -64,16 +64,17 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /**
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:40:44 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-22 21:56:51 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
-implements Transformer, Composer {
+implements Transformer, Composer, Loggable {
+    private Logger log;
 
     /** The store service instance */
     private Store store = null;
@@ -83,6 +84,12 @@ implements Transformer, Composer {
 
     /**The DocumentHandler */
     private DocumentHandler docHandler = null;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -123,11 +130,13 @@ implements Transformer, Composer {
 
         if (store != null) {
             loaderprocessor = (XTProcessor) store.get(xsluri);
+            loaderprocessor.setLogger(this.log);
         }
 
         // If not in the store or if style sheet has changed, loads and stores it
         if (loaderprocessor == null || loaderprocessor.hasChanged()) {
             loaderprocessor= new XTProcessor();
+            loaderprocessor.setLogger(this.log);
             SAXParser saxParser = null;
             try {
                 saxParser = SAXParserFactory.newInstance().newSAXParser();
@@ -144,10 +153,13 @@ implements Transformer, Composer {
         // Always clone the processor before using it,
         // Indeed 1 instance per thread is allowed
         this.processor = (XTProcessor) loaderprocessor.clone();
+        this.processor.setLogger(this.log);
 
         // Create the processor and set it as this documenthandler
         // FIXME (SS): set the correct SystemId to the XML inputSource
-        this.docHandler = new DocHandler(processor.createBuilder("XTSystemID"));
+        DocHandler temp = new DocHandler(processor.createBuilder("XTSystemID"));
+        temp.setLogger(this.log);
+        this.docHandler = temp;
         this.setDocumentHandler(this.docHandler);
     }
 
@@ -187,8 +199,8 @@ implements Transformer, Composer {
     /**
     * inner class DocumentHandler that delegates all SAX Events to the XT's builder.
     */
-    class DocHandler implements DocumentHandler, DTDHandler {
-        protected Logger log = LogKit.getLoggerFor("cocoon");
+    class DocHandler implements DocumentHandler, DTDHandler, Loggable {
+        protected Logger log;
 
         /**
         * The XT's DocumentHandler instance to which SAX events are forwarded
@@ -201,6 +213,12 @@ implements Transformer, Composer {
         public DocHandler(XMLProcessorImpl.Builder builder) {
             this.builder = builder;
         }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
         public void setDocumentLocator (Locator locator) {
             builder.setDocumentLocator(locator);
@@ -258,9 +276,9 @@ implements Transformer, Composer {
   * The XT processor.
   */
 
-class XTProcessor implements Cloneable, ParameterSet, Modifiable {
+class XTProcessor implements Cloneable, ParameterSet, Modifiable, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+    protected Logger log;
     private XMLProcessorEx sheetLoader;
     private Parser sheetParser;
     private Sheet sheet;
@@ -272,6 +290,12 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
     private HashMap params = new HashMap();
     private File xslFile;
     private long lastModified;
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
     /**
     * set the Parser that will parse the XSL style sheet
@@ -379,6 +403,7 @@ class XTProcessor implements Cloneable, ParameterSet, Modifiable {
     public Object clone() {
         try {
             XTProcessor cloned = (XTProcessor) super.clone();
+            cloned.setLogger(this.log);
             cloned.params = (HashMap) cloned.params.clone();
             return cloned;
         } catch (CloneNotSupportedException e) {

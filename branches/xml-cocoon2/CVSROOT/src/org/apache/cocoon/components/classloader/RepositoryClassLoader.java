@@ -22,8 +22,8 @@ import java.net.MalformedURLException;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.ClassUtils;
 
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
 
 /**
  * A class loader with a growable list of path search directories.
@@ -33,19 +33,25 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-19 13:00:59 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-22 21:56:33 $
  */
-class RepositoryClassLoader extends URLClassLoader {
+class RepositoryClassLoader extends URLClassLoader implements Loggable {
   /**
    * The logger
    */
-  protected Logger log = LogKit.getLoggerFor("cocoon");
+  protected Logger log;
 
   /**
    * Create an empty new class loader.
    */
   public RepositoryClassLoader() {
     super(new URL[] {}, ClassUtils.getClassLoader());
+  }
+
+  public void setLogger(Logger logger) {
+    if (this.log == null) {
+      this.log = logger;
+    }
   }
 
   /**

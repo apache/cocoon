@@ -6,18 +6,18 @@ import java.util.Enumeration;
 import org.apache.cocoon.util.IOUtils;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 import org.apache.avalon.ThreadSafe;
 
 import java.io.IOException;
 
-public class FilesystemStore implements Store, ThreadSafe {
+public class FilesystemStore implements Store, ThreadSafe, Loggable {
   /** The directory repository */
   protected File directoryFile;
   protected volatile String directoryPath;
 
-  private Logger log = LogKit.getLoggerFor("cocoon");
+  private Logger log;
 
   /**
    * Constructor
@@ -55,6 +55,12 @@ public class FilesystemStore implements Store, ThreadSafe {
       );
     }
   }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
+    }
 
   /**
    * Returns the repository's full pathname

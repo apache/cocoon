@@ -16,6 +16,7 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Loggable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -94,16 +95,16 @@ import org.apache.cocoon.acting.LangSelect;
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
  */
 public class I18nTransformer extends AbstractTransformer implements Composer {
-    
+
     protected ComponentManager manager;
-    
+
     public Map dictionary;
-    
+
     //apache.org/cocoon/i18n";
-    public final static String I18N_NAMESPACE_URI = 
+    public final static String I18N_NAMESPACE_URI =
             "http://apache.org/cocoon/i18n";
     public final static String I18N_ELEMENT = "i18n";
-    
+
     public final static String I18N_ELEMENT_KEY_ATTRIBUTE = "key";
     public final static String I18N_ENTRY_ELEMENT = "entry";
     public final static String I18N_TRANSLATION_ELEMENT = "translation";
@@ -112,45 +113,45 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
     public final static String I18N_TR_ATTRIBUTE = "tr";
     public final static String I18N_TR_ELEMENT = "tr";
     public final static String I18N_IMAGE_ELEMENT = "image";
-    
+
     protected boolean translate_image = false;
     protected boolean translate = false;
     protected boolean is_element = false;
     protected String lang;
-    
-    
+
+
     /**
      *  Uses <code>org.apache.cocoon.acting.LangSelect.getLang()</code>
      *  to get language user has selected. First it checks is lang set in
      *  objectModel.
      */
-    
+
     public void setup(EntityResolver resolver, Map objectModel, String source,
-            Parameters parameters) 
+            Parameters parameters)
             throws ProcessingException, SAXException, IOException {
-        
+
         lang = (String)(objectModel.get("lang"));
         if (lang == null) {
             lang = LangSelect.getLang(objectModel, parameters);
         }
-        
+
         String translations_file = parameters.getParameter("src", null);
-        
-        URL tr = 
+
+        URL tr =
                 new URL(resolver.resolveEntity(null,
                 translations_file).getSystemId());
         initialiseDictionary(tr);
     }
-    
-    
+
+
     public void compose(ComponentManager manager) {
         this.manager = manager;
     }
-    
-    
+
+
     public void startElement(String uri, String name, String raw,
             Attributes attr) throws SAXException {
-        
+
         if (I18N_NAMESPACE_URI.equals(uri) && I18N_TR_ELEMENT.equals(name)) {
             translate = true;
             is_element = true;
@@ -163,7 +164,7 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
         }
         if (attr != null) {
             AttributesImpl temp_attr = new AttributesImpl(attr);
-            int attr_index = 
+            int attr_index =
                     temp_attr.getIndex(I18N_NAMESPACE_URI, I18N_TR_ATTRIBUTE);
             if (attr_index != -1) {
                 translate = true;
@@ -174,9 +175,9 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
         }
         super.startElement(uri, name, raw, attr);
     }
-    
-    
-    public void endElement(String uri, String name, String raw) 
+
+
+    public void endElement(String uri, String name, String raw)
             throws SAXException {
         if (translate) {
             translate = false;
@@ -188,12 +189,12 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
             is_element = false;
             return;
         }
-        
+
         super.endElement(uri, name, raw);
     }
-    
-    
-    
+
+
+
     /**
      *Gets translations from xml file to dictionary.
      */
@@ -201,14 +202,14 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
         boolean in_entry = false;
         boolean in_key = false;
         boolean in_translation = false;
-        
+
         String key = null;
         String translation = null;
-        
-        
+
+
         public void startElement(String namespace, String name, String raw,
                 Attributes attr) throws SAXException {
-            
+
             if (name.equals(I18N_ENTRY_ELEMENT)) {
                 in_entry = true;
             } else {
@@ -216,7 +217,7 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
                     if (name.equals(I18N_KEY_ELEMENT)) {
                         in_key = true;
                     } else {
-                        if (name.equals(I18N_TRANSLATION_ELEMENT) 
+                        if (name.equals(I18N_TRANSLATION_ELEMENT)
                                 && attr.getValue(I18N_LANG).equals(lang)) {
                             in_translation = true;
                         }
@@ -224,11 +225,11 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
                 }
             }
         }
-        
-        
-        public void endElement(String namespace, String name, String raw) 
+
+
+        public void endElement(String namespace, String name, String raw)
                 throws SAXException {
-            
+
             if (name.equals(I18N_ENTRY_ELEMENT)) {
                 if (key != null && translation != null) {
                     dictionary.put(key, translation);
@@ -243,15 +244,15 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
                     in_translation = false;
                 }
             }
-            
+
         }
-        
-        
-        public void characters(char[] ary, int start, int length) 
+
+
+        public void characters(char[] ary, int start, int length)
                 throws SAXException {
             if (in_key) {
                 key = new String(ary, start, length);
-                
+
             } else {
                 if (in_translation) {
                     translation = new String(ary, start, length);
@@ -286,19 +287,22 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
     /**
      *Loads translations from given URL
      */
-    private void initialiseDictionary(URL url) 
+    private void initialiseDictionary(URL url)
             throws SAXException, MalformedURLException, IOException {
-        
+
         Object object = url.getContent();
         Parser parser = null;
         try {
             parser = (Parser)(manager.lookup(Roles.PARSER));
-            
+
         } catch (Exception e) {
             log.error("Could not find component", e);
             return;
-        } 
+        }
         InputSource input;
+        if (object instanceof Loggable) {
+            ((Loggable)object).setLogger(this.log);
+        }
         if (object instanceof Reader) {
             input = new InputSource((Reader)(object));
         } else if (object instanceof InputStream) {
@@ -306,12 +310,12 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
         } else {
             throw new SAXException("Unknown object type: " + object);
         }
-        
+
         // How this could be cached?
         dictionary = new Hashtable();
         I18nContentHandler i18n_handler = new I18nContentHandler();
         parser.setContentHandler(i18n_handler);
         parser.parse(input);
-        
+
     }
 }

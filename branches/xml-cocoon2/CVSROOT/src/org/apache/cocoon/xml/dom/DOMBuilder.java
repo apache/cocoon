@@ -31,7 +31,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -40,10 +40,10 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-09 13:28:51 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:56 $
  */
-public class DOMBuilder implements XMLConsumer {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class DOMBuilder implements XMLConsumer, Loggable {
+    protected Logger log;
     /** The document was not started */
     private static final int S_AVAIL=0;
     /** State between startDTD() and endDTD() */
@@ -84,6 +84,12 @@ public class DOMBuilder implements XMLConsumer {
      */
     protected DOMBuilder() {
         this(null,null);
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**

@@ -18,12 +18,12 @@ import org.apache.avalon.util.pool.PoolController;
 
 import org.apache.cocoon.util.ClassUtils;
 
-/** 
- * This class holds a sitemap component which is not specially marked as having 
+/**
+ * This class holds a sitemap component which is not specially marked as having
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-13 04:05:41 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-22 21:56:53 $
  */
 public class ComponentPoolController implements PoolController, ThreadSafe, Component {
 
@@ -50,7 +50,7 @@ public class ComponentPoolController implements PoolController, ThreadSafe, Comp
     /*
         if (sizing_direction < 0 && amount > 1)
             amount /= 2;
-	    sizing_direction = 1;
+        sizing_direction = 1;
     */
         return amount;
     }
@@ -64,7 +64,7 @@ public class ComponentPoolController implements PoolController, ThreadSafe, Comp
     /*
         if (sizing_direction > 0 && amount > 1)
             amount /= 2;
-	    sizing_direction = -1;
+        sizing_direction = -1;
     */
         return amount;
     }

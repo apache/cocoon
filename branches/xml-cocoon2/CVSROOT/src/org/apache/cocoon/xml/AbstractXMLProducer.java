@@ -10,24 +10,24 @@ package org.apache.cocoon.xml;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 /**
  * This abstract class provides default implementation of the methods specified
- * by the <code>XMLProducer</code> interface. 
+ * by the <code>XMLProducer</code> interface.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-10 22:38:56 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-22 21:56:54 $
  */
-public abstract class AbstractXMLProducer implements XMLProducer {
+public abstract class AbstractXMLProducer implements XMLProducer, Loggable {
 
-    protected Logger log = LogKit.getLoggerFor("cocoon");
-    
+    protected Logger log;
+
     /** The <code>ContentHandler</code> receiving SAX events. */
     protected ContentHandler contentHandler;
-    
+
     /** The <code>LexicalHandler</code> receiving SAX events. */
     protected LexicalHandler lexicalHandler;
 
@@ -40,6 +40,12 @@ public abstract class AbstractXMLProducer implements XMLProducer {
     public void setConsumer(XMLConsumer consumer) {
         this.contentHandler = consumer;
         this.lexicalHandler = consumer;
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /**

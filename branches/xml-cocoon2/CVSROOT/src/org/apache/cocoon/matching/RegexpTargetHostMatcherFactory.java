@@ -17,7 +17,7 @@ import org.apache.avalon.ConfigurationException;
 
 import org.w3c.dom.traversal.NodeIterator;
 
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -27,15 +27,21 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-15 20:41:15 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-22 21:56:45 $
  */
 
-public class RegexpTargetHostMatcherFactory implements CodeFactory {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
+    protected Logger log;
 
     public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "RE";
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     public String generateClassSource (String prefix, String pattern,

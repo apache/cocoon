@@ -35,15 +35,15 @@ import org.apache.cocoon.util.ComponentPool;
 import org.apache.cocoon.util.ComponentPoolController;
 
 import org.apache.log.Logger;
-import org.apache.log.LogKit;
+import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-01-18 22:02:14 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-01-22 21:56:32 $
  */
-public class CocoonComponentSelector implements ComponentSelector, Composer, Configurable, ThreadSafe {
-    protected Logger log = LogKit.getLoggerFor("cocoon");
+public class CocoonComponentSelector implements ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
+    protected Logger log;
     /** Hashmap of all components which this ComponentManager knows about.
      */
     private Map components;
@@ -71,6 +71,12 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Con
         configurations = Collections.synchronizedMap(new HashMap());
         pools = Collections.synchronizedMap(new HashMap());
         instances = Collections.synchronizedMap(new HashMap());
+    }
+
+    public void setLogger(Logger logger) {
+        if (this.log == null) {
+            this.log = logger;
+        }
     }
 
     /** Implement Composer interface
@@ -208,10 +214,12 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Con
 
         if ( pool == null ) {
             try {
-                pool = new ComponentPool(
-                    new ComponentFactory(componentClass, (Configuration)configurations.get(hint), this.manager),
-                    new ComponentPoolController()
-                    );
+                ComponentFactory cf = new ComponentFactory(componentClass, (Configuration)configurations.get(hint), this.manager);
+                cf.setLogger(this.log);
+
+                pool = new ComponentPool(cf, new ComponentPoolController());
+                pool.setLogger(this.log);
+                pool.init();
             } catch (Exception e) {
                 log.error("Could not create pool for component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
@@ -242,6 +250,10 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Con
      */
     private void setupComponent(Object hint, Component c)
     throws ComponentManagerException {
+        if ( c instanceof Loggable ) {
+            ((Loggable)c).setLogger(this.log);
+        }
+
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(
