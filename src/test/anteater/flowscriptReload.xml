@@ -17,7 +17,7 @@
         +-->
 
     <copy file="${src-webapp-dir}/${test-dir}/sendpage.js"
-	  tofile="${deploy-dir}${test-dir}/sendpage.js"
+	  tofile="${deploy-dir}/${test-dir}/sendpage.js"
 	  overwrite="yes">
       <filterset>
         <filter token="REPLACEME" value="replaceme-abc"/>

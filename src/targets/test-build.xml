@@ -26,13 +26,23 @@
     <property name="port" value="8888"/>
     <property name="base" value="/"/>
 
-    <!-- FIXME: Anteater invocation is platform specific
-    <exec executable="cmd">
-      <arg line="/C C:\Java\anteater-0.9.15\bin\anteater.bat -f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
-    </exec>
-    <exec executable="anteater">
+    <!-- adjust anteater.home property and uncomment to enable Anteater functional tests
+    <property name="anteater.home" value="D:\downloads\anteater-0.9.16"/>
+    <java classname="org.apache.tools.ant.Main" fork="true">
+      <classpath>
+        <fileset dir="${anteater.home}">
+          <include name="lib/**/*.jar"/>
+          <include name="tomcat/**/*.jar"/>
+        </fileset>
+        <pathelement location="${anteater.home}/resources"/>
+      </classpath>
+      <jvmarg value="-Dant.home=${anteater.home}"/>
+      <jvmarg value="-Danteater.home=${anteater.home}"/>
+      <jvmarg value="-Danteater.resources=${anteater.home}/resources"/>
+      <jvmarg value="-Danteater.report=${anteater.home}/resources/scripts/report.xml"/>
+      <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
       <arg line="-f src/test/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
-    </exec>
+    </java>
     -->
   </target>
 

@@ -24,6 +24,8 @@
       </filterset>
     </copy>
 
+    <sleep seconds="1"/>
+
     <httpRequest href="${url}" description="Send original request">
       <match>
         <xpath select="html/body//p[2]" pattern=".*abc.*"/>
@@ -42,6 +44,8 @@
 	   <filter token="PARAMETER" value="123"/>
       </filterset>
     </copy>
+
+    <sleep seconds="1"/>
 
     <httpRequest href="${url}"
 		 description="Send next request after sitemap was modified">
