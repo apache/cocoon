@@ -238,7 +238,7 @@ public class HttpRequest implements HttpServletRequest {
 
     /**
      * @deprecated 	As of Version 2.1 of the Java Servlet API,
-     * 			use {@link ServletContext#getRealPath} instead.
+     * 			use {@link javax.servlet.ServletContext#getRealPath} instead.
      */
     public String getRealPath(String path) {
         return this.req.getRealPath(path);

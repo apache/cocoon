@@ -50,7 +50,7 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-11 17:09:43 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-01-12 15:31:17 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable
@@ -235,17 +235,13 @@ public abstract class AbstractMarkupLanguage
 
     /**
     * Add a dependency on an external file to the document for inclusion in
-    * generated code. This is used by <code>AbstractServerPagesGenerator</code>
-    * to populate a list of <code>File</code>'s tested for change on each
-    * invocation; this information, in turn, is used by
-    * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
-    * necessary.
+    * generated code. This is used to populate a list of <code>File</code>'s 
+	* tested for change on each invocation; this information is used to assert 
+	* whether regeneration is necessary.
     *
-    * @param PARAM_NAME Param description
-    * @return the value
-    * @exception EXCEPTION_NAME If an error occurs
-    * @see ServerPages <code>AbstractServerPagesGenerator</code>
-    *      and <code>ServerPagesLoaderImpl</code>
+    * @param location The file path of the dependent file
+    * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
+    *      and <code>AbstractServerPage</code>
     */
     protected abstract void addDependency(String location);
 
@@ -593,7 +589,7 @@ public abstract class AbstractMarkupLanguage
 
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startDocument () throws SAXException {
             isRootElem=true;
@@ -601,7 +597,7 @@ public abstract class AbstractMarkupLanguage
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             if(!isRootElem) {
@@ -616,7 +612,7 @@ public abstract class AbstractMarkupLanguage
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startElement (
             String namespaceURI, String localName,

@@ -87,7 +87,7 @@ public abstract class AbstractDOMTransformer extends DOMBuilder
 	/**
 	 * This method is called when the Document is finished.
 	 * @param doc The DOM Document object representing this SAX stream
-	 * @see DOMBuilder.Listener
+	 * @see org.apache.cocoon.xml.dom.DOMBuilder.Listener
 	 */
 	public void notify(Document doc) throws SAXException {
 		// Call the user's transform method

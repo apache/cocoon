@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 20:38:54 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-12 15:31:23 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -101,15 +101,13 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
     /**
     * Add a dependency on an external file to the document for inclusion in
-    * generated code. This is used by <code>AbstractServerPagesGenerator</code>
-    * to populate a list of <code>File</code>'s tested for change on each
-    * invocation; this information, in turn, is used by
-    * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
-    * necessary.
+    * generated code. This is used to populate a list of <code>File</code>'s 
+	* tested for change on each invocation; this information is used to assert 
+	* whether regeneration is necessary.
     *
     * @param location The file path of the dependent file
-    * @see ServerPages <code>AbstractServerPagesGenerator</code>
-    *      and <code>ServerPagesLoaderImpl</code>
+    * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
+    *      and <code>AbstractServerPage</code>
     */
     protected void addDependency(String location) {
         dependencies.add(location);
@@ -256,7 +254,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startDocument () throws SAXException {
             isRootElem=true;
@@ -267,7 +265,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void processingInstruction(String target, String data) throws SAXException {
             // Retrieve logicsheets declared by processing-instruction
@@ -298,7 +296,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startElement (String namespaceURI, String localName,
             String qName, Attributes atts) throws SAXException {
@@ -392,7 +390,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void endElement (String namespaceURI, String localName,
                           String qName) throws SAXException {
@@ -404,7 +402,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
          public void characters(char[] ch, int start, int length) throws SAXException {
             if (finished) {
@@ -418,7 +416,7 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             if(finished) {

@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-18 21:17:28 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-12 15:31:34 $
  */
 public class ClassUtils {
 
@@ -61,7 +61,7 @@ public class ClassUtils {
      *     the ClassLoader.
      *
      * @return The context classloader.
-     * @exception Exception If a loading error occurs
+     * @exception MalformedURLException If a loading error occurs
      */
     public static URL getResource(String resource) throws MalformedURLException {
         return ClassUtils.getClassLoader().getResource(resource);
@@ -74,7 +74,6 @@ public class ClassUtils {
      *     the ClassLoader.
      *
      * @return The context classloader.
-     * @exception Exception If a loading error occurs
      */
     public static ClassLoader getClassLoader() {
         if (ClassUtils.loader == null) {

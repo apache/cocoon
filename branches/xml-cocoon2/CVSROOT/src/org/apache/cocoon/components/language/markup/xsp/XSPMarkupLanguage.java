@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:02 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-12 15:31:26 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -105,15 +105,14 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
     /**
     * Add a dependency on an external file to the document for inclusion in
-    * generated code. This is used by <code>AbstractServerPagesGenerator</code>
-    * to populate a list of <code>File</code>'s tested for change on each
-    * invocation; this information, in turn, is used by
-    * <code>ServerPagesLoaderImpl</code> to assert whether regeneration is
-    * necessary. XSP uses &lt;xsp:dependency&gt; elements for this purpose
+    * generated code. This is used to populate a list of <code>File</code>'s 
+	* tested for change on each invocation; this information is used to assert 
+	* whether regeneration is necessary. XSP uses &lt;xsp:dependency&gt; 
+	* elements for this purpose.
     *
     * @param location The file path of the dependent file
-    * @see ServerPages <code>AbstractServerPagesGenerator</code>
-    *      and <code>ServerPagesLoaderImpl</code>
+    * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
+    *      and <code>AbstractServerPage</code>
     */
     protected void addDependency(String location) {
         dependencies.add(location);
@@ -209,7 +208,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startDocument() throws SAXException {
             super.startDocument();
@@ -218,7 +217,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void processingInstruction(String target, String data) throws SAXException {
             if (!"xml-logicsheet".equals(target)) {
@@ -228,7 +227,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startElement (String namespaceURI, String localName,
                           String qName, Attributes atts) throws SAXException {
@@ -255,7 +254,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void endElement (String namespaceURI, String localName,
                               String qName) throws SAXException {
@@ -264,7 +263,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void characters(char[] ch, int start, int length) throws SAXException {
             String[] tag = (String[]) stack.peek();
@@ -333,7 +332,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void processingInstruction(String target, String data) throws SAXException {
             // Retrieve logicsheets declared by processing-instruction
@@ -365,7 +364,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startDocument () throws SAXException {
             isRootElem=true;
@@ -376,7 +375,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startElement (String namespaceURI, String localName,
             String qName, Attributes atts ) throws SAXException {
@@ -462,7 +461,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void endElement (String namespaceURI, String localName,
             String qName) throws SAXException {
@@ -473,7 +472,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void characters(char[] ch, int start, int length) throws SAXException {
             if (finished) {
@@ -487,7 +486,7 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
         }
 
         /**
-         * @see ContentHandler
+         * @see org.xml.sax.ContentHandler
          */
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             if(finished) {
