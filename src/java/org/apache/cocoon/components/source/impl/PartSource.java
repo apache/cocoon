@@ -58,8 +58,6 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.components.CocoonComponentManager;
-
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.io.IOException;
@@ -72,7 +70,7 @@ import java.io.InputStream;
  * a file is uploaded.
  *
  * @author <a href="mailto:paul.crabtree@dna.co.uk">Paul Crabtree</a>
- * @version CVS $Id: PartSource.java,v 1.1 2003/10/23 01:45:34 ghoward Exp $
+ * @version CVS $Id: PartSource.java,v 1.2 2003/10/25 22:31:39 ghoward Exp $
  */
 public class PartSource implements Source
 {
@@ -91,7 +89,7 @@ public class PartSource implements Source
      * @throws SourceException
      * @throws MalformedURLException
      */
-	public PartSource(String uri) throws MalformedURLException, SourceException
+	public PartSource(String uri, Map objectModel) throws MalformedURLException, SourceException
 	{
 		// set the uri for use in getURI()
 	    this.uri = uri;
@@ -110,9 +108,6 @@ public class PartSource implements Source
 
 		// get the request parameter name: the bit after ://
 		String location = uri.substring(position + 2);
-
-		// get the object model from the component managers curr env.
-		Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
 
 		// get the cocoon request from the object model.
 		Request request = ObjectModelHelper.getRequest(objectModel);
