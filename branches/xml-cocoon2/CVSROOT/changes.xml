@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.4 2000-04-19 06:31:31 balld Exp $
+  $Id: changes.xml,v 1.9.2.5 2000-04-19 16:40:21 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,7 +16,7 @@
  </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="DB" type="add" due-to="X Y" due-to-email="thezvi@ifrance.com">
+  <action dev="DB" type="add" due-to="Zvi" due-to-email="thezvi@ifrance.com">
    Patched SQLFilter so VJ++ was happy
   </action>
   <action dev="DB" type="add">
