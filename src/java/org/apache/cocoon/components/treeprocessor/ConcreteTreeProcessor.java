@@ -15,15 +15,10 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
@@ -35,7 +30,9 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.SitemapExecutor;
-import org.apache.cocoon.sitemap.impl.DefaultExecutor;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -65,61 +62,20 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     /** The sitemap executor */
     private SitemapExecutor sitemapExecutor;
 
-    /** Release the executor */
-    private boolean releaseSitemapExecutor;
-
 	/**
      * Builds a concrete processig, given the wrapping processor
      */
-	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor) {
+	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor,
+                                 SitemapExecutor sitemapExecutor,
+                                 ProcessorComponentInfo componentInfo) {
         // Store our wrapping processor
         this.wrappingProcessor = wrappingProcessor;
 
         // Initialize component info
-        if (this.wrappingProcessor.parent == null) {
-            // top-level processor
-            this.componentInfo = new ProcessorComponentInfo(null);
-        } else {
-            // chain to the parent processor
-            this.componentInfo = new ProcessorComponentInfo(
-                    this.wrappingProcessor.parent.concreteProcessor.getComponentInfo());
-        }
+        this.componentInfo = new ProcessorComponentInfo(componentInfo);
 
-        // get the sitemap executor - we use the same executor for each sitemap
-        this.releaseSitemapExecutor = false;
-        if (this.wrappingProcessor.parent == null) {
-            final ServiceManager manager = this.wrappingProcessor.parentServiceManager;
-
-            // FIXME(SW): do we really need to check hasService()? If a default class is defined
-            // in cocoon.roles, the lookup is always successful.
-            if (manager.hasService(SitemapExecutor.ROLE)) {
-                try {
-                    this.sitemapExecutor = (SitemapExecutor) manager.lookup(SitemapExecutor.ROLE);
-                    this.releaseSitemapExecutor = true;
-                } catch (ServiceException e) {
-                    // this should not happen as we called hasComponent first
-                    // but we ignore it
-                    getLogger().error("Unable to lookup sitemap executor.", e);
-                }
-            }
-
-            if (this.sitemapExecutor == null) {
-                try {
-                    // FIXME: VG: Why not new DefaultExecutor() which will use getClass().getClassLoader() anyway
-                    this.sitemapExecutor = (SitemapExecutor) getClass().getClassLoader()
-                                 .loadClass(DefaultExecutor.class.getName())
-                                 .newInstance();
-                } catch (InstantiationException e) {
-                    throw new CascadingRuntimeException("Unable to create default sitemap executor.", e);
-                } catch (IllegalAccessException e) {
-                    throw new CascadingRuntimeException("Unable to create default sitemap executor.", e);
-                } catch (ClassNotFoundException e) {
-                    throw new CascadingRuntimeException("Unable to create default sitemap executor.", e);
-                }
-            }
-        } else {
-            this.sitemapExecutor = this.wrappingProcessor.parent.concreteProcessor.sitemapExecutor;
-        }
+        // Get the sitemap executor - we use the same executor for each sitemap
+        this.sitemapExecutor = sitemapExecutor;
 	}
 
 	/** Set the processor data, result of the treebuilder job */
@@ -339,10 +295,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         // Ensure it won't be used anymore
         this.rootNode = null;
-        if (this.releaseSitemapExecutor) {
-            this.componentInfo.getServiceManager().release(this.sitemapExecutor);
-            this.sitemapExecutor = null;
-        }
+        this.sitemapExecutor = null;
 	}
 
     private class TreeProcessorRedirector extends ForwardRedirector {
