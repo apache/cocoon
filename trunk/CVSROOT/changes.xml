@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.26 2000-01-31 21:50:24 stefano Exp $
+  $Id: changes.xml,v 1.27 2000-02-09 21:30:51 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -15,6 +15,22 @@
   </devs>
 
  <release version="1.6.2-dev" date="Not yet released">
+  <action dev="SM" type="remove">
+    Added library with all the required jar files for ease of installation.
+  </action>
+  <action dev="SM" type="remove">
+    Leave DCP out by default. Now DCP is considered obsolete and will be
+    removed in future versions.
+  </action>
+  <action dev="SM" type="remove">
+    Removed ProducerFromMap.
+  </action>
+  <action dev="SM" type="remove">
+    Removed the need for the URLFactory (which caused troubles with Weblogic).
+  </action>
+  <action dev="SM" type="add" due-to="Philippe Lavoie" due-to-email="philippe.lavoie@cactus.ca">
+    Added infrastructure document.
+  </action>
   <action dev="SM" type="fix">
     Fixed problem with xml parser performing validation but nobody catching the 
     validation errors triggered. Now if validation is turned on, an invalid

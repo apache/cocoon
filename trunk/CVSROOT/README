@@ -39,10 +39,6 @@
 
    o  Server API 2.x Servlet Engine (optional for command line operation).
    
-   o  XML Parser with DOM support.
-
-   o  XSL Processor with DOM support.
-
 
   Installation Instructions and Documentation
   -------------------------------------------
