@@ -315,6 +315,9 @@
     <parameter name="reuse-parsers" value="false"/>
     <!--parameter name="sax-parser-factory" value="???"/-->
     <!--parameter name="document-builder-factory" value="???"/-->
+    <!-- drop-dtd-comments: causes all comment events originating from DTD
+         comments to be dropped right after parsing -->
+    <parameter name="drop-dtd-comments" value="true"/>
   </xml-parser>
 
 
