@@ -21,6 +21,13 @@
     <menu-item label="Selectors" href="selectors/selectors.html"/>
     <menu-item label="Actions" href="actions/actions.html"/>
     <menu-item label="Readers" href="readers/readers.html"/>
+  </men>
+
+  <menu label="Flowscript"
+    <menu-item label="Flowscript" href="flow/index.html"/>
+  </menu>
+    
+  <menu label="XSP"
     <menu-item label="XSP" href="xsp/index.html"/>
   </menu>
 
