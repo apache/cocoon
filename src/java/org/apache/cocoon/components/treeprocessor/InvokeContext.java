@@ -46,7 +46,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.6 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.7 2004/05/25 13:31:06 cziegeler Exp $
  */
 
 public class InvokeContext 
@@ -100,9 +100,7 @@ implements Recomposable, Disposable {
      * Determines if the Pipeline been set for this context 
      */
     public boolean pipelineIsSet() {
-	if (this.processingPipeline != null)
-		return true;
-	return false;
+	    return (this.processingPipeline != null);
     }
 
     /**
