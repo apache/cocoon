@@ -231,7 +231,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;c:macro name="tablerows"&gt;
  *   &lt;c:parameter name="list"/&gt;
  *   &lt;c:parameter name="color"/&gt;
- *   &lt;c:forEach var="item" items=${list}&gt;
+ *   &lt;c:forEach var="item" items="${list}"&gt;
  *     &lt;tr&gt;&lt;td bgcolor="${color}"&gt;${item}&lt;/td&gt;&lt;/tr&gt;
  *   &lt;/c:forEach&gt;
  * &lt;/c:macro&gt;
@@ -762,29 +762,38 @@ public class JXTemplate extends AbstractGenerator {
     private Object getValue(Object expr, JexlContext jexlContext,
                             JXPathContext jxpathContext) 
         throws Exception {
-        if (expr instanceof CompiledExpression) {
-            CompiledExpression e = (CompiledExpression)expr;
-            return e.getValue(jxpathContext);
-        } else if (expr instanceof org.apache.commons.jexl.Expression) {
-            org.apache.commons.jexl.Expression e = 
-                (org.apache.commons.jexl.Expression)expr;
-            return e.evaluate(jexlContext);
+        try {
+            if (expr instanceof CompiledExpression) {
+                CompiledExpression e = (CompiledExpression)expr;
+                return e.getValue(jxpathContext);
+            } else if (expr instanceof org.apache.commons.jexl.Expression) {
+                org.apache.commons.jexl.Expression e = 
+                    (org.apache.commons.jexl.Expression)expr;
+                return e.evaluate(jexlContext);
+            }
+            return expr;
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
         }
-        return expr;
     }
 
+    // Hack: try to prevent JXPath from converting result to a String
     private Object getNode(Object expr, JexlContext jexlContext,
                             JXPathContext jxpathContext) 
         throws Exception {
-        if (expr instanceof CompiledExpression) {
-            CompiledExpression e = (CompiledExpression)expr;
-            return e.getPointer(jxpathContext, "").getNode();
-        } else if (expr instanceof org.apache.commons.jexl.Expression) {
-            org.apache.commons.jexl.Expression e = 
-                (org.apache.commons.jexl.Expression)expr;
-            return e.evaluate(jexlContext);
+        try {
+            if (expr instanceof CompiledExpression) {
+                CompiledExpression e = (CompiledExpression)expr;
+                return e.getPointer(jxpathContext, "").getNode();
+            } else if (expr instanceof org.apache.commons.jexl.Expression) {
+                org.apache.commons.jexl.Expression e = 
+                    (org.apache.commons.jexl.Expression)expr;
+                return e.evaluate(jexlContext);
+            }
+            return expr;
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
         }
-        return expr;
     }
 
     class Event {
@@ -1388,7 +1397,6 @@ public class JXTemplate extends AbstractGenerator {
                 } else {
                     if (params) {
                         params = false;
-                        System.out.println("body="+e);
                         body = e;
                     }
                 }
@@ -1444,8 +1452,7 @@ public class JXTemplate extends AbstractGenerator {
         }
     }
 
-
-    class Parser implements LexicalHandler, ContentHandler {
+    class Parser implements ContentHandler, LexicalHandler {
 
         StartDocument startEvent;
         Event lastEvent;

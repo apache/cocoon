@@ -37,7 +37,7 @@
   <td align="center">
   <input type="text" size="3" name="#{item/itemId}" value="#{quantity}" />
   </td>
-  <td align="right">#{ format-number(item/listPrice, '$#,##0.00') }</td>
+  <td align="right">#{format-number(item/listPrice, '$#,##0.00')}</td>
   <td><a href="removeItemFromCart.do?workingItemId=#{item/itemId}">
   <img border="0" src="images/button_remove.gif" /></a></td>
   </tr>
@@ -45,7 +45,7 @@
 <tr bgcolor="#FFFF88">
 <td colspan="5" align="right">
 
-<b>Sub Total: #{ format-number(cartForm/cart/subTotal, '$#,##0.00') }</b><br />
+<b>Sub Total: #{format-number(cartForm/cart/subTotal, '$#,##0.00')}</b><br />
 <input type="image" border="0" src="images/button_update_cart.gif" name="update" />
 
 </td><td> </td>
@@ -54,7 +54,7 @@
 </form>
 
 <t:if test="#{number(cartForm/cart/numberOfItems) > 0}">
-<br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
+   <br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
 </t:if>
 
 </td>

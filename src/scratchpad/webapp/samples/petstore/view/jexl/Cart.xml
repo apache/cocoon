@@ -16,7 +16,7 @@
   <td><b>Item ID</b></td>  <td><b>Product ID</b></td>  <td><b>Description</b></td>  <td><b>Quantity</b></td>  <td><b>List Price</b></td>  <td> </td>
   </tr>
 
-<t:if test="#{number(cartForm/cart/numberOfItems) = 0}"> 
+<t:if test="${cartForm.cart.numberOfItems.intValue() == 0}"> 
 <tr bgcolor="#FFFF88"><td colspan="6"><b>Your cart is empty.</b></td></tr>
 </t:if>
 <t:forEach var="cartItem" items="${cartItems}">
@@ -37,7 +37,7 @@
   <td align="center">
   <input type="text" size="3" name="${cartItem.item.ItemId}" value="${cartItem.quantity}" />
   </td>
-  <td align="right">#{format-number(item/listPrice, '$#,##0.00')}</td>
+  <td align="right">${fmt.formatNumber(item.listPrice, '$#,##0.00')}</td>
   <td><a href="removeItemFromCart.do?workingItemId=${cartItem.item.itemId}">
   <img border="0" src="images/button_remove.gif" /></a></td>
   </tr>
@@ -45,7 +45,7 @@
 <tr bgcolor="#FFFF88">
 <td colspan="5" align="right">
 
-<b>Sub Total: #{ format-number(cartForm/cart/subTotal, '$#,##0.00') }</b><br />
+<b>Sub Total: ${fmt.formatNumber(cartForm.cart.subTotal, '$#,##0.00') }</b><br />
 <input type="image" border="0" src="images/button_update_cart.gif" name="update" />
 
 </td><td> </td>
@@ -53,7 +53,7 @@
 </table>
 </form>
 
-<t:if test="#{number(cartForm/cart/numberOfItems) > 0}">
+<t:if test="$(cartForm.cart.numberOfItems.intValue() > 0}">
 <br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
 </t:if>
 
@@ -61,10 +61,10 @@
 
 
 <td valign="top" width="20%" align="right">
-<t:if test="#{accountForm}">
- <t:if test="#{accountForm/account}">
-  <t:if test="#{accountForm/account/username}">
-    <t:if test="#{accountForm/account/listOption}">
+<t:if test="${accountForm != null}">
+ <t:if test="${accountForm.account != null}">
+  <t:if test="${accountForm.account.username != null}">
+    <t:if test="${accountForm.account.listOption != null}">
       <t:import uri="view/jexl/IncludeMyList.xml"/>
     </t:if>
   </t:if>
