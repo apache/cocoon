@@ -63,7 +63,7 @@ public class StartDefine extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         executionContext.getDefinitions().put(this.qname, this);
         return getEndInstruction().getNext();
@@ -127,7 +127,7 @@ public class StartDefine extends StartInstruction {
         return body;
     }
 
-    private String getQname() {
+    public String getQname() {
         return qname;
     }
 }

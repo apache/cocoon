@@ -37,7 +37,6 @@ import org.apache.cocoon.template.jxtg.script.Invoker;
 import org.apache.cocoon.template.jxtg.script.ScriptManager;
 import org.apache.cocoon.template.jxtg.script.event.Event;
 import org.apache.cocoon.template.jxtg.script.event.StartDocument;
-import org.apache.cocoon.template.jxtg.script.event.StartElement;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
@@ -114,11 +113,10 @@ public class JXTemplateGenerator extends ServiceableGenerator implements
      */
     public void generate() throws IOException, SAXException,
             ProcessingException {
-        performGeneration(this.xmlConsumer, null, this.startDocument, null);
+        performGeneration(this.xmlConsumer, this.startDocument, null);
     }
 
-    public void performGeneration(final XMLConsumer consumer,
-                                  StartElement macroCall, Event startEvent, Event endEvent)
+    public void performGeneration(final XMLConsumer consumer, Event startEvent, Event endEvent)
             throws SAXException {
         ((Map)expressionContext.get("cocoon")).put("consumer", consumer);
         Invoker.execute(this.xmlConsumer, this.expressionContext,

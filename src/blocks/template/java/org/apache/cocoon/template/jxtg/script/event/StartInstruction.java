@@ -29,7 +29,7 @@ public abstract class StartInstruction extends Event {
         this.startElement = startElement;
     }
 
-    private final StartElement startElement;
+    protected final StartElement startElement;
     private EndInstruction endInstruction;
 
     public EndInstruction getEndInstruction() {
@@ -42,5 +42,9 @@ public abstract class StartInstruction extends Event {
 
     public void endNotify() throws SAXException {
         return;
+    }
+
+    public StartElement getStartElement() {
+        return startElement;
     }
 }

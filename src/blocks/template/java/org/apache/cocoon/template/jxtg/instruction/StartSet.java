@@ -59,7 +59,7 @@ public class StartSet extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
 
         Object value = null;
@@ -78,7 +78,7 @@ public class StartSet extends StartInstruction {
             NodeList nodeList =
                 Invoker.toDOMNodeList("set", this,
                                       expressionContext, executionContext,
-                                      macroCall);
+                                      macroContext);
             // JXPath doesn't handle NodeList, so convert it to an array
             int len = nodeList.getLength();
             Node[] nodeArr = new Node[len];

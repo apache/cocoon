@@ -36,11 +36,11 @@ public class StartEvalBody extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         try {
             Invoker.execute(consumer, expressionContext, executionContext,
-                            null, macroCall.getNext(), macroCall.getEndElement());
+                            null, macroContext.getBodyStart(), macroContext.getBodyEnd());
         } catch (Exception exc) {
             throw new SAXParseException(exc.getMessage(), getLocation(), exc);
         } catch (Error err) {

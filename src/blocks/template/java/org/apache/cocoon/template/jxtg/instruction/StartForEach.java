@@ -74,7 +74,7 @@ public class StartForEach extends StartInstruction {
 
     public Event execute(final XMLConsumer consumer,
                          ExpressionContext expressionContext, ExecutionContext executionContext,
-                         StartElement macroCall, Event startEvent, Event endEvent) 
+                         MacroContext macroContext, Event startEvent, Event endEvent) 
         throws SAXException {
         Iterator iter = null;
         int begin, end, step;
@@ -131,7 +131,7 @@ public class StartForEach extends StartInstruction {
                 status.setLast((i == end || !iter.hasNext()));
             }
             Invoker.execute(consumer, localExpressionContext, executionContext,
-                            macroCall, getNext(), getEndInstruction());
+                            macroContext, getNext(), getEndInstruction());
             // Skip rows
             skipCounter = step;
             while (--skipCounter > 0 && iter.hasNext()) {

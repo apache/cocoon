@@ -17,6 +17,7 @@ package org.apache.cocoon.template.jxtg.script.event;
 
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.template.jxtg.instruction.MacroContext;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -28,7 +29,7 @@ public class EndCDATA extends Event {
     
     public Event execute(XMLConsumer consumer,
             ExpressionContext expressionContext,
-            ExecutionContext executionContext, StartElement macroCall,
+            ExecutionContext executionContext, MacroContext macroContext,
             Event startEvent, Event endEvent) throws SAXException {
         consumer.endCDATA();
         return getNext();

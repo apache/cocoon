@@ -23,6 +23,7 @@ import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.expression.Literal;
 import org.apache.cocoon.template.jxtg.expression.Subst;
+import org.apache.cocoon.template.jxtg.instruction.MacroContext;
 import org.apache.cocoon.template.jxtg.script.Invoker;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
@@ -37,7 +38,7 @@ public class Characters extends TextEvent {
 
     public Event execute(XMLConsumer consumer,
             ExpressionContext expressionContext,
-            ExecutionContext executionContext, StartElement macroCall,
+            ExecutionContext executionContext, MacroContext macroContext,
             Event startEvent, Event endEvent) throws SAXException {
         Iterator iter = getSubstitutions().iterator();
         while (iter.hasNext()) {
