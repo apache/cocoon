@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.5 1999-12-02 11:49:24 stefano Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.6 1999-12-09 07:50:13 balld Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-02 11:49:24 $
+ * @version $Revision: 1.6 $ $Date: 1999-12-09 07:50:13 $
  */
 
 public class EngineWrapper extends Engine {
@@ -162,7 +162,16 @@ public class EngineWrapper extends Engine {
         public boolean isRequestedSessionIdFromURL() { return false; }
         public Enumeration getAttributeNames() { return null; }
         public void setAttribute(String name, Object value) {}
+        public void removeAttribute(String name) {}
+        public Locale getLocale() { return null; }
+        public Enumeration getLocales() { return null; }
         public HttpSession getSession() { return null; }
+        public boolean isSecure() { return false; }
+        public RequestDispatcher getRequestDispatcher(String path) { return null; }
+        public Enumeration getHeaders(String name) { return null; }
+        public String getContextPath() { return null; }
+        public boolean isUserInRole(String role) { return false; }
+        public java.security.Principal getUserPrincipal() { return null; }
 
         /** @deprecated */
         public String getRealPath(String path) { return null; }
@@ -201,6 +210,16 @@ public class EngineWrapper extends Engine {
         public void sendRedirect(String location) throws IOException {}
         public String encodeURL (String url) { return url; }
         public String encodeRedirectURL (String url) { return url; }
+        public void setBufferSize(int size) { }
+        public int getBufferSize() { return 0; }
+        public void flushBuffer() { }
+        public boolean isCommitted() { return false; }
+        public void reset() { }
+        public void setLocale(Locale locale) { }
+        public Locale getLocale() { return null; }
+        public void addDateHeader(String name, long date) { }
+        public void addHeader(String name, String value) { }
+        public void addIntHeader(String name, int value) { }
         
         /** @deprecated */
         public void setStatus(int sc, String sm) {}
