@@ -8,6 +8,8 @@
 
 package org.apache.cocoon.matching;
 
+import org.apache.cocoon.CodeFactory;
+
 import org.apache.avalon.ConfigurationException;
 
 import org.w3c.dom.traversal.NodeIterator;
@@ -22,10 +24,10 @@ import org.apache.log.LogKit;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2000-12-15 20:35:13 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2000-12-15 20:44:35 $
  */
 
-public class WildcardURIMatcherFactory implements MatcherFactory {
+public class WildcardURIMatcherFactory implements CodeFactory {
     protected Logger log = LogKit.getLoggerFor("cocoon");
 
     /** The int representing '*' in the pattern <code>int []</code>. */
@@ -55,8 +57,9 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
      */
     public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
+               //"String uri = ((org.apache.cocoon.environment.http.HttpRequest) objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();" +
         return "HashMap map = new HashMap();" +
-               "String uri = ((org.apache.cocoon.environment.http.HttpRequest) objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();" +
+               "String uri = ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI();" +
                "if (uri.startsWith(\"/\")) uri = uri.substring(1);" +
                "if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (map, uri, pattern)) {" +
                "return map;" +
