@@ -64,7 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.16 2004/03/27 15:35:49 unico Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.17 2004/03/29 13:52:39 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -473,10 +473,7 @@ public final class SourceUtil {
                 uri = buffer.toString();
             }
         }
-        // FIXME: followRedirects: Is it something which is not completed?
-//        boolean followRedirects = (typeParameters != null ?
-//                                   typeParameters.getParameterAsBoolean("followRedirects", true)
-//                                      : true);
+
         String method = ((typeParameters!=null)
                          ? typeParameters.getParameter("method", "GET")
                          : "GET");
