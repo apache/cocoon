@@ -50,9 +50,11 @@ import java.util.List;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
+import org.apache.cocoon.components.flow.ContinuationsDisposer;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
@@ -63,7 +65,7 @@ import org.apache.cocoon.environment.Request;
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' 
  * flow implementation. 
  */
-public class ApplesProcessor extends AbstractInterpreter implements Serviceable {
+public class ApplesProcessor extends AbstractInterpreter implements Serviceable, ContinuationsDisposer {
 
     //TODO make this a configuration setting
     public static final int TIMETOLIVE = 1800; // 30 minutes
@@ -80,11 +82,13 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
 
         AppleController app = instantiateController(className);
 
-        WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, TIMETOLIVE);
+        WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, TIMETOLIVE, this);
 
         getLogger().debug("Pulling fresh apple through the lifecycle...");
         DefaultContext appleContext = new DefaultContext();
         appleContext.put("continuation-id", wk.getId());
+        
+        //TODO: also add the componentManager for Apples that took the other approach
         LifecycleHelper.setupComponent(app, getLogger(), appleContext, this.serviceManager, null, null, null);
 
         processApple(params, env, app, wk);
@@ -156,8 +160,19 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
     }
 
 
+    public void disposeContinuation(WebContinuation webContinuation) {
+        AppleController app =
+            (AppleController) webContinuation.getContinuation();
+        if (app instanceof Disposable) {
+            ((Disposable)app).dispose();            
+        }
+
+    }
+
+
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
     }
+
 
 }
