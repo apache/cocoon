@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.8 2004/05/06 14:23:04 vgritsenko Exp $-->
+<!-- $Id: welcome.xml,v 1.9 2004/05/11 12:01:38 bruno Exp $-->
 <samples name="CForms Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
  <group name="Back">
   <sample name="Back" href="../..">to Cocoon Samples main page</sample>
@@ -25,8 +25,8 @@
     other similar approaches will be deprecated soon.
     Of course, your feedback is very much welcome on the Cocoon mailing lists.
   </note>
-  <sample name="Cocoon Forms Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">
-    Documentation is available on the Cocoon Wiki.
+  <sample name="Cocoon Forms Documentation" href="http://cocoon.apache.org/2.1/userdocs/forms/">
+    Documentation is available on the Cocoon site.
   </sample>
  </group>
 
