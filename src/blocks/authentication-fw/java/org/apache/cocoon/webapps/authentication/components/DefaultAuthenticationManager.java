@@ -99,7 +99,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.20 2003/10/24 08:41:46 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.21 2003/11/07 11:21:50 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -419,6 +419,34 @@ implements AuthenticationManager,
         // we don't throw an exception if we are already logged out!
         if ( handler != null ) {
             
+            // Do we save something on logout?
+            /*
+            
+            if ( config.saveOnLogout() 
+                 && config.getSaveResource() != null) {
+                final AuthenticationContext authContext = handler.getContext();
+                try {
+                    // This might not work, because of the missing state
+                    authContext.saveXML("/authentication", 
+                                    null, 
+                                    ContextHelper.getObjectModel(this.context), 
+                                    this.resolver, this.manager);
+                } catch (Exception ignore) {
+                    // we don't want to stop the logout process
+                    // because of errors during save
+                    this.getLogger().error("Exception while saving authentication information.", ignore);
+                }
+            }
+            // save applications (if configured)
+            Iterator iter = config.getApplications().values().iterator();
+            while ( iter.hasNext() ) {
+                ApplicationConfiguration appConfig = (ApplicationConfiguration) iter.next();
+                if ( appConfig.saveOnLogout()
+                     && appConfig.getSaveResource() != null ) {
+                     // ???
+                }
+            }
+            */
             // notify the authenticator
             try {
                 this.lookupAuthenticator(config).logout(handler);

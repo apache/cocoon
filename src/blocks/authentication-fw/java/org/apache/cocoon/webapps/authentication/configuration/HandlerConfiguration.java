@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HandlerConfiguration.java,v 1.2 2003/07/12 18:39:49 cziegeler Exp $
+ * @version CVS $Id: HandlerConfiguration.java,v 1.3 2003/11/07 11:21:50 cziegeler Exp $
 */
 public final class HandlerConfiguration
 implements java.io.Serializable {
@@ -109,6 +109,9 @@ implements java.io.Serializable {
     /** The configuration fragments */
     private Map configurations;
 
+    /** Save the context on logout */
+    private boolean saveOnLogout = false;
+    
     /**
      * Create a new handler object.
      */
@@ -169,6 +172,7 @@ implements java.io.Serializable {
         if (child != null) {
             this.saveResource = child.getAttribute("uri");
             this.saveResourceParameters = SourceParameters.create(child);
+            this.saveOnLogout = child.getAttributeAsBoolean("saveOnLogout", false);
         }
 
         // And now: Applications
@@ -251,21 +255,36 @@ implements java.io.Serializable {
     }
 
     /** Get the save resource */
-    public String getSaveResource() { return this.saveResource; }
+    public String getSaveResource() { 
+        return this.saveResource; }
+    
 
     /** Get the load resource */
-    public String getLoadResource() { return this.loadResource; }
+    public String getLoadResource() { 
+        return this.loadResource; 
+    }
 
+    /** Should we save on logout? */
+    public boolean saveOnLogout() { 
+        return this.saveOnLogout;
+    }
+    
     /** Get the save resource */
-    public SourceParameters getSaveResourceParameters() { return this.saveResourceParameters; }
+    public SourceParameters getSaveResourceParameters() { 
+        return this.saveResourceParameters;
+    }
 
     /** Get the load resource parameters */
-    public SourceParameters getLoadResourceParameters() { return this.loadResourceParameters; }
+    public SourceParameters getLoadResourceParameters() { 
+        return this.loadResourceParameters; 
+    }
 
     /**
      * Get the applications map
      */
-    public Map getApplications() { return applications; }
+    public Map getApplications() { 
+        return applications; 
+    }
 
     /**
      * Get the configuration
@@ -278,7 +297,7 @@ implements java.io.Serializable {
      * toString()
      */
     public String toString() {
-        return "authentication-Handler " + this.name;
+        return "authentication handler '" + this.name + "' (" + super.toString() + ')';
     }
     
     /**
