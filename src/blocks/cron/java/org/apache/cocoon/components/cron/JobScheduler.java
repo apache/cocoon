@@ -62,7 +62,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  * This component schedules jobs.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: JobScheduler.java,v 1.4 2003/09/04 15:59:09 giacomo Exp $
+ * @version CVS $Id: JobScheduler.java,v 1.5 2003/09/05 10:20:21 giacomo Exp $
  *
  * @since 2.1.1
  */
@@ -85,27 +85,7 @@ public interface JobScheduler {
     JobSchedulerEntry getJobSchedulerEntry(String jobname);
 
     /**
-     * Schedule a periodic job.
-     * The job is started the first time when the period has passed. 
-     * Note that if a Job already has same name then it is overwritten.
-     *
-     * @param name the name of the job
-     * @param jobrole The Avalon components role name of the job itself
-     * @param period Every period seconds this job is started
-     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
-     * @param params Additional Parameters to setup CronJob
-     * @param objects A Map with additional object to setup CronJob
-     */
-    void addPeriodicJob(String name, 
-                        String jobrole, 
-                        long period, 
-                        boolean canRunConcurrently,
-                        Parameters params, 
-                        Map objects)
-    throws CascadingException;
-
-    /**
-     * Schedule a time based job. Note that if a CronJob already has same name then it is overwritten.
+     * Schedule a time based job.  Note that if a job with the same name has already beed added it is overwritten.
      *
      * @param name the name of the job
      * @param jobrole The Avalon components role name of the job itself
@@ -113,10 +93,10 @@ public interface JobScheduler {
      * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
      */
     void addJob(String name, String jobrole, String cronSpec, boolean canRunConcurrently)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Schedule a time based job. Note that if a CronJob already has same name then it is overwritten.
+     * Schedule a time based job.  Note that if a job with the same name has already beed added it is overwritten.
      *
      * @param name the name of the job
      * @param jobrole The Avalon components role name of the job itself
@@ -126,10 +106,10 @@ public interface JobScheduler {
      * @param objects A Map with additional object to setup CronJob
      */
     void addJob(String name, String jobrole, String cronSpec, boolean canRunConcurrently, Parameters params, Map objects)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Schedule a job. Note that if a CronJob already has the same name then it is overwritten.
+     * Schedule a time based job.  Note that if a job with the same name has already beed added it is overwritten.
      *
      * @param name the name of the job
      * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
@@ -138,10 +118,10 @@ public interface JobScheduler {
      * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
      */
     void addJob(String name, Object job, String cronSpec, boolean canRunConcurrently)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Schedule a job. Note that if a CronJob already has the same name then it is overwritten.
+     * Schedule a job.  Note that if a job with the same name has already beed added it is overwritten.
      *
      * @param name the name of the job
      * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
@@ -152,7 +132,22 @@ public interface JobScheduler {
      * @param objects A Map with additional object to setup CronJob
      */
     void addJob(String name, Object job, String cronSpec, boolean canRunConcurrently, Parameters params, Map objects)
-        throws CascadingException;
+    throws CascadingException;
+
+    /**
+     * Schedule a periodic job. The job is started the first time when the period has passed.  Note that if a job with
+     * the same name has already beed added it is overwritten.
+     *
+     * @param name the name of the job
+     * @param jobrole The Avalon components role name of the job itself
+     * @param period Every period seconds this job is started
+     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
+     * @param params Additional Parameters to setup CronJob
+     * @param objects A Map with additional object to setup CronJob
+     */
+    void addPeriodicJob(String name, String jobrole, long period, boolean canRunConcurrently, Parameters params,
+                        Map objects)
+    throws CascadingException;
 
     /**
      * Fire a job once immediately
@@ -183,7 +178,7 @@ public interface JobScheduler {
      * @return whether the job has been successfully started
      */
     boolean fireJob(String jobrole, Parameters params, Map objects)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
      * Fire a job once immediately
@@ -196,20 +191,22 @@ public interface JobScheduler {
      * @return whether the job has been successfully started
      */
     boolean fireJob(Object job, Parameters params, Map objects)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Fire a job once at a specific date
+     * Fire a job once at a specific date Note that if a job with the same name has already beed added it is
+     * overwritten.
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
      * @param jobrole The Avalon components role name of the job itself
      */
     void fireJobAt(Date date, String name, String jobrole)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Fire a job once immediately
+     * Fire a job once at a specific date Note that if a job with the same name has already beed added it is
+     * overwritten.
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
@@ -218,10 +215,11 @@ public interface JobScheduler {
      * @param objects A Map with additional object to setup CronJob
      */
     void fireJobAt(Date date, String name, String jobrole, Parameters params, Map objects)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Fire a CronJob once immediately
+     * Fire a job once at a specific date Note that if a job with the same name has already beed added it is
+     * overwritten.
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
@@ -229,10 +227,11 @@ public interface JobScheduler {
      *        specific class (i.e. org.quartz.Job)
      */
     void fireJobAt(Date date, String name, Object job)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
-     * Fire a job once immediately
+     * Fire a job once at a specific date Note that if a job with the same name has already beed added it is
+     * overwritten.
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
@@ -242,7 +241,7 @@ public interface JobScheduler {
      * @param objects A Map with additional object to setup CronJob
      */
     void fireJobAt(Date date, String name, Object job, Parameters params, Map objects)
-        throws CascadingException;
+    throws CascadingException;
 
     /**
      * Remove a scheduled job by name.
@@ -250,5 +249,5 @@ public interface JobScheduler {
      * @param name the name of the job
      */
     void removeJob(String name)
-        throws NoSuchElementException;
+    throws NoSuchElementException;
 }
