@@ -56,9 +56,20 @@ package org.apache.cocoon.components.validation;
  * validation
  *
  * @author  ivelin@apache.org
- * @version CVS $Id: Violation.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
+ * @version CVS $Id: Violation.java,v 1.3 2003/05/12 13:23:58 stephan Exp $
  */
 public class Violation implements Comparable {
+
+    private String xpath_;
+    private String message_;
+
+    public Violation() {
+    }
+
+    public Violation(String xpath, String message) {
+        setPath(xpath);
+        setMessage(message);
+    }
 
     /**
      * @return the XPath location of the Violation
@@ -143,8 +154,4 @@ public class Violation implements Comparable {
             }
         }
     }
-
-    private String xpath_;
-    private String message_;
-
 }
