@@ -18,7 +18,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | $Id:$
+    | $Id$
     +-->
 <module name="cocoon">
   <url href="http://cocoon.apache.org/"/>
@@ -1251,6 +1251,9 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-forms" />
     <depend project="cocoon-block-ojb" type="samples"/>
+    <depend project="javaflow"/>
+
+    <library name="javaflow"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1347,6 +1350,10 @@
     <depend project="commons-jexl"/>
     <depend project="commons-jxpath"/>
 
+    <library name="commons-beanutils"/>
+    <library name="commons-jexl"/>
+    <library name="commons-jxpath"/>
+
     <work nested="build/cocoon-@@DATE@@/blocks/template/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1378,7 +1385,7 @@
     <description>
       Delivery context library
     </description>
-    <home nested="src/blocks/deli/lib"/>
+    <home nested="ib/optional"/>
     <jar name="deli-x031104.jar"/>
   </project>
 
@@ -1407,7 +1414,7 @@
     <description>
       Chaperon is a project that helps to convert structured text to XML
     </description>
-    <home nested="src/blocks/chaperon/lib"/>
+    <home nested="ib/optional"/>
     <jar name="chaperon-20040205.jar"/>
   </project>
 
@@ -1416,7 +1423,7 @@
     <description>
       iText is a library that allows you to generate PDF files on the fly
     </description>
-    <home nested="src/blocks/itext/lib"/>
+    <home nested="ib/optional"/>
     <jar name="itext-1.1.jar"/>
   </project>
 
@@ -1443,7 +1450,7 @@
     <description>
       Streaming Transformation for XML (STX) library
     </description>
-    <home nested="src/blocks/stx/lib"/>
+    <home nested="lib/optional"/>
     <jar name="joost-20040330.jar"/>
   </project>
 
@@ -1459,21 +1466,26 @@
 
   <project name="jsf">
     <package>javax.faces</package>
-    <jar name="src/blocks/faces/lib/myfaces-jsf-api-20041005.jar"/>
+    <jar name="lib/optional/myfaces-jsf-api-20041005.jar"/>
   </project>
 
   <project name="nekodtd">
     <package>org.cyberneko.dtd</package>
-    <jar name="src/blocks/forms/lib/nekodtd-0.1.11.jar"/>
+    <jar name="lib/optional/nekodtd-0.1.11.jar"/>
   </project>  
 
   <project name="daisy-htmlcleaner">
     <package>org.outerj.daisy.htmlcleaner</package>
-    <jar name="src/blocks/forms/lib/daisy-htmlcleaner-1.1.jar"/>
+    <jar name="optional/daisy-htmlcleaner-1.1.jar"/>
   </project>  
   
   <project name="daisy-util">
     <package>org.outerj.daisy.xmlutil</package>
-    <jar name="src/blocks/forms/lib/daisy-util-1.1.jar"/>
+    <jar name="lib/optional/daisy-util-1.1.jar"/>
+  </project>      
+
+  <project name="javaflow">
+    <package>org.apache.javaflow</package>
+    <jar name="lib/optional/javaflow-20041213.jar"/>
   </project>      
 </module>
