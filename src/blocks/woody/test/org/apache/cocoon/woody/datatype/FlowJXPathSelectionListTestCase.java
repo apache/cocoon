@@ -84,7 +84,7 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for Woody's FlowModelSelectionList datatype.
- * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.1 2003/10/23 22:08:13 ugo Exp $
+ * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.2 2003/12/10 23:34:11 ugo Exp $
  */
 public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
 
@@ -151,7 +151,38 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
         assertEqual("Test if generated list matches expected",
             expected, dest.getDocument());
     }
-
+    
+    /**
+     * Test the generateSaxFragment method with a list containing a null value.
+     */
+    public void testGenerateSaxFragmentWithNull() throws Exception {
+        List beans = new ArrayList(2);
+        beans.add(null);
+        beans.add(new TestBean("1", "One"));
+        beans.add(new TestBean("2", "Two"));
+        Map flowContextObject = new HashMap();
+        flowContextObject.put("beans", beans);
+        Request request = new MockRequest();
+        request.setAttribute(FlowHelper.CONTEXT_OBJECT, flowContextObject);
+        Map objectModel = new HashMap();
+        objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
+        Map contextObjectModel = new HashMap();
+        contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
+        Context context = new DefaultContext(contextObjectModel);
+        Source sampleSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCase.source.xml");
+        Document sample = parser.parse(sampleSource.getInputStream());
+        Element datatypeElement = (Element) sample.getElementsByTagNameNS(Constants.WD_NS, "datatype").item(0);
+        Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
+        FlowJXPathSelectionList list = new FlowJXPathSelectionList
+            (context, "beans", "key", "value", datatype);
+        DOMBuilder dest = new DOMBuilder();
+        list.generateSaxFragment(dest, Locale.ENGLISH);
+        Source expectedSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
+        Document expected = parser.parse(expectedSource.getInputStream());
+        assertEqual("Test if generated list matches expected",
+                expected, dest.getDocument());
+    }
+    
     /**
      * Check is the source document is equal to the one produced by the method under test.
      * @param message A message to print in case of failure.
