@@ -37,7 +37,9 @@
       </fb:struct>
     </fb:case>
     <fb:case id="file" path=".">
-      <fb:value id="file" path="file/@path"/>
+      <fb:struct id="file" path=".">
+        <fb:value id="filename" path="file/@path"/>
+      </fb:struct>
     </fb:case>
   </fb:union>
 </fb:context>
