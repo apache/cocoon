@@ -292,7 +292,7 @@ PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
 <note>TODO: ensure that the link to samples works OK in the various documentation situations (i.e. static site, local docs build)</note>
 
   <p>Here is the source for the top-level XML instance document
-   <code>test.xml</code> ...
+   <code>catalog-demo.xml</code> ...
   </p>
 
 <source><![CDATA[
@@ -316,12 +316,12 @@ PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
  <section>
   <para>This sample application demonstrates the use of catalogs for
    entity resolution. &note; see the Apache Cocoon documentation
-   <link href="/cocoon/docs/catalog.html">Entity resolution with
-   catalogs</link> for the full background and explanation, and the XML
-   source of this document (test.xml).
+   <link href="/../../docs/userdocs/concepts/catalog.html">Entity
+   resolution with catalogs</link> for the full background and
+   explanation, and the XML source of this document (catalog-demo.xml).
   </para>
 
-  <para>This top-level XML instance document is test.xml - it declares
+  <para>This top-level XML instance document is catalog-demo.xml - it declares
    three other XML sub-documents as external entities and then includes
    them in the sections below. The real system identifiers will be looked
    up in the catalog, to resolve the actual location of the resource.
@@ -479,17 +479,19 @@ PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
 
   <ul>
    <li>
-    downloaded a recent copy of the Simplified DocBook DTD distribution
-    and unpacked it at
-    <code>/usr/local/sgml/docbook/simple/</code>
+    Downloaded a recent copy of the Simplified DocBook DTD (the flattened DTD
+    will suffice) from
+    <link href="http://www.oasis-open.org/docbook/">here</link>
+    and place it at
+    <code>/usr/local/sgml/docbook/simple/sdocbook.dtd</code>
    </li>
    <li>
-    created a catalog file at 
+    Created a catalog file at 
     <code>/usr/local/sgml/docbook/simple/sdocbook.cat</code>
     with a single entry for the Simplified DocBook XML DTD
    </li>
    <li>
-    added the parameter (<code>local-catalog</code>) to the
+    Added the parameter (<code>local-catalog</code>) to the
     <code>WEB-INF/cocoon.xconf</code>
     (using the full pathname to the <code>sdocbook.cat</code> catalog).
    </li>
