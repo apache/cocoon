@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.5 2003/07/20 21:28:26 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.6 2003/08/06 15:37:18 bruno Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -383,7 +383,6 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
      * will be retrieved from at the next invocation of {@link #callFunction}.</p>
      *
      * @param environment an <code>Environment</code> value
-     * @return a <code>Scriptable</code> value
      * @exception Exception if an error occurs
      */
     private void setupContext(Environment environment,
