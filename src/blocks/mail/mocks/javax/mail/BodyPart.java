@@ -6,6 +6,6 @@ package javax.mail;
  * 
  * @version CVS $Id:
  */
-public interface BodyPart extends Part {
+public abstract class BodyPart implements Part {
 
 }
