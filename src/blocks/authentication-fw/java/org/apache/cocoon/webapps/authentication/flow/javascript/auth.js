@@ -54,7 +54,7 @@
  * WARNING   -  THIS IS EXPERIMENTAL STUFF!!! Use it at your own risk
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: auth.js,v 1.6 2003/11/16 00:28:40 vgritsenko Exp $
+ * @version CVS $Id: auth.js,v 1.7 2003/11/24 03:42:44 antonio Exp $
 */
 
 function auth_checkAuthentication(handler, application) {
@@ -108,7 +108,7 @@ function auth_login(handler, application, params) {
 
 function auth_logout(handler, modeString) {
     var mode;
-    if ( modeString == null | modeString == "" || modeString == "if-not-authenticated" ) {
+    if ( modeString == null || modeString == "" || modeString == "if-not-authenticated" ) {
         mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IF_NOT_AUTHENTICATED;
     } else if ( modeString == "if-unused" ) {
         mode = Packages.org.apache.cocoon.webapps.authentication.AuthenticationConstants.LOGOUT_MODE_IF_UNUSED;
@@ -117,17 +117,15 @@ function auth_logout(handler, modeString) {
     } else {
        throw new Error("Unknown mode"); // " + modeString);
     }
-
     var authMgr = null;
     try {
         authMgr = cocoon.getComponent(Packages.org.apache.cocoon.webapps.authentication.AuthenticationManager.ROLE);
         var state = authMgr.getState();
 
-        if (handler == null && state!=null) {
+        if (handler == null && state != null) {
             handler = state.getHandlerName();
         }
-
-        if ( null == handler )
+        if (handler == null)
             throw new Error("LogoutAction requires at least the handler parameter.");
         authMgr.logout( handler, mode );
     } finally {
