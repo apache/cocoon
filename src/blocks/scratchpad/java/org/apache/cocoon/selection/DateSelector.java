@@ -103,7 +103,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * </code></pre>
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: DateSelector.java,v 1.5 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DateSelector extends AbstractSwitchSelector
 implements Configurable, ThreadSafe {
@@ -297,7 +297,7 @@ implements Configurable, ThreadSafe {
             return this.isCompareAfter;
         }
         public boolean isCompareBefore() {
-            return this.isCompareBefore();
+            return this.isCompareBefore;
         }
         
         /**
