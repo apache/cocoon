@@ -28,6 +28,10 @@
   <!ELEMENT forbidden-children (#PCDATA)>
 ]>
 
+<!--+
+    | The sitemap language.
+    | $Id$
+    +-->
 <sitemap-language>
 
     <!-- node definitions for the sitemap language -->
@@ -42,52 +46,64 @@
       
       <!-- Sitemap root node -->
       <node name="sitemap" builder="org.apache.cocoon.components.treeprocessor.sitemap.SitemapNodeBuilder">
-        <allowed-children>components, views, action-sets, resources, pipelines, flow</allowed-children>
+        <allowed-children>components, views, action-sets, resources, flow, pipelines</allowed-children>
       </node>
-    
+
       <node name="components" builder="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsNodeBuilder"/>
-      
+
       <node name="generators" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCsNodeBuilder"/>
-      
+
       <node name="generator" builder="org.apache.cocoon.components.treeprocessor.sitemap.VPCNodeBuilder">
         <ignored-children>source</ignored-children>
       </node>
-      
+
+      <node name="views" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
+        <allowed-children>view</allowed-children>
+      </node>
+
+      <node name="view" builder="org.apache.cocoon.components.treeprocessor.sitemap.ViewNodeBuilder"/>
+
+      <node name="action-sets" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
+        <allowed-children>action-set</allowed-children>
+      </node>
+
+      <node name="action-set" builder="org.apache.cocoon.components.treeprocessor.sitemap.ActionSetNodeBuilder"/>
+
+      <node name="resources" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
+        <allowed-children>resource</allowed-children>
+      </node>
+
+      <node name="resource" builder="org.apache.cocoon.components.treeprocessor.NamedContainerNodeBuilder"/>
+
+      <node name="flow" builder="org.apache.cocoon.components.treeprocessor.sitemap.FlowNodeBuilder">
+        <allowed-children>script</allowed-children>
+      </node>
+
+      <node name="script" builder="org.apache.cocoon.components.treeprocessor.sitemap.ScriptNodeBuilder"/>
+
       <node name="pipelines" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNodeBuilder">
         <allowed-children>pipeline, handle-errors</allowed-children>
         <ignored-children>component-configurations</ignored-children>
       </node>
 
-      <node name="flow" builder="org.apache.cocoon.components.treeprocessor.sitemap.FlowNodeBuilder"/>
-
-      <node name="views" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder"/>
-      
-      <node name="view" builder="org.apache.cocoon.components.treeprocessor.sitemap.ViewNodeBuilder"/>
-      
-      <node name="resources" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder"/>
-      
-      <node name="resource" builder="org.apache.cocoon.components.treeprocessor.NamedContainerNodeBuilder"/>
-
-      <node name="action-sets" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder"/>
-      
-      <node name="action-set" builder="org.apache.cocoon.components.treeprocessor.sitemap.ActionSetNodeBuilder"/>
-
       <node name="pipeline" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelineNodeBuilder">
-        <forbidden-children>sitemap, components, pipelines</forbidden-children>
+        <forbidden-children>sitemap, components, pipeline</forbidden-children>
       </node>
-      
+
       <node name="match" builder="org.apache.cocoon.components.treeprocessor.sitemap.MatchNodeBuilder">
         <forbidden-children>sitemap, components, pipeline, handle-errors</forbidden-children>
       </node>
 
-      <node name="select" builder="org.apache.cocoon.components.treeprocessor.sitemap.SelectNodeBuilder"/>
+      <node name="select" builder="org.apache.cocoon.components.treeprocessor.sitemap.SelectNodeBuilder">
+        <forbidden-children>sitemap, components, pipeline, handle-errors</forbidden-children>
+      </node>
 
       <node name="act" builder="org.apache.cocoon.components.treeprocessor.sitemap.ActNodeBuilder">
         <forbidden-children>sitemap, components, pipeline, handle-errors</forbidden-children>
       </node>
 
       <node name="redirect-to" builder="org.apache.cocoon.components.treeprocessor.sitemap.RedirectToNodeBuilder"/>
-      
+
       <node name="call" builder="org.apache.cocoon.components.treeprocessor.sitemap.CallNodeBuilder"/>
 
       <node name="mount" builder="org.apache.cocoon.components.treeprocessor.sitemap.MountNodeBuilder"/>
@@ -102,13 +118,13 @@
 
       <node name="serialize" builder="org.apache.cocoon.components.treeprocessor.sitemap.SerializeNodeBuilder"/>
 
-      <node name="script" builder="org.apache.cocoon.components.treeprocessor.sitemap.ScriptNodeBuilder"/>
-
       <node name="handle-errors" builder="org.apache.cocoon.components.treeprocessor.sitemap.HandleErrorsNodeBuilder"/>
 
     </nodes>
-    <!-- You can add specific nodes for a specific sitemap version, using
-         &lt;nodes-{version}&gt;
-    -->
+
+    <!--+
+        | You can add specific nodes for a specific sitemap version, using
+        | &lt;nodes-{version}&gt;
+        +-->
 
 </sitemap-language>
