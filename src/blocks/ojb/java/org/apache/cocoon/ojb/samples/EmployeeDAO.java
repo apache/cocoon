@@ -18,24 +18,25 @@ package org.apache.cocoon.ojb.samples;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Transaction;
 
-import org.apache.cocoon.ojb.jdo.components.JdoPMF;
+import org.apache.cocoon.ojb.jdo.components.JDO;
 import org.apache.cocoon.ojb.samples.bean.Employee;
 import org.apache.ojb.broker.Identity;
 import org.apache.ojb.broker.PersistenceBroker;
 import org.apache.ojb.broker.PersistenceBrokerFactory;
+
 /**
  *  Employee's Impl
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: EmployeeDAO.java,v 1.3 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public class EmployeeDAO {
 
     public EmployeeDAO(){}
 
-    public void retrieve(Employee bean, JdoPMF pmf) {
-        /* 1. Get the PersistenceManager */
-        PersistenceManager persistenceManager = pmf.getPersistenceManager();
+    public void retrieve(Employee bean, JDO jdo) {
+        // 1. Get the PersistenceManager
+        PersistenceManager persistenceManager = jdo.getPersistenceManager();
         
         Employee e = new Employee();
         e.setId(bean.getId());
@@ -43,7 +44,7 @@ public class EmployeeDAO {
         Identity oid = new Identity(e, broker);
         
         Employee b = new Employee();
-        //	2. start transaction
+        // 2. start transaction
         persistenceManager.currentTransaction().begin();
         // 3. Get the Object based on the primary key
         b = (Employee) persistenceManager.getObjectById(oid, false);
@@ -53,9 +54,9 @@ public class EmployeeDAO {
         persistenceManager.currentTransaction().commit();
     }
 
-    public void insert(Employee e, JdoPMF pmf) {
-        /* 1. Get the PersistenceManager */
-        PersistenceManager persistenceManager = pmf.getPersistenceManager();
+    public void insert(Employee e, JDO jdo) {
+        // 1. Get the PersistenceManager
+        PersistenceManager persistenceManager = jdo.getPersistenceManager();
         // 2. Get current transaction
         Transaction tx = persistenceManager.currentTransaction();
         // 3. Start a Transaction
@@ -66,9 +67,9 @@ public class EmployeeDAO {
         tx.commit();
     }
 
-    public void update(Employee bean, JdoPMF pmf) {
-        /* 1. Get the PersistenceManager */
-        PersistenceManager persistenceManager = pmf.getPersistenceManager();
+    public void update(Employee bean, JDO jdo) {
+        // 1. Get the PersistenceManager
+        PersistenceManager persistenceManager = jdo.getPersistenceManager();
         
         Employee e = new Employee();
         e.setId(bean.getId());
@@ -76,7 +77,7 @@ public class EmployeeDAO {
         Identity oid = new Identity(e, broker);
         
         Employee b = new Employee();
-        //	2. start transaction
+        // 2. start transaction
         persistenceManager.currentTransaction().begin();
         // 3. Get the Object based on the primary key
         b = (Employee) persistenceManager.getObjectById(oid, false);
@@ -88,9 +89,9 @@ public class EmployeeDAO {
         persistenceManager.currentTransaction().commit();
     }
 
-    public void remove(Employee bean, JdoPMF pmf) {
-        /* 1. Get the PersistenceManager */
-        PersistenceManager persistenceManager = pmf.getPersistenceManager();
+    public void remove(Employee bean, JDO jdo) {
+        // 1. Get the PersistenceManager
+        PersistenceManager persistenceManager = jdo.getPersistenceManager();
         
         Employee e = new Employee();
         e.setId(bean.getId());
@@ -98,7 +99,7 @@ public class EmployeeDAO {
         Identity oid = new Identity(e, broker);
         
         Employee b = new Employee();
-        //	2. start transaction
+        // 2. start transaction
         persistenceManager.currentTransaction().begin();
         // 3. Get the Object based on the primary key
         b = (Employee) persistenceManager.getObjectById(oid, false);

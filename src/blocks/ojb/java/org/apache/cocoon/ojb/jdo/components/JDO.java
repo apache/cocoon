@@ -26,9 +26,9 @@ import javax.jdo.PersistenceManager;
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version CVS $Id$
 */
-public interface JdoPMF extends Component {
+public interface JDO extends Component {
 
-    String ROLE = JdoPMF.class.getName();
+    String ROLE = JDO.class.getName();
 
     /**
      * Get a Persitence Manager.
