@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.apache.cocoon.kernel.composition.Composer;
 import org.apache.cocoon.kernel.composition.Lifecycle;
-import org.apache.cocoon.kernel.composition.LifecycleException;
 import org.apache.cocoon.kernel.composition.Wire;
 import org.apache.cocoon.kernel.composition.WiringException;
 import org.apache.cocoon.kernel.composition.Wirings;
@@ -38,7 +37,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.7 $)
+ * @version 1.0 (CVS $Revision: 1.8 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -226,16 +225,14 @@ public class DeployedWirings implements Wirings, Lifecycle {
     /**
      * <p>Notify this {@link DeployedWirings} of its initialization.</p>
      *
-     * @throws LifecycleException if this instance cannot be initialized.
+     * @throws Exception if this instance cannot be initialized.
      */
     public void init()
-    throws LifecycleException {
-        if (this.composer != null) try {
-            this.composer.contextualize(this); // TODO wrap this instance
+    throws Exception {
+        if (this.composer != null) {
+            /* TODO: wrap this Wirings instance */
+            this.composer.contextualize(this);
             this.composer.configure(this.instance.configuration());
-        } catch (Throwable throwable) {
-            throw new LifecycleException("Unable to configure or contextualize"
-                                         + " composer instance", throwable);
         }
         if (this.composer instanceof Lifecycle) {
             ((Lifecycle)this.composer).init();
@@ -245,10 +242,10 @@ public class DeployedWirings implements Wirings, Lifecycle {
     /**
      * <p>Notify this {@link DeployedWirings} of its destruction.</p>
      *
-     * @throws LifecycleException if this instance cannot be destroyed.
+     * @throws Exception if this instance cannot be destroyed.
      */
     public void destroy()
-    throws LifecycleException {
+    throws Exception {
         if (this.composer instanceof Lifecycle) {
             ((Lifecycle)this.composer).destroy();
         }

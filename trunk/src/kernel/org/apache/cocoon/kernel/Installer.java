@@ -37,7 +37,7 @@ import org.apache.cocoon.kernel.identification.ParsedIdentifier;
  * deploying each block in the correct order.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public class Installer {
 
@@ -192,7 +192,14 @@ public class Installer {
         }
 
         /* Process parameters */
-        instance.configure(new Parameters(configuration.child("parameters")));
+        try {
+            instance.configure(new Parameters(configuration.child("parameters")));
+        } catch (ConfigurationException exception) {
+            throw(exception);
+        } catch (Exception exception) {
+            String message = "Problems configuring instnace \"" + name + "\""; 
+            throw new ConfigurationException(message, exception);
+        }
 
         /* Finally, deploy the baby*/
         try {

@@ -50,7 +50,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * this planned new feature.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.7 $)
+ * @version 1.0 (CVS $Revision: 1.8 $)
  */
 public final class ProxyWire implements InvocationHandler {
     
@@ -147,7 +147,7 @@ public final class ProxyWire implements InvocationHandler {
 
             /* Contextualize the instance with the wire */
             if (instance instanceof Component) {
-                ((Component)instance).contextualize(this.wire, null, r);
+                ((Component)instance).contextualize(this.wire, r);
             }
 
             /* Record the original composer and instance */
@@ -157,7 +157,7 @@ public final class ProxyWire implements InvocationHandler {
             /* Something bad happened releasing, release the instance */
             composer.release(instance);
             throw new WiringException("Unable to create wrapper for "
-                                           + "composed component instance", t);
+                                      + "composed component instance", t);
         }
     }
 

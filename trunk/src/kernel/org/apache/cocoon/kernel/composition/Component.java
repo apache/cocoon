@@ -58,7 +58,7 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * is returned to the original {@link Composer}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public interface Component {
 
@@ -67,10 +67,8 @@ public interface Component {
      *
      * @param wire the {@link Wire} instance through which the block requesting
      *             this instance is accessing it.
-     * @param wirings the {@link Wirings} instance associated with the block
-     *                instance in which this {@link Component} is defined.
      * @param resolver the {@link Resolver} instance resolving resources in the
      *                 calling block instance.
      */
-    public void contextualize(Wire wire, Wirings wirings, Resolver resolver);
+    public void contextualize(Wire wire, Resolver resolver);
 }

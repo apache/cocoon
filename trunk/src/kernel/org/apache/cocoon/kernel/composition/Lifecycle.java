@@ -30,7 +30,7 @@ package org.apache.cocoon.kernel.composition;
  * is implemented by a normal component, it will be silently ignored.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Lifecycle {
 
@@ -50,10 +50,10 @@ public interface Lifecycle {
      * has been called, as this method defines the beginning of lifecycle
      * awareness.</p>
      *
-     * @throws LifecycleException if this instance cannot be initialized.
+     * @throws Exception if this instance cannot be initialized.
      */
     public void init()
-    throws LifecycleException;
+    throws Exception;
 
     /**
      * <p>Notify this instance of its destruction.</p>
@@ -66,14 +66,14 @@ public interface Lifecycle {
      * of this interface are guaranteed that this method will be the last one
      * called before garbage collection, release or disposal.</p>
      *
-     * <p>If this method throws a {@link LifecycleException} and this instance
-     * was acquired from a {@link Composer}, its instance <b>will not</b> be
+     * <p>If this method throws an {@link Exception} and this instance was
+     * acquired from a {@link Composer}, its instance <b>will not</b> be
      * {@link Composer#release(Object) released} to it (which would be its
      * normal behavior), but rather {@link Composer#dispose(Object) disposed}
      * back through it.</p>
      *
-     * @throws LifecycleException if this instance cannot be destroyed.
+     * @throws Exception if this instance cannot be destroyed.
      */
     public void destroy()
-    throws LifecycleException;
+    throws Exception;
 }

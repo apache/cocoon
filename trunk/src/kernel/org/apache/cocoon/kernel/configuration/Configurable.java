@@ -24,7 +24,7 @@ package org.apache.cocoon.kernel.configuration;
  * method using a {@link Configuration}
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Configurable {
 
@@ -32,8 +32,8 @@ public interface Configurable {
      * <p>Configure this instance with the specified {@link Parameters}.</p>
      *
      * @param parameters the {@link Parameters} configuring the instance.
-     * @throws ConfigurationException if this instance could not be configured.
+     * @throws Exception if this instance could not be configured.
      */
     public void configure(Parameters parameters)
-    throws ConfigurationException;
+    throws Exception;
 }

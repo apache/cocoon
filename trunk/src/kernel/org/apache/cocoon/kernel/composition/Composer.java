@@ -51,7 +51,7 @@ import org.apache.cocoon.kernel.configuration.Configurable;
  * (requiring no parameters) constructor.</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Composer extends Configurable {
 
@@ -104,10 +104,10 @@ public interface Composer extends Configurable {
      *
      * @param wirings the {@link Wirings} instance associated with
      *                this {@link Composer}'s block.
-     * @throws WiringException if there was an error performing operations
-     *                              on the supplied {@link Wirings} instance.
+     * @throws Exception if there was an error performing operations on the
+     *                   supplied {@link Wirings} instance.
      */
     public void contextualize(Wirings wirings)
-    throws WiringException;
+    throws Exception;
 
 }
