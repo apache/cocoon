@@ -39,11 +39,11 @@
                         <c:forEach var="lineItem" items="${lineItemList}" >
                             <lineItem  linenum="${lineItem.linenum}" id="${lineItem.itemId}">
                                 <quantity>${lineItem.quantity}</quantity>
-                                <unitprice><c:formatNumber value="${lineItem.unitprice}" pattern="###,##0.00" currencyCode="USD" type="currency"/></unitprice>
-                                <total><c:formatNumber value="${lineItem.total}" pattern="###,##0.00" currencyCode="USD" type="currency"/></total>
+                                <unitprice>${lineItem.unitprice}</unitprice>
+                                <total>${lineItem.total}</total>
                             </lineItem>
                         </c:forEach>
-                        <total label="Total"><c:formatNumber value="${archivedOrder.totalprice}" pattern="###,##0.00" currencyCode="USD" type="currency"/></total>
+                        <total label="Total">${archivedOrder.totalprice}</total>
                     </cart>
                 </field>
             </panel>

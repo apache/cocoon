@@ -39,6 +39,10 @@
 
 <!-- ======================== Resources ============================ -->
   <map:resources>
+    <map:resource name="html">
+      <map:transform src="stylesheets/site2html.xsl"/>
+      <map:serialize type="html"/>
+    </map:resource>
   </map:resources>
 
 <!-- ======================== Flow ================================= -->
@@ -69,19 +73,16 @@
     <map:pipeline>
       <map:match pattern="view/*.xsp">
         <map:generate src="view/xsp/{1}.xsp" type="serverpages" label="debug"/>
-        <map:transform src="stylesheets/site2html.xsl" />
-        <map:serialize type="html"/>
+        <map:call resource="html"/>
       </map:match>
       <map:match pattern="view/*.jxpath">
         <map:generate src="view/jxpath/{1}.xml" type="file" />
         <map:transform type="jx"  label="debug"/>
-        <map:transform src="stylesheets/site2html.xsl" />
-        <map:serialize type="html"/>
+        <map:call resource="html"/>
       </map:match>
       <map:match pattern="view/*.jexl">
         <map:generate src="view/jexl/{1}.xml" type="jx"  label="debug"/>
-        <map:transform src="stylesheets/site2html.xsl" />
-        <map:serialize type="html"/>
+        <map:call resource="html"/>
       </map:match>
       <map:match pattern="view/*.vm">
         <map:generate src="view/templates/{1}.vm" type="velocity" label="debug"/>
@@ -90,8 +91,7 @@
       <map:match pattern="view/*.cforms">
         <map:generate src="view/forms/{1}_t.xml" label="debug"/>
         <map:transform type="woody" label="debug1"/>
-        <map:transform src="stylesheets/site2html.xsl" />
-        <map:serialize type="html"/>
+        <map:call resource="html"/>
       </map:match>
     </map:pipeline>
 
