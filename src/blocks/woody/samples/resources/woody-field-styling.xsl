@@ -20,7 +20,7 @@
                 exclude-result-prefixes="wi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: woody-field-styling.xsl,v 1.48 2004/04/21 14:00:03 joerg Exp $
+      | Version CVS $Id$
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -258,13 +258,24 @@
 
   <!--+
       | wi:booleanfield : produce a checkbox
+      | A hidden booleanfield is not a checkbox, so 'value' contains 
+      | the value and not the checked attribute
       +-->
   <xsl:template match="wi:booleanfield">
     <input id="{@id}" type="checkbox" value="true" name="{@id}" title="{wi:hint}">
       <xsl:apply-templates select="." mode="styling"/>
-      <xsl:if test="wi:value = 'true'">
-        <xsl:attribute name="checked">checked</xsl:attribute>
-      </xsl:if>
+      <xsl:choose>
+          <xsl:when test="./wi:styling[@type='hidden']">
+          <xsl:if test="wi:value = 'false'">
+            <xsl:attribute name="value">false</xsl:attribute>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="wi:value = 'true'">
+            <xsl:attribute name="checked">checked</xsl:attribute>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
     </input>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>

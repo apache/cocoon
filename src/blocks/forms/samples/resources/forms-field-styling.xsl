@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.8 2004/04/22 14:27:58 mpo Exp $
+      | Version CVS $Id$
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -259,13 +259,24 @@
 
   <!--+
       | fi:booleanfield : produce a checkbox
+      | A hidden booleanfield is not a checkbox, so 'value' contains 
+      | the value and not the checked attribute
       +-->
   <xsl:template match="fi:booleanfield">
     <input id="{@id}" type="checkbox" value="true" name="{@id}" title="{fi:hint}">
       <xsl:apply-templates select="." mode="styling"/>
-      <xsl:if test="fi:value = 'true'">
-        <xsl:attribute name="checked">checked</xsl:attribute>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="./fi:styling[@type='hidden']">
+          <xsl:if test="fi:value = 'false'">
+            <xsl:attribute name="value">false</xsl:attribute>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="fi:value = 'true'">
+            <xsl:attribute name="checked">checked</xsl:attribute>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
     </input>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
