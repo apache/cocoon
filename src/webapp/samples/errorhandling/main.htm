@@ -1,0 +1,35 @@
+<html>
+	<body>
+		<p>Please choose an exception:</p>
+		<form action="exception/exception">
+			<input type="hidden" name="exception" value="validation"/>
+			<input type="submit" value="ValidationException"/>
+		</form>
+		<form action="exception/exception">
+			<input type="hidden" name="exception" value="application"/>
+			<input type="hidden" name="code" value="1"/>
+			<input type="submit" value="ApplicationException (1)"/>
+		</form>
+		<form action="exception/exception">
+			<input type="hidden" name="exception" value="application"/>
+			<input type="hidden" name="code" value="2"/>
+			<input type="submit" value="ApplicationException (2)"/>
+		</form>
+		<form action="exception/exception">
+			<input type="hidden" name="exception" value="application"/>
+			<input type="hidden" name="code" value="3"/>
+			<input type="submit" value="ApplicationException (3)"/>
+		</form>
+		<form action="exception/exception">
+			<input type="hidden" name="exception" value="resourceNotFound"/>
+			<input type="submit" value="ResourceNotFoundException"/>
+		</form>
+		<form action="exception/exception">
+			<input type="hidden" name="exception" value="nullPointer"/>
+			<input type="submit" value="NullPointerException"/>
+		</form>
+		<form action="exception/exception">
+			<input type="submit" value="No exception"/>
+		</form>
+	</body>
+</html>
