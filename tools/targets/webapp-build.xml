@@ -28,10 +28,10 @@
     <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
-	<!-- generate sitemap entries 
+	<!-- generate sitemap entries
     <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
     -->
-    
+
     <copy todir="${build.webapp}/stylesheets" filtering="on">
       <fileset dir="${webapp}/stylesheets">
         <include name="**/*.xslt"/>
@@ -129,9 +129,7 @@
 
     <copy todir="${build.webapp.docs}" filtering="on">
       <fileset dir="${documentation}">
-        <exclude name="**/*.jpg"/>
-        <exclude name="**/*.gif"/>
-        <exclude name="**/*.png"/>
+        <exclude name="images/**"/>
       	<exclude name="*.xwelcome"/>
       </fileset>
     </copy>
@@ -151,9 +149,7 @@
 
     <copy todir="${build.webapp.docs}" filtering="off">
       <fileset dir="${documentation}">
-        <include name="**/*.jpg"/>
-        <include name="**/*.gif"/>
-        <include name="**/*.png"/>
+        <include name="images/**"/>
       </fileset>
     </copy>
 
