@@ -232,7 +232,7 @@
      AbstractMessageListener and AbstractMessagePublisher should be used as basis for
      custom publish/subscribe components.
    </action>
-   <action dev="VG" type="fix" fixes-bug="29765" due-to="Rui Alberto L. Gon&ccedil;alves" due-to-email="rui-l-goncalves@ptinovacao.pt">
+   <action dev="VG" type="fix" fixes-bug="29765" due-to="Rui Alberto L. Gon&#231;alves" due-to-email="rui-l-goncalves@ptinovacao.pt">
      XMLDB Block: Add ability to delete collections with XMLDBTransformer.
    </action>
    <action dev="VG" type="update">
