@@ -1,5 +1,14 @@
+/*
+ +-----------------------------------------------------------------------------+
+ |                                                                             |
+ |   This flowscript is based upon a unsupported object model. Please checkout |
+ |   the JXForms blocks.                                                       |
+ |                                                                             | 
+ +-----------------------------------------------------------------------------+
+*/
+
 //
-// CVS $Id: xmlForm.js,v 1.1 2003/04/25 08:34:57 stephan Exp $
+// CVS $Id: xmlForm.js,v 1.2 2003/08/07 08:45:11 reinhard Exp $
 //
 // XMLForm Support
 //
