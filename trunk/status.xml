@@ -210,6 +210,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="VG" type="fix" fixes-bug="10242">
+    TextSerializer now can handle absence of root element in the incoming XML.
+  </action>
   <action dev="SW" type="add">
     'handle-errors' sections in the sitemap now do not have an implicit
     generator: any generator can now be used, whereas previously it was
