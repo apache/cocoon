@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# CVS $Id: runclient.sh,v 1.1 2003/03/09 00:11:34 pier Exp $
+# CVS $Id: runclient.sh,v 1.2 2003/03/13 19:05:33 crafterm Exp $
 #
 # Script to run instrumentation client (run from the bin directory).
 
@@ -10,5 +10,5 @@ ALTRMI=../lib/excalibur-altrmi-client-impl-20030116.jar:../lib/excalibur-altrmi-
 
 CLASSPATH=$FRAMEWORK:$CLIENT:$ALTRMI
 
-java -classpath $CLASSPATH org.apache.excalibur.instrument.client.Main
+java -classpath $CLASSPATH org.apache.excalibur.instrument.client.Main $*
 
