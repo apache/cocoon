@@ -27,7 +27,6 @@ using the MetadataManager.
         dbalias="hsql://localhost:9002"
         username="sa"
         password=""
-        eager-release="true"
         batch-mode="false"
         useAutoCommit="1"
         ignoreAutoCommitExceptions="false"
