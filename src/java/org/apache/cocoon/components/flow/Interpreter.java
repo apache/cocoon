@@ -73,7 +73,6 @@ import java.util.List;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
- * @see InterpreterSelector
  * @version CVS $Id$
  */
 public interface Interpreter {
