@@ -313,10 +313,11 @@ wrapper.classpath=/usr/local/java/lib/jndi.jar
     to your <code>mod_jserv.conf</code> or <code>jserv.conf</code> file:
    </p>
     
-   <source>ApJServAction .xml /servlet/org.apache.cocoon.Cocoon</source>
+<source>Action cocoon /servlet/org.apache.cocoon.Cocoon
+AddHandler cocoon xml</source>
   
    <p>
-    where <em>.xml</em> is the file extention you want to map to the servlet
+    where <em>xml</em> is the file extention you want to map to the servlet
     and <em>/servlet/</em> is the mount point of your servlet zone (and the
     above is the standard name for servlet mapping for Apache JServ).
    </p>
@@ -343,12 +344,14 @@ wrapper.classpath=/usr/local/java/lib/jndi.jar
     extentions like this:
    </p>
    
-<source>ApJServAction .xml1 /zone1/org.apache.cocoon.Cocoon
-ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>           
+<source>Action cocoon1 /zone1/org.apache.cocoon.Cocoon
+Action cocoon1 /zone2/org.apache.cocoon.Cocoon
+AddHandler cocoon1 xml1
+AddHandler cocoon2 xml2</source>
 
    <p>
-    where <em>.xml1</em> is handled by the Cocoon residing on <em>zone1</em>
-    and <em>.xml2</em> is handled by the Cocoon residing on <em>zone2</em>
+    where <em>xml1</em> is handled by the Cocoon residing on <em>zone1</em>
+    and <em>xml2</em> is handled by the Cocoon residing on <em>zone2</em>
     which have different configurations and thus different behavior.
    </p>
   </s2>
@@ -598,6 +601,12 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
    <td>Apache 1.3.9</td>
    <td>Apache JServ 1.1b3</td>
    <td>Sun JDK 1.1.7</td>
+  </tr>
+  <tr>
+   <td>FreeBSD 3.4</td>
+   <td>Apache 1.3.9</td>
+   <td>Apache JServ 1.0</td>
+   <td>Blackdown JDK 1.1.8</td>
   </tr>
   <tr>
    <td>SCO OpenServer 5</td>

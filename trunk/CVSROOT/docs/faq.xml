@@ -24,6 +24,15 @@
 </faq>
 
 <faq>
+ <question>How come Apache is not redirecting requests to Cocoon?</question>
+ <answer>There is a bug in mod_jserv that makes it dependent on its configuration
+ position. If you use <em>ApJServHandler</em> you should change this to more
+ standard <em>Action and AddHandler</em>. If you installed an old version
+ of Cocoon, read again the installation instructions to find a solutions for
+ this problem. (thanks to Dan Egnor for finding and solving the problem).</answer>
+</faq>
+
+<faq>
  <question>How do I pipe my servlet output into Cocoon?</question>
  <answer>
   <p>Simple answer: <em>you don't!!!</em> read <connect href="dynamic.xml">the page
@@ -147,15 +156,6 @@
 </faq>
 
 <faq>
- <question>Why %lt;xsl:import%gt; and %lt;xsl:include%gt; don't work with Xalan?</question>
- <answer>
-  <p>This is a problem in the way that Xalan handles DOM-based stylesheets, it will be
-  fixed as soon as Cocoon moves on a SAX based architecture. As a work around, you can
-  consider using XT which has no problems.</p>
- </answer>
-</faq>
-
-<faq>
  <question>I see that Cocon 1.x has starting to incorporate features planned for 
  Cocoon 2.x, why?</question>
  <answer>
@@ -230,13 +230,12 @@
 </faq>
 
 <faq>
-<question>What is VoiceML and how do I browse VML?</question>
+<question>What is VoxML and how do I browse VML?</question>
 <answer>
-  <p>VoiceML and VML are the same and stand for "Voice Markup Language". 
-    For more information, please refer to the 
-    <link href="http://www.voiceml.org">VoiceML Official web site</link>. 
+  <p>VoxML is a voice markup language, designed to allow direct integration 
+    between voice recognition/synthesis software and web technologies. 
     The Cocoon VML samples have been tested with the 
-    <link href="http://www.voiceml.org">Motorola VoxML SDK 1.1</link>(for windows)
+    <link href="http://www.voxml.org">Motorola VoxML SDK 1.1</link>(for windows)
     which is freely available.</p>
 </answer>
 </faq>
