@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page
+          language="java"
+          xmlns:xsp="http://apache.org/xsp"
+	  xmlns:esql="http://apache.org/cocoon/SQL/v2"
+>
+  <page>
+    <xsp:logic>
+      String empID = request.getParameter("employee");
+      String depID = request.getParameter("department");
+      String message = (String) request.getAttribute("message");
+      System.err.println("message is "+message);
+    </xsp:logic>
+    <title>Manage Employees</title>
+    <para style="backgroud-color:#ff0000"><xsp:expr>(message == null?"":message)</xsp:expr></para>
+    <content>
+      <form name="EmployeeSelection">
+          <select size="1" name="employee"
+              onChange="top.location.href=window.location.pathname + '?employee=' + document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value">
+            <option value="0">-- New employee --</option>
+            <esql:execute-query inner-method="no">
+              <esql:driver>postgresql.Driver</esql:driver>
+              <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+              <esql:username>test</esql:username>
+              <esql:password>test</esql:password>
+              <esql:query>select id, department_id, name from employee_table order by name</esql:query>
+              <esql:results>
+                <option>
+                  <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
+                  <xsp:attribute name="selected"><xsp:expr>(<esql:get-string column="id"/>.equals(empID)?"true":"false")</xsp:expr></xsp:attribute>
+                  <xsp:logic>
+                    if (<esql:get-string column="id"/>.equals(empID)) {
+                      depID = <esql:get-string column="department_id"/>;
+                    }
+                  </xsp:logic>
+                  <esql:get-string column="name"/>
+                </option>
+              </esql:results>
+            </esql:execute-query>
+          </select>
+      </form>
+      <form action="" method="POST" name="EmployeeEntry">
+        <script>document.forms["EmployeeEntry"].action = window.location.pathname</script>
+        <para>Employee Name: <input name="name" type="text"/>
+          <xsp:logic>
+            if (empID != null &amp;&amp; !empID.equals("0")) {
+              <script>document.forms["EmployeeEntry"].name.value = document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].text</script>
+            }
+          </xsp:logic>
+        </para>
+        <para>Department:
+          <select name="department">
+            <esql:execute-query inner-method="no">
+              <esql:driver>postgresql.Driver</esql:driver>
+              <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+              <esql:username>test</esql:username>
+              <esql:password>test</esql:password>
+              <esql:query>select id, name from department_table order by name</esql:query>
+              <esql:results>
+                <option>
+                  <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
+                  <xsp:attribute name="selected"><xsp:expr>(<esql:get-string column="id"/>.equals(depID)?"true":"false")</xsp:expr></xsp:attribute>
+                  <esql:get-string column="name"/>
+                </option>
+              </esql:results>
+            </esql:execute-query>
+          </select>
+        </para>
+        <xsp:logic>
+          if (empID != null &amp;&amp; !empID.equals("0")) {
+            <input type="submit" name="cocoon-action" value="Update"/>
+            <input type="submit" name="cocoon-action" value="Delete"/>
+          } else {
+            <input type="submit" name="cocoon-action" value="Add"/>
+          }
+        </xsp:logic>
+      </form>
+    </content>
+  </page>
+</xsp:page>
