@@ -98,7 +98,11 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         try {
             datasource = (DataSourceComponent) dbselector.select(dsn);
             con = datasource.getConnection();
-            con.setAutoCommit(false);
+
+            if (con.getAutoCommit() == true) {
+                con.setAutoCommit(false);
+            }
+
             PreparedStatement statement = con.prepareStatement(getQuery());
             statement.setString(1, this.source);
             ResultSet set = statement.executeQuery();

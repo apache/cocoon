@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-08 15:37:06 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-09 16:10:27 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();
@@ -64,7 +64,10 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
-            conn.setAutoCommit(false);
+
+            if (conn.getAutoCommit() == true) {
+                conn.setAutoCommit(false);
+            }
 
             PreparedStatement statement = conn.prepareStatement(query);
 

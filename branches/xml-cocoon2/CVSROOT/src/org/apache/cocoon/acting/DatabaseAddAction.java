@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-08 15:37:08 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-09 16:10:27 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -63,7 +63,11 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
-            conn.setAutoCommit(false);
+
+            if (conn.getAutoCommit() == true) {
+                conn.setAutoCommit(false);
+            }
+
             PreparedStatement statement = conn.prepareStatement(query);
 
             Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
