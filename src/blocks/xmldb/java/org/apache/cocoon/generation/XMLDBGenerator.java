@@ -91,7 +91,7 @@ import java.util.Map;
  * slash in the base tag is important!
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBGenerator.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: XMLDBGenerator.java,v 1.3 2003/10/29 14:27:07 vgritsenko Exp $
  * @deprecated Use the XML:DB pseudo protocol instead.
  */
 public class XMLDBGenerator extends ComposerGenerator
@@ -151,12 +151,12 @@ public class XMLDBGenerator extends ComposerGenerator
             database = (Database)c.newInstance();
             DatabaseManager.registerDatabase(database);
         } catch (XMLDBException xde) {
-            this.getLogger().error("Unable to connect to the XML:DB database");
+            getLogger().error("Unable to connect to the XML:DB database");
             throw new ProcessingException("Unable to connect to the XMLDB database: "
                                           + xde.getMessage());
         } catch (Exception e) {
-            this.getLogger().error("There was a problem setting up the connection");
-            this.getLogger().error("Make sure that your driver is available");
+            getLogger().error("There was a problem setting up the connection");
+            getLogger().error("Make sure that your driver is available");
             throw new ProcessingException("Problem setting up the connection: "
                                           + e.getMessage());
         }
@@ -212,8 +212,8 @@ public class XMLDBGenerator extends ComposerGenerator
             throw new ProcessingException("Unable to fetch content: " +
                                           xde.getMessage());
         } catch (NullPointerException npe) {
-            this.getLogger().error("The XML:DB driver raised an exception");
-            this.getLogger().error("probably the document was not found");
+            getLogger().error("The XML:DB driver raised an exception");
+            getLogger().error("probably the document was not found");
             throw new ProcessingException("Null pointer exception while " +
                                           "retrieving document : " + npe.getMessage());
         }
