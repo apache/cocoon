@@ -50,8 +50,10 @@
 */
 package org.apache.cocoon.components.language.generator;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -76,20 +78,22 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.source.Source;
 
-import java.io.File;
-import java.net.MalformedURLException;
-
 /**
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.6 2003/11/09 20:09:47 cziegeler Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.7 2003/12/29 13:30:36 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProgramGenerator
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=program-generator
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Serviceable, Parameterizable,
-               Disposable, ThreadSafe {
+               Disposable {
 
     /** The auto-reloading option */
     protected boolean autoReload = true;
@@ -104,16 +108,10 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * The ComponentSelector for programs. Caches Program by program
      * source file.
      */
-    protected GeneratorSelector cache;
+//    protected GeneratorSelector cache;
 
     /** The service manager */
     protected ServiceManager manager;
-
-    /** The markup language component selector */
-    protected ServiceSelector markupSelector;
-
-    /** The programming language component selector */
-    protected ServiceSelector languageSelector;
 
     /** The working directory */
     protected File workDir;
@@ -168,9 +166,6 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
     public void service(ServiceManager manager) throws ServiceException {
         if (this.manager == null && manager != null) {
             this.manager = manager;
-            this.cache = (GeneratorSelector) this.manager.lookup(GeneratorSelector.ROLE + "Selector");
-            this.markupSelector = (ServiceSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
-            this.languageSelector = (ServiceSelector)this.manager.lookup(ProgrammingLanguage.ROLE + "Selector");
             this.classManager = (ClassLoaderManager)this.manager.lookup(ClassLoaderManager.ROLE);
         }
     }
@@ -234,7 +229,8 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      *
      * This method does not releases passed source object. Caller of the method must release
      * source when needed.
-     *
+     * 
+     * @param newManager  The ServiceManager that it will be loaded with
      * @param source The input document's <code>File</code>
      * @param markupLanguageName The <code>MarkupLanguage</code> in which the input document is written
      * @param programmingLanguageName The <code>ProgrammingLanguage</code> in which the program must be written
@@ -263,8 +259,10 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                     " -> normalizedName=[" + normalizedName + "]");
             }
 
-            markupLanguage = (MarkupLanguage) this.markupSelector.select(markupLanguageName);
-            programmingLanguage = (ProgrammingLanguage) this.languageSelector.select(programmingLanguageName);
+            markupLanguage = (MarkupLanguage) this.manager.lookup(
+                MarkupLanguage.ROLE + "/" + markupLanguageName);
+            programmingLanguage = (ProgrammingLanguage) this.manager.lookup(
+                ProgrammingLanguage.ROLE + "/" + programmingLanguageName);
             programmingLanguage.setLanguageName(programmingLanguageName);
 
             Program program = null;
@@ -272,7 +270,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
 
             // Attempt to load program object from cache
             try {
-                programInstance = (CompiledComponent) this.cache.select(normalizedName);
+//                programInstance = (CompiledComponent) this.cache.select(normalizedName);
             } catch (Exception e) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("The serverpage [" + id + "] is not in the cache yet");
@@ -286,8 +284,8 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                                           this.workDir,
                                                           markupLanguage.getEncoding());
 
-                    this.cache.addGenerator(newManager, normalizedName, program);
-                    programInstance = (CompiledComponent) this.cache.select(normalizedName);
+//                    this.cache.addGenerator(newManager, normalizedName, program);
+//                    programInstance = (CompiledComponent) this.cache.select(normalizedName);
 
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Successfully preloaded serverpage [" + id + "]");
@@ -334,7 +332,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                             }
                             release(programInstance);
                             programmingLanguage.unload(program, normalizedName, this.workDir);
-                            this.cache.removeGenerator(normalizedName);
+//                            this.cache.removeGenerator(normalizedName);
                             programInstance = null;
                             program = null;
 
@@ -371,7 +369,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                         }
                                         release(programInstance);
                                         //programmingLanguage.unload(program, normalizedName, this.workDir);
-                                        this.cache.removeGenerator(normalizedName);
+//                                        this.cache.removeGenerator(normalizedName);
                                         programInstance = null;
                                         program = null;
 
@@ -403,14 +401,18 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             // This is required to provide XSP with manager from the correct
             // sitemap so it will be able to find all components declared in
             // the sitemap.
-            if (programInstance instanceof Recomposable) {
-                ((Recomposable) programInstance).recompose(newManager);
-            }
+//            if (programInstance instanceof Recomposable) {
+//                ((Recomposable) programInstance).recompose(newManager);
+//            }
 
             return (programInstance);
         } finally {
-            this.markupSelector.release(markupLanguage);
-            this.languageSelector.release(programmingLanguage);
+            if (markupLanguage != null) {
+                this.manager.release(markupLanguage);
+            }
+            if (programmingLanguage != null) {
+                this.manager.release(programmingLanguage);
+            }
         }
     }
 
@@ -422,10 +424,10 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
 
         CompiledComponent programInstance = null;
 
-        try {
-            return (CompiledComponent) this.cache.select(normalizedName);
-        } catch (Exception e) {
-        }
+//        try {
+//            return (CompiledComponent) this.cache.select(normalizedName);
+//        } catch (Exception e) {
+//        }
 
         try {
             if (getLogger().isDebugEnabled()) {
@@ -433,7 +435,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             }
             Program program = programmingLanguage.load(normalizedName, this.workDir, markupLanguage.getEncoding());
 
-            this.cache.addGenerator(newManager, normalizedName, program);
+//            this.cache.addGenerator(newManager, normalizedName, program);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Successfully loaded program [" + normalizedName + "]");
             }
@@ -444,14 +446,14 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             throw new ProcessingException("Language Exception", le);
         }
 
-        try {
-            programInstance = (CompiledComponent) this.cache.select(normalizedName);
-        } catch (Exception cme) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Can't load ServerPage: got exception", cme);
-            }
-            throw new ProcessingException("Can't load ServerPage", cme);
-        }
+//        try {
+//            programInstance = (CompiledComponent) this.cache.select(normalizedName);
+//        } catch (Exception cme) {
+//            if (getLogger().isDebugEnabled()) {
+//                getLogger().debug("Can't load ServerPage: got exception", cme);
+//            }
+//            throw new ProcessingException("Can't load ServerPage", cme);
+//        }
 
         return (programInstance);
     }
@@ -503,7 +505,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * @param component program instance to be released
      */
     public void release(CompiledComponent component) {
-        this.cache.release(component);
+//        this.cache.release(component);
     }
 
     /**
@@ -513,22 +515,17 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      */
     public void remove(Source source) {
         final String normalizedName = getNormalizedName(source.getURI());
-        this.cache.removeGenerator(normalizedName);
+//        this.cache.removeGenerator(normalizedName);
     }
 
     /**
      *  dispose
      */
     public void dispose() {
-        this.manager.release(this.cache);
-        this.cache = null;
-        this.manager.release(this.markupSelector);
-        this.markupSelector = null;
-        this.manager.release(this.languageSelector);
-        this.languageSelector = null;
+//        this.manager.release(this.cache);
+//        this.cache = null;
         this.manager.release(this.classManager);
         this.classManager = null;
-
         this.manager = null;
 
         this.workDir = null;
