@@ -186,11 +186,11 @@ public class DataTableTag extends UIComponentTag {
 
 
     public String getRendererType() {
-        return "javax.faces.Textarea";
+        return "javax.faces.Table";
     }
 
     public String getComponentType() {
-        return "javax.faces.HtmlInputTextarea";
+        return "javax.faces.HtmlDataTable";
     }
 
 
