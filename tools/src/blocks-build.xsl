@@ -360,8 +360,8 @@
 
       <mkdir dir="{string('${build.blocks}')}/{$block-name}/conf"/>
       <copy filtering="on" todir="{string('${build.blocks}')}/{$block-name}/conf">
-        <fileset dir="{string('${blocks}')}/{$block-name}/conf">
-          <include name="**/*.x*"/>
+        <fileset dir="{string('${blocks}')}/{$block-name}">
+          <include name="conf**/*.x*"/>
         </fileset>
       </copy>
 
