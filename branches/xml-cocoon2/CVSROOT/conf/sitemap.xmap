@@ -124,6 +124,11 @@
      <parameter name="contentType" value="text/html"/> 
     </map:serialize> 
    </map:match>
+    
+   <map:handle-errors> 
+    <map:transform src="stylesheets/simple-error2html.xsl"/> 
+    <map:serialize/>   
+   </map:handle-errors> 
 
   </map:pipeline>
  </map:pipelines>

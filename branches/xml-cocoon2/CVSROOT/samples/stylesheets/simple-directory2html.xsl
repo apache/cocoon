@@ -1,6 +1,6 @@
 <xsl:stylesheet version="1.0" 
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
- xmlns:dir="http://xml.apache.org/cocoon/2.0/DirectoryGenerator">
+ xmlns:dir="http://apache.org/cocoon/2.0/DirectoryGenerator">
 
   <xsl:template match="/">
    <html>

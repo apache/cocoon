@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-07-30 19:08:57 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-08-02 22:48:28 $
 -->
 
 <xsl:stylesheet 
@@ -48,6 +48,7 @@
     import org.apache.cocoon.sitemap.ResourcePipeline;
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.SitemapManager;
+    import org.apache.cocoon.sitemap.ErrorGenerator;
     import org.apache.cocoon.transformation.Transformer;
 
     import org.xml.sax.SAXException;
@@ -60,7 +61,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     
     private Parameters emptyParam = new Parameters(); 
 
-    private Generator generator_error_handler = null;
+    private Generator generator_error_handler = new ErrorGenerator();
 
     <!-- generate variables for all components -->
     /** The generators */
@@ -228,26 +229,48 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       List list = null;
       Parameters param = null; 
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
+        <xsl:variable name="pipeline-position" select="position()"/>
         try {
           <xsl:apply-templates select="./*"/>
         } catch (Exception e) {
           <xsl:choose>
-            <xsl:when test="not (./map:handle-errors)">
-             System.out.println (e.toString());
-             e.printStackTrace(System.out);
-            </xsl:when>
-            <xsl:otherwise>
-              
-              pipeline.setGenerator (generator_error_handler, e.getMessage(), null, emptyParam);
-              <xsl:apply-templates select="./map:handle-error/*"/>
-              return pipeline.process (environment, out);
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:when test="(./map:handle-errors)">
+            try {
+              return error_process_<xsl:value-of select="$pipeline-position"/> (environment, out, e);
+            } catch (Exception ex) {
+              System.out.println (ex.toString());
+              ex.printStackTrace(System.out);
+            }
+          </xsl:when>
+          <xsl:otherwise>
+            System.out.println (e.toString());
+            e.printStackTrace(System.out);
+          </xsl:otherwise> 
+        </xsl:choose>
         }
       </xsl:for-each>
       return false;
     }
+
+    <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
+      <xsl:variable name="pipeline-position" select="position()"/>
+      <xsl:if test="(./map:handle-errors)">
+        private boolean error_process_<xsl:value-of select="$pipeline-position"/> (Environment environment, OutputStream out, Exception e) 
+        throws Exception { 
+          ResourcePipeline pipeline = new ResourcePipeline ();
+          pipeline.setComponentManager (this.manager);
+          List listOfLists = (List)(new ArrayList());
+          List list = null;
+          Parameters param = null; 
+          pipeline.setGenerator (generator_error_handler, e.getMessage(), null, emptyParam);
+          ErrorGenerator eg = (ErrorGenerator) pipeline.getGenerator();
+          eg.setException (e);
+          <xsl:apply-templates select="./map:handle-errors/*"/>
+        }
+      </xsl:if>
+    </xsl:for-each>
 }
+
 
   </xsl:template> <!-- match="map:sitemap" -->
 

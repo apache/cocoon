@@ -52,12 +52,12 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:00 $ */
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-02 22:48:28 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI =
-	"http://xml.apache.org/cocoon/2.0/DirectoryGenerator";
+	"http://apache.org/cocoon/2.0/DirectoryGenerator";
 
     /* Node and attribute names */
     protected static final String DIR_NODE_NAME		= "directory";

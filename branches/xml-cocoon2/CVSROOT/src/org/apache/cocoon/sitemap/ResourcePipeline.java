@@ -28,9 +28,8 @@ import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.SAXException;
 
 /**
- *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-07-31 17:05:56 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-08-02 22:48:29 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -57,6 +56,7 @@ public class ResourcePipeline implements Composer {
     public void setComponentManager (ComponentManager manager) {
         this.manager = manager;
     }
+
     public void setGenerator (Generator generator, String source, 
                               Configuration conf, Parameters param) 
     throws InstantiationException, IllegalAccessException {
@@ -67,6 +67,10 @@ public class ResourcePipeline implements Composer {
             ((Configurable)this.generator).setConfiguration (conf);
         this.generatorSource = source;
         this.generatorParam = param;
+    }
+
+    public Generator getGenerator () {
+        return this.generator;
     }
 
     public void setReader (Reader reader, String source, 

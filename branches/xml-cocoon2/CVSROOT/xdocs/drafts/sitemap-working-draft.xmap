@@ -367,7 +367,7 @@ The following goals were identified as engineering constraints:
    </map:match> 
     
    <map:handle-errors> 
-    <map:serialize type="xml"/>   
+    <map:serialize type="html"/>   
    </map:handle-errors> 
     
   </map:pipeline> 
