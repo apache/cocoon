@@ -153,8 +153,10 @@
        <map:call continuation="{1}"/>
      </map:match>
 
+     <!--
+        | Show a form, using the forms transformer
+        -->
      <map:match pattern="*-display-pipeline">
-       <!-- pipeline to show the form -->
        <map:generate src="forms/{1}_template.xml"/>
        <map:transform type="forms"/>
        <map:transform type="i18n">
@@ -167,6 +169,24 @@
        <map:serialize/>
      </map:match>
 
+     <!--
+        | Show a form, using the jx template macros
+        -->
+     <map:match pattern="*-display-pipeline.jx">
+       <map:generate type="jx" src="forms/{1}_template.xml"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="forms/{1}_template.xml"/>
+       </map:call>
+       <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+
+     <!--
+        | Display a success page using XSP
+        -->
      <map:match pattern="*-success-pipeline.xsp">
        <map:generate type="serverpages" src="forms/{1}_success.xsp"/>
        <map:call resource="simple-page2html">

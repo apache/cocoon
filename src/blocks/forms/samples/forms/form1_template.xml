@@ -14,9 +14,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- The only difference between this file and the form1_template_action.xml
-     is the value of the action attribute on the ft:form-template element -->
-<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+<!-- This file is similar to form1_template_action.xml. They differ in group layout,
+     form's action attribute (to use continuations) and, this one is a dynamic form
+     template that changes the 'contacts' repeater layout depending on its size -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+      
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  
   <title>Sample form</title>
   <content>
     <ft:form-template action="#{$continuation/id}.continue" method="POST">
@@ -96,24 +103,34 @@
             <th><ft:repeater-widget-label id="contacts" widget-id="birthdate"/></th>
             <th><ft:repeater-widget-label id="contacts" widget-id="select"/></th>
           </tr>
-          <!-- The contents of the repeater-widget element is a template that will
-               be applied to each row in the repeater. -->
-          <ft:repeater-widget id="contacts">
-            <tr>
-              <td><ft:widget id="firstname"/></td>
-              <td><ft:widget id="lastname"/></td>
-              <td><ft:widget id="phone"/></td>
-              <td><ft:widget id="email"/></td>
-              <td>
-                <ft:widget id="birthdate"/>
-              </td>
-              <td><ft:widget id="select"/></td>
-            </tr>
-          </ft:repeater-widget>
+              <jx:choose>
+                <jx:when test="${widget.getChild('contacts').getSize() == 0}">
+                  <tr><td colspan="6" align="center"><em>There are no contacts to display</em></td></tr>
+                </jx:when>
+                <jx:otherwise>
+                  <!-- The contents of the repeater-widget element is a template that will
+                       be applied to each row in the repeater. -->
+                  <ft:repeater-widget id="contacts">
+                    <tr>
+                      <td><ft:widget id="firstname"/></td>
+                      <td><ft:widget id="lastname"/></td>
+                      <td><ft:widget id="phone"/></td>
+                      <td><ft:widget id="email"/></td>
+                      <td><ft:widget id="birthdate"/></td>
+                      <td><ft:widget id="select"/></td>
+                    </tr>
+                  </ft:repeater-widget>
+                </jx:otherwise>
+              </jx:choose>
           <tr>
-            <td colspan="4" align="right">
+            <td colspan="6">
               <ft:widget id="addcontact"/>
-              <ft:widget id="removecontacts"/>
+                  <jx:if test="${widget.getChild('contacts').getSize() > 0}">
+                    <ft:widget id="removecontacts"/>
+                    <br/>
+                    <small>Hint: remove all contacts to see how dynamic form templates can change
+                      their layout depending on widget values</small>
+                  </jx:if>
             </td>
           </tr>
         </table>
