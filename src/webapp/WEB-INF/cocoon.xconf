@@ -243,15 +243,21 @@
     <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
     <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
     <component-instance class="org.apache.cocoon.components.source.impl.SitemapSourceFactory" name="cocoon"/>
-    <!-- The "file:" protocol is modifiable (can be written to) and traversable (directory structures
-         can be crawled). -->
+    <!--+
+        | The "file:" source protocol is modifiable (can be written to) and
+        | traversable (directory structures can be crawled).
+        +-->
     <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
     <component-instance class="org.apache.cocoon.components.source.impl.PartSourceFactory" name="upload"/>
-    <!-- the "*" protocol handles all uri schemes that are not explicitely specified. This includes all
-         JDK standard protocols. -->
-    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
     <component-instance class="org.apache.cocoon.components.source.impl.ModuleSourceFactory" name="module"/>
+
+    <!--+
+        | The "*" protocol handles all uri schemes that are not explicitely
+        | specified. This includes all JDK standard protocols.
+        +-->
+    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
+
   <!--+
       | Entity resolution catalogs
       |
