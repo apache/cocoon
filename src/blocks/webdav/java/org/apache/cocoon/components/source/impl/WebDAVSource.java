@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.31 2004/06/30 08:39:04 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.32 2004/07/02 12:32:36 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource, MoveableSource {
@@ -954,7 +954,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      */
     public void moveTo(Source source) throws SourceException {
         if (source instanceof WebDAVSource) {
+            initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
             WebDAVSource destination = (WebDAVSource)source;
+            destination.initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
             try {            
                  this.resource.moveMethod(destination.resource.getHttpURL().getPath());
             } catch (HttpException e) {
@@ -976,7 +978,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      */
     public void copyTo(Source source) throws SourceException {
         if (source instanceof WebDAVSource) {
+            initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
             WebDAVSource destination = (WebDAVSource)source;
+            destination.initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
             try {
                 this.resource.copyMethod(destination.resource.getHttpURL().getPath());
             } catch (HttpException e) {
