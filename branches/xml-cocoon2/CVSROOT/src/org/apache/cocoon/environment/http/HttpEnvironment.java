@@ -70,7 +70,12 @@ public class HttpEnvironment implements Environment {
         this.response = new HttpResponse (response);
         this.servletResponse = response;
         this.servletContext = servletContext; 
-        this.context = new URL("file://"+servletContext.getRealPath("/"));
+        String ctx = servletContext.getRealPath("/");
+        if (ctx.charAt(ctx.length()-1) != '/') {
+            this.context = new URL("file://"+ctx+'/');
+        } else {
+            this.context = new URL("file://"+ctx);
+        }
         this.outputStream = response.getOutputStream();
         this.objectModel = new Hashtable();
         this.objectModel.put("request", this.request);
@@ -92,6 +97,7 @@ public class HttpEnvironment implements Environment {
      */
     public void changeContext(String prefix, String context) 
     throws MalformedURLException { 
+this.servletContext.log("changeContext: prefix="+prefix+",context="+context);
         if (uri.startsWith (prefix)) {
             this.prefix.append (prefix);
             uri = uri.substring(prefix.length());
