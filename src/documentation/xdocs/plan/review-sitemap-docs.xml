@@ -2002,8 +2002,8 @@
 </tr>
 <tr>
   <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestMethodSelector.html">RequestMethodSelector</link></td>
-  <!-- 2 --><td></td>
-  <!-- A --><td>n</td>
+  <!-- 2 --><td><link href="../userdocs/selectors/requestmethod-selector.html">requestmethod</link></td>
+  <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
   <!-- D --><td></td>
