@@ -15,7 +15,12 @@
       <!-- JSPReader is used to serve direct output from 
            a JSP page. Note, that JSP result can be non XML  -->
       <map:reader logger="sitemap.reader.jsp" name="jsp" 
-                  src="org.apache.cocoon.reading.JSPReader"/>
+                  src="org.apache.cocoon.reading.JSPReader">
+      <!-- The configuration for the JSPReader with its default values:
+        <buffer-size>8192</buffer-size>
+        <output-encoding>UTF-8</output-encoding>
+      -->
+      </map:reader>
     </map:readers>
     <map:serializers default="html"/>
     <map:matchers default="wildcard"/>
