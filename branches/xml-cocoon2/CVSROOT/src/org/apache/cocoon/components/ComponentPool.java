@@ -99,7 +99,7 @@ public class ComponentPool implements Pool, ThreadSafe, Loggable {
     protected synchronized Poolable getOverflowResource()
         throws Exception
     {
-        Poolable poolable = m_factory.newInstance();
+        Poolable poolable = (Poolable)m_factory.newInstance();
         log.debug("Component Pool - creating Overflow Resource:"
                         + " Resource=" + poolable
                         + " Available=" + availableResources.size()

@@ -16,15 +16,8 @@ import java.util.Iterator;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentNotFoundException;
-import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
-import org.apache.avalon.SingleThreaded;
-import org.apache.avalon.ThreadSafe;
-import org.apache.avalon.Poolable;
-import org.apache.avalon.Recyclable;
-import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Composer;
@@ -40,7 +33,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 05:18:04 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-16 19:54:03 $
  */
 public class CocoonComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
@@ -50,29 +43,20 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
      */
     private Context context;
 
-    /** Hashmap of all components which this ComponentManager knows about.
+    /** Static component handlers.
      */
-    private Map components;
+    private Map componentMapping;
 
-    /** Static component instances.
+    /** Static component handlers.
      */
-    private Map instances;
-
-    /** Configurations for components.
-     */
-    private Map configurations;
-
-    /** Component pools. */
-    private Map pools;
+    private Map componentHandlers;
 
     /** Construct a new default component manager.
      */
     public CocoonComponentManager() {
         // Setup the maps.
-        components = Collections.synchronizedMap(new HashMap());
-        configurations = Collections.synchronizedMap(new HashMap());
-        pools = Collections.synchronizedMap(new HashMap());
-        instances = Collections.synchronizedMap(new HashMap());
+        componentHandlers = Collections.synchronizedMap(new HashMap());
+        componentMapping = Collections.synchronizedMap(new HashMap());
     }
 
     public void setLogger(Logger logger) {
@@ -92,91 +76,52 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
     public Component lookup( String role )
     throws ComponentManagerException {
 
-        Component component;
+        CocoonComponentHandler handler = null;
+        Component component = null;
 
         if ( role == null ) {
             log.error("CocoonComponentManager Attempted to retrieve component with null role.");
-            throw new ComponentNotFoundException("Attempted to retrieve component with null role.");
+            throw new ComponentManagerException("Attempted to retrieve component with null role.");
         }
 
+        handler = (CocoonComponentHandler) this.componentHandlers.get(role);
         // Retrieve the instance of the requested component
-        component = (Component) this.instances.get(role);
+        if ( handler != null ) {
+            try {
+                component = handler.get();
+            } catch (Exception e) {
+                throw new ComponentManagerException("Could not access the Component for you", e);
+            }
+        }
 
-        if ( component != null ) {
+        if (component != null) {
+            this.componentMapping.put(component, handler);
             return component;
         }
 
-        // Retrieve the class of the requested component.
-        Class componentClass = (Class)this.components.get(role);
+        Class componentClass = null;
+        Configuration config = new DefaultConfiguration("", "-");
 
-        if (componentClass == null) {
-            try {
-                componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
-            } catch (Exception e) {
-                log.error("CocoonComponentManager Could not find component for role '" + role + "'.", e);
-                throw new ComponentNotFoundException("Could not find component for role '" + role + "'.", e);
-            }
-
-            this.components.put(role, componentClass);
-
-            if (Configurable.class.isAssignableFrom(componentClass)) {
-                this.configurations.put(role, new DefaultConfiguration("", "-"));
-            }
+        try {
+            componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
+        } catch (Exception e) {
+            log.error("CocoonComponentManager Could not find component for role: " + role, e);
+            throw new ComponentManagerException("Could not find component for role: " + role, e);
         }
 
-        if ( !Component.class.isAssignableFrom(componentClass) ) {
-            log.error("CocoonComponentManager Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.");
-            throw new ComponentNotAccessibleException(
-                "Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.",
-                null
-            );
-        }
+        try {
+            handler = new CocoonComponentHandler(componentClass, config, this, this.context);
+            handler.setLogger(this.log);
+            handler.init();
 
-        // Work out what class of component we're dealing with.
-        if ( ThreadSafe.class.isAssignableFrom(componentClass)) {
-            component = getThreadsafeComponent(role, componentClass);
-        } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
-            component = getPooledComponent(role, componentClass);
-        } else if ( SingleThreaded.class.isAssignableFrom(componentClass) ) {
-            try {
-                component = (Component)componentClass.newInstance();
-            } catch ( InstantiationException e ) {
-                log.error("CocoonComponentManager Could not access class " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            } catch ( IllegalAccessException e ) {
-                log.error("CocoonComponentManager Could not access class " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            }
-            setupComponent(role, component);
-        } else {
-            /* The component doesn't implement any of the Avalon marker
-             * classes, treat as normal.
-             */
-            try {
-                component = (Component)componentClass.newInstance();
-            } catch ( InstantiationException e ) {
-                log.error("CocoonComponentManager Could not instantiate component " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            } catch ( IllegalAccessException e ) {
-                log.error("CocoonComponentManager Could not access class " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            }
-            setupComponent(role, component);
-        }
+            this.componentHandlers.put(role, handler);
+            component = handler.get();
+            this.componentMapping.put(component, handler);
 
-        return component;
+            return component;
+        } catch (Exception e) {
+            throw new ComponentManagerException("Could not access the component for role: " + role, e);
+        }
     }
 
     public void configure(Configuration conf) throws ConfigurationException {
@@ -230,125 +175,10 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
         }
     }
 
-    /** Retrieve an instance of a threadsafe component.
-     * @param componentClass the class to retrieve an instance of.
-     * @return and instance of the component.
-     */
-    private Component getThreadsafeComponent(String role, Class componentClass)
-    throws ComponentManagerException {
-
-        Component retVal;
-
-        try {
-            retVal = (Component) componentClass.newInstance();
-
-            this.setupComponent(role, retVal);
-            this.instances.put(role, retVal);
-        } catch (Exception e) {
-            log.error("Could not set up the Component for role: " + role, e);
-            throw new ComponentNotAccessibleException("Could not set up the Component for role: " + role, e);
-        }
-
-        return retVal;
-    }
-
-    /** Return an instance of a component from its associated pool.
-     * @param componentClass the class of the component of which we need an instance.
-     */
-    private Component getPooledComponent(String role, Class componentClass)
-    throws ComponentManagerException {
-        ComponentPool pool = (ComponentPool)pools.get(componentClass);
-
-        if ( pool == null ) {
-            try {
-                log.debug("Creating new component pool for " + componentClass.getName() + ".");
-                ComponentFactory cf = new ComponentFactory(componentClass, (Configuration)configurations.get(role), this, this.context);
-                cf.setLogger(this.log);
-
-                pool = new ComponentPool(cf);
-                pool.setLogger(this.log);
-                pool.init();
-            } catch (Exception e) {
-                log.error("Could not create pool for component " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not create pool for component " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            }
-            pools.put(componentClass, pool);
-        }
-
-        Component component;
-        try {
-            component = (Component)pool.get();
-        } catch ( Exception e ) {
-            log.error("Could not retrieve component " + componentClass.getName(), e);
-            throw new ComponentNotAccessibleException(
-                "Could not retrieve component " + componentClass.getName() + " due to a " +
-                e.getClass().getName() + ": " + e.getMessage(),
-                e
-            );
-        }
-
-        return component;
-    }
-
     public void release(Component component) {
-         if (
-            component instanceof Disposable
-            && ! ( component instanceof Poolable )
-            && ! ( component instanceof ThreadSafe)
-        ) {
-            try {
-                ((Disposable) component).dispose();
-            } catch (Exception e) {
-                this.log.warn(
-                    "Could not dispose of instance of component " + component.getClass().getName() + ".",
-                    e
-                );
-            }
-         }
-        
-        if (component instanceof Poolable) {
-            ComponentPool pool = (ComponentPool) pools.get(component.getClass());
-
-            if (pool != null) {
-                pool.put((Poolable) component);
-            }
-        }
-    }
-
-    /** Configure a new component.
-     * @param c the component to configure.
-     */
-    private void setupComponent(String role, Component c)
-    throws ComponentManagerException {
-
-        if ( c instanceof Contextualizable ) {
-            ((Contextualizable)c).contextualize(this.context);
-        }
-
-        if ( c instanceof Loggable ) {
-            ((Loggable)c).setLogger(this.log);
-        }
-
-        if ( c instanceof Configurable ) {
-            try {
-                ((Configurable)c).configure(
-                    (Configuration)this.configurations.get(role)
-                );
-            } catch (ConfigurationException e) {
-                log.error("Could not configure component " + c.getClass().getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not configure component " + c.getClass().getName() + ".",
-                    e
-                );
-            }
-        }
-
-        if ( c instanceof Composer ) {
-            ((Composer)c).compose(this);
-        }
+        CocoonComponentHandler handler = (CocoonComponentHandler) this.componentMapping.get(component);
+        handler.put(component);
+        this.componentMapping.remove(component);
     }
 
     /** Add a new component to the manager.
@@ -357,20 +187,29 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
      * @param Configuration the configuration for this component.
      */
     public void addComponent(String role, Class component, Configuration config)
-    throws ConfigurationException,
-           ComponentManagerException {
-
-        this.components.put(role,component);
-        if ( config != null ) {
-            this.configurations.put(role, config);
+    throws ComponentManagerException {
+        try {
+            CocoonComponentHandler handler = new CocoonComponentHandler(component, config, this, this.context);
+            handler.setLogger(this.log);
+            handler.init();
+            this.componentHandlers.put(role, handler);
+        } catch (Exception e) {
+            throw new ComponentManagerException ("Could not set up Component for role: " + role, e);
         }
-      }
+    }
 
     /** Add a static instance of a component to the manager.
      * @param role the role name for the component.
      * @param instance the instance of the component.
      */
     public void addComponentInstance(String role, Object instance) {
-        this.instances.put(role,instance);
+        try {
+            CocoonComponentHandler handler = new CocoonComponentHandler((Component) instance);
+            handler.setLogger(this.log);
+            handler.init();
+            this.componentHandlers.put(role, handler);
+        } catch (Exception e) {
+            this.log.warn("Could not set up Component for role: " + role, e);
+        }
     }
 }

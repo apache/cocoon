@@ -29,7 +29,7 @@ import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-03-12 05:18:05 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-16 19:54:01 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     private Logger log;
@@ -69,8 +69,8 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
         }
     }
 
-    public Poolable newInstance() throws Exception {
-        Poolable comp = (Poolable)componentClass.newInstance();
+    public Object newInstance() throws Exception {
+        Object comp = componentClass.newInstance();
 
         log.debug("ComponentFactory creating new instance of "
             + componentClass.getName() + "."
@@ -107,7 +107,7 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
         return componentClass;
     }
 
-    public final void decommission(Poolable comp) throws Exception {
+    public final void decommission(Object comp) throws Exception {
         if ( comp instanceof Stoppable ) {
             ((Stoppable)comp).stop();
         }
@@ -115,5 +115,7 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
         if ( comp instanceof Disposable ) {
             ((Disposable)comp).dispose();
         }
+
+        comp = null;
     }
 }
