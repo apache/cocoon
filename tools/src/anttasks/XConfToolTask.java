@@ -42,7 +42,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Ant task to patch xmlfiles.
@@ -64,19 +66,22 @@ import java.util.Iterator;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.21 $ $Date: 2004/03/16 14:23:28 $
+ * @version CVS $Revision: 1.22 $ $Date: 2004/03/17 20:04:18 $
  */
 public final class XConfToolTask extends MatchingTask {
 
     private static final String NL=System.getProperty("line.separator");
     private static final String FSEP=System.getProperty("file.separator");
+    
+    /** Cache the read configuration files (Documents) */
+    private static Map fileCache = new HashMap();
+    
     private File file;
     //private File directory;
     private File srcdir;
     private boolean addComments;
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
-    private DocumentBuilderFactory builderFactory;
     private DocumentBuilder builder;
     private Transformer transformer;
 
@@ -119,8 +124,23 @@ public final class XConfToolTask extends MatchingTask {
      * Initialize internal instance of XMLCatalog
      */
     public void init() throws BuildException {
-      super.init();
-      xmlCatalog.setProject(project);
+        super.init();
+        try {
+            xmlCatalog.setProject(project);
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setValidating(false);
+            builderFactory.setExpandEntityReferences(false);
+            builderFactory.setNamespaceAware(false);
+            builderFactory.setAttribute(
+               "http://apache.org/xml/features/nonvalidating/load-external-dtd",
+               Boolean.FALSE);
+            builder = builderFactory.newDocumentBuilder();
+            transformer = TransformerFactory.newInstance().newTransformer();
+        } catch (TransformerException e) {
+            throw new BuildException("TransformerException: "+e);
+        } catch (ParserConfigurationException e) {
+            throw new BuildException("ParserConfigurationException: "+e);
+        }  
     }
 
     /**
@@ -131,20 +151,18 @@ public final class XConfToolTask extends MatchingTask {
             throw new BuildException("file attribute is required", location);
         }
         try {
-            builderFactory = DocumentBuilderFactory.newInstance();
-            builderFactory.setValidating(false);
-            builderFactory.setExpandEntityReferences(false);
-            builderFactory.setNamespaceAware(false);
-            builderFactory.setAttribute(
-                "http://apache.org/xml/features/nonvalidating/load-external-dtd",
-                Boolean.FALSE);
-            builder = builderFactory.newDocumentBuilder();
-            transformer = TransformerFactory.newInstance().newTransformer();
+            final String fileName = this.file.toURL().toExternalForm();
+            Document document = (Document)this.fileCache.get(fileName);
+            if ( document != null ) {
+                log("Using file from cache: " + this.file, Project.MSG_DEBUG);
+                this.fileCache.remove(fileName);
+            } else {
 
-            // load xml
-            log("Reading: " + this.file, Project.MSG_DEBUG);
-            final Document document = builder.parse(this.file.toURL().toExternalForm());
-
+                // load xml
+                log("Reading: " + this.file, Project.MSG_DEBUG);
+                document = builder.parse(fileName);
+            }
+            
             if (this.srcdir == null) {
                 this.srcdir = project.resolveFile(".");
             }
@@ -216,14 +234,13 @@ public final class XConfToolTask extends MatchingTask {
             } else {
                 log("No Changes: " + this.file, Project.MSG_DEBUG);
             }
+            this.fileCache.put(fileName, document);
         } catch (TransformerException e) {
             throw new BuildException("TransformerException: "+e);
         } catch (SAXException e) {
             throw new BuildException("SAXException: "+e);
         } catch (DOMException e) {
             throw new BuildException("DOMException:" +e);           
-        } catch (ParserConfigurationException e) {
-            throw new BuildException("ParserConfigurationException: "+e);
         } catch (UnknownHostException e) {
             throw new BuildException("UnknownHostException.  Probable cause: The parser is " +
                 "trying to resolve a dtd from the internet and no connection exists.\n" +
