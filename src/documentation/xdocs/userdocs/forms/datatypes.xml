@@ -18,7 +18,7 @@
 
 <document>
   <header>
-    <title>Apache Cocoon Forms: Datatypes</title>
+    <title>Cocoon Forms: Datatypes</title>
     <authors>
       <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
     </authors>
@@ -43,23 +43,8 @@
       <p>The <strong>base</strong> attribute refers to one of the built-in
       datatypes such as string or long.</p>
 
-      <s2 title="Validation rules">
-        <p>A datatype can have a number of validation rules, for example:</p>
-
-        <source><![CDATA[<fd:datatype base="string">
-  <fd:validation>
-    <fd:length exact='4'/>
-  </fd:validation>
-</fd:datatype>]]></source>
-
-        <p>The <strong>fd:validation</strong> element contains a number of
-        child elements, each child element signifies a validation rule.
-        The supported validation rules are documented in the
-        <link href="validation.html">Validation Rule Reference</link>.</p>
-      </s2>
-
       <s2 title="Convertors">
-        <p>A datatype also needs a convertor. The purpose of a convertor
+        <p>A datatype needs a convertor. The purpose of a convertor
         is to convert between string and object representations of values.
         There is always a default convertor, but you change or configure
         that using the fd:convertor element. Here's an example for dates:</p>

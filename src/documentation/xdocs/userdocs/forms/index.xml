@@ -113,7 +113,7 @@
         their value from the request. Some might generate events, which will
         be handled by event handlers. Validation of the widget tree is also
         triggered, whereby all widgets will validate themselves based on
-        validation rules described in the form definition. The controller
+        widget validators described in the form definition. The controller
         can afterwards perform application-specific validation logic.</li>
         <li>If there were validation errors, the form will be redisplayed.
         Otherwise the controller will decide what's the next step, for
