@@ -152,8 +152,8 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           source="${source.vm}"
-           target="${source.vm}"
+           source="1.4"
+           target="1.4"
            nowarn="on"
            classpathref="tasks.classpath"/>
 
@@ -178,8 +178,8 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           source="${source.vm}"
-           target="${source.vm}"
+           source="1.4"
+           target="1.4"
            nowarn="on"/>
 
     <!-- Ant-Contrib tasks -->
