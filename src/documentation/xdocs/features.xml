@@ -337,7 +337,7 @@
       <ul>
         <li>
            Enhanced form handling with strong validation through 
-           <link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">CocoonForms</link>
+           <link href="http://wiki.apache.org/cocoon/Forms">CocoonForms</link>
         </li>
         <li>
            Easy integration of (future) <fork href="http://www.w3.org/TR/xforms/">XForms</fork> clients
