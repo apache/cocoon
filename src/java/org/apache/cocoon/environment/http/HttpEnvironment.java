@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.2 2003/04/04 13:19:07 stefano Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.3 2003/04/09 09:52:50 stefano Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -120,6 +120,13 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, this.webcontext);
+        
+        // This is a kind of a hack for the components that need
+        // the real servlet objects to pass them along to other
+        // libraries.
+        this.objectModel.put(HTTP_REQUEST_OBJECT, req);
+        this.objectModel.put(HTTP_RESPONSE_OBJECT, res);
+        this.objectModel.put(HTTP_SERVLET_CONTEXT, servletContext);
     }
 
    /**
