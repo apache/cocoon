@@ -26,7 +26,7 @@
 <!-- The src attribute is optional -->
 ]]></source>
             <p>The output has the following schema. All elements have the namespace
-               <code>http://xml.apache.org/cocoon/requestgenerator/2.0</code></p>
+               <code>http://apache.org/cocoon/request/2.0</code></p>
 
 <source><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
@@ -35,7 +35,7 @@
      requested uri and the source attribute is the optional 
      source attribute of the sitemap entry for this pipeline. -->
 <request target="/cocoon/request" source=""
-         xmlns="http://xml.apache.org/cocoon/requestgenerator/2.0">
+         xmlns="http://apache.org/cocoon/request/2.0">
 
   <!-- First the headers: -->
   <requestHeaders>
