@@ -27,6 +27,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -387,6 +388,13 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             } else {
                 return false;
             }
+        }
+        
+        public int hashCode() {
+            return new HashCodeBuilder().
+            append(value).
+            append(this.type).
+            toHashCode();
         }
 
         public void merge(Token newToken) {
