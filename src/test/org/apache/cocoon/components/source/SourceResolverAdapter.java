@@ -170,24 +170,10 @@ public class SourceResolverAdapter implements SourceResolver
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    public void toSAX( org.apache.excalibur.source.Source source,
-                String mimeType,
+    public void toSAX( org.apache.excalibur.source.Source source, String mimeType,
                 ContentHandler handler )
         throws SAXException, IOException, ProcessingException {
 
-        SAXParser parser = null;
-        org.apache.excalibur.source.Source assertionsource = null;
-
-        try {
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
-
-            parser.parse(new InputSource(source.getInputStream()), handler);
-        } catch (ComponentException ce) {
-            throw new ProcessingException("Couldn't xmlize source", ce);
-        } catch (org.apache.excalibur.source.SourceException se) {
-            throw new ProcessingException("Couldn't xmlize source", se);
-        } finally {
-            this.manager.release((Component) parser);
-        } 
+        this.toSAX( source, handler );
     }
 }
