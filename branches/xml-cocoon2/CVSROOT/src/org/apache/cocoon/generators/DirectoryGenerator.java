@@ -53,29 +53,29 @@ import org.apache.cocoon.Response;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-05-24 23:08:58 $ */
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-06-24 19:25:18 $ */
 public class DirectoryGenerator extends ComposerGenerator {
 
     /** The URI of the namespace of this generator. */
-    private static final String URI =
+    protected static final String URI =
 	"http://xml.apache.org/cocoon/2.0/DirectoryGenerator";
 
     /* Node and attribute names */
-    private static final String DIR_NODE_NAME		= "directory";
-    private static final String FILE_NODE_NAME		= "file";
+    protected static final String DIR_NODE_NAME		= "directory";
+    protected static final String FILE_NODE_NAME		= "file";
 
-    private static final String FILENAME_ATTR_NAME	= "name";
-    private static final String LASTMOD_ATTR_NAME	= "lastModified";
-    private static final String DATE_ATTR_NAME		= "date";
+    protected static final String FILENAME_ATTR_NAME	= "name";
+    protected static final String LASTMOD_ATTR_NAME	= "lastModified";
+    protected static final String DATE_ATTR_NAME		= "date";
 
     /*
      * Variables set per-request
      * 
      * FIXME: SimpleDateFormat is not supported by all locales!
      */
-    private int depth;
-    private AttributesImpl attributes = new AttributesImpl();
-    private SimpleDateFormat dateFormatter;
+    protected int depth;
+    protected AttributesImpl attributes = new AttributesImpl();
+    protected SimpleDateFormat dateFormatter;
 
     /**
      * Set the request parameters. Must be called before the generate
@@ -157,7 +157,7 @@ public class DirectoryGenerator extends ComposerGenerator {
      * @throws	SAXException
      * 		if an error occurs while constructing nodes
      */
-    private void addPath(File path, int depth)
+    protected void addPath(File path, int depth)
     throws SAXException {
 
 	if (path.isDirectory()) {
@@ -184,9 +184,8 @@ public class DirectoryGenerator extends ComposerGenerator {
     }
 
     /**
-     * Begins a named node, and sets its attributes based on a given
-     * path. The new node will contain attributes for the name of the
-     * file/directory and for the last modification time of the path.
+     * Begins a named node, and calls setNodeAttributes to set its
+	 * attributes.
      *
      * @param	nodeName
      * 		the name of the new node
@@ -196,10 +195,27 @@ public class DirectoryGenerator extends ComposerGenerator {
      * @throws	SAXException
      * 		if an error occurs while creating the node
      */
-    private void startNode(String nodeName, File path)
+    protected void startNode(String nodeName, File path)
     throws SAXException {
-	long lastModified = path.lastModified();
 
+	setNodeAttributes(path);
+	super.contentHandler.startElement(URI, nodeName, nodeName, attributes);
+    }
+
+	/**
+	 * Sets the attributes for a given path. The default method sets attributes 
+	 * for the name of thefile/directory and for the last modification time 
+	 * of the path.
+	 *
+	 * @param path
+	 *        the file/directory to use when setting attributes
+	 *
+	 * @throws SAXException
+	 *         if an error occurs while setting the attributes
+	 */
+	protected void setNodeAttributes(File path) throws SAXException {
+	
+	long lastModified = path.lastModified();
 	attributes.clear();
 	attributes.addAttribute("", FILENAME_ATTR_NAME,
 				FILENAME_ATTR_NAME, "CDATA",
@@ -213,9 +229,9 @@ public class DirectoryGenerator extends ComposerGenerator {
 	attributes.addAttribute("", DATE_ATTR_NAME,
 				DATE_ATTR_NAME, "CDATA",
 				dateFormatter.format(new Date(lastModified)));
+	
+	}
 
-	super.contentHandler.startElement(URI, nodeName, nodeName, attributes);
-    }
 
     /**
      * Ends the named node.
@@ -228,7 +244,7 @@ public class DirectoryGenerator extends ComposerGenerator {
      * @throws	SAXException
      * 		if an error occurs while closing the node
      */
-    private void endNode(String nodeName)
+    protected void endNode(String nodeName)
     throws SAXException {
 	super.contentHandler.endElement(URI, nodeName, nodeName);
     }
