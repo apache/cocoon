@@ -44,8 +44,7 @@
     </map:transform>
     <map:serialize/>
    </map:match>
-
-
+   
    <!-- All Static. -->
    <map:match pattern="all-static">
     <map:generate src="content/simple.xml"/>
@@ -59,59 +58,10 @@
     <map:serialize/>
    </map:match>
 
-
-   <!-- These samples show ways how XSP could be obtained and executed -->
-   <map:match pattern="xsp-*">
-
-    <!-- XSP obtained from the local file, and executed -->
-    <map:match pattern="xsp-file">
-     <map:generate type="serverpages" src="content/simple.xsp"/>
-    </map:match>
-
-    <!-- Generate XSP source from local file -->
-    <map:match pattern="xsp-source">
-     <map:generate src="content/simple.xsp"/>
-     <map:serialize type="xml"/>
-    </map:match>
-
-    <!-- XSP obtained from the matcher 'xsp-source', right above, and executed -->
-    <map:match pattern="xsp-cocoon">
-     <map:generate type="serverpages" src="cocoon:/xsp-source"/>
-    </map:match>
-
-    <!-- XSP obtained from the matcher 'xsp-source', absolute reference, and executed -->
-    <map:match pattern="xsp-cocoon-root">
-     <map:generate type="serverpages" src="cocoon://samples/sources/xsp-source"/>
-    </map:match>
-
-    <!-- XSP obtained from the external HTTP server, and executed -->
-    <map:match pattern="xsp-http">
-     <map:generate type="serverpages" src="http://{request:serverName}:{request:serverPort}/{request:contextPath}/samples/sources/xsp-source"/>
-    </map:match>
-
-    <!-- Generate XSP source dynamically. -->
-    <map:match pattern="xsp-dynamic-source">
-     <map:generate type="serverpages" src="content/dynamic.xsp"/>
-     <map:transform src="style/dynamic-xsp2xsp.xsl"/>
-     <map:serialize type="xml"/>
-    </map:match>
-
-    <!-- XSP obtained from the matcher 'xsp-dynamic-source'. Beware: Very slow! -->
-    <map:match pattern="xsp-dynamic">
-     <map:generate type="serverpages" src="cocoon:/xsp-dynamic-source"/>
-    </map:match>
-
-    <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-     <map:parameter name="servletPath" value="{request:servletPath}"/>
-     <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-     <map:parameter name="remove" value="{0}"/>
-     <map:parameter name="file" value="content/simple.xsp"/>
-    </map:transform>
-    <map:serialize/>
+   <map:match pattern="xsp/**">
+     <map:mount uri-prefix="xsp" src="xsp.xmap" />
    </map:match>
-
-
+   
    <!-- These samples show ways how XSL could be obtained and applied -->
    <map:match pattern="xsl-*">
 
@@ -173,16 +123,10 @@
      <map:serialize/>
     </map:match>
 
-    <!-- Generate XSL source dynamically using XSP page. -->
-    <map:match pattern="xsl-dynamic-source">
-     <map:generate type="serverpages" src="style/simple-page2html.xsp"/>
-     <map:serialize type="xml"/>
-    </map:match>
-
     <!-- XSL obtained from the matcher 'xsl-dynamic-source'. Beware: Slow! -->
     <map:match pattern="xsl-dynamic">
      <map:generate src="content/simple.xml"/>
-     <map:transform src="cocoon:/xsl-dynamic-source">
+     <map:transform src="cocoon:/xsp/xsl-dynamic-source">
       <map:parameter name="servletPath" value="{request:servletPath}"/>
       <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
       <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -193,19 +137,6 @@
     </map:match>
    </map:match>
 
-
-   <!-- All Dynamic. Beware: Very slow! -->
-   <map:match pattern="all-dynamic">
-    <map:generate type="serverpages" src="cocoon:/xsp-dynamic-source"/>
-    <map:transform src="cocoon:/xsl-dynamic-source">
-     <map:parameter name="servletPath" value="{request:servletPath}"/>
-     <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-     <map:parameter name="contextPath" value="{request:contextPath}"/>
-     <map:parameter name="remove" value="{0}"/>
-     <map:parameter name="file" value="content/simple.xsp"/>
-    </map:transform>
-    <map:serialize/>
-   </map:match>
    
    <!-- Uploaded xml as source. Beware: Very cool! -->
    <map:match pattern="xml-upload">

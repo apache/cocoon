@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.5 2004/04/05 12:34:24 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.6 2004/05/18 10:31:56 unico Exp $ -->
 
 <samples name="Using Sources" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -25,6 +25,12 @@
    </sample>
   </group>
 
+  <group name="Note">
+   <note>
+     Some of these samples require XSP to be present in order to work.
+   </note>
+  </group>
+   
   <group name="Static XML With Static XSL">
    <sample name="All Static" href="all-static">
     This is the simpliest sample, similar to the "Hello World!".
@@ -32,24 +38,24 @@
   </group>
 
   <group name="Obtaining XSP Source">
-   <sample name="Plain XSP" href="xsp-file">
+   <sample name="Plain XSP" href="xsp/file">
     Source is obtained from local file
    </sample>
 
-   <sample name="This sitemap XSP" href="xsp-cocoon">
-    Source is obtained via cocoon:/xsp-source
+   <sample name="This sitemap XSP" href="xsp/cocoon">
+    Source is obtained via cocoon:/source
    </sample>
 
-   <sample name="Root sitemap XSP" href="xsp-cocoon-root">
-    Source is obtained via cocoon://sub/xsp-source
+   <sample name="Root sitemap XSP" href="xsp/cocoon-root">
+    Source is obtained via cocoon://sub/source
    </sample>
 
-   <sample name="External XSP" href="xsp-http">
-    Source is obtained via http://&lt;serverName&gt;[:&lt;serverPort&gt;][/&lt;contextPath&gt;]/samples/sources/xsp-source
+   <sample name="External XSP" href="xsp/http">
+    Source is obtained via http://&lt;serverName&gt;[:&lt;serverPort&gt;][/&lt;contextPath&gt;]/samples/sources/xsp/source
    </sample>
 
-   <sample name="Dynamic XSP" href="xsp-dynamic">
-    Source is generated dynamically and obtained as Cocoon source cocoon:/xsp-dynamic-source
+   <sample name="Dynamic XSP" href="xsp/dynamic">
+    Source is generated dynamically and obtained as Cocoon source cocoon:/dynamic-source
    </sample>
   </group>
 
@@ -63,7 +69,7 @@
    </sample>
 
    <sample name="Root sitemap XSL" href="xsl-cocoon-root">
-    XSL is obtained via cocoon://sub/xsp-source, processed by root sitemap.
+    XSL is obtained via cocoon://sub/xsl-source, processed by root sitemap.
    </sample>
 
    <sample name="External XSL" href="xsl-http">
@@ -76,9 +82,9 @@
   </group>
 
   <group name="Dynamic XSP With Dynamic XSL">
-   <sample name="All Dynamic" href="all-dynamic">
+   <sample name="All Dynamic" href="xsp/all-dynamic">
     Combines last XSP sample with last XSL sample: XSP is obtained via Cocoon 
-    source cocoon:/xsp-dynamic-source, and processed by XSL obtained via Cocoon
+    source cocoon:/dynamic-source, and processed by XSL obtained via Cocoon
     source cocoon:/xsl-dynamic-source.
    </sample>
   </group>
