@@ -27,7 +27,7 @@
     <depend project="xml-xalan2" version="supplied"/>
     <depend project="xml-commons-resolver" version="supplied"/>
 
-    <depend project="excalibur-cli" version="supplied"/>
+    <depend project="excalibur-compatibility" version="supplied"/>
     <depend project="excalibur-instrument" version="supplied"/>
     <depend project="excalibur-instrument-manager" version="supplied"/>
     <depend project="excalibur-naming" version="supplied"/>
@@ -38,7 +38,7 @@
     <depend project="excalibur-datasource" version="supplied"/>
     <depend project="excalibur-component" version="supplied"/>
     <depend project="excalibur-logger" version="supplied"/>
-    <depend project="excalibur-collections" version="supplied"/>
+    <!--    <depend project="excalibur-collections" version="supplied"/> -->
 
     <depend project="avalon-cornerstone" version="supplied"/>
 
