@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractExtractionTransformer.java,v 1.2 2003/10/23 08:07:19 cziegeler Exp $
+ * @version CVS $Id: AbstractExtractionTransformer.java,v 1.3 2003/10/23 08:08:16 cziegeler Exp $
  */
 abstract public class AbstractExtractionTransformer extends AbstractTransformer {
 
@@ -97,20 +97,6 @@ abstract public class AbstractExtractionTransformer extends AbstractTransformer 
         super.recycle();
     }
 
-
-    /**
-     * Receive notification of the beginning of a document.
-     */
-    public void startDocument() throws SAXException {
-        super.startDocument();
-    }
-
-    /**
-     * Receive notification of the end of a document.
-     */
-    public void endDocument() throws SAXException {
-        super.endDocument();
-    }
 
     /**
      * Begin the scope of a prefix-URI Namespace mapping.
