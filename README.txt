@@ -18,8 +18,9 @@
   hooking together components into pipelines without any required programming.
 
   Cocoon is "web glue for your web application development needs". It is a glue
-  that keeps concerns separate and allows parallel evolution of the two sides,
-  improving development pace and reducing the chance of conflicts.
+  that keeps concerns separate and allows parallel evolution of all aspects of
+  a web application, improving development pace and reducing the chance of
+  conflicts.
 
 
 
