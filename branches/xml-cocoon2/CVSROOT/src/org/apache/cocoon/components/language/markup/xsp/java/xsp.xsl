@@ -11,7 +11,8 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-22 11:20:46 $
+ * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-26 15:45:03 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -24,6 +25,10 @@
   <xsl:output method="text"/>
 
   <xsl:variable name="prefix">xsp</xsl:variable>
+
+  <!-- Do we have to generate namespace declarations as xmlns:xxx attributes ?
+       Xalan + Xerces does not provide namespaces decl. as attributes while Saxon + Xerces does -->
+  <xsl:variable name="add-xmlns" select="not(/*/@*[starts-with(name(.), 'xmlns:')])"/>
 
   <xsl:template match="/">
     <code xml:space="preserve">
@@ -91,45 +96,17 @@
         /**
         * Generate XML data.
         */
-      public void generateContent() throws SAXException {
-        AttributesImpl xspAttr = new AttributesImpl();
-
-        <!-- Process only 1st non-XSP element as generated root -->
-        <xsl:call-template name="process-first-element">
-          <xsl:with-param
-                          name="content"
-                          select="*[not(starts-with(name(.), 'xsp:'))]"/>
-        </xsl:call-template>
-      }
-
-        public void generate() throws SAXException {
+      public void generate() throws SAXException {
             this.contentHandler.startDocument();
             AttributesImpl xspAttr = new AttributesImpl();
 
             <!-- Generate top-level processing instructions -->
             <xsl:apply-templates select="/processing-instruction()"/>
 
-            <!-- Start top-level namespace prefix mapping -->
-            <xsl:for-each select="namespace::*[not(local-name(.) = 'xsp')]">
-              <!-- Xerces with Saxon generates a "xmlns" namespace -->
-              <xsl:if test="local-name(.) != 'xmlns'">
-              this.contentHandler.startPrefixMapping(
-                      "<xsl:value-of select="local-name(.)"/>",
-                      "<xsl:value-of select="."/>"
-                  );
-              </xsl:if>
-            </xsl:for-each>
-
-        generateContent();
-
-            <!-- End top-level namespace prefix mapping -->
-            <xsl:for-each select="namespace::*[not(local-name(.) = 'xsp')]">
-              <xsl:if test="local-name(.) != 'xmlns'">
-              this.contentHandler.endPrefixMapping(
-                      "<xsl:value-of select="local-name(.)"/>"
-                  );
-              </xsl:if>
-            </xsl:for-each>
+            <!-- Process only 1st non-XSP element as generated root -->
+            <xsl:call-template name="process-first-element">
+              <xsl:with-param name="content" select="*[not(starts-with(name(.), 'xsp:'))][1]"/>
+            </xsl:call-template>
 
             this.contentHandler.endDocument();
         }
@@ -138,7 +115,44 @@
 
   <xsl:template name="process-first-element">
     <xsl:param name="content"/>
-    <xsl:apply-templates select="$content[1]"/>
+
+    <!-- Generate top-level namespaces declarations -->
+    <xsl:variable name="parent-element" select="$content/.."/>
+    <xsl:for-each select="$content/namespace::*">
+      <xsl:variable name="ns-prefix" select="local-name(.)"/>
+      <xsl:variable name="ns-uri" select="string(.)"/>
+        <!-- Declare namespaces that also exist on the parent (i.e. not locally declared),
+             and filter out "xmlns:xmlns" namespace produced by Xerces+Saxon -->
+        <xsl:if test="($ns-prefix != 'xmlns') and $parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
+          this.contentHandler.startPrefixMapping(
+            "<xsl:value-of select="$ns-prefix"/>",
+            "<xsl:value-of select="$ns-uri"/>"
+          );
+          <xsl:if test="$add-xmlns">
+            xspAttr.addAttribute(
+              Constants.XML_NAMESPACE_URI,
+              "<xsl:value-of select="$ns-prefix"/>",
+              "<xsl:value-of select="concat('xmlns:',$ns-prefix)"/>",
+              "CDATA",
+              "<xsl:value-of select="$ns-uri"/>"
+            );
+          </xsl:if>
+      </xsl:if>
+    </xsl:for-each>
+
+    <!-- Generate content -->
+    <xsl:apply-templates select="$content"/>
+
+    <!-- Close top-level namespaces declarations-->
+    <xsl:for-each select="$content/namespace::*">
+      <xsl:variable name="ns-prefix" select="local-name(.)"/>
+      <xsl:variable name="ns-uri" select="string(.)"/>
+      <xsl:if test="$parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
+      this.contentHandler.endPrefixMapping(
+        "<xsl:value-of select="local-name(.)"/>"
+      );
+      </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template match="xsp:element">
@@ -192,10 +206,19 @@ Either both 'uri' and 'prefix' or none of them must be specified
       <xsl:variable name="ns-prefix" select="local-name(.)"/>
       <xsl:variable name="ns-uri" select="string(.)"/>
       <xsl:if test="not($parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
-      this.contentHandler.startPrefixMapping(
-        "<xsl:value-of select="local-name(.)"/>",
-        "<xsl:value-of select="."/>"
-      );
+        this.contentHandler.startPrefixMapping(
+          "<xsl:value-of select="local-name(.)"/>",
+          "<xsl:value-of select="."/>"
+        );
+        <xsl:if test="$add-xmlns">
+          xspAttr.addAttribute(
+            Constants.XML_NAMESPACE_URI,
+            "<xsl:value-of select="$ns-prefix"/>",
+            "<xsl:value-of select="concat('xmlns:',$ns-prefix)"/>",
+            "CDATA",
+            "<xsl:value-of select="$ns-uri"/>"
+          );
+        </xsl:if>
       </xsl:if>
     </xsl:for-each>
 
@@ -361,10 +384,19 @@ Either both 'uri' and 'prefix' or none of them must be specified
       <xsl:variable name="ns-prefix" select="local-name(.)"/>
       <xsl:variable name="ns-uri" select="string(.)"/>
       <xsl:if test="not($parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
-      this.contentHandler.startPrefixMapping(
-        "<xsl:value-of select="local-name(.)"/>",
-        "<xsl:value-of select="."/>"
-      );
+        this.contentHandler.startPrefixMapping(
+          "<xsl:value-of select="local-name(.)"/>",
+          "<xsl:value-of select="."/>"
+        );
+        <xsl:if test="$add-xmlns">
+          xspAttr.addAttribute(
+            Constants.XML_NAMESPACE_URI,
+            "<xsl:value-of select="$ns-prefix"/>",
+            "<xsl:value-of select="concat('xmlns:',$ns-prefix)"/>",
+            "CDATA",
+            "<xsl:value-of select="$ns-uri"/>"
+          );
+        </xsl:if>
       </xsl:if>
     </xsl:for-each>
 
@@ -402,8 +434,6 @@ Either both 'uri' and 'prefix' or none of them must be specified
   </xsl:template>
 
   <xsl:template match="@*">
-    <!-- Xerces with Saxon gives namespace declarations also as attributes -->
-    <xsl:if test="not(starts-with(name(.), 'xmlns:'))">
     xspAttr.addAttribute(
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
@@ -411,7 +441,6 @@ Either both 'uri' and 'prefix' or none of them must be specified
       "CDATA",
       "<xsl:value-of select="."/>"
     );
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="text()">

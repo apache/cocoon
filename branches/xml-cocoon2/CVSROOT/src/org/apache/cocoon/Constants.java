@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-20 13:04:59 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-26 15:45:01 $
  */
 
 public interface Constants {
@@ -41,6 +41,8 @@ public interface Constants {
     String XSP_REQUEST_URI     = XSP_URI + "/request";
     String XSP_RESPONSE_PREFIX = "xsp-response";
     String XSP_RESPONSE_URI    = XSP_URI + "/response";
+
+    String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
 
     String LINK_CONTENT_TYPE     = "application/x-cocoon-links";
     String LINK_VIEW             = "links";
