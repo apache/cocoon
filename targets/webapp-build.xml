@@ -79,19 +79,6 @@
             includes="**/*.xconf"
             addComments="true"/>
   </target>
-
-  <target name="prepare-webapp-idldocs" depends="idldocs" unless="unless.exclude.webapp.idldocs">
-    <mkdir dir="${build.webapp.idldocs}"/>
-
-    <copy todir="${build.webapp.idldocs}" filtering="off">
-      <fileset dir="${build.idldocs}"/>
-    </copy>
-
-    <!-- patch the welcome page to tell we have idldocs to show -->
-    <xpatch file="${build.webapp}/welcome.xml"
-            srcdir="${idl}" 
-            includes="**/*.xwelcome"/>
-  </target>
   
   <target name="prepare-webapp-javadocs" depends="javadocs" unless="unless.exclude.webapp.javadocs">
     <mkdir dir="${build.webapp.javadocs}"/>
@@ -141,7 +128,7 @@
             includes="**/*.xwelcome"/>    
   </target>
   
-  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
     <!-- Add some other documents -->
     <copy file="${build.temp}/jars.xml"
       tofile="${build.webapp.docs}/xdocs/installing/jars.xml" 

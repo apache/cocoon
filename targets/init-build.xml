@@ -47,12 +47,6 @@
         <istrue value="${exclude.webapp.javadocs}"/>
       </or>
     </condition>
-    <condition property="unless.exclude.webapp.idldocs">
-      <or>
-        <istrue value="${exclude.idldocs}"/>
-        <istrue value="${exclude.webapp.idldocs}"/>
-      </or>
-    </condition>
     <condition property="unless.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
@@ -62,9 +56,6 @@
     </condition>
     <condition property="unless.exclude.javadocs">
       <istrue value="${exclude.javadocs}"/>
-    </condition>
-    <condition property="unless.exclude.idldocs">
-      <istrue value="${exclude.idldocs}"/>
     </condition>
     <condition property="exclude.validate.jars">
       <isfalse value="${validate.jars}"/>
