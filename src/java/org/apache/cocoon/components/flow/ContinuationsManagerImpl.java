@@ -15,17 +15,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -37,6 +26,21 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.Sink;
 import org.apache.excalibur.event.command.RepeatedCommand;
+import org.apache.excalibur.instrument.CounterInstrument;
+import org.apache.excalibur.instrument.Instrument;
+import org.apache.excalibur.instrument.Instrumentable;
+import org.apache.excalibur.instrument.ValueInstrument;
+
+import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * The default implementation of {@link ContinuationsManager}.
@@ -45,17 +49,20 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.11 2004/05/17 18:50:53 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.12 2004/06/03 12:45:49 vgritsenko Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
         implements ContinuationsManager, Component, Configurable,
-        ThreadSafe, Contextualizable {
+                   ThreadSafe, Contextualizable, Instrumentable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
 
-    protected SecureRandom random = null;
+    /**
+     * Random number generator used to create continuation ID
+     */
+    protected SecureRandom random;
     protected byte[] bytes;
 
     protected Sink m_commandSink;
@@ -68,12 +75,13 @@ public class ContinuationsManagerImpl
 
     /**
      * Maintains the forrest of <code>WebContinuation</code> trees.
+     * This Set used only for debugging puroses by {@link #displayAllContinuations()} method.
      */
     protected Set forrest = Collections.synchronizedSet(new HashSet());
 
     /**
-     * Association between <code>WebContinuation</code> ids and the
-     * corresponding <code>WebContinuation</code> object.
+     * Association between <code>WebContinuation</code> IDs and the
+     * corresponding <code>WebContinuation</code> objects.
      */
     protected Map idToWebCont = Collections.synchronizedMap(new HashMap());
 
@@ -84,17 +92,29 @@ public class ContinuationsManagerImpl
      */
     protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
+    private String instrumentableName;
+    private ValueInstrument continuationsCount;
+    private ValueInstrument forrestSize;
+    private ValueInstrument expirationsSize;
+    private CounterInstrument continuationsCreated;
+    private CounterInstrument continuationsInvalidated;
+
 
     public ContinuationsManagerImpl() throws Exception {
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
-        }
-        catch(java.security.NoSuchAlgorithmException nsae) {
+        } catch(java.security.NoSuchAlgorithmException nsae) {
             // maybe we are on IBM's SDK
             random = SecureRandom.getInstance("IBMSecureRandom");
         }
         random.setSeed(System.currentTimeMillis());
         bytes = new byte[CONTINUATION_ID_LENGTH];
+
+        continuationsCount = new ValueInstrument("count");
+        forrestSize = new ValueInstrument("forrest-size");
+        expirationsSize = new ValueInstrument("expirations-size");
+        continuationsCreated = new CounterInstrument("creates");
+        continuationsInvalidated = new CounterInstrument("invalidates");
     }
 
     /**
@@ -118,6 +138,28 @@ public class ContinuationsManagerImpl
         }
     }
 
+    public void setInstrumentableName(String instrumentableName) {
+        this.instrumentableName = instrumentableName;
+    }
+
+    public String getInstrumentableName() {
+        return instrumentableName;
+    }
+
+    public Instrument[] getInstruments() {
+        return new Instrument[]{
+            continuationsCount,
+            continuationsCreated,
+            continuationsInvalidated,
+            forrestSize
+        };
+    }
+
+    public Instrumentable[] getChildInstrumentables() {
+        return Instrumentable.EMPTY_INSTRUMENTABLE_ARRAY;
+    }
+
+
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
@@ -129,6 +171,7 @@ public class ContinuationsManagerImpl
 
         if (parent == null) {
             forrest.add(wk);
+            forrestSize.setValue(forrest.size());
         } else {
             // REVISIT: This places only the "leaf" nodes in the expirations Sorted Set.
             // do we really want to do this?
@@ -138,6 +181,7 @@ public class ContinuationsManagerImpl
         }
 
         expirations.add(wk);
+        expirationsSize.setValue(expirations.size());
 
         // No need to add the WebContinuation in idToWebCont as it was
         // already done during its construction.
@@ -147,44 +191,6 @@ public class ContinuationsManagerImpl
         }
 
         return wk;
-    }
-
-    public void invalidateWebContinuation(WebContinuation wk) {
-        WebContinuation parent = wk.getParentContinuation();
-        if (parent == null) {
-            forrest.remove(wk);
-        } else {
-            List parentKids = parent.getChildren();
-            parentKids.remove(wk);
-        }
-
-        _invalidate(wk);
-    }
-
-    private void _invalidate(WebContinuation wk) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("WK: Manual Expire of Continuation " + wk.getId());
-        }
-        disposeContinuation(wk);
-        expirations.remove(wk);
-
-        // Invalidate all the children continuations as well
-        List children = wk.getChildren();
-        int size = children.size();
-        for (int i = 0; i < size; i++) {
-            _invalidate((WebContinuation) children.get(i));
-        }
-    }
-
-    /**
-     * Makes the continuation inaccessible for lookup, and triggers possible needed
-     * cleanup code through the ContinuationsDisposer interface.
-     *
-     * @param wk the continuation to dispose.
-     */
-    private void disposeContinuation(WebContinuation wk) {
-        idToWebCont.remove(wk.getId());
-        wk.dispose();
     }
 
     public WebContinuation lookupWebContinuation(String id) {
@@ -230,12 +236,65 @@ public class ContinuationsManagerImpl
                 if (!idToWebCont.containsKey(id)) {
                     wk = new WebContinuation(id, kont, parent, ttl, disposer);
                     idToWebCont.put(id, wk);
+                    continuationsCount.setValue(idToWebCont.size());
                     break;
                 }
             }
         }
 
+        continuationsCreated.increment();
         return wk;
+    }
+
+    public void invalidateWebContinuation(WebContinuation wk) {
+        _detach(wk);
+        _invalidate(wk);
+    }
+
+    private void _invalidate(WebContinuation wk) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("WK: Manual Expire of Continuation " + wk.getId());
+        }
+        disposeContinuation(wk);
+        expirations.remove(wk);
+        expirationsSize.setValue(expirations.size());
+
+        // Invalidate all the children continuations as well
+        List children = wk.getChildren();
+        int size = children.size();
+        for (int i = 0; i < size; i++) {
+            _invalidate((WebContinuation) children.get(i));
+        }
+    }
+
+    /**
+     * Detach this continuation from parent. This method removes
+     * continuation from {@link #forrest} set, or, if it has parent,
+     * from parent's children collection.
+     * @param wk Continuation to detach from parent.
+     */
+    private void _detach(WebContinuation wk) {
+        WebContinuation parent = wk.getParentContinuation();
+        if (parent == null) {
+            forrest.remove(wk);
+            forrestSize.setValue(forrest.size());
+        } else {
+            List parentKids = parent.getChildren();
+            parentKids.remove(wk);
+        }
+    }
+
+    /**
+     * Makes the continuation inaccessible for lookup, and triggers possible needed
+     * cleanup code through the ContinuationsDisposer interface.
+     *
+     * @param wk the continuation to dispose.
+     */
+    private void disposeContinuation(WebContinuation wk) {
+        idToWebCont.remove(wk.getId());
+        continuationsCount.setValue(idToWebCont.size());
+        wk.dispose();
+        continuationsInvalidated.increment();
     }
 
     /**
@@ -252,20 +311,14 @@ public class ContinuationsManagerImpl
 
         // remove access to this contination
         disposeContinuation(wk);
-
-        WebContinuation parent = wk.getParentContinuation();
-        if (parent == null) {
-            forrest.remove(wk);
-        } else {
-            List parentKids = parent.getChildren();
-            parentKids.remove(wk);
-        }
+        _detach(wk);
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: deleted this WK: " + wk.getId());
         }
 
         // now check if parent needs to be removed.
+        WebContinuation parent = wk.getParentContinuation();
         if (null != parent && parent.hasExpired()) {
             removeContinuation(parent);
         }
@@ -329,6 +382,7 @@ public class ContinuationsManagerImpl
             iter.remove();
             removeContinuation(wk);
         }
+        expirationsSize.setValue(expirations.size());
 
         // log state after continuations clean up
         if (getLogger().isDebugEnabled()) {
