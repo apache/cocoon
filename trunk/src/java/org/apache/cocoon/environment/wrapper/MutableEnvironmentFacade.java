@@ -69,15 +69,15 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.7 2003/10/29 14:39:08 vgritsenko Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.8 2003/10/30 12:56:48 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
     private EnvironmentWrapper env;
     
     // Track the first values set for prefix and uri
-    private String prefix = null;
-    private String uri = null;
+    private String prefix;
+    private String uri;
     
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
@@ -96,19 +96,10 @@ public class MutableEnvironmentFacade implements Environment {
     public void setURI(String prefix, String uri) {
         this.env.setURI(prefix, uri);
         
-        if (this.uri == null) {
-            // First call : keep the values to restore them on the wrapped
-            // enviromnent in reset()
-            this.prefix = prefix;
-            this.uri = uri;
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setURI(java.lang.String)
-     */
-    public void setURI(String value) {
-        // TODO Auto-generated method stub
+        // keep the values to restore them on the wrapped
+        // enviromnent in reset()
+        this.prefix = prefix;
+        this.uri = uri;
     }
 
     public void setOutputStream(OutputStream os) {
@@ -126,11 +117,7 @@ public class MutableEnvironmentFacade implements Environment {
     
     public void reset() {
         this.env.reset();
-        // TODO - If we remove the line below, do we break something
-        //        else again? If we leave it in, the SitemapSource
-        //        object is unusable after a call to getInputStream()
-        //        or toSAX() :(
-        //this.env.setURI(this.uri, this.prefix);
+        this.env.setURI(this.uri, this.prefix);
     }
     //----------------------------------
 
@@ -149,20 +136,6 @@ public class MutableEnvironmentFacade implements Environment {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#getRootContext()
-     */
-    public String getRootContext() {
-        return env.getRootContext();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#getContext()
-     */
-    public String getContext() {
-        return env.getContext();
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#getView()
      */
     public String getView() {
@@ -177,24 +150,12 @@ public class MutableEnvironmentFacade implements Environment {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#setContext(java.lang.String, java.lang.String, java.lang.String)
+     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
      */
-    public void setContext(String prefix, String uri, String context) {
-        env.setContext(prefix, uri, context);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#changeContext(java.lang.String, java.lang.String)
-     */
-    public void changeContext(String uriprefix, String context) throws Exception {
-        env.changeContext(uriprefix, context);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#redirect(boolean, java.lang.String)
-     */
-    public void redirect(boolean sessionmode, String url) throws IOException {
-        env.redirect(sessionmode, url);
+    public void redirect(String url, 
+                         boolean global, 
+                         boolean permanent) throws IOException {
+        env.redirect(url, global, permanent);
     }
 
     /* (non-Javadoc)
