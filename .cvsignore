@@ -3,6 +3,7 @@ dist
 prj.el
 .project
 .classpath
+cocoon.launch
 local.build.properties
 local.blocks.properties
 cocoon.sampledata
