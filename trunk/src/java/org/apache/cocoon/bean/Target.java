@@ -60,7 +60,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.1 2003/08/27 19:18:18 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.2 2003/09/10 09:12:21 upayavira Exp $
  */
 public class Target {
 	// Defult type is append
@@ -113,7 +113,7 @@ public class Target {
 		return new Target(this.type, this.root, newURI, this.destURI);
 	}
 
-	public String getFinalURI(String actualSourceURI)
+	public String getDestinationURI(String actualSourceURI)
 		throws ProcessingException {
 		if (!actualSourceURI.startsWith(root)) {
 			throw new ProcessingException(
