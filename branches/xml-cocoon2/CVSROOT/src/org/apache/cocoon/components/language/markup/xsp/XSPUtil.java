@@ -36,12 +36,13 @@ import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 
 /**
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.4 $ $Date: 2001-02-07 17:44:15 $
+ * @version $Revision: 1.1.2.5 $ $Date: 2001-02-07 19:16:49 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {
@@ -129,6 +130,15 @@ public class XSPUtil {
                 new IncludeXMLConsumer(parentContentHandler));
             parser.parse(is);
     }
+
+    public static org.w3c.dom.Document getDocument(InputSource input, Parser parser)
+		throws SAXException, IOException  {
+		DOMBuilder builder = new DOMBuilder(parser);
+		parser.setContentHandler(builder);
+		parser.setLexicalHandler(builder);
+		parser.parse(input);
+		return builder.getDocument();
+	}
 
     public static String encodeMarkup(String string) {
         char[] array = string.toCharArray();

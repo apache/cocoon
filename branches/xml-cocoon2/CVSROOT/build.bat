@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: build.bat - Win32 Build Script for Apache Cocoon
 ::
-:: $Id: build.bat,v 1.10.2.20 2001-02-07 18:03:35 bloritsch Exp $
+:: $Id: build.bat,v 1.10.2.21 2001-02-07 19:16:46 bloritsch Exp $
 :: -----------------------------------------------------------------------------
 
 :: ----- Verify and Set Required Environment Variables -------------------------
@@ -18,7 +18,7 @@ set ANT_HOME=.
 
 :: ----- Set Up The Runtime Classpath ------------------------------------------
 
-set CP=%JAVA_HOME%\lib\tools.jar;%ANT_HOME%\lib\ant_1_2.jar;.\lib\xerces_1_3_0.jar
+set CP=%JAVA_HOME%\lib\tools.jar;%ANT_HOME%\lib\ant_1_2.jar;.\lib\xerces_1_2_3.jar
 
 :: ----- Execute The Requested Build -------------------------------------------
 
