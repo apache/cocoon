@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.91 2003/10/15 09:12:19 reinhard Exp $
+    | CVS $Id: gump.xml,v 1.92 2003/11/28 13:29:10 michi Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -136,7 +136,7 @@
       Jing performs XML Validation using RelaxNG schemas
     </description>
     <home nested="tools/lib"/>
-    <jar name="jing-20020724.jar"/>
+    <jar name="jing-20030619.jar"/>
   </project>
 
   <project name="chaperon">
