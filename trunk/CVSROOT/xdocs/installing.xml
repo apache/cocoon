@@ -182,12 +182,17 @@ wrapper.classpath=/usr/local/java/cocoon/lib/xerces.jar
 </source>
 
    <note>
-    The <code>./bin/cocoon.jar</code> package <strong>must</strong> be added to the
-    servlet engine classpath in order for the XSP subsystem to work correctly.
-    We understand that this could be a flexibility limitation. 
-    On JServ it is not yet possible to run
-    multiple instances of Cocoon in the same virtual machine - if you
-    would like to do that, try using a different servlet engine. (To be fixed soon.)
+    To run multiple instances of Cocoon in the same virtual machine (in 
+    different zones), the <code>./bin/cocoon.jar</code> file needs to be 
+    included in the zone's classpath (together with other zone specific 
+    classpath components).  Also, you need to properly set the 
+    processor.xsp.localclasspath property. This property tells the XSP 
+    engine wich classpath to use when calling the compiler, as there's 
+    currently no way for Cocoon to ask the classpath to the zone's 
+    classloader. The value of this property should be the classpath 
+    used in the "repositories" parameter (which includes 
+    <code>cocoon.jar</code>). Please note that the support 
+    for doing this is still experimental.
    </note>
 
    <note>
