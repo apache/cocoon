@@ -33,12 +33,12 @@
     <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
       <classpath>
         <path refid="test.classpath"/>
-	      <fileset dir="${build.blocks}">
-	        <include name="*.jar"/>
-	      </fileset>
-	      <fileset dir="${blocks}">
-	        <include name="*/lib/*.jar"/>
-	      </fileset>
+        <fileset dir="${build.blocks}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${blocks}">
+          <include name="*/lib/*.jar"/>
+        </fileset>
       </classpath>
       <formatter type="plain"/>
       <formatter type="xml"/>
