@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,18 +15,18 @@
  */
 package org.apache.cocoon.components.source.impl;
 
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.ModifiableSource;
@@ -34,6 +34,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -60,7 +61,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.14 2004/04/19 14:53:50 cziegeler Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.15 2004/05/16 12:19:18 vgritsenko Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
@@ -137,10 +138,10 @@ public class XMLDBSource extends AbstractLogEnabled
 
     /** XMLDBOutputStream for writing to Modifiable resource */
     protected XMLDBOutputStream os;
-    
+
     /** The Avalon context */
     protected final Context context;
-    
+
     /**
      * The constructor.
      *
@@ -440,12 +441,12 @@ public class XMLDBSource extends AbstractLogEnabled
     throws IOException {
 
         ServiceManager manager = null;
-        ServiceSelector serializerSelector = null;
+        ComponentSelector serializerSelector = null;
         Serializer serializer = null;
         // this.manager does not have Serializer
         try {
             manager = (ServiceManager) this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-            serializerSelector = (ServiceSelector) manager.lookup(Serializer.ROLE + "Selector");
+            serializerSelector = (ComponentSelector) manager.lookup(Serializer.ROLE + "Selector");
             serializer = (Serializer)serializerSelector.select("xml");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             serializer.setOutputStream(os);
