@@ -53,9 +53,9 @@ package org.apache.cocoon.portal;
 /**
  * Defines constants used within portal classes.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: Constants.java,v 1.1 2003/05/08 11:54:00 cziegeler Exp $
+ * @version CVS $Id: Constants.java,v 1.2 2003/07/10 13:17:07 cziegeler Exp $
  */
 public class Constants {
     

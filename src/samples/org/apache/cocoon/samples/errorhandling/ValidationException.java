@@ -1,7 +1,7 @@
 /*
 	ValidationException.java
 
-	Author: Björn Lütkemeier <bluetkemeier@s-und-n.de>
+	Author: Bj&ouml;rn L&uuml;tkemeier <bluetkemeier@s-und-n.de>
 	Date: April 23, 2003
 
  */

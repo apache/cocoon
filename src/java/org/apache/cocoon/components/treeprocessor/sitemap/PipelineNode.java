@@ -67,12 +67,12 @@ import org.apache.cocoon.environment.Environment;
 /**
  * Handles &lt;map:pipeline&gt;
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.7 2003/07/09 07:42:23 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.8 2003/07/10 13:17:00 cziegeler Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode

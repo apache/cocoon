@@ -93,8 +93,8 @@ import org.apache.commons.jxpath.JXPathContext;
  *	&lt;/map:action&gt;
  * &lt;/map:action&gt;</pre>
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.2 2003/05/27 11:54:18 cziegeler Exp $
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @version CVS $Id: CopletModule.java,v 1.3 2003/07/10 13:17:03 cziegeler Exp $
  */
 public class CopletModule 
 implements InputModule, Composable, ThreadSafe {

@@ -61,9 +61,9 @@ import org.exolab.castor.mapping.MapItem;
 /**
  * Field handler for parameters.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: ParameterFieldHandler.java,v 1.2 2003/06/13 14:20:09 cziegeler Exp $
+ * @version CVS $Id: ParameterFieldHandler.java,v 1.3 2003/07/10 13:16:55 cziegeler Exp $
  */
 public class ParameterFieldHandler implements FieldHandler {
     

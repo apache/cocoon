@@ -70,6 +70,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.portal.util.ReferenceFieldHandler;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.exolab.castor.mapping.Mapping;
@@ -79,12 +80,19 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
 /**
- *
+ * This is a component that converts the profiles (= object tree) to XML and vice-versa
+ * using Castor.
+ * 
+ * In order to work properly the methods provided by this interface require some 
+ * parameters:
+ * objectmap : containing a map of objects for resolving references during load
+ * profiletype: specifying the mapping (this is one of layout, copletinstancedata, copletdata or copletbasedate
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.4 2003/05/27 07:38:33 cziegeler Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.5 2003/07/10 13:17:07 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
@@ -96,9 +104,10 @@ public class CastorSourceConverter
     private ComponentManager manager;
     private Map mappings = new HashMap();
 
-    public Object getObject(InputStream stream, String name) throws ConverterException {
+    public Object getObject(InputStream stream, Map parameters) throws ConverterException {
         try {
-            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(name));
+            ReferenceFieldHandler.setObjectMap((Map)parameters.get("objectmap"));
+            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(parameters.get("profiletype")));
             Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
             return result;
@@ -109,12 +118,12 @@ public class CastorSourceConverter
         }
     }
 
-	public void storeObject(OutputStream stream, String name, Object object) throws ConverterException {
+	public void storeObject(OutputStream stream, Map parameters, Object object) throws ConverterException {
         Writer writer = new OutputStreamWriter(stream);
 		try {
 			Marshaller marshaller = new Marshaller( writer );
 			Mapping mapping = new Mapping();
-			marshaller.setMapping((Mapping)this.mappings.get(name));
+			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(parameters.get("profiletype"))));
 			marshaller.marshal(object);
 			writer.close();
 		} catch (MappingException e) {

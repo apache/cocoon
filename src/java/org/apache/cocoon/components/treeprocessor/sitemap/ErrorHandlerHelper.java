@@ -66,9 +66,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 /**
  * Helps to call error handlers from PipelineNode and PipelinesNode.
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: ErrorHandlerHelper.java,v 1.2 2003/04/29 10:45:20 cziegeler Exp $
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.3 2003/07/10 13:17:00 cziegeler Exp $
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable {
 

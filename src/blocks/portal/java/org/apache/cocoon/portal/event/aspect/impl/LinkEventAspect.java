@@ -66,18 +66,16 @@ import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.FrameLayout;
+import org.apache.cocoon.portal.layout.impl.LinkLayout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.7 2003/07/10 13:17:03 cziegeler Exp $
+ * @version CVS $Id: LinkEventAspect.java,v 1.1 2003/07/10 13:17:03 cziegeler Exp $
  */
-public class FrameEventAspect
+public class LinkEventAspect
     extends AbstractLogEnabled
     implements EventAspect, ThreadSafe, Composable {
 
@@ -88,7 +86,7 @@ public class FrameEventAspect
      */
     public void process(EventAspectContext context, PortalService service) {
         // TODO - make this configurable
-        final String requestParameterName = "frame";
+        final String requestParameterName = "link";
         final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
         String[] values = request.getParameterValues(requestParameterName);
         if (values != null) {
@@ -104,56 +102,63 @@ public class FrameEventAspect
                 } catch (Exception ignore) {
                 }
                 if (e == null) {
-                    // Use '|' character as delimiter between Group, ID and URI
-					StringTokenizer tokenizer = new StringTokenizer(value, "|");
-					int tokenNumber = 0;
-					int tokenCount = tokenizer.countTokens();
+                    // Use '|' character as delimiter between targetGroup, targetId, contentGroup and contentId
+                    StringTokenizer tokenizer = new StringTokenizer(value, "|");
+                    int tokenNumber = 0;
+                    int tokenCount = tokenizer.countTokens();
 					// if only 3 params are in the String
-					if (tokenCount == 2)
+					if (tokenCount == 3)
 						tokenNumber = tokenNumber + 1;
 
-					String groupKey = null;
-					String id = null;
-                        String uri = null;
-										
-					while (tokenizer.hasMoreTokens())
-					{
+					String targetGroup = null;
+					String targetId = null;
+					String contentGroup = null;
+					String contentId = null;
+					
+                    while (tokenizer.hasMoreTokens())
+                    {
                         	
-						switch (tokenNumber)
-						{
-							case 0 :
-								groupKey = tokenizer.nextToken();
-								break;
+                    	switch (tokenNumber)
+                        {
+                            case 0 :
+								targetGroup = tokenizer.nextToken();
+                                break;
 							case 1 :
-								id = tokenizer.nextToken();
+								targetId = tokenizer.nextToken();
 								break;
 							case 2 :
-								uri = tokenizer.nextToken();
+								contentGroup = tokenizer.nextToken();
+								break;
+							case 3 :
+								contentId = tokenizer.nextToken();
 								break;
                         }
                         
 						tokenNumber = tokenNumber + 1;
-					} // while
+                    } // while
                     
-					if (tokenCount > 0) {                                            					                        
+					if (tokenCount > 0) {                                            
                         ProfileManager profileManager = null;
                         try {
                             profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-                            Layout layout = profileManager.getPortalLayout(groupKey, id );
+							Layout layout = profileManager.getPortalLayout(targetGroup, targetId );
                             if ( layout != null ) {
-								if (layout instanceof FrameLayout){
-                                e = new ChangeAspectDataEvent(layout, "frame", uri);
-                                publisher.publish(e);
-								} else {
-									this.getLogger().warn("the configured layout: " + layout.getName() + " is not a FrameLayout.");
-                            }
+                            	if (layout instanceof LinkLayout){
+									LinkLayout linkLayout = (LinkLayout)layout;
+									e = new ChangeAspectDataEvent(linkLayout, "link-layout-key", contentGroup);
+									publisher.publish(e);	
+                                    e = new ChangeAspectDataEvent(linkLayout, "link-layout-id", contentId);
+                                    publisher.publish(e);   
+                            	} else {
+									this.getLogger().warn("the configured layout: " + layout.getName() + " is not a linkLayout.");
+                            	}								
                             }
                         } catch (ComponentException ignore) {
                         } finally {
                             this.manager.release( profileManager );
                         }
-					} else {
-						this.getLogger().warn("data for LinkEvent is not set correctly");
+                    } else {
+                    	this.getLogger().warn("data for LinkEvent is not set correctly");
                     }
                 }
             }

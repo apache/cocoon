@@ -83,11 +83,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * Note that both "name" and "unroll" can be specified. In that case, we first try to unroll the exception,
  * and if none of the causes has a name, then the "name" attribute is considered.
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.4 2003/05/07 05:09:38 vgritsenko Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.5 2003/07/10 13:16:55 cziegeler Exp $
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {

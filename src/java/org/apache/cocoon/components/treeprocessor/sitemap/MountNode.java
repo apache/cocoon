@@ -66,9 +66,9 @@ import org.apache.cocoon.environment.Environment;
 
 /**
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.4 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: MountNode.java,v 1.5 2003/07/10 13:17:00 cziegeler Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 

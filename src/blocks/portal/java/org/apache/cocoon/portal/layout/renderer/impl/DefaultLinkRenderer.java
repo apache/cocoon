@@ -62,8 +62,9 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: DefaultLinkRenderer.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkRenderer.java,v 1.2 2003/07/10 13:16:59 cziegeler Exp $
  */
 public class DefaultLinkRenderer extends AbstractRenderer {
 
@@ -73,8 +74,14 @@ public class DefaultLinkRenderer extends AbstractRenderer {
             ProfileManager profileManager = null;
             try {
                 profileManager = (ProfileManager)this.componentManager.lookup(ProfileManager.ROLE);
-                final String layoutId = ((LinkLayout)layout).getLayoutId();
-                this.processLayout(profileManager.getPortalLayout(layoutId), service, handler);
+                String layoutKey = (String)layout.getAspectData("link-layout-key");
+				String layoutId = (String)layout.getAspectData("link-layout-id");
+                if ( layoutKey == null && layoutId == null){
+					// get default values
+					layoutKey = ((LinkLayout)layout).getLayoutKey();
+					layoutId = ((LinkLayout)layout).getLayoutId();
+				}
+                this.processLayout(profileManager.getPortalLayout(layoutKey, layoutId), service, handler);
             } catch (ComponentException ce) {
                 throw new SAXException("Unable to lookup profile manager.", ce);
             } finally {

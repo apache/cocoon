@@ -74,8 +74,8 @@ import org.xml.sax.SAXException;
  * Please see also the documentation of superclass AbstractCopletTransformer for how
  * the coplet instance data are acquired.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.3 2003/05/27 11:54:17 cziegeler Exp $
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @version CVS $Id: CopletTransformer.java,v 1.4 2003/07/10 13:17:04 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {

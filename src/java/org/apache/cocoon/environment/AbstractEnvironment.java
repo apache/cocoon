@@ -75,10 +75,10 @@ import org.xml.sax.SAXException;
 /**
  * Base class for any environment
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.14 2003/06/03 07:29:19 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.15 2003/07/10 13:17:03 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 

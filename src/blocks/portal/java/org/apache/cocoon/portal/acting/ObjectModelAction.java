@@ -61,8 +61,8 @@ import org.apache.cocoon.environment.SourceResolver;
 /**
  * Stores all parameters in the object model adding prefix "cocoon-portal-".
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: ObjectModelAction.java,v 1.1 2003/05/08 11:54:01 cziegeler Exp $
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @version CVS $Id: ObjectModelAction.java,v 1.2 2003/07/10 13:17:04 cziegeler Exp $
  */
 public class ObjectModelAction 
 extends AbstractAction {

@@ -55,9 +55,9 @@ package org.apache.cocoon.portal.util;
  * and where references to contained DeltaApplicable objects can be adjusted 
  * if no delta has been applied to them.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: DeltaApplicableReferencesAdjustable.java,v 1.2 2003/06/13 14:20:10 cziegeler Exp $
+ * @version CVS $Id: DeltaApplicableReferencesAdjustable.java,v 1.3 2003/07/10 13:16:56 cziegeler Exp $
  */
 public interface DeltaApplicableReferencesAdjustable 
 extends DeltaApplicable {

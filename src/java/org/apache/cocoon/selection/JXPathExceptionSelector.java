@@ -82,9 +82,9 @@ import org.apache.commons.jxpath.JXPathContext;
  * <li>the test is the xpath expression that will be evaluated against the exception ,</li>
  * <li>an xpath expression can be given a name, which is used in the &lt;map:when> tests,</li>
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @since 2.1
- * @version CVS $Id: JXPathExceptionSelector.java,v 1.2 2003/05/07 05:09:38 vgritsenko Exp $
+ * @version CVS $Id: JXPathExceptionSelector.java,v 1.3 2003/07/10 13:16:55 cziegeler Exp $
  */
 
 public class JXPathExceptionSelector
