@@ -173,8 +173,8 @@
     <td></td>
    </tr>
    <tr>
-    <td>xalan_1_2_D02.jar</td>
-    <td>Xalan 1.2D02</td>
+    <td>xalan_1_2_2.jar</td>
+    <td>Xalan 1.2.2</td>
     <td><link href="http://xml.apache.org/xalan/index.html">xml.apache.org</link></td>
     <td>Processing XSLT stylesheets and logicsheets</td>
     <td>Yes</td>
@@ -182,8 +182,8 @@
     <td></td>
    </tr>
    <tr>
-    <td>xerces_1_2.jar</td>
-    <td>Xerces 1.2</td>
+    <td>xerces_1_2_3.jar</td>
+    <td>Xerces 1.2.3</td>
     <td><link href="http://xml.apache.org/xerces-j/index.html">xml.apache.org</link></td>
     <td>Parsing XML and outputting XML/HTML/text.</td>
     <td>Yes</td>
@@ -746,8 +746,8 @@ set cocoon "$webapp/Servlet:cocoon"
 # *** NOTE! - the following should be all on one line!! ***
 ApplicationServer modify $appserv/ -attribute
 {{CommandLineArgs {-classpath D:/cocoon-1.8/lib/bsf.jar;D:/cocoon-1.8/lib/bsfengines.jar;
-D:/cocoon-1.8/lib/turbine-pool.jar;D:/cocoon-1.8/lib/xerces_1_2.jar;
-D:/cocoon-1.8/lib/xalan_1_2_D02.jar;D:/cocoon-1.8/lib/fop_0_15_0.jar;
+D:/cocoon-1.8/lib/turbine-pool.jar;D:/cocoon-1.8/lib/xerces_1_2_3.jar;
+D:/cocoon-1.8/lib/xalan_1_2_2.jar;D:/cocoon-1.8/lib/fop_0_15_0.jar;
 D:/WebSphere/AppServer/jdk/lib/tools.jar;D:\cocoon-1.8\bin\cocoon.jar}}}
 
 # create the cocoon web application
@@ -834,8 +834,8 @@ d:/Netscape/Server4/bin/https/jar/Calljsac.jar;
 D:/Netscape/Server4/docs/cocoon/bin/cocoon.jar;
 D:/Netscape/Server4/docs/cocoon/lib/fop_0_15.jar;
 D:/Netscape/Server4/docs/cocoon/lib/turbine-pool.jar;
-D:/Netscape/Server4/docs/cocoon/lib/xalan_1_2_D02.jar;
-D:/Netscape/Server4/docs/cocoon/lib/xerces_1_2.jar
+D:/Netscape/Server4/docs/cocoon/lib/xalan_1_2_2.jar;
+D:/Netscape/Server4/docs/cocoon/lib/xerces_1_2_3.jar
 </source>
 
     <p>In the rules.properties file, add the following line (this is made to turn around a regexp bug in iWS):</p>
