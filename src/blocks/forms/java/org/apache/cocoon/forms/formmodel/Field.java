@@ -372,6 +372,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        if (locale == null) {
+            locale = getForm().getLocale();
+        }
+        
         if (enteredValue != null || value != null) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
             String stringValue;
