@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.15 2000-12-21 21:06:39 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.16 2000-12-21 21:12:52 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -157,7 +157,7 @@
   </xsl:template>
 
   <xsl:template match="text()" priority="-1">
-    <xsl:value-of select="text()"/>
+    <xsl:value-of select="."/>
   </xsl:template>
 
   <!-- =========================================================== -->
