@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # build.sh - Unix Build Script for Apache Cocoon
 #
-# $Id: build.sh,v 1.10.2.25 2001-04-13 17:39:51 dims Exp $
+# $Id: build.sh,v 1.10.2.26 2001-04-17 03:44:41 donaldp Exp $
 # -----------------------------------------------------------------------------
 
 # ----- Verify and Set Required Environment Variables -------------------------
@@ -28,7 +28,7 @@ fi
 
 # ----- Execute The Requested Build -------------------------------------------
 
-$JAVA_HOME/bin/java $ANT_OPTS -classpath $CP org.apache.tools.ant.Main -Dant.home=$ANT_HOME $*
+$JAVA_HOME/bin/java $ANT_OPTS -classpath $CP org.apache.tools.ant.Main -Dant.home=$ANT_HOME -logger org.apache.tools.ant.NoBannerLogger -emacs $*
 
 
 
