@@ -49,6 +49,13 @@
 */
 package org.apache.cocoon.bean;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.avalon.fortress.ContainerManager;
 import org.apache.avalon.fortress.impl.DefaultContainerManager;
 import org.apache.avalon.fortress.util.FortressConfig;
@@ -65,9 +72,6 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.CocoonContainer;
 import org.apache.cocoon.components.SitemapConfigurableAccessor;
 
-import java.io.File;
-import java.util.*;
-
 /**
  * CocoonBean does XYZ
  *
@@ -82,7 +86,7 @@ public class CocoonBean
     private String m_contextURI = Constants.DEFAULT_CONTEXT_DIR;
     private File m_workDirectory = new File( System.getProperty( "java.io.tmpdir" ) );
     private String m_logConfigURI = m_contextURI + File.separator + "cocoon.xlog";
-    private String m_logCategory = "cocoon";
+    private String m_logCategory = "";
     private String m_configURI = Constants.DEFAULT_CONF_FILE;
     private String m_roleConfigURI = "resource://org/apache/cocoon/cocoon.roles";
     private List m_classForceLoadList = new ArrayList();
@@ -142,11 +146,13 @@ public class CocoonBean
 
     public Logger getInitializationLogger()
     {
-        return m_initializationLogger; }
+        return m_initializationLogger;
+    }
 
     public void setInitializationLogger( Logger initializationLogger )
     {
-        m_initializationLogger = initializationLogger; }
+        m_initializationLogger = initializationLogger;
+    }
 
     public File getWorkDirectory()
     {
