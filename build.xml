@@ -20,7 +20,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.36 2004/03/09 10:19:38 reinhard Exp $:
+       CVS $Id$:
 
 ============================================================================ -->
 
@@ -61,9 +61,6 @@
   <!-- =================================================================== -->
   <!-- Standalone-demo targets -->
   <import file="tools/targets/standalone-demo-build.xml" />
-  <!-- =================================================================== -->
-  <!-- Instrumentation targets -->
-  <import file="tools/targets/instrumentation-build.xml" />
   <!-- =================================================================== -->
   <!-- Upgrade targets -->
   <import file="tools/targets/upgrade-build.xml" />
