@@ -288,7 +288,7 @@
       <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of
-select="@project"/>-tests</xsl:for-each></xsl:attribute>
+select="@project"/>-compile</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <!-- Test if this block has tests -->
