@@ -27,7 +27,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.50 2004/03/26 00:00:14 joerg Exp $
+    | CVS $Id: sitemap.xmap,v 1.51 2004/06/11 21:38:10 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -644,7 +644,6 @@
       </map:select>
 
     </map:handle-errors>
-
   </map:pipeline>
  </map:pipelines>
 

@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.16 2004/06/04 00:12:30 tcurdt Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.17 2004/06/11 21:38:10 vgritsenko Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -129,9 +129,6 @@
    </sample>
    <sample name="PNG" href="../blocks/batik/hello.png">
     Hello from the batik block in PNG.
-   </sample>
-   <sample name="SWF" href="../blocks/swf/hello.swf">
-    Flashy hello from swf block! You need the appropriate (flash) plugin for your browser.
    </sample>
    <sample name="XLS" href="../blocks/poi/hello.xls">
     Hello in Excel spreadsheet format from the POI block.
