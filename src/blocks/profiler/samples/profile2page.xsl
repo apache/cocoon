@@ -12,30 +12,33 @@
  <xsl:param name="component"/>
 
  <xsl:template match="/">
-  <page>
-   <tab title="Back" href="profile.html"/>
-   <tab title="Overview" href="welcome"/>
-   <style href="xml2html.css"/>
-   <script href="xml2html.js"/>
+  <document>
+   <header>
+    <tab title="Back" href="profile.html"/>
+    <tab title="Overview" href="welcome"/>
+    <style href="xml2html.css"/>
+    <script href="xml2html.js"/>
+   </header>
+   <body>
+    <xsl:choose>
+     <xsl:when test="$component!=''">
+      <xsl:apply-templates
+          select="profile:profilerinfo/profile:pipeline/profile:result/profile:component[@index=$component]"
+          mode="fragment"/>
+     </xsl:when>
+     <xsl:when test="$result!=''">
+      <xsl:apply-templates select="profile:profilerinfo/profile:pipeline/profile:result" mode="result"/>
+     </xsl:when>
+     <xsl:when test="$key!=''">
+      <xsl:apply-templates select="profile:profilerinfo/profile:pipeline" mode="results"/>
+     </xsl:when>
+     <xsl:otherwise>
+      <xsl:apply-templates select="profile:profilerinfo" mode="pipelines"/>
+     </xsl:otherwise>
+    </xsl:choose>
 
-   <xsl:choose>
-    <xsl:when test="$component!=''">
-     <xsl:apply-templates
-         select="profile:profilerinfo/profile:pipeline/profile:result/profile:component[@index=$component]"
-         mode="fragment"/>
-    </xsl:when>
-    <xsl:when test="$result!=''">
-     <xsl:apply-templates select="profile:profilerinfo/profile:pipeline/profile:result" mode="result"/>
-    </xsl:when>
-    <xsl:when test="$key!=''">
-     <xsl:apply-templates select="profile:profilerinfo/profile:pipeline" mode="results"/>
-    </xsl:when>
-    <xsl:otherwise>
-     <xsl:apply-templates select="profile:profilerinfo" mode="pipelines"/>
-    </xsl:otherwise>
-   </xsl:choose>
- 
-  </page>
+   </body>
+  </document>
  </xsl:template>
 
  <xsl:template match="profile:profilerinfo" mode="pipelines">

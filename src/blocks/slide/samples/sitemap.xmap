@@ -100,7 +100,7 @@
    <map:match pattern="authenticate">
     <map:generate src="cocoon:/principallist"/>
 
-    <map:transform type="xslt" src="principal2auth.xsl"> <!-- stylesheets seems to have a problem with XSLTC -->
+	  <map:transform type="xslt" src="principal2auth.xsl"> 
      <map:parameter name="use-request-parameters" value="true"/>
     </map:transform>
 
@@ -129,7 +129,10 @@
    </map:match>
  
    <map:match pattern="login.html">
-    <map:generate src="login.xhtml"/>
+    <map:generate src="login.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:transform src="redirect4login.xsl">
      <map:parameter name="destination" value="{request-param:resource}"/>
     </map:transform>
@@ -144,7 +147,10 @@
      <map:redirect-to uri="{request-param:resource}"/>
     </map:act>
 
-    <map:generate src="login-failed.xhtml"/>
+    <map:generate src="login-failed.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:transform src="redirect4login.xsl">
      <map:parameter name="destination" value="{request-param:resource}"/>
     </map:transform>
@@ -155,7 +161,11 @@
     <map:act type="auth-logout">
      <map:parameter name="handler" value="slidehandler"/>
 
-     <map:read src="logout.xhtml"/>
+     <map:generate src="logout.xml"/>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+     <map:serialize/>
     </map:act>
 
     <map:redirect-to uri="login.html"/>
@@ -175,6 +185,9 @@
       <map:transform src="description2html4content.xsl">
        <map:parameter name="cocoon-source-principal" value="{../ID}"/>
       </map:transform>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:transform type="xinclude"/>
       <map:serialize type="html"/>
      </map:match>
@@ -187,6 +200,9 @@
 
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
       <map:transform src="description2html4properties.xsl"/>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:serialize type="html"/>
      </map:match>
 
@@ -202,6 +218,9 @@
       </map:aggregate>
 
       <map:transform src="description2html4permissions.xsl"/>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:serialize type="html"/>
      </map:match>
 
@@ -213,6 +232,9 @@
 
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
       <map:transform src="description2html4locks.xsl"/>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:serialize type="html"/>
      </map:match>
 
@@ -233,6 +255,9 @@
        <map:parameter name="principalcaller" value="{../ID}"/>
       </map:generate>
       <map:transform src="principal2html4users.xsl"/>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:serialize type="html"/>
      </map:match>
 

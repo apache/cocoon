@@ -3,7 +3,6 @@
                 xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
                 version="1.0">
 
-
  <xsl:template match="st:E">
   <table bgcolor="#a0ffff" cellspacing="1">
    <tr>

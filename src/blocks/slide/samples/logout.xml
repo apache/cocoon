@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<document>
+  <header>
+    <title>Jakarta Slide example</title>
+    <tab title="login" href="/cocoon/samples/slide/login.html"/>
+    <tab title="back" href=".."/>
+  </header>
+  <body>
+    <row>
+      <column title="Logout">
+        <p>Good bye.</p>
+      </column>
+    </row>
+  </body>
+</document>
