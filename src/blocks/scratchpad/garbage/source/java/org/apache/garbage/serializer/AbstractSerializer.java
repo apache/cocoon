@@ -33,9 +33,10 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: AbstractSerializer.java,v 1.3 2004/03/24 02:28:22 joerg Exp $
+ * @version CVS $Id: AbstractSerializer.java,v 1.4 2004/04/19 17:56:47 pier Exp $
  */
-public abstract class AbstractSerializer implements Serializer, Locator {
+public abstract class AbstractSerializer
+implements Serializer, Locator, org.apache.cocoon.serialization.Serializer {
 
     /** The line separator string */
     private static final char S_EOL[] =
@@ -91,6 +92,20 @@ public abstract class AbstractSerializer implements Serializer, Locator {
     public AbstractSerializer() {
         super();
         this.reset();
+    }
+
+    /* ====================================================================== */
+
+    public String getMimeType() {
+        return(this.getContentType());
+    }
+
+    public void setOutputStream(OutputStream out) {
+        this.setOutput(out);
+    }
+
+    public boolean shouldSetContentLength() {
+        return(false);
     }
 
     /* ====================================================================== */
