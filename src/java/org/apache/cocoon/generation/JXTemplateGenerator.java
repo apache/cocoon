@@ -2357,7 +2357,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         valid = startEvent.compileTime.isValid(validity);
                     }
                     if (valid != SourceValidity.VALID) {
-                        cache.remove(uri);
                         regenerate = true;
                     }
                 } else {
