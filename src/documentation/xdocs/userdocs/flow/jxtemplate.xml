@@ -362,14 +362,14 @@ If the <code>varStatus</code> attribute is present a variable will be created to
  <p/>
 <p>JXPath Example:</p>
 <source>
-&lt;jx:forEach items="#{items}" varStatus="status"&gt;
-    index=#{$status.index},
-    count=#{$status.count},
-    current=#{$status.current},
-    first=#{$status.first},
-    last=#{$status.last},
-    begin=#{$status.begin},
-    end=#{$status.end}
+&lt;jx:forEach select="#{items}" varStatus="status"&gt;
+    index=#{$status/index},
+    count=#{$status/count},
+    current=#{$status/current},
+    first=#{$status/first},
+    last=#{$status/last},
+    begin=#{$status/begin},
+    end=#{$status/end}
 &lt;/jx:forEach&gt;
 </source>
 </s2>
