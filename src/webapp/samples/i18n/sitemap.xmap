@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.6 2003/08/12 15:48:02 sylvain Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.7 2003/12/12 14:48:43 vgritsenko Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -21,7 +21,6 @@
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
-    <!-- =========================== Actions ================================= -->
     <map:actions>
       <!-- LocaleAction is used to set/get current users locale. See Javadocs for details. -->
       <map:action name="locale" logger="sitemap.action.locale" src="org.apache.cocoon.acting.LocaleAction">
