@@ -18,7 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 import org.w3c.dom.Element;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 
 /**
  * Builds {StructDefinition}s.
@@ -43,7 +43,7 @@ public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         }
 
         definition.makeImmutable();
-        DeprecationLogger.log("Use of 'fd:struct' is deprecated. Use 'fd:group' instead, at " + definition.getLocation());
+        Deprecation.logger.info("Use of 'fd:struct' is deprecated. Use 'fd:group' instead, at " + definition.getLocation());
         return definition;
     }
 }

@@ -131,6 +131,16 @@
     </init-param>
 
     <!--
+      The forbidden level for deprectation messages. DEBUG forbids all deprecations (strict mode)
+      and FATAL_ERROR allows all (tolerant mode). Default is ERROR, allowing up to WARN.
+      See org.apache.util.Deprecation for more details.
+    -->
+    <init-param>
+      <param-name>forbidden-deprecation-level</param-name>
+      <param-value>ERROR</param-value>
+    </init-param>
+
+    <!--
       This parameter switches the logging system from LogKit to Log4J for Cocoon.
       Log4J has to be configured already.
       <init-param>

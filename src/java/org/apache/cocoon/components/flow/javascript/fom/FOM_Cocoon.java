@@ -46,7 +46,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaObject;

@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 import org.w3c.dom.Element;
 
 /**
@@ -48,7 +48,7 @@ public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         if (actionCommand == null) {
             actionCommand = DomHelper.getAttribute(widgetElement, "action-command", null);
             if (actionCommand != null) {
-                DeprecationLogger.log("The 'action-command' attribute is deprecated and replaced by 'command', at " +
+                Deprecation.logger.warn("The 'action-command' attribute is deprecated and replaced by 'command', at " +
                     DomHelper.getLocation(widgetElement));
             }
         }

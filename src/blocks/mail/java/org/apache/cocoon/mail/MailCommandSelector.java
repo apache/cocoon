@@ -17,7 +17,7 @@ package org.apache.cocoon.mail;
 
 import java.util.Map;
 import org.apache.cocoon.selection.AbstractSwitchSelector;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -91,7 +91,7 @@ public class MailCommandSelector extends AbstractSwitchSelector {
     }
 
     public boolean select(String expression, Object selectorContext) {
-        DeprecationLogger.log("The MailCommandSelector is deprecated."
+        Deprecation.logger.warn("The MailCommandSelector is deprecated."
                  + " Use RequestAttributeSelector, RequestParameterSelector, or ParameterSelector instead.");
         if (selectorContext == null) {
             return false;

@@ -16,7 +16,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 import org.w3c.dom.Element;
 
 /**
@@ -38,7 +38,7 @@ public class StructJXPathBindingBuilder
 
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
             throws BindingException {
-        DeprecationLogger.log("'fb:struct' is deprecated and replaced by 'fb:group' at " + DomHelper.getLocation(bindingElm));
+        Deprecation.logger.info("'fb:struct' is deprecated and replaced by 'fb:group' at " + DomHelper.getLocation(bindingElm));
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);

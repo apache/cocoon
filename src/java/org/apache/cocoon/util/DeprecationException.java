@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.util.log;
+package org.apache.cocoon.util;
 
-import org.apache.avalon.framework.logger.Logger;
 
 /**
- * This class provides static accessors for a special "deprecation" logger.
- * All deprecated code should use this logger to log warnings into the 
- * deprecation log. This makes it easier for users to find out if they're 
- * using deprecated stuff.
- *
+ * An exception that indicates unauthorized use of a deprecated feature, or an
+ * attempt to use a old feature that has been removed.
+ * 
  * @version $Id$
  */
-public class DeprecationLogger {
-
-    /** This is the logger used to log the warn messages.
-     *  THIS IS AN INTERNAL FIELD, DON'T USE IT DIRECTLY.
-     */
-    public static Logger logger;
-    
-    public static void log(String message) {
-        logger.warn(message);
+public class DeprecationException extends RuntimeException {
+    public DeprecationException(String message) {
+        super(message);
     }
 }

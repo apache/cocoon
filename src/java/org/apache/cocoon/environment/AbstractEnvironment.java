@@ -34,7 +34,7 @@ import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.log.DeprecationLogger;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.source.SourceException;
 import org.xml.sax.SAXException;
@@ -370,7 +370,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public Source resolve(String systemId)
     throws ProcessingException, SAXException, IOException {
-        DeprecationLogger.log("The resolve(String) method of the SourceResolver is "
+        Deprecation.logger.warn("The method SourceResolver.resolve(String) is "
                               + "deprecated. Use resolveURI(String) instead.");
         if (!this.initializedComponents) {
             initComponents();
@@ -468,7 +468,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * @deprecated Use {@link #getOutputStream(int)} instead.
      */
     public OutputStream getOutputStream() throws IOException {
-        DeprecationLogger.log("The getOutputStream() method of the Environment " +
+        Deprecation.logger.warn("The method Environment.getOutputStream() " +
                               "is deprecated. Use getOutputStream(-1) instead.");
         // by default we use the complete buffering output stream
         return this.getOutputStream(-1);
