@@ -88,6 +88,6 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
      */
     public abstract JXPathBindingBase buildBinding(
         Element bindingElm,
-        JXPathBindingManager.Assistant assistant);
+        JXPathBindingManager.Assistant assistant) throws BindingException;
 
 }

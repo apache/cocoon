@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.binding;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.apache.cocoon.woody.util.DomHelper;
 
 /**
  * InsertNodeJXPathBindingBuilder provides a helper class for the Factory 
@@ -75,7 +76,7 @@ public class InsertNodeJXPathBindingBuilder
      */
     public JXPathBindingBase buildBinding(
         Element bindingElm,
-        JXPathBindingManager.Assistant assistant) {
+        JXPathBindingManager.Assistant assistant) throws BindingException {
             
         try {
             // TODO have src attribute to point to extermal template in stead of 
@@ -92,8 +93,7 @@ public class InsertNodeJXPathBindingBuilder
 
             return new InsertNodeJXPathBinding(domTemplate);
         } catch (Exception e) {
-            getLogger().warn("Error building a insert-node binding.", e);
-            return null;
+            throw new BindingException("Error building the insert-node binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 }

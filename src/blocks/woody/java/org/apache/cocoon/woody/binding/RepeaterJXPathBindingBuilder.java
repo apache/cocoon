@@ -94,7 +94,7 @@ public class RepeaterJXPathBindingBuilder
      */
     public JXPathBindingBase buildBinding(
         Element bindingElm,
-        JXPathBindingManager.Assistant assistant) {
+        JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
             String repeaterId = DomHelper.getAttribute(bindingElm, "id");
@@ -142,9 +142,10 @@ public class RepeaterJXPathBindingBuilder
                     deleteBindings);
 
             return repeaterBinding;
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            getLogger().warn("Error building a repeater field binding.", e);
-            return null;
+            throw new BindingException("Error building repeater binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 }

@@ -75,10 +75,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public AggregateJXPathBinding(
-        String widgetId,
-        String xpath,
-        JXPathBindingBase[] childBindings) {
+    public AggregateJXPathBinding(String widgetId, String xpath, JXPathBindingBase[] childBindings) {
         super(childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;
@@ -90,13 +87,11 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * before continuing the binding over the child-bindings.
      */
     public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
-
-        AggregateField aggregate =
-            (AggregateField) frmModel.getWidget(this.widgetId);
-        JXPathContext subContext =
-            jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+        AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.loadFormFromModel(aggregate, subContext);
-        getLogger().debug("done loading " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done loading " + toString());
     }
 
     /**
@@ -104,22 +99,15 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context 
      * before continuing the binding over the child-bindings.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
-
-        AggregateField aggregate =
-            (AggregateField) frmModel.getWidget(this.widgetId);
-        JXPathContext subContext =
-            jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+        AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.saveFormToModel(aggregate, subContext);
-        getLogger().debug("done saving " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done saving " + toString());
     }
 
     public String toString() {
-        return "AggregateJXPathBinding [widget="
-            + this.widgetId
-            + ", xpath="
-            + this.xpath
-            + "]";
+        return "AggregateJXPathBinding [widget=" + this.widgetId + ", xpath=" + this.xpath + "]";
     }
-
 }

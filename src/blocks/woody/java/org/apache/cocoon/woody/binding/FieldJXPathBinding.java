@@ -53,120 +53,132 @@ package org.apache.cocoon.woody.binding;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.formmodel.Field;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
 
-///**
-// * Represents a Binding class for the Woody block that maps onto
-// * a &lt;bnd:field&gt; element of the binding config.
-// * The purpose of a this is to map a specific widget's value to a jxpath
-// * accessible property of the objectModel. 
-// */
+import java.util.Locale;
 
 /**
- * FieldJXPathBinding provides an implementation of a {@link Binding} 
- * that loads and saves the information behind a specific xpath expresion 
+ * FieldJXPathBinding provides an implementation of a {@link Binding}
+ * that loads and saves the information behind a specific xpath expresion
  * (pointing to an attribute or text-node) to and from a specific Woody
- * widget as identified by its id. 
+ * widget as identified by its id.
  */
 public class FieldJXPathBinding extends JXPathBindingBase {
 
-    /** 
-     * The xpath expression to the objectModel property     */
+    /**
+     * The xpath expression to the objectModel property
+     */
     private final String xpath;
 
-    /** 
-     * The id of the Woody form-widget     */
+    /**
+     * The id of the Woody form-widget
+     */
     private final String fieldId;
 
-    /** 
-     * Flag indicating if the objectModel-property can be altered or not */
+    /**
+     * Flag indicating if the objectModel-property can be altered or not
+     */
     private final boolean readonly;
 
-    /** 
-     * Flag indicating if the objectModel-property can be altered or not */
+    /**
+     * Flag indicating if the objectModel-property can be altered or not
+     */
     private final JXPathBindingBase updateBinding;
 
     /**
-     * Constructs FieldJXPathBinding
+     * Optional convertor to convert values to and from strings when setting or reading
+     * the from the model. Especially used in combination with XML models where everything
+     * are strings.
      */
-    public FieldJXPathBinding(
-        String widgetId,
-        String xpath,
-        boolean readonly,
-        JXPathBindingBase[] updateBindings) {
+    private final Convertor convertor;
+
+    /**
+     * The locale to pass to the {@link #convertor}.
+     */
+    private final Locale convertorLocale;
+
+    /**
+     * Constructs FieldJXPathBinding.
+     *
+     * @param convertor may be null
+     */
+    public FieldJXPathBinding(String widgetId, String xpath, boolean readonly, JXPathBindingBase[] updateBindings,
+                              Convertor convertor, Locale convertorLocale) {
         this.fieldId = widgetId;
         this.xpath = xpath;
         this.readonly = readonly;
         this.updateBinding = new ComposedJXPathBindingBase(updateBindings);
+        this.convertor = convertor;
+        this.convertorLocale = convertorLocale;
     }
 
     /**
-     * Actively performs the binding from the ObjectModel wrapped in a jxpath 
+     * Actively performs the binding from the ObjectModel wrapped in a jxpath
      * context to the Woody-form-widget specified in this object.
      */
     public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
         try {
             Field fld = (Field) frmModel.getWidget(this.fieldId);
-            // TODO here we need to use the dataconversion in the future
-            String value = (String) jxpc.getValue(this.xpath);
+            Object value = jxpc.getValue(this.xpath);
+
+            if (convertor != null)
+                value = convertor.convertFromString((String)value, convertorLocale, null);
+
             fld.setValue(value);
-            getLogger().debug(
-                "done loading " + toString() + " -- value= " + value);
+
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("done loading " + toString() + " -- value= " + value);
         } catch (Exception e) {
-            getLogger().warn(
-                "JXPath failed to find value for " + this.xpath,
-                e);
+            getLogger().warn("JXPath failed to find value for " + this.xpath, e);
         }
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel 
+     * Actively performs the binding from the Woody-form to the ObjectModel
      * wrapped in a jxpath context
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
         if (!this.readonly) {
             try {
                 Field fld = (Field) frmModel.getWidget(this.fieldId);
-                // TODO here we need some dataconversion in the future
-                String value = (String) fld.getValue();
-                String oldValue = (String) jxpc.getValue(this.xpath);
-                getLogger().debug(
-                    "value= " + value + "-- oldvalue=" + oldValue);
+                Object value = fld.getValue();
+                if (value != null && convertor != null)
+                    value = convertor.convertToString(value, convertorLocale, null);
+                Object oldValue = jxpc.getValue(this.xpath);
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("value= " + value + "-- oldvalue=" + oldValue);
                 boolean update = false;
 
-                if (value != oldValue
-                    && value != null
-                    && !value.equals(oldValue)) {
+                if ((value == null && oldValue != null) || value != null && !value.equals(oldValue)) {
+                    // first update the value itself
                     jxpc.setValue(this.xpath, value);
-                    JXPathContext subContext =
-                        jxpc.getRelativeContext(
-                            jxpc.getPointer(this.xpath));
-                    this.updateBinding.saveFormToModel(
-                        frmModel,
-                        subContext);
+
+                    // now perform any other bindings that need to be performed when the value is updated
+                    JXPathContext subContext = null;
+                    try {
+                        subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+                    } catch (JXPathException e) {
+                        // if the value has been set to null and the underlying model is a bean, then
+                        // JXPath will not be able to create a relative context
+                        if (getLogger().isDebugEnabled())
+                            getLogger().debug("(Ignorable) problem binding field " + fld.getFullyQualifiedId(), e);
+                    }
+                    if (subContext != null)
+                        this.updateBinding.saveFormToModel(frmModel, subContext);
                     update = true;
                 }
-                getLogger().debug(
-                    "done saving "
-                        + toString()
-                        + " -- value= "
-                        + value
-                        + " -- on-update == "
-                        + update);
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("done saving " + toString() + " -- value= " + value + " -- on-update == " + update);
             } catch (Exception e) {
-                getLogger().warn(
-                    "JXPath failed to find value for " + this.xpath,
-                    e);
+                throw new BindingException("Problem binding field " + this.fieldId + " (parent = \"" + frmModel.getFullyQualifiedId() + "\") to xpath " + this.xpath + " (context xpath = \"" + jxpc.getContextPointer().asPath() + "\")", e);
             }
         }
     }
 
     public String toString() {
-        return "FieldJXPathBinding [widget="
-            + this.fieldId
-            + ", xpath="
-            + this.xpath
-            + "]";
+        return "FieldJXPathBinding [widget=" + this.fieldId + ", xpath=" + this.xpath + "]";
     }
 
     public void enableLogging(Logger logger) {

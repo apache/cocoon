@@ -74,7 +74,6 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
     
     /**
      * Constructs InsertNodeJXPathBinding
-     * @param domTemplate
      */
     public InsertNodeJXPathBinding(DocumentFragment domTemplate) {       
         this.template = domTemplate;
@@ -93,9 +92,7 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
      * The factory will inserts a clone of the 'template' DocumentFragment 
      * inside this object into the target objectmodel.
      */
-    public void saveFormToModel(
-        Widget frmModel,
-        JXPathContext jxpc) {
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
 
         jxpc.setFactory(new AbstractFactory() {
             public boolean createObject(JXPathContext context, Pointer pointer,
@@ -105,13 +102,15 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
                 Document targetDoc = parentNode.getOwnerDocument();
                 Node toInsert = targetDoc.importNode(InsertNodeJXPathBinding.this.template, true);
                 parentNode.appendChild(toInsert);
-                
-                InsertNodeJXPathBinding.this.getLogger().debug("InsertNode jxpath factory executed for index." + index);
+
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("InsertNode jxpath factory executed for index." + index);
                 return true;
             }
         });
-        
-        getLogger().debug("done registered factory for inserting node -- " + toString());
+
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done registered factory for inserting node -- " + toString());
     }
     
     public String toString() {

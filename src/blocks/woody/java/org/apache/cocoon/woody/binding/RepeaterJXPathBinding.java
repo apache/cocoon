@@ -82,26 +82,19 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(
-        String repeaterId,
-        String repeaterPath,
-        String rowPath,
-        String uniqueRowId,
-        String uniqueRowPath,
-        JXPathBindingBase[] childBindings,
-        JXPathBindingBase insertBinding,
-        JXPathBindingBase[] deleteBindings) {
+    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, String rowPath, String uniqueRowId,
+                                 String uniqueRowPath, JXPathBindingBase[] childBindings,
+                                 JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.uniqueRowId = uniqueRowId;
         this.uniqueRowPath = uniqueRowPath;
         this.uniqueFieldBinding =
-            new FieldJXPathBinding(uniqueRowId, uniqueRowPath, true, null);
+            new FieldJXPathBinding(uniqueRowId, uniqueRowPath, true, null, null, null);
         this.rowBinding = new ComposedJXPathBindingBase(childBindings);
         this.insertRowBinding = insertBinding;
-        this.deleteRowBinding =
-            new ComposedJXPathBindingBase(deleteBindings);
+        this.deleteRowBinding = new ComposedJXPathBindingBase(deleteBindings);
     }
 
 
@@ -109,19 +102,14 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * Binds the unique-id of the repeated rows, and narrows the context on 
      * objectModelContext and Repeater to the repeated rows before handing 
      * over to the actual binding-children.
-     *   
-     * @param frmModel
-     * @param jxpc
      */
     public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 
         // build a jxpath iterator for pointers
-        JXPathContext repeaterContext =
-            jxpc.getRelativeContext(jxpc.getPointer(this.repeaterPath));
-        Iterator rowPointers =
-            repeaterContext.iteratePointers(this.rowPath);
+        JXPathContext repeaterContext = jxpc.getRelativeContext(jxpc.getPointer(this.repeaterPath));
+        Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
 
         //iterate through it
         while (rowPointers.hasNext()) {
@@ -130,14 +118,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
             // make a jxpath ObjectModelSubcontext on the iterated element
             Pointer jxp = (Pointer) rowPointers.next();
-            JXPathContext rowContext =
-                repeaterContext.getRelativeContext(jxp);
+            JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
 
             // hand it over to children
             this.uniqueFieldBinding.loadFormFromModel(thisRow, rowContext);
             this.rowBinding.loadFormFromModel(thisRow, rowContext);
         }
-        getLogger().debug("done loading rows " + toString());
+
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done loading rows " + toString());
     }
 
 
@@ -146,7 +135,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * updated, inserted or removed.  Depending on what happened the appropriate
      * child-bindings are alowed to visit the narrowed contexts.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
 
@@ -178,13 +167,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                         repeaterContext.getRelativeContext(jxp);
 
                     //TODO future might need data-conversion here
-                    String matchId =
-                        (String) rowContext.getValue(this.uniqueRowPath);
+                    String matchId = (String) rowContext.getValue(this.uniqueRowPath);
                     if (rowIdValue.equals(matchId)) {
                         // match! --> bind to children
-                        this.rowBinding.saveFormToModel(
-                            thisRow,
-                            rowContext);
+                        this.rowBinding.saveFormToModel(thisRow, rowContext);
                         //        --> store rowIdValue in list of updatedRowIds
                         updatedRowIds.add(rowIdValue);
                         break;
@@ -197,15 +183,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
 
         //again iterate nodes for deletion  
-        Iterator rowPointers =
-            repeaterContext.iteratePointers(this.rowPath);
+        Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
         while (rowPointers.hasNext()) {
             Pointer jxp = (Pointer) rowPointers.next();
-            JXPathContext rowContext =
-                repeaterContext.getRelativeContext(jxp);
+            JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
             //TODO future might need data-conversion here
-            String matchId =
-                (String) rowContext.getValue(this.uniqueRowPath);
+            String matchId = (String) rowContext.getValue(this.uniqueRowPath);
 
             // check if matchPath was in list of updates, if not --> bind for delete
             if (!updatedRowIds.contains(matchId)) {
@@ -226,31 +209,24 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         //register the factory!
         this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
         while (rowIterator.hasNext()) {
-            Repeater.RepeaterRow thisRow =
-                (Repeater.RepeaterRow) rowIterator.next();
+            Repeater.RepeaterRow thisRow = (Repeater.RepeaterRow) rowIterator.next();
             // -->  create the path to let the context be created
-            Pointer newRowContextPointer =
-                repeaterContext.createPath(
-                    this.rowPath + "[" + indexCount + "]");
-            JXPathContext newRowContext =
-                repeaterContext.getRelativeContext(newRowContextPointer);
-            getLogger().debug(
-                "inserted row at " + newRowContextPointer.asPath());
+            Pointer newRowContextPointer = repeaterContext.createPath(this.rowPath + "[" + indexCount + "]");
+            JXPathContext newRowContext = repeaterContext.getRelativeContext(newRowContextPointer);
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("inserted row at " + newRowContextPointer.asPath());
             //    + rebind to children for update
             this.rowBinding.saveFormToModel(thisRow, newRowContext);
             getLogger().debug("bound new row");
             indexCount++;
         }
 
-        getLogger().debug("done saving rows " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done saving rows " + toString());
     }
 
     public String toString() {
-        return "RepeaterJXPathBinding [widget="
-            + this.repeaterId
-            + ", xpath="
-            + this.repeaterPath
-            + "]";
+        return "RepeaterJXPathBinding [widget=" + this.repeaterId + ", xpath=" + this.repeaterPath + "]";
     }
 
     public void enableLogging(Logger logger) {

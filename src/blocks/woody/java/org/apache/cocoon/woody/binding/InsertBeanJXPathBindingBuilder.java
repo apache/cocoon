@@ -70,9 +70,7 @@ public class InsertBeanJXPathBindingBuilder
      * Creates an instance of {@link InsertBeanJXPathBinding} configured 
      * with the nested template of the bindingElm. 
      */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
-        Assistant assistant) {
+    public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
 
         try {
             String className =
@@ -81,9 +79,10 @@ public class InsertBeanJXPathBindingBuilder
                 DomHelper.getAttribute(bindingElm, "addmethod");
 
             return new InsertBeanJXPathBinding(className, addMethod);
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            getLogger().warn("Error building a insert-bean binding.", e);
-            return null;
+            throw new BindingException("Error building a insert-bean binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 

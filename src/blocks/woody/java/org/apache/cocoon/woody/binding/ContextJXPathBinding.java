@@ -61,18 +61,14 @@ import org.apache.commons.jxpath.JXPathContext;
 public class ContextJXPathBinding extends ComposedJXPathBindingBase {
 
     /** 
-     * the relative contextPath for the sub-bindings of this context */
+     * the relative contextPath for the sub-bindings of this context
+     */
     private final String xpath;
 
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context
-     * 
-     * @param contextPath
-     * @param childBindings
      */
-    public ContextJXPathBinding(
-        String contextPath,
-        JXPathBindingBase[] childBindings) {
+    public ContextJXPathBinding(String contextPath, JXPathBindingBase[] childBindings) {
         super(childBindings);
         this.xpath = contextPath;
     }
@@ -82,25 +78,24 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * context to the Woody-form.
      */
     public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
-        JXPathContext subContext =
-            jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.loadFormFromModel(frmModel, subContext);
-        getLogger().debug("done loading " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done loading " + toString());
     }
 
     /**
      * Actively performs the binding from the Woody-form to the ObjectModel 
      * wrapped in a jxpath context.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
-        JXPathContext subContext =
-            jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.saveFormToModel(frmModel, subContext);
-        getLogger().debug("done saving " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done saving " + toString());
     }
 
     public String toString() {
         return "ContextJXPathBinding [xpath=" + this.xpath + "]";
     }
-
 }

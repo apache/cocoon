@@ -51,7 +51,12 @@
 package org.apache.cocoon.woody.binding;
 
 import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import org.apache.cocoon.i18n.I18nUtils;
 import org.w3c.dom.Element;
+
+import java.util.Locale;
 
 /**
  * FieldJXPathBindingBuilder provides a helper class for the Factory 
@@ -74,38 +79,36 @@ public class FieldJXPathBindingBuilder extends JXpathBindingBuilderBase {
      * Creates an instance of {@link FieldJXPathBinding} based on the attributes
      * and nested configuration of the provided bindingElm.
      */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
-        JXPathBindingManager.Assistant assistant) {
+    public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            boolean readonly =
-                DomHelper.getAttributeAsBoolean(
-                    bindingElm,
-                    "readonly",
-                    false);
+            boolean readonly = DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
             Element updateWrapElement =
-                DomHelper.getChildElement(
-                    bindingElm,
-                    BindingManager.NAMESPACE,
-                    "on-update");
-            JXPathBindingBase[] updateBindings =
-                assistant.makeChildBindings(updateWrapElement);
+                DomHelper.getChildElement(bindingElm, BindingManager.NAMESPACE, "on-update");
+            JXPathBindingBase[] updateBindings = assistant.makeChildBindings(updateWrapElement);
+
+            Convertor convertor = null;
+            Locale convertorLocale = Locale.US;
+            Element convertorEl = DomHelper.getChildElement(bindingElm, Constants.WD_NS, "convertor");
+            if (convertorEl != null) {
+                String datatype = DomHelper.getAttribute(convertorEl, "datatype");
+                String localeStr = convertorEl.getAttribute("datatype");
+                if (!localeStr.equals(""))
+                    convertorLocale = I18nUtils.parseLocale(localeStr);
+                convertor = assistant.getDatatypeManager().createConvertor(datatype, convertorEl);
+            }
 
             FieldJXPathBinding fieldBinding =
-                new FieldJXPathBinding(
-                    widgetId,
-                    xpath,
-                    readonly,
-                    updateBindings);
+                    new FieldJXPathBinding(widgetId, xpath, readonly, updateBindings, convertor, convertorLocale);
 
             return fieldBinding;
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            getLogger().warn("Error building a field binding.", e);
-            return null;
+            throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 }
