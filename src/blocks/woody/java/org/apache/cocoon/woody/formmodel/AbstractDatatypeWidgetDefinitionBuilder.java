@@ -72,26 +72,29 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
 
         Element selectionListElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "selection-list");
         if (selectionListElement != null) {
-
             // Get an appropriate list builder
-
             ServiceSelector builderSelector = (ServiceSelector)this.serviceManager.lookup(SelectionListBuilder.ROLE + "Selector");
-
-            // listType can be null, meaning we will use the default selection list
-            String listType = selectionListElement.getAttribute("type");
-            if (listType.length() == 0) listType = null;
-            
-            SelectionListBuilder builder = (SelectionListBuilder)builderSelector.select(listType);
-            
+            SelectionListBuilder builder = null;
             try {
+                // listType can be null, meaning we will use the default selection list
+                String listType = selectionListElement.getAttribute("type");
+                if ("".equals(listType)) {
+                    listType = null;
+                }
+
+                builder = (SelectionListBuilder)builderSelector.select(listType);
                 SelectionList list = builder.build(selectionListElement, widget.getDatatype());
                 widget.setSelectionList(list);
             } finally {
-                builderSelector.release(builder);
+                if (builder != null) {
+                    builderSelector.release(builder);
+                }
                 this.serviceManager.release(builderSelector);
             }
+
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 }
