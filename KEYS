@@ -244,3 +244,78 @@ T3rs8e0pd5LmNqJpWLOjihNLPWpC1PrMiEYEGBECAAYFAkCAyjgACgkQwTnxUyPL
 eipZzgCeIaSVLRsyuTVMbAjdxKnRoyp0F08An1kkI/x5gP0X4cHbcUAGTbLqdzJP
 =wNYp
 -----END PGP PUBLIC KEY BLOCK-----
+pub  1024D/7C200941 2004-04-24 Torsten Curdt <tcurdt@apache.org>
+sig 3       7C200941 2004-09-25   Torsten Curdt <tcurdt@apache.org>
+sig 3       23CB7A2A 2004-04-27   David Crossley <dcrossley@indexgeo.com.au>
+sig         C4C57B42 2004-06-23   Marcus Crafter <crafterm@debian.org>
+sig 3       7C200941 2004-04-24   Torsten Curdt <tcurdt@apache.org>
+sig 3       015AFC8A 2004-10-16   Bertrand Delacretaz <bdelacretaz@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+sig 3       E41EDC7E 2004-10-30   Carsten Ziegeler <cziegeler@apache.org>
+uid                            Torsten Curdt <tcurdt@vafer.org>
+sig 3       7C200941 2004-09-25   Torsten Curdt <tcurdt@apache.org>
+sig 3       7C200941 2004-06-23   Torsten Curdt <tcurdt@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+sig 3       E41EDC7E 2004-10-30   Carsten Ziegeler <cziegeler@apache.org>
+uid                            Torsten Curdt <tcurdt@web.de>
+sig 3       7C200941 2004-06-23   Torsten Curdt <tcurdt@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+uid                            Torsten Curdt <tcurdt@managesoft.com>
+sig 3       7C200941 2004-06-23   Torsten Curdt <tcurdt@apache.org>
+sig 3       E2D774DF 2004-10-28   Sylvain Wallez <sylvain@apache.org>
+sig 3       E41EDC7E 2004-10-30   Carsten Ziegeler <cziegeler@apache.org>
+sub  1024g/87C5307C 2004-04-24
+sig         7C200941 2004-04-24   Torsten Curdt <tcurdt@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+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
+SaIPhA==
+=ruBc
+-----END PGP PUBLIC KEY BLOCK-----
