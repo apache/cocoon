@@ -262,7 +262,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      XSPRequestHelper.setSessionAttribute(objectModel,
+      XSPRequestHelper.setAttribute(objectModel,
         String.valueOf(<xsl:copy-of select="$name"/>),
         <xsl:copy-of select="$content"/>
       );
