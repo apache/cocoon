@@ -51,6 +51,8 @@
 
 package org.apache.cocoon;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +76,7 @@ import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -86,10 +89,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Testcase for action, generator and transformer components. 
+ * Testcase for actions, generators, transformers and serializer components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.6 2003/08/04 03:06:30 joerg Exp $
+ * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.7 2003/09/02 08:51:23 stephan Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {
@@ -333,6 +337,77 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         return document; 
     }
 
+    /**
+     * Serialize a document by a serializer
+     *
+     * @param type Hint of the serializer.
+     * @param parameters Serializer parameters.
+     * @param input Input document.
+     *
+     * @return Serialized data.
+     */
+    public final byte[] serialize(String type, Parameters parameters,
+                                  Document input) {
+
+        ComponentSelector selector = null;
+        Serializer serializer = null;
+        SourceResolver resolver = null;
+        Source inputsource = null;
+
+        assertNotNull("Test for component manager", this.manager);
+
+        ByteArrayOutputStream document = null;
+
+        try {
+            selector = (ComponentSelector) this.manager.lookup(Serializer.ROLE+
+                "Selector");
+            assertNotNull("Test lookup of serializer selector", selector);
+
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if serializer name is not null", type);
+            serializer = (Serializer) selector.select(type);
+            assertNotNull("Test lookup of serializer", serializer);
+
+            document = new ByteArrayOutputStream();
+            serializer.setOutputStream(document);
+
+            assertNotNull("Test if input document is not null", input);
+            DOMStreamer streamer = new DOMStreamer(serializer);
+
+            streamer.stream(input);
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve serializer", ce);
+            ce.printStackTrace();
+            fail("Could not retrieve serializer:"+ce.toString());
+        } catch (SAXException saxe) {
+            getLogger().error("Could not execute test", saxe);
+            fail("Could not execute test:"+saxe.toString());
+        } catch (IOException ioe) {
+            getLogger().error("Could not execute test", ioe);
+            fail("Could not execute test:"+ioe.toString());
+        } finally {
+            if (serializer!=null) {
+                selector.release(serializer);
+            }
+
+            if (selector!=null) {
+                this.manager.release(selector);
+            }
+
+            if (inputsource!=null) {
+                resolver.release(inputsource);
+            }
+
+            if (resolver!=null) {
+                this.manager.release(resolver);
+            }
+        }
+
+        return document.toByteArray();
+    }
+
     public final void print(Document document) {
         TransformerFactory factory = (TransformerFactory) TransformerFactory.newInstance();
         try
@@ -389,6 +464,67 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             fail("Could not execute test: " + e);
         } finally {
             if (resolver != null) {
+                resolver.release(assertionsource);
+            }
+            this.manager.release(resolver);
+            this.manager.release((Component) parser);
+        }
+
+        return assertiondocument;
+    }
+
+    /**
+     * Load a binary document.
+     *
+     * @param source Source location.
+     *
+     * @return Binary data.
+     */
+    public final byte[] loadByteArray(String source) {
+
+        SourceResolver resolver = null;
+        SAXParser parser = null;
+        Source assertionsource = null;
+
+        assertNotNull("Test for component manager", this.manager);
+
+        byte[] assertiondocument = null;
+
+        try {
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            assertNotNull("Test lookup of parser", parser);
+
+            assertNotNull("Test if assertion document is not null", source);
+            assertionsource = resolver.resolveURI(source);
+            assertNotNull("Test lookup of assertion source", assertionsource);
+            assertTrue("Test if source exist", assertionsource.exists());
+
+            assertNotNull("Test if inputstream of the assertion source is not null",
+                          assertionsource.getInputStream());
+
+            InputStream input = assertionsource.getInputStream();
+            long size = assertionsource.getContentLength();
+
+            assertiondocument = new byte[(int) size];
+            int i = 0;
+            int c;
+
+            while ((c = input.read())!=-1) {
+                assertiondocument[i] = (byte) c;
+                i++;
+            }
+
+        } catch (ComponentException ce) {
+            getLogger().error("Could not retrieve generator", ce);
+            fail("Could not retrieve generator: "+ce.toString());
+        } catch (Exception e) {
+            getLogger().error("Could not execute test", e);
+            fail("Could not execute test: "+e);
+        } finally {
+            if (resolver!=null) {
                 resolver.release(assertionsource);
             }
             this.manager.release(resolver);
@@ -474,5 +610,24 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         Diff diff = compareXML(expected, actual);
 
         assertEquals("Test if the assertion document is equal, " + diff.toString(), true, diff.identical());
+    }
+
+    /**
+     * Assert that the result of a byte comparison is identical.
+     *
+     * @param expected The expected byte array
+     * @param actual The actual byte array
+     */
+    public final void assertIdentical(byte[] expected, byte[] actual) {
+        assertEquals("Byte arrays of differing sizes, ", expected.length,
+                     actual.length);
+
+        if (expected.length>0) {
+            for (int i = 0; i<expected.length; i++) {
+                assertEquals("Byte array differs at index "+i, expected[i],
+                             actual[i]);
+            }
+        }
+
     }
 }
