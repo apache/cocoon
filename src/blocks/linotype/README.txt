@@ -10,7 +10,11 @@ Linotypes were machines that first allowed a single individual to mass-produce c
  Requirements
  ------------
 
-Linotype just depends on Cocoon and saves its edited content on disk, nothing else.
+On the server side, Linotype just depends on Cocoon and saves its edited content on disk, nothing else.
+
+To edit content with Linotype, a browser that supports the Mozilla Midas API is required. For now this means
+Mozilla 1.3 or greater. Note that Midas is *NOT* part of standard Gecko, so Camino and other Gecko-based browser
+won't do it.
 
 Thanks for your interest in Linotype. 
  
