@@ -73,13 +73,15 @@ import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 
 /**
  * This source descriptor acts as container for a set of source inspectors.
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceDescriptorManager.java,v 1.3 2003/10/27 09:30:07 unico Exp $
+ * @version CVS $Id: SourceDescriptorManager.java,v 1.4 2003/10/28 13:48:12 unico Exp $
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 
 implements SourceDescriptor, Contextualizable, Composable, 
@@ -105,7 +107,7 @@ Configurable, Initializable, Disposable, ThreadSafe {
     public void compose(ComponentManager manager) {
         m_manager = manager;
     }
-    
+        
     public void configure(Configuration configuration) throws ConfigurationException {
         m_configuration = configuration;
     }
@@ -221,5 +223,24 @@ Configurable, Initializable, Disposable, ThreadSafe {
         }
     }
     
+    /**
+     * Returns an aggregate validity describing the validity of all the properties.
+     */
+    public SourceValidity getValidity(Source source) {
+        AggregatedValidity validity = new AggregatedValidity();
+        SourceInspector inspector;
+        final Iterator inspectors = m_inspectors.iterator();
+        while (inspectors.hasNext()) {
+            inspector = (SourceInspector) inspectors.next();
+            if (inspector instanceof SourceDescriptor) {
+                SourceValidity sv = ((SourceDescriptor) inspector).getValidity(source);
+                if (sv == null) {
+                    return null;
+                }
+                validity.add(sv);
+            }
+        }
+        return validity;
+    }
 }
 
