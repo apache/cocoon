@@ -54,6 +54,8 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -81,7 +83,7 @@ import org.apache.fop.render.Renderer;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.8 2004/02/07 13:18:16 joerg Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.9 2004/02/26 21:13:24 tcurdt Exp $
  */
 public class FOPSerializer extends AbstractSerializer implements
   Configurable, CacheableProcessingComponent, Serviceable/*, Disposable */{
@@ -239,6 +241,24 @@ public class FOPSerializer extends AbstractSerializer implements
                 "Could not autodetect renderer for FOPSerializer and "
                 + "no renderer was specified in the sitemap configuration."
             );
+        }
+
+        Configuration confRenderer = conf.getChild("renderer-config");
+        if (confRenderer != null) {
+            parameters = confRenderer.getChildren("parameter");
+            if (parameters.length > 0) {
+                Map rendererOptions = new HashMap(); 
+                for (int i = 0; i < parameters.length; i++) {
+                    String name = parameters[i].getAttribute("name");
+                    String value = parameters[i].getAttribute("value");
+                
+                    if (getLogger().isDebugEnabled()) {
+                    	getLogger().debug("renderer " + String.valueOf(name) + " = " + String.valueOf(value));
+                    }
+                    rendererOptions.put(name,value);
+                }
+                this.renderer.setOptions(rendererOptions);
+            }
         }
     }
 
