@@ -85,7 +85,7 @@
             <!-- THE CONTENT PANEL -->
             <td width="*" valign="top" align="left">
               <table border="0" cellspacing="0" cellpadding="3">
-                <tr><td><xsl:apply-templates/></td></tr>
+                <tr><td><br/><xsl:apply-templates/></td></tr>
               </table>
             </td>
           </tr>
@@ -155,7 +155,7 @@
 
   <xsl:template match="s1">
    <div align="right">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <table border="0" width="98%" cellspacing="0" cellpadding="0">
       <tr>
         <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
         <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>

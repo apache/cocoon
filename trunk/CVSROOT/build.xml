@@ -10,9 +10,6 @@ Authors:
 Todo:
  - write the target rule that reacts on class presence.
  
-Legal: 
-  Copyright (c) 1999-2000 The Apache Software Foundation. All Rights Reserved.
-
 ================================================================================
 
 
@@ -154,9 +151,11 @@ new improvements in order to build correctly.
   <target name="init">
     <tstamp/>
     <property name="name" value="Cocoon"/>
-    <property name="version" value="1.6.1-dev"/>
+    <property name="version" value="1.6.1"/>
     <property name="year" value="1999-2000"/>
-  
+
+    <echo message="------------------- ${name} ${version} [${year}] ----------------"/>  
+    
     <property name="build.compiler" value="classic"/>
     <!-- <property name="build.compiler" value="jikes"/> -->
     <property name="debug" value="off"/>
@@ -183,8 +182,7 @@ new improvements in order to build correctly.
   
     <property name="dist.dir" value="./dist"/>
   
-    <property name="site.dir" value="../xml-site/sources/cocoon"/>
-    <property name="site.docs" value="../xml-site/targets/cocoon"/>
+    <property name="site" value="../xml-site/targets/cocoon"/>
   </target>
 
   <!-- =================================================================== -->
@@ -215,7 +213,7 @@ new improvements in order to build correctly.
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare" depends="init">
+  <target name="prepare">
     <mkdir dir="${build.dir}"/>
   </target>
 
@@ -254,11 +252,13 @@ new improvements in order to build correctly.
   <!-- =================================================================== -->
   <target name="prepare-docs" depends="init">
     <copyfile src="changes.xml" dest="${docs.dir}/changes.xml"/>
+    <copyfile src="todo.xml" dest="${docs.dir}/todo.xml"/>
+
     <replace file="${docs.dir}/changes.xml" token="./docs/dtd/" value="dtd/"/>
+    <replace file="${docs.dir}/todo.xml" token="./docs/dtd/" value="dtd/"/>
+
     <replace file="${docs.dir}/changes.xml" token="${version}-dev" value="${version}"/>
     <replace file="${docs.dir}/changes.xml" token="Not yet released" value="${TODAY}"/>
-    <copyfile src="todo.xml" dest="${docs.dir}/todo.xml"/>
-    <replace file="${docs.dir}/todo.xml" token="./docs/dtd/" value="dtd/"/>
   </target>
 
   <!-- =================================================================== -->
@@ -268,7 +268,7 @@ new improvements in order to build correctly.
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml"/>
     <replace file="${docs.dir}/book.xml" token="@@year@@" value="${year}"/>
-    <java class="${doc.generator}" args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}" fork="no"/>
+    <java class="${doc.generator}" args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}" fork="yes"/>
   </target>
 
   <!-- =================================================================== -->
@@ -278,7 +278,7 @@ new improvements in order to build correctly.
     <mkdir dir="${site.dir}"/>  
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml"/>
     <replace file="${docs.dir}/book.xml" token="@@year@@" value="${year}"/>
-    <java class="${doc.generator}" args="targetDirectory=${site.docs} ${docs.dir}/book.xml ${skin}" fork="no"/>
+    <java class="${doc.generator}" args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}" fork="yes"/>
   </target>
   
   <!-- =================================================================== -->
@@ -294,9 +294,9 @@ new improvements in order to build correctly.
              use="true"
              windowtitle="${name} API"
              doctitle="${name}"
-             bottom="Copyright &#169; ${year} Apache XML Project. All Rights Reserved."
+             bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
+             stylesheetfile="${skins.dir}/javadoc.css"
     />
-    <copyfile src="${sheets.dir}/javadoc.css" dest="${build.javadocs}/stylesheet.css"/>
   </target>
 
   <!-- =================================================================== -->
@@ -312,8 +312,6 @@ new improvements in order to build correctly.
     <mkdir dir="${dist.dir}/samples"/>
     <mkdir dir="${dist.dir}/skins"/>
     <mkdir dir="${dist.dir}/xdocs"/>
-    <mkdir dir="${dist.dir}/xdocs/DTD"/>
-    <mkdir dir="${dist.dir}/xdocs/stylesheets"/>
 
     <copydir src="${build.src}" dest="${dist.dir}/src" ignore="cocoon.properties"/>
     <copyfile src="${src.dir}/org/apache/cocoon/cocoon.properties" dest="${dist.dir}/conf/cocoon.properties"/>
@@ -322,7 +320,7 @@ new improvements in order to build correctly.
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
     <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
     <replace file="${samples.dir}/index.xsl" token="@@year@@" value="${year}"/>
-    <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" ignore="book.xml"/>
+    <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" ignore="book.xml, changes.xml, todo.xml"/>
     <copydir src="${skins.dir}" dest="${dist.dir}/skins"/>
 
     <copyfile src="README" dest="${dist.dir}/README"/>
@@ -338,7 +336,7 @@ new improvements in order to build correctly.
   <!-- =================================================================== -->
   <!-- Cleans everything                                                   -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init">
+  <target name="clean">
     <deltree dir="${build.dir}"/>
     <deltree dir="${dist.dir}"/>
     <delete file="${docs.dir}/changes.xml"/>

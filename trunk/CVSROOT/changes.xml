@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.24 2000-01-27 03:40:22 stefano Exp $
+  $Id: changes.xml,v 1.25 2000-01-27 11:47:33 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -15,7 +15,10 @@
   </devs>
 
  <release version="1.6.1-dev" date="Not yet released">
-  <action dev="SM" type="fix" due-to="Timm, Sean" due-to-email="STimm@mailgo.com">
+  <action dev="SM" type="add" due-to="Philippe Lavoie" due-to-email="philippe.lavoie@cactus.ca">
+    Added ability to return exception stack trace when sending error page back to web server.
+  </action>
+  <action dev="SM" type="fix" due-to="Sean Timm" due-to-email="STimm@mailgo.com">
     Fixed a nullpointerexception when removing the very last PI.
   </action>
   <action dev="SM" type="update">
@@ -498,7 +501,7 @@
   Added support for XSL:P processor.
  </action>
  <action dev="SM" type="remove">
-  Removed support for Koala XSL parser.
+  Removed support for Koala XSL processor.
  </action>
  <action dev="SM" type="update">
   Redesigned internal framework.

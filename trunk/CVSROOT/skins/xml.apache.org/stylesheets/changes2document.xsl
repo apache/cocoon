@@ -18,11 +18,11 @@
  </xsl:template>
  
  <xsl:template match="release">
-  <s1 title="{$name} {@version} ({@date})">
+  <s2 title="{$name} {@version} ({@date})">
    <sl>
     <xsl:apply-templates/>
    </sl>
-  </s1>
+  </s2>
  </xsl:template>
 
  <xsl:template match="action">

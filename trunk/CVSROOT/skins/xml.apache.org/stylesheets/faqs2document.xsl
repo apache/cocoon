@@ -37,6 +37,10 @@
     </s2>
   </xsl:template>
 
+  <xsl:template match="question">
+    <!-- ignored since already used -->
+  </xsl:template>
+
   <xsl:template match="answer">
     <xsl:apply-templates/>
   </xsl:template>

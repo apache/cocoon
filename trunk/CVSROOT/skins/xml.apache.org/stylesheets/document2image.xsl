@@ -6,7 +6,7 @@
 
   <xsl:template match="/">
     <xsl:variable name="label">
-      <xsl:if test="header/title">
+      <xsl:if test="//header/title">
         <xsl:value-of select="//header/title"/>
       </xsl:if>
     </xsl:variable>
