@@ -58,7 +58,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ojb.components.AbstractOjbImpl;
 import org.apache.ojb.jdori.sql.OjbStorePMF;
@@ -67,7 +66,7 @@ import org.apache.ojb.jdori.sql.OjbStorePMF;
 * Implementation of the JdoPMF. Create one PMF and store it for future use
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: JdoPMFImpl.java,v 1.2 2004/02/01 21:37:30 giacomo Exp $
+ * @version CVS $Id: JdoPMFImpl.java,v 1.3 2004/02/02 10:48:59 joerg Exp $
 */
 public class JdoPMFImpl extends AbstractOjbImpl implements JdoPMF, Configurable, Initializable,
 Disposable, ThreadSafe
