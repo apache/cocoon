@@ -51,7 +51,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.10 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.11 2004/05/09 18:10:33 haul Exp $
  */
 public class MailMessageSender {
 
@@ -268,7 +268,9 @@ public class MailMessageSender {
                 }
             } else {
                 Multipart multipart = new MimeMultipart();
-                BodyPart bodypart = null;
+                BodyPart bodypart = new MimeBodyPart();
+                multipart.addBodyPart(bodypart);
+                this.message.setContent(multipart);
 
                 if (this.src != null) {
                     DataSource ds = null;
@@ -288,14 +290,9 @@ public class MailMessageSender {
                     bodypart.setDataHandler(new DataHandler(ds));
                     bodypart.setFileName(ds.getName());
 
-                    multipart.addBodyPart(bodypart);
-
                 } else if (this.body != null) {
-                    bodypart = new MimeBodyPart();
                     bodypart.setText(this.body);
-                    multipart.addBodyPart(bodypart);
                 }
-                this.message.setContent(multipart);
 
                 for (Iterator i = this.attachmentList.iterator(); i.hasNext();) {
                     a = (Attachment) i.next();
