@@ -24,3 +24,9 @@ at the moment:
    is no ContinuationContext availble. This makes lookups of components
    impossible. The move of the continuation context into an
    independent ThreadLocal variable might be an option.
+
+ - The classloader seems to have problems with inner classes, because the
+   the inner classes is not transformed by the ContinuationClassLoader, which
+   caused a LinkageError.
+   Temporary solution is to implement Continuable for the inner class.
+

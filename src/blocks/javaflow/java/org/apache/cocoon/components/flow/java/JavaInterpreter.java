@@ -29,7 +29,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.2 2004/03/30 11:10:53 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -163,9 +163,15 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             method.invoke(flow, new Object[0]);
 
         } catch (InvocationTargetException ite) {
-            if ((ite.getTargetException() != null)
-                    && (ite.getTargetException() instanceof Exception)) {
-                throw (Exception) ite.getTargetException();
+            if (ite.getTargetException() != null) {
+                if (ite.getTargetException() instanceof Exception) 
+                    throw (Exception) ite.getTargetException();
+                else if (ite.getTargetException() instanceof Error)
+                    throw new ProcessingException("An internal error occured", ite.getTargetException());
+                else if (ite.getTargetException() instanceof RuntimeException)
+                    throw (RuntimeException) ite.getTargetException();
+                else
+                    throw ite;
             } else {
                 throw ite;
             }
@@ -223,9 +229,15 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             method.invoke(flow, new Object[0]);
 
         } catch (InvocationTargetException ite) {
-            if ((ite.getTargetException() != null)
-                    && (ite.getTargetException() instanceof Exception)) {
-                throw (Exception) ite.getTargetException();
+            if (ite.getTargetException() != null) {
+                if (ite.getTargetException() instanceof Exception)
+                    throw (Exception) ite.getTargetException();
+                else if (ite.getTargetException() instanceof Error)
+                    throw new ProcessingException("An internal error occured", ite.getTargetException());
+                else if (ite.getTargetException() instanceof RuntimeException)
+                    throw (RuntimeException) ite.getTargetException();
+                else
+                    throw ite;
             } else {
                 throw ite;
             }
