@@ -349,7 +349,7 @@ public class FOM_Cocoon extends ScriptableObject {
     /**
      * Setup an object so that it can access the information provided to regular components.
      * This is done by calling the various Avalon lifecycle interfaces implemented by the object, which
-     * are <code>LogEnabled</code>, <code>Contextualizable</code>, <code>ServiceManageable</code>,
+     * are <code>LogEnabled</code>, <code>Contextualizable</code>, <code>Serviceable</code>,
      * <code>Composable</code> (even if deprecated) and <code>Initializable</code>.
      * <p>
      * <code>Contextualizable</code> is of primary importance as it gives access to the whole object model
@@ -378,7 +378,7 @@ public class FOM_Cocoon extends ScriptableObject {
     /**
      * Create and setup an object so that it can access the information provided to regular components.
      * This is done by calling the various Avalon lifecycle interfaces implemented by the object, which
-     * are <code>LogEnabled</code>, <code>Contextualizable</code>, <code>ServiceManageable</code>,
+     * are <code>LogEnabled</code>, <code>Contextualizable</code>, <code>Serviceable</code>,
      * <code>Composable</code> (even if deprecated) and <code>Initializable</code>.
      * <p>
      * <code>Contextualizable</code> is of primary importance as it gives access to the whole object model
