@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.55 2001-01-11 20:48:24 greenrd Exp $
+  $Id: todo.xml,v 1.56 2001-01-12 21:20:30 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -21,6 +21,9 @@
   </action>
   <action context="docs" assigned-to="RDG" bugid="6">
    Fix dead links in docs.
+  </action>
+  <action context="code" bugid="33">
+   Fix XSP string escaping bug.
   </action>
   <action context="code" bugid="30">
    Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
