@@ -55,12 +55,12 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
@@ -73,14 +73,14 @@ import org.xmldb.api.DatabaseManager;
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.3 2003/10/25 11:38:37 joerg Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
  */
 public final class XMLDBSourceFactory
         extends AbstractLogEnabled
-        implements SourceFactory, Configurable, Composable {
+        implements SourceFactory, Configurable, Serviceable {
 
-    /** The Component Manager class */
-    protected ComponentManager m_manager;
+    /** The ServiceManager instance */
+    protected ServiceManager m_manager;
 
     /** A Map containing the authentication credentials */
     protected HashMap credentialMap;
@@ -131,10 +131,10 @@ public final class XMLDBSourceFactory
     }
 
     /**
-     * Compose this Composable object. We need to pass on the
-     * ComponentManager to the actual Source.
+     * Compose this Serviceable object. We need to pass on the
+     * ServiceManager to the actual Source.
      */
-    public void compose(ComponentManager cm) {
+    public void service(ServiceManager cm) {
         this.m_manager = cm;
     }
 

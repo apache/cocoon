@@ -73,13 +73,10 @@ import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.model.Type;
 
-//import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-//import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.Logger;
-//import org.apache.cocoon.serialization.Serializer;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.serialization.XMLSerializer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -99,7 +96,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.3 $ $Date: 2003/07/05 14:30:52 $
+ * @version CVS $Revision: 1.4 $ $Date: 2003/10/25 18:06:19 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -157,7 +154,7 @@ public final class QDoxSource
     protected final static int CONSTRUCTOR_INHERITANCE = 5;
     protected final static int METHOD_INHERITANCE = 6;
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     protected Logger logger;
 
     protected Source javaSource;
@@ -200,7 +197,7 @@ public final class QDoxSource
      * @param logger
      * @param manager
      */
-    public QDoxSource(String location, Source javaSource, Logger logger, ComponentManager manager) {
+    public QDoxSource(String location, Source javaSource, Logger logger, ServiceManager manager) {
         this.javadocUri = location;
         this.javaSource = javaSource;
         this.logger = logger;
@@ -529,8 +526,8 @@ public final class QDoxSource
 
                         resolver.release(source);
                     }
-                } catch (ComponentException e) {
-                    logger.error("Could not find a SourceResolver!", e);
+                } catch (ServiceException se) {
+                    logger.error("Could not find a SourceResolver!", se);
                 } catch (MalformedURLException e) {
                     // ignore - invalid URI (is subject of test)
                 } catch (SourceException e) {
@@ -765,8 +762,8 @@ public final class QDoxSource
                 classMap.put(className, jClass);
             }
             resolver.release(source);
-        } catch (ComponentException ce) {
-            logger.error("Couldn't return JavaClass!", ce);
+        } catch (ServiceException se) {
+            logger.error("Couldn't return JavaClass!", se);
         } catch (MalformedURLException mue) {
             logger.error("Couldn't return JavaClass!", mue);
         } catch (SourceException se) {

@@ -58,9 +58,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 
 /**
  * Executes an arbitrary query. The query is associated with a table
@@ -84,7 +84,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *</pre>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseQueryAction.java,v 1.2 2003/09/24 21:54:48 cziegeler Exp $
+ * @version CVS $Id: DatabaseQueryAction.java,v 1.3 2003/10/25 18:06:19 joerg Exp $
  */
 public class DatabaseQueryAction extends DatabaseAction {
 
@@ -114,7 +114,7 @@ public class DatabaseQueryAction extends DatabaseAction {
      * @return the insert query as a string
      */
     protected CacheHelper getQuery( Configuration table, Map modeTypes, Map defaultModeNames )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         LookUpKey lookUpKey = new LookUpKey( table, modeTypes );
         CacheHelper queryData = null;
@@ -164,7 +164,7 @@ public class DatabaseQueryAction extends DatabaseAction {
      * Fetch all values for all columns that are needed to do the database operation.
      */
     protected Object[][] getColumnValues( Configuration tableConf, CacheHelper queryData, Map objectModel )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         Object[][] columnValues = new Object[ queryData.columns.length ][];
         for ( int i = 0; i < queryData.columns.length; i++ ){

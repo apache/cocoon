@@ -59,13 +59,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -109,11 +109,11 @@ import org.apache.regexp.RESyntaxException;
  * </p>
  * 
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/05/06 08:49:59 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/10/25 18:06:19 $
  */
 public final class QDoxSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, Composable, Configurable, ThreadSafe {
+    implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     
     protected final static String INCLUDE_INHERITANCE_ELEMENT = "include-inheritance";
     protected final static String VALUE_ATTRIBUTE = "value";
@@ -122,7 +122,7 @@ public final class QDoxSourceFactory
     protected final static String SOURCE_ROOT_ELEMENT = "source-root";
     protected final static String URI_ATTRIBUTE = "uri";
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     protected List sourceRootUris;
     
     /**
@@ -180,8 +180,8 @@ public final class QDoxSourceFactory
                     getLogger().debug("getSource called with className=" + className);
                 }
                 javaSource = getSource(className);
-            } catch (ComponentException ce) {
-                throw new SourceException("SourceResolver not found", ce);
+            } catch (ServiceException se) {
+                throw new SourceException("SourceResolver not found", se);
             }
         } else {
             throw new MalformedURLException();
@@ -200,9 +200,9 @@ public final class QDoxSourceFactory
     }
     
     /**
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#Service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Composing the QDoxSourceFactory...");
         }
@@ -252,7 +252,7 @@ public final class QDoxSourceFactory
      * @param className
      * @return File
      */
-    private Source getSource(String className) throws ComponentException {
+    private Source getSource(String className) throws ServiceException {
         String classFileName = className;
         String packageName;
         

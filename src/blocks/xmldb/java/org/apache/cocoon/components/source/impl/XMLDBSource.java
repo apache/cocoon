@@ -56,10 +56,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -86,7 +87,7 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.5 2003/07/04 11:20:51 cziegeler Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.6 2003/10/25 18:06:20 joerg Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled  
     implements Source, XMLizable {
@@ -106,8 +107,8 @@ public class XMLDBSource extends AbstractLogEnabled
     /** The System ID */
     protected String systemId;
 
-    /** ComponentManager */
-    protected ComponentManager manager;
+    /** ServiceManager */
+    protected ServiceManager manager;
     
     /** Static Strings used for XML Collection representation */
 
@@ -157,7 +158,7 @@ public class XMLDBSource extends AbstractLogEnabled
     public XMLDBSource(Logger logger,
                        SourceCredential credential,
                        String url,
-                       ComponentManager manager) {
+                       ServiceManager manager) {
         this.enableLogging(logger);
         this.manager = manager;
 
@@ -453,6 +454,8 @@ public class XMLDBSource extends AbstractLogEnabled
             this.toSAX(serializer);
 
             return new ByteArrayInputStream(os.toByteArray());
+        } catch (ServiceException se) {
+            throw new CascadingIOException("could not lookup pipeline components", se);
         } catch (ComponentException cme) {
             throw new CascadingIOException("could not lookup pipeline components", cme);
         } catch (Exception e) {

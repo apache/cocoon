@@ -61,6 +61,8 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.components.modules.database.AutoIncrementModule;
 
@@ -70,7 +72,7 @@ import org.apache.cocoon.components.modules.database.AutoIncrementModule;
  * {@link DatabaseAction} for details.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.2 2003/07/01 11:23:19 haul Exp $
+ * @version CVS $Id: DatabaseAddAction.java,v 1.3 2003/10/25 18:06:19 joerg Exp $
  */
 public class DatabaseAddAction extends DatabaseAction {
 
@@ -166,7 +168,7 @@ public class DatabaseAddAction extends DatabaseAction {
      */
     protected void storeKeyValue( Configuration tableConf, Column key, int rowIndex, Connection conn,
                                   Statement statement, Map objectModel, String outputMode, Map results )
-        throws SQLException, ConfigurationException, ComponentException {
+        throws SQLException, ConfigurationException, ComponentException, ServiceException {
 
         ComponentSelector autoincrSelector = null;
         AutoIncrementModule autoincr = null;
@@ -219,7 +221,7 @@ public class DatabaseAddAction extends DatabaseAction {
      */
     protected Object[][] getColumnValues( Configuration tableConf, CacheHelper queryData,
                                           Map objectModel )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         Object[][] columnValues = new Object[ queryData.columns.length ][];
         for ( int i = 0; i < queryData.columns.length; i++ ){
@@ -237,7 +239,7 @@ public class DatabaseAddAction extends DatabaseAction {
      * @return the insert query as a string
      */
     protected CacheHelper getQuery( Configuration table, Map modeTypes, Map defaultModeNames )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         LookUpKey lookUpKey = new LookUpKey( table, modeTypes );
         CacheHelper queryData = null;
@@ -266,13 +268,13 @@ public class DatabaseAddAction extends DatabaseAction {
                     }
                     if ( queryData.columns[i].isKey && queryData.columns[i].isAutoIncrement ) {
 
-                        ComponentSelector autoincrSelector = null;
+                        ServiceSelector autoincrSelector = null;
                         AutoIncrementModule autoincr = null;
                         try {
-                            autoincrSelector=(ComponentSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR); 
+                            autoincrSelector = (ServiceSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR); 
                             if (queryData.columns[i].mode != null && 
                                 autoincrSelector != null && 
-                                autoincrSelector.hasComponent(queryData.columns[i].mode)){
+                                autoincrSelector.isSelectable(queryData.columns[i].mode)){
                                 autoincr = (AutoIncrementModule) autoincrSelector.select(queryData.columns[i].mode);
                                 
                                 if ( autoincr.includeInQuery() ) {

@@ -56,16 +56,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 
 /**
  * Updates a record in a database. The action can update one or more
  * tables, and can update more than one row to a table at a time.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseUpdateAction.java,v 1.2 2003/07/01 11:23:19 haul Exp $
+ * @version CVS $Id: DatabaseUpdateAction.java,v 1.3 2003/10/25 18:06:19 joerg Exp $
  */
 public class DatabaseUpdateAction extends DatabaseAction {
 
@@ -92,7 +92,7 @@ public class DatabaseUpdateAction extends DatabaseAction {
      * database operation.
      */
     protected Object[][] getColumnValues( Configuration tableConf, CacheHelper queryData, Map objectModel )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         Object[][] columnValues = new Object[ queryData.columns.length ][];
         for ( int i = 0; i < queryData.columns.length; i++ ){
@@ -111,7 +111,7 @@ public class DatabaseUpdateAction extends DatabaseAction {
      * @return the insert query as a string
      */
     protected CacheHelper getQuery( Configuration table, Map modeTypes, Map defaultModeNames )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         LookUpKey lookUpKey = new LookUpKey( table, modeTypes );
         CacheHelper queryData = null;

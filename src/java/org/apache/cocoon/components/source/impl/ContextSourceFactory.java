@@ -58,12 +58,12 @@ import java.util.Map;
 
 import org.apache.excalibur.source.*;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
@@ -75,18 +75,18 @@ import org.apache.cocoon.environment.Context;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.3 2003/06/07 21:19:36 bruno Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, Composable, Disposable, Contextualizable, ThreadSafe, URIAbsolutizer
+    implements SourceFactory, Serviceable, Disposable, Contextualizable, ThreadSafe, URIAbsolutizer
 {
 
     /** The context */
     protected Context envContext;
 
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The ServiceManager */
+    protected ServiceManager manager;
 
     /** The Source Resolver */
     protected SourceResolver resolver;
@@ -94,7 +94,7 @@ public class ContextSourceFactory
     /**
      * Composable Interface
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         // FIXME : Looking up the resolver here leads to an infinite loop
         // (is this because of Avalon or CocoonComponentManager ??)
@@ -136,8 +136,8 @@ public class ContextSourceFactory
         if (this.resolver == null) {
             try {
                 this.resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
-            } catch (ComponentException ce) {
-            	throw new SourceException("Unable to lookup source resolver.", ce);
+            } catch (ServiceException se) {
+            	throw new SourceException("Unable to lookup source resolver.", se);
             }
         }
                 

@@ -60,11 +60,10 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
@@ -91,14 +90,14 @@ import org.xml.sax.SAXException;
  * a given period of time
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingSource.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: CachingSource.java,v 1.2 2003/10/25 18:06:19 joerg Exp $
  */
 public class CachingSource
 extends AbstractLogEnabled
-implements Source, Composable, Initializable, Disposable, XMLizable {
+implements Source, Serviceable, Initializable, Disposable, XMLizable {
 
-    /** The current ComponentManager */
-    protected ComponentManager manager;
+    /** The current ServiceManager */
+    protected ServiceManager manager;
 
     /** The current source resolver */
     protected SourceResolver resolver;
@@ -309,9 +308,9 @@ implements Source, Composable, Initializable, Disposable, XMLizable {
 
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.component.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -386,7 +385,7 @@ implements Source, Composable, Initializable, Disposable, XMLizable {
             SAXParser parser = null;
             try {
                 serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
-                if ( this.source instanceof XMLizable ) {
+                if (this.source instanceof XMLizable) {
                     ((XMLizable)this.source).toSAX(serializer);
                 } else {
                     parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
@@ -394,14 +393,14 @@ implements Source, Composable, Initializable, Disposable, XMLizable {
                     final InputSource inputSource = new InputSource(new ByteArrayInputStream(this.cachedResponse.getResponse()));
                     inputSource.setSystemId(this.source.getURI());
                     
-                    parser.parse( inputSource, serializer );
+                    parser.parse(inputSource, serializer);
                 }
                 
                 this.cachedResponse.setAlternativeResponse((byte[])serializer.getSAXFragment());
-            } catch (ComponentException ce) {
-                throw new CascadingIOException("Unable to lookup xml serializer.", ce);
+            } catch (ServiceException se) {
+                throw new CascadingIOException("Unable to lookup xml serializer.", se);
             } finally {
-                this.manager.release((Component)parser);
+                this.manager.release(parser);
                 this.manager.release(serializer);
             }
             storeResponse = true;
@@ -439,8 +438,8 @@ implements Source, Composable, Initializable, Disposable, XMLizable {
                deserializer.setConsumer(new ContentHandlerWrapper(contentHandler));
            }
            deserializer.deserialize( this.cachedResponse.getAlternativeResponse() );
-       } catch (ComponentException ce ) {
-           throw new SAXException("Unable to lookup xml deserializer.", ce);
+       } catch (ServiceException se ) {
+           throw new SAXException("Unable to lookup xml deserializer.", se);
        } finally {
            this.manager.release(deserializer);
        }

@@ -55,15 +55,14 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.CachedResponse;
@@ -83,15 +82,15 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="cached"/>
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingSourceFactory.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.2 2003/10/25 18:06:19 joerg Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Composable, URIAbsolutizer, Disposable, Parameterizable
+    implements SourceFactory, ThreadSafe, Serviceable, URIAbsolutizer, Disposable, Parameterizable
 {
-    /** The <code>ComponentManager</code> */
-    protected ComponentManager manager;
+    /** The <code>ServiceManager</code> */
+    protected ServiceManager manager;
 
     /** The {@link SourceResolver} */
     protected SourceResolver   resolver;
@@ -109,10 +108,9 @@ public final class CachingSourceFactory
     protected Refresher refresher;
     
     /**
-     * Composable
+     * Serviceable
      */
-    public void compose(ComponentManager manager) 
-    throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         // due to cyclic dependencies we can't lookup the resolver or the refresher here
     }
@@ -131,15 +129,15 @@ public final class CachingSourceFactory
         if (this.resolver == null) {
             try {
                 this.resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
-            } catch (ComponentException ce) {
-                throw new SourceException("SourceResolver is not available.", ce);
+            } catch (ServiceException se) {
+                throw new SourceException("SourceResolver is not available.", se);
             }
         }
         if ( this.refresher == null ) {
             try {
                 this.refresher = (Refresher)this.manager.lookup(Refresher.ROLE);
-            } catch (ComponentException ce) {
-                throw new SourceException("Refesher is not available.", ce);
+            } catch (ServiceException se) {
+                throw new SourceException("Refesher is not available.", se);
             }
         }
 
@@ -170,14 +168,14 @@ public final class CachingSourceFactory
         }
         ContainerUtil.enableLogging(source, this.getLogger());
         try {
-            ContainerUtil.compose(source, this.manager);
+            ContainerUtil.service(source, this.manager);
             // we pass the components for performance reasons
             source.init(this.resolver, this.cache);
             ContainerUtil.initialize(source);                                  
         } catch (IOException ioe) {
             throw ioe;
-        } catch (ComponentException ce) {
-            throw new SourceException("Unable to initialize source.", ce);
+        } catch (ServiceException se) {
+            throw new SourceException("Unable to initialize source.", se);
         } catch (Exception e) {
             throw new SourceException("Unable to initialize source.", e);
         }
@@ -204,10 +202,10 @@ public final class CachingSourceFactory
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.resolver );
-            this.manager.release( this.cache );
-            this.manager.release( (Component)this.refresher );
+        if (this.manager != null) {
+            this.manager.release(this.resolver);
+            this.manager.release(this.cache);
+            this.manager.release(this.refresher);
             this.refresher = null;
             this.cache = null;
             this.manager = null;
@@ -226,8 +224,8 @@ public final class CachingSourceFactory
         
         try {
             this.cache = (Cache)this.manager.lookup(this.cacheRole);
-        } catch (ComponentException ce) {
-            throw new ParameterException("Unable to lookup cache: " + this.cacheRole, ce);
+        } catch (ServiceException se) {
+            throw new ParameterException("Unable to lookup cache: " + this.cacheRole, se);
         }
 
         this.async = parameters.getParameterAsBoolean("async", false);

@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.excalibur.source.Source;
@@ -69,14 +69,14 @@ import java.util.Map;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSourceFactory.java,v 1.3 2003/09/05 07:10:54 cziegeler Exp $
+ * @version CVS $Id: BlobSourceFactory.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
  */
 public class BlobSourceFactory
   extends AbstractLogEnabled
-  implements Composable, SourceFactory, ThreadSafe {
+  implements Serviceable, SourceFactory, ThreadSafe {
     
-    /** The component manager instance */
-    protected ComponentManager manager;
+    /** The ServiceManager instance */
+    protected ServiceManager manager;
 
     /**
      * Get a <code>Source</code> object.
@@ -86,7 +86,7 @@ public class BlobSourceFactory
         throws MalformedURLException, IOException, SourceException {
         BlobSource blob = new BlobSource(location);
         this.setupLogger(blob);
-        blob.compose(this.manager);
+        blob.service(this.manager);
         return blob;
     }
 
@@ -98,9 +98,9 @@ public class BlobSourceFactory
     }
     
 	/**
-	 * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+	 * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
 	 */
-	public void compose(ComponentManager manager) throws ComponentException {
+	public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
 	}
 

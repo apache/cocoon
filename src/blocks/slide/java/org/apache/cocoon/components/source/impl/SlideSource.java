@@ -61,16 +61,15 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.*;
@@ -112,18 +111,18 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSource.java,v 1.8 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: SlideSource.java,v 1.9 2003/10/25 18:06:20 joerg Exp $
  */
 public class SlideSource extends AbstractLogEnabled
-  implements Contextualizable, Composable, Source, ModifiableSource,
+  implements Contextualizable, Serviceable, Source, ModifiableSource,
              ModifiableTraversableSource, MoveableSource, RestrictableSource,
              LockableSource, InspectableSource, VersionableSource {
 
     /** Component context */
     protected Context context;
 
-    /** Component manager */
-    private ComponentManager manager;
+    /** ServiceManager */
+    private ServiceManager manager;
 
     /** Namespace access token. */
     protected NamespaceAccessToken nat;
@@ -254,14 +253,14 @@ public class SlideSource extends AbstractLogEnabled
     }
 
     /**
-     * Pass the ComponentManager to the composer. The Composable implementation
-     * should use the specified ComponentManager to acquire the components it needs for execution
+     * Pass the ServiceManager to the composer. The Serviceable implementation
+     * should use the specified ServiceManager to acquire the services it needs for execution
      *
-     * @param manager The ComponentManager which this Composable uses
+     * @param manager The ServiceManager which this Serviceable uses
      *
-     * @throws ComponentException
+     * @throws ServiceException
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -1694,7 +1693,7 @@ public class SlideSource extends AbstractLogEnabled
         } catch (Exception e) {
             throw new SourceException("Could not parse property", e);
         } finally {
-            this.manager.release((Component) parser);
+            this.manager.release(parser);
         }
 
         return new SourceProperty(doc.getDocumentElement());
@@ -1742,7 +1741,7 @@ public class SlideSource extends AbstractLogEnabled
         } catch (Exception e) {
             throw new SourceException("Could not parse property "+xml, e);
         } finally {
-            this.manager.release((Component) parser);
+            this.manager.release(parser);
         }
 
         SourceProperty[] sourcepropertiesArray = new SourceProperty[sourceproperties.size()];

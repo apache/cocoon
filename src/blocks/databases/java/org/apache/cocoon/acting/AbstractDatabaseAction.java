@@ -52,12 +52,12 @@ package org.apache.cocoon.acting;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.ImageProperties;
 import org.apache.cocoon.util.ImageUtils;
@@ -191,12 +191,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: AbstractDatabaseAction.java,v 1.1 2003/03/09 00:03:02 pier Exp $
+ * @version CVS $Id: AbstractDatabaseAction.java,v 1.2 2003/10/25 18:06:20 joerg Exp $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
     protected Map files = new HashMap();
     protected static final Map typeConstants;
-    protected ComponentSelector dbselector;
+    protected ServiceSelector dbselector;
 
     static {
         /** Initialize the map of type names to jdbc column types.
@@ -236,17 +236,15 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
     /**
      * Compose the Actions so that we can select our databases.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.dbselector = (ComponentSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
-
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
     /**
      * Get the Datasource we need.
      */
-    protected final DataSourceComponent getDataSource(Configuration conf) throws ComponentException {
+    protected final DataSourceComponent getDataSource(Configuration conf) throws ServiceException {
         Configuration dsn = conf.getChild("connection");
-
         return (DataSourceComponent) this.dbselector.select(dsn.getValue(""));
     }
 
