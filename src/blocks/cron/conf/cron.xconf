@@ -19,7 +19,7 @@
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.cron.JobScheduler']">
 
     <component role="org.apache.cocoon.components.cron.JobScheduler"
-               class="org.apache.cocoon.components.cron.QuartzJobScheduler"
+               class="org.apache.cocoon.components.cron.CocoonQuartzJobScheduler"
                logger="cron">
       <!--+
           | Definitions for a thread pool used to schedule jobs
