@@ -3,7 +3,7 @@
 <!--+
     | Authentication block samples sitemap.
     |
-    | CVS $Id: sitemap.xmap,v 1.8 2003/11/18 06:24:14 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.9 2003/11/18 06:37:27 antonio Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -90,7 +90,7 @@
     </map:pipeline>
 
     <map:pipeline internal-only="true">
-      <!-- This is the authentication respource -->
+      <!-- This is the authentication resource -->
       <map:match pattern="authenticate">
         <map:generate src="docs/userlist.xml"/>
         <map:transform src="stylesheets/authenticate.xsl">
