@@ -11,15 +11,18 @@
   </header>
   <body>
     <s1 title="Notices">
+      <note>
+        This document is out of date. XMLForm is not supported anymore starting from
+        the Cocoon 2.1 release. Alternatively, you can use <link
+          href="../flow/jxforms.html">JXForms</link>, which is conceptually the
+        same but offers a more robust implementation. Another emerging form
+        framework is <link
+          href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">Woody</link>.
+      </note>
       <p>This document is based on components included in the current un-released Cocoon 2.1
       distribution. Be sure
       to look at the WARNING document that accompanies such pre-release versions.
       </p>
-      <fixme author="volunteer">
-        This document is not really a conceptual document for Cocoon
-        "forms" frameworks, as it describes one particular implementation.
-        There are now various different solutions.
-      </fixme>
     </s1>
 
     <s1 title="Introduction">
