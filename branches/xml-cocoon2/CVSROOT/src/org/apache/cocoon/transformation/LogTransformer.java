@@ -27,13 +27,14 @@ import java.util.Map;
  * to print the SAX events which passes thru this transformer in a readable form 
  * to a file. 
  * <br>
- * The file will be specified in a parameter tag to the transformer as follows:
+ * The file will be specified in a parameter tag in the sitemap pipeline to the
+ * transformer as follows:
  * <p>
  * <code>
- * &lt;transformer name="log"&gt;<br>
+ * &lt;map:transform type="log"&gt;<br>
  * &nbsp;&nbsp;&lt;parameter name="logfile" value="logfile.log"/&gt;<br>
  * &nbsp;&nbsp;&lt;parameter name="append" value="no"/&gt;<br>
- * &lt;/transformer&gt;<br>
+ * &lt;/map:transform&gt;<br>
  * </code>
  * </p>
  *
@@ -44,7 +45,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-27 16:16:16 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-07 20:22:33 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
