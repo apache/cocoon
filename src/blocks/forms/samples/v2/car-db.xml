@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: car-db.xml,v 1.1 2004/03/09 10:34:02 reinhard Exp $-->
+<!-- $Id$-->
 <cars>
   <!-- Enhancements to this list are welcome !
        Types with no models will automatically be filled with dumb values. -->
