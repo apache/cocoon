@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.bean;
 
+import java.util.TreeMap;
+
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.ProcessingException;
 
@@ -60,117 +62,213 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.2 2003/09/10 09:12:21 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.3 2003/09/13 10:20:09 upayavira Exp $
  */
 public class Target {
-	// Defult type is append
-	private static final String APPEND_TYPE = "append";
-	private static final String REPLACE_TYPE = "replace";
-	private static final String INSERT_TYPE = "insert";
+    // Defult type is append
+    private static final String APPEND_TYPE = "append";
+    private static final String REPLACE_TYPE = "replace";
+    private static final String INSERT_TYPE = "insert";
 
-	private final String type;
-	private final String root;
-	private final String sourceURI;
-	private final String destURI;
+    private final String type;
+    private final String root;
+    private final String sourceURI;
+    private final String destURI;
+    private final String deparameterizedSourceURI;
+    private final TreeMap parameters;
+    
+    private String originalURI; 
+    
+    private transient int _hashCode;
+    private transient String _toString;
 
-	private transient int _hashCode;
-	private transient String _toString;
+    public Target(
+        String type,
+        String root,
+        String sourceURI,
+        String destURI)
+        throws IllegalArgumentException {
+        this.type = type;
+        this.root = root;
+        if (destURI == null || destURI.length() == 0) {
+            throw new IllegalArgumentException("You must specify a destination directory when defining a target");
+        }
+        if (!destURI.endsWith("/")) {
+            destURI += "/";
+        }
+        this.destURI = destURI;
+        
+        this.parameters = new TreeMap();
+        sourceURI = NetUtils.normalize(root + sourceURI);
+        this.deparameterizedSourceURI = NetUtils.deparameterize(sourceURI, this.parameters);
+        this.sourceURI = NetUtils.parameterize(this.deparameterizedSourceURI, this.parameters);
+    }
 
-	public Target(
-		String type,
-		String root,
-		String sourceURI,
-		String destURI)
-		throws IllegalArgumentException {
-		this.type = type;
-		this.root = root;
-		this.sourceURI = NetUtils.normalize(sourceURI);
-		if (destURI == null || destURI.length() == 0) {
-			throw new IllegalArgumentException("You must specify a destination directory when defining a target");
-		}
-		if (!destURI.endsWith("/")) {
-			destURI += "/";
-		}
-		this.destURI = destURI;
-	}
+    public Target(String type, String sourceURI, String destURI)
+        throws IllegalArgumentException {
+        this(type, "", sourceURI, destURI);
+    }
 
-	public Target(String type, String sourceURI, String destURI)
-		throws IllegalArgumentException {
-		this(type, "", sourceURI, destURI);
-	}
+    public Target(String sourceURI, String destURI)
+        throws IllegalArgumentException {
+        this(APPEND_TYPE, "", sourceURI, destURI);
+    }
 
-	public Target(String sourceURI, String destURI)
-		throws IllegalArgumentException {
-		this(APPEND_TYPE, "", sourceURI, destURI);
-	}
+    public Target getDerivedTarget(String originalLinkURI)
+        throws IllegalArgumentException {
 
-	public Target getDerivedTarget(String newURI)
-		throws IllegalArgumentException {
-		if (!newURI.startsWith(root)) {
-			return null;
-		}
-		newURI = newURI.substring(root.length());
-		return new Target(this.type, this.root, newURI, this.destURI);
-	}
+        String linkURI = originalLinkURI;
+        // Fix relative links starting with "?"
+        if (linkURI.startsWith("?")) {
+            linkURI = this.getPageURI() + linkURI;
+        }
+        linkURI =
+            NetUtils.normalize(NetUtils.absolutize(this.getPath(), linkURI));
 
-	public String getDestinationURI(String actualSourceURI)
-		throws ProcessingException {
-		if (!actualSourceURI.startsWith(root)) {
-			throw new ProcessingException(
-				"Derived target does not share same root: "
-					+ actualSourceURI);
-		}
-		actualSourceURI = actualSourceURI.substring(root.length());
+        // Ignore pages outside the root folder
+        if (!linkURI.startsWith(this.root)) {
+            return null;
+        }
+        linkURI = linkURI.substring(root.length());
+        
+        Target target = new Target(this.type, this.root, linkURI, this.destURI);
+        target.setOriginalURI(originalLinkURI);
+        return target;
+    }
 
-		if (APPEND_TYPE.equals(this.type)) {
-			return destURI + actualSourceURI;
-		} else if (REPLACE_TYPE.equals(this.type)) {
-			return destURI;
-		} else if (INSERT_TYPE.equals(this.type)) {
-			int starPos = destURI.indexOf("*");
-			if (starPos == -1) {
-				throw new ProcessingException("Missing * in replace mapper uri");
-			} else if (starPos == destURI.length() - 1) {
-				return destURI.substring(0, starPos) + actualSourceURI;
-			} else {
-				return destURI.substring(0, starPos)
-					+ actualSourceURI
-					+ destURI.substring(starPos + 1);
-			}
-		} else {
-			throw new ProcessingException(
-				"Unknown mapper type: " + this.type);
-		}
-	}
+    /**
+     * Sets the original URI. This is used to record the URI that
+     * caused the creation of this Target, for example as a link
+     * in another page. It is needed for doing link translation, as
+     * this is the URI that must be replaced by the translated one.
+     */
+    public void setOriginalURI(String uri) {
+        this.originalURI = uri;
+    }
+    
+    /**
+     * Gets the filename from the source URI, without the path.
+     * This is used to fill out relative URIs that have
+     * parameters but no filename such as ?page=123
+     */
+    public String getPageURI() {
+        String pageURI = this.getSourceURI();
+        if (pageURI.indexOf("/") != -1) {
+            pageURI = pageURI.substring(pageURI.lastIndexOf("/") + 1);
+            if (pageURI.length() == 0) {
+                pageURI = "./";
+            }
+        }
+        return pageURI;
+    }
 
-	public String getSourceURI() {
-		return root + sourceURI;
-	}
+    /**
+     * Gets the path from the source URI, without the filename. 
+     * This is used when absolutizing/relativizing link URIs.
+     */
+    public String getPath() {
+        return NetUtils.getPath(this.getSourceURI());
+    }
 
-	public boolean equals(Object o) {
-		return (o instanceof Target) && o.toString().equals(toString());
-	}
+    /**
+     * Calculates the destination URI - the URI to which the generated
+     * page should be written. This will be a URI that, when resolved
+     * by a SourceResolver, will return a modifiableSource.
+     */
+    public String getDestinationURI(String actualSourceURI)
+        throws ProcessingException {
+        if (!actualSourceURI.startsWith(root)) {
+            throw new ProcessingException(
+                "Derived target does not share same root: "
+                    + actualSourceURI);
+        }
+        actualSourceURI = actualSourceURI.substring(root.length());
 
-	public int hashCode() {
-		if (_hashCode == 0) {
-			return _hashCode = toString().hashCode();
-		}
-		return _hashCode;
-	}
+        if (APPEND_TYPE.equals(this.type)) {
+            return destURI + actualSourceURI;
+        } else if (REPLACE_TYPE.equals(this.type)) {
+            return destURI;
+        } else if (INSERT_TYPE.equals(this.type)) {
+            int starPos = destURI.indexOf("*");
+            if (starPos == -1) {
+                throw new ProcessingException("Missing * in replace mapper uri");
+            } else if (starPos == destURI.length() - 1) {
+                return destURI.substring(0, starPos) + actualSourceURI;
+            } else {
+                return destURI.substring(0, starPos)
+                    + actualSourceURI
+                    + destURI.substring(starPos + 1);
+            }
+        } else {
+            throw new ProcessingException(
+                "Unknown mapper type: " + this.type);
+        }
+    }
 
-	public String toString() {
-		if (_toString == null) {
-			return _toString =
-				"<"
-					+ type
-					+ "|"
-					+ root
-					+ "|"
-					+ sourceURI
-					+ "|"
-					+ destURI
-					+ ">";
-		}
-		return _toString;
-	}
+    /**
+     * Gets the original URI used to create this Target.
+     * This URI is completely unprocessed.
+     */
+    public String getOriginalSourceURI() {
+        return this.originalURI;
+    }
+
+    /**
+     * Gets the source URI for this target, after
+     * the URI has been 'prepared' by normalisation,
+     * absolutization and deparameterization followed
+     * by reparameterization. This final step is to 
+     * ensure that all parameters appear in a consistent
+     * order. For example page?a=1&b=2 and page?b=2&a=1
+     * should be considered the same resource, and thus
+     * have the same sourceURI. 
+     */
+    public String getSourceURI() {
+        return this.sourceURI;
+    }
+    /**
+     * Gets the source URI for this target, with 
+     * parameters removed. This is the URI that is 
+     * to be passed to Cocoon in order to generate 
+     * the page.
+     */
+    public String getDeparameterizedSourceURI() {
+        return this.deparameterizedSourceURI;
+    }
+
+    /**
+     * Gets the parameters that have been removed from
+     * the URI. These need to be passed to Cocoon when
+     * generating a page.
+     */
+    public TreeMap getParameters() {
+        return this.parameters;
+    }
+
+    public boolean equals(Object o) {
+        return (o instanceof Target) && o.toString().equals(toString());
+    }
+
+    public int hashCode() {
+        if (_hashCode == 0) {
+            return _hashCode = toString().hashCode();
+        }
+        return _hashCode;
+    }
+
+    public String toString() {
+        if (_toString == null) {
+            return _toString =
+                "<"
+                    + type
+                    + "|"
+                    + root
+                    + "|"
+                    + sourceURI
+                    + "|"
+                    + destURI
+                    + ">";
+        }
+        return _toString;
+    }
 }

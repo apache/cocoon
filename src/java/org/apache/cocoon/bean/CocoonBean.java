@@ -89,7 +89,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.22 2003/09/10 19:20:38 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.23 2003/09/13 10:20:09 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -365,32 +365,14 @@ public class CocoonBean extends CocoonWrapper {
 
         int status = 0;
         
-        String uri = target.getSourceURI();
         int linkCount = 0;
-
-        // Get parameters, deparameterized URI and path from URI
-        final TreeMap parameters = new TreeMap();
-        final String deparameterizedURI =
-            NetUtils.deparameterize(uri, parameters);
-        final String path = NetUtils.getPath(uri);
-        final String suri =
-            NetUtils.parameterize(deparameterizedURI, parameters);
-
-        // Get file name from URI (without path)
-        String pageURI = deparameterizedURI;
-        if (pageURI.indexOf("/") != -1) {
-            pageURI = pageURI.substring(pageURI.lastIndexOf("/") + 1);
-            if (pageURI.length() == 0) {
-                pageURI = "./";
-            }
-        }
 
         String destinationURI;
         if (confirmExtension) {
-            destinationURI = (String) allTranslatedLinks.get(suri);
+            destinationURI = (String) allTranslatedLinks.get(target.getSourceURI());
             if (destinationURI == null) {
-                destinationURI = mangle(suri);
-                final String type = getType(deparameterizedURI, parameters);
+                destinationURI = mangle(target.getSourceURI());
+                final String type = getType(target.getDeparameterizedSourceURI(), target.getParameters());
                 final String ext = NetUtils.getExtension(destinationURI);
                 final String defaultExt = MIMEUtils.getDefaultExtension(type);
                 if (defaultExt != null) {
@@ -398,10 +380,10 @@ public class CocoonBean extends CocoonWrapper {
                         destinationURI += defaultExt;
                     }
                 }
-                allTranslatedLinks.put(suri, destinationURI);
+                allTranslatedLinks.put(target.getSourceURI(), destinationURI);
             }
         } else {
-            destinationURI = suri;
+            destinationURI = target.getSourceURI();
         }
         // Store processed URI list to avoid eternal loop
         allProcessedLinks.put(target, target);
@@ -416,60 +398,48 @@ public class CocoonBean extends CocoonWrapper {
         final List targets = new ArrayList();
         if (followLinks && confirmExtension) {
             final Iterator i =
-                this.getLinks(deparameterizedURI, parameters).iterator();
+                this.getLinks(target.getDeparameterizedSourceURI(), target.getParameters()).iterator();
 
             while (i.hasNext()) {
-                String originalLinkSourceURI = (String) i.next();
+                String linkURI = (String) i.next();
+                Target linkTarget = target.getDerivedTarget(linkURI);
 
-                // Fix relative links starting with "?"
-                String linkSourceURI = originalLinkSourceURI;
-                if (linkSourceURI.startsWith("?")) {
-                    linkSourceURI = pageURI + linkSourceURI;
-                }
-
-                linkSourceURI =
-                    NetUtils.normalize(NetUtils.absolutize(path, linkSourceURI));
-                
-                if (!isIncluded(linkSourceURI)) {
+                if (linkTarget == null) {
+                    System.out.println("Skipping "+ linkURI);
                     //@TODO@ Log/report skipped link
                     continue;
                 }
 
-                {
-                    final TreeMap p = new TreeMap();
-                    linkSourceURI =
-                        NetUtils.parameterize(
-                            NetUtils.deparameterize(linkSourceURI, p),
-                            p);
+                if (!isIncluded(linkTarget.getSourceURI())) {
+                    //@TODO@ Log/report skipped link
+                    continue;
                 }
+
                 String linkDestinationURI =
-                    (String) allTranslatedLinks.get(linkSourceURI);
+                    (String) allTranslatedLinks.get(linkTarget.getSourceURI());
                 if (linkDestinationURI == null) {
                     try {
                         linkDestinationURI =
-                            this.translateURI(linkSourceURI);
-                        log.info("  Link translated: " + linkSourceURI);
+                            this.translateURI(linkTarget.getSourceURI());
+                        log.info("  Link translated: " + linkTarget.getSourceURI());
                         allTranslatedLinks.put(
-                            linkSourceURI,
+                            linkTarget.getSourceURI(),
                             linkDestinationURI);
                     } catch (ProcessingException pe) {
-                        this.sendBrokenLinkWarning(linkSourceURI, pe.getMessage());
+                        this.sendBrokenLinkWarning(linkTarget.getSourceURI(), pe.getMessage());
                     }
                 }
 
                 // AllTranslatedLinks is for preventing retranslation
                 // translartedLinks is for use by the LinkTranslator
                 final String translatedRelativeLink =
-                    NetUtils.relativize(path, linkDestinationURI);
-                translatedLinks.put(originalLinkSourceURI, translatedRelativeLink);
+                    NetUtils.relativize(target.getPath(), linkDestinationURI);
+                translatedLinks.put(linkTarget.getOriginalSourceURI(), translatedRelativeLink);
 
                 // I have to add also broken links to the absolute links
                 // to be able to generate the "broken link" page
                 // @TODO@ Only do this if broken page generation is required
-                Target derivedTarget = target.getDerivedTarget(linkSourceURI);
-                if (derivedTarget != null) {
-                    targets.add(derivedTarget);
-                }
+                targets.add(linkTarget);
             }
 
             linkCount = translatedLinks.size();
@@ -481,9 +451,9 @@ public class CocoonBean extends CocoonWrapper {
             try {
                 status =
                     getPage(
-                        deparameterizedURI,
+                        target.getDeparameterizedSourceURI(),
                         getLastModified(target, destinationURI),
-                        parameters,
+                        target.getParameters(),
                         confirmExtension ? translatedLinks : null,
                         gatheredLinks,
                         output);
@@ -495,36 +465,29 @@ public class CocoonBean extends CocoonWrapper {
 
                 if (followLinks && !confirmExtension) {
                     for (Iterator it = gatheredLinks.iterator();it.hasNext();) {
-                        String linkSourceURI = (String) it.next();
-                        if (linkSourceURI.startsWith("?")) {
-                            linkSourceURI = pageURI + linkSourceURI;
+                        String linkURI = (String) it.next();
+                        Target linkTarget = target.getDerivedTarget(linkURI);
+
+                        if (linkTarget == null) {
+                            System.out.println("Skipping "+ linkURI);
+                            //@TODO@ Log/report skipped link
+                            continue;
                         }
-                        linkSourceURI =
-                            NetUtils.normalize(NetUtils.absolutize(path, linkSourceURI));
-                        {
-                            final TreeMap p = new TreeMap();
-                            linkSourceURI =
-                                NetUtils.parameterize(
-                                    NetUtils.deparameterize(linkSourceURI, p),
-                                    p);
+
+                        if (!isIncluded(linkTarget.getSourceURI())) {
+                            //@TODO@ Log/report skipped link
+                            continue;
                         }
-                        if (isIncluded(linkSourceURI)) {
-                            Target derivedTarget = target.getDerivedTarget(linkSourceURI);
-                            if (derivedTarget != null) { 
-                                targets.add(derivedTarget);
-                            }
-                        } else {
-                            // @TODO@ Log/report skipped link
-                        }
+                        targets.add(linkTarget);
                     }
                     linkCount = gatheredLinks.size();
                 }
 
-                pageGenerated(uri, linkCount, 0); // @todo@ get the number of pages remaining here
+                pageGenerated(target.getSourceURI(), linkCount, 0); // @todo@ get the number of pages remaining here
             } catch (ProcessingException pe) {
                 output.close();
                 output = null;
-                this.resourceUnavailable(target, uri, destinationURI);
+                this.resourceUnavailable(target, target.getSourceURI(), destinationURI);
                 this.sendBrokenLinkWarning(
                     destinationURI,
                     DefaultNotifyingBuilder.getRootCause(pe).getMessage());
@@ -546,8 +509,8 @@ public class CocoonBean extends CocoonWrapper {
                 }
             }
         } catch (Exception rnfe) {
-            log.warn("Could not process URI: " + deparameterizedURI);
-            this.sendBrokenLinkWarning(deparameterizedURI, "URI not found");
+            log.warn("Could not process URI: " + target.getSourceURI());
+            this.sendBrokenLinkWarning(target.getSourceURI(), "URI not found");
         }
 
 /*  Commenting out timestamp - will reimplement properly using the BeanListener interface
@@ -575,14 +538,12 @@ public class CocoonBean extends CocoonWrapper {
         String deparameterizedURI = NetUtils.deparameterize(uri, parameters);
 
         String destinationURI = mangle(uri);
-        if (confirmExtension) {
-            String type = getType(deparameterizedURI, parameters);
-            String ext = NetUtils.getExtension(destinationURI);
-            String defaultExt = MIMEUtils.getDefaultExtension(type);
-            if (defaultExt != null) {
-                if ((ext == null) || (!ext.equals(defaultExt))) {
-                    destinationURI += defaultExt;
-                }
+        String type = getType(deparameterizedURI, parameters);
+        String ext = NetUtils.getExtension(destinationURI);
+        String defaultExt = MIMEUtils.getDefaultExtension(type);
+        if (defaultExt != null) {
+            if ((ext == null) || (!ext.equals(defaultExt))) {
+                destinationURI += defaultExt;
             }
         }
 
@@ -660,10 +621,13 @@ public class CocoonBean extends CocoonWrapper {
     }
 
     public long getLastModified(Target target, String destinationURI) throws IOException, ProcessingException {
-        return getSource(target, destinationURI).getLastModified();
+        Source src = getSource(target, destinationURI);
+        long lastModified = src.getLastModified();
+        this.releaseSource(src);
+        return lastModified;
     }
         
-    public void releaseSource(ModifiableSource source) {
+    public void releaseSource(Source source) {
         sourceResolver.release(source);
     }
     private boolean isIncluded(String uri) {
