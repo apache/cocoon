@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.5 2003/04/13 13:41:26 stefano Exp $
+# $Id: cocoon.sh,v 1.6 2003/04/13 16:26:54 morrijr Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -70,11 +70,11 @@ if [ "$COCOON_HOME" = "" ] ; then
 fi
 
 if [ "$COCOON_WEBAPP_HOME" = "" ] ; then
-  COCOON_WEBAPP_HOME=$COCOON_HOME/build/webapp
+  COCOON_WEBAPP_HOME="$COCOON_HOME/build/webapp"
 fi
 
 if [ "$COCOON_LIB" = "" ] ; then
-  COCOON_LIB=$COCOON_WEBAPP_HOME/WEB-INF/lib
+  COCOON_LIB="$COCOON_WEBAPP_HOME/WEB-INF/lib"
 fi
 
 if [ "$JETTY_PORT" = "" ] ; then
@@ -95,25 +95,25 @@ fi
 
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
-JAVA=$JAVA_HOME/bin/java
-ENDORSED_LIBS=$COCOON_HOME/lib/endorsed
-ENDORSED=-Djava.endorsed.dirs=$ENDORSED_LIBS
+JAVA="$JAVA_HOME/bin/java"
+ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
+ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
-LOADER_LIB=$COCOON_HOME/tools/loader
+LOADER_LIB="$COCOON_HOME/tools/loader"
 
 CLI=-Dloader.main.class=org.apache.cocoon.Main
-CLI_LIBRARIES=-Dloader.jar.repositories=$COCOON_LIB
+CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
 
 JETTY=-Dloader.main.class=org.mortbay.jetty.Server
-JETTY_CONF=$COCOON_HOME/tools/jetty/conf
-JETTY_MAIN=$JETTY_CONF/main.xml
-JETTY_ADMIN=$JETTY_CONF/admin.xml
-JETTY_WEBAPP=-Dwebapp=$COCOON_WEBAPP_HOME
-JETTY_HOME=-Dhome=$COCOON_HOME
-JETTY_PORT_ARGS=-Djetty.port=$JETTY_PORT
-JETTY_ADMIN_ARGS=-Djetty.admin.port=$JETTY_ADMIN_PORT
-JETTY_LIBRARIES=-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib,$ENDORSED_LIBS
+JETTY_CONF="$COCOON_HOME/tools/jetty/conf"
+JETTY_MAIN="$JETTY_CONF/main.xml"
+JETTY_ADMIN="$JETTY_CONF/admin.xml"
+JETTY_WEBAPP="-Dwebapp=$COCOON_WEBAPP_HOME"
+JETTY_HOME="-Dhome=$COCOON_HOME"
+JETTY_PORT_ARGS="-Djetty.port=$JETTY_PORT"
+JETTY_ADMIN_ARGS="-Djetty.admin.port=$JETTY_ADMIN_PORT"
+JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib,$ENDORSED_LIBS"
 
 # ----- Do the action ----------------------------------------------------------
 
