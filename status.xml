@@ -199,6 +199,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="GR" type="add" fixes-bug="19206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
+    Added 304 support to cacheable pipelines
+  </action>
   <action dev="BRD" type="fix" fixes-bug="17763">
     DTD comment events are now dropped after parsing by default.
   </action>
