@@ -564,7 +564,6 @@ extends AbstractSAXTransformer implements Initializable, Generator {
             String variable = getExpr(a.getValue(JXPATH_VALUEOF_SELECT));
             Iterator iter = 
                 JXPathContext.compile(variable).iteratePointers(getContext());
-            foreachStack.push(variable);
             foreachStack.push(iter);
         }
     }
