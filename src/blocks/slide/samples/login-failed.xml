@@ -2,10 +2,12 @@
 <document>
   <header>
     <title>Jakarta Slide example</title>
-    <tab title="back" href=".."/>
   </header>
   <body>
     <row>
+      <column title="Back">
+        <a href="../">Back</a> - to Cocoon examples main page
+      </column>
       <column title="Login failed">
         <table border="0" cellspacing="0" cellpadding="2">
           <form action="login" method="post">

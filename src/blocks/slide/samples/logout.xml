@@ -2,11 +2,13 @@
 <document>
   <header>
     <title>Jakarta Slide example</title>
-    <tab title="login" href="/cocoon/samples/slide/login.html"/>
-    <tab title="back" href=".."/>
+    <tab title="login" href="login.html"/>
   </header>
   <body>
     <row>
+      <column title="Back">
+        <a href="../">Back</a> - to Cocoon examples main page
+      </column>
       <column title="Logout">
         <p>Good bye.</p>
       </column>
