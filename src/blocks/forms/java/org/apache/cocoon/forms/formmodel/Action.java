@@ -29,13 +29,13 @@ import java.util.Locale;
 /**
  * An Action widget. An Action widget can cause an {@link ActionEvent} to be triggered
  * on the server side, which will be handled by either the event handlers defined in the
- * form definition, and/or by the {@link org.apache.cocoon.woody.event.FormHandler FormHandler}
+ * form definition, and/or by the {@link org.apache.cocoon.forms.event.FormHandler FormHandler}
  * registered with the form, if any. An Action widget can e.g. be rendered as a button,
  * or as a hidden field which gets its value set by javascript. The Action widget will generate its associated
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: Action.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class Action extends AbstractWidget {
     protected ActionDefinition definition;

@@ -19,11 +19,11 @@ import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * Builds {@link org.apache.cocoon.woody.formmodel.UploadDefinition}s.
+ * Builds {@link org.apache.cocoon.forms.formmodel.UploadDefinition}s.
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: UploadDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: UploadDefinitionBuilder.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

@@ -16,7 +16,7 @@
 package org.apache.cocoon.forms.datatype.typeimpl;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
+ * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation for
  * types implementing Joshua Bloch's <a href="http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums">
  * typesafe enum</a> pattern.
  * <p>See the following code for an example:</p>
@@ -41,7 +41,7 @@ package org.apache.cocoon.forms.datatype.typeimpl;
  * different, you should also provide a fromString(String, Locale)
  * method to convert those strings back to instances.
  *  
- * @version CVS $Id: EnumType.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: EnumType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class EnumType extends AbstractDatatype {
     
@@ -49,14 +49,14 @@ public class EnumType extends AbstractDatatype {
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.Datatype#getTypeClass()
+     * @see org.apache.cocoon.forms.datatype.Datatype#getTypeClass()
      */
     public Class getTypeClass() {
         return this.getConvertor().getTypeClass();
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.Datatype#getDescriptiveName()
+     * @see org.apache.cocoon.forms.datatype.Datatype#getDescriptiveName()
      */
     public String getDescriptiveName() {
         return this.getConvertor().getTypeClass().getName();

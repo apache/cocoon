@@ -33,9 +33,9 @@ import org.xml.sax.SAXException;
 /**
  * A selection list that takes its values from the flow page data.
  *
- * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder
+ * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -56,7 +56,7 @@ public class FlowJXPathSelectionList implements SelectionList {
 
     /**
      * Builds a dynamic selection list from an in-memory collection.
-     * @see org.apache.cocoon.woody.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
+     * @see org.apache.cocoon.forms.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
      * @param model The collection used as a model for the selection list.
      * @param valuePath An XPath expression referring to the attribute used
      * to populate the values of the list's items.

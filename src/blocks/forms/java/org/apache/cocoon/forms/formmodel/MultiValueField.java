@@ -37,14 +37,14 @@ import java.util.Locale;
  * instead use the ValueCountValidationRule to check how many items the user
  * has selected.
  *
- * <p>A MultiValueField also has a {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
+ * <p>A MultiValueField also has a {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * associated with it. In case of MultiValueFields, this Datatype will always be an array
- * type, thus {@link org.apache.cocoon.woody.datatype.Datatype#isArrayType()} will
+ * type, thus {@link org.apache.cocoon.forms.datatype.Datatype#isArrayType()} will
  * always return true, and this in return has an influence on the kind of validation rules that
- * can be used with the Datatype (see {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
+ * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: MultiValueField.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private SelectionList selectionList;

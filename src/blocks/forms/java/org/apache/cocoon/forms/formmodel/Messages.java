@@ -33,7 +33,7 @@ import java.util.Iterator;
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
  * 
- * @version $Id: Messages.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: Messages.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();
@@ -71,7 +71,7 @@ public class Messages extends AbstractWidget {
      * This allows to add messages that produce mixed content. The XMLizable should
      * only generate a SAX fragment, i.e. without start/endDocument calls.
      *
-     * <p>A useful implementation is {@link org.apache.cocoon.woody.util.I18nMessage I18nMesage}.
+     * <p>A useful implementation is {@link org.apache.cocoon.forms.util.I18nMessage I18nMesage}.
      */
     public void addMessage(XMLizable message) {
         messages.add(message);

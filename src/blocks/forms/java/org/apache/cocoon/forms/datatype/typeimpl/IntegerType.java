@@ -16,11 +16,11 @@
 package org.apache.cocoon.forms.datatype.typeimpl;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation
+ * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation
  * for whole numbers.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: IntegerType.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: IntegerType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class IntegerType extends AbstractDatatype {
     public Class getTypeClass() {

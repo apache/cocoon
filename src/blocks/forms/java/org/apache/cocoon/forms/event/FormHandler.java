@@ -16,7 +16,7 @@
 package org.apache.cocoon.forms.event;
 
 /**
- * A FormHandler can be registered with a {@link org.apache.cocoon.woody.formmodel.Form Form},
+ * A FormHandler can be registered with a {@link org.apache.cocoon.forms.formmodel.Form Form},
  * and will then receive all events fired by widgets on the form.
  *
  * <p>It provides an alternative way of handling events, instead of specifying the eventhandlers
@@ -27,7 +27,7 @@ package org.apache.cocoon.forms.event;
  * you want the event handler to have access to objects it would not be able to get access
  * to if they were part of the form definition.
  * 
- * @version CVS $Id: FormHandler.java,v 1.1 2004/03/09 10:33:45 reinhard Exp $
+ * @version CVS $Id: FormHandler.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public interface FormHandler {
 

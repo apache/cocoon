@@ -16,11 +16,11 @@
 package org.apache.cocoon.forms.validation;
 
 /**
- * Interface implemented by {@link org.apache.cocoon.woody.formmodel.Widget}s that
+ * Interface implemented by {@link org.apache.cocoon.forms.formmodel.Widget}s that
  * can hold a validation error.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ValidationErrorAware.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version CVS $Id: ValidationErrorAware.java,v 1.2 2004/03/09 11:31:10 joerg Exp $
  */
 public interface ValidationErrorAware {
     

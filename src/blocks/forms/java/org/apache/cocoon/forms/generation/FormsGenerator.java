@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * using an XSLT.
  *
  * <p>An alternative approach that requires less (or even none) XSLT work is offered by
- * the {@link org.apache.cocoon.woody.transformation.WoodyTemplateTransformer WoodyTemplateTransformer}.
+ * the {@link org.apache.cocoon.forms.transformation.FormsTemplateTransformer}.
  *
  * <p>The Form whose XML should be produced should reside either 
  * <ol><li> In a request attribute, whose name should be provided to this 
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * <li> Or else at its default-location in the flow context-object.</li>
  * </ol>
  * 
- * @version $Id: FormsGenerator.java,v 1.1 2004/03/09 10:34:14 reinhard Exp $
+ * @version $Id: FormsGenerator.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class FormsGenerator extends AbstractGenerator {
     

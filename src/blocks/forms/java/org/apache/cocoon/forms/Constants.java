@@ -21,12 +21,12 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Various constants used in the Woody form framework.
  * 
- * @version $Id: Constants.java,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+ * @version $Id: Constants.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public final class Constants {
 // TODO : see this later
 //    /**
-//     * The value returned by {@link org.apache.cocoon.woody.formmodel.Widget#getValue()}
+//     * The value returned by {@link org.apache.cocoon.forms.formmodel.Widget#getValue()}
 //     * when the widget's value is invalid.
 //     */
 //    public static final Object INVALID_VALUE = new Object() {

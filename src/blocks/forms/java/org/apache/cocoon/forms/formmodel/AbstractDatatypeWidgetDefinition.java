@@ -29,7 +29,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  * 
- * @version $Id: AbstractDatatypeWidgetDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: AbstractDatatypeWidgetDefinition.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;
@@ -74,7 +74,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
      * This is a helper method for widget instances whose selection
      * list has to be changed dynamically, and it does not modify this definition's selection list,
      * if any.
-     * @see org.apache.cocoon.woody.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
+     * @see org.apache.cocoon.forms.formmodel.Field#setSelectionList(Object model, String valuePath, String labelPath)
      * @param model The collection used as a model for the selection list. 
      * @param valuePath An XPath expression referring to the attribute used
      * to populate the values of the list's items. 

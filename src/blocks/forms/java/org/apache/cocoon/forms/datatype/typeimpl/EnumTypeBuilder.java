@@ -22,12 +22,12 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link EnumType}s.
  * 
- * @version CVS $Id: EnumTypeBuilder.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: EnumTypeBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class EnumTypeBuilder extends AbstractDatatypeBuilder {
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.DatatypeBuilder#build(org.w3c.dom.Element, boolean, org.apache.cocoon.woody.datatype.DatatypeManager)
+     * @see org.apache.cocoon.forms.datatype.DatatypeBuilder#build(org.w3c.dom.Element, boolean, org.apache.cocoon.forms.datatype.DatatypeManager)
      */
     public Datatype build(Element datatypeElement,
 						  boolean arrayType,

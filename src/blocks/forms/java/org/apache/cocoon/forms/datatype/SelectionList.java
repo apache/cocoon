@@ -17,13 +17,12 @@ package org.apache.cocoon.forms.datatype;
 
 import java.util.Locale;
 
-import org.apache.cocoon.forms.datatype.*;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
  * Interface to be implemented by selection lists.
- * @version $Id: SelectionList.java,v 1.1 2004/03/09 10:34:01 reinhard Exp $
+ * @version $Id: SelectionList.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public interface SelectionList {
     

@@ -24,11 +24,11 @@ import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 
 /**
- * An adapter to transform a {@link org.apache.cocoon.woody.datatype.ValidationRule} into a
- * {@link org.apache.cocoon.woody.validation.WidgetValidator}.
+ * An adapter to transform a {@link org.apache.cocoon.forms.datatype.ValidationRule} into a
+ * {@link org.apache.cocoon.forms.validation.WidgetValidator}.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ValidationRuleValidator.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: ValidationRuleValidator.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class ValidationRuleValidator implements WidgetValidator {
     

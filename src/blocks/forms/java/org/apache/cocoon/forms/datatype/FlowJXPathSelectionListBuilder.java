@@ -40,9 +40,9 @@ import org.w3c.dom.Element;
  *   form.showForm("form.html", data);
  * </pre>
  * 
- * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionList
+ * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionList
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionListBuilder.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version CVS $Id: FlowJXPathSelectionListBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Contextualizable {
 
