@@ -92,7 +92,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.10 2004/02/06 22:45:58 joerg Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.11 2004/02/21 12:25:44 jeremy Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Contextualizable {
@@ -425,8 +425,12 @@ public class LuceneIndexTransformer extends AbstractTransformer
         }
     }
 
-    private void openWriter() throws IOException {
-        File indexDirectory = new File(workDir, queryConfiguration.indexDirectory);
+    private void openWriter() throws IOException {		
+    		File indexDirectory = new File(queryConfiguration.indexDirectory);
+        if (!indexDirectory.isAbsolute()) {
+            indexDirectory = new File(workDir, queryConfiguration.indexDirectory);
+        }
+
         // If the index directory doesn't exist, then always create it.
         boolean indexExists = IndexReader.indexExists(indexDirectory);
         if (!indexExists) {
@@ -434,17 +438,19 @@ public class LuceneIndexTransformer extends AbstractTransformer
         }
         
         // Get the index directory, creating it if necessary
-        Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory,
-                                                              createIndex);
+        Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory, createIndex);
         Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(queryConfiguration.analyzerClassname);
         this.writer = new IndexWriter(directory, analyzer, createIndex);
         this.writer.mergeFactor = queryConfiguration.mergeFactor; 
     }    
     
     private IndexReader openReader() throws IOException {
-        Directory directory = LuceneCocoonHelper.getDirectory(
-                                            new File(workDir, queryConfiguration.indexDirectory),
-                                            createIndex);
+    		File indexDirectory = new File(queryConfiguration.indexDirectory);
+        if (!indexDirectory.isAbsolute()) {
+            indexDirectory = new File(workDir, queryConfiguration.indexDirectory);
+        }
+    
+        Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory, createIndex);
         IndexReader reader = IndexReader.open(directory);
         return reader;
     }    
