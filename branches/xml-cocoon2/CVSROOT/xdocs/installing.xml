@@ -55,12 +55,15 @@
   
   <source>
     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\cocoon.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_1_1.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\AvalonAware.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\bsf.jar
     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\fop_0_13_0.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\svgv_0_8.jar
-    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jstyle.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jakarta-regexp-1.1.jar
     set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\js.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jstyle.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\svgv_0_8.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_1_2.jar
   </source>
   
   <p>
