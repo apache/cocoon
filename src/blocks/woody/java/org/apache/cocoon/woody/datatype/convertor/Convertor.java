@@ -63,6 +63,8 @@ import java.util.Locale;
  * beneficial to pass a {@link FormatCache} object to the convert methods.
  * Some convertors need to build and configure parser or formatting objects,
  * which can be expensive if it needs to be done repeatedly.
+ *
+ * @version CVS $Id: Convertor.java,v 1.4 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public interface Convertor {
     

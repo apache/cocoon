@@ -59,6 +59,8 @@ import java.util.Locale;
 
 /**
  * Builds {@link FormattingDecimalConvertor}s.
+ *
+ * @version CVS $Id: FormattingDecimalConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class FormattingDecimalConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

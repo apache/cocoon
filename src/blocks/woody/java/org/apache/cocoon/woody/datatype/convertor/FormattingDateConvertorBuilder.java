@@ -60,6 +60,8 @@ import java.util.Locale;
 
 /**
  * Builds {@link FormattingDateConvertor}s.
+ *
+ * @version CVS $Id: FormattingDateConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class FormattingDateConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

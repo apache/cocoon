@@ -60,6 +60,8 @@ import org.w3c.dom.Element;
  * always have the local name "convertor" and the woody definition namespace,
  * but attributes and content of the element can vary depending on the
  * ConvertorBuilder implementation.
+ *
+ * @version CVS $Id: ConvertorBuilder.java,v 1.3 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public interface ConvertorBuilder {
     /**

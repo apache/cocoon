@@ -56,7 +56,9 @@ import org.w3c.dom.Element;
  * Builds {@link PlainIntegerConvertor}s.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PlainIntegerConvertorBuilder.java,v 1.1 2003/10/01 18:20:23 antonio Exp $
+ * @version CVS $Id: PlainIntegerConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
+ *
+ * @version CVS $Id: PlainIntegerConvertorBuilder.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class PlainIntegerConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

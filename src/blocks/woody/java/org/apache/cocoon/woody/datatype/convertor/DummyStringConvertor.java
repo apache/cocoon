@@ -55,6 +55,8 @@ import java.util.Locale;
 /**
  * Convertor that converts between strings and strings, in other words,
  * it does nothing.
+ *
+ * @version CVS $Id: DummyStringConvertor.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
  */
 public class DummyStringConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {

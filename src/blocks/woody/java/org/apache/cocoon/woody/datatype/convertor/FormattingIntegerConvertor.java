@@ -63,10 +63,9 @@ import java.text.ParseException;
  * so see there for more information.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: FormattingIntegerConvertor.java,v 1.1 2003/10/01 18:20:23 antonio Exp $
+ * @version CVS $Id: FormattingIntegerConvertor.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
 */
-
- public class FormattingIntegerConvertor extends FormattingDecimalConvertor {
+public class FormattingIntegerConvertor extends FormattingDecimalConvertor {
 
     public FormattingIntegerConvertor() {
         super();
