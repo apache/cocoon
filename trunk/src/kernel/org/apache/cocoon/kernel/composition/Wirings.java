@@ -33,7 +33,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
  * to its composed object instances.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public interface Wirings extends Resolver {
 
@@ -55,7 +55,7 @@ public interface Wirings extends Resolver {
      * <pre>
      * MyInterface myObject = manager.lookup(MyInterface.class, "mywiring");
      * <small><i>[... use the object instance ...]</i></small>
-     * ((Wiring)myObject).release();</pre>
+     * ((Wire)myObject).release();</pre>
      *
      * <p>Note that although <b>it is not required</b> to release the
      * {@link Wirings} associated with component instance, it is common practice
@@ -77,7 +77,7 @@ public interface Wirings extends Resolver {
      *
      * <pre>
      * // myObject is a wired component that we looked up at initialization
-     * if (!((Wiring)myObject).wired()) {
+     * if (!((Wire)myObject).wired()) {
      *   manager.lookup(MyInterface.class, "mywiring");
      * }
      * <small><i>[... use the object instance ...]</i></small></pre>
