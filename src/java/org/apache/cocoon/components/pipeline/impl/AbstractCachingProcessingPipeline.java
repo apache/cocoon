@@ -61,7 +61,14 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.*;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.CacheValidityToSourceValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.caching.CachedResponse;
+import org.apache.cocoon.caching.CachingOutputStream;
+import org.apache.cocoon.caching.ComponentCacheKey;
+import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
@@ -76,7 +83,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.15 2004/02/18 21:23:03 joerg Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.16 2004/02/29 03:35:23 antonio Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -128,9 +135,12 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Abstract methods defined in subclasses
      */
-    protected abstract void cacheResults(Environment environment, OutputStream os)  throws Exception;
-    protected abstract ComponentCacheKey newComponentCacheKey(int type, String role,Serializable key);
-    protected abstract void connectCachingPipeline(Environment   environment) throws ProcessingException;
+    protected abstract void cacheResults(Environment environment,
+            OutputStream os)  throws Exception;
+    protected abstract ComponentCacheKey newComponentCacheKey(int type,
+            String role,Serializable key);
+    protected abstract void connectCachingPipeline(Environment   environment)
+            throws ProcessingException;
 
     /**
      * Parameterizable Interface - Configuration
@@ -138,7 +148,8 @@ public abstract class AbstractCachingProcessingPipeline
     public void parameterize(Parameters params)
     throws ParameterException {
         super.parameterize(params);
-        this.configuredDoSmartCaching = params.getParameterAsBoolean("smart-caching", true);
+        this.configuredDoSmartCaching =
+            params.getParameterAsBoolean("smart-caching", true);
     }
     
     /**
@@ -147,13 +158,14 @@ public abstract class AbstractCachingProcessingPipeline
     public void setup(Parameters params) {
         super.setup(params);
         this.doSmartCaching = params.getParameterAsBoolean("smart-caching",
-                                                           this.configuredDoSmartCaching);
+                                               this.configuredDoSmartCaching);
     }
 
     /**
      * Set the generator.
      */
-    public void setGenerator (String role, String source, Parameters param, Parameters hintParam)
+    public void setGenerator (String role, String source, Parameters param,
+            Parameters hintParam)
     throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
         this.generatorRole = role;
@@ -162,8 +174,8 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Add a transformer.
      */
-    public void addTransformer (String role, String source, Parameters param, Parameters hintParam)
-    throws ProcessingException {
+    public void addTransformer (String role, String source, Parameters param,
+            Parameters hintParam) throws ProcessingException {
         super.addTransformer(role, source, param, hintParam);
         this.transformerRoles.add(role);
     }
@@ -172,8 +184,8 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Set the serializer.
      */
-    public void setSerializer (String role, String source, Parameters param, Parameters hintParam, String mimeType)
-    throws ProcessingException {
+    public void setSerializer (String role, String source, Parameters param,
+            Parameters hintParam, String mimeType) throws ProcessingException {
         super.setSerializer(role, source, param, hintParam, mimeType);
         this.serializerRole = role;
     }
@@ -181,8 +193,8 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Set the Reader.
      */
-    public void setReader (String role, String source, Parameters param, String mimeType)
-    throws ProcessingException {
+    public void setReader (String role, String source, Parameters param,
+            String mimeType) throws ProcessingException {
         super.setReader(role, source, param, mimeType);
         this.readerRole = role;
     }
@@ -193,16 +205,18 @@ public abstract class AbstractCachingProcessingPipeline
     protected boolean processXMLPipeline(Environment environment)
     throws ProcessingException {
         if (this.toCacheKey == null && this.cachedResponse == null) {
-            return super.processXMLPipeline( environment );
-        } else if (this.cachedResponse != null && this.completeResponseIsCached) {
+            return super.processXMLPipeline(environment);
+        } else if (this.cachedResponse != null
+                && this.completeResponseIsCached) {
 
             // Allow for 304 (not modified) responses in dynamic content
-            if (super.checkIfModified( environment, this.cachedLastModified )) {
+            if (super.checkIfModified(environment, this.cachedLastModified)) {
                 return true;
             }
 
             try {
-                final OutputStream outputStream = environment.getOutputStream(0);
+                final OutputStream outputStream =
+                            environment.getOutputStream(0);
                 if (this.cachedResponse.length > 0) {
                     environment.setContentLength(this.cachedResponse.length);
                     outputStream.write(this.cachedResponse);
@@ -211,9 +225,11 @@ public abstract class AbstractCachingProcessingPipeline
                 if (se.getMessage().indexOf("reset") > 0
                         || se.getMessage().indexOf("aborted") > 0
                         || se.getMessage().indexOf("connection abort") > 0) {
-                    throw new ConnectionResetException("Connection reset by peer", se);
+                    throw new ConnectionResetException(
+                            "Connection reset by peer", se);
                 } else {
-                    throw new ProcessingException("Failed to execute pipeline.", se);
+                    throw new ProcessingException(
+                            "Failed to execute pipeline.", se);
                 }
             } catch ( Exception e ) {
                 if (e instanceof ProcessingException)
@@ -223,20 +239,24 @@ public abstract class AbstractCachingProcessingPipeline
         } else {
 
             if (this.getLogger().isDebugEnabled() && this.toCacheKey != null) {
-                this.getLogger().debug("processXMLPipeline: caching content for further requests of '" + environment.getURI() + "' using key " + this.toCacheKey);
+                this.getLogger().debug(
+                        "processXMLPipeline: caching content for further" +
+                        " requests of '" + environment.getURI() +
+                        "' using key " + this.toCacheKey);
             }
             try {
                 OutputStream os = null;
                 
-                if ( this.cacheCompleteResponse && this.toCacheKey != null) {
-                    os = new CachingOutputStream( environment.getOutputStream(this.outputBufferSize) );
+                if (this.cacheCompleteResponse && this.toCacheKey != null) {
+                    os = new CachingOutputStream(environment.getOutputStream(
+                            this.outputBufferSize));
                 }
-                if ( super.serializer != super.lastConsumer ) {
+                if (super.serializer != super.lastConsumer) {
                     if (os == null) {
                         os = environment.getOutputStream(this.outputBufferSize);
                     }
                     // internal processing
-                    if ( this.xmlDeserializer != null ) {
+                    if (this.xmlDeserializer != null) {
                         this.xmlDeserializer.deserialize(this.cachedResponse);
                     } else {
                         this.generator.generate();
@@ -247,12 +267,14 @@ public abstract class AbstractCachingProcessingPipeline
                             os = environment.getOutputStream(0);
                         }
                         // set the output stream
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        ByteArrayOutputStream baos =
+                            new ByteArrayOutputStream();
                         this.serializer.setOutputStream(baos);
     
                         // execute the pipeline:
                         if ( this.xmlDeserializer != null ) {
-                            this.xmlDeserializer.deserialize(this.cachedResponse);
+                            this.xmlDeserializer.deserialize(
+                                    this.cachedResponse);
                         } else {
                             this.generator.generate();
                         }
@@ -261,13 +283,15 @@ public abstract class AbstractCachingProcessingPipeline
                         os.write(data);
                     } else {
                         if (os == null) {
-                            os = environment.getOutputStream(this.outputBufferSize);
+                            os = environment.getOutputStream(
+                                    this.outputBufferSize);
                         }
                         // set the output stream
-                        this.serializer.setOutputStream( os );
+                        this.serializer.setOutputStream(os);
                         // execute the pipeline:
-                        if ( this.xmlDeserializer != null ) {
-                            this.xmlDeserializer.deserialize(this.cachedResponse);
+                        if (this.xmlDeserializer != null) {
+                            this.xmlDeserializer.deserialize(
+                                    this.cachedResponse);
                         } else {
                             this.generator.generate();
                         }
@@ -279,18 +303,21 @@ public abstract class AbstractCachingProcessingPipeline
                 //
                 this.cacheResults(environment,os);
 
-            } catch ( SocketException se ) {
+            } catch (SocketException se) {
                 if (se.getMessage().indexOf("reset") > 0
                         || se.getMessage().indexOf("aborted") > 0
                         || se.getMessage().indexOf("connection abort") > 0) {
-                    throw new ConnectionResetException("Connection reset by peer", se);
+                    throw new ConnectionResetException(
+                            "Connection reset by peer", se);
                 } else {
-                    throw new ProcessingException("Failed to execute pipeline.", se);
+                    throw new ProcessingException(
+                            "Failed to execute pipeline.", se);
                 }
-            } catch ( ProcessingException e ) {
+            } catch (ProcessingException e) {
                 throw e;
-            } catch ( Exception e ) {
-                throw new ProcessingException("Failed to execute pipeline.", e);
+            } catch (Exception e) {
+                throw new ProcessingException(
+                        "Failed to execute pipeline.", e);
             }
             return true;
         }
@@ -308,7 +335,8 @@ public abstract class AbstractCachingProcessingPipeline
         Serializable key = null;
         this.generatorIsCacheableProcessingComponent = false;
         this.serializerIsCacheableProcessingComponent = false;
-        this.transformerIsCacheableProcessingComponent = new boolean[this.transformers.size()];
+        this.transformerIsCacheableProcessingComponent =
+            new boolean[this.transformers.size()];
 
         this.firstNotCacheableTransformerIndex = 0;
         this.cacheCompleteResponse = false;
@@ -329,10 +357,10 @@ public abstract class AbstractCachingProcessingPipeline
 
         if (key != null) {
             this.toCacheKey = new PipelineCacheKey();
-            this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Generator,
-                                       this.generatorRole,
-                                       key)
-                              );
+            this.toCacheKey.addKey(
+                    this.newComponentCacheKey(
+                            ComponentCacheKey.ComponentType_Generator,
+                            this.generatorRole, key));
 
             // now testing transformers
             final int transformerSize = super.transformers.size();
@@ -340,8 +368,9 @@ public abstract class AbstractCachingProcessingPipeline
 
             while (this.firstNotCacheableTransformerIndex < transformerSize
                     && continueTest) {
-                final Transformer trans =
-                    (Transformer)super.transformers.get(this.firstNotCacheableTransformerIndex);
+                final Transformer trans = 
+                    (Transformer)super.transformers.get(
+                            this.firstNotCacheableTransformerIndex);
                 key = null;
                 if (trans instanceof CacheableProcessingComponent) {
                     key = ((CacheableProcessingComponent)trans).getKey();
@@ -350,9 +379,12 @@ public abstract class AbstractCachingProcessingPipeline
                     key = new Long(((Cacheable)trans).generateKey());
                 }
                 if (key != null) {
-                    this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Transformer,
-                                                 (String)this.transformerRoles.get(this.firstNotCacheableTransformerIndex),
-                                                 key));
+                    this.toCacheKey.addKey(
+                            this.newComponentCacheKey(
+                                    ComponentCacheKey.ComponentType_Transformer,
+                                    (String)this.transformerRoles.get(
+                                            this.firstNotCacheableTransformerIndex),
+                                            key));
 
                     this.firstNotCacheableTransformerIndex++;
                 } else {
@@ -372,10 +404,11 @@ public abstract class AbstractCachingProcessingPipeline
                     key = new Long(((Cacheable)this.serializer).generateKey());
                 }
                 if (key != null) {
-                    this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Serializer,
-                                                 this.serializerRole,
-                                                 key)
-                                                );
+                    this.toCacheKey.addKey(
+                            this.newComponentCacheKey(
+                                    ComponentCacheKey.ComponentType_Serializer,
+                                    this.serializerRole,
+                                    key));
                     this.cacheCompleteResponse = true;
                 }
             }
@@ -395,17 +428,20 @@ public abstract class AbstractCachingProcessingPipeline
             if (this.fromCacheKey == null 
                 || this.fromCacheKey.size() < this.toCacheKey.size()) {
 
-                this.toCacheSourceValidities = new SourceValidity[this.toCacheKey.size()];
+                this.toCacheSourceValidities = 
+                    new SourceValidity[this.toCacheKey.size()];
                 int len = this.toCacheSourceValidities.length;
                 int i = 0;
                 while (i < len) {
-                    final SourceValidity validity = this.getValidityForInternalPipeline(i);
+                    final SourceValidity validity =
+                        this.getValidityForInternalPipeline(i);
 
                     if (validity == null) {
                         if (i > 0 
-                            && (this.fromCacheKey == null || i > this.fromCacheKey.size())) {
+                            && (this.fromCacheKey == null
+                                    || i > this.fromCacheKey.size())) {
                             // shorten key
-                            for(int m=i; m < this.toCacheSourceValidities.length; m++) {
+                            for (int m=i; m < this.toCacheSourceValidities.length; m++) {
                                 this.toCacheKey.removeLastKey();
                                 if (!this.cacheCompleteResponse) {
                                     this.firstNotCacheableTransformerIndex--;
@@ -658,7 +694,6 @@ public abstract class AbstractCachingProcessingPipeline
         if (this.toCacheKey != null) {
             this.validatePipeline(environment);
         }
-
         this.setupValidities();        
     }
 
@@ -713,9 +748,8 @@ public abstract class AbstractCachingProcessingPipeline
                 if (cachedObject != null) {
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug(
-                            "Found cached response for '" + environment.getURI() +
-                            "' using key: " + pcKey
-                        );
+                            "Found cached response for '" +
+                            environment.getURI() + "' using key: " + pcKey);
                     }
                     SourceValidity[] validities = cachedObject.getValidityObjects();
                     if (validities == null || validities.length != 1) {
@@ -723,9 +757,9 @@ public abstract class AbstractCachingProcessingPipeline
                         this.cache.remove( pcKey );
                         if (this.getLogger().isDebugEnabled()) {
                             this.getLogger().debug(
-                                "Cached response for '" + environment.getURI() +
-                                "' using key: " + pcKey + " is invalid."
-                            );
+                                "Cached response for '" +
+                                environment.getURI() + "' using key: " +
+                                pcKey + " is invalid.");
                         }
                         cachedResponse = null;
                     } else {
