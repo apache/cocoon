@@ -35,7 +35,7 @@ import org.apache.cocoon.components.modules.database.AutoIncrementModule;
  * {@link DatabaseAction} for details.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.5 2004/03/05 13:01:52 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DatabaseAddAction extends DatabaseAction {
 
@@ -87,75 +87,77 @@ public class DatabaseAddAction extends DatabaseAction {
      * @param results sitemap result object
      * @return the number of columns by which to increment the currentIndex
      */
-    protected int setKeyAuto ( Configuration table, Column column, int currentIndex, int rowIndex,
-                               Connection conn, PreparedStatement statement, Map objectModel, String outputMode, Map results )
+    protected int setKeyAuto(Configuration table, Column column, int currentIndex, int rowIndex,
+                               Connection conn, PreparedStatement statement, Map objectModel, String outputMode, Map results)
         throws ConfigurationException, SQLException, Exception {
 
         int columnCount = 0;
         ServiceSelector autoincrSelector = null;
         AutoIncrementModule autoincr = null;
         try {
-            autoincrSelector = (ServiceSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR);
+            autoincrSelector = (ServiceSelector)this.manager.lookup(DATABASE_MODULE_SELECTOR);
             if (column.mode != null && autoincrSelector != null && autoincrSelector.isSelectable(column.mode)){
-                autoincr = (AutoIncrementModule) autoincrSelector.select(column.mode);
+                autoincr = (AutoIncrementModule)autoincrSelector.select(column.mode);
             }
-
-            if ( autoincr.includeInQuery() ) {
-                if ( autoincr.includeAsValue() ) {
-                    Object value = autoincr.getPreValue( table, column.columnConf, column.modeConf, conn, objectModel );
-                    this.setColumn(objectModel, outputMode, results, table, column.columnConf, rowIndex, value, statement, currentIndex);
-                    columnCount = 1;
+            if (autoincr != null) {
+                if (autoincr.includeInQuery()) {
+                    if (autoincr.includeAsValue()) {
+                        Object value = autoincr.getPreValue(table, column.columnConf, column.modeConf, conn, objectModel);
+                        this.setColumn(objectModel, outputMode, results, table, column.columnConf, rowIndex, value, statement, currentIndex);
+                        columnCount = 1;
+                    }
+                } else {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Automatically setting key");
+                    }
                 }
-            } else {
-                if (getLogger().isDebugEnabled())
-                    getLogger().debug( "Automatically setting key" );
+            } else if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Could not select autoincrement module" + outputMode + ". Defaulting to automatically setting key.");
             }
-
         } finally {
             if (autoincrSelector != null) {
-                if (autoincr != null)
+                if (autoincr != null) {
                     autoincrSelector.release(autoincr);
+                }
                 this.manager.release(autoincrSelector);
             }
          }
-
         return columnCount;
     }
-
-
 
     /**
      * Put key values into request attributes. Checks whether the
      * value needs to be retrieved from the database module first.
      *
      */
-    protected void storeKeyValue( Configuration tableConf, Column key, int rowIndex, Connection conn,
-                                  Statement statement, Map objectModel, String outputMode, Map results )
+    protected void storeKeyValue(Configuration tableConf, Column key, int rowIndex, Connection conn,
+                                  Statement statement, Map objectModel, String outputMode, Map results)
         throws SQLException, ConfigurationException, ServiceException {
 
-            ServiceSelector autoincrSelector = null;
+        ServiceSelector autoincrSelector = null;
         AutoIncrementModule autoincr = null;
         try {
-            autoincrSelector=(ServiceSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR);
+            autoincrSelector = (ServiceSelector)this.manager.lookup(DATABASE_MODULE_SELECTOR);
             if (key.mode != null && autoincrSelector != null && autoincrSelector.isSelectable(key.mode)){
-                autoincr = (AutoIncrementModule) autoincrSelector.select(key.mode);
+                autoincr = (AutoIncrementModule)autoincrSelector.select(key.mode);
             }
-
-            if (!autoincr.includeAsValue()) {
-                Object value = autoincr.getPostValue( tableConf, key.columnConf, key.modeConf, conn, statement, objectModel );
-                this.setOutput(objectModel, outputMode, results, tableConf, key.columnConf, rowIndex, value);
+            if (autoincr != null) {
+                if (!autoincr.includeAsValue()) {
+                    Object value = autoincr.getPostValue(tableConf, key.columnConf, key.modeConf, conn, statement, objectModel);
+                    this.setOutput(objectModel, outputMode, results, tableConf, key.columnConf, rowIndex, value);
+                }
+            } else {
+                throw new ConfigurationException("Could not obtain key value");
             }
-
         } finally {
             if (autoincrSelector != null) {
-                if (autoincr != null)
+                if (autoincr != null) {
                     autoincrSelector.release(autoincr);
+                }
                 this.manager.release(autoincrSelector);
             }
          }
-
     }
-
 
     /**
      * determine which mode to use as default mode
@@ -260,7 +262,6 @@ public class DatabaseAddAction extends DatabaseAction {
                                 }
                                 throw new ConfigurationException("Could not find mode description "+queryData.columns[i].mode+" for column "+i);
                             }
-                            
                         } finally {
                             if (autoincrSelector != null) {
                                 if (autoincr != null) 
@@ -268,14 +269,12 @@ public class DatabaseAddAction extends DatabaseAction {
                                 this.manager.release(autoincrSelector);
                             }
                         }
-
                     } else {
                         actualColumns++;
                         queryBuffer.append( queryData.columns[i].columnConf.getAttribute( "name" ) );
                         valueBuffer.append( "?" );
                     }
                 }
-
                 valueBuffer.append(")");
                 queryBuffer.append(valueBuffer);
 
@@ -284,9 +283,6 @@ public class DatabaseAddAction extends DatabaseAction {
                 this.cachedQueryData.put( lookUpKey, queryData );
             }
         }
-
         return queryData;
     }
-
-
 }
