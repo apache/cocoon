@@ -176,6 +176,7 @@
       <file src="resource://org/apache/cocoon/cocoon.properties" />
     </component-instance>
     <component-instance logger="core.modules.input" name="flow-attribute"     class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
+    <component-instance logger="core.modules.input" name="flow-attr"          class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
     <component-instance logger="core.modules.input" name="flow-continuation"  class="org.apache.cocoon.components.modules.input.FlowContinuationModule"/>
 
     <component-instance logger="core.modules.input" name="xmlmeta"      class="org.apache.cocoon.components.modules.input.XMLMetaModule"/>
