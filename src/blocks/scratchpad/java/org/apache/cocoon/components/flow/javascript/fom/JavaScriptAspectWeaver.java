@@ -72,36 +72,47 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
 
 /**
  * <p>
- * The <code>AspectWeaver</code> provides functionality to intercept 
+ * The <code>JavaScriptAspectWeaver</code> provides functionality to intercept 
  * JavaScript functions
  * </p>
  * <p>
  * Known restrictions, to be implemented, open questions:<br/>
  * <ul>
- *  <li>after() interceptions are added *after* the "return"
- *      which is of course wrong</li>
- *  <li>after() interceptions have to be added in reverse order</li>
- *  <li>no support for object property functions</li>
- *  <li>how to deal with more than one around interception?</li>
- *  <li>does not work for scripts loaded by "cocoon.load(...)"</li>
- *  <li>if applied scripts change they are not reloaded (a change in
-        the base script is necessary)</li>
- *  <li>no syntax check for base script</li>
- *  <li>no syntax check for result scripts</li>
- *  <li>no syntax check for interception definitions</li>
+ *  <li>Add interception support for scripts loaded by 
+ *      <code>"cocoon.load( uri, aspectFiles[] )"</code>
+ *      <br/>
+ *      So we have to find the best solution to provide access to a configured
+ *      <code>JavaScriptAspectWeaver</code> within the cocoon.load
+ *      method. Possible solutions:
+ *      <ul>
+ *        <li>Convert the <code>JavaScriptAspectWeaver</code> to a
+ *            regular Avalon component which is configureable itself.</li>
+ *        <li>Add the <code>JavaScriptAspectWeaver</code> to the
+ *            <code>setup()</code> method of <code>AO_FOM_Cocoon</code></li>
+ *      </ul>
+ *      (RP) I prefer the second possibility to avoid another component
+ *  </li>
  *  <li>the result script should be pretty printed
  *      and put into the directory of the base script
  *      if file protocol is used
  *      --&gt;enables easier debugging</li>
- *   <li>pass the calling function name to the interception scripts</li>
- *   <li>review the naming of all classes and methods</li>
- *   <li>What's the purpose of the arguments in continueExecution(arguments)?
+ *  <li>after() interceptions have to be added in reverse order, haven't they?</li>
+ *  <li>add support for object property functions</li>
+ *  <li>how to deal with more than one around interception?</li>
+ *  <li>if applied scripts change they are not reloaded (a change in
+        the base script is necessary)</li>
+ *  <li>add syntax check for base script</li>
+ *  <li>add syntax check for result scripts</li>
+ *  <li>add syntax check for interception definitions</li>
+ *  <li>pass the calling function name to the interception scripts</li>
+ *  <li>review the naming of all classes and methods</li>
+ *  <li>What's the purpose of the arguments in continueExecution(arguments)?
  *       See Stefano's proposal?</li>
  * </ul>
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.3 2003/09/08 23:06:08 reinhard Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.4 2003/09/12 14:46:58 reinhard Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -152,11 +163,17 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         
         // comment out all cocoon.apply(..) parts
         this.baseScriptTokenList.commentScriptsApplied();
-        
+       
+        // add interception events
+        // add events to make parsing easier
+        this.baseScriptTokenList.addInterceptionEvents( this.stopExecutionFunctions );        
+       
+        // replace return statements with variable defintions and put
+        // it to the end of the function
+        this.baseScriptTokenList.replaceReturn();
+
         // add the interceptions
-        this.baseScriptTokenList.addInterceptions( 
-                this.interceptorGroups,
-                this.stopExecutionFunctions );
+        this.baseScriptTokenList.addInterceptions( this.interceptorGroups );
 
         // pretty print script
         // TODO tbd 
@@ -554,6 +571,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      */
     static class JSTokenList extends LinkedList {
 
+        public static String RETURN_VARIABLE = "____interceptionReturn____"; 
+
         /**
          * Token ids of all cocoon object occurencies followed by '.apply'
          * ( cocoon.apply( "bla" ); )
@@ -569,14 +588,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * Add the code fragement of the passed interceptions at the right places
          */
-        private void addInterceptions( ArrayList interceptionsList, 
-                                       List stopExecutionFunctions ) {
-            
-            this.stopExecutionFunctions = stopExecutionFunctions;
+        private void addInterceptions( ArrayList interceptionsList ) {
                                            
-            // add events to make parsing easier
-            addInterceptionEvents();
-            
             ListIterator li = this.listIterator();
             boolean inAround = false;
             while( li.hasNext() ) {
@@ -627,8 +640,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * Add all tokens in the correct order 
          * 
-         * TODO tokens from events are streamed here --> better: add tokens to tokensList
-         * 
          * @param interceptionsList - sorted list of all available interceptions
          * @param functionName - name of the intercepted function
          * @param eventType - event type
@@ -661,15 +672,26 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                 }
             }
             if( matchingInterceptors.size() > 0 ) {
-                t.append( "\n\n/* " + eventType + "():" + "         */\n" );       
+                // add a comment showing the interception type
+                t.append( "\n\n/* " + eventType + "():" + "         */\n" );      
+                tokensListIt.add( t); 
                 ListIterator ili = matchingInterceptors.listIterator();
                 while( ili.hasNext() ) {
                     Interceptor interceptor = (Interceptor) ili.next();
-                    t.append( "\n// interception from: "  + interceptor.getName() + " [" + interceptor.getBaseScript() + "]\n" );
-                    t.append( interceptor.stream() );         
+                    // add a comment where the interception is defined                    
+                    t = new JSToken( JSToken.COMMENT );
+                    t.append( "\n// interception from: "  + interceptor.getName() + " [" + interceptor.getBaseScript() + "]\n" );                    
+                    tokensListIt.add( t.getClone() );
+                    // add all tokens that the interception definition contains
+                    ListIterator interceptorTokensIt = interceptor.getTokens().listIterator();
+                    while( interceptorTokensIt.hasNext() ) {
+                        tokensListIt.add( interceptorTokensIt.next() );
+                    }       
                 }
+                // end comment
+                t = new JSToken( JSToken.COMMENT );                
                 t.append( "\n/* end " + eventType + "():" + "     */\n\n" );   
-                tokensListIt.add( t);                    
+                tokensListIt.add( t.getClone() );                    
                 return true;
             }
             
@@ -766,7 +788,10 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          * to make intercepting easier events are added (start function, 
          * stop function, stop execution, continue execution)
          */
-        private void addInterceptionEvents() {
+        private void addInterceptionEvents( List stopExecutionFunctions ) {
+
+            this.stopExecutionFunctions = stopExecutionFunctions;
+            
             List functionPositions = this.getFunctionPositions();
             // count all added interceptor events to jump into the right
             // position of the tokens list
@@ -840,9 +865,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                     }
                 } // end while
             } // end for
-            
-            
-            
         } // end method
         
         /**
@@ -909,6 +931,61 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                 }
                 t.append('*').append('/');
             }
+        }
+        
+        /**
+         * Replace all occurencies of return (except those which
+         * are in separte code blocks)
+         */
+        private void replaceReturn() {
+            ListIterator li = this.listIterator();
+            int countOpenBrackets = 0;
+            boolean inFunction = false;
+            boolean foundReturnStatement = false;
+            while( li.hasNext() ) {
+                JSToken t = (JSToken) li.next();
+                int type = t.getType();                
+                if( t instanceof InterceptorEvent ) {
+                    InterceptorEvent ie  =(InterceptorEvent) t;
+                    int ieType = ie.getType();
+                    if( ieType == InterceptorEvent.FNC_START ) {
+                        inFunction = true;    
+                        foundReturnStatement = false;
+                    } 
+                    else if( ieType == InterceptorEvent.FNC_END ) {
+                        if( foundReturnStatement ) {
+                            li.add( new JSToken( JSToken.COMMENT, "/* moved return statement   */" ));      
+                            li.add( new JSToken( JSToken.LF, "\n" ));    
+                            li.add( new JSToken( JSToken.CODE, "return" ));                   
+                            li.add( new JSToken( JSToken.WHITESPACE, " " ));                            
+                            li.add( new JSToken( JSToken.CODE, RETURN_VARIABLE ));     
+                            li.add( new JSToken( JSToken.SEMICOLON, ";" ));   
+                            li.add( new JSToken( JSToken.LF, "\n" ));                               
+                        }   
+                        inFunction = false;
+                    }
+                }                
+                else if( inFunction ) {
+                    if( type == JSToken.BRACKET2_LEFT ) {
+                        countOpenBrackets++;
+                    }   
+                    else if( type == JSToken.BRACKET2_RIGHT ) {
+                        countOpenBrackets--;   
+                    }
+                    else if( countOpenBrackets == 0 && 
+                             type == JSToken.CODE && 
+                             t.equals( "return") ) {
+                        
+                        li.remove();
+                        li.add( new JSToken( JSToken.CODE, "var" ));    
+                        li.add( new JSToken( JSToken.WHITESPACE, " " ));                            
+                        li.add( new JSToken( JSToken.CODE, RETURN_VARIABLE ));
+                        li.add( new JSToken( JSToken.WHITESPACE, " " ));      
+                        li.add( new JSToken( JSToken.EQUAL_SIGN, "=" ));                      
+                        foundReturnStatement = true;                     
+                    }
+                }                 
+            }   
         }
 
         // ------------ TokenList of appield files ---------------------------
@@ -1201,6 +1278,11 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
              this.type = type;
              token = new char[0];
          }
+         
+         public JSToken( int type, String tokenValue ) {
+             this.type = type;
+             this.token = tokenValue.toCharArray();
+         }
 
          public void setType(int type) {
              this.type = type;
@@ -1278,10 +1360,10 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
      */
     static class InterceptorEvent extends JSToken {
 
-        public static int FNC_START                = 51;
-        public static int FNC_END                  = 52;     
-        public static int STOP_EXEC                = 53;
-        public static int CONT_EXEC            = 54;  
+        public static int FNC_START = 51;
+        public static int FNC_END   = 52;     
+        public static int STOP_EXEC = 53;
+        public static int CONT_EXEC = 54;  
 
         String interceptorName;
         int type;
