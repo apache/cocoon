@@ -69,7 +69,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: FormValidatorAction.java,v 1.2 2003/08/15 15:53:20 haul Exp $
+ * @version CVS $Id: FormValidatorAction.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  */
 public class FormValidatorAction extends AbstractValidatorAction implements ThreadSafe {
 
@@ -80,7 +80,7 @@ public class FormValidatorAction extends AbstractValidatorAction implements Thre
      * 
      * @param objectModel the object model
      * @param set a collection of parameter names
-     * @return
+     * @return HashMap of required parameters 
      */
     protected HashMap createMapOfParameters(Map objectModel, Collection set) {
         String name;

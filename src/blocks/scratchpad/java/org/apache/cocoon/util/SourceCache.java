@@ -100,7 +100,7 @@ import org.apache.excalibur.source.SourceResolver;
  * 
  * @since 2.1.4
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SourceCache.java,v 1.1 2003/11/09 13:33:24 haul Exp $
+ * @version CVS $Id: SourceCache.java,v 1.2 2003/11/15 04:21:29 joerg Exp $
  */
 public interface SourceCache {
 	
@@ -120,10 +120,10 @@ public interface SourceCache {
 	 * objects identified by the key hasn't been cached or has been
 	 * cleared from the cache, or source has changed.
 	 * 
-	 * @param A source resolver to use.
-	 * @param An object used as a key to the cached object.
-	 * @param A string holding the URI.
-	 * @param Parameters to pass to the source reloader.
+	 * @param resolver A source resolver to use.
+	 * @param key An object used as a key to the cached object.
+	 * @param uri A string holding the URI.
+	 * @param parameter Parameters to pass to the source reloader.
 	 * @return Cached object.
 	 * @throws MalformedURLException
 	 * @throws IOException

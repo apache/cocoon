@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.9 2003/10/31 21:41:59 vgritsenko Exp $
+ * @version CVS $Id: Target.java,v 1.10 2003/11/15 04:21:30 joerg Exp $
  */
 public class Target {
     // Defult type is append
@@ -342,7 +342,8 @@ public class Target {
 
     /**
      * 
-     * @return
+     * @return destination URI after all authentication details have been
+     *         removed
      */
     public String getAuthlessDestURI() throws ProcessingException {
         return NetUtils.removeAuthorisation(this.getDestinationURI());
@@ -432,7 +433,7 @@ public class Target {
         return _toString;
     }
     /**
-     * @return
+     * @return boolean
      */
     public boolean confirmExtensions() {
         return confirmExtension;

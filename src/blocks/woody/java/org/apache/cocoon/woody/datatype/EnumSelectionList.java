@@ -60,9 +60,8 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * Builds a selection list with possible values for a class implementing
- * the {@link Enum} interface.
- * @version CVS $Id: EnumSelectionList.java,v 1.2 2003/11/09 09:21:19 ugo Exp $
+ * Builds a EnumSelectionList.
+ * @version CVS $Id: EnumSelectionList.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";

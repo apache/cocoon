@@ -174,7 +174,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.8 2003/10/27 21:28:39 joerg Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.9 2003/11/15 04:21:30 joerg Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -1170,8 +1170,8 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * invoking super's method, so that the element itself is skipped, or afterwards,
      * so that only the children are skipped.
      * 
-     * @param increment skip counter 
-     * @param skip only children
+     * @param skip
+     * @param children 
      * @param uri
      * @param name
      * @param raw

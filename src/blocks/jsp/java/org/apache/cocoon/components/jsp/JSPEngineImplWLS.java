@@ -51,6 +51,7 @@
 package org.apache.cocoon.components.jsp;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -74,7 +75,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplWLS.java,v 1.2 2003/07/10 23:38:04 joerg Exp $
+ * @version CVS $Id: JSPEngineImplWLS.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -95,11 +96,11 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
     String servletName = DEFAULT_SERVLET_NAME;
 
     /**
-     * Set the sitemap-provided configuration.
-     * @param conf The configuration information
-     * @exception ConfigurationException
+     * parameterize
+     * @param params Parameters
+     * @exception ParameterException
      */
-    public void parameterize(Parameters params) {
+    public void parameterize(Parameters params) throws ParameterException {
         this.servletName = params.getParameter( CONFIG_SERVLET_NAME, DEFAULT_SERVLET_NAME);
     }
 

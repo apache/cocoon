@@ -52,7 +52,7 @@ import java.io.Serializable;
  * uncache event.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: Event.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
+ * @version $Id: Event.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  */
 public abstract class Event implements Serializable {
     
@@ -61,7 +61,7 @@ public abstract class Event implements Serializable {
      * is important for determining whether a received event 
      * should uncache a held Pipeline key.
      * 
-     * @param event Another Event to compare.
+     * @param e Another Event to compare.
      * @return true if
      */
     public abstract boolean equals(Event e);

@@ -89,7 +89,7 @@ import java.util.Vector;
  * getAttributeNames() will return an Iterator to an empty collection.</p>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: LocateResource.java,v 1.1 2003/08/15 15:55:45 haul Exp $
+ * @version CVS $Id: LocateResource.java,v 1.2 2003/11/15 04:21:30 joerg Exp $
  */
 public class LocateResource extends AbstractInputModule implements Composable, ThreadSafe {
 
@@ -104,7 +104,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
      * Calculate the minimal length of the URL, that is the position
      * of the first ":" if a protocol is provided or otherwise 0.
      * @param name
-     * @return
+     * @return minimal length
      */
     protected int calculateMinLen(String name) {
 
@@ -120,7 +120,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
      * 
      * @param urlstring
      * @param minLen
-     * @return
+     * @return shortened URI
      */
     protected String shortenURI(String urlstring, int minLen) {
 
@@ -154,7 +154,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
      * @param urlstring
      * @param filename
      * @param minLen
-     * @return
+     * @return urlstring if resource was found, <code>null</code> otherwise
      */
     protected String locateResource(String urlstring, String filename, int minLen) {
         String sourcename = null;

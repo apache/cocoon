@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  * </pre>
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SourcePropsWritingTransformer.java,v 1.2 2003/10/27 17:39:10 unico Exp $
+ * @version CVS $Id: SourcePropsWritingTransformer.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  */
 public class SourcePropsWritingTransformer
     extends AbstractSAXTransformer {
@@ -127,7 +127,7 @@ public class SourcePropsWritingTransformer
      * @param resolver Source Resolver
      * @param objectModel Object model
      * @param src URI of the source attribute
-     * @param parameters Parameters for the transformer
+     * @param par Parameters for the transformer
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {

@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.6 2003/11/08 17:42:36 haul Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.7 2003/11/15 04:21:30 joerg Exp $
  */
 public class MailMessageSender {
 
@@ -509,7 +509,7 @@ public class MailMessageSender {
     }
 
     /** Sets the optional body source Mime Type of the email message.
-     * @param srcMimeTyoe The optional body source Mime Type of the email message
+     * @param srcMimeType The optional body source Mime Type of the email message
      */
     public void setBodyFromSrcMimeType(String srcMimeType) {
         if (!("".equals(srcMimeType) || "null".equals(srcMimeType))) {

@@ -57,7 +57,7 @@ import org.apache.cocoon.portal.event.LayoutEvent;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutRemoveEvent.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
+ * @version CVS $Id: LayoutRemoveEvent.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
  */
 public class LayoutRemoveEvent
     extends AbstractActionEvent
@@ -65,7 +65,6 @@ public class LayoutRemoveEvent
 
     /**
      * @param target
-     * @param action
      */
     public LayoutRemoveEvent(Object target) {
         super(target);

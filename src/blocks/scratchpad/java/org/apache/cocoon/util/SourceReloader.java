@@ -57,15 +57,15 @@ import org.apache.excalibur.source.Source;
  * 
  * @since 2.1.4
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SourceReloader.java,v 1.1 2003/11/09 13:33:24 haul Exp $
+ * @version CVS $Id: SourceReloader.java,v 1.2 2003/11/15 04:21:29 joerg Exp $
  */
 public interface SourceReloader {
 
 	/**
 	 * Load data from a source and return an object.
 	 * 
-	 * @param A source.
-	 * @param A parameter.
+	 * @param src A source.
+	 * @param parameter A parameter.
 	 * @return An object.
 	 */
 	Object reload(Source src, Object parameter);

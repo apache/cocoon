@@ -77,7 +77,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author     <a href="mailto:tom.klaasen@pandora.be">Tom Klaasen</a>
- * @version CVS $Id: AbstractConstrainedTransformer.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
+ * @version CVS $Id: AbstractConstrainedTransformer.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  */
 public abstract class AbstractConstrainedTransformer
 		 extends AbstractTransformer {
@@ -307,9 +307,8 @@ public abstract class AbstractConstrainedTransformer
 	 *  Utility methods also for subclasses
 	 *
 	 *@author     Nicola Ken Barozzi
-	 *@created    14 mei 2002
+	 *@since      14 May 2002
 	 */
-
 	public class RipperListener extends ElementEventAdapter {
 
 		public void elementValueRecieved(ElementValueEvent e) {

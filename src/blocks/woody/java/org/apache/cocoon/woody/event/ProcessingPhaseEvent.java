@@ -61,9 +61,6 @@ public class ProcessingPhaseEvent extends WidgetEvent {
     
     private ProcessingPhase phase;
 
-    /**
-     * @param sourceWidget
-     */
     public ProcessingPhaseEvent(Form form, ProcessingPhase phase) {
         super(form);
         this.phase = phase;

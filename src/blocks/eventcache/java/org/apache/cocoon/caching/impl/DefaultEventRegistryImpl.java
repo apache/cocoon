@@ -82,7 +82,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.7 2003/10/02 04:21:17 ghoward Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.8 2003/11/15 04:21:30 joerg Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -102,8 +102,8 @@ public class DefaultEventRegistryImpl
      * Registers (stores) a two-way mapping between this Event and this 
      * PipelineCacheKey for later retrieval.
      * 
-     * @param event The event to 
-     * @param key
+     * @param e The event to 
+     * @param key key
      */
     public void register(Event e, Serializable key) {
         synchronized(this) {

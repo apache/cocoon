@@ -34,7 +34,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * and activation.jar in xml-cocoon2/lib/local/, and recompile.  These jars could actually be
  * moved to lib/optional and added to jars.xml in the future.
  *
- * @todo. Refactor all of this to use the MailCommandManager, etc...
+ * TODO Refactor all of this to use the MailCommandManager, etc...
  *
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>
  */

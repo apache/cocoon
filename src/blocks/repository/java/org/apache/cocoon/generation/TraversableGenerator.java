@@ -132,7 +132,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.4 2003/11/03 17:13:33 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.5 2003/11/15 04:21:28 joerg Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -299,7 +299,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      * before generation has occured. So the returned object is kept by the
      * generator and filled with each of the resources that is traversed.
      * 
-     * @see TraversableGenerator.CollectionValidity
+     * @see org.apache.cocoon.components.source.impl.MultiSourceValidity
      */
     public SourceValidity getValidity() {
         if (this.validity == null) {

@@ -87,7 +87,7 @@ package org.apache.cocoon.util;
  * the derived class.
  *
  * @author Christoph Grein
- * @version CVS $Id: EnumerationFactory.java,v 1.2 2003/03/16 17:49:16 vgritsenko Exp $
+ * @version CVS $Id: EnumerationFactory.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
  */
 public class EnumerationFactory {
 
@@ -138,13 +138,13 @@ public class EnumerationFactory {
   //--------------------------------------------------------------------------
   // Numeric representation:
 
+  public int getPos () {                                          // Ada'Pos
+    return pos;
+  }
   /**
    * Access to the numeric representation.
    * @param value the numeric value
    */
-  public int getPos () {                                          // Ada'Pos
-    return pos;
-  }
   public static EnumerationFactory getVal (int value) {           // Ada'Val
     return (EnumerationFactory) allObjects.elementAt (value);
   }

@@ -54,7 +54,7 @@ package org.apache.cocoon.components.repository;
  * on the interface java.security.Principal.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: Principal.java,v 1.3 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: Principal.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
  */
 public class Principal implements java.security.Principal {
 
@@ -107,7 +107,7 @@ public class Principal implements java.security.Principal {
     /**
      * Sets the role of the user
      *
-     * @param Role of the principal
+     * @param role Role of the principal
      */
     public void setRole(String role) {
         this.role = role;

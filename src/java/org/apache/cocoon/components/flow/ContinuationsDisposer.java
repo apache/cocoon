@@ -62,7 +62,7 @@ public interface ContinuationsDisposer {
      * the invalidation of a continuation upon the {@link ContinuationsDisposer}
      * object passed during the creation of the WebContinuation.
      * 
-     * @param kont the {@link WebContinuation} value representing the  
+     * @param webContinuation the {@link WebContinuation} value representing the  
      * continuation object. 
      */
     public void disposeContinuation(WebContinuation webContinuation);

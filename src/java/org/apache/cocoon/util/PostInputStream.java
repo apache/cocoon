@@ -57,7 +57,7 @@ import java.io.InputStream;
  * It allows to control read operation, restricting the number of bytes read to the value returned by getContentLen() method.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: PostInputStream.java,v 1.1 2003/03/09 00:09:43 pier Exp $
+ * @version CVS $Id: PostInputStream.java,v 1.2 2003/11/15 04:21:28 joerg Exp $
  */
 
 public class PostInputStream extends InputStream {
@@ -100,7 +100,7 @@ public class PostInputStream extends InputStream {
     /**
     * Sets the underlying input stream and contentLen value .
     *
-    * @param inputStream the input stream; can not be null.
+    * @param input the input stream; can not be null.
     * @param len the post message body length.
     *
     * @throws IllegalArgumentException
@@ -116,7 +116,7 @@ public class PostInputStream extends InputStream {
     /**
     * Sets the underlying input stream and contentLen value .
     *
-    * @param inputStream the input stream; can not be null.
+    * @param input the input stream; can not be null.
     * @param len the post message body length.
     *
     * @throws IOException

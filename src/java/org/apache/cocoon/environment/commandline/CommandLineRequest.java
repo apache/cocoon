@@ -63,7 +63,7 @@ import java.util.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.3 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
  */
 
 /*
@@ -262,21 +262,16 @@ public class CommandLineRequest implements Request {
      * you must call this method before
      * the response is committed.
      *
+     * @param create  <code>true</code> to create a new session for this request
+     *                if necessary;
+     *                <code>false</code> to return <code>null</code> if there's
+     *                no current session
      *
+     * @return  the <code>Session</code> associated with this request or
+     *          <code>null</code> if <code>create</code> is <code>false</code>
+     *          and the request has no valid session
      *
-     *
-     * @param                <code>true</code> to create
-     *                        a new session for this request if necessary;
-     *                        <code>false</code> to return <code>null</code>
-     *                        if there's no current session
-     *
-     *
-     * @return                 the <code>Session</code> associated
-     *                        with this request or <code>null</code> if
-     *                         <code>create</code> is <code>false</code>
-     *                        and the request has no valid session
-     *
-     * @see        #getSession()
+     * @see  #getSession()
      *
      *
      */

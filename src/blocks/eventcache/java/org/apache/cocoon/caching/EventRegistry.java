@@ -63,7 +63,7 @@ import org.apache.cocoon.caching.validity.Event;
  *  
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistry.java,v 1.3 2003/10/02 04:21:17 ghoward Exp $
+ * @version CVS $Id: EventRegistry.java,v 1.4 2003/11/15 04:21:28 joerg Exp $
  */
 public interface EventRegistry extends Component {
     
@@ -75,8 +75,8 @@ public interface EventRegistry extends Component {
     /**
      * Map an event to a key
      * 
-     * @param event
-     * @param key
+     * @param e event
+     * @param key key
      */
     public void register(Event e, Serializable key);
     
@@ -90,7 +90,7 @@ public interface EventRegistry extends Component {
     /**
      * Retrieve an array of all keys mapped to this event.
      * 
-     * @param event
+     * @param e event
      * @return an array of keys which should not be modified or null if 
      *      no keys are mapped to this event.
      */

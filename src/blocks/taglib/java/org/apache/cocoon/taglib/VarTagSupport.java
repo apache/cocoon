@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * Add support for setting and getting variables
  * 
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: VarTagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
+ * @version CVS $Id: VarTagSupport.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  */
 public abstract class VarTagSupport extends TagSupport implements Composable {
     protected String var;
@@ -105,7 +105,7 @@ public abstract class VarTagSupport extends TagSupport implements Composable {
      * Register the name and object specified.
      *
      * @param name the name of the attribute to set
-     * @param attribute  the object to associate with the name
+     * @param value  the object to associate with the name
      */
     protected final void setVariable(String name, Object value) {
         JXPathContext context = getVariableContext();

@@ -71,7 +71,7 @@ import org.apache.cocoon.environment.Session;
  * copied to the final destination.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionAttributeOutputModule.java,v 1.1 2003/03/09 00:09:05 pier Exp $
+ * @version CVS $Id: SessionAttributeOutputModule.java,v 1.2 2003/11/15 04:21:28 joerg Exp $
  */
 public class SessionAttributeOutputModule extends AbstractOutputModule implements OutputModule {
     
@@ -83,7 +83,7 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
      * communicate an attribute value to further processing logic.
      * @param modeConf column's mode configuration from resource
      * description. This argument is optional.
-     * @param request The request object
+     * @param objectModel The objectModel
      * @param name The attribute's label, consisting of "table.column"
      * or "table.column[index]" in case of multiple attributes of the
      * same spec.

@@ -50,7 +50,7 @@ package org.apache.cocoon.caching.validity;
  * (not necessarily useful) could include "Easter" or "Shutdown"
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: NamedEvent.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
+ * @version $Id: NamedEvent.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
  */
 public class NamedEvent extends Event {
     
@@ -60,7 +60,7 @@ public class NamedEvent extends Event {
     /**
      * Constructor takes a simple String as event name.
      * 
-     * @param String name
+     * @param name name
      */
     public NamedEvent(String name) {
         m_name = name;

@@ -96,7 +96,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.9 2003/10/20 08:47:29 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.10 2003/11/15 04:21:28 joerg Exp $
  */
 public final class SourceUtil {
 
@@ -147,12 +147,12 @@ public final class SourceUtil {
 
     /**
      * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
+     * <b>NOTE</b> : if the implementation can produce lexical events, care
+     * should be taken that <code>handler</code> can actually directly implement
+     * the LexicalHandler interface!
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
-     * @deprecated Use the {@link #toSAX(ServiceManager, Source, String, ContentHandler)
+     * @deprecated Use the {@link #toSAX(ServiceManager, Source, String, ContentHandler)}
      *             method instead.
      */
     static public void toSAX( ComponentManager manager, Source source,
@@ -222,7 +222,7 @@ public final class SourceUtil {
      * directly implement the LexicalHandler interface!
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
-     * @deprecated Use {@link #parse(ServiceManager, Source, ContentHandler}.
+     * @deprecated Use {@link #parse(ServiceManager, Source, ContentHandler)}.
      */
     static public void parse( ComponentManager manager, 
                                 Source source,
