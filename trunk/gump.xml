@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.41 2003/04/16 06:44:20 stephan Exp $
+  CVS $Id: gump.xml,v 1.42 2003/04/16 07:43:51 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -36,7 +36,6 @@
     <depend project="excalibur-compatibility"/>
     <depend project="excalibur-instrument"/>
     <depend project="excalibur-instrument-manager"/>
-    <depend project="excalibur-naming"/>
     <depend project="excalibur-sourceresolve"/>
     <depend project="excalibur-xmlutil"/>
     <depend project="excalibur-store"/>
