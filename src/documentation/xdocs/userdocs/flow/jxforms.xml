@@ -60,13 +60,13 @@ intentionally defaulted the JXForms namespace prefix here):</p>
 &lt;/submit&gt;</source>
   <p>
   In your Flow script you would supply an appropriate model, for example, like this:</p>
-   <p><source>
+   <source>
       var model = {
          method: "cash",
          number: "",
          expiry: ""
       }
-   </source></p>
+   </source>
    <p>
    Since JXForms uses <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>, your model may consist of any objects that <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link> supports.
    </p>
@@ -74,7 +74,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
    Use the <code>setModel()</code> function of the form to associate your model with the form. Then use the <code>sendView()</code> function of the form to display it.
   Upon submission of the form, the model will be automatically updated and you can take action in your script based on its values:
   </p>
-   <p><source>
+   <source>
       var model = {
          method: "cash",
          number: "",
@@ -90,7 +90,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       } else if (model.method == "credit") {
           ....
       } 
-   </source></p>
+   </source>
    <p> 
    JXForms also supports declarative <link href="#validation">validation</link> of form elements using Schematron, and automated <link href="#backNext">support</link> for back/forward navigation in multi-page forms using continuations.
    </p>
@@ -369,7 +369,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       </p>
       <p>Computes the value of an xpath expression against the model of this form</p>
     </s3>
-    <s3 title = "iterate"><anchor id="getValue"/>
+    <s3 title = "iterate"><anchor id="iterate"/>
       <p>
       <em>Function</em> <code>[java.util.Iterator] iterate([String] xpath)</code>
       </p>

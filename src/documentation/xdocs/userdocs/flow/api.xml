@@ -28,11 +28,11 @@
     <p>Classes in packages under <code>java</code> are accessible directly in your scripts.</p>
     <p>Note that classes under <code>java.lang</code> are not automatically imported, however:</p>
 
-    <p><source>var n = new java.lang.Integer(3);</source></p>
+    <source>var n = new java.lang.Integer(3);</source>
 
     <p>All other java packages and classes are accessible under the property <code>Packages</code>:</p>
 
-    <p><source>var tree = new Packages.javax.swing.JTree();</source></p>
+    <source>var tree = new Packages.javax.swing.JTree();</source>
 
     <p>You can get the effect of Java imports using the <code>importPackage()</code> and <code>importClass()</code> functions:</p>
     <table>
@@ -63,16 +63,14 @@
     </table>
     <p>
       If your Java classes have getters and setters you can access them as properties in JavaScript:</p>
-    <p>
       <source>
               var d = new java.util.Date();
               d.year = 2003;    // same effect as d.setYear(2003);
-      </source>
-     </p>
+      </source>     
     </s1>
     <s1 title="Flow Object Model">
       <p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the Flow Object Model (<em>FOM</em>).
-      The Flow Object Model contains following objects:
+      The Flow Object Model contains following objects:</p>
     <ul>
       <li><link href="#cocoon">Cocoon</link></li>
       <li><link href="#request">Request</link></li>
@@ -83,7 +81,6 @@
       <li><link href="#log">Log</link></li>
       <li><link href="#WebContinuation">WebContinuation</link></li>
     </ul>
-    </p>
     <s2 title = "Cocoon Object"><anchor id="cocoon"/>
     <p>The <code>Cocoon</code> object represents the current Cocoon Sitemap. This is the entry point into the FOM. There is one instance of <code>Cocoon</code> which you may access in your scripts as the global variable <code>cocoon</code>, for example like this:</p>
     <source>
@@ -95,31 +92,31 @@
     <s3 title="request">
     <p>The current Cocoon request:</p>
     <p>
-    <em>Property</em> <code>[<link href="#request">Request</link>] request</code>
+    <em>Property</em> [<link href="#request">Request</link>] request
     </p>
     </s3>
     <s3 title="response">
     <p>The current Cocoon response:</p>
     <p>
-    <em>Property</em> <code>[<link href="#response">Response</link>] response</code>
+    <em>Property</em> [<link href="#response">Response</link>] response
     </p>
     </s3>
     <s3 title="session">
     <p>The current Cocoon session:</p>
     <p>
-    <em>Property</em> <code>[<link href="#session">Session</link>] session</code>
+    <em>Property</em> [<link href="#session">Session</link>] session
     </p>
     </s3>
     <s3 title="context">
     <p>The current Cocoon application context:</p>
     <p>
-    <em>Property</em> <code>[<link href="#context">Context</link>] context</code>
+    <em>Property</em> [<link href="#context">Context</link>] context
     </p>
     </s3>
     <s3 title="log">
     <p>A reference to the current logger:</p>
     <p>
-    <em>Property</em> <code>[<link href="#log">Log</link>] log</code>
+    <em>Property</em> [<link href="#log">Log</link>] log
     </p>
     </s3>
 

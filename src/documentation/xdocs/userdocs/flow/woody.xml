@@ -63,11 +63,11 @@ function form1(form) {
     <p>
     </p>
     <s2 title ="The woody function"><anchor id="woody"/>
-      <p>The entry point to a Woody form is the <code>woody()</code> function:
+      <p>The entry point to a Woody form is the <code>woody()</code> function:</p>
       <p>
       <em>Function</em> <code>woody(form_function, form_definition, attribut_name)</code>
       </p>
-        You call the 
+      <p>  You call the 
 <code>woody</code> function from your sitemap to create a new form, for example:</p>
 <source><![CDATA[
 
