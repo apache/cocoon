@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.40 2000-03-06 11:46:39 stefano Exp $
+  $Id: changes.xml,v 1.41 2000-03-16 13:40:58 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,21 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RR" type="add">
+   Added the ability to include taglibs with PIs.
+  </action>
+  <action dev="RR" type="add">
+   Added tablig logicsheet dynamic reloading to XSP.
+  </action>
+  <action dev="DB" type="add">
+   Added SQL XSP taglib.
+  </action>
+  <action dev="SM" type="fix" fixes-bug="56">
+   Fixed problem with custom classloaders.
+  </action>
+  <action dev="SM" type="fix">
+   Updated Xalan and Xerces to latest version.
+  </action>
   <action dev="SM" type="fix">
    Fixed problem with stylesheet reloading when multiple transformations
    are applied on the same pipeline.
