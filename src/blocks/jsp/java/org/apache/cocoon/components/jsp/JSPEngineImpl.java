@@ -75,7 +75,7 @@ import java.util.Locale;
  * functionality - overrides the output method and returns the byte(s).
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.7 2003/07/12 13:30:02 joerg Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.8 2004/01/05 14:54:27 unico Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -221,6 +221,8 @@ public class JSPEngineImpl extends AbstractLogEnabled
     class MyServletResponse implements HttpServletResponse {
         HttpServletResponse response = null;
         MyServletOutputStream output = null;
+        boolean hasWriter = false;
+        boolean hasOutputStream = false;
 
         public MyServletResponse(HttpServletResponse response){
             this.response = response;
@@ -231,6 +233,10 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
         public Locale getLocale(){ return this.response.getLocale();}
         public PrintWriter getWriter() {
+            if (this.hasOutputStream) {
+                throw new IllegalStateException("getOutputStream was already called.");
+            }
+            this.hasWriter = true;
             return this.output.getWriter();
         }
         public boolean isCommitted() { return false; }
@@ -240,6 +246,10 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public void setContentType(java.lang.String type) {}
         public void setLocale(java.util.Locale loc) {}
         public ServletOutputStream getOutputStream() {
+            if (this.hasWriter) {
+                throw new IllegalStateException("getWriter was already called.");
+            }
+            this.hasOutputStream = true;
             return this.output;
         }
         public void addCookie(Cookie cookie){ response.addCookie(cookie); }
@@ -294,8 +304,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
             return this.writer;
         }
         public void write(int b) throws IOException  {
-            // This method is not used but have to be implemented
-            this.writer.write(b);
+            this.output.write(b);
         }
         public byte[] toByteArray() {
             this.writer.flush();

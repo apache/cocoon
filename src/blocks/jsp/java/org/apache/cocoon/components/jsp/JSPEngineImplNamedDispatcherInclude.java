@@ -50,22 +50,32 @@
 */
 package org.apache.cocoon.components.jsp;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.Locale;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.xml.sax.SAXException;
-
-import javax.servlet.*;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.security.Principal;
-import java.util.Enumeration;
-import java.util.Locale;
 
 /**
  * Allows JSP to be used as a generator.  Builds upon the JSP servlet
@@ -75,7 +85,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.5 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.6 2004/01/05 14:54:27 unico Exp $
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -215,6 +225,8 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
     class MyServletResponse implements HttpServletResponse {
         HttpServletResponse response;
         MyServletOutputStream output;
+        boolean hasOutputStream = false;
+        boolean hasWriter = false;
 
         public MyServletResponse(HttpServletResponse response){
             this.response = response;
@@ -225,6 +237,10 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
         public Locale getLocale(){ return this.response.getLocale();}
         public PrintWriter getWriter() {
+            if (this.hasOutputStream) {
+                throw new IllegalStateException("getOutputStream was already called.");
+            }
+            this.hasWriter = true;
             return this.output.getWriter();
         }
         public boolean isCommitted() { return false; }
@@ -234,6 +250,10 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         public void setContentType(java.lang.String type) {}
         public void setLocale(java.util.Locale loc) {}
         public ServletOutputStream getOutputStream() {
+            if (this.hasWriter) {
+                throw new IllegalStateException("getWriter was already called.");
+            }
+            this.hasOutputStream = true;
             return this.output;
         }
         public void addCookie(Cookie cookie){ response.addCookie(cookie); }
@@ -285,9 +305,8 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         public PrintWriter getWriter() {
             return this.writer;
         }
-        public void write(int b) throws java.io.IOException  {
-            // This method is not used but have to be implemented
-            this.writer.write(b);
+        public void write(int b) throws java.io.IOException {
+            this.output.write(b);
         }
         public byte[] toByteArray() {
             this.writer.flush();
