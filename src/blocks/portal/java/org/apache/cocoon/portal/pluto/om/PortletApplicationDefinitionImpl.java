@@ -26,7 +26,6 @@ import org.apache.pluto.om.portlet.PortletDefinitionList;
 import org.apache.pluto.om.servlet.WebApplicationDefinition;
 import org.apache.cocoon.portal.pluto.om.common.AbstractSupportSet;
 import org.apache.cocoon.portal.pluto.om.common.Support;
-import org.apache.cocoon.portal.PortalService;
 
 /**
  * 
