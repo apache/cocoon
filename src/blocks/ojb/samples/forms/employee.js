@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js")
 
 function employeeform_jdo(form) {
     // Get OJB factory
@@ -30,8 +30,8 @@ function employeeform_jdo(form) {
 
     // Load the Bean to the form
     form.load(bean);
-    // Let woody handle the form
-    form.showForm("jdo/woody/employee-form-display");
+    // Let Cocoon Forms handle the form
+    form.showForm("jdo/forms/employee-form-display");
     // Update the Bean based on user input
     form.save(bean);
 
@@ -42,5 +42,5 @@ function employeeform_jdo(form) {
 
     // Send response to the user
     cocoon.request.setAttribute("employeeform", form.getWidget());
-    cocoon.sendPage("jdo/woody/employee-form-success");
+    cocoon.sendPage("jdo/forms/employee-form-success");
 }

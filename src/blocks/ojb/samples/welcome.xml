@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.6 2004/03/06 02:26:13 antonio Exp $-->
+<!-- $Id: welcome.xml,v 1.7 2004/03/11 16:59:50 stephan Exp $-->
 <samples>
 
   <group name="Using JDO 1.01">
@@ -27,7 +27,7 @@
     instances into the persistent store (database). Uses Java Data Object Query Language (JDOQL).
   </note>
   <sample name="XSP" href="jdo/xspdemo">Sample using JDO in a XSP page.</sample>
-  <sample name="Woody" href="jdo/woody/employee">Sample using JDO with Woody Binding.</sample>
+  <sample name="Cocoon Forms" href="jdo/forms/employee">Sample using JDO with Cocoon Forms Binding.</sample>
  </group>
 
  <group name="Using ODMG 3.0 (To be done)">
@@ -36,13 +36,13 @@
      Uses Object Query Language (OQL). ODMG has been superceded by JDO.
   </note>
   <sample name="XSP" href="odmg/xspdemo">Sample using JDO in a XSP page.</sample>
-  <sample name="Woody" href="">Sample using Woody binding. To be done.</sample>
+  <sample name="Cocoon Forms" href="">Sample using Cocoon Forms Binding. To be done.</sample>
  </group>
 
  <group name="Using Persistence Broker (To be done)">
   <note>Low-level API that can be used directly by applications that don't need full fledged object level transactions.</note>
   <sample name="XSP" href="">Sample using JDO in a XSP page. To be done.</sample>
-  <sample name="Woody" href="">Sample using Woody binding. To be done.</sample>
+  <sample name="Cocoon Forms" href="">Sample using Cocoon Forms Binding. To be done.</sample>
   <sample name="JXForm" href="">Sample using JXForms. To be done.</sample>
  </group>
 

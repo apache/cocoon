@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: employee_template.xml,v 1.2 2004/02/18 19:58:17 joerg Exp $-->
+<!-- $Id: employee_bind.xml,v 1.1 2004/03/11 16:59:50 stephan Exp $-->
 <!--
 
  ============================================================================
@@ -51,19 +51,13 @@
 -->
 
 <!--
- * Employee template
+ * Employee binding bean
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/02/18 19:58:17 $
+ * @version CVS $Revision: 1.1 $ $Date: 2004/03/11 16:59:50 $
 -->
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
-  <title>Employee</title>
-  <content>
-    <wt:form-template action="#{$continuation/id}.continue" method="POST">
-        <wt:widget-label id="id"/>: <wt:widget id="id"/><br/><br/>
-        <wt:widget-label id="name"/>: <wt:widget id="name"/><br/><br/>
-        <wt:widget-label id="department_id"/>: <wt:widget id="department_id"/><br/><br/>
-        <input type="submit"/>
-    </wt:form-template>
-  </content>
-</page>
+<fd:context xmlns:fd="http://apache.org/cocoon/forms/1.0#binding" path="/" >
+    <fd:value id="id" path="id"/>
+    <fd:value id="name" path="name"/>
+    <fd:value id="department_id" path="departmentId"/>
+</fd:context>

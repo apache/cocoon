@@ -20,7 +20,7 @@
     <xsp:include>org.apache.cocoon.ojb.jdo.components.JdoPMF</xsp:include>
     <xsp:include>org.apache.cocoon.ojb.samples.EmployeeDAO</xsp:include>
     <xsp:include>org.apache.cocoon.ojb.samples.bean.Employee</xsp:include>
-    <xsp:include>org.apache.cocoon.woody.formmodel.*</xsp:include>
+    <xsp:include>org.apache.cocoon.forms.formmodel.*</xsp:include>
   </xsp:structure>
 
   <page>
