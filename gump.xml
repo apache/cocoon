@@ -64,7 +64,6 @@
     <depend project="excalibur-event-api"/>
     <depend project="excalibur-event-impl"/>
     <depend project="excalibur-legacy" id="i18n"/>
-    <depend project="excalibur-testcase"/>
 
     <depend project="jakarta-regexp"/>
     <depend project="jakarta-servletapi-4"/>

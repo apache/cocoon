@@ -20,31 +20,6 @@
   Test Cases: WebDAVSource
  </annotation>
 
- <logkit>
-  <factories>
-   <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
-  </factories>
-  <targets>
-   <stream id="root">
-    <stream>System.out</stream>
-    <format type="extended">
-     %7.7{priority} %5.5{time}   [%{category}] (%{context}): %{message}\n%{throwable}
-    </format>
-   </stream>
-  </targets>
-  <categories>
-   <category name="WebDAVSourceTestCase" log-level="DEBUG">
-     <log-target id-ref="root"/>
-   </category>
-   <category name="test" log-level="DEBUG">
-    <log-target id-ref="root"/>
-   </category>
-   <category name="core" log-level="DEBUG">
-    <log-target id-ref="root"/>
-   </category>
-  </categories>
- </logkit>
-
  <roles>
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"

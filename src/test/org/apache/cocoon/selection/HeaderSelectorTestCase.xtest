@@ -19,27 +19,6 @@
   Test Cases: HeaderSelector
  </annotation>
 
- <logkit>
-  <factories>
-   <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
-  </factories>
-  <targets>
-   <stream id="root">
-    <stream>System.out</stream>
-    <format type="extended">
-     %7.7{priority} %5.5{time}   [%9.9{category}] (%{context}): %{message}\n%{throwable}
-    </format>
-   </stream>
-  </targets>
-  <categories>
-   <category name="test" log-level="WARN">
-    <log-target id-ref="root"/>
-   </category>
-  </categories>
- </logkit>
-
- <context/>
-
  <roles>
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
