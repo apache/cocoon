@@ -50,6 +50,21 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.formmodel.AggregateFieldDefinition.SplitMapping;
+import org.apache.cocoon.woody.util.I18nMessage;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.oro.text.regex.MatchResult;
+import org.apache.oro.text.regex.PatternMatcher;
+import org.apache.oro.text.regex.Perl5Matcher;
+
+import org.outerj.expression.ExpressionException;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,204 +72,192 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.validation.ValidationError;
-import org.apache.cocoon.woody.validation.ValidationErrorAware;
-import org.apache.cocoon.woody.datatype.ValidationRule;
-import org.apache.cocoon.woody.formmodel.AggregateFieldDefinition.SplitMapping;
-import org.apache.cocoon.woody.util.I18nMessage;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.outerj.expression.ExpressionException;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
 /**
- * An aggregatedfield allows to edit the content of multiple fields through 1 textbox.
- * Hence this widget is a container widget, though its individual widgets are never rendered.
+ * An aggregated field allows to represent one value as multiple input fields, or several values
+ * as one field. Hence this widget is a field and a container widget simultaneously.
  *
- * <p>Upon submit, the value from the textbox will be split over multiple field widgets
- * using a regular expression. If this fails, this will simple give a validation error.
+ * <p>Upon submit, it first attempts to read own value from the request, and splits over nested
+ * field widgets using a regular expression. If split fails, this will simply give a validation error.
+ * If own value was not submitted, it attempts to read values for nested field widgets, and combines
+ * theirs values using combine expression.
  *
- * <p>To validate this widget, both the validation rules of the containing widgets are
- * checked, and those of the aggregated field themselve. The validation rules of the aggregated
+ * <p>To validate this widget, both the validation rules of the nested widgets are
+ * checked, and those of the aggregated field themselves. The validation rules of the aggregated
  * field can perform checks on the string as entered by the user (e.g. check its total length).
  *
- * <p>When getting the value from this widget (e.g. when generating its XML representation),
- * the values of the individual child widgets are combined again into one string. This is done
- * using an expression.
+ * <p>This field and nested fields can be of any supported type, as long as combine expression
+ * gives result of the correct type, and split regular expression can split string representation
+ * into parts which can be converted to the values of nested fields.
  *
- * <p>Currently the child widgets should always be field widgets whose datatype is string.
- * 
- * @version CVS $Id: AggregateField.java,v 1.14 2004/02/04 17:25:57 sylvain Exp $
- *
+ * @version CVS $Id: AggregateField.java,v 1.15 2004/02/29 06:07:37 vgritsenko Exp $
  */
-public class AggregateField extends AbstractWidget implements ValidationErrorAware {
-    private AggregateFieldDefinition aggregateDefinition;
-    private String enteredValue;
-    private List fields = new ArrayList();
-    private Map fieldsById = new HashMap();
-    private ValidationError validationError;
+public class AggregateField extends Field {
 
-    protected AggregateField(AggregateFieldDefinition definition) {
-        super.setDefinition(definition);
-        this.aggregateDefinition = definition;
-        setLocation(definition.getLocation());
+    /**
+     * List of nested fields
+     */
+    private List fields = new ArrayList();
+
+    /**
+     * Map of nested fields
+     */
+    private Map fieldsById = new HashMap();
+
+
+    public AggregateField(AggregateFieldDefinition definition) {
+        super(definition);
+    }
+
+    public final AggregateFieldDefinition getAggregateFieldDefinition() {
+        return (AggregateFieldDefinition)super.definition;
     }
 
     protected void addField(Field field) {
-        fields.add(field);
         field.setParent(this);
+        fields.add(field);
         fieldsById.put(field.getId(), field);
     }
 
-    public String getId() {
-        return definition.getId();
+    public Iterator getChildren() {
+        return fields.iterator();
     }
 
     public void readFromRequest(FormContext formContext) {
         String newEnteredValue = formContext.getRequest().getParameter(getFullyQualifiedId());
-        
-        // whitespace & empty field handling
         if (newEnteredValue != null) {
-            // TODO make whitespace behaviour configurable !!
-            newEnteredValue.trim();
-            if (newEnteredValue.length() == 0) {
-                newEnteredValue = null;
+            // There is one aggregated entered value. Read it and split it.
+            super.readFromRequest(formContext);
+            if (needsParse) {
+                setFieldsValues(enteredValue);
             }
-        }
-
-        // Only convert if the text value actually changed. Otherwise, keep the old value
-        // and/or the old validation error (allows to keep errors when clicking on actions)
-        if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
-            
-            enteredValue = newEnteredValue;
-            validationError = null;
-    
-            if (enteredValue != null) {
-                // try to split it
-                PatternMatcher matcher = new Perl5Matcher();
-                if (matcher.matches(enteredValue, aggregateDefinition.getSplitPattern())) {
-                    MatchResult matchResult = matcher.getMatch();
-                    Iterator iterator = aggregateDefinition.getSplitMappingsIterator();
-                    while (iterator.hasNext()) {
-                        SplitMapping splitMapping = (SplitMapping)iterator.next();
-                        String result = matchResult.group(splitMapping.getGroup());
-                        // Since we know the fields are guaranteed to have a string datatype, we
-                        // can set the value immediately, instead of going to the readFromRequest
-                        // (which would also require us to create wrapper FormContext and Request
-                        // objects)
-                        ((Field)fieldsById.get(splitMapping.getFieldId())).setValue(result);
-                    }
-                } else {
-                    // set values of the fields to null
-                    Iterator fieldsIt = fields.iterator();
-                    while (fieldsIt.hasNext()) {
-                        Field field = (Field)fieldsIt.next();
-                        field.setValue(null);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Always returns a String for this widget (or null).
-     */
-    public Object getValue() {
-        if (fieldsHaveValues()) {
-            String value;
-            try {
-                value = (String)aggregateDefinition.getCombineExpression().evaluate(new ExpressionContextImpl(this, true));
-            } catch (ExpressionException e) {
-                return "#ERROR evaluating combine expression: " + e.getMessage();
-            } catch (ClassCastException e) {
-                return "#ERROR evaluating combine expression: result was not a string";
-            }
-            return value;
         } else {
-            return enteredValue;
+            // Check if there are multiple splitted values. Read them and aggregate them.
+            boolean needsParse = false;
+            for (Iterator i = fields.iterator(); i.hasNext();) {
+                Field field = (Field)i.next();
+                field.readFromRequest(formContext);
+                needsParse |= field.needsParse;
+            }
+            if (needsParse) {
+                combineFields();
+            }
+        }
+    }
+
+    public void setValue(Object newValue) {
+        super.setValue(newValue);
+        if (needsValidate) {
+            setFieldsValues(enteredValue);
         }
     }
 
     /**
-     * Returns false if their is at least one field which has no value.
+     * Returns false if all fields have no value.
      */
     private boolean fieldsHaveValues() {
-        Iterator fieldsIt = fields.iterator();
-        while (fieldsIt.hasNext()) {
-            Field field = (Field)fieldsIt.next();
-            if (field.getValue() == null)
-                return false;
+        for (Iterator i = fields.iterator(); i.hasNext();) {
+            Field field = (Field)i.next();
+            if (field.getValue() != null) {
+                return true;
+            }
         }
-        return true;
+        return false;
+    }
+
+    /**
+     * Splits passed value and sets values of all nested fields.
+     * If split fails, resets all fields.
+     */
+    private void setFieldsValues(String value) {
+        if (value == null) {
+            resetFieldsValues();
+        } else {
+            PatternMatcher matcher = new Perl5Matcher();
+            if (matcher.matches(value, getAggregateFieldDefinition().getSplitPattern())) {
+                MatchResult matchResult = matcher.getMatch();
+                Iterator iterator = getAggregateFieldDefinition().getSplitMappingsIterator();
+                while (iterator.hasNext()) {
+                    SplitMapping splitMapping = (SplitMapping)iterator.next();
+                    String result = matchResult.group(splitMapping.getGroup());
+
+                    // Fields can have a non-string datatype, going to the readFromRequest
+                    Field field = (Field)fieldsById.get(splitMapping.getFieldId());
+                    field.readFromRequest(result);
+                }
+            } else {
+                resetFieldsValues();
+            }
+        }
+    }
+
+    public void combineFields() {
+        try {
+            Object value = getAggregateFieldDefinition().getCombineExpression().evaluate(new ExpressionContextImpl(this, true));
+            super.setValue(value);
+        } catch (CannotYetResolveWarning e) {
+            super.setValue(null);
+        } catch (ExpressionException e) {
+            super.setValue(null);
+        } catch (ClassCastException e) {
+            super.setValue(null);
+        }
+    }
+
+    /**
+     * Sets values of all nested fields to null
+     */
+    private void resetFieldsValues() {
+        for (Iterator i = fields.iterator(); i.hasNext();) {
+            Field field = (Field)i.next();
+            field.setValue(null);
+        }
     }
 
     public boolean validate(FormContext formContext) {
-        // valid unless proven otherwise
-        validationError = null;
-
-        if (enteredValue == null) {
-            if (isRequired()) {
-                validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
-                return false;
-            }
-            return true;
-        } else if (!fieldsHaveValues()) {
-            XMLizable splitFailMessage = aggregateDefinition.getSplitFailMessage();
-            if (splitFailMessage != null) {
-                validationError = new ValidationError(splitFailMessage);
+        if ((enteredValue != null) != fieldsHaveValues()) {
+            XMLizable failMessage = getAggregateFieldDefinition().getSplitFailMessage();
+            if (failMessage != null) {
+                validationError = new ValidationError(failMessage);
             } else {
-                validationError = new ValidationError(new I18nMessage("aggregatedfield.split-failed", new String[] { aggregateDefinition.getSplitRegexp()}, Constants.I18N_CATALOGUE));
+                validationError = new ValidationError(new I18nMessage("aggregatedfield.split-failed",
+                                                                      new String[] { getAggregateFieldDefinition().getSplitRegexp() },
+                                                                      Constants.I18N_CATALOGUE));
             }
             return false;
-        } else {
-            // validate my child fields
-            Iterator fieldsIt = fields.iterator();
-            while (fieldsIt.hasNext()) {
-                Field field = (Field)fieldsIt.next();
-                if (!field.validate(formContext)) {
-                    validationError = field.getValidationError();
-                    return false;
-                }
-            }
-            // validate against my own validation rules
-            Iterator validationRuleIt = aggregateDefinition.getValidationRuleIterator();
-            ExpressionContextImpl exprCtx = new ExpressionContextImpl(this, true);
-            while (validationRuleIt.hasNext()) {
-                ValidationRule validationRule = (ValidationRule)validationRuleIt.next();
-                validationError = validationRule.validate(enteredValue, exprCtx);
-                if (validationError != null)
-                    return false;
+        }
+
+        // validate my child fields
+        for (Iterator i = fields.iterator(); i.hasNext();) {
+            Field field = (Field)i.next();
+            if (!field.validate(formContext)) {
+                validationError = field.getValidationError();
+                return false;
             }
         }
-        return validationError == null ? super.validate(formContext) : false;
+
+        return super.validate(formContext);
     }
 
-    public boolean isRequired() {
-        return aggregateDefinition.isRequired();
-    }
 
     private static final String AGGREGATEFIELD_EL = "aggregatefield";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
 
-
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl aggregatedFieldAttrs = new AttributesImpl();
         aggregatedFieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(aggregateDefinition.isRequired()));
-
+        aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(getAggregateFieldDefinition().isRequired()));
         contentHandler.startElement(Constants.WI_NS, AGGREGATEFIELD_EL, Constants.WI_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
 
-        String value = (String)getValue();
-        if (value != null) {
+        if (enteredValue != null || value != null) {
             contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
-            contentHandler.characters(value.toCharArray(), 0, value.length());
+            String stringValue;
+            if (value != null) {
+                stringValue = getDatatype().convertToString(value, locale);
+            } else {
+                stringValue = enteredValue;
+            }
+            contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
         }
 
@@ -267,6 +270,13 @@ public class AggregateField extends AbstractWidget implements ValidationErrorAwa
 
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
+
+        // generate selection list, if any
+        if (selectionList != null) {
+            selectionList.generateSaxFragment(contentHandler, locale);
+        } else if (getFieldDefinition().getSelectionList() != null) {
+            getFieldDefinition().getSelectionList().generateSaxFragment(contentHandler, locale);
+        }
         contentHandler.endElement(Constants.WI_NS, AGGREGATEFIELD_EL, Constants.WI_PREFIX_COLON + AGGREGATEFIELD_EL);
     }
 
@@ -276,13 +286,5 @@ public class AggregateField extends AbstractWidget implements ValidationErrorAwa
 
     public Widget getWidget(String id) {
         return (Widget)fieldsById.get(id);
-    }
-
-    public ValidationError getValidationError() {
-        return this.validationError;
-    }
-
-    public void setValidationError(ValidationError error) {
-        this.validationError = error;
     }
 }
