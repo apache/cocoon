@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.31 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.32 2004/04/09 19:52:54 vgritsenko Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -246,6 +246,7 @@ public class FOM_Cocoon extends ScriptableObject {
 
 
     public FOM_WebContinuation jsGet_continuation() {
+        // FIXME: This method can return invalid continuation! Is it OK to do so?
         return currentCall.getLastContinuation();
     }
 
@@ -1511,6 +1512,23 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     /**
+     * Return this continuation if it is valid, or first valid parent
+     */
+    private FOM_WebContinuation findValidParent(FOM_WebContinuation wk) {
+        if (wk != null) {
+            WebContinuation wc = wk.getWebContinuation();
+            while (wc != null && wc.disposed()) {
+                wc = wc.getParentContinuation();
+            }
+            if (wc != null) {
+                return new FOM_WebContinuation(wc);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Create a Bookmark WebContinuation from a JS Continuation with the last
      * continuation of sendPageAndWait as its parent.
      * PageLocal variables will be shared with the continuation of
@@ -1524,7 +1542,7 @@ public class FOM_Cocoon extends ScriptableObject {
         double d = org.mozilla.javascript.Context.toNumber(ttl);
         FOM_WebContinuation result =
             makeWebContinuation((Continuation)unwrap(k),
-                                jsGet_continuation(),
+                                findValidParent(jsGet_continuation()),
                                 (int)d);
         result.setPageLocal(pageLocal.getDelegate());
         currentCall.setLastContinuation(result);

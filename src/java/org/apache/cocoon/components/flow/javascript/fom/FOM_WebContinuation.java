@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ import org.mozilla.javascript.continuations.Continuation;
 
 /**
  *
- * @version CVS $Id: FOM_WebContinuation.java,v 1.8 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: FOM_WebContinuation.java,v 1.9 2004/04/09 19:52:54 vgritsenko Exp $
  */
 public class FOM_WebContinuation extends ScriptableObject {
 
@@ -112,7 +112,10 @@ public class FOM_WebContinuation extends ScriptableObject {
 
     public FOM_WebContinuation jsFunction_getParent() {
         WebContinuation parent = wk.getParentContinuation();
-        if (parent == null) return null;
+        if (parent == null) {
+            return null;
+        }
+
         FOM_WebContinuation pwk = new FOM_WebContinuation(parent);
         pwk.setParentScope(getParentScope());
         pwk.setPrototype(getClassPrototype(getParentScope(),
@@ -141,10 +144,8 @@ public class FOM_WebContinuation extends ScriptableObject {
     public void jsFunction_invalidate() throws Exception {
         ContinuationsManager contMgr = null;
         FOM_Cocoon cocoon =
-            (FOM_Cocoon)getProperty(getTopLevelScope(this),
-                                    "cocoon");
-        ServiceManager componentManager =
-            cocoon.getServiceManager();
+            (FOM_Cocoon)getProperty(getTopLevelScope(this), "cocoon");
+        ServiceManager componentManager = cocoon.getServiceManager();
         contMgr = (ContinuationsManager)
             componentManager.lookup(ContinuationsManager.ROLE);
         contMgr.invalidateWebContinuation(wk);
@@ -201,7 +202,10 @@ public class FOM_WebContinuation extends ScriptableObject {
 
     public FOM_WebContinuation jsGet_previousBookmark() {
         WebContinuation c = wk.getParentContinuation();
-        if (c == null) return null;
+        if (c == null) {
+            return null;
+        }
+
         // If this is a continuation of sendPageAndWait()
         // and the immediate parent is a bookmark, then
         // it is the bookmark for this page, so skip it.
@@ -211,12 +215,13 @@ public class FOM_WebContinuation extends ScriptableObject {
         while (c != null && !isBookmark(c)) {
             c = c.getParentContinuation();
         }
-        if (c == null) return null;
+        if (c == null) {
+            return null;
+        }
+
         FOM_WebContinuation pwk = new FOM_WebContinuation(c);
         pwk.setParentScope(getParentScope());
-        pwk.setPrototype(getClassPrototype(getParentScope(),
-                                           pwk.getClassName()));
+        pwk.setPrototype(getClassPrototype(getParentScope(), pwk.getClassName()));
         return pwk;
-
     }
 }
