@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.208 2001-02-07 19:49:23 greenrd Exp $ 
+  $Id: changes.xml,v 1.209 2001-02-19 20:06:02 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,8 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" fixes-bug="642" due-to="Antonia Arena" due-to-email="antonio_arena@yahoo.it">
+   Fixed bug in Util.getAllPIs
+  </action>
   <action dev="RDG" type="fix" due-to="David Cittadini" due-to-email="David.Cittadini@blackmarble.com">
-   Fixed SVG samples for IE5.5.
+   Fixed SVG sample for IE5.5.
   </action>
   <action dev="RDG" type="fix" fixes-bug="541" 
    due-to="Dafang Zhang" due-to-email="dafang.zhang@wcom.com">

@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.25 2001-02-06 12:29:49 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.26 2001-02-19 20:06:05 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.25 $ $Date: 2001-02-06 12:29:49 $
+ * @version $Revision: 1.26 $ $Date: 2001-02-19 20:06:05 $
  */
 
 public final class Utils {
@@ -101,6 +101,7 @@ public final class Utils {
                     if (remove) {
                         node.getParentNode().removeChild(node);
                         i--;
+                        j--;
                     }
                 }
             }
