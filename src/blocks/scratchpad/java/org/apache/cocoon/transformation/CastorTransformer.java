@@ -84,7 +84,7 @@ import java.util.Iterator;
  * @author <a href="mailto:mauch@imkenberg.de">Thorsten Mauch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
- * @version CVS $Id: CastorTransformer.java,v 1.7 2004/03/05 10:07:26 bdelacretaz Exp $
+ * @version CVS $Id: CastorTransformer.java,v 1.8 2004/05/08 01:34:06 joerg Exp $
  */
 public class CastorTransformer extends AbstractTransformer implements Configurable {
     private static final String CASTOR_URI = "http://apache.org/cocoon/castor/1.0";
@@ -103,7 +103,7 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
 
     /** The map of namespace prefixes. */
     private Map prefixMap = new HashMap();
-                                                                                                                                                               
+
     private Unmarshaller unmarshaller;
     private UnmarshalHandler unmarshalHandler;
     private ContentHandler unmarshalContentHandler;
@@ -143,18 +143,18 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
         } else if (unmarshalContentHandler != null) {
             // check if this marks the end of the unmarshalling
             if ((CASTOR_URI.equals(uri)) && (CMD_UNMARSHAL.equals(name))) {
-                                                                                                                                                               
+
                 // End marshalling, remove prefixes
                 Iterator itt = prefixMap.entrySet().iterator();
                 while ( itt.hasNext() ) {
                    Map.Entry entry = (Map.Entry) itt.next();
                    unmarshalContentHandler.endPrefixMapping((String)entry.getKey());
                 }
-                                                                                                                                                               
+
                 // end document
                 unmarshalContentHandler.endDocument();
                 unmarshalContentHandler = null;
-                                                                                                                                                               
+
                 // store the result of the unmarshaller
                 Object root = unmarshalHandler.getObject();
                 this.storeBean(objectModel, beanName, beanScope, root);
@@ -184,11 +184,11 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
 
     private void process (String command, Attributes attr) throws SAXException {
         if (command.equals(CMD_MARSHAL)) {
-                                                                                                                                                               
+
             String scope = attr.getValue(ATTRIB_SCOPE);
             String name = attr.getValue(ATTRIB_NAME);
             String mapping = attr.getValue(ATTRIB_MAPPING);
-                                                                                                                                                               
+
             if (name == null) {
                 getLogger().error("Attribute to insert not set");
             } else {
@@ -197,25 +197,24 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
         } else if (command.equals(CMD_UNMARSHAL)) {
             beanScope = attr.getValue(ATTRIB_SCOPE);
             beanName = attr.getValue(ATTRIB_NAME);
-                                                                                                                                                               
+
             if (beanScope == null) {
               getLogger().error("Destination for unmarshalled bean not set");
               return;
             }
-                                                                                                                                                               
+
             if (beanName == null) {
               getLogger().error("Name of unmarshalled bean not set");
               return;
             }
             String mappingpath = attr.getValue(ATTRIB_MAPPING);
-                                                                                                                                                               
-                                                                                                                                                               
+
             // Create the unmarshaller
             unmarshaller = new Unmarshaller((Class) null);
             // Only set a mapping if one is specified
             if (mappingpath != null) {
                 Mapping mapping;
-                                                                                                                                                               
+
                 try {
                     mapping = loadMapping(mappingpath);
                     unmarshaller.setMapping(mapping);
@@ -225,13 +224,13 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
                     getLogger().error("Could not load mapping file " + mappingpath, e);
                 }
             }
-                                                                                                                                                               
+
 //            unmarshalCommand = null;
 /*            if (commandclass != null) {
     try {
       unmarshalCommand = (CastorUnmarshalCommand)Class.forName(commandclass).newInstance();
       unmarshalCommand.enableLogging(this.getLogger());
-                                                                                                                                                               
+
       unmarshalCommand.pre(unmarshaller, xmlConsumer, objectModel, params);
     } catch (InstantiationException e) {
       getLogger().error("Could not instantiate class " + commandclass ,e);
@@ -241,22 +240,21 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
       getLogger().error("Could not instantiate class " + commandclass ,e);
     }
     }*/
-                                                                                                                                                               
+
             // Create the unmarshalhandler and wrap it with a SAX2 contentHandler
             unmarshalHandler = unmarshaller.createHandler();
-                                                                                                                                                               
+
             try {
                 unmarshalContentHandler = Unmarshaller.getContentHandler(
                                                   unmarshalHandler);
-                                                                                                                                                               
                 unmarshalContentHandler.startDocument();
-                                                                                                                                                               
+
                 Iterator itt = prefixMap.entrySet().iterator();
                 while ( itt.hasNext() ) {
                    Map.Entry entry = (Map.Entry)itt.next();
                    unmarshalContentHandler.startPrefixMapping((String)entry.getKey(), (String)entry.getValue());
                 }
-                                                                                                                                                               
+
             } catch (SAXException e) {
                 getLogger().error("Could not get contenthandler from unmarshaller", e);
             }
@@ -305,37 +303,37 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
      */
     private Object searchBean(Map objectModel, String name, String scope) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-                                                                                                                                                               
+
         //  search all maps for the given bean
         if ((scope == null) || SCOPE_SITEMAP.equals(scope)) {
             return objectModel.get(name);
         }
-                                                                                                                                                               
+
         if ((scope == null) || SCOPE_REQUEST.equals(scope)) {
             return request.getAttribute(name);
         }
-                                                                                                                                                               
+
         if ((scope == null) || SCOPE_SESSION.equals(scope)) {
             Session session = request.getSession(false);
-                                                                                                                                                               
+
             if (session != null) {
                 return session.getAttribute(name);
             }
         }
-                                                                                                                                                               
+
         return null;
     }
 
     private void storeBean(Map objectModel, String name, String scope, Object bean) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-                                                                                                                                                               
+
         if (SCOPE_SITEMAP.equals(scope)) {
             objectModel.put(name, bean);
         } else if (SCOPE_REQUEST.equals(scope)) {
             request.setAttribute(name, bean);
         } else if (SCOPE_SESSION.equals(scope)) {
             Session session = request.getSession(true);
-                                                                                                                                                               
+
             session.setAttribute(name, bean);
         }
     }
