@@ -89,9 +89,6 @@
    <sample name="File Uploads" href="xsp/upload" xlink:role="dynamic">
     Sample to illustrate File uploads.
    </sample>
-  </group>
-
-  <group name="Generators">
    <sample name="Javascript Generator" href="scripts/hello.js">
     An example of the ScriptGenerator producing XML out of a Javascript program.
    </sample>
@@ -102,6 +99,14 @@
    </sample>
    <sample name="Velocity Generator" href="templates/hello-page.vm">
     An example of the VelocityGenerator producing XML out of a Velocity Template.
+   </sample>
+  </group>
+
+  <group name="Web Applications">
+   <sample name="Protected Area" href="protected/login">
+		  An example web-application built around db-authenticator,
+		  form-validator, session-validator and session-invalidator
+		  actions.
    </sample>
   </group>
 

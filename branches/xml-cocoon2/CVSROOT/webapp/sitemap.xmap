@@ -134,8 +134,12 @@
     <map:mount uri-prefix="sub" src="sub/" check-reload="yes"/>
    </map:match>
   </map:pipeline>
-
   <map:pipeline>
+   <map:match pattern="protected**">
+    <map:mount uri-prefix="protected" src="protected/" check-reload="yes"/>
+   </map:match>
+  </map:pipeline>
+ <map:pipeline>
 
    <map:match pattern="">
     <map:redirect-to uri="welcome"/>
