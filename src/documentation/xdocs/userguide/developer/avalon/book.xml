@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Sessions" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="4. Developer" href="../preface.html"/>
+  </menu>
+  
+  <menu label="4.2 Avalon">
+    <menu-item label="4.2.1 Intro" href="preface.html"/>
+    <menu-item label="4.2.2 Avalon" href="avalon.html"/>
+    <menu-item label="4.2.3 Parent CM" href="parent-component-manager.html"/>
+    <menu-item label="4.2.4 Sources" href="source.html"/>
+  </menu>
+
+</book>
