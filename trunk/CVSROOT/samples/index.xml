@@ -45,9 +45,20 @@
    on the server side. NOTE: you need a CSS/PNG capable browser to view
    the slides.
   </sample>
-  <sample name="Structure Formatting with XSLT" url="showtree/slides.xml">
+  <sample name="Structure Formatting with XSLT" url="structure/slides.xml">
    This page shows the use of a general XSLT stylesheet that create a 
    tree view of the input file. The slides XML source is used as input.
+  </sample>
+ </group>
+ 
+ <group name="DocBook">
+  <sample name="Article Outline (Simplified DocBook DTD)" url="docbook/article-sdocbook.xml">
+   This page shows the structure of an article written using the 
+   simplified DocBook DTD.
+  </sample>
+  <sample name="Book Outline (DocBook DTD)" url="docbook/book-docbook.xml">
+   This page shows the structure of a book written using the complete
+   DocBook DTD.
   </sample>
  </group>
 
