@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-31 15:48:14 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-09-19 00:26:26 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -78,7 +78,6 @@ public class ProgramGeneratorImpl
    */
   public void setComponentManager(ComponentManager manager) {
     this.manager = manager;
-
     this.factory = (NamedComponentManager) this.manager.getComponent("factory");
   }
 
@@ -94,7 +93,6 @@ public class ProgramGeneratorImpl
   {
     Parameters params = Parameters.fromConfiguration(conf);
 
-    //this.repositoryName = params.getParameter("repository");
     if (this.repositoryName == null) {
         this.repositoryName = System.getProperty(Cocoon.TEMPDIR_PROPERTY, Cocoon.DEFAULT_TEMP_DIR);
     }
@@ -124,6 +122,14 @@ public class ProgramGeneratorImpl
     ProgrammingLanguage programmingLanguage = (ProgrammingLanguage)
       this.factory.getComponent("programming-language", programmingLanguageName);
 
+    if (markupLanguage instanceof Composer) {
+        ((Composer) markupLanguage).setComponentManager(this.manager);
+    }
+
+    if (programmingLanguage instanceof Composer) {
+        ((Composer) programmingLanguage).setComponentManager(this.manager);
+    }
+    
     // Create filesystem store
     FilesystemStore repository = new FilesystemStore(this.repositoryName);
 
