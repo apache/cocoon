@@ -51,13 +51,10 @@
 package org.apache.cocoon.components.cron;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
@@ -73,21 +70,26 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.quartz.*;
+
 import org.quartz.impl.DirectSchedulerFactory;
+
 import org.quartz.simpl.RAMJobStore;
+
+import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 
 /**
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.3 2003/09/04 12:42:44 cziegeler Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.4 2003/09/04 15:57:41 giacomo Exp $
  * @since 2.1.1
  */
 public class QuartzJobScheduler
-    extends AbstractLogEnabled
-    implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable {
-    
+extends AbstractLogEnabled
+implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable {
     /** ThreadPool policy RUN */
     private static final String POLICY_RUN = "RUN";
 
@@ -104,31 +106,34 @@ public class QuartzJobScheduler
     private static final String POLICY_DISCARD_OLDEST = "DISCARDOLDEST";
 
     /** Map key for the component role */
-    public static final String DATA_MAP_ROLE = "QuartzJobScheduler.ROLE";
+    static final String DATA_MAP_ROLE = "QuartzJobScheduler.ROLE";
 
     /** Map key for the job object */
-    public static final String DATA_MAP_OBJECT = "QuartzJobScheduler.Object";
+    static final String DATA_MAP_OBJECT = "QuartzJobScheduler.Object";
 
     /** Map key for the job name */
-    public static final String DATA_MAP_NAME = "QuartzJobScheduler.JobName";
+    static final String DATA_MAP_NAME = "QuartzJobScheduler.JobName";
 
     /** Map key for the service manager */
-    public static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
+    static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
 
     /** Map key for the logger */
-    public static final String DATA_MAP_LOGGER = "QuartzJobScheduler.Logger";
+    static final String DATA_MAP_LOGGER = "QuartzJobScheduler.Logger";
 
     /** Map key for the concurrent run property */
-    public static final String DATA_MAP_RUN_CONCURRENT = "QuartzJobScheduler.RunConcurrently";
+    static final String DATA_MAP_RUN_CONCURRENT = "QuartzJobScheduler.RunConcurrently";
 
     /** Map key for additional Parameters */
-    public static final String DATA_MAP_PARAMETERS = "QuartzJobScheduler.Parameters";
+    static final String DATA_MAP_PARAMETERS = "QuartzJobScheduler.Parameters";
 
     /** Map key for additional Object Map */
-    public static final String DATA_MAP_OBJECTMAP = "QuartzJobScheduler.Map";
+    static final String DATA_MAP_OBJECTMAP = "QuartzJobScheduler.Map";
+
+    /** Map key for the last JobExecutionContext */
+    static final String DATA_MAP_JOB_EXECUTION_CONTEXT = "QuartzJobScheduler.JobExecutionContext";
 
     /** The group name */
-    private static final String DEFAULT_QUARTZ_JOB_GROUP = "Cocoon";
+    static final String DEFAULT_QUARTZ_JOB_GROUP = "Cocoon";
 
     /** The PooledExecutor instance */
     private PooledExecutor m_executor;
@@ -142,6 +147,34 @@ public class QuartzJobScheduler
     /** Should we wait for running jobs to terminate on shutdown ? */
     private boolean m_shutdownGraceful;
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.cron.JobScheduler#getJobNames()
+     */
+    public String[] getJobNames() {
+        try {
+            final String[] names = m_scheduler.getJobNames(DEFAULT_QUARTZ_JOB_GROUP);
+            Arrays.sort(names);
+
+            return names;
+        } catch (final SchedulerException se) {
+            getLogger().error("could not gather job names", se);
+        }
+
+        return new String[0];
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.cron.JobScheduler#getSchedulerEntry(java.lang.String)
+     */
+    public JobSchedulerEntry getJobSchedulerEntry(String jobname) {
+        try {
+            return new QuartzJobSchedulerEntry(jobname, m_scheduler);
+        } catch (final Exception e) {
+            getLogger().error("cannot create QuartzJobSchedulerEntry", e);
+        }
+
+        return null;
+    }
 
     /**
      * Schedule a period job. Note that if a Job already has same name then it is overwritten.
@@ -266,6 +299,7 @@ public class QuartzJobScheduler
      */
     public boolean fireJob(final String jobrole) {
         Object job = null;
+
         try {
             job = m_manager.lookup(jobrole);
 
@@ -273,7 +307,7 @@ public class QuartzJobScheduler
         } catch (final ServiceException se) {
             getLogger().error("cannot fire job " + jobrole, se);
         } finally {
-            m_manager.release( job );
+            m_manager.release(job);
         }
 
         return false;
@@ -297,6 +331,7 @@ public class QuartzJobScheduler
     public boolean fireJob(final String jobrole, final Parameters params, final Map objects)
     throws CascadingException {
         Object job = null;
+
         try {
             job = m_manager.lookup(jobrole);
 
@@ -308,7 +343,7 @@ public class QuartzJobScheduler
         } catch (final ServiceException se) {
             getLogger().error("cannot fire job " + jobrole, se);
         } finally {
-            m_manager.release( job );
+            m_manager.release(job);
         }
 
         return false;
@@ -358,8 +393,16 @@ public class QuartzJobScheduler
     public void removeJob(final String name)
     throws NoSuchElementException {
         try {
-            m_scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP);
+            if( m_scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP) )
+            {
+                getLogger().info( "job " + name + " removed by request" );
+            }
+            else
+            {
+                getLogger().error( "couldn't remove requested job " + name  );
+            }
         } catch (final SchedulerException se) {
+            getLogger().error( "cannot remove job " + name, se );
             throw new NoSuchElementException(se.getMessage());
         }
     }
@@ -630,11 +673,11 @@ public class QuartzJobScheduler
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.3 2003/09/04 12:42:44 cziegeler Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.4 2003/09/04 15:57:41 giacomo Exp $
      */
     private static class ThreadPool
-        extends AbstractLogEnabled
-        implements org.quartz.spi.ThreadPool {
+    extends AbstractLogEnabled
+    implements org.quartz.spi.ThreadPool {
         /** Our executor thread pool */
         private PooledExecutor m_executor;
 
