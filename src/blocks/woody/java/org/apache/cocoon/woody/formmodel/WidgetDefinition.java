@@ -58,6 +58,8 @@ import org.xml.sax.SAXException;
  * function is a lot like that of the class in Java. Users of the Woody framework
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
+ * 
+ * @version CVS $Id: WidgetDefinition.java,v 1.4 2003/12/31 11:41:41 antonio Exp $
  */
 public interface WidgetDefinition {
 
