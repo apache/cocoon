@@ -549,7 +549,7 @@ rules. For example, you could count &lt;session&gt; AND &lt;chapter&gt; elements
   </s1>
   <s1 title="Comments">
 <p>
-Got an idea how to improve the Paginator Transformer? Post it to the <link href="mailto:cocoon-dev@xml.apache.org?subject=Paginator:">cocoon-dev</link> mailing list. Care to comment on this How-To? Help keep this document relevant by passing along any constructive feedback to the <link href="mailto:cocoon-docs@xml.apache.org?subject=Paginator:">cocoon-docs</link> mailing list.
+Got an idea how to improve the Paginator Transformer? Post it to the <link href="mailto:dev@cocoon.apache.org?subject=Paginator:">cocoon-dev</link> mailing list. Care to comment on this How-To? Help keep this document relevant by passing along any constructive feedback to the <link href="mailto:docs@cocoon.apache.org?subject=Paginator:">cocoon-docs</link> mailing list.
   </p>
   </s1>
   <s1 title="Revisions">

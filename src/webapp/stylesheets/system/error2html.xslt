@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.7 2003/06/13 12:05:54 upayavira Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.8 2003/07/02 09:31:00 cziegeler Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -50,7 +50,7 @@
     If you still don't find the answers you need,
     can send a mail to the
     <a>
-    <xsl:attribute name="href">mailto:cocoon-users@xml.apache.org?subject=[HELP]<xsl:value-of select="error:message"/>&amp;body=Description:<xsl:value-of select="error:description"/></xsl:attribute>
+    <xsl:attribute name="href">mailto:users@cocoon.apache.org?subject=[HELP]<xsl:value-of select="error:message"/>&amp;body=Description:<xsl:value-of select="error:description"/></xsl:attribute>
     Cocoon users mailing list</a>,
     remembering to:
    </p>

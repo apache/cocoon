@@ -205,3 +205,12 @@
     </javadoc>
 
   </target>
+
+  <!-- build the javadocs of the blocks -->
+  <target name="blocks-javadocs" depends="javadocs,prepare-blocks">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="javadocs"/>
+  </target>
+  

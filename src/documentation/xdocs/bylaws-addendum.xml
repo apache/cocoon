@@ -26,13 +26,13 @@
                   </s3>   
                   <s3 title="Specific Resources">
 			        <ul>
-			           <li>cocoon-docs@xml.apache.org mailing list</li>
+			           <li>docs@cocoon.apache.org mailing list</li>
 			           <li>bugzilla</li>
 			           <li>cocoon-.* modules CVS access</li>
                     </ul>
                   </s3>   
                   <s3 title="Reference mailing list">
-			        <p>cocoon-docs@xml.apache.org</p>
+			        <p>docs@cocoon.apache.org</p>
                   </s3>                     
                </s2>    
 

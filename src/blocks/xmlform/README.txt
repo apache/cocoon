@@ -12,14 +12,14 @@ xdocs/userdocs/concepts/xmlform.xml
 
 Following are copies of the announcement emails send to the Cocoon development
 mailing list.
-cocoon-dev@xml.apache.org <cocoon-dev@xml.apache.org>
+dev@cocoon.apache.org <dev@cocoon.apache.org>
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ----- Original Message ----- 
 From: "Ivelin Ivanov" <ivelin@apache.org>
-To: <cocoon-dev@xml.apache.org>
+To: <dev@cocoon.apache.org>
 Sent: Tuesday, April 16, 2002 
 Subject: [Announcement] Cocoon Form Handling - XML Form Release 0.8
 
@@ -69,7 +69,7 @@ Ivelin
 
 ----- Original Message ----- 
 From: "Ivelin Ivanov" <ivelin@iname.com>
-To: <cocoon-dev@xml.apache.org>
+To: <dev@cocoon.apache.org>
 Cc: "Sam Robertson" <xml_freak@yahoo.com>; "Torsten Curdt" <tcurdt@dff.st>; "Dmitri Plotnikov" <dmitri@plotnix.com>; <stefano@apache.org>; <acoliver@nc.rr.com>; <KPiroumian@flagship.ru>; <cocoond@wyona.org>; <M.Homeijer@devote.nl>
 Sent: Thursday, March 14, 2002 3:31 PM
 Subject: [Announcement] HTML Form binding and validation arrived
@@ -99,7 +99,7 @@ code.
 
 ----- Original Message ----- 
 From: "Ivelin Ivanov" <ivelin@iname.com>
-To: <cocoon-dev@xml.apache.org>
+To: <dev@cocoon.apache.org>
 Cc: "Oliver Becker" <obecker@informatik.hu-berlin.de>; "Rick Jelliffe" <ricko@allette.com.au>; "Dmitri Plotnikov" <dmitri@plotnix.com>
 Sent: Sunday, March 24, 2002 7:03 AM
 Subject: [Announcement] Fast Schematron Validation Here !
