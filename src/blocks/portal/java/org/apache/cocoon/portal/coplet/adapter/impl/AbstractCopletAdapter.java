@@ -125,6 +125,10 @@ public abstract class AbstractCopletAdapter
                     } catch (InterruptedException ignore) {
                         // ignored
                     }
+                    error = loader.exception;
+                    if ( error != null && this.getLogger().isWarnEnabled() ) {
+                        this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), error);                        
+                    }
                 } else {
                     this.streamContent( coplet, buffer );
                     read = true;
@@ -156,12 +160,14 @@ public abstract class AbstractCopletAdapter
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void init(CopletInstanceData coplet) {
+        // nothing to do here, can be overwritten in subclasses
     }
     
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void destroy(CopletInstanceData coplet) {
+        // nothing to do here, can be overwritten in subclasses
     }
 
     /* (non-Javadoc)
@@ -183,6 +189,7 @@ public abstract class AbstractCopletAdapter
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void logout(CopletInstanceData coplet) {
+        // nothing to do here, can be overwritten in subclasses
     }
     
     /**
@@ -229,8 +236,7 @@ final class LoaderThread implements Runnable {
     }
     
     boolean join( final long milis )
-    throws InterruptedException 
-    {
+    throws InterruptedException {
         return this.finished.attempt( milis );
     }
     

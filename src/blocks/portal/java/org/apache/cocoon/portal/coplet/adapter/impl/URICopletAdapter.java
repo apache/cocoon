@@ -149,6 +149,7 @@ public class URICopletAdapter
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
                 eventManager.getRegister().unsubscribe( this );
             } catch (Exception ignore) {
+                // ignore
             } finally {
                 this.manager.release( eventManager ); 
             }
@@ -188,6 +189,7 @@ public class URICopletAdapter
             list.add(event.getTarget());
             service.setTemporaryAttribute(URICopletAdapter.class.getName(), list);
         } catch (ServiceException ignore ) {            
+            // ignore
         } finally {
             this.manager.release(service);
         }
@@ -231,6 +233,7 @@ public class URICopletAdapter
                     notifyingBuilder= (NotifyingBuilder)this.manager.lookup(NotifyingBuilder.ROLE);
                     currentNotifying = notifyingBuilder.build(this, error);
                 } catch (Exception ignore) {
+                    // ignore
                 } finally {
                     this.manager.release(notifyingBuilder);
                 }
@@ -248,9 +251,10 @@ public class URICopletAdapter
                     objectModel.remove(org.apache.cocoon.Constants.NOTIFYING_OBJECT);
                     objectModel.remove(ObjectModelHelper.THROWABLE_OBJECT);
                 }
-            }
+            } else {
             
-            this.streamContent( coplet, uri, handler);
+                this.streamContent( coplet, uri, handler);
+            }
                         
             return true;
         }
