@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.117 2004/03/08 21:42:08 unico Exp $
+    | CVS $Id: gump.xml,v 1.118 2004/03/09 10:20:25 reinhard Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -759,11 +759,11 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-woody" status="unstable">
+  <project name="cocoon-block-forms" status="unstable">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
-      <property name="block-name" value="woody"/>
+      <property name="block-name" value="forms"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
 
@@ -771,11 +771,11 @@
     <depend project="xreporter-expression"/>
     <depend project="jakarta-oro"/>
 
-    <work nested="build/cocoon-@@DATE@@/blocks/woody/test"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="blocks/woody-block.jar"/>
+    <jar name="blocks/forms-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
@@ -875,7 +875,7 @@
     <depend project="cocoon-block-databases"/>
     <depend project="cocoon-block-hsqldb"/>
     <depend project="cocoon-block-velocity"/>
-    <depend project="cocoon-block-woody"/>
+    <depend project="cocoon-block-forms"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -975,7 +975,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <!-- following dependency is only for samples -->
-    <depend project="cocoon-block-woody" />
+    <depend project="cocoon-block-forms" />
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1224,7 +1224,7 @@
     <description>
       An expression language interpreter.
     </description>
-    <home nested="src/blocks/woody/lib"/>
+    <home nested="src/blocks/forms/lib"/>
     <jar name="xreporter-expression-20030725.jar"/>
   </project>
 
