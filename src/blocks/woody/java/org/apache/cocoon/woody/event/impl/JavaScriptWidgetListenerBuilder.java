@@ -70,15 +70,17 @@ import org.w3c.dom.Element;
  * </pre>
  * As shown above, the event that fired this listener is published as the <code>event</code>
  * variable.
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
 public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
 
+    public static final JavaScriptWidgetListenerBuilder INSTANCE = new JavaScriptWidgetListenerBuilder();
+
     public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
-        
+
         Script script = JavaScriptHelper.buildScript(element);
-        
+
         if (listenerClass == ActionListener.class) {
             return new JavaScriptWidgetListener.JSActionListener(script);
         } else if (listenerClass == ValueChangedListener.class) {
@@ -87,5 +89,4 @@ public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
             throw new Exception("Unkonwn event class: " + listenerClass);
         }
     }
-    
 }

@@ -63,19 +63,19 @@ import org.w3c.dom.Element;
  * <pre>
  *   &lt;java class="com.my.SuperListener"/&gt;
  * </pre>
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
 public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder {
 
+    public static final JavaClassWidgetListenerBuilder INSTANCE = new JavaClassWidgetListenerBuilder();
+
     public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
-        
+
         String name = DomHelper.getAttribute(element, "class");
 
         Object listener = ClassUtils.newInstance(name);
-        
         if (listenerClass.isAssignableFrom(listener.getClass())) {
-            
             // FIXME : apply filecyclehelper
             return (WidgetListener)listener;
         } else {
