@@ -6,6 +6,6 @@
   <tab title="back" href="."/>
  </header>
  <body>
-  <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="wikitest/${page}.txt" line="1" column="1">${text}</text>
+  <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="wiki/${page}.txt" line="1" column="1">${text}</text>
  </body>
 </document>
