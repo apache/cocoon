@@ -14,10 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "../dtd/changes-v10.dtd">
+<!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "changes-v10.dtd">
 <!--
   History of Cocoon Documentation changes
-  $Id: changes-doc.xml,v 1.7 2004/03/23 19:29:02 tcurdt Exp $
+  $Id: changes-doc.xml,v 1.8 2004/05/08 08:57:55 crossley Exp $
 -->
 <changes title="Documentation History of Changes">
   <devs>

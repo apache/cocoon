@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE faqs PUBLIC "-//APACHE//DTD FAQ V1.0//EN" "../dtd/faq-v10.dtd">
+<!DOCTYPE faqs PUBLIC "-//APACHE//DTD FAQ V1.0//EN" "faq-v10.dtd">
 
 <faqs title="Cocoon Configuration FAQs">
 

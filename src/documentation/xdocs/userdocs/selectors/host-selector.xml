@@ -14,10 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: host-selector.xml,v 1.6 2004/04/21 00:35:27 crossley Exp $ 
+  <![CDATA[ CVS Version: $Id: host-selector.xml,v 1.7 2004/05/08 08:57:58 crossley Exp $ 
   ]]>
 -->
 
