@@ -47,12 +47,6 @@
         shorthand="dom-parser"
         default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
 
-  <!-- This is the HTML parser -->
-  <role name="org.apache.excalibur.xml.sax.SAXParser/HTML"
-        shorthand="html-parser"
-        default-class="org.apache.excalibur.xml.sax.JTidyHTMLParser"/>
-
-
   <!-- A Dom Serializer -->
   <role default-class="org.apache.excalibur.xml.dom.DefaultDOMSerializer" name="org.apache.excalibur.xml.dom.DOMSerializer" shorthand="dom-serializer"/>
 
