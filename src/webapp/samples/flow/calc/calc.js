@@ -22,7 +22,7 @@ function getNumber(name, a, b)
 {
   var uri = "page/getNumber" + name.toUpperCase();
   cocoon.sendPageAndWait(uri, { "a" : a, "b" : b });
-  return parseFloat(cocoon.request.name);
+  return parseFloat(cocoon.request.getParameter(name));
 }
 
 function getOperator(a, b)
