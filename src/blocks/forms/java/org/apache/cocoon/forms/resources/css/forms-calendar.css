@@ -18,6 +18,7 @@
     visibility: hidden;
     background-color: white;
     layer-background-color: white;
+    z-index: 10000;
 }
 
 .forms_cpYearNavigation, .forms_cpMonthNavigation {
