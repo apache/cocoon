@@ -56,7 +56,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -65,9 +66,9 @@ import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * @author ?
- * @version CVS $Id: TagtestAction.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
+ * @version CVS $Id: TagtestAction.java,v 1.3 2003/10/15 20:47:15 cziegeler Exp $
  */
-public class TagtestAction extends ComposerAction {
+public class TagtestAction extends ServiceableAction implements ThreadSafe {
 
     /*
      * @see Action#act(Redirector, SourceResolver, Map, String, Parameters)

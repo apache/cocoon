@@ -71,11 +71,11 @@ import java.util.Map;
  * A simple action that executes any script that can be run by the BSF
  *
  * @author <a href="mailto:jafoster@uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptAction.java,v 1.1 2003/03/09 00:02:44 pier Exp $
+ * @version CVS $Id: ScriptAction.java,v 1.2 2003/10/15 20:47:15 cziegeler Exp $
  */
 
 public class ScriptAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
 

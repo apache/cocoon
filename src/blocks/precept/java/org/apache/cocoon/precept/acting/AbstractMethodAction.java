@@ -64,7 +64,7 @@ import org.apache.cocoon.environment.Request;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 
-import org.apache.cocoon.acting.ConfigurableComposerAction;
+import org.apache.cocoon.acting.ConfigurableServiceableAction;
 
 
 import java.util.HashMap;
@@ -77,9 +77,9 @@ import java.lang.reflect.Method;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 25, 2002
- * @version CVS $Id: AbstractMethodAction.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
+ * @version CVS $Id: AbstractMethodAction.java,v 1.3 2003/10/15 20:47:15 cziegeler Exp $
  */
-public abstract class AbstractMethodAction extends ConfigurableComposerAction {
+public abstract class AbstractMethodAction extends ConfigurableServiceableAction {
 
     private static final String ACTION_METHOD_PREFIX = "do";
     private static final String ACTION_METHOD_PARAMETER = "method";

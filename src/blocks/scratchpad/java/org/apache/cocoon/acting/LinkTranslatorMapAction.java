@@ -70,9 +70,9 @@ import org.apache.cocoon.util.NetUtils;
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
  * @since 16 December 2002
- * @version CVS $Id: LinkTranslatorMapAction.java,v 1.2 2003/09/05 07:04:35 cziegeler Exp $
+ * @version CVS $Id: LinkTranslatorMapAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
  */
-public class LinkTranslatorMapAction extends ComposerAction implements ThreadSafe {
+public class LinkTranslatorMapAction extends ServiceableAction implements ThreadSafe {
 
     /**
      * Execute the LinkTranslatorMapAction.

@@ -65,9 +65,9 @@ import java.util.Map;
  * has been created or not.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: HelloAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: HelloAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
  */
-public class HelloAction extends ComposerAction implements ThreadSafe {
+public class HelloAction extends ServiceableAction implements ThreadSafe {
 
     /**
      * A simple Action that logs if the <code>Session</code> object

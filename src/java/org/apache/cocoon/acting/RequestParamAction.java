@@ -115,9 +115,9 @@ import org.apache.cocoon.environment.SourceResolver;
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: RequestParamAction.java,v 1.2 2003/08/07 12:37:04 joerg Exp $
+ * @version CVS $Id: RequestParamAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
  */
-public class RequestParamAction extends ComposerAction implements ThreadSafe {
+public class RequestParamAction extends ServiceableAction implements ThreadSafe {
 
     public final static String MAP_URI         = "requestURI";
     public final static String MAP_QUERY       = "requestQuery";

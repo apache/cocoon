@@ -56,7 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -72,7 +72,7 @@ import org.apache.cocoon.precept.PreceptorViolationException;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 25, 2002
- * @version CVS $Id: AbstractPreceptorAction.java,v 1.2 2003/03/16 17:49:04 vgritsenko Exp $
+ * @version CVS $Id: AbstractPreceptorAction.java,v 1.3 2003/10/15 20:47:15 cziegeler Exp $
  */
 public abstract class AbstractPreceptorAction extends AbstractMethodAction implements ThreadSafe {
     public final static String PRECEPTORVIOLATIONS = "preceptorViolations";
@@ -90,7 +90,7 @@ public abstract class AbstractPreceptorAction extends AbstractMethodAction imple
     }
 
 
-    final protected Instance createInstance(String id) throws ComponentException {
+    final protected Instance createInstance(String id) throws ServiceException {
         InstanceFactory factory = (InstanceFactory) manager.lookup(InstanceFactory.ROLE);
         Instance instance = factory.createInstance(id);
         manager.release(factory);

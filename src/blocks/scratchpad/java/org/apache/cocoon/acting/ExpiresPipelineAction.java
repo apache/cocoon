@@ -73,10 +73,10 @@ import java.util.Map;
  *                   action with value remove (required)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ExpiresPipelineAction.java,v 1.1 2003/09/04 12:42:42 cziegeler Exp $
+ * @version CVS $Id: ExpiresPipelineAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
  * @since 2.1.1
  */
-public class ExpiresPipelineAction extends ComposerAction implements ThreadSafe {
+public class ExpiresPipelineAction extends ServiceableAction implements ThreadSafe {
 
     public Map act(Redirector redirector,
                     SourceResolver resolver,

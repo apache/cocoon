@@ -52,10 +52,9 @@ package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
@@ -70,10 +69,10 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  using a handler. If not a redirect takes place.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthAction.java,v 1.3 2003/05/23 12:13:13 cziegeler Exp $
+ * @version CVS $Id: AuthAction.java,v 1.4 2003/10/15 20:47:14 cziegeler Exp $
 */
 public final class AuthAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
     public Map act(Redirector redirector,
@@ -108,7 +107,7 @@ implements ThreadSafe {
                 map = state.getHandler().getContext().getContextInfo();
             }
         } finally {
-            this.manager.release( (Component)authManager );
+            this.manager.release( authManager );
         }
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END act map="+map);

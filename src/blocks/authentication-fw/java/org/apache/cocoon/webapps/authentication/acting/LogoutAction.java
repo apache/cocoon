@@ -52,11 +52,10 @@ package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
@@ -67,10 +66,10 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  This action logs the current user out of a given handler
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LogoutAction.java,v 1.4 2003/05/23 12:35:33 cziegeler Exp $
+ * @version CVS $Id: LogoutAction.java,v 1.5 2003/10/15 20:47:14 cziegeler Exp $
 */
 public final class LogoutAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
     public Map act(Redirector redirector,
@@ -110,7 +109,7 @@ implements ThreadSafe {
                 throw new ProcessingException("LogoutAction requires at least the handler parameter.");
             authManager.logout( handlerName , mode );
         } finally {
-            this.manager.release( (Component)authManager );
+            this.manager.release( authManager );
         }
 
         if (this.getLogger().isDebugEnabled() ) {

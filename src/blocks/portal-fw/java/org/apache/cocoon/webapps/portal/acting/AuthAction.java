@@ -53,7 +53,7 @@ package org.apache.cocoon.webapps.portal.acting;
 import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.portal.components.PortalManager;
@@ -63,10 +63,10 @@ import org.apache.cocoon.webapps.portal.components.PortalManager;
  *  This action protecteds a pipeline by using a coplet ID.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthAction.java,v 1.2 2003/06/18 12:36:46 cziegeler Exp $
+ * @version CVS $Id: AuthAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
 */
 public final class AuthAction
-extends ComposerAction
+extends ServiceableAction
 implements ThreadSafe {
 
     public Map act(Redirector redirector,

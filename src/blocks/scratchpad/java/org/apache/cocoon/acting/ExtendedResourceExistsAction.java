@@ -75,10 +75,10 @@ import java.util.HashMap;
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
  *
- * @version CVS $Id: ExtendedResourceExistsAction.java,v 1.1 2003/09/04 12:42:42 cziegeler Exp $
+ * @version CVS $Id: ExtendedResourceExistsAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
  * @since 2.1
  */
-public class ExtendedResourceExistsAction extends ComposerAction implements ThreadSafe {
+public class ExtendedResourceExistsAction extends ServiceableAction implements ThreadSafe {
 
     /**
      * This parameter name is put into the objectModel map, setting it to <code>true</code>,

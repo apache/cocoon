@@ -53,6 +53,7 @@ package org.apache.cocoon.acting;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Redirector;
@@ -76,10 +77,10 @@ import java.util.Map;
  *  you want to remove a cookie set its maxage to -1.
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @version CVS $Id: CookieCreatorAction.java,v 1.1 2003/09/04 12:42:42 cziegeler Exp $
+ * @version CVS $Id: CookieCreatorAction.java,v 1.2 2003/10/15 20:47:14 cziegeler Exp $
  */
 
-public class CookieCreatorAction extends ComposerAction {
+public class CookieCreatorAction extends ServiceableAction implements ThreadSafe {
 
     /**
      *  Description of the Method

@@ -63,9 +63,9 @@ import java.util.Map;
  * cached results
  *
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: ClearCacheAction.java,v 1.2 2003/08/07 13:28:50 cziegeler Exp $
+ * @version CVS $Id: ClearCacheAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
  */
-public class ClearCacheAction extends ComposerAction implements ThreadSafe {
+public class ClearCacheAction extends ServiceableAction implements ThreadSafe {
 
     public Map act(Redirector redirector,
                     SourceResolver resolver,
