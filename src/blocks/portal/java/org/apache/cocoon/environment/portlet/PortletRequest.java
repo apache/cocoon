@@ -40,7 +40,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class PortletRequest implements Request {
 
@@ -229,22 +229,25 @@ public abstract class PortletRequest implements Request {
     }
 
     public String getRequestURI() {
-        // TODO: getRequestURI
         if (this.portletRequestURI == null) {
-            this.portletRequestURI = this.request.getContextPath();
-            /*
-            this.portletRequestURI = this.request.getRequestURI();
-            if (this.portletRequestURI.equals("/")) {
-                String s = this.request.getServletPath();
-                final StringBuffer buffer = new StringBuffer();
-                if (null != s)
-                    buffer.append(s);
-                s = this.request.getPathInfo();
-                if (null != s)
-                    buffer.append(s);
-                this.portletRequestURI = buffer.toString();
+            final StringBuffer buffer = new StringBuffer();
+            buffer.append(this.request.getContextPath());
+
+            if (getServletPath() != null) {
+                if (buffer.charAt(buffer.length()-1) != '/') {
+                    buffer.append('/');
+                }
+                buffer.append(getServletPath());
             }
-            */
+
+            if (getPathInfo() != null) {
+                if (buffer.charAt(buffer.length()-1) != '/') {
+                    buffer.append('/');
+                }
+                buffer.append(getPathInfo());
+            }
+
+            this.portletRequestURI = buffer.toString();
         }
         return this.portletRequestURI;
     }
