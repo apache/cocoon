@@ -49,11 +49,28 @@
 
 */
 package org.apache.cocoon.servlet;
-import java.io.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * This class implements a Servlet 2.3 Cocoon post-processing filter.
@@ -133,7 +150,7 @@ import javax.servlet.http.*;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonFilterGeneratorImpl.java,v 1.1 2003/09/04 12:42:35 cziegeler Exp $
+ * @version CVS $Id: CocoonFilterGeneratorImpl.java,v 1.2 2003/11/15 03:38:20 joerg Exp $
  *
  * @servlet:filter-name    CocoonFilterGeneratorImpl
  */
