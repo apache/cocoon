@@ -32,9 +32,12 @@ import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.taglib.IterationTag;
 import org.apache.cocoon.taglib.Tag;
+import org.apache.cocoon.taglib.BodyTag;
+import org.apache.cocoon.taglib.BodyContent;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.cocoon.xml.SaxBuffer;
 
 import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.collections.map.StaticBucketMap;
@@ -389,9 +392,25 @@ public class TagTransformer
                     try {
                         xmlDeserializer = (XMLDeserializer) manager.lookup(XMLDeserializer.ROLE);
                         xmlDeserializer.setConsumer(this);
+
+                        // BodyTag Support
+                        XMLConsumer backup = this.currentConsumer;
+                        if (tag instanceof BodyTag) {
+                            SaxBuffer content = new SaxBuffer();
+                            this.currentConsumer = content;
+                            ((BodyTag)tag).setBodyContent(new BodyContent(content, backup));
+                            ((BodyTag)tag).doInitBody();
+                        }
+
                         do {
                             xmlDeserializer.deserialize(saxFragment);
                         } while (iterTag.doAfterBody() != Tag.SKIP_BODY);
+
+                        // BodyTag Support
+                        if (tag instanceof BodyTag) {
+                            this.currentConsumer = backup;
+                        }
+
                     } catch (ServiceException e) {
                         throw new SAXException("Can't obtain XMLDeserializer", e);
                     } finally {
