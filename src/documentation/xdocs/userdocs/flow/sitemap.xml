@@ -60,7 +60,9 @@
         <map:pipelines>
            <map:pipeline>
               <map:match pattern="index.html">
-                 <map:call function="showIndexPage"/>
+                 <map:call function="showIndexPage">
+                   <map:parameter name="paramName" value="Value"/>
+                 </map:call>
               </map:match>
            </map:pipeline>
         </map:pipelines>
@@ -68,7 +70,7 @@
       <p>Then in <code>myApplication.js</code> you would define a JavaScript function called <code>showIndexPage()</code> such as:</p>
       <source><![CDATA[
         function showIndexPage() { 
-            var param = cocoon.request.get("paramName");
+            var param = cocoon.parameters.paramName;
             sendPage("private/index.html", {param: param});
         }
       ]]></source>
