@@ -35,16 +35,16 @@ public abstract class AbstractFormFlow extends AbstractCocoonFlow {
         //if (localeStr != null)
         //    locale = I18nUtils.parseLocale(localeStr, locale);
 
-				SourceResolver resolver = null;
-				FormManager formManager = null;
+        SourceResolver resolver = null;
+        FormManager formManager = null;
         Source source = null;
         Form form = null;
         try {
             resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
-					
+          
             source = resolver.resolveURI(formSource);
 
-						formManager = (FormManager) getComponent(FormManager.ROLE);
+            formManager = (FormManager) getComponent(FormManager.ROLE);
             form = formManager.createForm(source);
 
             /*if (formHandler != null) {
@@ -66,8 +66,8 @@ public abstract class AbstractFormFlow extends AbstractCocoonFlow {
         } finally {
             if (source != null)
                 resolver.release(source);
-						releaseComponent(resolver);
-						releaseComponent(formManager);
+            releaseComponent(resolver);
+            releaseComponent(formManager);
         }
         return form;
     }
@@ -131,26 +131,26 @@ public abstract class AbstractFormFlow extends AbstractCocoonFlow {
         return widget == null ? null : widget.getId();
     }
 
-		protected String showForm(Form form, String uri) {
-			  return showForm(form, uri, new VarMap());
-		}
+    protected String showForm(Form form, String uri) {
+        return showForm(form, uri, new VarMap());
+    }
 
     protected Binding loadBinding(String bindingURI) {
-			  SourceResolver resolver = null;
-			  BindingManager bindingManager = null;
+        SourceResolver resolver = null;
+        BindingManager bindingManager = null;
         Source source = null;
         Binding binding = null;
         try {
-					  resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
+            resolver = (SourceResolver) getComponent(SourceResolver.ROLE);
             source = resolver.resolveURI(bindingURI);
-						bindingManager = (BindingManager) getComponent(BindingManager.ROLE);
+            bindingManager = (BindingManager) getComponent(BindingManager.ROLE);
             binding = bindingManager.createBinding(source);
         } catch (Exception e) {
             throw new RuntimeException("Cannot load form binding from '"+bindingURI+"'", e);
         } finally {
             if (source != null)
                 resolver.release(source);
-						releaseComponent(resolver);
+            releaseComponent(resolver);
             releaseComponent(bindingManager);
         }
         return binding;

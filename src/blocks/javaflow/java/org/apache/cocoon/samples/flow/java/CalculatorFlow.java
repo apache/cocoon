@@ -33,8 +33,8 @@ public class CalculatorFlow extends AbstractCocoonFlow {
         } else if (op.equals("multiply")) {
             sendResult(a, b, op, a * b);
         } else if (op.equals("divide")) {
-					  if (b==0f)
-  							sendMessage("Error: Cannot divide by zero!");
+            if (b==0f)
+                sendMessage("Error: Cannot divide by zero!");
             sendResult(a, b, op, a / b);
         } else {
             sendMessage("Error: Unkown operator!");
@@ -47,12 +47,12 @@ public class CalculatorFlow extends AbstractCocoonFlow {
         String uri = "page/calculator-" + name.toLowerCase();
         sendPageAndWait(uri, new VarMap().add("a", a).add("b", b).add("count", count));
 
-				float value = 0f;
-				try {
-					  value = Float.parseFloat(getRequest().getParameter(name));
-				} catch (NumberFormatException nfe) {
+        float value = 0f;
+        try {
+            value = Float.parseFloat(getRequest().getParameter(name));
+        } catch (NumberFormatException nfe) {
             sendMessage("Error: \""+getRequest().getParameter(name)+"\" is not a correct number!");
-		    }
+        }
         return value;
     }
 
@@ -65,7 +65,7 @@ public class CalculatorFlow extends AbstractCocoonFlow {
         sendPage("page/calculator-result", new VarMap().add("a", a).add("b", b).add("operator", op).add("result", result).add("count", count));
     }
 
-		private void sendMessage(String message) {
+    private void sendMessage(String message) {
         sendPageAndWait("page/calculator-message", new VarMap().add("message", message).add("count", count));
     }
 }

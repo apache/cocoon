@@ -45,8 +45,8 @@ public class FormFlow extends AbstractFormFlow {
         showForm(form, "form/form1");
 
         sendPage("page/form1-result", new VarMap().add("email", ((Field)form.getWidget("email")).getValue())
-						                                      .add("somebool", ((BooleanField)form.getWidget("somebool")).getValue())
-																								  .add("firstname", ((Field)((Repeater)form.getWidget("contacts")).getWidget(1, "firstname")).getValue()));
+                                                  .add("somebool", ((BooleanField)form.getWidget("somebool")).getValue())
+                                                  .add("firstname", ((Field)((Repeater)form.getWidget("contacts")).getWidget(1, "firstname")).getValue()));
     }
 
     public void doEditForm2() throws BindingException {
