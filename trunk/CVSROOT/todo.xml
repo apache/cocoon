@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.66 2001-02-06 12:49:20 greenrd Exp $
+  $Id: todo.xml,v 1.67 2001-02-14 18:01:33 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -93,7 +93,7 @@
    Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
   </action>
   <action context="code" assigned-to="RDG" bugid="12">
-   Class auto-reloading for XSP pages
+   Class auto-reloading for XSP pages (and Processors)?
    (code written; just needs to be merged in and documented.)
   </action>
   <action context="code" bugid="70">
