@@ -47,6 +47,42 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     private SourceDescriptor m_descriptor;
     private String m_name;
     private boolean m_useEventCaching;
+    private boolean m_isInitialized;
+    
+    public RepositorySourceFactory() {
+    }
+    
+    private synchronized void lazyInitialize() throws IOException {
+        if (m_isInitialized) {
+            return;
+        }
+        if (m_resolver == null) {
+            try {
+                m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+            }
+            catch (ServiceException e) {
+                throw new IOException("Resolver service is not available: " + e.toString());
+            }
+        }
+        if (m_manager.hasService(SourceDescriptorManager.ROLE)) {
+            try {
+                m_descriptor = (SourceDescriptor) m_manager.lookup(SourceDescriptorManager.ROLE);
+            }
+            catch (ServiceException e) {
+                // impossible
+            }
+        }
+        else {
+            m_descriptor = null;
+            if (getLogger().isInfoEnabled()) {
+                final String message =
+                    "SourceDescriptor is not available. " +
+                    "RepositorySource will not support " +
+                    "source properties.";
+                getLogger().info(message);
+            }
+        }
+    }
     
     /**
      * Read the <code>name</code> attribute and the <code>use-event-caching</code>
@@ -69,38 +105,18 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
      */
     public void service(final ServiceManager manager) {
         m_manager = manager;
-        if (manager.hasService(SourceDescriptorManager.ROLE)) {
-            try {
-                m_descriptor = (SourceDescriptor) manager.lookup(SourceDescriptorManager.ROLE);
-            }
-            catch (ServiceException e) {
-                // impossible
-            }
-        }
-        else {
-            m_descriptor = null;
-            if (getLogger().isInfoEnabled()) {
-                final String message =
-                    "SourceDescriptor is not available. " +
-                    "RepositorySource will not support " +
-                    "source properties.";
-                getLogger().info(message);
-            }
-        }
     }
     
     public Source getSource(String location, Map parameters)
         throws IOException, MalformedURLException {
         
-        // lazy initialization of resolver in order to avoid 
-        // problems due to circular dependency
-        if (m_resolver == null) {
-            try {
-                m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
-            }
-            catch (ServiceException e) {
-                throw new IOException("Resolver service is not available: " + e.toString());
-            }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Creating RepositorySource for " + location);
+        }
+        
+        // lazy initialization due to circular dependency
+        if (!m_isInitialized) {
+            lazyInitialize();
         }
         
         // assert location.startsWith(m_name)
@@ -111,12 +127,8 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
             throw new SourceException(message);
         }
         
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Creating RepositorySource for " + location);
-        }
-        
         return new RepositorySource(
-            m_name,    
+            m_name,
             (ModifiableTraversableSource) source, 
             m_descriptor,
             getLogger(),
