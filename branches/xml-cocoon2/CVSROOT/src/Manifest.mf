@@ -1,2 +1,23 @@
 Manifest-Version: 1.0
 Main-Class: org.apache.cocoon.Main
+
+Name: org/apache/cocoon/components/markup/sitemap/java/sitemap.xsl
+Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/esql.xsl
+Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/log.xsl
+Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/request.xsl
+Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/response.xsl
+Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/util.xsl
+Mime-Type: application/xml
+
+Name: org/apache/cocoon/components/markup/xsp/java/xsp.xsl
+Mime-Type: application/xml
