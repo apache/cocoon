@@ -2,18 +2,18 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: template-selector.xml,v 1.1 2003/03/09 00:08:23 pier Exp $ 
+  <![CDATA[ CVS Version: $Id: selector.template,v 1.1 2003/07/14 20:16:01 joerg Exp $ 
   ]]>
 
-  Using this TemplateMatcher:
+  Using this TemplateSelector:
   
-  *  replace TemplateMatcher by the name of the matcher you are describing
+  * replace TemplateSelector by the name of the selector you are describing
   * write concrete description
   
 -->
 <document>
   <header>
-    <title>Template-Selector in Cocoon</title>
+    <title>TemplateSelector in Cocoon</title>
     <version>0.9</version>
     <type>Technical document</type>
     <authors>
@@ -44,7 +44,7 @@
         <tr>
           <td>CLASS</td><td>org.apache.cocoon.reading.TemplateSelector</td>
         </tr>
-        <!-- uncomment folling tr iff TemplateSelector is deprecated -->
+        <!-- uncomment following tr if TemplateSelector is deprecated -->
         <!--tr>
           <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
         </tr-->
