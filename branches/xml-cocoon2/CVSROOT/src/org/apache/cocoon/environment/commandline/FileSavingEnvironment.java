@@ -12,18 +12,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+
+import java.util.Map;
+
 import java.net.MalformedURLException;
+
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 public class FileSavingEnvironment extends AbstractEnvironment {
 
-    private File destDir;
-    private String extention;
-
-    public FileSavingEnvironment(String uri, File context, File destDir)
+    private String contentType;
+    private OutputStream stream;
+    
+    public FileSavingEnvironment(String uri, File context, Map links, OutputStream stream)
     throws MalformedURLException {
-        super(uri, null, context);
-        this.destDir = destDir;
+        super(uri, Cocoon.LINK_TRANSLATING_VIEW, context);
+        this.stream = stream;
+        this.objectModel.put(Cocoon.LINK_TRANSLATED_NAME, links);
     }
 
     /**
@@ -37,25 +43,21 @@ public class FileSavingEnvironment extends AbstractEnvironment {
      * Set the ContentType
      */
     public void setContentType(String contentType) {
-        this.extention = getExtention(contentType);
+        this.contentType = contentType;
+    }
+
+    /**
+     * Set the ContentType
+     */
+    public String getContentType() {
+        return this.contentType;
     }
 
     /**
      * Get the OutputStream
      */
     public OutputStream getOutputStream() throws IOException {
-        File file = new File(destDir, uri + "." + extention);
-        return new FileOutputStream(file);
-    }
-    
-    private String getExtention(String contentType) {
-        if ("text/html".equals(contentType)) {
-            return "html";
-        } else if ("application/pdf".equals(contentType)) {
-            return "pdf";
-        } else {
-            return "unknown";
-        }
+        return this.stream;
     }
 }
 

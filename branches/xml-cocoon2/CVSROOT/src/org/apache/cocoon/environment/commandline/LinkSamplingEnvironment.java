@@ -10,13 +10,17 @@ package org.apache.cocoon.environment.commandline;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.ArrayList;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
+
 import java.net.MalformedURLException;
+
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
@@ -57,8 +61,8 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
     /** 
      * Indicates if other links are present.
      */ 
-    public Iterator getLinks() {
-        return this.links.iterator();
+    public Collection getLinks() {
+        return this.links.list();
     }
     
     /**
@@ -79,9 +83,9 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
             }
         }
         
-        public Iterator iterator() {
+        public Collection list() {
             synchronized (links) {
-                return links.iterator();
+                return links;
             }
         }
     }

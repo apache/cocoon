@@ -105,7 +105,7 @@ public abstract class AbstractEnvironment implements Environment {
     public String getView() {
         return this.view;
     }
-    
+
     // Response methods
 
     /**

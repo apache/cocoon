@@ -13,10 +13,14 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.io.OutputStream;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.environment.Environment;
@@ -28,7 +32,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-08-31 15:59:23 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-09-03 17:45:45 $
  */
 
 public class Main {
@@ -100,7 +104,7 @@ public class Main {
             File root = conf.getParentFile();
             Main main = new Main(new Cocoon(conf), conf, dest);
             System.out.println("[main] Starting...");
-            main.processLinks(targets.iterator());
+            main.process(targets);
             System.out.println("[main] Done.");
         } catch (Exception e) {
             System.out.println("[fatal error] Exception caught (" + e.getClass().getName() + "): " + e.getMessage() + "\n");
@@ -195,27 +199,133 @@ public class Main {
     }
 
     /**
-     * Process the link list and recursively process them all.
+     * Process the URI list and process them all independently.
      */
-    public void processLinks(Iterator links) throws Exception {
-        while (links.hasNext()) {
-            String link = (String) links.next();
-            this.processLinks(this.processLink(link));
+    public void process(Collection uris) throws Exception {
+        Iterator i = uris.iterator();
+        while (i.hasNext()) {
+            String uri = (String) i.next();
+            System.out.println("[main] starting from: " + uri);
+            this.processURI(uri);
         }
     }
 
     /**
-     * Process the given link and return the list of sublinks.
+     * Processes the given URI in a recursive way. The algorithm followed by
+     * this method is the following:
+     *
+     * <ul>
+     *  <li>the link view of the given URI is called and the resourced linked
+     *      to the requested one are obtained.</li>
+     *  <li>for each link, this method is recursively called and returns
+     *      the file used to save the resource on disk.</li>
+     *  <li>after the complete list of links is translated, the link-translating
+     *      view of the resource is called to obtain a link-translated version
+     *      of the resource with the given link map</li>
+     *  <li>the resource is saved on disk and the URI MIME type is checked for 
+     *      consistenci with the URI and, if the extention is inconsistent
+     *      or absent, the file is renamed</li>
+     *  <li>then the file name of the translated URI is returned</li>
+     * </ul>
      */
-    public Iterator processLink(String link) throws Exception {
-        System.out.println("[main] processing link: " + link);        
-        // First process the given link and save it on disk
-        FileSavingEnvironment fileEnv = new FileSavingEnvironment(link, root, destDir);
-        cocoon.process(fileEnv);
-        // Then process it again (with another view) to obtain the hyperlinks
-        LinkSamplingEnvironment linkEnv = new LinkSamplingEnvironment(link);
-        cocoon.process(linkEnv);
-        return linkEnv.getLinks();
+    public File processURI(String uri) throws Exception {
+        System.out.println("[main] processing: " + uri);
+        
+        Collection links = getLinks(uri);
+        Map translatedLinks = new HashMap(links.size());
+        Iterator i = links.iterator();
+        while (i.hasNext()) {
+            String link = (String) i.next();
+            translatedLinks.put(link, processURI(link));
+        }
+        
+        File outputFile = getFile(uri);
+        FileOutputStream output = new FileOutputStream(getFile(uri));
+        String type = getPage(uri, translatedLinks, output);
+        output.close();
+        
+        if (!matchesExtention(uri, type)) {
+            outputFile.renameTo(getFile(uri, type));
+        }
+        
+        return outputFile;
+    }        
+    
+    Collection getLinks(String uri) throws Exception {
+        LinkSamplingEnvironment env = new LinkSamplingEnvironment(uri);
+        cocoon.process(env);
+        return env.getLinks();
     }
+
+    String getPage(String uri, Map links, OutputStream stream) throws Exception {
+        FileSavingEnvironment env = new FileSavingEnvironment(uri, root, links, stream);
+        cocoon.process(env);
+        return env.getContentType();
+    }
+    
+    File getFile(String uri) {
+        return new File(destDir, uri);
+    }
+    
+    File getFile(String uri, String type) {
+        return new File(destDir, uri + File.separator + getExtension(type));
+    }
+    
+    boolean matchesExtention(String uri, String type) {
+        int dotindex = uri.lastIndexOf('.');
+        int slashindex = uri.indexOf('/', dotindex);
+        if ((dotindex != -1) && (slashindex == -1)) {
+            String ext = uri.substring(dotindex);
+            return type.equals(getExtension(type));
+        }
+        return false;
+    }
+    
+    String getExtension(String type) {
+        if ("text/html".equals(type)) {
+            return "html";
+        } else if ("text/xml".equals(type)) {
+            return "xml";
+        } else if ("text/css".equals(type)) {
+            return "css";
+        } else if ("text/vnd.wap.wml".equals(type)) {
+            return "wml";
+        } else if ("image/jpg".equals(type)) {
+            return "jpg";
+        } else if ("image/png".equals(type)) {
+            return "png";
+        } else if ("image/gif".equals(type)) {
+            return "gif";
+        } else if ("image/svg-xml".equals(type)) {
+            return "svg";
+        } else if ("application/pdf".equals(type)) {
+            return "pdf";
+        } else if ("model/vrml".equals(type)) {
+            return "wrl";
+        } else if ("text/plain".equals(type)) {
+            return "txt";
+        } else if ("application/rtf".equals(type)) {
+            return "rtf";
+        } else if ("text/rtf".equals(type)) {
+            return "rtf";
+        } else if ("application/smil".equals(type)) {
+            return "smil";
+        } else if ("application/x-javascript".equals(type)) {
+            return "js";
+        } else if ("application/zip".equals(type)) {
+            return "zip";
+        } else if ("video/mpeg".equals(type)) {
+            return "mpg";
+        } else if ("video/quicktime".equals(type)) {
+            return "mov";
+        } else if ("audio/midi".equals(type)) {
+            return "mid";
+        } else if ("audio/mpeg".equals(type)) {
+            return "mp3";
+        } else {
+            return "xxx";
+        }
+    }
+    
 }
 
