@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.33 2003/04/04 19:22:36 stefano Exp $
+  CVS $Id: gump.xml,v 1.34 2003/04/06 17:51:35 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -23,41 +23,41 @@
 
     <ant target="gump-core">
       <property name="version" value="@@DATE@@"/>
-      <depend property="logkit.jar"    project="dist-avalon-logkit"/>
+      <depend property="logkit.jar" project="dist-avalon-logkit"/>
       <depend property="avalonapi.jar" project="avalon"/>
     </ant>
 
-    <depend project="ant" inherit="runtime" version="supplied"/>
+    <depend project="ant" inherit="runtime"/>
 
-    <depend project="xml-xerces" version="supplied"/>
-    <depend project="xml-xalan2" version="supplied"/>
-    <depend project="xml-commons-resolver" version="supplied"/>
+    <depend project="xml-xerces"/>
+    <depend project="xml-xalan2"/>
+    <depend project="xml-commons-resolver"/>
 
-    <depend project="excalibur-compatibility" version="supplied"/>
-    <depend project="excalibur-instrument" version="supplied"/>
-    <depend project="excalibur-instrument-manager" version="supplied"/>
-    <depend project="excalibur-naming" version="supplied"/>
-    <depend project="excalibur-sourceresolve" version="supplied"/>
-    <depend project="excalibur-xmlutil" version="supplied"/>
-    <depend project="excalibur-store" version="supplied"/>
-    <depend project="excalibur-pool" version="supplied"/>
-    <depend project="excalibur-datasource" version="supplied"/>
-    <depend project="excalibur-component" version="supplied"/>
-    <depend project="excalibur-logger" version="supplied"/>
+    <depend project="excalibur-compatibility"/>
+    <depend project="excalibur-instrument"/>
+    <depend project="excalibur-instrument-manager"/>
+    <depend project="excalibur-naming"/>
+    <depend project="excalibur-sourceresolve"/>
+    <depend project="excalibur-xmlutil"/>
+    <depend project="excalibur-store"/>
+    <depend project="excalibur-pool"/>
+    <depend project="excalibur-datasource"/>
+    <depend project="excalibur-component"/>
+    <depend project="excalibur-logger"/>
     <depend project="excalibur-event" inherit="runtime"/>
 
-    <depend project="jakarta-regexp" version="supplied"/>
-    <depend project="jakarta-servletapi" version="supplied"/>
+    <depend project="jakarta-regexp"/>
+    <depend project="jakarta-servletapi"/>
 
-    <depend project="commons-cli" version="supplied"/>
-    <depend project="commons-httpclient" version="supplied"/>
-    <depend project="commons-collections" version="supplied"/>
-    <depend project="commons-jxpath" version="supplied"/>
-    <depend project="commons-lang" version="supplied"/>
+    <depend project="commons-cli"/>
+    <depend project="commons-httpclient"/>
+    <depend project="commons-collections"/>
+    <depend project="commons-jxpath"/>
+    <depend project="commons-lang"/>
 
-    <depend project="jdom" version="supplied"/>
-    <depend project="rhino-cocoondev" version="supplied"/>
-    <depend project="jisp" version="supplied"/>
+    <depend project="jdom"/>
+    <depend project="rhino-cocoondev"/>
+    <depend project="jisp"/>
     <depend project="jaxen" inherit="runtime"/>
     
     <depend project="jing"/>
@@ -96,9 +96,10 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="castor" version="supplied"/>
+    <depend project="castor"/>
     <depend project="commons-jexl" inherit="all"/>
-    <depend project="jakarta-servletapi-4" version="supplied"/>
+    <depend project="jakarta-velocity" inherit="all"/>
+    <depend project="jakarta-servletapi-4"/>
     
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -123,7 +124,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-fop" version="supplied"/>
+    <depend project="xml-fop"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -142,7 +143,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-batik" version="supplied"/>
+    <depend project="xml-batik"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -161,7 +162,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="chaperon" version="supplied"/>
+    <depend project="chaperon"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -180,7 +181,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="spark" version="supplied"/>
+    <depend project="spark"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -199,7 +200,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jfor" version="supplied"/>
+    <depend project="jfor"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -217,8 +218,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="itext" version="supplied"/>
-    <depend project="itext-xml" version="supplied"/>
+    <depend project="itext"/>
+    <depend project="itext-xml"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -258,7 +259,7 @@
     <depend project="cocoon-block-session-fw"/>
 
     <work nested="tools/anttasks"/>
-    <home nested="build/cocoon"/>
+    <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/authentication-fw-block.jar"/>
 
@@ -314,7 +315,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases"/>
-    <depend project="hsqldb" version="supplied"/>
+    <depend project="hsqldb"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -333,7 +334,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="castor" version="supplied"/>
+    <depend project="castor"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -352,7 +353,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-poi" version="supplied"/>
+    <depend project="jakarta-poi"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -371,7 +372,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jndi" version="supplied"/>
+    <depend project="jndi"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -409,9 +410,10 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <option project="phpservlt" version="supplied"/>
+    <option project="phpservlt"/>
 
     <work nested="tools/anttasks"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/php/mocks"/>    
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/php-block.jar"/>
@@ -428,7 +430,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <option project="jython" version="supplied"/>
+    <option project="jython"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -447,7 +449,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-lucene" version="supplied"/>
+    <depend project="jakarta-lucene"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -466,7 +468,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jtidy" version="supplied"/>
+    <depend project="jtidy"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -485,7 +487,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="bsf" version="supplied"/>
+    <depend project="bsf"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -522,7 +524,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-velocity" version="supplied"/>
+    <depend project="jakarta-velocity"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -559,8 +561,8 @@
     </ant>
     
     <depend project="cocoon" inherit="all"/>
-    <depend project="jta" version="supplied"/>
-    <depend project="concurrent" version="supplied"/>
+    <depend project="jta"/>
+    <depend project="concurrent"/>
     
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/web3/mocks"/>
@@ -580,9 +582,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-slide" ids="kernel" version="supplied"/>
-    <depend project="jakarta-slide" ids="roles" version="supplied"/>
-    <depend project="jakarta-slide" ids="stores" version="supplied"/>
+    <depend project="jakarta-slide"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -601,8 +601,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="commons-httpclient" version="supplied"/>
-    <depend project="commons-logging" version="supplied"/>
+    <depend project="commons-httpclient"/>
+    <depend project="commons-logging"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -622,7 +622,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases"/>
-    <depend project="xmldb" version="supplied"/>
+    <depend project="xmldb"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -641,7 +641,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="deli" version="supplied"/>
+    <depend project="deli"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -679,7 +679,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-asciiart"/>
-    <depend project="javamail" version="supplied"/>
+    <depend project="javamail"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -698,7 +698,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-axis" version="supplied"/>
+    <depend project="xml-axis"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -787,7 +787,7 @@
       Chaperon is a project that helps to convert structured text to XML
     </description>
     <home nested="src/blocks/chaperon/lib"/>
-    <jar name="chaperon-20030208.jar"/>
+    <jar name="chaperon-20030401.jar"/>
   </project>
 
   <project name="itext">
