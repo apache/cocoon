@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.231 2004/06/29 12:14:06 antonio Exp $
+    | CVS $Id: jars.xml,v 1.232 2004/06/29 12:47:10 sylvain Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -703,7 +703,7 @@
     <title>Continuations-based JavaScript engine</title>
     <description>Rhino is an implementation of JavaScript in Java.</description>
     <used-by>Control flow</used-by>
-    <lib>core/rhino1.5r4-continuations-20040627.jar</lib>
+    <lib>core/rhino1.5r4-continuations-20040629T1232.jar</lib>
     <homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
   </file>
 
