@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.21 2003/03/22 16:57:41 stefano Exp $
+  CVS $Id: gump.xml,v 1.22 2003/03/23 11:05:26 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -268,7 +268,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-
+    <depend project="commons-lang" version="supplied"/>
+    
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -533,7 +534,7 @@
     
     <depend project="cocoon" inherit="all"/>
     <depend project="jta" version="supplied"/>
-    <depend project="dougLea" version="supplied"/>
+    <depend project="concurrent" version="supplied"/>
     
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/web3/mocks"/>
@@ -797,4 +798,14 @@
     <jar name="spark.jar"/>
   </project>
 
+  <project name="concurrent">
+    <url href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"/>
+    <description>
+       This package provides standardized, efficient versions of utility classes 
+       commonly encountered in concurrent Java programming.
+    </description>
+    <home nested="src/blocks/swf/lib"/>
+    <jar name="util.concurrent-1.3.1.jar"/>
+  </project>
+  
 </module>
