@@ -45,24 +45,28 @@
 */
 package org.apache.cocoon.components.flow;
 
+import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
-
-import org.apache.avalon.framework.activity.Disposable;
-
-import org.apache.avalon.cornerstone.services.scheduler.TimeScheduler;
-import org.apache.avalon.cornerstone.services.scheduler.Target;
-import org.apache.avalon.cornerstone.services.scheduler.TimeTriggerFactory;
-
-import java.security.SecureRandom;
-import java.util.*;
+import org.apache.excalibur.event.Queue;
+import org.apache.excalibur.event.Sink;
+import org.apache.excalibur.event.command.RepeatedCommand;
 
 /**
  * The default implementation of {@link ContinuationsManager}.
@@ -75,7 +79,7 @@ import java.util.*;
 public class ContinuationsManagerImpl
   extends AbstractLogEnabled
   implements ContinuationsManager, Component, Configurable, 
-  ThreadSafe, Composable, Disposable, Target {
+  ThreadSafe, Contextualizable {
 
   static final int CONTINUATION_ID_LENGTH = 20;
   static final String EXPIRE_CONTINUATIONS="expire-continuations"; 
@@ -84,8 +88,7 @@ public class ContinuationsManagerImpl
   protected SecureRandom random = null;
   protected byte[] bytes;
 
-  protected TimeScheduler m_scheduler;
-  protected ComponentManager m_manager;
+  protected Sink m_commandSink;
 
   /**
    * How long does a continuation exist in memory since the last
@@ -125,12 +128,8 @@ public class ContinuationsManagerImpl
     Configuration expireConf = config.getChild("expirations-check");
 
     try {
-      m_scheduler = (TimeScheduler)this.m_manager.lookup(TimeScheduler.ROLE);
-      TimeTriggerFactory    triggerFac = new TimeTriggerFactory();
-
-      m_scheduler.addTrigger(EXPIRE_CONTINUATIONS,
-                             triggerFac.createTimeTrigger(expireConf),
-                             this);
+      ContinuationInterrupt interrupt = new ContinuationInterrupt(expireConf);
+      m_commandSink.enqueue(interrupt);
     }
     catch (Exception ex) {
       if (this.getLogger().isDebugEnabled()) {
@@ -319,11 +318,6 @@ public class ContinuationsManagerImpl
     }
   }
  
-  public void compose(ComponentManager manager) throws ComponentException
-  {
-      this.m_manager = manager;
-  }
-
   /**
    * Remove all continuations which have 
    * already expired
@@ -356,29 +350,61 @@ public class ContinuationsManagerImpl
     }
   } 
 
-  /**
-   * Handle cornerstone triggers 
-   *
-   * @param trigger an <code>String</code> value
-   */
-   public void targetTriggered(String trigger)   
-   {
-     // Expire continuations whenever this
-     // trigger goes off.
-     if (trigger.equals(EXPIRE_CONTINUATIONS)) {
-       if (this.getLogger().isDebugEnabled()) {
-         getLogger().debug("WK: ExpireContinuations clean up triggered:");
-       }
-        this.expireContinuations();
-     }
-   }
+    /**
+     * Get the command sink so that we can be notified of changes
+     */
+    public void contextualize(Context context) throws ContextException
+    {
+        m_commandSink = (Sink)context.get(Queue.ROLE);
+    }
+    
+    public final class ContinuationInterrupt implements RepeatedCommand
+    {
+        private final long m_interval;
+        private final long m_initialDelay;
+        
+        /**
+         * @param expireConf
+         */
+        public ContinuationInterrupt(Configuration expireConf)
+        {
+            // only periodic time triggers are supported
+            m_initialDelay =
+                expireConf.getChild( "offset", true ).getValueAsLong( 100 );
+            m_interval =
+                expireConf.getChild( "period", true ).getValueAsLong( 100 );
+        }
 
-  /**
-   * dispose of this component
-   */
-  public void dispose() {
-    this.m_scheduler.removeTrigger(EXPIRE_CONTINUATIONS);
-    this.m_manager.release((Component)m_scheduler);
-    this.m_manager = null;
-  }
+        /**
+         * Repeat forever
+         */
+        public int getNumberOfRepeats()
+        {
+            return -1;
+        }
+
+        /**
+         * Get the number of millis to wait between invocations
+         */
+        public long getRepeatInterval()
+        {
+            return m_interval;
+        }
+
+        /**
+         * Get the number of millis to wait for the first invocation
+         */
+        public long getDelayInterval()
+        {
+            return m_initialDelay;
+        }
+
+        /**
+         * expire any continuations that need expiring.
+         */
+        public void execute() throws Exception
+        {
+            expireContinuations();
+        }
+    }
 }

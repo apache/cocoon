@@ -55,28 +55,21 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
-
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.sax.SAXParser;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -87,7 +80,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.1 2003/03/09 00:10:41 pier Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.2 2003/03/12 15:02:17 bloritsch Exp $
  */
 public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 {
@@ -237,7 +230,8 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
                            (test.assertiontype>=EQUAL) &&
                            (test.assertiontype<=NOTIDENTICAL));
 
-                NodeList childs = assertiondocument.getDocumentElement().getChildNodes();
+                // NEVER USED!
+                //NodeList childs = assertiondocument.getDocumentElement().getChildNodes();
 
                 switch (test.assertiontype) {
                     case EQUAL :
@@ -289,9 +283,6 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
         } catch (IOException ioe) {
             getLogger().error("Could not execute test", ioe);
             fail("Could not execute test:"+ioe.toString());
-/*        } catch (SourceException se) {
-            getLogger().error("Could not retrieve sources", se);
-            fail("Could not retrieve sources:"+se.toString()); */
         } catch (ProcessingException pe) {
             getLogger().error("Could not execute test", pe);
             pe.printStackTrace();

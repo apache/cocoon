@@ -63,7 +63,7 @@ import org.apache.cocoon.util.NetUtils;
  *
  * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version    CVS $Id: NetUtilsTestCase.java,v 1.1 2003/03/09 00:10:42 pier Exp $
+ * @version    CVS $Id: NetUtilsTestCase.java,v 1.2 2003/03/12 15:02:17 bloritsch Exp $
  */
 public class NetUtilsTestCase extends TestCase
 {

@@ -72,7 +72,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:crossley@apache.org">David Crossley</a>
- * @version CVS $Id: ResolverImplTestCase.java,v 1.1 2003/03/09 00:10:38 pier Exp $
+ * @version CVS $Id: ResolverImplTestCase.java,v 1.2 2003/03/12 15:02:12 bloritsch Exp $
  */
 public final class ResolverImplTestCase
          extends ExcaliburTestCase

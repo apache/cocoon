@@ -59,11 +59,11 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMUtil;
+import org.apache.excalibur.xml.xpath.NodeListImpl;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.xml.xpath.NodeListImpl;
 import org.apache.xml.utils.PrefixResolverDefault;
 import org.apache.xpath.XPath;
 import org.apache.xpath.XPathContext;
@@ -81,7 +81,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.1 2003/03/09 00:06:10 pier Exp $
+ * @version CVS $Id: SimpleSessionContext.java,v 1.2 2003/03/12 15:01:00 bloritsch Exp $
 */
 public final class SimpleSessionContext
 implements SessionContext {
@@ -496,7 +496,7 @@ implements SessionContext {
         Source source = null;
         try {
             source = SourceUtil.getSource(this.loadResource, null, parameters, resolver);
-            Document doc = SourceUtil.toDOM(source);
+            Document doc = SourceUtil.toDOM(source, manager);
             DocumentFragment df = doc.createDocumentFragment();
             df.appendChild(doc.getDocumentElement());
             this.setXML(path, df);
@@ -532,7 +532,8 @@ implements SessionContext {
                             parameters,
                             frag,
                             resolver,
-                            "xml");
+                            "xml",
+                            manager);
     }
 
 }

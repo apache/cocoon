@@ -80,7 +80,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.1 2003/03/09 00:10:40 pier Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.2 2003/03/12 15:02:17 bloritsch Exp $
  */
 public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 {
@@ -260,9 +260,6 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
         } catch (IOException ioe) {
             getLogger().error("Could not execute test", ioe);
             fail("Could not execute test:"+ioe.toString());
-/*        } catch (SourceException se) {
-            getLogger().error("Could not retrieve sources", se);
-            fail("Could not retrieve sources:"+se.toString());*/
         } catch (ProcessingException pe) {
             getLogger().error("Could not execute test", pe);
             pe.printStackTrace();
