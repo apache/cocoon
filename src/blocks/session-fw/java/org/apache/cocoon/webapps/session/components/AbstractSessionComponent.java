@@ -73,10 +73,14 @@ import org.apache.cocoon.webapps.session.TransactionManager;
 import org.xml.sax.SAXException;
 
 /**
- * The base class for all components
- *
+ * The base class for own components
+ * This is only here for compatibility
+ * 
+ * @deprecated Lookup the components yourself and use contextualizable to get the
+ *             current object model
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSessionComponent.java,v 1.2 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: AbstractSessionComponent.java,v 1.3 2003/08/20 12:11:13 cziegeler Exp $
 */
 public abstract class AbstractSessionComponent extends AbstractLogEnabled
     implements Component, Composable, Recomposable, Recyclable, RequestLifecycleComponent {
