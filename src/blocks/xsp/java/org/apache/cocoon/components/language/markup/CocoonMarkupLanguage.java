@@ -47,7 +47,7 @@ import java.util.Set;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonMarkupLanguage.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: CocoonMarkupLanguage.java,v 1.2 2004/03/20 13:30:48 joerg Exp $
  */
 public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
 {
@@ -183,8 +183,10 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
             super ();
             this.filename = filename;
             this.language = language;
+            this.filter = filter;
             // Put meself in front of filter
-            super.setConsumer(this.filter = filter);
+            super.setLexicalHandler(this.filter);
+            super.setContentHandler(this.filter);
         }
 
         public void setConsumer(XMLConsumer consumer) {
