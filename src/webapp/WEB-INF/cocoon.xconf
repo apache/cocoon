@@ -176,7 +176,7 @@
     <component-instance logger="core.modules.input" name="cocoon-properties" class="org.apache.cocoon.components.modules.input.PropertiesFileModule">
       <file src="resource://org/apache/cocoon/cocoon.properties" />
     </component-instance>
-    <component-instance logger="core.modules.input" name="flow-attr"     class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
+    <component-instance logger="core.modules.input" name="flow-attribute"     class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
     <component-instance logger="core.modules.input" name="flow-continuation"  class="org.apache.cocoon.components.modules.input.FlowContinuationModule"/>
 
     <component-instance logger="core.modules.input" name="xmlmeta"      class="org.apache.cocoon.components.modules.input.XMLMetaModule"/>
@@ -192,7 +192,6 @@
       <input-module name="defaults"/>
     </component-instance>
 
-
     <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used
          in the samples -->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
@@ -201,6 +200,7 @@
         <base-url>http://localhost:8080/cocoon</base-url>
       </values>
     </component-instance>
+
     <component-instance class="org.apache.cocoon.components.modules.input.XMLFileModule" logger="core.modules.xml" name="myxml">
       <file src="context://samples/modules/forrestconf.xml"/>
     </component-instance>
@@ -443,7 +443,7 @@
   
   <!--+
       | Store: generic store. The default implementation is an in-memory store
-      | backed by a disk store (based on JCS). This forms a two-stage
+      | backed by a disk store (based on EHCache). This forms a two-stage
       | cache composed of a fast in-memory MRU front-end and a persistent
       | back-end which stores the less-used objects.
       |
