@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <logkit>
   <factories>
     <factory type="priority-filter" class="org.apache.avalon.excalibur.logger.factory.PriorityFilterTargetFactory"/>
@@ -65,15 +64,6 @@
       <append>false</append>
     </cocoon>
 
-    <!-- The logger for the xmlform components -->
-    <cocoon id="xmlform">
-      <filename>${context-root}/WEB-INF/logs/xmlform.log</filename>
-      <format type="cocoon">
-        %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
-      </format>
-      <append>false</append>
-    </cocoon>
-
     <!--
       This log file gets only messages with log level ERROR and below.
     -->
@@ -99,7 +89,7 @@
       When defining subcategory manually, it is required to specify log
       targets, because they are not inherited in this case.
     -->
-    <category name="core" log-level="ERROR">
+    <category name="core" log-level="DEBUG">
       <!-- Startup component manager logger -->
       <category name="startup" log-level="ERROR">
         <log-target id-ref="core"/>
@@ -132,12 +122,6 @@
         <log-target id-ref="error"/>
       </category>
 
-      <!-- Cocoon source repository logger -->
-      <category name="repositories" log-level="ERROR">
-        <log-target id-ref="core"/>
-        <log-target id-ref="error"/>
-      </category>
-
       <!-- Cocoon store logger -->
       <category name="store" log-level="ERROR">
         <category name="janitor" log-level="ERROR">
@@ -152,7 +136,7 @@
       <log-target id-ref="error"/>
     </category>
 
-    <category name="sitemap" log-level="ERROR">
+    <category name="sitemap" log-level="DEBUG">
       <log-target id-ref="sitemap"/>
       <log-target id-ref="error"/>
     </category>
@@ -164,11 +148,6 @@
 
     <category name="flow" log-level="ERROR">
       <log-target id-ref="flow"/>
-      <log-target id-ref="error"/>
-    </category>
-
-    <category name="xmlform" log-level="ERROR">
-      <log-target id-ref="xmlform"/>
       <log-target id-ref="error"/>
     </category>
 
