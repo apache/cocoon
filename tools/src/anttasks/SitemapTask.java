@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.10 $ $Date: 2004/05/03 11:57:10 $
+ * @version CVS $Revision: 1.11 $ $Date: 2004/05/03 13:07:26 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -158,7 +158,6 @@ public final class SitemapTask extends AbstractQdoxTask {
      */
     public void execute()
     throws BuildException {
-
         validate();
 
         List components = (List)cache.get(this.directory);
