@@ -20,7 +20,7 @@ import org.apache.avalon.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-22 17:10:46 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-09 11:41:34 $
  */
 
 public class XMLSerializer extends AbstractTextSerializer implements Poolable {
@@ -38,6 +38,7 @@ public class XMLSerializer extends AbstractTextSerializer implements Poolable {
             handler.setResult(new StreamResult(out));
             handler.getTransformer().setOutputProperties(format);
             this.setContentHandler(handler);
+            this.setLexicalHandler(handler);
         } catch (Exception e) {
             getLogger().error("XMLSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());
