@@ -61,6 +61,14 @@ public class DefaultClassLoaderFactory extends AbstractLogEnabled implements Cla
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
     }
     
+    private void ensureIsDirectory(Source src, String location) throws ConfigurationException {
+        if (!src.exists()) {
+            throw new ConfigurationException(src.getURI() + " doesn't exist, at " + location);
+        } else if (!(src instanceof TraversableSource) || !((TraversableSource)src).isCollection()) {
+            throw new ConfigurationException(src.getURI() + " is not a directory, at " + location);
+        }
+    }
+    
     private URL[] parseConfiguration(Configuration config) throws ConfigurationException {
         List urlList = new ArrayList();
         Configuration[] children = config.getChildren();
@@ -72,22 +80,20 @@ public class DefaultClassLoaderFactory extends AbstractLogEnabled implements Cla
                 src = resolver.resolveURI(child.getAttribute("src"));
                 // A class dir: simply add its URL
                 if ("class-dir".equals(name)) {
+                    ensureIsDirectory(src, child.getLocation());
                     urlList.add(new URL(src.getURI()));
                 
                 // A lib dir: scan for all jar and zip it contains
                 } else if ("lib-dir".equals(name)) {
-                    if (src instanceof TraversableSource) {
-                        Iterator iter = ((TraversableSource)src).getChildren().iterator();
-                        while (iter.hasNext()) {
-                            Source childSrc = (Source)iter.next();
-                            String childURI = childSrc.getURI();
-                            resolver.release(childSrc);
-                            if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
-                                urlList.add(new URL(childURI));
-                            }
+                    ensureIsDirectory(src, child.getLocation());
+                    Iterator iter = ((TraversableSource)src).getChildren().iterator();
+                    while (iter.hasNext()) {
+                        Source childSrc = (Source)iter.next();
+                        String childURI = childSrc.getURI();
+                        resolver.release(childSrc);
+                        if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
+                            urlList.add(new URL(childURI));
                         }
-                    } else {
-                        throw new ConfigurationException(src.getURI() + " is not a directory, at " + child.getLocation());
                     }
                 } else {
                     throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
