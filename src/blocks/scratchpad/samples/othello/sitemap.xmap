@@ -8,11 +8,16 @@
 		<map:transformers default="xslt">
 			<!-- Configure i18n transformer -->
 			<map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-				<!-- This parameter sets the base name for dictionary files -->
-				<catalogue-name>messages</catalogue-name>
-				<!-- This parameter sets the path where dictionaries are placed-->
-				<catalogue-location>translations</catalogue-location>
-				<cache-at-startup>true</cache-at-startup>
+			  <catalogues default="messages">
+			    <catalogue id="messages" name="messages" location="translations"/>
+			  </catalogues>
+			  <cache-at-startup>true</cache-at-startup>			
+	
+				<!-- This parameter sets the base name for dictionary files 
+				<catalogue-name>messages</catalogue-name> -->
+				<!-- This parameter sets the path where dictionaries are placed 
+				<catalogue-location>translations</catalogue-location> 
+				<cache-at-startup>true</cache-at-startup> -->
 			</map:transformer>
 		</map:transformers>
 		<map:readers default="resource"/>
