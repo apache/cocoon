@@ -78,7 +78,7 @@ import org.apache.cocoon.util.JavaArchiveFilter;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.4 2004/02/07 15:20:09 joerg Exp $
+ * @version CVS $Id: JavaLanguage.java,v 1.5 2004/02/09 21:26:40 joerg Exp $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
         implements Initializable, ThreadSafe, Serviceable, Disposable {
@@ -92,6 +92,8 @@ public class JavaLanguage extends CompiledProgrammingLanguage
     /** Classpath */
     private String classpath;
 
+    private String classLoaderClass;
+    
     /**
      * Return the language's canonical source file extension.
      *
@@ -115,39 +117,39 @@ public class JavaLanguage extends CompiledProgrammingLanguage
      * sitemap-specified <code>ClassLoaderManager</code>
      *
      * @param params The configuration parameters
-     * @exception ParameterException If the class loader manager cannot be instantiated
+     * @throws ParameterException If the class loader manager cannot be
+     *                            instantiated or looked up.
      */
     public void parameterize(Parameters params) throws ParameterException {
         super.parameterize(params);
 
-        String classLoaderClass = params.getParameter("class-loader",null);
-        if (classLoaderClass != null) {
+        this.classLoaderClass = params.getParameter("class-loader", null);
+        if (this.classLoaderClass != null) {
             try {
-                this.classLoaderManager = (ClassLoaderManager) ClassUtils.newInstance(classLoaderClass);
+                this.classLoaderManager = (ClassLoaderManager)
+                        ClassUtils.newInstance(this.classLoaderClass);
             } catch (Exception e) {
-                throw new ParameterException("Unable to load class loader: " + classLoaderClass, e);
+                throw new ParameterException("Unable to load class loader: "
+                                             + this.classLoaderClass, e);
+            }
+        } else {
+            try {
+                getLogger().debug("Looking up " + ClassLoaderManager.ROLE);
+                this.classLoaderManager = (ClassLoaderManager)
+                        manager.lookup(ClassLoaderManager.ROLE);
+            } catch (ServiceException e) {
+                throw new ParameterException("Lookup of ClassLoaderManager failed", e);
             }
         }
     }
 
     /**
-     * Set the global service manager. This methods initializes the class
-     * loader manager if it was not (successfully) specified in the language
-     * parameters
+     * Set the global service manager.
      *
      * @param manager The global service manager
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        if (this.classLoaderManager == null) {
-            try {
-                getLogger().debug("Looking up " + ClassLoaderManager.ROLE);
-                this.classLoaderManager =
-                        (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
-            } catch (Exception e) {
-                getLogger().error("Could not find component", e);
-            }
-        }
     }
 
     public void initialize() throws Exception {
@@ -299,6 +301,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
                 }
             }
         }
+
         return buffer.toString();
     }
 
@@ -306,6 +309,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage
      *  dispose
      */
     public void dispose() {
-        manager.release(this.classLoaderManager);
+        if (this.classLoaderClass == null && this.classLoaderManager != null) {
+            manager.release(this.classLoaderManager);
+            this.classLoaderManager = null;
+        }
     }
 }
