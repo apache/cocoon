@@ -23,7 +23,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>DAV resource</web-resource-name>
-            <url-pattern>/*</url-pattern>
+            <url-pattern>/webdav/*</url-pattern>
             <http-method>COPY</http-method>
             <http-method>DELETE</http-method>
             <http-method>GET</http-method>
