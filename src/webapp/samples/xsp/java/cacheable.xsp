@@ -8,7 +8,7 @@
     the caching samples found at http://localhost:8888/samples/fop/welcome (or equivalent)
     still work .
 
-    $Id: cacheable.xsp,v 1.1 2003/09/07 06:09:10 vgritsenko Exp $
+    $Id: cacheable.xsp,v 1.2 2003/09/18 22:07:39 ghoward Exp $
  -->
 
 
@@ -18,8 +18,7 @@
 
 <xsp:structure>
     <xsp:include>org.apache.excalibur.source.SourceValidity</xsp:include>
-    <xsp:include>org.apache.cocoon.caching.CacheValidityToSourceValidity</xsp:include>
-    <xsp:include>org.apache.cocoon.caching.DeltaTimeCacheValidity</xsp:include>
+    <xsp:include>org.apache.excalibur.source.impl.validity.ExpiresValidity</xsp:include>
     <xsp:include>java.io.Serializable</xsp:include>
 </xsp:structure>
 
@@ -28,6 +27,7 @@
     // artificial slowdown to make the effects of the cache visible
     final int DELAY_SECS = 2;
 
+	// request parameter "validity" contains number of seconds to cache
     private int getValidityFromRequest() {
         int result = 15;
         try {
@@ -69,8 +69,7 @@
     */
     public SourceValidity getValidity() {
        // keep in cache for our validity time
-       return CacheValidityToSourceValidity.createValidity(
-           new DeltaTimeCacheValidity(0, getValidityFromRequest()));
+       return new ExpiresValidity(getValidityFromRequest()*1000);
     }
  </xsp:logic>
 
