@@ -21,18 +21,51 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.cocoon.template.jxtg.environment.JSIntrospector;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl.util.Introspector;
+import org.apache.commons.jexl.util.introspection.Info;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.lang.StringUtils;
+import org.mozilla.javascript.NativeArray;
 import org.w3c.dom.Node;
+import org.xml.sax.Locator;
 
 /**
  */
 public class ValueHelper {
+
+    private static final Iterator EMPTY_ITER = new Iterator() {
+        public boolean hasNext() {
+            return false;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
+
+    private static final Iterator NULL_ITER = new Iterator() {
+        public boolean hasNext() {
+            return true;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
 
     public static Locale parseLocale(String locale, String variant) {
         Locale ret = null;
@@ -59,7 +92,7 @@ public class ValueHelper {
 
     // Hack: try to prevent JXPath from converting result to a String
     public static Object getNode(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext, Boolean lenient)
-        	throws Exception {
+                throws Exception {
         try {
             Object compiled = expr.getCompiledExpression();
             if (compiled instanceof CompiledExpression) {
@@ -71,24 +104,24 @@ public class ValueHelper {
                     if (iter.hasNext()) {
                         Pointer first = (Pointer)iter.next();
                         if (iter.hasNext()) {
-    	                    List result = new LinkedList();
-    	                    result.add(first.getNode());
-    	                    boolean dom = (first.getNode() instanceof Node);
-    	                    while (iter.hasNext()) {
-    	                        Object obj = ((Pointer)iter.next()).getNode();
-    	                        dom = dom && (obj instanceof Node);
-    	                        result.add(obj);
-    	                    }
-    	                    Object[] arr;
-    	                    if (dom) {
-    	                        arr = new Node[result.size()];
-    	                    } else {
-    	                        arr = new Object[result.size()];
-    	                    }
-    	                    result.toArray(arr);
-    	                    return arr;
-                    	}
-                    	return first.getNode();                    
+                            List result = new LinkedList();
+                            result.add(first.getNode());
+                            boolean dom = (first.getNode() instanceof Node);
+                            while (iter.hasNext()) {
+                                Object obj = ((Pointer)iter.next()).getNode();
+                                dom = dom && (obj instanceof Node);
+                                result.add(obj);
+                            }
+                            Object[] arr;
+                            if (dom) {
+                                arr = new Node[result.size()];
+                            } else {
+                                arr = new Object[result.size()];
+                            }
+                            result.toArray(arr);
+                            return arr;
+                        }
+                        return first.getNode();                    
                     }
                     return null;
                 } finally {
@@ -110,6 +143,59 @@ public class ValueHelper {
 
     public static Object getNode(JXTExpression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         return getNode(expr, jexlContext, jxpathContext, null);
+    }
+
+    public static Iterator getIterator(final JXTExpression items, JexlContext jexlContext, JXPathContext jxpathContext, Locator loc) throws Exception {
+        Iterator iter = null;
+        if (items != null) {
+            if (items.getCompiledExpression() instanceof CompiledExpression) {
+                CompiledExpression compiledExpression = 
+                    (CompiledExpression) items.getCompiledExpression();
+                Object val =
+                    compiledExpression.getPointer(jxpathContext, items.getRaw()).getNode();
+                // FIXME: workaround for JXPath bug
+                iter =
+                    val instanceof NativeArray ?
+                    new JSIntrospector.NativeArrayIterator((NativeArray) val)
+                        : compiledExpression.iteratePointers(jxpathContext);
+            } else if (items.getCompiledExpression() instanceof Expression) {
+                Expression e = (Expression) items.getCompiledExpression();
+                Object result = e.evaluate(jexlContext);
+                if (result != null) {
+                    iter = Introspector.getUberspect().getIterator(
+                                                                   result,
+                                                                   new Info(
+                                                                            loc.getSystemId(),
+                                                                            loc.getLineNumber(),
+                                                                            loc.getColumnNumber()));
+                }
+                if (iter == null) {
+                    iter = EMPTY_ITER;
+                }
+            } else {
+                // literal value
+                iter = new Iterator() {
+                        Object val = items;
+                        
+                        public boolean hasNext() {
+                            return val != null;
+                        }
+                        
+                        public Object next() {
+                            Object res = val;
+                            val = null;
+                            return res;
+                        }
+                        
+                        public void remove() {
+                            // EMPTY
+                        }
+                    };
+            }
+        } else {
+            iter = NULL_ITER;
+        }
+        return iter;
     }
 
     public static Boolean getBooleanValue(JXTExpression expr, JexlContext jexlContext,

@@ -277,7 +277,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements
             throws SAXException {
         cocoon.put("consumer", consumer);
         Invoker.execute(this.xmlConsumer, new ExecutionContext(jexlContext,
-                jxpathContext, this.variables, this.definitions), null,
+                jxpathContext, this.definitions), null,
                 startEvent, null, scriptManager);
     }
 
