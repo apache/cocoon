@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.212 2003/12/12 15:15:19 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.213 2003/12/17 04:15:14 antonio Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="fix" due-to-email="ltrillaud@jouve.fr" due-to="Laurent Trillaud">
+     Fix NPE error when pointed tag is empty in xsp-session-fw:getxml. Applying
+     patch from ltrillaud@jouve.fr (ltrillaud@jouve.fr).
+   </action>
    <action dev="VG" type="update">
      ResourceExistsSelector now works the same way as ResourceExistsAction does.
      It can now detect existence of any Cocoon resource, not only files in context.
