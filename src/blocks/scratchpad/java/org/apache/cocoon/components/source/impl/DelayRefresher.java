@@ -44,7 +44,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.caching.SimpleCacheKey;
+import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.cron.CronJob;
 import org.apache.cocoon.components.cron.JobScheduler;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Default implementation of the refresher.
  * 
  * @since 2.1.1
- * @version CVS $Id: DelayRefresher.java,v 1.4 2004/04/02 08:08:03 cziegeler Exp $
+ * @version CVS $Id: DelayRefresher.java,v 1.5 2004/04/15 08:05:56 cziegeler Exp $
  */
 public class DelayRefresher extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSafe, Refresher, CronJob {
@@ -162,7 +162,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.source.impl.Refresher#refresh(org.apache.cocoon.caching.SimpleCacheKey, java.lang.String, long, java.lang.String)
      */
-    public void refresh(SimpleCacheKey cacheKey,
+    public void refresh(IdentifierCacheKey cacheKey,
                         String uri,
                         String cacheRole,
                         Parameters parameters)
@@ -273,7 +273,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 		final String cache = conf.getAttribute(ATTR_CACHE);
         final int expires = conf.getAttributeAsInteger(ATTR_EXPIRES);
 		final String key = URLDecoder.decode(conf.getAttribute(ATTR_KEY));
-		final SimpleCacheKey cacheKey = new SimpleCacheKey(key, false);
+		final IdentifierCacheKey cacheKey = new IdentifierCacheKey(key, false);
 		
         final Parameters parameters = Parameters.fromConfiguration(conf);
         
@@ -337,7 +337,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
         writer.write("\" "+ATTR_CACHE+"=\"");
         writer.write(c.parameters.getParameter(PARAM_CACHE_ROLE, ""));
         writer.write("\" "+ATTR_KEY+"=\"");
-        writer.write(URLEncoder.encode(((SimpleCacheKey) c.map.get(CACHE_KEY)).getKey()));
+        writer.write(URLEncoder.encode(((IdentifierCacheKey) c.map.get(CACHE_KEY)).getKey()));
         writer.write("\"/>\n");
 	}
 	
@@ -349,7 +349,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
         final Map map;
 		Parameters parameters;
         
-        TargetConfiguration(SimpleCacheKey cacheKey,
+        TargetConfiguration(IdentifierCacheKey cacheKey,
                             String uri,
                             String cacheRole,
                             Parameters parameters) {

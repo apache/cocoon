@@ -24,10 +24,10 @@ import java.io.Serializable;
  * for an internal pipeline call.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleCacheKey.java,v 1.3 2004/04/15 08:04:39 cziegeler Exp $
+ * @version CVS $Id: IdentifierCacheKey.java,v 1.1 2004/04/15 08:05:55 cziegeler Exp $
  * @since 2.1.1
  */
-public class SimpleCacheKey
+public class IdentifierCacheKey
     implements Serializable {
 
     /** The key */
@@ -45,7 +45,7 @@ public class SimpleCacheKey
     /**
      * Constructor
      */
-    public SimpleCacheKey(String key, boolean external) {
+    public IdentifierCacheKey(String key, boolean external) {
         this.key = key;
         this.external = external;
         final StringBuffer buf = new StringBuffer();
@@ -57,8 +57,8 @@ public class SimpleCacheKey
      * Compare
      */
     public boolean equals(Object object) {
-        if (object instanceof SimpleCacheKey) {
-            SimpleCacheKey pck = (SimpleCacheKey)object;
+        if (object instanceof IdentifierCacheKey) {
+            IdentifierCacheKey pck = (IdentifierCacheKey)object;
             return this.cacheKey.equals( pck.cacheKey );
         }
         return false;

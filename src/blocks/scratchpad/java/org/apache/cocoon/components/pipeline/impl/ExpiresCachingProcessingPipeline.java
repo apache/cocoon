@@ -27,7 +27,7 @@ import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
-import org.apache.cocoon.caching.SimpleCacheKey;
+import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
@@ -48,7 +48,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.4 2004/03/07 18:44:14 cziegeler Exp $
+ * @version CVS $Id: ExpiresCachingProcessingPipeline.java,v 1.5 2004/04/15 08:05:55 cziegeler Exp $
  */
 public class ExpiresCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -63,7 +63,7 @@ public class ExpiresCachingProcessingPipeline
     protected SourceValidity cacheValidity;
 
     /** The key used for caching */
-    protected SimpleCacheKey cacheKey;
+    protected IdentifierCacheKey cacheKey;
     
     /** The expires information */
     protected long cacheExpires;
@@ -235,7 +235,7 @@ public class ExpiresCachingProcessingPipeline
         super.preparePipeline( environment );
 
         // and now prepare the caching information
-        this.cacheKey = new SimpleCacheKey(key, 
+        this.cacheKey = new IdentifierCacheKey(key, 
                                            this.serializer == this.lastConsumer);
         if ( this.cacheExpires > 0) {
             this.cacheValidity = new ExpiresValidity(this.cacheExpires*1000);                                               

@@ -16,7 +16,7 @@
 package org.apache.cocoon.components.source.impl;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.caching.SimpleCacheKey;
+import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.excalibur.source.SourceException;
 
 /**
@@ -28,7 +28,7 @@ import org.apache.excalibur.source.SourceException;
  * </p>
  * 
  * @since 2.1.1
- * @version CVS $Id: Refresher.java,v 1.4 2004/03/22 17:38:25 unico Exp $
+ * @version CVS $Id: Refresher.java,v 1.5 2004/04/15 08:05:56 cziegeler Exp $
  */
 public interface Refresher {
     
@@ -42,7 +42,7 @@ public interface Refresher {
      * @param cacheRole The role of the cache component to store the content
      * @param params    Additional parameters such as a timout value
      */
-    void refresh(SimpleCacheKey cacheKey,
+    void refresh(IdentifierCacheKey cacheKey,
                  String uri,
                  String cacheRole,
                  Parameters params)
