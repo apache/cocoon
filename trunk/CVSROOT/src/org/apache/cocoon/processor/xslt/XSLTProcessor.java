@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.33 2001-05-22 23:05:54 balld Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.34 2001-05-22 23:10:14 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.33 $ $Date: 2001-05-22 23:05:54 $
+ * @version $Revision: 1.34 $ $Date: 2001-05-22 23:10:14 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -160,28 +160,28 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
     }
 
     private boolean isValidName (String name) {
-				StringCharacterIterator iter = new StringCharacterIterator(name);
-				boolean valid_name = true;
-				char c = iter.first();
-				
-				if (!(Character.isLetter(c) || c == '_')) {
-					valid_name = false;
-				} else {
-					c = iter.next();
-				}
-				
-				while (valid_name && c != iter.DONE) {
-					if (!(Character.isLetterOrDigit(c) ||
-						c == '-' ||
-						c == '_' ||
-						c == '.')) {
-						valid_name = false;
-					} else {
-						c = iter.next();
-					}
-				}
-
-                                return valid_name;				
+        if (!name) { 
+            return false;
+        }
+	StringCharacterIterator iter = new StringCharacterIterator(name);
+	boolean valid_name = true;
+	char c = iter.first();
+	if (!(Character.isLetter(c) || c == '_')) {
+		valid_name = false;
+	} else {
+		c = iter.next();
+	}
+	while (valid_name && c != iter.DONE) {
+		if (!(Character.isLetterOrDigit(c) ||
+			c == '-' ||
+			c == '_' ||
+			c == '.')) {
+			valid_name = false;
+		} else {
+			c = iter.next();
+		}
+	}
+        return valid_name;				
     }
     
     private Object getResource(ServletContext context, HttpServletRequest request, 
