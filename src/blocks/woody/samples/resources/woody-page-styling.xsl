@@ -171,7 +171,30 @@
   </xsl:template>
 
   <!--
-    Columnized group items layout
+    Column group items layout
+  -->
+  <xsl:template match="wi:group[wi:styling/@layout='column']" mode="group-layout">
+    <table border="0">
+      <tbody>
+        <xsl:apply-templates select="wi:items/*" mode="group-column-content"/>
+      </tbody>
+    </table>
+  </xsl:template>
+
+  <!--
+    Default column layout : label above and input below
+  -->
+  <xsl:template match="wi:*" mode="group-column-content">
+    <tr>
+      <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+    </tr>
+    <tr>
+      <td><xsl:apply-templates select="."/></td>
+    </tr>
+  </xsl:template>
+
+  <!--
+    Columns group items layout
   -->
   <xsl:template match="wi:group[wi:styling/@layout='columns']" mode="group-layout">
     <table border="0">
@@ -182,13 +205,61 @@
   </xsl:template>
 
   <!--
-    Default column layout : label left and input right
+    Default columns layout : label left and input right
   -->
   <xsl:template match="wi:*" mode="group-columns-content">
     <tr>
       <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
       <td><xsl:apply-templates select="."/></td>
     </tr>
+  </xsl:template>
+
+  <!--
+    Row group items layout
+  -->
+  <xsl:template match="wi:group[wi:styling/@layout='row']" mode="group-layout">
+    <table border="0">
+      <tbody>
+        <tr>
+          <xsl:apply-templates select="wi:items/*" mode="group-row-content"/>
+        </tr>
+      </tbody>
+    </table>
+  </xsl:template>
+
+  <!--
+    Default row layout : label left and input right
+  -->
+  <xsl:template match="wi:*" mode="group-row-content">
+    <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+    <td><xsl:apply-templates select="."/></td>
+  </xsl:template>
+
+  <!--
+    Rows group items layout
+  -->
+  <xsl:template match="wi:group[wi:styling/@layout='rows']" mode="group-layout">
+    <table border="0">
+      <tbody>
+        <tr>
+          <xsl:apply-templates select="wi:items/*" mode="group-rows-labels"/>
+        </tr>
+        <tr>
+          <xsl:apply-templates select="wi:items/*" mode="group-rows-content"/>
+        </tr>
+      </tbody>
+    </table>
+  </xsl:template>
+
+  <!--
+    Default rows layout : label above and input below
+  -->
+  <xsl:template match="wi:*" mode="group-rows-labels">
+    <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+  </xsl:template>
+
+  <xsl:template match="wi:*" mode="group-rows-content">
+    <td><xsl:apply-templates select="."/></td>
   </xsl:template>
 
   <!-- boolean field : checkbox and label on a single line -->
