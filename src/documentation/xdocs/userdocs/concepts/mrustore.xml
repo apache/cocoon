@@ -67,7 +67,7 @@
     NOTE: The keys under Cocoon are Strings at the moment. Therefore the
     filenames of the swapped objects can be very long. Especially Windows OS
     flavours have problems with long filenames. Use the JispFilesystemStore to
-    get rid of it.
+    deal with that (see <link href="persistence.html">Persistent cache</a>).
     </p>
     </s2>
   </s1>
