@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.31 2003/04/02 10:51:14 stefano Exp $
+  CVS $Id: gump.xml,v 1.32 2003/04/03 15:08:07 sylvain Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -53,6 +53,7 @@
     <depend project="commons-httpclient" version="supplied"/>
     <depend project="commons-collections" version="supplied"/>
     <depend project="commons-jxpath" version="supplied"/>
+    <depend project="commons-lang" version="supplied"/>
 
     <depend project="jdom" version="supplied"/>
     <depend project="rhino-cocoondev" version="supplied"/>
@@ -292,7 +293,6 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="commons-lang" version="supplied"/>
     
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
