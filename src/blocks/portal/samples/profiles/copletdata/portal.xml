@@ -152,5 +152,21 @@
       </attribute>
    </coplet-data>
 
+   <coplet-data id="Gallery" name="standard">
+      <title>Picture Gallery</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/gallery</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="GalleryViewer" name="standard">
+      <title>Gallery Viewer</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/galleryviewer</value>
+      </attribute>
+   </coplet-data>
 
 </coplets>

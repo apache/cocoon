@@ -15,6 +15,7 @@
         <ul>
           <li>The TabDemo1 shows a tab inside a tab, which is useful for structuring content.</li>
           <li>The TabDemo2 shows the same content as TabDemo2 but with just a different stylesheet for the tab.</li>
+          <li>The Coplets tab show some more coplets. You need to also have the petstore example installed!</li>
         </ul>
         <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
      </s1> 
