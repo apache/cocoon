@@ -28,7 +28,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-02 16:34:41 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-02 22:05:55 $
  */
 public class IOUtils {
 
@@ -130,6 +130,9 @@ public class IOUtils {
   /** Collator for comparing the strings */
   static final Collator englishCollator = Collator.getInstance(Locale.ENGLISH);
 
+  /** Use this character as suffix */
+  static final char keywordSuffix = '_';
+
   /**
    * checks if the input string is a valid java keyword.
    * @return boolean true/false
@@ -177,8 +180,9 @@ public class IOUtils {
         }
       }
 
+      // Append the suffix if necessary.
       if(isJavaKeyword)
-          buffer.append('$');
+          buffer.append(keywordSuffix);
     }
 
     return buffer.toString();
