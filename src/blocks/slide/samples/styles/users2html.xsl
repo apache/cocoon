@@ -43,7 +43,11 @@
             <td align="left">
               <b>User</b>
             </td>
-            <td align="left"/>
+            <td/>
+            <td align="left">
+              <b>Password</b>
+            </td>
+            <td/>
             <td align="left">
               <b>Roles</b>
             </td>
@@ -53,13 +57,22 @@
             <xsl:variable name="useruri"  select="uri/text()" />
             <xsl:variable name="username" select="substring-after($useruri,concat($userspath,'/'))" />
             <tr>
-              <form action="{$base}/removeobject" method="post">
-                <input type="hidden" name="objecturi" value="{$useruri}"/>
+              <td align="left">
+                <xsl:value-of select="$username"/><br/>
+              </td>
+              <td align="left">
+                <form action="{$base}/removeobject">
+                  <input type="hidden" name="objecturi" value="{$useruri}"/>
+                  <input type="submit" name="doRemoveUser" value="Delete"/>
+                </form>
+              </td>
+              <form action="{$base}/changepwd" method="post">
+                <input type="hidden" name="username" value="{$username}"/>
                 <td align="left">
-                  <xsl:value-of select="$username"/>
+                  <input type="password" name="password" size="10" maxlength="40"/>
                 </td>
-                <td align="left">
-                  <input type="submit" name="doRemoveUser" value="Delete user"/>
+                <td>
+                  <input type="submit" name="doSetPassword" value="Change"/>
                 </td>
               </form>
               <form action="{$base}/removemember" method="post">
@@ -81,8 +94,7 @@
               </form>
             </tr>
             <tr>
-              <td align="left"/>
-              <td align="left"/>
+              <td colspan="4"/>
               <form action="{$base}/addmember" method="post">
                 <input type="hidden" name="subjecturi" value="{$useruri}"/>
                 <td align="left">
@@ -99,6 +111,7 @@
                 <td align="left">
                   <input type="submit" name="doAddRoleMember" value="Add role"/>
                 </td>
+                <td align="left"/>
               </form>
             </tr>
           </xsl:for-each>
@@ -107,10 +120,11 @@
               <td align="left">
                 <input name="username" type="text" size="10" maxlength="40"/>
               </td>
+              <td align="left"/>
               <td align="left">
                 <input name="password" type="password" size="10" maxlength="40"/>
               </td>
-              <td align="left"/>
+              <td colspan="2"/>
               <td align="right">
                 <input type="submit" name="doAddUser" value="Add user"/>
               </td>
