@@ -167,7 +167,6 @@ implements ServiceManager, Configurable {
 
                 throw new ServiceException( role, message, e );
             }
-            this.initialize( role, component );
         } catch ( ServiceException se) {
             throw se;
         } catch( final Exception e ) {
@@ -178,6 +177,7 @@ implements ServiceManager, Configurable {
 
             throw new ServiceException( role, message, e );
         }
+        this.initialize( role, component );
 
         // Add a mapping between the component and its handler.
         //  In the case of a ThreadSafeComponentHandler, the same component will be mapped
