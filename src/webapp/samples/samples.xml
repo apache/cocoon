@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.10 2003/04/25 08:35:02 stephan Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.11 2003/04/29 10:45:21 cziegeler Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -150,4 +150,11 @@
    </sample>
   </group>
  
+  <group name="Error handling">
+    <sample name="Error handling" href="errorhandling/main">
+    	An example page producing exceptions and handling them. Demonstrates the 
+    	handler hierarchy and the exception selectors.
+    </sample>
+  </group>
+
 </samples>

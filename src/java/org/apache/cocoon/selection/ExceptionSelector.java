@@ -83,9 +83,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * Note that both "name" and "unroll" can be specified. In that case, we first try to unroll the exception,
  * and if none of the causes has a name, then the "name" attribute is considered.
  *
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.2 2003/04/10 13:59:32 sylvain Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.3 2003/04/29 10:45:19 cziegeler Exp $
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {
@@ -149,10 +151,10 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
             throw new IllegalStateException("No exception in object model. ExceptionSelector can only be used in <map:handle-errors>");
         }
 
-        return findName(thr);
+        return find(thr);
     }
 
-    private String findName(Throwable thr) {
+    private FindResult find(Throwable thr) {
         // Now find the proper name
         for (int i = 0; i < this.clazz.length; i++) {
             if (this.clazz[i].isInstance(thr)) {
@@ -162,15 +164,15 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
                 if (this.unroll[i]) {
                     Throwable cause = ExceptionUtils.getCause(thr);
                     if (cause != null) {
-                        String causeName = findName(cause);
-                        if (causeName != null) {
-                            return causeName;
+                        FindResult result = find(cause);
+                        if (result != null) {
+                            return result;
                         }
                     }
                 }
 
                 // Not unrolled
-                return this.name[i];
+                return new FindResult(this.name[i], thr);
             }
         }
 
@@ -180,7 +182,44 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
 
     public boolean select(String expression, Object selectorContext) {
         // Just compare the expression with the previously found name
-        return expression.equals(selectorContext);
+		boolean result = expression.equals(((FindResult)selectorContext).getName());
+		
+		if (result) {
+			if (getLogger().isDebugEnabled())
+				getLogger().debug("select succesfull for condition " + selectorContext.toString());						
+		}
+        
+		return result; 
+    }
+    
+    class FindResult {
+    	private String name;
+    	private Throwable throwable;
+    	
+    	public FindResult(String name, Throwable throwable) {
+    		this.name = name;
+    		this.throwable = throwable;
+    	}
+    	
+		public String getName() {
+			return this.name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public Throwable getThrowable() {
+			return this.throwable;
+		}
+
+		public void setThrowable(Throwable throwable) {
+			this.throwable = throwable;
+		}
+		
+		public String toString() {
+			return this.name;
+		}
     }
 
 }

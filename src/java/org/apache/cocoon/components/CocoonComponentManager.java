@@ -82,8 +82,9 @@ import org.apache.excalibur.source.SourceResolver;
  * directly - and do not assume that a {@link ComponentManager} you get
  * via the compose() method is an instance of CocoonComponentManager.
  *
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.10 2003/04/26 14:06:50 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.11 2003/04/29 10:45:22 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -443,7 +444,7 @@ implements SourceResolver
             final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
             if ( null != stack && !stack.empty()) {
                 final Object[] objects = (Object[])stack.getCurrent();
-                baseURI = ((Environment)objects[0]).getContext().toExternalForm();
+                baseURI = ((Environment)objects[0]).getContext();
             }
         }
         return this.sourceResolver.resolveURI(location, baseURI, parameters);
