@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
  * are instances of the {@link ParamSaxBuffer} class.
  * 
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.7 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.8 2004/06/24 07:32:17 cziegeler Exp $
  */
 public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle, Serviceable {
@@ -116,7 +116,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
     /**
      * Processes XML bundle file and creates map of values
      */
-    private class SAXContentHandler implements ContentHandler {
+    private static class SAXContentHandler implements ContentHandler {
         private Map values;
         private int state;
         private String namespace;
