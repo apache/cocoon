@@ -55,38 +55,6 @@ FIXME:
   See Bruno email
   http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=103847911212458
 
-CHANGE HISTORY:
-20010715 V0.1 Initial version of DTD. (RNG)
-20011106 V0.2 Reviewed all */sitemap.xmap and added definitions (DC)
-20011106 V0.2 All elements now have "map:" prefix. (DC)
-20011106 V0.2 Incorporated comments Bruno Dumon cocoon-dev 20010718 (DC)
-20011116 V0.2 Changes from label/view discussion cocoon-dev 20011115 (DC)
-20011219 V0.2 Deprecated 'redirect-to resource'. Added 'map:call resource'(CH)
-20021017 V0.3 Updated so validation works again (CPA)
-20021019 V0.3 Further changes made to cope with all current sitemaps (CPA)
-20021021 V0.4 General simplification by adding parameter entities (CPA)
-20021024 V0.4 RELAX NG grammar generated from sitemap-v04.dtd using DTDinst (DC)
-20021025 V0.5 Tightening of grammar rules which was not possible with DTD.
-              Also added datatypes. (CPA)
-20021030 V0.5 Added some missing bits: selector/browser, 
-              label.attr is temporarily string (DC)
-20021029 V0.5 Corrections to allow recent sitemap changes to validate
-              (rules needed loosening considerably to enable this). (CPA)
-20021030 V0.5 Additional checks on element contents. (CPA)
-20021106 V0.5 Map:selector declared to have any content. (CPA)
-20021114 V0.6 Initial set of Schematron rules added. (CPA)
-20021129 V0.6 map:select should be able to have map:parameter children. (BD)
-20021129 V0.6 map:action component declaration should allow any child elements
-              as additional configuration information. The exact contents
-              depends on the implementation of each action, and since users can
-              implement their own actions this content cannot be foreseen. (BD)
-20030212 V0.6 Add TagTransformer contents (VG)
-20030219 V0.6 Add new i18nTransformer contents <catalogues> (DC)
-20030730 V0.6 Added new htmlGenerator contents <catalogues> (NKB)
-20040123 V0.6 Added <parameter>* to <generator> (NKB)
-20040414 V0.6 Added <parameter>* to <pipe> (DC)
-20040414 V0.6 Allow anyElement for <global-variables> (DC)
-
 ====================================================================
 -->
 
