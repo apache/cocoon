@@ -1,5 +1,5 @@
 /*
-$Id: ActionImpl.java,v 1.3 2004/03/01 11:00:43 andreas Exp $
+$Id: ActionImpl.java,v 1.4 2004/03/01 11:24:11 andreas Exp $
 <License>
 
  ============================================================================
@@ -61,8 +61,10 @@ import org.apache.lenya.workflow.WorkflowInstance;
 
 
 /**
+ * Basic action implementation.
  *
- * @author  andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: ActionImpl.java,v 1.4 2004/03/01 11:24:11 andreas Exp $
  */
 public class ActionImpl implements Action {
     

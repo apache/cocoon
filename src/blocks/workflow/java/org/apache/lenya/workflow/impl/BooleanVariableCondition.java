@@ -1,5 +1,5 @@
 /*
-$Id: BooleanVariableCondition.java,v 1.1 2004/02/29 17:34:47 gregor Exp $
+$Id: BooleanVariableCondition.java,v 1.2 2004/03/01 11:24:11 andreas Exp $
 <License>
 
  ============================================================================
@@ -61,10 +61,10 @@ import org.apache.lenya.workflow.WorkflowInstance;
 import org.apache.log4j.Category;
 
 /**
- * @author andreas
+ * Implementation of a boolean variable condition.
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: BooleanVariableCondition.java,v 1.2 2004/03/01 11:24:11 andreas Exp $
  */
 public class BooleanVariableCondition extends AbstractCondition {
     

@@ -1,5 +1,5 @@
 /*
-$Id: BooleanVariableImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
+$Id: BooleanVariableImpl.java,v 1.3 2004/03/01 11:24:11 andreas Exp $
 <License>
 
  ============================================================================
@@ -59,8 +59,10 @@ import org.apache.lenya.workflow.BooleanVariable;
 
 
 /**
+ * Implementation of a boolean variable.
  *
- * @author  andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: BooleanVariableImpl.java,v 1.3 2004/03/01 11:24:11 andreas Exp $
  */
 public class BooleanVariableImpl implements BooleanVariable {
     

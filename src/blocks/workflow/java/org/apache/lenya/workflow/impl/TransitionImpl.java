@@ -1,5 +1,5 @@
 /*
-$Id: TransitionImpl.java,v 1.3 2004/03/01 11:10:00 andreas Exp $
+$Id: TransitionImpl.java,v 1.4 2004/03/01 11:24:11 andreas Exp $
 <License>
 
  ============================================================================
@@ -69,8 +69,10 @@ import java.util.List;
 
 
 /**
+ * Implementation of a transition.
  *
- * @author  andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: TransitionImpl.java,v 1.4 2004/03/01 11:24:11 andreas Exp $
  */
 public class TransitionImpl implements Transition {
     
