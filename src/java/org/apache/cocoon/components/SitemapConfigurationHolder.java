@@ -57,7 +57,7 @@ package org.apache.cocoon.components;
  * @since 2.1
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurationHolder.java,v 1.1 2003/03/19 12:47:34 cziegeler Exp $
+ * @version CVS $Id: SitemapConfigurationHolder.java,v 1.2 2003/03/20 11:45:58 cziegeler Exp $
  */
 public interface SitemapConfigurationHolder {
 
@@ -80,5 +80,5 @@ public interface SitemapConfigurationHolder {
      * 
      * @param preparedConfig The prepared configuration
      */
-    void setPreparedConfiguration(Object preparedConfig);
+    void setPreparedConfiguration(ChainedConfiguration configuration, Object preparedConfig);
 }
