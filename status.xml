@@ -180,6 +180,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="GR" type="update" fixes-bug="19978" due-to="Ciro Mondueri" due-to-email="cmr@adinet.com.uy">
+   Fixed namespace handling in XMLDBSource.
+  </action>
   <action dev="VG" type="add" fixes-bug="16003">
    Added XHTML 1.1 DTD to the entity catalog. Added XHTML 1.1 serializer into the sitemap.
    Explained different XHTML 1.0 serializer options.

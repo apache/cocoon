@@ -86,7 +86,7 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.2 2003/04/30 01:50:02 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.3 2003/05/16 06:17:24 gianugo Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled  
     implements Source, XMLizable {
@@ -281,7 +281,7 @@ public class XMLDBSource extends AbstractLogEnabled
                     attributes.addAttribute("", NAME_ATTR, NAME_ATTR, CDATA, collections[i]);
                     handler.startElement(URI, COLLECTION,
                             QCOLLECTION, attributes);
-                    handler.endElement(URI, COLLECTION, COLLECTION);
+                    handler.endElement(URI, COLLECTION, QCOLLECTION);
                 }
 
                 // Print child resources
@@ -291,7 +291,7 @@ public class XMLDBSource extends AbstractLogEnabled
                     attributes.addAttribute("", NAME_ATTR, NAME_ATTR, CDATA, resources[i]);
                     handler.startElement(URI, RESOURCE,
                             QRESOURCE, attributes);
-                    handler.endElement(URI, RESOURCE, RESOURCE);
+                    handler.endElement(URI, RESOURCE, QRESOURCE);
                 }
 
                 handler.endElement(URI, COLLECTIONS, QCOLLECTIONS);
@@ -352,7 +352,7 @@ public class XMLDBSource extends AbstractLogEnabled
 
                 result.getContentAsSAX(includeHandler);
 
-                handler.endElement(URI, RESULT, RESULT);
+                handler.endElement(URI, RESULT, QRESULT);
             }
 
             handler.endElement(URI, RESULTSET, QRESULTSET);
