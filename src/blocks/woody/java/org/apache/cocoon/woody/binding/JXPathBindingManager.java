@@ -101,8 +101,11 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
     public Binding createBinding(Source bindSrc)
         throws BindingException {
         try {
+            InputSource is = new InputSource(bindSrc.getInputStream());
+            is.setSystemId(bindSrc.getURI());
+            
             Document doc =
-                DomHelper.parse(new InputSource(bindSrc.getURI()));
+                DomHelper.parse(is);
             Element rootElm = doc.getDocumentElement();
             JXPathBindingBase newBinding = null;
             if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
