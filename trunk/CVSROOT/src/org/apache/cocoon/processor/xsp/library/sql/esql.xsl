@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.21 2000-10-13 21:41:30 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.22 2000-10-16 23:41:42 balld Exp $-->
 <!--
 
  ============================================================================
@@ -130,7 +130,7 @@
 	</xsp:page>
 </xsl:template>
 
-<xsl:template match="xsp:page/*">
+<xsl:template match="xsp:page/*[not(namespace-uri(.)='http://www.apache.org/1999/XSP/Core')]">
  <xsl:copy>
   <xsl:apply-templates select="@*"/>
   <xsp:logic>
