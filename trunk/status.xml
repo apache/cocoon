@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.71 2003/07/01 23:47:44 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.72 2003/07/02 12:53:20 bruno Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="BRD" type="add" fixes-bug="15150" due-to="Danny Mui" due-to-email="danny@muibros.com">
+    Added merged region support to HSSF (= Excel) Serializer.
+  </action>
   <action dev="JH" type="update" fixes-bug="21248" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
     Updated POI from 1.7.0-dev to 1.10.0-dev. Patched code accordingly. Fixed usage of deprecated methods.
   </action>
