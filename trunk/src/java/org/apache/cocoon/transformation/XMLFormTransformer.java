@@ -89,9 +89,7 @@ import org.apache.cocoon.environment.Environment;
 public class XMLFormTransformer extends AbstractSAXTransformer
 {
 
-  // @todo : implements CacheableProcessingComponent {
-
-
+  // TODO: implements CacheableProcessingComponent {
 
   public final static String NS = "http://xml.apache.org/cocoon/xmlform/2002";
   private final static String NS_PREFIX = "xf";
