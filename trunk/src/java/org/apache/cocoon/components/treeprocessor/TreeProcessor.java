@@ -89,7 +89,7 @@ import java.util.Map;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.4 2003/04/26 14:06:50 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.5 2003/06/11 13:33:25 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -357,6 +357,7 @@ public class TreeProcessor
      */
     public void setComponentConfigurations(Configuration componentConfigurations) {
         this.componentConfigurations = componentConfigurations;
+        this.sitemapComponentConfigurations = null;
     }
 
     /**
