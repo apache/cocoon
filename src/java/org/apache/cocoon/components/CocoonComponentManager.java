@@ -86,7 +86,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.20 2003/11/07 14:15:53 vgritsenko Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.21 2004/02/28 13:10:19 bdelacretaz Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -112,6 +112,9 @@ implements SourceResolver
     /** Temporary list of parent-aware components.  Will be null for most of
      * our lifecycle. */
     private ArrayList parentAwareComponents = new ArrayList();
+
+    /** has this been disposed? */
+    private boolean wasDisposed;
 
     /** Create the ComponentManager */
     public CocoonComponentManager() {
@@ -299,6 +302,11 @@ implements SourceResolver
         }
         if ( role.equals(SourceResolver.ROLE) ) {
             if ( null == this.sourceResolver ) {
+                if(wasDisposed) {
+                    // (BD) working on bug 27249: I think we could throw an Exception here, as
+                    // the following call fails anyway, but I'm not sure enough ;-)
+                    getLogger().warn("Trying to lookup SourceResolver on disposed CocoonComponentManager");
+                }
                 this.sourceResolver = (SourceResolver) super.lookup( role );
             }
             return this;
@@ -480,6 +488,10 @@ implements SourceResolver
      * Dispose
      */
     public void dispose() {
+        if(getLogger().isDebugEnabled()) {
+            getLogger().debug("CocoonComponentManager.dispose() called");
+        }
+
         if ( null != this.sourceResolver ) {
             super.release( this.sourceResolver );
             // We cannot null out sourceResolver here yet as some other not
@@ -493,6 +505,9 @@ implements SourceResolver
         // All components now are released so sourceResolver should be not
         // needed anymore.
         this.sourceResolver = null;
+
+        // This is used to track bug 27249
+        this.wasDisposed = true;
     }
 
     /**
