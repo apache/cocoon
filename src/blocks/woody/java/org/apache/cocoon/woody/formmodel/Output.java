@@ -19,6 +19,10 @@ public class Output extends AbstractWidget {
     private OutputDefinition definition;
     private Object value;
 
+    public OutputDefinition getOutputDefinition() {
+        return definition;
+    }
+
     protected Output(OutputDefinition definition) {
         this.definition = definition;
         setLocation(definition.getLocation());
