@@ -106,6 +106,7 @@
                   DBConnection db_connection;
                   Connection connection;
                   boolean close_connection = true;
+		  String query;
                   Statement statement;
                   ResultSet resultset;
                   ResultSetMetaData resultset_metadata;
@@ -231,7 +232,8 @@
 		 </xsl:otherwise>
 	        </xsl:choose>
 	       _esql_session.statement = _esql_session.connection.createStatement();
-	       _esql_session.resultset = _esql_session.statement.executeQuery(<xsl:copy-of select="$query"/>);
+	       _esql_session.query = String.valueOf(<xsl:copy-of select="$query"/>);
+	       _esql_session.resultset = _esql_session.statement.executeQuery(_esql_session.query);
 	       _esql_session.resultset_metadata = _esql_session.resultset.getMetaData();
 	       _esql_session.count = 0;
 	       if (_esql_session.skip_rows &gt; 0) {
@@ -242,7 +244,9 @@
 		 }
 		}
 	       }
+	       boolean _esql_results = false;
 	       while (_esql_session.resultset.next()) {
+		_esql_results = true;
 	        <xsl:apply-templates select="esql:results/*"/>
 		if (_esql_session.max_rows != -1 &amp;&amp; _esql_session.count - _esql_session.skip_rows == _esql_session.max_rows-1) {
 		 break;
@@ -268,6 +272,8 @@
 	        _esql_session = (EsqlSession)_esql_sessions.pop();
 	       }
 	      }
+	      if (!_esql_results) {
+               <xsl:apply-templates select="esql:no-results/*"/>
 	     }
 	</xsp:logic>
 </xsl:template>
