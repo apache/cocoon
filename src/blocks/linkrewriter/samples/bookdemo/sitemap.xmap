@@ -9,9 +9,13 @@
   <map:transformers default="xslt">
     <map:transformer name="linkrewriter"
       src="org.apache.cocoon.transformation.LinkRewriterTransformer">
-      <input-module name="book-raw" src="cocoon://samples/linkrewriter/bookdemo/linkmap" reloadable="true"/>
+      <input-module name="book-raw">
+        <file src="cocoon://samples/linkrewriter/bookdemo/linkmap" reloadable="true"/>
+      </input-module>
       <input-module name="book">
-        <input-module name="book-raw" src="{src}" reloadable="true"/>
+        <input-module name="book-raw">
+          <file src="{src}" reloadable="true"/>
+        </input-module>
         <prefix>//*[@label='</prefix>
         <suffix>']/@href</suffix>
       </input-module>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='linkrewriter']">
+
+  <group name="linkrewriter">
+    <sample name="LinkRewriter Transformer" href="linkrewriter/">
+      A demo of the LinkRewriterTransformer, which rewrites XML links (by
+      default, href attributes) with values looked up from any Input Module.
+      See http://xml.apache.org/forrest/linking.html
+   </sample>
+  </group>
+  
+</xsamples>
