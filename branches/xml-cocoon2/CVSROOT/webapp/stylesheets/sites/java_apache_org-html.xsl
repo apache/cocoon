@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: java_apache_org-html.xsl,v 1.1.2.2 2000-08-21 19:29:14 bloritsch Exp $ -->
+<!-- Version: $Id: java_apache_org-html.xsl,v 1.1.2.3 2000-08-23 13:11:36 stefano Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -38,7 +38,7 @@
              </td>
             </tr>
             <tr>
-             <td width="100%">
+             <td width="100%" align="left">
               <small><small>
                <xsl:value-of select="legal"/>
               </small></small>
@@ -75,14 +75,14 @@
 
   <xsl:template match="news">
    <tr>
-    <td bgcolor="#E0E0E0">
+    <td bgcolor="#E0E0E0" align="left">
      <a href="{link}">
       <strong><xsl:value-of select="title"/></strong>
      </a>
     </td>
    </tr>
    <tr>
-    <td bgcolor="#ffffff">
+    <td bgcolor="#ffffff" align="left">
      <strong><xsl:value-of select="date"/></strong>
      <xsl:text> - </xsl:text>
      <xsl:value-of select="content"/>
@@ -109,7 +109,7 @@
 
   <xsl:template match="project">
    <tr>
-    <td bgcolor="#E0E0E0" colspan="2">
+    <td bgcolor="#E0E0E0" colspan="2" align="left">
      <a href="{link}">
       <b><xsl:value-of select="title"/></b>
      </a>
