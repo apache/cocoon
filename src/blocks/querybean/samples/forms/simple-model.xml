@@ -89,7 +89,7 @@
 			<fd:hint><i18n:text i18n:catalogue="local">criterion.field.hint</i18n:text></fd:hint>
 			<fd:datatype base="string">
 				<fd:validation>
-					<fd:length min="2" max="64"/>
+					<fd:length min="1" max="64"/>
 				</fd:validation>
 			</fd:datatype>
 			<fd:selection-list src="forms/simple-fields.xml"/>
