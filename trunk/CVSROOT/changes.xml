@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.136 2000-10-24 01:51:56 greenrd Exp $ 
+  $Id: changes.xml,v 1.137 2000-10-24 02:20:34 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Paul Lamb" due-to-email="paul@oil-law.com">
+   Fixed XSPProcessor to pick up correct classpath and
+   compile on Tomcat 3.3 and Catalina (Tomcat 4).
+  </action>
   <action dev="RDG" type="add" due-to="Gordon Weakliem"
    due-to-email="Gordon.Weakliem@Den.Galileo.com">
    Added WebSphere installation script to docs.

@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaProcessor.java,v 1.11 2000-08-18 22:43:59 stefano Exp $ --
+/*-- $Id: XSPJavaProcessor.java,v 1.12 2000-10-24 02:20:37 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.11 $ $Date: 2000-08-18 22:43:59 $
+ * @version $Revision: 1.12 $ $Date: 2000-10-24 02:20:37 $
  */
 public class XSPJavaProcessor implements XSPLanguageProcessor, Configurable {
   // Create class loader
@@ -69,6 +69,7 @@ public class XSPJavaProcessor implements XSPLanguageProcessor, Configurable {
   protected String encoding;
   protected XSPClassLoader classLoader;
   protected JavaCompiler javac;
+  protected String classpath;
 
   protected boolean format;
 
@@ -113,6 +114,10 @@ public class XSPJavaProcessor implements XSPLanguageProcessor, Configurable {
     return code;
   }
 
+  public void setClassPath(String classpath) {
+    this.classpath = classpath;
+  }
+
   public void compile(String filename) throws Exception {
     String repositoryName = this.repository.getCanonicalPath();
     String fullFilename = repositoryName + File.separator + filename;
@@ -120,7 +125,7 @@ public class XSPJavaProcessor implements XSPLanguageProcessor, Configurable {
     ByteArrayOutputStream err = new ByteArrayOutputStream(256);
     
     javac.setEncoding(this.encoding);
-    javac.setClasspath(repositoryName + File.pathSeparator + System.getProperty("java.class.path"));
+    javac.setClasspath(repositoryName + File.pathSeparator + classpath);
     javac.setOutputDir(repositoryName);
     javac.setMsgOutput(err);
 

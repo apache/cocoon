@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.38 2000-10-23 20:30:26 greenrd Exp $
+  $Id: todo.xml,v 1.39 2000-10-24 02:20:34 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,9 +16,6 @@
  </devs>
 
  <actions priority="high">
-  <action context="code" assigned-to="RDG">
-   Apply patch to let XSP compile on Tomcat >3.1
-  </action>
   <action context="code">
    Make ESQL default to inner-method=false but make this configurable
    in cocoon.properties.
@@ -45,6 +42,10 @@
  <actions priority="medium">
   <action context="code" assigned-to="RDG">
    Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
+  </action>
+  <action context="code">
+   Integrate and test Jeremy Quinn's multiline get-nested-content template,
+   especially for use with &lt;xsp:expr&gt;.
   </action>
   <action context="docs" assigned-to="RDG">
    Write a full guide to logicsheets, including: (1) What they are and how

@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.25 2000-08-18 22:43:15 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.26 2000-10-24 02:20:48 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.25 $ $Date: 2000-08-18 22:43:15 $
+ * @version $Revision: 1.26 $ $Date: 2000-10-24 02:20:48 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -206,6 +206,19 @@ public class XSPProcessor extends AbstractActor
         + ". Make sure you have writing permissions.");
     }
 
+    // Languages other than Java may also need to use the classpath to link to Java code
+    // Try to get the classpath from catalina or tomcat first; if that fails use the
+    // standard one.
+    String classpath = (String) 
+      this.servletContext.getAttribute("org.apache.catalina.jsp_classpath");
+    if (classpath == null) {
+      classpath = (String)
+        this.servletContext.getAttribute("org.apache.tomcat.jsp_classpath");
+      if (classpath == null) {
+        classpath = System.getProperty("java.class.path");
+      }
+    }
+
     // Set repository for each language processor
     Enumeration enum = this.languages.elements();
     while (enum.hasMoreElements()) {
@@ -215,6 +228,7 @@ public class XSPProcessor extends AbstractActor
       try {
         languageProcessor.setEncoding(this.encoding);
         languageProcessor.setRepository(this.repositoryFile);
+	languageProcessor.setClassPath(classpath);
       } catch (Exception e) {
         throw new RuntimeException(
           "Error setting repository for language processor: " +

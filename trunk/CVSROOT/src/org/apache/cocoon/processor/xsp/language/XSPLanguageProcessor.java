@@ -1,4 +1,4 @@
-/*-- $Id: XSPLanguageProcessor.java,v 1.5 2000-05-07 00:43:57 ricardo Exp $ -- 
+/*-- $Id: XSPLanguageProcessor.java,v 1.6 2000-10-24 02:20:39 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.processor.xsp.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.5 $ $Date: 2000-05-07 00:43:57 $
+ * @version $Revision: 1.6 $ $Date: 2000-10-24 02:20:39 $
  */
 public interface XSPLanguageProcessor {
   public String getSourceExtension();
@@ -70,6 +70,8 @@ public interface XSPLanguageProcessor {
 
   public void setFormatOption(boolean format);
   public String formatCode(String code) throws Exception;
+
+  public void setClassPath(String classpath);
 
   public void compile(String filename) throws Exception;
 
