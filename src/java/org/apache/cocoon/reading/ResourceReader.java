@@ -228,10 +228,10 @@ public class ResourceReader extends AbstractReader
             response.setHeader("Accept-Ranges", "none");
         }
 
-        String ranges = request.getHeader("Ranges");
+        String ranges = request.getHeader("Range");
 
         ByteRange byteRange;
-        if (ranges != null && byteRanges) {
+        if (byteRanges && ranges != null) {
             try {
                 ranges = ranges.substring(ranges.indexOf('=') + 1);
                 byteRange = new ByteRange(ranges);
