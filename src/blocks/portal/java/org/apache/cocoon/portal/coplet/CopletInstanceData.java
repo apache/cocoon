@@ -38,7 +38,9 @@ public final class CopletInstanceData
 
     /** Temporary attributes are not persisted */
     protected Map temporaryAttributes = new HashMap();
-    
+
+    private String title = null;
+
 	/**
 	 * Constructor
 	 */
@@ -92,7 +94,22 @@ public final class CopletInstanceData
     public Map getTemporaryAttributes() {
         return this.temporaryAttributes;
     }
-    
+
+    public String getTitle() {
+        if (this.title != null) {
+            return this.title;
+        }
+        return this.getCopletData().getTitle();
+    }
+
+    public String getInstanceTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#clone()
      */
