@@ -24,7 +24,7 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:47 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 15:32:29 $
  */
 
 public final class XMLByteStreamCompiler
@@ -111,7 +111,7 @@ implements XMLSerializer, Component, Recyclable {
                 out.writeString(atts.getType(i));
                 out.writeString(atts.getValue(i));
              }
-             out.writeString(namespaceURI);
+             out.writeString((namespaceURI == null ? "" : namespaceURI));
              out.writeString(localName);
              out.writeString(qName);
          } catch (Exception e) {
@@ -123,7 +123,7 @@ implements XMLSerializer, Component, Recyclable {
     throws SAXException {
         try {
             out.writeEvent(END_ELEMENT);
-            out.writeString(namespaceURI);
+            out.writeString((namespaceURI == null ? "" : namespaceURI));
             out.writeString(localName);
             out.writeString(qName);
         } catch (Exception e) {
