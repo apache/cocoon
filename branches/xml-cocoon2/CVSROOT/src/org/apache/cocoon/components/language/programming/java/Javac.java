@@ -18,7 +18,7 @@ import org.apache.log.LogKit;
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.11 $ $Date: 2001-01-31 15:48:36 $
+ * @version $Revision: 1.1.2.12 $ $Date: 2001-02-08 21:37:45 $
  * @since 2.0
  */
 
@@ -36,7 +36,7 @@ public class Javac extends AbstractJavaCompiler {
         ClassUtils.loadClass(MODERN_CLASS);
         modern = true;
     } catch (ClassNotFoundException e) {
-        LogKit.getLoggerFor("cocoon").warn("Javac connector could not find modern compiler -- falling back to classic.");
+        LogKit.getLoggerFor("cocoon").debug("Javac connector could not find modern compiler -- falling back to classic.");
         try {
             ClassUtils.loadClass(CLASSIC_CLASS);
             modern = false;
