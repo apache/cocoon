@@ -22,11 +22,11 @@ import org.apache.cocoon.kernel.configuration.Parameters;
  * <p>An abstract implementation of the {@link Composer} interface.</p> 
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public abstract class AbstractComposer implements Composer {
 
-     /** <p>The {@link Wirings} instance contextualized in this instance.</p> */
+    /** <p>The {@link Wirings} instance contextualized in this instance.</p> */
     protected Wirings wirings = null;
 
     /** <p>The {@link Parameters} instance configured in this instance.</p> */
