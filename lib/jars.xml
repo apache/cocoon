@@ -696,7 +696,7 @@
     <title>Eclipse Java Development Tools Core</title>
     <description>Eclipse Java Compiler</description>
     <used-by>XSP</used-by>
-    <lib>optional/jdtcore-3.0.0.jar</lib>
+    <lib>optional/jdtcore-3.0.1.jar</lib>
     <homepage>http://www.eclipse.org/jdt</homepage>
   </file>
 
