@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<!-- <!DOCTYPE todo SYSTEM "./dtd/todo-v10.dtd"> -->
+<!DOCTYPE todo SYSTEM "./dtd/todo-v10.dtd">
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.4 1999-12-03 23:46:16 stefano Exp $
+  $Id: todo.xml,v 1.5 1999-12-08 12:29:05 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -17,10 +17,6 @@
  
  <action priority="showstopper" assigned-to="SM" context="docs">
   Finish XML-ize the docs (install, DCP, SQL).
- </action>
-
- <action priority="showstopper" assigned-to="SM" context="docs">
-  Write the HTML/FO stylesheets.
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="admin">
