@@ -5,8 +5,49 @@
 <faqs title="Frequently Asked Questions">
 
 <faq>
- <question></question>
- <answer></answer>
+ <question>
+   Cocoon won't start and I get a &quot;java.lang.NoSuchMethodError: org.apache.log.LogKit: method
+   createLogger(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/apache/log/Logger;
+   not found&quot; in my Servlet Container's log.
+ </question>
+ <answer>
+   <p>
+     You have an old set of libraries installed.  Copy the correct libraries from the
+     distribution.
+   </p>
+   <p>
+     Even better, if you build Cocoon with "build -Dinclude.webapp.libs webapp" then
+     Cocoon will create a complete WAR file for you with all necessary libraries.
+   </p>
+ </answer>
+</faq>
+<faq>
+ <question>
+   Cocoon still won't start, this time I get 
+javax.xml.transform.TransformerConfigurationException: Namespace not supported by SAXParser
+   in the Cocoon log file.
+ </question>
+ <answer>
+   <p>
+     This is a classloader issue with Tomcat and some other Servlet Engines.  Basically
+     it means that the Xerces library included with Cocoon is not being found.  The solution
+     is to place the Xerces library first in the classpath.
+   </p>
+ </answer>
+</faq>
+<faq>
+ <question>
+   I have a J2EE server and I want to use the J2eeDataSource that the docs said was available.
+   When I try to use it, I get a ClassNotFoundException.
+ </question>
+ <answer>
+   <p>
+     When you build Cocoon, you need the package that has JNDI and the JDBC Extensions in
+     the classpath.  The build script automatically determines if they exist.  You can place
+     a copy directly in the &quot;lib&quot; directory and rebuild Cocoon.  The missing class
+     should now be there.
+   </p>
+ </answer>
 </faq>
 
 </faqs>
