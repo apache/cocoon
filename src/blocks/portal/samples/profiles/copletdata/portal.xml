@@ -236,14 +236,15 @@
    </coplet-data>
 
    <!--
-     +  The basket coplet
+     +  The basket coplets
+     +  The uri's for these coplets have to be absolut, so you have to use cocoon://!
      -->
    <coplet-data id="BasketContent" name="standard">
       <title>Basket Item</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/content</value>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/content</value>
       </attribute>
    </coplet-data>
    <coplet-data id="BasketAdmin" name="standard">
@@ -251,7 +252,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/basket-admin</value>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/basket-admin</value>
       </attribute>
    </coplet-data>
    <coplet-data id="Basket" name="standard">
@@ -259,7 +260,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/basket</value>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/basket</value>
       </attribute>
    </coplet-data>
    <coplet-data id="Basket.admin" name="standard">
@@ -267,31 +268,139 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/basket.admin</value>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/basket.admin</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="BasketSample" name="standard">
-      <title>Basket Sample</title>
+   <coplet-data id="BasketSampleStaticCoplet" name="standard">
+      <title>Static Coplet</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
-         <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/sample</value>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">document</value>
       </attribute>
       <attribute>
-         <name>basket-link</name>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/staticcoplet.add.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithAttribute" name="standard">
+      <title>Coplet with Attribute</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">document</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletwithattr.add.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithInlineProcess" name="standard">
+      <title>Coplet with Inline Process</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">document</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletwithinline.add.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithInputProcess" name="standard">
+      <title>Coplet with Input Processing</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">notepad</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
          <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
       </attribute>
       <attribute>
-         <name>basket-content</name>
+         <name>handleParameters</name>
          <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
       </attribute>
-   </coplet-data>
-   <coplet-data id="BasketUploadSample" name="standard">
-      <title>Basket Upload</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/basket/upload-sample</value>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletwithinput.add.flow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithInputProcessShow" name="standard">
+      <title>Show Input</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">notepad</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletwithinputshow.changeTitle.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithApp" name="standard">
+      <title>Coplet with Application</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">request</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletwithapp.add.flow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletList" name="standard">
+      <title>Coplet List</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">request</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletlist</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithUpload" name="standard">
+      <title>Coplet with Input Process</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">folder</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/basket/copletwithupload.add.preflow</value>
       </attribute>
    </coplet-data>
 

@@ -90,23 +90,84 @@
       <coplet-data>Portlet2</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="Basket" name="standard">
+   <!-- This is the basket sample
+   -->
+   <coplet-instance-data id="basket" name="standard">
       <coplet-data>Basket</coplet-data>
+      <attribute>  <!-- which kinds are enabled for this user: briefcase, basker, folder? -->
+         <name>basket:enabled-storages</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">briefcase,basket,folder</value>
+      </attribute>
    </coplet-instance-data>
+
+   <coplet-instance-data id="basket-document" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">document</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-request" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">request</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-result" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">result</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-notepad" name="standard">
+      <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">notepad</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-folder" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">folder</value>
+      </attribute>       
+   </coplet-instance-data>
+
    <coplet-instance-data id="Basket.admin" name="standard">
       <coplet-data>Basket.admin</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="BasketContent" name="standard">
+   <coplet-instance-data id="basket-content" name="standard">
       <coplet-data>BasketContent</coplet-data>
    </coplet-instance-data>
    <coplet-instance-data id="BasketAdmin" name="standard">
       <coplet-data>BasketAdmin</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="BasketSample" name="standard">
-      <coplet-data>BasketSample</coplet-data>
+   <coplet-instance-data id="basket-sample-1" name="standard">
+      <coplet-data>BasketSampleStaticCoplet</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="BasketUploadSample" name="standard">
-      <coplet-data>BasketUploadSample</coplet-data>
+   <coplet-instance-data id="basket-sample-2" name="standard">
+      <coplet-data>BasketSampleCopletWithAttribute</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-3" name="standard">
+      <coplet-data>BasketSampleCopletWithInlineProcess</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-4" name="standard">
+      <coplet-data>BasketSampleCopletWithInputProcess</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-5" name="standard">
+      <coplet-data>BasketSampleCopletWithApp</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-6" name="standard">
+      <coplet-data>BasketSampleCopletWithUpload</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-7" name="standard">
+      <coplet-data>BasketSampleCopletWithInputProcessShow</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-8" name="standard">
+      <coplet-data>BasketSampleCopletList</coplet-data>
    </coplet-instance-data>
 
    <coplet-instance-data id="TestPortlet-1" name="standard">

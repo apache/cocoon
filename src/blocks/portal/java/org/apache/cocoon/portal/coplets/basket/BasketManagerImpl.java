@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
@@ -44,11 +47,23 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.cron.CronJob;
+import org.apache.cocoon.components.cron.JobScheduler;
+import org.apache.cocoon.components.cron.ServiceableCronJob;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
+import org.apache.cocoon.portal.coplets.basket.events.ContentStoreEvent;
+import org.apache.cocoon.portal.coplets.basket.events.CleanBriefcaseEvent;
+import org.apache.cocoon.portal.coplets.basket.events.MoveItemEvent;
+import org.apache.cocoon.portal.coplets.basket.events.RefreshBasketEvent;
+import org.apache.cocoon.portal.coplets.basket.events.RemoveItemEvent;
+import org.apache.cocoon.portal.coplets.basket.events.ShowBasketEvent;
+import org.apache.cocoon.portal.coplets.basket.events.ShowItemEvent;
+import org.apache.cocoon.portal.coplets.basket.events.UploadItemEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
@@ -65,13 +80,11 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  * This is the implementation of the basket manager
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
  * @version CVS $Id$
  */
 public class BasketManagerImpl
 extends AbstractLogEnabled
-implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializable, Parameterizable, ThreadSafe, Component  {
+implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializable, Disposable, Parameterizable, ThreadSafe, Component  {
     
     /** The service manager */
     protected ServiceManager manager;
@@ -85,12 +98,47 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
     /** The class name of the basket */
     protected String basketClassName = Basket.class.getName();
     
+    /** The class name of the briefcase */
+    protected String briefcaseClassName = Briefcase.class.getName();
+
+    /** The class name of the folder */
+    protected String folderClassName = Folder.class.getName();
+
+    /** All actions for a basket */
+    protected List basketActions = new ArrayList();
+    
+    /** All actions for a briefcase */
+    protected List briefcaseActions = new ArrayList();
+    
+    /** All batches */
+    protected List batches = new ArrayList();
+    
+    /** Scheduler */
+    protected JobScheduler scheduler;
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
         this.directory = parameters.getParameter("directory", this.directory);
         this.basketClassName = parameters.getParameter("basket-class", this.basketClassName);
+        this.briefcaseClassName = parameters.getParameter("briefcase-class", this.briefcaseClassName);
+        this.folderClassName = parameters.getParameter("folder-class", this.folderClassName);
+        String[] names = parameters.getNames();
+        if ( names != null ) {
+            for(int i=0; i<names.length; i++) {
+                final String current = names[i];
+                if ( current.startsWith("basket:action:") ) {
+                    final String value = parameters.getParameter(current);
+                    final String key = current.substring(14);
+                    this.basketActions.add(new ActionInfo(key, value));
+                } else if ( current.startsWith("briefcase:action:") ) {
+                    final String value = parameters.getParameter(current);
+                    final String key = current.substring(17);
+                    this.briefcaseActions.add(new ActionInfo(key, value));
+                }
+            }
+        }
     }
 
     /* (non-Javadoc)
@@ -106,8 +154,20 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.scheduler = (JobScheduler)this.manager.lookup(JobScheduler.ROLE);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.scheduler);
+            this.scheduler = null;
+            this.manager = null;
+        }
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
@@ -125,7 +185,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
      */
     public Class getEventType() {
-        return BasketEvent.class;
+        return ContentStoreEvent.class;
     }
 
     /* (non-Javadoc)
@@ -140,61 +200,64 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      */
     public void inform(Event event) {
         // dispatch
-        Session session = ContextHelper.getRequest(this.context).getSession();
-        Basket basket = this.getBasket();
+        final Session session = ContextHelper.getRequest(this.context).getSession();
         if ( event instanceof AddItemEvent ) {
             
-            this.processAddItemEvent((AddItemEvent)event, basket);
+            this.processAddItemEvent((AddItemEvent)event);
             
         } else if (event instanceof RemoveItemEvent ){
             
-            this.processRemoveItemEvent((RemoveItemEvent)event, basket);
-            
-        } else if (event instanceof SaveBasketEvent) {
-            
-            this.saveBasket(basket);
+            this.processRemoveItemEvent((RemoveItemEvent)event);
             
         } else if (event instanceof RefreshBasketEvent) {
             
-            session.removeAttribute(ALL_BASKETS_KEY);          
+            session.removeAttribute(ALL_BRIEFCASES_KEY);          
             
-        } else if (event instanceof CleanBasketEvent) {
+        } else if (event instanceof CleanBriefcaseEvent) {
             
-            this.processCleanBasketEvent((CleanBasketEvent)event, session);
+            this.processCleanBriefcaseEvent((CleanBriefcaseEvent)event, session);
             
         } else if ( event instanceof UploadItemEvent ) {
             
-            this.processUploadItemEvent((UploadItemEvent)event, basket);
+            this.processUploadItemEvent((UploadItemEvent)event);
         } else if ( event instanceof ShowItemEvent ) {
             
-            this.processShowItemEvent((ShowItemEvent)event, basket);
+            this.processShowItemEvent((ShowItemEvent)event);
         } else if ( event instanceof ShowBasketEvent ) {
             
             this.processShowBasketEvent((ShowBasketEvent)event, session);
+        } else if ( event instanceof MoveItemEvent ) {
+            ContentStore source = ((MoveItemEvent)event).getContentStore();
+            ContentStore target = ((MoveItemEvent)event).getTarget();
+            Object item = ((MoveItemEvent)event).getItem();
+            source.removeItem(item);
+            target.addItem(item);
+            this.saveContentStore(source);
+            this.saveContentStore(target);
         }
     }
 
     /**
-     * Process an upload and add the item to the basket
+     * Process an upload and add the item to the content store
      * @param event The event triggering the action
-     * @param basket The basket
      */
-    protected void processUploadItemEvent(UploadItemEvent event, Basket basket) {
-        Request req = ContextHelper.getRequest(this.context);
-        List paramNames = event.getItemNames();
-        Iterator i = paramNames.iterator();
+    protected void processUploadItemEvent(UploadItemEvent event) {
+        final ContentStore store = event.getContentStore();
+        final Request req = ContextHelper.getRequest(this.context);
+        final List paramNames = event.getItemNames();
+        final Iterator i = paramNames.iterator();
         while ( i.hasNext() ) {
-            String name = (String)i.next();
-            Object o = req.get(name);
+            final String name = (String)i.next();
+            final Object o = req.get(name);
             if ( o != null && o instanceof Part) {
-                Part file = (Part)o;
+                final Part file = (Part)o;
                 try {
                     byte[] c = IOUtil.toByteArray(file.getInputStream());
                     ContentItem ci = new ContentItem(file.getFileName(), true);
                     ci.setContent(c);
-                    basket.addItem(ci);
+                    store.addItem(ci);
                 } catch (Exception ignore) {
-                    // ignore it
+                    // ignore the exception
                 }
                 if ( file instanceof PartOnDisk) {
                     ((PartOnDisk)file).getFile().delete();
@@ -208,7 +271,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      * @param event  The event triggering the action
      * @param basket The basket
      */
-    protected void processShowItemEvent(ShowItemEvent event, Basket basket) {
+    protected void processShowItemEvent(ShowItemEvent event) {
         if ( event.getItem() instanceof ContentItem ) {
             PortalService service = null;
             try {
@@ -245,10 +308,18 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                         }
                         
                     } else {
-                        CopletData copletData = service.getComponentManager().getProfileManager().getCopletInstanceData(ci.getCopletId()).getCopletData();
+                        final CopletInstanceData original = service.getComponentManager().getProfileManager().getCopletInstanceData(ci.getCopletId());
+                        final CopletData copletData = original.getCopletData();
                         cid = service.getComponentManager().getCopletFactory().newInstance(copletData);
                         Map attributes = (Map) ci.getAttribute("coplet-attributes");
                         Iterator i = attributes.entrySet().iterator();
+                        while ( i.hasNext() ) {
+                            Map.Entry entry = (Map.Entry)i.next();
+                            cid.setAttribute(entry.getKey().toString(), entry.getValue());
+                        }
+                        // now copy the original attributes
+                        attributes = original.getAttributes();
+                        i = attributes.entrySet().iterator();
                         while ( i.hasNext() ) {
                             Map.Entry entry = (Map.Entry)i.next();
                             cid.setAttribute(entry.getKey().toString(), entry.getValue());
@@ -270,36 +341,37 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
      * Show the selected basket
      */
     protected void processShowBasketEvent(ShowBasketEvent event, Session session) {
-        Basket basket = this.loadBasket( event.getBasketId() );
-        session.setAttribute(BASKET_KEY, basket);
+        Briefcase briefcase = (Briefcase)this.loadContentStore( BRIEFCASE_KEY, event.getBasketId() );
+        session.setAttribute(BRIEFCASE_KEY, briefcase);
     }
+    
     /**
-     * Cleaning a basket or all
+     * Cleaning a briefcase or all
      * @param event   The triggering event
      * @param session The session
      */
-    protected void processCleanBasketEvent(CleanBasketEvent event, Session session) {
-        String basketId = event.getBasketId();
-        List baskets = (List)session.getAttribute(ALL_BASKETS_KEY);
-        if ( basketId == null) {
-            // remove all baskets
+    protected void processCleanBriefcaseEvent(CleanBriefcaseEvent event, Session session) {
+        final Briefcase briefcase = (Briefcase)event.getContentStore();
+        final List baskets = (List)session.getAttribute(ALL_BRIEFCASES_KEY);
+        if ( briefcase == null) {
+            // remove all briefcases
             if ( baskets != null ) {
                 Iterator i = baskets.iterator();
                 while (i.hasNext()) {
-                    BasketDescription entry = (BasketDescription)i.next();
-                    this.deleteBasket(entry.id);
+                    ContentStoreDescription entry = (ContentStoreDescription)i.next();
+                    this.deleteContentStore(BRIEFCASE_KEY, entry.id);
                 }
-                session.removeAttribute(ALL_BASKETS_KEY);
+                session.removeAttribute(ALL_BRIEFCASES_KEY);
             }
         } else {
-            // remove one basket
-            this.deleteBasket(basketId);
+            // remove one briefcase
+            this.deleteContentStore(BRIEFCASE_KEY, briefcase.getId());
             if ( baskets != null ) {
                 Iterator i = baskets.iterator();
                 boolean found = false;
                 while (i.hasNext() && !found) {
-                    BasketDescription entry = (BasketDescription)i.next();
-                    if ( entry.id.equals(basketId)) {
+                    ContentStoreDescription entry = (ContentStoreDescription)i.next();
+                    if ( entry.id.equals(briefcase.getId())) {
                         found = true;
                         i.remove();
                     }
@@ -309,34 +381,28 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
     }
 
     /**
-     * This method processes removing one item from the basket
+     * This method processes removing one item from a content store
      * @param event The event triggering the action
-     * @param basket The basket
      */
-    protected void processRemoveItemEvent(RemoveItemEvent event, Basket basket) {
-        Object item = event.getItem();
-        basket.removeItem(item);
+    protected void processRemoveItemEvent(RemoveItemEvent event) {
+        final Object item = event.getItem();
+        final ContentStore store = event.getContentStore();
+        
+        store.removeItem(item);
+        
+        this.saveContentStore(store);
     }
 
     /**
-     * This method processes adding one item to the basket
+     * This method processes adding one item to a content store
      * @param event The event triggering the action
-     * @param basket The basket
      */
-    protected void processAddItemEvent(AddItemEvent event, Basket basket) {
-        Object item = event.getItem();
+    protected void processAddItemEvent(AddItemEvent event) {
+        final ContentStore store = event.getContentStore();
+        final Object item = event.getItem();
         if ( item instanceof ContentItem ) {
             ContentItem ci = (ContentItem)item;
-            boolean found = false;
-            //Iterator i = basket.getIterator();
-            // while ( i.hasNext() && ! found ) {
-            //    Object next = i.next();
-            //    if ( next instanceof ContentItem ) {
-            //        found = ((ContentItem)next).equalsItem(ci);
-            //    }
-            //}
-            if (!found) {
-                basket.addItem(ci);
+
                 if ( ci.isContent() ) {
                     SourceResolver resolver = null;
                     Source source = null;
@@ -345,7 +411,29 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                         resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
                         url = ci.getURL();
                         if ( url == null ) {
+                        // copy coplet attributes
+                        PortalService service = null;
+                        try {
+                            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+                            CopletInstanceData cid = service.getComponentManager().getProfileManager().getCopletInstanceData(ci.getCopletId());
                             url = "coplet://" + ci.getCopletId();
+                            Map attributes = new HashMap();
+                            Iterator i = cid.getAttributes().entrySet().iterator();
+                            while ( i.hasNext() ) {
+                                Map.Entry entry = (Map.Entry)i.next();
+                                attributes.put(entry.getKey(), entry.getValue());
+                        }
+                            i = cid.getCopletData().getAttributes().entrySet().iterator();
+                            while ( i.hasNext() ) {
+                                Map.Entry entry = (Map.Entry)i.next();
+                                attributes.put(entry.getKey(), entry.getValue());
+                            }
+                            ci.setAttribute("coplet-attributes", attributes);
+                        } catch (ServiceException se) {
+                            this.getLogger().warn("Unable to lookup portal service.", se);
+                        } finally {
+                            this.manager.release(service);
+                        }
                         }
                         source = resolver.resolveURI(url);
                         ci.setContent(IOUtil.toByteArray(source.getInputStream()));
@@ -371,6 +459,11 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                             Map.Entry entry = (Map.Entry)i.next();
                             attributes.put(entry.getKey(), entry.getValue());
                         }
+                        i = cid.getCopletData().getAttributes().entrySet().iterator();
+                        while ( i.hasNext() ) {
+                            Map.Entry entry = (Map.Entry)i.next();
+                            attributes.put(entry.getKey(), entry.getValue());
+                        }
                         ci.setAttribute("coplet-attributes", attributes);
                     } catch (ServiceException se) {
                         this.getLogger().warn("Unable to lookup portal service.", se);
@@ -378,25 +471,44 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                         this.manager.release(service);
                     }
                 }
-            }
+            store.addItem(ci);
         } else { 
-            basket.addItem(item);
+            store.addItem(item);
+            }
+        this.saveContentStore(store);
+    }
+
+    /**
+     * Save the content store if it is a briefcase or a folder
+     */
+    protected void saveContentStore(ContentStore store) {
+        if ( store instanceof Briefcase ) {
+            this.saveContentStore(BRIEFCASE_KEY, store);
+        } else if ( store instanceof Folder ) {
+            this.saveContentStore(FOLDER_KEY, store);
         }
     }
 
     /** 
-     * Load the basket for a single user
-     * @return The basket or null
+     * Load the content store for a single user
+     * @param type The type of the content store (briefcase or folder)
+     * @return The content store or null
      */
-    protected Basket loadBasket(String userId) {
+    protected ContentStore loadContentStore(String type, String userId) {
         if ( this.directory != null ) {
-            File file = new File(this.directory, userId+".basket");
+            final String suffix;
+            if ( FOLDER_KEY.equals(type) ) {
+                suffix = ".folder";
+            } else {
+                suffix = ".briefcase";
+            }
+            File file = new File(this.directory, userId + suffix);
             if ( file.exists() ) {
                 try {
                     ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                    Basket basket = (Basket)ois.readObject();
+                    ContentStore store = (ContentStore)ois.readObject();
                     ois.close();
-                    return basket;
+                    return store;
                 } catch (Exception ignore) {
                     // ignore this
                 }
@@ -406,37 +518,51 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
     }
     
     /** 
-     * Load the basket 
+     * Load a content store
+     * @param type The type of the content store (briefcase or folder)
      */
-    protected Basket loadBasket() {
-        Basket basket = null;
-        AuthenticationManager authManager = null;
-        try {
-            authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            RequestState rs = authManager.getState();
-            final String user = (String)rs.getHandler().getContext().getContextInfo().get("ID");
-            basket = this.loadBasket(user);
-        } catch (ProcessingException ignore) {
-            // ignore this
-        } catch (ServiceException ignore) {
-            // ignore this
+    protected ContentStore loadContentStore(String type) {
+        ContentStore store = null;
+        String user = this.getUser();
+        if ( user != null ) {
+            store = this.loadContentStore(type, user);
         }
-        if ( basket == null ) {
-            try {
-                basket = (Basket)ClassUtils.newInstance(this.basketClassName);
+        if ( store == null && user != null ) {
+        try {
+                final String clazzName;
+                if ( BRIEFCASE_KEY.equals(type) ) {
+                    clazzName = this.briefcaseClassName;
+                } else {
+                    clazzName = this.folderClassName;
+        }
+                
+                final Class clazz = ClassUtils.loadClass(clazzName);
+                final Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                
+                store = (ContentStore)constructor.newInstance(new Object[] {user});
             } catch (Exception ignore) {
-                basket = new Basket();
+                if ( BRIEFCASE_KEY.equals(type) ) {
+                    store = new Briefcase(user);
+                } else {
+                    store = new Folder(user);
+            }
             }
         }
-        return basket;
+        return store;
     }
     
     /** 
-     * Delete the basket for a u ser
+     * Delete the content store for a user
      */
-    protected void deleteBasket(String userId) {
+    protected void deleteContentStore(String type, String userId) {
+        final String suffix;
+        if ( FOLDER_KEY.equals(type) ) {
+            suffix = ".folder";
+        } else {
+            suffix = ".briefcase";
+        }
         if ( this.directory != null ) {
-            File file = new File(this.directory, userId+".basket");
+            File file = new File(this.directory, userId+suffix);
             if ( file.exists() ) {
                 file.delete();
             }
@@ -444,18 +570,26 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
     }
 
     /** 
-     * Save the basket for a single user
+     * Save the content store for a single user
      */
-    protected void saveBasket(Basket basket, String userId) {
+    protected void saveContentStore(String type, ContentStore store) {
+        final String userId = store.getId();
+        final String suffix;
+        if ( FOLDER_KEY.equals(type) ) {
+            suffix = ".folder";
+        } else {
+            suffix = ".briefcase";
+        }
+        
         if ( this.directory != null ) {
-            File file = new File(this.directory, userId+".basket");
+            File file = new File(this.directory, userId+suffix);
             try {
                 if ( !file.exists() ) {
                     file.createNewFile();
-                    file = new File(this.directory, userId+".basket");
+                    file = new File(this.directory, userId+suffix);
                 }
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-                oos.writeObject(basket);
+                oos.writeObject(store);
                 oos.close();
             } catch (Exception ignore) {
                 // ignore this
@@ -464,51 +598,32 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
     }
     
     /**
-     * Get baskets of all users
+     * Get briefcases of all users
      */
-    protected List loadBaskets() {
+    protected List loadBriefcases() {
         if ( this.directory != null ) {
             File directory = new File(this.directory);
             if ( directory.exists()) {
-                List baskets = new ArrayList();
+                List briefcases = new ArrayList();
                 File[] files = directory.listFiles();
                 for(int i=0; i<files.length;i++) {
                     String user = files[i].getName();
-                    int pos = user.indexOf(".basket");
+                    int pos = user.indexOf(".briefcase");
                     if ( pos != -1 ) {
                         user = user.substring(0, pos);
-                        Basket basket = this.loadBasket(user);
-                        if ( basket != null ) {
-                            BasketDescription bd = new BasketDescription();
+                        ContentStore store = this.loadContentStore(BRIEFCASE_KEY, user);
+                        if ( store != null ) {
+                            ContentStoreDescription bd = new ContentStoreDescription();
                             bd.id = user;
-                            bd.size = basket.contentSize();
-                            baskets.add(bd);
+                            bd.size = store.contentSize();
+                            briefcases.add(bd);
                         }
                     }
                 }
-                return baskets;
+                return briefcases;
             }
         }
         return null;
-    }
-    
-    /** 
-     * Save the basket 
-     */
-    protected void saveBasket(Basket basket) {
-        if ( basket != null ) {
-            AuthenticationManager authManager = null;
-            try {
-                authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-                RequestState rs = authManager.getState();
-                final String user = (String)rs.getHandler().getContext().getContextInfo().get("ID");
-                this.saveBasket(basket, user);
-            } catch (ProcessingException ignore) {
-                // ignore this
-            } catch (ServiceException ignore) {
-                // ignore this
-            }
-        }
     }
     
     /* (non-Javadoc)
@@ -518,26 +633,256 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
         Session session = ContextHelper.getRequest(this.context).getSession();
         Basket basket = (Basket) session.getAttribute(BASKET_KEY);
         if ( basket == null ) {
-            basket = this.loadBasket();
+            final String user = this.getUser();
+            try {
+                final Class clazz = ClassUtils.loadClass(this.basketClassName);
+                final Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                
+                basket = (Basket)constructor.newInstance(new Object[] {user});
+            } catch (Exception ignore) {
+                basket = new Basket(user);
+            }
             session.setAttribute(BASKET_KEY, basket);
         }
         return basket;
     }
    
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBaskets()
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBriefcase()
      */
-    public List getBaskets() {
+    public Briefcase getBriefcase() {
         Session session = ContextHelper.getRequest(this.context).getSession();
-        List baskets = (List)session.getAttribute(ALL_BASKETS_KEY);
-        if ( baskets == null ) {
-            baskets = this.loadBaskets();
-            if (baskets == null) {
-                baskets = new ArrayList();
-            }
-            session.setAttribute(ALL_BASKETS_KEY, baskets);
+        Briefcase briefcase = (Briefcase) session.getAttribute(BRIEFCASE_KEY);
+        if ( briefcase == null ) {
+            briefcase = (Briefcase)this.loadContentStore(BRIEFCASE_KEY);
+            session.setAttribute(BRIEFCASE_KEY, briefcase);
         }
-        return baskets;
+        return briefcase;
+    }
+    
+    public Folder getFolder() {
+        Session session = ContextHelper.getRequest(this.context).getSession();
+        Folder folder = (Folder) session.getAttribute(FOLDER_KEY);
+        if ( folder == null ) {
+            folder = (Folder)this.loadContentStore(FOLDER_KEY);
+            session.setAttribute(FOLDER_KEY, folder);
+        }
+        return folder;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBriefcaseDescriptions()
+     */
+    public List getBriefcaseDescriptions() {
+        Session session = ContextHelper.getRequest(this.context).getSession();
+        List briefcases = (List)session.getAttribute(ALL_BRIEFCASES_KEY);
+        if ( briefcases == null ) {
+            briefcases = this.loadBriefcases();
+            if (briefcases == null) {
+                briefcases = new ArrayList();
+            }
+            session.setAttribute(ALL_BRIEFCASES_KEY, briefcases);
+        }
+        return briefcases;
     }    
     
+    /** 
+     * Get the current user
+     */
+    protected String getUser() {
+            AuthenticationManager authManager = null;
+            try {
+                authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
+                RequestState rs = authManager.getState();
+            return rs.getHandler().getUserId();
+            } catch (ServiceException ignore) {
+                // ignore this
+        } finally {
+            this.manager.release(authManager);
+            }
+        return null;
+        
+        }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBasketActions()
+     */
+    public List getBasketActions() {
+        return this.basketActions;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBriefcaseActions()
+     */
+    public List getBriefcaseActions() {
+        return this.briefcaseActions;
+        }
+        
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#addBatch(org.apache.cocoon.portal.coplets.basket.ContentItem, int, org.apache.cocoon.portal.coplets.basket.BasketManager.ActionInfo)
+     */
+    public void addBatch(ContentItem item, 
+                         int frequencyInDays,
+                         ActionInfo action) {
+        final String name = action.name + "_" + item;
+        
+        final BatchInfo info = new BatchInfo();
+        info.item = item;
+        info.frequencyInSeconds = frequencyInDays * 60 * 60 * 24;
+        info.action = action;
+        if ( frequencyInDays > 0 ) {
+            synchronized (this.batches) {
+                BatchInfo old = this.searchBatchInfo(item, action);
+                if ( old != null ) {
+                    this.batches.remove(old);
+                    this.scheduler.removeJob(name);
+                }
+                this.batches.add(info);
+            }
+        }
+        final Job job = new Job(action.url, item);
+        
+        try {
+            if ( frequencyInDays > 0) {
+                this.scheduler.addPeriodicJob(name, job, info.frequencyInSeconds, false, null, null);
+            } else {
+                this.scheduler.fireJob(job);
+            }
+                
+        } catch (Exception ignore) {
+            this.getLogger().warn("Exception during adding of new batch.", ignore);
+        }
+    }
+   
+    protected BatchInfo searchBatchInfo(ContentItem item, ActionInfo info) {
+        final Iterator i = this.batches.iterator();
+        while (i.hasNext()) {
+            final BatchInfo current = (BatchInfo)i.next();
+            if ( current.item.equals(item) ) {
+                if ( current.action.name.equals(info.name) ) {
+                    return current;
+                }
+            }
+        }
+        return null;
+            }
+    
+    protected static final class BatchInfo {
+        public ContentItem item;
+        public int frequencyInSeconds;
+        public ActionInfo action;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBasketAction(java.lang.String)
+     */
+    public ActionInfo getBasketAction(String name) {
+        final Iterator i = this.basketActions.iterator();
+        while ( i.hasNext() ) {
+            final ActionInfo current = (ActionInfo)i.next();
+            if ( current.name.equals(name) ) {
+                return current;
+        }
+    }
+        return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#getBriefcaseAction(java.lang.String)
+     */
+    public ActionInfo getBriefcaseAction(String name) {
+        final Iterator i = this.briefcaseActions.iterator();
+        while ( i.hasNext() ) {
+            final ActionInfo current = (ActionInfo)i.next();
+            if ( current.name.equals(name) ) {
+                return current;
+            }
+        }
+        return null;
+    }
+    
+    public static final class Job extends ServiceableCronJob implements CronJob {
+        
+        protected final String url;
+        
+        public Job(String url, ContentItem item) {
+            final StringBuffer buffer = new StringBuffer(url);
+            boolean hasParams = url.indexOf('?') != -1;
+            Iterator i = item.attributes.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
+                final String key = current.getKey().toString();
+                if ( !"coplet-attributes".equals(key) ) {
+                    if ( hasParams ) {
+                        buffer.append('&');
+                    } else {
+                        buffer.append('?');
+                        hasParams = true;
+                    }
+                    buffer.append(key);
+                    buffer.append('=');
+                    buffer.append(current.getValue().toString());
+                }
+            }
+            // now add coplet attributes
+            Map copletAttributes = (Map)item.attributes.get("coplet-attributes");
+            if ( copletAttributes != null ) {
+                i = copletAttributes.entrySet().iterator();
+                while ( i.hasNext() ) {
+                    final Map.Entry current = (Map.Entry)i.next();
+                    final String key = current.getKey().toString();
+                    if ( hasParams ) {
+                        buffer.append('&');
+                    } else {
+                        buffer.append('?');
+                        hasParams = true;
+                    }
+                    buffer.append(key);
+                    buffer.append('=');
+                    buffer.append(current.getValue().toString());
+                }
+        }
+            this.url = buffer.toString();
+    }
+   
+    /* (non-Javadoc)
+         * @see org.apache.cocoon.components.cron.CronJob#execute(java.lang.String)
+     */
+        public void execute(String jobname) {
+            SourceResolver resolver = null;
+            Source source = null;
+            try {
+                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                source = resolver.resolveURI(this.url);
+
+                InputStreamReader r = new InputStreamReader(source.getInputStream());
+                try {
+                    char[] b = new char[8192];
+
+                    while( r.read(b) > 0) {
+                        // nothing to do
+                    }
+
+                } finally {
+                    r.close();
+                }
+            } catch (Exception ignore) {
+                // we ignore all
+                this.getLogger().warn("Exception during execution of job " + jobname, ignore);
+            } finally {
+                if ( resolver != null ) {
+                    resolver.release(source);
+                    this.manager.release(resolver);
+                }
+            }
+        }
+    }    
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplets.basket.BasketManager#update(org.apache.cocoon.portal.coplets.basket.ContentStore)
+     */
+    public void update(ContentStore store) {
+        this.saveContentStore(store);
+    }
 }

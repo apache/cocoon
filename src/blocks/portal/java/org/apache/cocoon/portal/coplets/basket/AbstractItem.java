@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,27 +26,51 @@ import java.util.Map;
  * 
  * It just adds attributes (or meta-data) functionality
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: AbstractItem.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AbstractItem implements Serializable {
+    
+    protected static long currentId = System.currentTimeMillis();
     
     /** The attributes */
     protected Map attributes = new HashMap();
     
+    /** Unique id */
+    protected long id;
+    
+    public AbstractItem() {
+        synchronized ( this.getClass() ) {
+            currentId++;
+            this.id = currentId;
+        }
+    }
+
     /** Return an attribute or null */
-    public Object getAttribute(String name) { return this.attributes.get(name); }
+    public Object getAttribute(String name) { 
+        return this.attributes.get(name); 
+    }
     
     /** Set an attribute */
-    public void setAttribute(String name, Object value) { this.attributes.put(name, value); }
+    public void setAttribute(String name, Object value) { 
+        this.attributes.put(name, value); 
+    }
     
     /** Get all attribute names */
-    public Iterator getAttributeNames() { return this.attributes.keySet().iterator(); }
+    public Iterator getAttributeNames() { 
+        return this.attributes.keySet().iterator(); 
+    }
     
     /** Remove one attribute */
-    public void removeAttribute(String name) { this.attributes.remove(name); }
+    public void removeAttribute(String name) { 
+        this.attributes.remove(name);
+    }
     
     /** Check if an attribute is available */
-    public boolean hasAttribute(String name) { return this.attributes.containsKey(name); }
+    public boolean hasAttribute(String name) { 
+        return this.attributes.containsKey(name); 
+    }
+    
+    public long getId() {
+        return this.id;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplets.basket;
+package org.apache.cocoon.portal.coplets.basket.events;
 
+import org.apache.cocoon.portal.coplets.basket.ContentStore;
 
 /**
- * Remove an item from the basket 
+ * This event is used to add an item to the content store
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: RemoveItemEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id: AddItemEvent.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public class RemoveItemEvent extends BasketEvent {
+public class AddItemEvent extends ContentStoreEvent {
     
-    /** The item to remove */
+    /** The item to add */
     protected Object item;
     
     /**
      * Constructor
-     * @param item The item to remove
+     * @param store   The content store
+     * @param item    The item that will be added to the content store
      */
-    public RemoveItemEvent(Object item) {
+    public AddItemEvent(ContentStore store, Object item) {
+        super(store);
         this.item = item;
     }
     
     /**
-     * Return the item to remove
+     * The item
      */
     public Object getItem() {
         return this.item;
