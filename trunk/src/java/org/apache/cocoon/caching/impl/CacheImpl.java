@@ -75,7 +75,7 @@ import java.util.Map;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.2 2003/07/11 08:04:22 cziegeler Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.3 2003/07/11 08:59:03 cziegeler Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -87,16 +87,12 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
     /** The component manager */
     protected ComponentManager manager;
 
-    /** The role name of the store to use */
-    protected String storeName;
-    
     /**
      * Composable Interface
      */
     public void compose (ComponentManager manager)
     throws ComponentException {
         this.manager = manager;
-        this.store = (Store)this.manager.lookup(this.storeName);
     }
 
     /**
@@ -157,7 +153,12 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        this.storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
+        String storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
+        try {
+            this.store = (Store)this.manager.lookup(storeName);
+        } catch (ComponentException ce) {
+            throw new ParameterException("Unable to lookup store: " + storeName, ce);
+        }
     }
 
 }

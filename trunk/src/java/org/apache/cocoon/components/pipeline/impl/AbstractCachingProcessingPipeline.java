@@ -60,6 +60,7 @@ import java.util.Date;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
@@ -81,10 +82,10 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.6 2003/05/30 09:23:14 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.7 2003/07/11 08:59:03 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
-            extends AbstractProcessingPipeline
+    extends AbstractProcessingPipeline
     implements Disposable {
 
     /** This is the Cache holding cached responses */
@@ -152,15 +153,25 @@ public abstract class AbstractCachingProcessingPipeline
     public void compose (ComponentManager manager)
     throws ComponentException {
         super.compose(manager);
-        this.cache = (Cache)this.manager.lookup(Cache.ROLE);
     }
 
     /**
      * Parameterizable Interface - Configuration
      */
-    public void parameterize(Parameters params) {
+    public void parameterize(Parameters params)
+    throws ParameterException {
         super.parameterize(params);
         this.configuredDoSmartCaching = params.getParameterAsBoolean("smart-caching", true);
+        String cacheRole = params.getParameter("cache-role", Cache.ROLE);
+        if ( this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Using cache " + cacheRole);
+        }
+        
+        try {
+            this.cache = (Cache)this.manager.lookup(cacheRole);
+        } catch (ComponentException ce) {
+            throw new ParameterException("Unable to lookup cache: " + cacheRole, ce);
+        }
     }
     
     /**
