@@ -75,7 +75,7 @@ import java.util.Map;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.3 2003/07/11 08:59:03 cziegeler Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.4 2003/07/13 03:10:10 ghoward Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -148,6 +148,13 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
     public void clear() {
         this.store.clear();
     }
+
+	/**
+	 * See if a response is cached under this key
+	 */
+	public boolean containsKey(PipelineCacheKey key) {
+		return this.store.containsKey(key);
+	}
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
