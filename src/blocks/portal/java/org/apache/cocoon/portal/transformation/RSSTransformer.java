@@ -53,17 +53,21 @@ package org.apache.cocoon.portal.transformation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.excalibur.xmlizer.XMLizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -74,10 +78,11 @@ import org.xml.sax.SAXException;
  * It's actually a quick hack...
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RSSTransformer.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: RSSTransformer.java,v 1.5 2003/12/23 14:38:07 cziegeler Exp $
  */
 public final class RSSTransformer
-extends AbstractSAXTransformer {
+extends AbstractSAXTransformer
+implements CacheableProcessingComponent {
 
     /** The xmlizer for converting html to xml */
     protected XMLizer xmlizer;
@@ -197,6 +202,20 @@ extends AbstractSAXTransformer {
         throws IOException, ProcessingException, SAXException {
         super.setupTransforming();
         this.filter = new HTMLFilter( this.xmlConsumer );
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+     */
+    public Serializable getKey() {
+        return "1";
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
+     */
+    public SourceValidity getValidity() {
+        return NOPValidity.SHARED_INSTANCE;
     }
 
 }
