@@ -19,8 +19,10 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
@@ -78,11 +80,18 @@ public class QuartzJobExecutor implements Job {
         Object job = null;
         String jobrole = null;
 
+        Processor processor;
+        try {
+            processor = (Processor)manager.lookup(Processor.ROLE);
+        } catch (ServiceException e) {
+            throw new JobExecutionException(e);
+        }
+
         boolean release = false;
         boolean dispose = false;
         try {
             env.startingProcessing();
-            EnvironmentHelper.enterProcessor(env.getProcessor(), manager, env);
+            EnvironmentHelper.enterProcessor(processor, manager, env);
 
             jobrole = (String)data.get(QuartzJobScheduler.DATA_MAP_ROLE);
 
