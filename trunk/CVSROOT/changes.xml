@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.7 1999-12-08 07:38:41 balld Exp $
+  $Id: changes.xml,v 1.8 1999-12-09 07:51:54 balld Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,6 +15,9 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
+  <action dev="DB" type="fix" due-to="Brett McLaughlin" due-to-email="martinguitar@hotmail.com">
+  	Added dummy methods to EngineWrapper for JSDK 2.2 compatibility
+  </action>
   <action dev="DB" type="add">
   	Moved a few things around in ColumnFormatter so that it's possible for columns to be formatted as more than simply a text node (e.g. embedded HTML). Also added a little formatter that can transform \n into <![CDATA[<br>]]> for text and varchar columns.
   </action>
