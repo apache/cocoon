@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.78 2003/07/05 05:03:59 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.79 2003/07/05 16:32:31 joerg Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="update">
+   Updated FOP to 0.20.5rc3a.
+  </action>
+  <action dev="JH" type="update">
+   Moved WebServiceProxyGenerator + some samples into the proxy block.
+  </action>
   <action dev="JH" type="update" fixes-bug="12216">
    Updated common-httpclient from CVS checkout of 2003-02-10 to 2.0 beta 2.
    This hopefully fixes also the bug. Moved it into core because of dependencies.
