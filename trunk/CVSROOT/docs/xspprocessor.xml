@@ -1534,13 +1534,6 @@ xspCurrentElement.appendChild(
              the <code>ServletContext</code> object did not provide
              a <code>getRealPath()</code> method
            </li>
-           <li>
-             <code>String requestRealPath(HttpServletRequest request, ServletContext context)</code>.<br/>
-             This method is used to retrieve the fully qualified
-             real path associated with a given <code>request</code>
-             in a way that is operating system-independent and portable
-             between older and newer versions of the JSDK API
-           </li>
          </ul>
        </s3>
   
