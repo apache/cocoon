@@ -12,7 +12,7 @@
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-30 14:17:09 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-05-07 13:31:49 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -25,10 +25,6 @@
   <xsl:output method="text"/>
 
   <xsl:variable name="prefix">xsp</xsl:variable>
-
-  <!-- Do we have to generate namespace declarations as xmlns:xxx attributes ?
-       Xalan + Xerces does not provide namespaces decl. as attributes while Saxon + Xerces does -->
-  <xsl:variable name="add-xmlns" select="not(/*/@*[starts-with(name(.), 'xmlns:')])"/>
 
   <xsl:template match="/">
     <code xml:space="preserve">
@@ -128,15 +124,6 @@
             "<xsl:value-of select="$ns-prefix"/>",
             "<xsl:value-of select="$ns-uri"/>"
           );
-          <xsl:if test="$add-xmlns">
-            xspAttr.addAttribute(
-              Constants.XML_NAMESPACE_URI,
-              "<xsl:value-of select="$ns-prefix"/>",
-              "<xsl:value-of select="concat('xmlns:',$ns-prefix)"/>",
-              "CDATA",
-              "<xsl:value-of select="$ns-uri"/>"
-            );
-          </xsl:if>
       </xsl:if>
     </xsl:for-each>
 
@@ -210,15 +197,6 @@ Either both 'uri' and 'prefix' or none of them must be specified
           "<xsl:value-of select="local-name(.)"/>",
           "<xsl:value-of select="."/>"
         );
-        <xsl:if test="$add-xmlns">
-          xspAttr.addAttribute(
-            Constants.XML_NAMESPACE_URI,
-            "<xsl:value-of select="$ns-prefix"/>",
-            "<xsl:value-of select="concat('xmlns:',$ns-prefix)"/>",
-            "CDATA",
-            "<xsl:value-of select="$ns-uri"/>"
-          );
-        </xsl:if>
       </xsl:if>
     </xsl:for-each>
 
@@ -388,15 +366,6 @@ Either both 'uri' and 'prefix' or none of them must be specified
           "<xsl:value-of select="local-name(.)"/>",
           "<xsl:value-of select="."/>"
         );
-        <xsl:if test="$add-xmlns">
-          xspAttr.addAttribute(
-            Constants.XML_NAMESPACE_URI,
-            "<xsl:value-of select="$ns-prefix"/>",
-            "<xsl:value-of select="concat('xmlns:',$ns-prefix)"/>",
-            "CDATA",
-            "<xsl:value-of select="$ns-uri"/>"
-          );
-        </xsl:if>
       </xsl:if>
     </xsl:for-each>
 
@@ -434,6 +403,8 @@ Either both 'uri' and 'prefix' or none of them must be specified
   </xsl:template>
 
   <xsl:template match="@*">
+    <!-- Filter out namespace declaration attributes -->
+    <xsl:if test="not(starts-with(name(.), 'xmlns:'))">
     xspAttr.addAttribute(
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
@@ -441,6 +412,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
       "CDATA",
       "<xsl:value-of select="."/>"
     );
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="text()">
