@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.338 2004/05/25 07:28:26 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.339 2004/05/25 08:06:19 crossley Exp $:-->
 
 <status>
  <developers>
@@ -211,6 +211,18 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="DC" type="update" fixes-bug="28809" due-to="Dave Brondsema">
+   Improvements for Chaperon JSPWiki to xdocs conversion:
+   * handle nested bullet lists (number lists already supported)
+   * if 'name' parameter is specified, use it as title (and add spaces between
+   WikiWords) instead of first section title
+   * handle images with alt text
+   * 'spaceless-filenames' parameter will squash out spaces in relative links
+   * fix anchors to use 'id' instead of 'name'
+   * emphasize anchors a bit
+   * selftest.txt tests for lists and tables
+   * more known issues listed in selftest.txt
+   </action>
    <action dev="CZ" type="update">
      Remove deprecated class AbstractSessionComponent from session block.
    </action>
