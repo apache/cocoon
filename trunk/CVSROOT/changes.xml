@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.212 2001-02-26 17:54:36 greenrd Exp $ 
+  $Id: changes.xml,v 1.213 2001-02-26 21:48:04 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -25,7 +25,7 @@
    IMPORTANT WARNING: If you use this alternative technique for a cacheable page, 
    you MUST set the HTTP Vary header as follows:
      response.setHeader ("Vary", "user-Agent");
-   This can be done either in an &lt;xsp:logic&gt; element in XSP, or in a Producer.
+   This can be done either in an &lt;xsp:logic&gt; element in XSP, or in a Processor.
    If you don't do this, it will work fine when users are connecting directly to the server, but
    if they access it through a web proxy, the proxy will not know that different content should
    be served for different browsers, so it will serve the same content for all browsers.
