@@ -20,6 +20,9 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.ContentHandler;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Document;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.Parameters;
@@ -27,6 +30,9 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.arch.ComponentManager;
 import org.apache.arch.Composer;
+import org.apache.cocoon.xml.util.DOMBuilder;
+import org.apache.cocoon.xml.util.DOMStreamer;
+import org.apache.cocoon.xml.util.XPathAPI;
 
 /**
  * My first pass at an XInclude filter. Currently it should set the base URI 
@@ -36,7 +42,7 @@ import org.apache.arch.Composer;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-04-04 20:22:28 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-04-17 00:14:39 $ $Author: balld $
  */
 public class XIncludeFilter extends AbstractFilter implements Composer {
 
@@ -163,11 +169,21 @@ public class XIncludeFilter extends AbstractFilter implements Composer {
 
 	protected void processXIncludeElement(String href, String parse) throws SAXException,MalformedURLException,IOException {
 		if (debug) { System.err.println("Processing XInclude element: href="+href+", parse="+parse); }
-		URL url = new URL(current_xmlbase_uri,href);
-		if (debug) { System.err.println("URL: "+url); }
+		URL url;
+		String suffix;
+		int index = href.indexOf('#');
+		if (index < 0) {
+			url = new URL(current_xmlbase_uri,href);
+			suffix = "";
+		} else {
+			url = new URL(current_xmlbase_uri,href.substring(0,index));
+			suffix = href.substring(index+1);
+		}
+		if (debug) { System.err.println("URL: "+url+"\nSuffix: "+suffix); }
 		Object object = url.getContent();
 		if (debug) { System.err.println("Object: "+object); }
 		if (parse.equals("text")) {
+			if (debug) { System.err.println("Parse type is text"); }
 			if (object instanceof Reader) {
 				Reader reader = (Reader)object;
 				int read;
@@ -197,14 +213,34 @@ public class XIncludeFilter extends AbstractFilter implements Composer {
 		} else if (parse.equals("xml")) {
 			if (debug) { System.err.println("Parse type is XML"); }
 			Parser parser = (Parser)manager.getComponent("parser");
-			XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler,"");
-			xinclude_handler.debug = debug;
-			parser.setContentHandler(xinclude_handler);
-			parser.setLexicalHandler(xinclude_handler);
+			InputSource input;
 			if (object instanceof Reader) {
-				parser.parse(new InputSource((Reader)object));
+				input = new InputSource((Reader)object);
 			} else if (object instanceof InputStream) {
-				parser.parse(new InputSource((InputStream)object));
+				input = new InputSource((InputStream)object);
+			} else {
+				throw new SAXException("Unknown object type: "+object);
+			}
+			if (suffix.startsWith("xptr(") && suffix.endsWith(")")) {
+				String xpath = suffix.substring(6,suffix.length()-1);
+				if (debug) { System.err.println("XPath is "+xpath); }
+				DOMBuilder builder = new DOMBuilder(parser);
+				parser.setContentHandler(builder);
+				parser.setLexicalHandler(builder);
+				parser.parse(input);
+				Document document = builder.getDocument();
+				NodeList list = XPathAPI.selectNodeList(document,xpath);
+				DOMStreamer streamer = new DOMStreamer(super.contentHandler,super.lexicalHandler);
+				int length = list.getLength();
+				for (int i=0; i<length; i++) {
+					streamer.stream(list.item(i));
+				}
+			} else {
+				XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);
+				xinclude_handler.debug = debug;
+				parser.setContentHandler(xinclude_handler);
+				parser.setLexicalHandler(xinclude_handler);
+				parser.parse(input);
 			}
 		}
 	}
@@ -213,13 +249,11 @@ public class XIncludeFilter extends AbstractFilter implements Composer {
 
 		ContentHandler content_handler;
 		LexicalHandler lexical_handler;
-		String xpath;
 		boolean debug;
 
-		XIncludeContentHandler(ContentHandler content_handler, LexicalHandler lexical_handler, String xpath) {
+		XIncludeContentHandler(ContentHandler content_handler, LexicalHandler lexical_handler) {
 			this.content_handler = content_handler;
 			this.lexical_handler = lexical_handler;
-			this.xpath = xpath;
 		}
 
 		public void setDocumentLocator(Locator locator) {
@@ -232,6 +266,7 @@ public class XIncludeFilter extends AbstractFilter implements Composer {
 		}
 
 		public void endDocument() {
+			if (debug) { System.err.println("Internal end document received"); }
 			/** We don't pass end document on to the "real" handler **/
 		}
 
