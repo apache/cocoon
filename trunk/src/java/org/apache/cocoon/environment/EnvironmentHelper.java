@@ -66,7 +66,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.1 2003/10/19 14:34:40 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.2 2003/10/19 17:27:32 cziegeler Exp $
  * @since 2.2
  */
 
@@ -96,6 +96,7 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public EnvironmentHelper(String context) {
         this.context = context;
+        this.rootContext = context;
     }
     
     

@@ -53,10 +53,12 @@ package org.apache.cocoon;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ComponentContext;
@@ -64,6 +66,7 @@ import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -83,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.22 2003/10/19 16:12:54 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.23 2003/10/19 17:27:32 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -114,6 +117,9 @@ public class Cocoon
     /** The source resolver */
     protected SourceResolver sourceResolver;
 
+    /** The environment helper */
+    protected EnvironmentHelper environmentHelper;
+    
     /**
      * Creates a new <code>Cocoon</code> instance.
      *
@@ -130,8 +136,18 @@ public class Cocoon
      *
      * @param manager the parent component manager. May be <code>null</code>
      */
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) 
+    throws ServiceException {
         this.serviceManager = manager;
+        this.sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
+        try {
+            this.environmentHelper = new EnvironmentHelper(
+                         (String) this.context.get(Constants.CONTEXT_ROOT_URL));
+            ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
+            ContainerUtil.service(this.environmentHelper, this.serviceManager);
+        } catch (ContextException e) {
+            throw new ServiceException("Unable to get context root url from context.", e);
+        }
     }
 
     /**
@@ -234,6 +250,7 @@ public class Cocoon
      * Dispose this instance
      */
     public void dispose() {
+        ContainerUtil.dispose(this.environmentHelper);
         this.context = null;
         this.disposed = true;
     }
@@ -486,8 +503,7 @@ public class Cocoon
      * @see org.apache.cocoon.Processor#getSourceResolver()
      */
     public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
-        // TODO (CZ) Implement me
-        return (org.apache.cocoon.environment.SourceResolver)this.sourceResolver;
+        return this.environmentHelper;
     }
 
 }
