@@ -49,6 +49,17 @@
       </jx:forEach>
     </table>
 
+    <table border="1">
+      <tr>
+        <th>drinks</th>
+      </tr>
+      <jx:forEach var="item" items="${form2bean.drinks}">
+        <tr>
+          <td>${item}</td>
+        </tr>
+      </jx:forEach>
+    </table>
+
     <br/>
     <a href="form2bean.flow">Do it again</a>
   </body>
