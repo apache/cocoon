@@ -50,22 +50,16 @@
 */
 package org.apache.cocoon.webapps.session.acting;
 
-import org.apache.cocoon.acting.AbstractValidatorAction;
-import org.apache.cocoon.acting.ValidatorActionHelper;
-import org.apache.cocoon.acting.ValidatorActionResult;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.webapps.session.SessionConstants;
-import org.apache.cocoon.util.Tokenizer;
 
-import java.util.HashMap;
+import org.apache.cocoon.acting.FormValidatorAction;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.webapps.session.SessionConstants;
+
 import java.util.Map;
 
 /**
@@ -129,212 +123,27 @@ import java.util.Map;
  *
  * where "session-form" is configured as SessionFormAction
  * 
+ * @see org.apache.cocoon.acting.FormValidatorAction
+ * @see org.apache.cocoon.acting.AbstractValidatorAction
+ * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SessionFormAction.java,v 1.4 2003/05/04 20:19:42 cziegeler Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: SessionFormAction.java,v 1.5 2003/08/15 15:53:20 haul Exp $
 */
-public class SessionFormAction extends AbstractValidatorAction implements ThreadSafe
-{
-    /**
-     * Main invocation routine.
+public class SessionFormAction extends FormValidatorAction implements ThreadSafe {
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.acting.AbstractValidatorAction#getDescriptor(org.apache.cocoon.environment.SourceResolver, org.apache.avalon.framework.parameters.Parameters)
      */
-    public Map act (Redirector redirector, SourceResolver resolver, Map objectModel, String src,
-            Parameters parameters) throws Exception {
-        Request req = ObjectModelHelper.getRequest(objectModel);
+    protected Configuration getDescriptor(
+        SourceResolver resolver,
+        Map objectModel,
+        Parameters parameters) {
 
-        // read local settings
-        try {
-
-            Session session = req.getSession(true);
-
-            Configuration conf = (Configuration)session.getAttribute(
-                                  req.getParameter(SessionConstants.SESSION_FORM_PARAMETER));
-
-            String valstr = parameters.getParameter ("validate", (String) settings.get("validate",""));
-            String valsetstr = parameters.getParameter ("validate-set", (String) settings.get("validate-set",""));
-
-            Configuration valConf = (Configuration)session.getAttribute(
-                                     req.getParameter(SessionConstants.SESSION_FORM_PARAMETER)+"validate-set");
-            if (valConf != null) {
-                valsetstr = valConf.getAttribute("name","");
-            }
-
-            Configuration[] desc = conf.getChildren ("parameter");
-            Configuration[] csets = conf.getChildren ("constraint-set");
-
-            HashMap actionMap = new HashMap ();
-            HashMap resultMap = new HashMap ();
-            boolean allOK = true;
-
-            /*
-             * old obsoleted method
-             */
-            if (!"".equals (valstr.trim ())) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug ("Validating parameters "
-                                       + "as specified via 'validate' parameter");
-                }
-
-                /* get list of params to be validated */
-                String[] rparams = null;
-                if (!"*".equals(valstr.trim())) {
-                    rparams = Tokenizer.tokenize (valstr, ",", false);
-                } else {
-                    // validate _all_ parameters
-                    rparams = new String[desc.length];
-                    for (int i=0; i<desc.length; i++) {
-                        rparams[i] = desc[i].getAttribute("name","");
-                        if ("".equals(rparams[i])) {
-                            if (getLogger().isDebugEnabled()) {
-                                getLogger().debug ("Wrong syntax of the 'validate' parameter");
-                            }
-                            return null;
-                        }
-                    }
-                }
-                /* perform actual validation */
-                ValidatorActionHelper result = null;
-                String name = null;
-                HashMap params = new HashMap (rparams.length);
-                /* put required params into hash */
-                for (int i = 0; i < rparams.length; i ++) {
-                    name = rparams[i];
-                    if (name == null || "".equals (name.trim ())) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug ("Wrong syntax of the 'validate' parameter");
-                        }
-                        return null;
-                    }
-                    name = name.trim ();
-                    params.put (name, req.getParameter (name));
-                }
-                for (int i = 0; i < rparams.length; i ++) {
-                    name = rparams[i].trim ();
-                    result = validateParameter (name, null, desc,
-                                                params, true);
-                    if (!result.isOK()) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug ("Validation failed for parameter " + name);
-                        }
-                        allOK = false;
-                    }
-                    actionMap.put (name, result.getObject());
-                    resultMap.put (name, result.getResult());
-                }
-            }
-            /*
-             * new set-based method
-             */
-            if (!"".equals (valsetstr.trim ())) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug ("Validating parameters "
-                                       + "from given constraint-set " + valsetstr);
-                }
-                // go over all constraint sets
-                // untill the requested set is found
-                // set number will be in j
-                Configuration cset = null;
-                String setname = null;
-                int j = 0;
-                boolean found = false;
-                for (j = 0; j < csets.length; j ++) {
-                    setname = csets[j].getAttribute ("name", "");
-                    if (valsetstr.trim().equals (setname.trim ())) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug ("Given set "
-                                           + valsetstr
-                                           + " does not exist in a description file");
-                    }
-                    return null;
-                }
-                cset = csets[j];
-                /* get the list of params to be validated */
-                Configuration[] set = cset.getChildren ("validate");
-
-                /* perform actuall validation */
-                ValidatorActionHelper result = null;
-                String name = null;
-                HashMap params = new HashMap (set.length);
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug ("Given set "
-                                       + valsetstr
-                                       + " contains " + set.length + " rules");
-                }
-                
-                /* put required params into hash */
-                for (int i = 0; i < set.length; i ++) {
-                    name = set[i].getAttribute ("name", "").trim();
-                    if ("".equals(name)) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug ("Wrong syntax "
-                                               + " of 'validate' children nr. " + i);
-                        }
-                        return null;
-                    }
-                    Object[] values = req.getParameterValues(name);
-                    if (values != null) {
-                        switch (values.length) {
-                            case 0: params.put(name,null); break;
-                            case 1: params.put(name,values[0]); break;
-                            default: params.put(name,values);
-                        }
-                    } else {
-                        params.put(name,values);
-                    }
-                }
-                String rule = null;
-                for (int i = 0; i < set.length; i ++) {
-                    name = set[i].getAttribute ("name", null);
-                    rule = set[i].getAttribute("rule",name);
-                    result = validateParameter (name, rule, set[i],
-                            desc, params, true);
-                    if (!result.isOK()) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug ("Validation failed for parameter " + name);
-                        }
-                        allOK = false;
-                    }
-                    actionMap.put (name, result.getObject());
-                    resultMap.put (name, result.getResult());
-                }
-            }
-            
-            if (!allOK) {
-                
-                // if any validation failed return an empty map
-                actionMap = null;
-                resultMap.put("*", ValidatorActionResult.ERROR);
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug ("All form params validated. An error occurred.");
-                }
-                
-            } else {
-                
-                resultMap.put("*", ValidatorActionResult.OK);
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug ("All form params successfully validated");
-                }
-            }
-            
-            // store validation results in request attribute
-            req.setAttribute(Constants.XSP_FORMVALIDATOR_PATH, resultMap);
-            
-            // store validation results in session attribute
-            // to be used by SessionTransformer
-            session.setAttribute(req.getParameter(SessionConstants.SESSION_FORM_PARAMETER)+
-                                 "validation-result", resultMap);
-
-            return actionMap;
-            
-        } catch (Exception ignore) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug ("exception: ", ignore);
-            }
-        }
-        return null;
+        Session session = ObjectModelHelper.getRequest(objectModel).getSession(true);
+        return (Configuration) session.getAttribute(
+            ObjectModelHelper.getRequest(objectModel).getParameter(
+                SessionConstants.SESSION_FORM_PARAMETER));
     }
+
 }
