@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.11 2003/08/01 17:48:44 vgritsenko Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.12 2003/10/15 16:10:29 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -725,7 +725,6 @@ public class DOMStreamer implements XMLProducer {
                 try {
                     this.transformer = factory.newTransformer();
                 } catch (TransformerConfigurationException e) {
-                    getLogger().error("DOMStreamer", e);
                     throw new SAXException(e);
                 }
             }
@@ -746,7 +745,6 @@ public class DOMStreamer implements XMLProducer {
             try {
                 transformer.transform(source, result);
             } catch (TransformerException e) {
-                getLogger().error("DOMStreamer", e);
                 throw new SAXException(e);
             }
         }
