@@ -40,7 +40,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplWLS.java,v 1.6 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -129,7 +129,7 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
         Thus we have to use <i>exactly</i> these classes!
       </p>
     */
-    class MyWLSResponse extends weblogic.servlet.internal.ServletResponseImpl {
+    static class MyWLSResponse extends weblogic.servlet.internal.ServletResponseImpl {
       /* the cocoon2 response. Let's use this response to forward headers
       , cookies, etc generated inside the jsp-response
       */
