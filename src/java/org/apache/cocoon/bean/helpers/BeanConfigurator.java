@@ -67,7 +67,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.4 2003/10/14 22:42:21 joerg Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.5 2004/02/06 16:40:48 unico Exp $
  */
 public class BeanConfigurator {
 
@@ -165,23 +165,14 @@ public class BeanConfigurator {
         if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
             cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
         }
-        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
-            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
-        }
-        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
-            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
-        }
-        if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
-            cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
-        }
         if (hasAttribute(root, ATTR_AGENT)) {
             cocoon.setAgentOptions(getAttributeValue(root, ATTR_AGENT));
         }
         if (hasAttribute(root, ATTR_ACCEPT)) {
-            cocoon.setAgentOptions(getAttributeValue(root, ATTR_ACCEPT));
+            cocoon.setAcceptOptions(getAttributeValue(root, ATTR_ACCEPT));
         }
         if (hasAttribute(root, ATTR_DEFAULT_FILENAME)) {
-            cocoon.setAgentOptions(getAttributeValue(root, ATTR_DEFAULT_FILENAME));
+            cocoon.setDefaultFilename(getAttributeValue(root, ATTR_DEFAULT_FILENAME));
         }
 
         if (destDir == null || destDir.length() == 0) {
