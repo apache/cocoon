@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.78 2000-05-30 21:13:10 stefano Exp $
+  $Id: changes.xml,v 1.79 2000-06-04 05:55:28 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="db" type="fix" due-to="Daniel Schneider" due-to-email="Daniel.Schneider@tecfa.unige.ch">
+   XIncludeProcessor now strips document type nodes from included documents
+  </action
   <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
    Added new installation case that should provide insights for newbies.
   </action>
