@@ -34,6 +34,7 @@
      alternate bean properties. It is based on
      <link href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</link>.
     </p>
+    <p>Samples of this Logic Sheet are avaliable in the XSP implementation of the petstore block</p>
    </s1>
    <s1 title ="Tags">
     <p>The JPath tags are defined in the namespace</p>
@@ -119,6 +120,27 @@
      <source>
 &lt;xsp:attribute name="action"&gt;&lt;xsp:expr&gt;&lt;jpath:continuation/&gt;+".form"&lt;/xsp:expr&gt;&lt;/xsp:attribute&gt;
      </source>
+    </s2>
+    <s2 title="set-lenient">
+      <note>Since Cocoon 2.1.6</note>
+      <p>
+        The <code>set-lenient</code> tag switch the lenient setting of jxpath.
+        By default it is set to false. If set to true, xpaths that don't point to an 
+        object or a set of them will return null (Instead of that annoying exception). 
+        Saves all the checking if you can accept nulls and are sure there are no typos.
+      </p>
+      <p>
+        If the tag contains child elements it will scope the setting for the enclosed
+        elements, otherwise it is a global setting. You can't nest <jpath:set-lenient>
+        tags.
+      </p>
+      <source>
+        &lt;jpath:set-lenient lenient="true|false"&gt;
+      </source>
+      <p>Example:</p>
+      <source>
+        &lt;jpath:set-lenient lenient="true"&gt;
+      </source>
     </s2>
    </s1>
   </body>
