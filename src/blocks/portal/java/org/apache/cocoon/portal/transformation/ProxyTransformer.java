@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.9 2004/03/20 16:33:42 joerg Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.10 2004/03/20 17:02:46 cziegeler Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -230,13 +230,12 @@ public class ProxyTransformer
     /**
      * Processes the request to the external application
      */
-    protected void processRequest() {
+    protected void processRequest() throws SAXException {
         try {
             String remoteURI = null;
             try {
                 remoteURI = resolveURI(link, documentBase);
-            }
-            catch (MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
                 throw new SAXException(ex);
             }
 
@@ -285,8 +284,7 @@ public class ProxyTransformer
 
                 }
                 while (remoteURI != null);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 throw new SAXException(
                     "Failed to retrieve remoteURI " + remoteURI,
                     ex);
@@ -297,11 +295,10 @@ public class ProxyTransformer
             DOMStreamer streamer = new DOMStreamer();
             streamer.setContentHandler(contentHandler);
             streamer.stream(result.getDocumentElement());
-        }
-        catch (Exception ex) {
-            System.err.println("Unexpected Exception occured: " + ex);
-            ex.printStackTrace();
-            throw new RuntimeException(ex.toString());
+        } catch (SAXException se) {
+            throw se;
+        } catch (Exception ex) {
+            throw new SAXException(ex);
         }
     }
 
@@ -420,7 +417,8 @@ public class ProxyTransformer
      * @param connection hte HttpURLConnection to read from
      * @return the result as valid W3C DOM XHTML document
      */
-    protected Document readXML(HttpURLConnection connection) {
+    protected Document readXML(HttpURLConnection connection) 
+    throws SAXException {
         try {
             int charEncoding = configuredEncoding;
 
@@ -459,11 +457,8 @@ public class ProxyTransformer
             errorWriter.flush();
             errorWriter.close();
             return doc;
-        }
-        catch (Exception ex) {
-            System.err.println("unexpected exeption: " + ex);
-            ex.printStackTrace();
-            throw new RuntimeException(ex.toString());
+        } catch (Exception ex) {
+            throw new SAXException(ex);
         }
     }
 
