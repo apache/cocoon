@@ -4,7 +4,7 @@
 
   <group name="FOP">
     <sample name="FOP PDF serializer" href="fop/">
-      Examples of PDF document generation.
+      Examples of PDF document generation using FOP.
     </sample>
   </group>
 

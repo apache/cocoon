@@ -4,7 +4,7 @@
 
   <group name="iText">
     <sample name="iText PDF serializer" href="itext/">
-      Examples of PDF document generation.
+      Examples of PDF document generation using iText.
     </sample>
   </group>
 
