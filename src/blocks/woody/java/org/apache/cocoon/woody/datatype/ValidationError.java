@@ -68,10 +68,11 @@ public class ValidationError {
      * @param i18n should the errorMessage be interpreted as an i18n key?
      */
     public ValidationError(String errorMessage, boolean i18n) {
-        if (i18n)
+        if (i18n) {
             saxFragment = new I18nMessage(errorMessage);
-        else
+        } else {
             saxFragment = new StringMessage(errorMessage);
+        }
     }
 
     /**
