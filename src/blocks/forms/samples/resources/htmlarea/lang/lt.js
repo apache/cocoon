@@ -1,7 +1,7 @@
 // I18N constants
 
 // LANG: "lt", ENCODING: UTF-8
-// Author: Jaroslav Šatkevi�?, <jaro@akl.lt>
+// Author: Jaroslav Šatkevič, <jaro@akl.lt>
 
 
 HTMLArea.I18N = {

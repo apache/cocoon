@@ -9,7 +9,7 @@
 // Version 3.0 developed by Mihai Bazon.
 //   http://dynarch.com/mishoo
 //
-// $Id: popup.js,v 1.2 2004/03/18 06:05:07 crossley Exp $
+// $Id: popup.js,v 1.3 2004/05/03 15:30:38 bruno Exp $
 
 function getAbsolutePos(el) {
 	var r = { x: el.offsetLeft, y: el.offsetTop };

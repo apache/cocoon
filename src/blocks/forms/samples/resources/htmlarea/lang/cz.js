@@ -19,7 +19,7 @@ HTMLArea.I18N = {
 	lang: "cz",
 
 	tooltips: {
-		bold:           "Tu�?ně",
+		bold:           "Tučně",
 		italic:         "Kurzíva",
 		underline:      "Podtržení",
 		strikethrough:  "Přeškrtnutí",
@@ -35,7 +35,7 @@ HTMLArea.I18N = {
 		indent:         "Odsadit",
 		forecolor:      "Barva písma",
 		hilitecolor:    "Barva pozadí",
-		horizontalrule: "Vodorovná �?ára",
+		horizontalrule: "Vodorovná čára",
 		createlink:     "Vložit odkaz",
 		insertimage:    "Vložit obrázek",
 		inserttable:    "Vložit tabulku",
@@ -58,6 +58,6 @@ HTMLArea.I18N = {
 
 	msg: {
 		"Path":         "Cesta",
-		"TEXT_MODE":    "Jste v TEXTOVÉM REŽIMU.  Použijte tla�?ítko [<>] pro přepnutí do WYSIWIG."
+		"TEXT_MODE":    "Jste v TEXTOVÉM REŽIMU.  Použijte tlačítko [<>] pro přepnutí do WYSIWIG."
 	}
 };
