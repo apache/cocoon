@@ -10,6 +10,9 @@
    <sample name="WML" url="hello.wml">
     Now something more juicy: the exact same page is translated into WAP WML.
    </sample>
+   <sample name="VoxML" url="hello.vml">
+    Maybe you have your hands busy? with VoxML you don't need hands, just your voice.
+   </sample>
    <sample name="SVG" url="hello.svg">
     Need a fancier look? No problem, SVG is your friend.
    </sample>
@@ -21,15 +24,18 @@
    </sample>
   </group>
 
-  <group name="Static Content Examples">
+  <group name="XML-ized web sites">
    <sample name="java.apache.org" url="sites/java.apache.org">
     This page shows a much more complex example that shows how powerful
-    is the style separation and how powerful XML+XSL can be even for
+    is the style separation and how powerful XML+XSLT can be even for
     web publishing.
    </sample>
    <sample name="jakarta.apache.org" url="sites/jakarta.apache.org">
-    This pages shows the same thing for the Apache Jakarta web site.
+    This pages shows the XML-ized version of the Apache Jakarta web site.
    </sample>
+  </group>
+  
+  <group name="Static Content">
    <sample name="formatting objects" url="fo">
     This is an example of FO translated to PDF by Apache FOP.
    </sample>
@@ -38,10 +44,7 @@
    </sample>
   </group>
 
-  <group name="Dynamic Content Examples">
-   <sample name="Status Page" url="status">
-    Simple status page example.
-   </sample>
+  <group name="Dynamic Content">
    <sample name="Simple XSP" url="xsp/simple">
     Simple XSP example.
    </sample>
@@ -52,9 +55,12 @@
    </sample>
   </group>
 
-  <group name="Error Page Example">
+  <group name="System Pages">
+   <sample name="Status Page" url="status">
+    Cocoon status page.
+   </sample>
    <sample name="Error Page" url="generror">
-    Simple error page example.
+    This example shows what happens if an error is triggered in the pipeline.
    </sample>
   </group>
   
