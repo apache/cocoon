@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 //
-// CVS $Id: Database.js,v 1.3 2004/03/06 02:25:37 antonio Exp $
+// CVS $Id: Database.js,v 1.4 2004/03/25 01:58:16 joerg Exp $
 //
 // Prototype Database API
 //
@@ -27,10 +27,10 @@ defineClass("org.apache.cocoon.components.flow.javascript.ScriptableResult");
 Database.getConnection = function(selectorValue) {
     var selector = cocoon.getComponent(Packages.org.apache.avalon.excalibur.datasource.DataSourceComponent.ROLE + "Selector");
     try {
-	var ds = selector.select(selectorValue);
-	return new Database(ds.getConnection());
+        var ds = selector.select(selectorValue);
+        return new Database(ds.getConnection());
     } finally {
-	cocoon.releaseComponent(selector);
+        cocoon.releaseComponent(selector);
     }
 }
 
