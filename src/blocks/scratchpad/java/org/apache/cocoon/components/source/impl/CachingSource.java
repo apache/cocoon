@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  * always. <code>0</code> can be used to achieve the exact opposite. That is to say, 
  * the cached contents will be thrown out and updated immediately and unconditionally.
  * <p>
- * @version CVS $Id: CachingSource.java,v 1.9 2004/03/24 15:19:20 unico Exp $
+ * @version CVS $Id: CachingSource.java,v 1.10 2004/03/24 18:54:23 joerg Exp $
  */
 public class CachingSource extends AbstractLogEnabled
 implements Source, Serviceable, Initializable, XMLizable {
@@ -245,7 +245,6 @@ implements Source, Serviceable, Initializable, XMLizable {
     /**
      * Initialize the cached response with meta info.
      * 
-     * @param refresh  whether to force refresh
      * @throws IOException  if an the binary response could not be initialized
      */
     protected void initMetaResponse() throws IOException {
@@ -280,7 +279,6 @@ implements Source, Serviceable, Initializable, XMLizable {
     /**
      * Initialize the cached response with binary contents.
      * 
-     * @param refresh  whether to force refresh
      * @throws IOException  if an the binary response could not be initialized
      */
     protected void initBinaryResponse() throws IOException {

@@ -20,7 +20,7 @@ package org.apache.garbage.serializer.util;
  * the document type public and system IDs and root element name.
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: DocType.java,v 1.2 2004/03/05 10:07:24 bdelacretaz Exp $
+ * @version CVS $Id: DocType.java,v 1.3 2004/03/24 18:54:23 joerg Exp $
  */
 public class DocType {
     /** The name of the root element. */
@@ -34,7 +34,6 @@ public class DocType {
      * Create a new <code>DocType</code> instance.
      * 
      * @param root_name The document root element name.
-     * @param public_id The document type public identifier.
      * @param system_id The document type system identifier.
      */
     public DocType(String root_name, String system_id) {

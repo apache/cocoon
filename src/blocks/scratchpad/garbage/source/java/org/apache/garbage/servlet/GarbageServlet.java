@@ -17,7 +17,6 @@ package org.apache.garbage.servlet;
 
 import java.net.URL;
 import java.io.IOException;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -29,20 +28,16 @@ import org.apache.garbage.serializer.HTMLSerializer;
 import org.apache.garbage.serializer.encoding.CharsetFactory;
 
 /**
- * 
- * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: GarbageServlet.java,v 1.2 2004/03/05 10:07:24 bdelacretaz Exp $
+ * @version CVS $Id: GarbageServlet.java,v 1.3 2004/03/24 18:54:23 joerg Exp $
  */
 public class GarbageServlet extends HttpServlet {
 
-    private ServletContext context = null;
     private ServletConfig config = null;
     private String charset = null;
 
     public void init()
     throws ServletException {
-        this.context = this.getServletContext();
         this.config = this.getServletConfig();
 
         /** Preload all charsets and configure our default */
