@@ -32,3 +32,7 @@ CLASSPATH=$CP
 export CLASSPATH
 ANT_HOME=OLD_ANT_HOME
 export ANT_HOME
+
+# ----- Clean the environment ------------------------------------------
+unset OLD_ANT_HOME
+unset CP
