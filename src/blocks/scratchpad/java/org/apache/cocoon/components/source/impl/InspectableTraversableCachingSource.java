@@ -126,7 +126,7 @@ implements InspectableSource {
 
     protected void initMeta(SourceMeta meta, Source source) throws IOException {
         super.initMeta(meta, source);
-        final InspectableSourceMeta imeta = ((InspectableSourceMeta) super.response.getExtra());
+        final InspectableSourceMeta imeta = ((InspectableSourceMeta) meta);
         imeta.setSourceProperties(isource.getSourceProperties());
     }
 
