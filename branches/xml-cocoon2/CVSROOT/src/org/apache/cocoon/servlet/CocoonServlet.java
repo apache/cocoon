@@ -40,10 +40,14 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.22 $ $Date: 2000-09-22 22:17:59 $
+ * @version CVS $Revision: 1.1.4.23 $ $Date: 2000-10-06 21:25:31 $
  */
  
 public class CocoonServlet extends HttpServlet {
+
+    final long second = 1000;
+    final long minute = 60 * second;
+    final long hour   = 60 * minute;
 
     private long creationTime = 0;
     private Cocoon cocoon;
@@ -62,7 +66,8 @@ public class CocoonServlet extends HttpServlet {
 
         this.context = conf.getServletContext();
 
-        // WARNING (SM): the line below BREAKS the Servlet API compatibility
+        // WARNING (SM): the line below BREAKS the Servlet API portability of
+        // web applications.
         // This is a hack to go around java compiler design problems that 
         // do not allow applications to force their own classloader to the
         // compiler during compilation.
@@ -72,8 +77,13 @@ public class CocoonServlet extends HttpServlet {
         // container classloading will break it on other servlet containers.
         // To fix this, Javac must be redesigned and rewritten or we have to
         // write our own compiler.
-        // For now we tie ourselves to Tomcat but at least we can work without
-        // placing everything in the system classpath.
+        // So, for now, the cocoon.war file with included libraries can work
+        // only in Tomcat or in containers that simulate this context attribute
+        // (I don't know if any do) or, for other servlet containers, you have
+        // to extract all the libraries and place them in the system classpath
+        // or the compilation of sitemaps and XSP will fail.
+        // I know this sucks, but I don't have the energy to write a java 
+        // compiler to fix this :(
         this.classpath = (String) context.getAttribute(Cocoon.CATALINA_SERVLET_CLASSPATH);
         if (this.classpath == null) {
             this.classpath = (String) context.getAttribute(Cocoon.TOMCAT_SERVLET_CLASSPATH);
@@ -104,8 +114,7 @@ public class CocoonServlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
-        long start = new Date().getTime();
-        long end   = 0;
+        long start = System.currentTimeMillis();
 
         // Reload cocoon if configuration changed or we are reloading
         boolean reloaded = false;
@@ -114,21 +123,15 @@ public class CocoonServlet extends HttpServlet {
             if (this.cocoon != null) {
                 if (this.cocoon.modifiedSince(this.creationTime)) {
                     this.context.log("Configuration changed reload attempt");
-
                     this.cocoon = this.create();
                     reloaded    = true;
-                } else if ((req.getPathInfo() == null)
-                           && (req.getParameter(Cocoon.RELOAD_PARAM)
-                               != null)) {
+                } else if ((req.getPathInfo() == null) && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
                     this.context.log("Forced reload attempt");
-
                     this.cocoon = this.create();
                     reloaded    = true;
                 }
-            } else if ((req.getPathInfo() == null)
-                       && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
+            } else if ((req.getPathInfo() == null) && (req.getParameter(Cocoon.RELOAD_PARAM) != null)) {
                 this.context.log("Invalid configurations reload");
-
                 this.cocoon = this.create();
                 reloaded    = true;
             }
@@ -153,59 +156,37 @@ public class CocoonServlet extends HttpServlet {
         // We got it... Process the request
         String uri =  req.getServletPath();
         String pathInfo = req.getPathInfo();
-        if (pathInfo != null) uri += "/" + pathInfo;
+        if (pathInfo != null) uri += pathInfo;
 
-        if (!uri.equals("")) {
-            try {
-                if (uri.charAt(0) == '/') {
-                    uri = uri.substring(1);
-                }
+        try {
+            if (uri.charAt(0) == '/') uri = uri.substring(1);
 
-                HttpEnvironment env = new HttpEnvironment(uri, req, res,
-                                                          context);
+            HttpEnvironment env = new HttpEnvironment(uri, req, res, context);
 
-                if (!this.cocoon.process(env)) {
+            if (!this.cocoon.process(env)) {
 
-                    //-----> FIXME (NKB) It is not true that!this.cocoon.process(env) means only SC_NOT_FOUND!
-                    res.setStatus(res.SC_NOT_FOUND);
+                // FIXME (NKB) It is not true that !this.cocoon.process(env) 
+                // means only SC_NOT_FOUND
+                res.setStatus(res.SC_NOT_FOUND);
 
-                    Notification n = new Notification(this);
-                    n.setType("resource-not-found");
-                    n.setTitle("Resource not found");
-                    n.setSource("Cocoon servlet");
-                    n.setMessage("Resource not found");
-                    n.setDescription("The requested URI \""
-                                     + req.getRequestURI()
-                                     + "\" was not found.");
-                    n.addExtraDescription("request-uri", req.getRequestURI());
-                    n.addExtraDescription("path-info", uri);
-                    Notifier.notify(n, req, res);
-                }
-            } catch (Exception e) {
-
-                //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
-                Notification n = new Notification(this, e);
-                n.setType("internal-server-error");
-                n.setTitle("Internal server error");
+                Notification n = new Notification(this);
+                n.setType("resource-not-found");
+                n.setTitle("Resource not found");
                 n.setSource("Cocoon servlet");
+                n.setMessage("Resource not found");
+                n.setDescription("The requested URI \""
+                                 + req.getRequestURI()
+                                 + "\" was not found.");
                 n.addExtraDescription("request-uri", req.getRequestURI());
                 n.addExtraDescription("path-info", uri);
                 Notifier.notify(n, req, res);
             }
-        } else {
-            Notification n = new Notification(this);
-            n.setType("information");
-            n.setTitle(Cocoon.VERSION + "  :)");
+        } catch (Exception e) {
+            //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
+            Notification n = new Notification(this, e);
+            n.setType("internal-server-error");
+            n.setTitle("Internal server error");
             n.setSource("Cocoon servlet");
-            n.setMessage("Ready to process requests...");
-
-            String OkDescription = "Ready to process requests...";
-
-            if (reloaded) {
-                OkDescription += "configurations reloaded.";
-            }
-
-            n.setDescription(OkDescription);
             n.addExtraDescription("request-uri", req.getRequestURI());
             n.addExtraDescription("path-info", uri);
             Notifier.notify(n, req, res);
@@ -213,51 +194,18 @@ public class CocoonServlet extends HttpServlet {
 
         ServletOutputStream out = res.getOutputStream();
 
-        end = new Date().getTime();
+        long end = System.currentTimeMillis();
 
         String showTime = req.getParameter(Cocoon.SHOWTIME_PARAM);
 
-        if ((showTime != null) &&!showTime.equalsIgnoreCase("no")) {
-            float time   = (float) (end - start);
-            float second = (float) 1000;
-            float minute = (float) 60 * second;
-            float hour   = (float) 60 * minute;
-
-            if (showTime.equalsIgnoreCase("hide")) {
-                out.print("<!-- ");
-            } else {
-                out.print("<p>");
-            }
-
-            out.print("Processed by Cocoon " + Cocoon.VERSION + " in ");
-
-            if (time > hour) {
-                out.print(time / hour);
-                out.print(" hours.");
-            } else if (time > minute) {
-                out.print(time / minute);
-                out.print(" minutes.");
-            } else if (time > second) {
-                out.print(time / second);
-                out.print(" seconds.");
-            } else {
-                out.print(time);
-                out.print(" milliseconds.");
-            }
-
-            if (showTime.equalsIgnoreCase("hide")) {
-                out.print("-->");
-            } else {
-                out.print("</p>");
-            }
+        if ((showTime != null) && !showTime.equalsIgnoreCase("no")) {
+            showTime(out, showTime.equalsIgnoreCase("hide"), end - start);
         }
 
         out.flush();
     }
 
-    /** Create a new <code>Cocoon</code> object. */
     private Cocoon create() {
-
         try {
             this.context.log("Reloading from: " + this.configFile);
             Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
@@ -266,9 +214,31 @@ public class CocoonServlet extends HttpServlet {
         } catch (Exception e) {
             this.context.log("Exception reloading: " + e.getMessage());
             this.exception = e;
+            return null;
+        }
+    }
+    
+    private void showTime(ServletOutputStream out, boolean hide, long time) throws IOException {
+        
+        out.print((hide) ? "<!-- " : "<p>");
+
+        out.print("Processed by " + Cocoon.COMPLETE_NAME + " in ");
+
+        if (time > hour) {
+            out.print(time / hour);
+            out.print(" hours.");
+        } else if (time > minute) {
+            out.print(time / minute);
+            out.print(" minutes.");
+        } else if (time > second) {
+            out.print(time / second);
+            out.print(" seconds.");
+        } else {
+            out.print(time);
+            out.print(" milliseconds.");
         }
 
-        return (null);
+        out.println((hide) ? " -->" : "</p>");
     }
 }
 

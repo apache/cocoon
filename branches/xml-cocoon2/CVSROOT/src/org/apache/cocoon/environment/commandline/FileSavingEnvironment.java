@@ -24,49 +24,17 @@ import org.apache.cocoon.environment.AbstractEnvironment;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-02 11:07:29 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-06 21:25:28 $
  */
 
-public class FileSavingEnvironment extends AbstractEnvironment {
+public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
 
-    private String contentType;
-    private OutputStream stream;
-    
     public FileSavingEnvironment(String uri, File context, Map attributes, Map parameters, Map links, OutputStream stream)
     throws MalformedURLException {
-        super(uri, null, context);
-        this.stream = stream;
+        super(uri, null, context, stream);
         this.objectModel.put(Cocoon.LINK_OBJECT, links);
-        this.objectModel.put("request", new CommandLineRequest(null, uri, null, attributes, parameters));
-        this.objectModel.put("response", new CommandLineResponse());
-    }
-
-    /**
-     * Redirect the client to a new URL
-     */
-    public void redirect(String newURL) throws IOException {
-        // FIXME (SM) What do we do here?
-    }
-    
-    /**
-     * Set the ContentType
-     */
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    /**
-     * Set the ContentType
-     */
-    public String getContentType() {
-        return this.contentType;
-    }
-
-    /**
-     * Get the OutputStream
-     */
-    public OutputStream getOutputStream() throws IOException {
-        return this.stream;
+        this.objectModel.put(Cocoon.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
+        this.objectModel.put(Cocoon.RESPONSE_OBJECT, new CommandLineResponse());
     }
 }
 

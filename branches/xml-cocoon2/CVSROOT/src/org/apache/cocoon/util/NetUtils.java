@@ -9,6 +9,7 @@
 package org.apache.cocoon.util;
 
 import java.io.File;
+import java.util.Map;
 import java.net.URL;
 import java.net.MalformedURLException;
 
@@ -17,13 +18,13 @@ import java.net.MalformedURLException;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-02 11:07:33 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-06 21:25:32 $
  */
 
 public class NetUtils {
 
     /**
-     Create a URL from a location. This method supports the
+     * Create a URL from a location. This method supports the
      * <i>resource://</i> pseudo-protocol for loading resources
      * accessible to this same class' <code>ClassLoader</code>
      *
@@ -44,70 +45,17 @@ public class NetUtils {
     }
 
     /**
-     * Adjusts the context the location of the child depending on the
-     * parent context.
+     * Returns the path of the given resource.
      *
-     * @param parentURI the parent context
-     * @param childURI the context child
-     * @return The location with the adjusted context
+     * @path the resource
+     * @return the resource path
      */
-    public static String adjustContext(String parentURI, String childURI) {
-        if (childURI.charAt(0) != '/') {
-            int lastSlash = parentURI.lastIndexOf('/');
-            if (lastSlash > -1) {
-                return parentURI.substring(0, lastSlash + 1) + childURI;
-            } else {
-                return childURI;
-            }
-        } else {
-            return childURI;
-        }
+    public static String getPath(String uri) {
+        int i = uri.lastIndexOf('/');
+        return (i > -1) ? uri.substring(0, i) : "";
     }
 
-    /**
-     * Normalize a uri containing ../ and ./ paths (the leading .. or . are 
-     * left unchanged)
-     *
-     * @param uri The uri path to normalize
-     * @return The normalized uri
-     */
-    public static String normalizeURI(String uri) {
-        String[] dirty = StringUtils.split(uri, "/");
-        int length = dirty.length;
-        String[] clean = new String[length];
-
-        boolean stillDirty;
-        do {
-            stillDirty = false;
-            for (int i = 0, j = 0; (i < length) && (dirty[i] != null); i++) {
-                if (!".".equals(dirty[i])) {
-                    if ("..".equals(dirty[i])) {
-                        stillDirty = true;
-                    } else if ((i+1 < length) && ("..".equals(dirty[i+1]))) {
-                        i += 2;
-                    }
-                    clean[j++] = dirty[i];
-                }
-            }
-            dirty = clean;
-            clean = new String[length];
-        } while (stillDirty);
-
-        StringBuffer b = new StringBuffer(uri.length());
-        
-        for (int i = 0; (i < length) && (dirty[i] != null); i++) {
-            b.append(dirty[i]);
-            if ((i+1 < length) && (dirty[i+1] != null)) b.append("/");
-        }
-        
-        return b.toString();
-    }
-
-    public static void main (String[] a) {
-        System.out.println(a[0] + " ---> " + normalizeURI(a[0]));
-    }
-    
-    /**
+   /**
     * Remove path and file information from a filename returning only its
     * extension  component
     *
@@ -137,5 +85,136 @@ public class NetUtils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Absolutize a relative resource on the given absolute path.
+     *
+     * @path the absolute path
+     * @relativeResource the relative resource
+     * @return the absolutized resource
+     */
+    public static String absolutize(String path, String relativeResource) {
+        if (("".equals(path)) || (path == null)) return relativeResource;
+        if (relativeResource.charAt(0) != '/') {
+            int length = path.length() - 1;
+            boolean slashPresent = (path.charAt(length) == '/');
+            StringBuffer b = new StringBuffer();
+            b.append(path);
+            if (!slashPresent) b.append('/');
+            b.append(relativeResource);
+            return b.toString();
+        } else {
+            // resource is already absolute
+            return relativeResource;
+        }
+    }
+
+    /**
+     * Relativize an absolute resource on a given absolute path.
+     *
+     * @path the absolute path
+     * @relativeResource the absolute resource
+     * @return the resource relative to the given path
+     */
+    public static String relativize(String path, String absoluteResource) {
+        if (("".equals(path)) || (path == null)) return absoluteResource;
+        int length = path.length() - 1;
+        boolean slashPresent = path.charAt(length) == '/';
+        if (absoluteResource.startsWith(path)) {
+            // resource is direct descentant
+            return absoluteResource.substring(length + (slashPresent ? 1 : 2));
+        } else {
+            // resource is not direct descendant
+            if (!slashPresent) path += "/";
+            int index = StringUtils.matchStrings(path, absoluteResource);
+            String pathDiff = path.substring(index);
+            String resource = absoluteResource.substring(index);
+            int levels = StringUtils.count(pathDiff, '/');
+            StringBuffer b = new StringBuffer();
+            for (int i = 0; i < levels; i++) {
+                b.append("../");
+            }
+            b.append(resource);
+            return b.toString();
+        }
+    }
+
+    /**
+     * Normalize a uri containing ../ and ./ paths.
+     *
+     * @param uri The uri path to normalize
+     * @return The normalized uri
+     */
+    public static String normalize(String uri) {
+        String[] dirty = StringUtils.split(uri, "/");
+        int length = dirty.length;
+        String[] clean = new String[length];
+
+        boolean path;
+        boolean finished;
+        while (true) {
+            path = false;
+            finished = true;
+            for (int i = 0, j = 0; (i < length) && (dirty[i] != null); i++) {
+                if (".".equals(dirty[i])) {
+                    // ignore
+                } else if ("..".equals(dirty[i])) {
+                    clean[j++] = dirty[i];
+                    if (path) finished = false;
+                } else {
+                    if ((i+1 < length) && ("..".equals(dirty[i+1]))) {
+                        i++;
+                    } else {
+                        clean[j++] = dirty[i];
+                        path = true;
+                    }
+                }
+            }
+            if (finished) {
+                break;
+            } else {
+                dirty = clean;
+                clean = new String[length];
+            }
+        }
+
+        StringBuffer b = new StringBuffer(uri.length());
+
+        for (int i = 0; (i < length) && (clean[i] != null); i++) {
+            b.append(clean[i]);
+            if ((i+1 < length) && (clean[i+1] != null)) b.append("/");
+        }
+
+        return b.toString();
+    }
+
+    /**
+     * Remove parameters from a uri.
+     *
+     * @param uri The uri path to deparameterize.
+     * @param parameters The map that collects parameters.
+     * @return The cleaned uri
+     */
+    public static String deparameterize(String uri, Map parameters) {
+        int i = uri.lastIndexOf('?');
+        if (i == -1) return uri;
+        String[] params = StringUtils.split(uri.substring(i+1), "&");
+        for (int j = 0; j < params.length; j++) {
+            String p = params[j];
+            int k = p.indexOf('=');
+            if (k == -1) break;
+            String name = p.substring(0, k);
+            String value = p.substring(k+1);
+            parameters.put(name, value);
+        }
+        return uri.substring(0, i);
+    }
+
+    public static void main(String[] args) {
+        String absoluteURI = absolutize(args[0], args[1]);
+        String normalizedURI = normalize(absoluteURI);
+        String relativeURI = relativize(args[0], normalizedURI);
+        System.out.println(absoluteURI + " --> " + normalizedURI + " --> " + relativeURI);
     }
 }

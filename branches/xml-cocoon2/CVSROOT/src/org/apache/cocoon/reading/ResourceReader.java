@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 
 import org.xml.sax.SAXException;
@@ -25,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-02 21:12:38 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-06 21:25:30 $
  */
 public class ResourceReader extends AbstractReader {
 
@@ -33,7 +34,7 @@ public class ResourceReader extends AbstractReader {
      * Generates the requested resource.
      */
     public void generate() throws IOException, ProcessingException {
-        HttpServletResponse res = (HttpServletResponse) objectModel.get("response");
+        HttpServletResponse res = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);
         if (res == null) {
            throw new ProcessingException ("Missing a Response object in the objectModel");
         }
@@ -57,7 +58,7 @@ public class ResourceReader extends AbstractReader {
         fis.close();
         res.setContentLength(buffer.length);
         res.setDateHeader("Last-Modified", file.lastModified());
-        res.setHeader("Accept-Ranges","bytes");
+        res.setHeader("Accept-Ranges", "bytes");
         out.write ( buffer );
     }
     /**

@@ -22,6 +22,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.utils.Parameters;
 
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.DocumentHandlerAdapter;
@@ -65,7 +66,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  * 
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-27 16:16:22 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-06 21:25:32 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -96,7 +97,7 @@ implements Transformer, Composer {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get("request");
+        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
         if (request == null) {
             throw new ProcessingException ("Missing request object in objectModel");
         }

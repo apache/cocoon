@@ -23,30 +23,28 @@ import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-
 import java.net.MalformedURLException;
 
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Main;
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 /**
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-02 11:07:29 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-06 21:25:28 $
  */
 
-public class LinkSamplingEnvironment extends AbstractEnvironment {
+public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
 
     private boolean skip = false;
-    private ByteArrayOutputStream stream = new ByteArrayOutputStream();
     
     public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters) 
     throws MalformedURLException, IOException {
-        super(uri, Cocoon.LINK_VIEW, contextFile);
-        this.objectModel.put("request", new CommandLineRequest(null, uri, null, attributes, parameters));
-        this.objectModel.put("response", new CommandLineResponse());
+        super(uri, Cocoon.LINK_VIEW, contextFile, new ByteArrayOutputStream());
+        this.objectModel.put(Cocoon.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
+        this.objectModel.put(Cocoon.RESPONSE_OBJECT, new CommandLineResponse());
     }
 
     /** 
@@ -59,26 +57,18 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
     }
  
     /** 
-     * Get the OutputStream 
-     */ 
-    public OutputStream getOutputStream() throws IOException {
-        return this.stream;
-    }
-
-    /**
-     * Redirect the client to a new URL
-     */
-    public void redirect(String newURL) throws IOException {
-        // FIXME (SM) What do we do here?
-    }
-
-    /** 
      * Indicates if other links are present.
      */ 
     public Collection getLinks() throws IOException {
         ArrayList list = new ArrayList();
         if (!skip) {
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(stream.toByteArray())));
+            BufferedReader buffer = new BufferedReader(
+                new InputStreamReader(
+                    new ByteArrayInputStream(
+                        ((ByteArrayOutputStream) stream).toByteArray()
+                    )
+                )
+            );
             while (true) {
                 String line = buffer.readLine();
                 if (line == null) break;

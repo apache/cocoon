@@ -17,12 +17,14 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.utils.Parameters;
 
+import org.apache.cocoon.Cocoon;
+
 import org.xml.sax.EntityResolver;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-02 21:12:36 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-06 21:25:29 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer {
@@ -33,8 +35,8 @@ implements Composer {
 
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
       super.setup(resolver, objectModel, src, par);
-      this.request = (HttpServletRequest) objectModel.get("request");
-      this.response = (HttpServletResponse) objectModel.get("response");
-      this.context = (ServletContext) objectModel.get("context");
+      this.request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
+      this.response = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);
+      this.context = (ServletContext) objectModel.get(Cocoon.CONTEXT_OBJECT);
     }
 }

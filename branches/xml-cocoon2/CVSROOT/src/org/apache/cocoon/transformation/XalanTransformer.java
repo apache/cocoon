@@ -41,7 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-27 16:16:24 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-06 21:25:32 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -69,7 +69,7 @@ implements Transformer, Composer {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get("request");
+        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
 
         // Check the stylesheet uri
         String xsluri = src;

@@ -35,7 +35,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.11 $ $Date: 2000-10-02 11:07:26 $
+ * @version CVS $Revision: 1.1.4.12 $ $Date: 2000-10-06 21:25:27 $
  */
 
 public class Main {
@@ -113,14 +113,14 @@ public class Main {
             File conf = getConfigurationFile(context);
             Main main = new Main(new Cocoon(conf, null, work.toString()), context, dest);
             log("Warming up...");
-            log(" [Cocoon is compiling the sitemap, this might take a while]");
+            log(" [Cocoon might need to compile the sitemaps, this might take a while]");
             main.warmup();
             log("...ready, let's go:");
             main.process(targets);
             log("Done");
         } catch (Exception e) {
             error("Exception caught (" + e.getClass().getName() + "): " + e.getMessage() + "\n");
-            e.printStackTrace(System.err);
+            e.printStackTrace();
         }
     }
 
@@ -203,7 +203,6 @@ public class Main {
     private File destDir;
     private File context;
     private Map attributes;
-    private Map parameters;
 
     /**
      * Creates the Main class
@@ -213,14 +212,13 @@ public class Main {
         this.context = context;
         this.destDir = destDir;
         this.attributes = new HashMap();
-        this.parameters = new HashMap();
     }
 
     /**
      * Warms up the engine by accessing the root.
      */
     public void warmup() throws Exception {
-        cocoon.process(new LinkSamplingEnvironment("/", context, attributes, parameters));
+        cocoon.process(new LinkSamplingEnvironment("/", context, attributes, null));
     }
 
     /**
@@ -229,8 +227,7 @@ public class Main {
     public void process(Collection uris) throws Exception {
         Iterator i = uris.iterator();
         while (i.hasNext()) {
-            String uri = (String) i.next();
-            this.processURI(uri, uri, 0);
+            this.processURI(NetUtils.normalize((String) i.next()), 0);
         }
     }
 
@@ -247,12 +244,12 @@ public class Main {
      *      view of the resource is called to obtain a link-translated version
      *      of the resource with the given link map</li>
      *  <li>the resource is saved on disk and the URI MIME type is checked for 
-     *      consistency with the URI and, if the extention is inconsistent
+     *      consistency with the URI and, if the extension is inconsistent
      *      or absent, the file is renamed</li>
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
      */
-    public String processURI(String uri, String origUri, int level) throws Exception {
+    public String processURI(String uri, int level) throws Exception {
         log(leaf(level) + uri);
 
         Collection links = this.getLinks(uri);
@@ -260,9 +257,12 @@ public class Main {
         Iterator i = links.iterator();
         while (i.hasNext()) {
             log(tree(level));
-            String origLink = (String) i.next();
-            String link = NetUtils.normalizeURI(NetUtils.adjustContext(uri, origLink));
-            translatedLinks.put(link, this.processURI(link, origLink, level + 1));
+            String path = NetUtils.getPath(uri);
+            String relativeLink = (String) i.next();
+            String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
+            String translatedAbsoluteLink = this.processURI(absoluteLink, level + 1);
+            String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
+            translatedLinks.put(relativeLink, translatedRelativeLink);
         }
         
         String filename = mangle(uri);
@@ -271,14 +271,14 @@ public class Main {
         String type = getPage(uri, translatedLinks, output);
         output.close();
 
-        String ext = NetUtils.getExtension(uri);
+        String ext = NetUtils.getExtension(filename);
         String defaultExt = MIMEUtils.getDefaultExtension(type);
         
         if ((ext == null) || (!ext.equals(defaultExt))) {
             filename += defaultExt;
-            origUri += defaultExt;
             File newFile = IOUtils.createFile(destDir, filename);
             file.renameTo(newFile);
+            file = newFile;
         }
 
         log(tree(level));
@@ -290,7 +290,7 @@ public class Main {
             log(leaf(level + 1) + "[" + type + "]--> " + filename);
         }
         
-        return mangle(origUri);
+        return filename;
     }        
 
     void resourceUnavailable(File file) throws IOException {
@@ -306,6 +306,7 @@ public class Main {
     }
     
     String mangle(String uri) {
+        if (uri.charAt(uri.length() - 1) == '/') uri += Cocoon.INDEX_URI;
         uri = uri.replace('"', '\'');
         return uri.replace('?','_');
     }
@@ -324,12 +325,16 @@ public class Main {
     }
     
     Collection getLinks(String uri) throws Exception {
-        LinkSamplingEnvironment env = new LinkSamplingEnvironment(uri, context, attributes, parameters);
+        HashMap parameters = new HashMap();
+        String deparameterizedURI = NetUtils.deparameterize(uri, parameters);
+        LinkSamplingEnvironment env = new LinkSamplingEnvironment(deparameterizedURI, context, attributes, parameters);
         cocoon.process(env);
         return env.getLinks();
     }
 
     String getPage(String uri, Map links, OutputStream stream) throws Exception {
+        HashMap parameters = new HashMap();
+        String deparameterizedURI = NetUtils.deparameterize(uri, parameters);
         FileSavingEnvironment env = new FileSavingEnvironment(uri, context, attributes, parameters, links, stream);
         cocoon.process(env);
         return env.getContentType();

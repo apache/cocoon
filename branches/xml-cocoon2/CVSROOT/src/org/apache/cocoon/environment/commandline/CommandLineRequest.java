@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-02 11:07:29 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-06 21:25:27 $
  */
 
 /*
@@ -111,7 +111,9 @@ public class CommandLineRequest implements HttpServletRequest {
     public Enumeration getParameterNames() { 
         return (parameters != null) ? new IteratorWrapper(parameters.keySet().iterator()) : null;
     }
-    public String[] getParameterValues(String name) { return null; } // FIXME
+    public String[] getParameterValues(String name) { 
+        throw new RuntimeException (this.getClass().getName() + ".getParameterValues(String name) method not yet implemented!");
+    } // FIXME
 
     public String getHeader(String name) { 
         return (headers != null) ? (String) headers.get(name) : null;
@@ -120,8 +122,12 @@ public class CommandLineRequest implements HttpServletRequest {
         String header = (headers != null) ? (String) headers.get(name) : null;
         return (header != null) ? Integer.parseInt(header) : -1;
     }
-    public long getDateHeader(String name) { return -1; } // FIXME
-    public Enumeration getHeaders(String name) { return null; } // FIXME
+    public long getDateHeader(String name) { 
+        throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
+    } // FIXME
+    public Enumeration getHeaders(String name) { 
+        throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
+    } // FIXME
     public Enumeration getHeaderNames() {
         return (headers != null) ? new IteratorWrapper(headers.keySet().iterator()) : null;
     }
@@ -150,7 +156,9 @@ public class CommandLineRequest implements HttpServletRequest {
     public boolean isRequestedSessionIdFromURL() { return false; }
 
     public Locale getLocale() { return Locale.getDefault(); }
-    public Enumeration getLocales() { return null; } //FIXME
+    public Enumeration getLocales() {
+        throw new RuntimeException (this.getClass().getName() + ".getLocales() method not yet implemented!");
+    } // FIXME
 
     public String getAuthType() { return null; }
     public boolean isSecure() { return false; }

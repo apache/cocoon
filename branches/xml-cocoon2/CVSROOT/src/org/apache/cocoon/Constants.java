@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-02 11:07:25 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-10-06 21:25:27 $
  */
 
 public interface Constants {
@@ -44,8 +44,14 @@ public interface Constants {
     public static final String LINK_CONTENT_TYPE     = "application/x-cocoon-links";
     public static final String LINK_VIEW             = "links";
     public static final String LINK_CRAWLING_ROLE    = "static";
-    public static final String LINK_OBJECT           = "links";
 
+    public static final String REQUEST_OBJECT  = "request";
+    public static final String RESPONSE_OBJECT = "response";
+    public static final String CONTEXT_OBJECT  = "context";
+    public static final String LINK_OBJECT     = "link";
+    
+    public static final String INDEX_URI = "index";
+    
     public static final String CATALINA_SERVLET_CLASSPATH = "org.apache.catalina.jsp_classpath";
     public static final String TOMCAT_SERVLET_CLASSPATH = "org.apache.tomcat.jsp_classpath";
 
