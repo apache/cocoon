@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.4 2004/04/13 21:28:24 sylvain Exp $
+ * @version $Id: Union.java,v 1.5 2004/04/14 17:51:23 joerg Exp $
  */
 public class Union extends AbstractContainerWidget {
     private static final String ELEMENT = "field";
@@ -58,7 +58,7 @@ public class Union extends AbstractContainerWidget {
     // "resolve" should be changed to "expand", and a new step, "resolve" should be introduced which patches up any
     // *widget* (not definition) references after the expansion has put all of the widgets in place.
     public void resolve() {
-        String caseWidgetId = ((UnionDefinition)definition).getCaseWidgetId();
+        String caseWidgetId = definition.getCaseWidgetId();
         caseWidget = getParent().getWidget(caseWidgetId);
     }
 
