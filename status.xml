@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="GP" type="add">
+    Allow attribute values to be matches as well for EncodeURLTransformer.
+   </action>
   <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
     I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
   </action>
