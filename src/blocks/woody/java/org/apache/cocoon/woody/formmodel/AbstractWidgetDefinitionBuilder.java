@@ -50,9 +50,17 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.event.WidgetListener;
+import org.apache.cocoon.woody.event.WidgetListenerBuilderUtil;
 import org.apache.cocoon.woody.expression.ExpressionManager;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -105,6 +113,23 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         return builder.buildWidgetDefinition(widgetDefinition);
     }
 
+    protected List buildEventListeners(Element widgetElement, String elementName, Class listenerClass) throws Exception {
+        List result = null;
+        Element listenerElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, elementName);
+        if (listenerElement != null) {
+            NodeList list = listenerElement.getChildNodes();
+            for (int i = 0; i < list.getLength(); i++) {
+                if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    WidgetListener listener = WidgetListenerBuilderUtil.getWidgetListener((Element)list.item(i), listenerClass);
+                    if (result == null) result = new ArrayList();
+                    result.add(listener);
+                }
+            }
+        }
+        
+        return result == null ? Collections.EMPTY_LIST : result;
+    }
+    
     public void dispose() {
         serviceManager.release(widgetDefinitionBuilderSelector);
         serviceManager.release(datatypeManager);

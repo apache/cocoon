@@ -48,36 +48,14 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
-
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
+package org.apache.cocoon.woody.event;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Listeners for {@link ActionEvent}s
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
-    }
-    
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
-    }
+public interface ActionListener extends WidgetListener {
+    void actionPerformed(ActionEvent event);
 }

@@ -52,6 +52,9 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.woody.datatype.SelectionList;
+import org.apache.cocoon.woody.event.WidgetEventMulticaster;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
+import org.apache.cocoon.woody.event.ValueChangedListener;
 
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
@@ -59,6 +62,7 @@ import org.apache.cocoon.woody.datatype.SelectionList;
 public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition {
     private Datatype datatype;
     private SelectionList selectionList;
+    private ValueChangedListener listener;
 
     public Datatype getDatatype() {
         return datatype;
@@ -76,5 +80,19 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
 
     public SelectionList getSelectionList() {
         return selectionList;
+    }
+    
+    public void addValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+    
+    public void fireValueChangedEvent(ValueChangedEvent event) {
+        if (this.listener != null) {
+            this.listener.valueChanged(event);
+        }
+    }
+    
+    public boolean hasValueChangedListeners() {
+        return this.listener != null;
     }
 }

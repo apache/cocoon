@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.woody.samples;
 
+import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.datatype.DynamicSelectionList;
@@ -64,19 +65,15 @@ import org.apache.avalon.framework.service.ServiceException;
  * FormHandler used by the "carselector" sample form.
  */
 public class CarSelectorHandler implements FormHandler, Serviceable {
-    private Form form;
     private ServiceManager serviceManager;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
     }
 
-    public void setup(Form form) {
-        this.form = form;
-    }
-
-    public void handleActionEvent(ActionEvent actionEvent) {
+    public void handleActionEvent(FormContext context, ActionEvent actionEvent) {
         String action = actionEvent.getActionCommand();
+        Form form = actionEvent.getSourceWidget().getForm();
         if (action.equals("updatemodels")) {
             Field make = (Field)form.getWidget("make");
             Field model = (Field)form.getWidget("model");

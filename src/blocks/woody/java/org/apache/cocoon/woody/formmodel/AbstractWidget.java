@@ -50,12 +50,15 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.cocoon.woody.event.WidgetEvent;
+
 /**
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  */
 public abstract class AbstractWidget implements Widget {
     private Widget parent;
+    private Form form;
 
     public Widget getParent() {
         return parent;
@@ -63,6 +66,23 @@ public abstract class AbstractWidget implements Widget {
 
     public void setParent(Widget widget) {
         this.parent = widget;
+    }
+    
+    public Form getForm() {
+        if (this.form == null) {
+            // Find the form
+            Widget current = this;
+            Widget parent;
+        
+            while((parent = current.getParent()) != null) {
+                current = parent;
+            }
+            
+            // And keep it locally
+            this.form = (Form)current;
+        }
+        
+        return this.form;
     }
 
     public String getNamespace() {
@@ -95,5 +115,9 @@ public abstract class AbstractWidget implements Widget {
 
     public Widget getWidget(String id) {
         return null;
+    }
+    
+    public void broadcastEvent(WidgetEvent event) {
+        throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
     }
 }

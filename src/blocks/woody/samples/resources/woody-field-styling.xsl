@@ -4,6 +4,56 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
   
+  <!-- must be called in <head> to load calendar script and setup the CSS -->
+  <xsl:template name="woody-field-head">
+    <xsl:param name="uri" select="'resources'"/>
+    <xsl:param name="div">woody_calendarDiv</xsl:param>
+    
+    <script src="{$uri}/CalendarPopup.js" language="JavaScript"></script>
+    <script language="JavaScript">
+      function woody_getForm(element) {
+        while(element != null &amp;&amp; element.tagName != "FORM") {
+          element = element.parentNode;
+        }
+        return element;
+      }
+      
+      function woody_submitForm(element, name) {
+        if (name == undefined) {
+          name = element.name;
+        }
+        
+        var form = woody_getForm(element);
+        if (form == null) {
+          alert("Cannot find form for " + element);
+        } else {
+          form["woody_submit_id"] = name;
+          form.submit();
+        }
+      }
+
+      // Setup calendar
+      <xsl:choose>
+        <xsl:when test="$div">
+      var woody_calendar = CalendarPopup('<xsl:value-of select="$div"/>');
+        </xsl:when>
+        <xsl:otherwise>
+      var woody_calendar = CalendarPopup();
+        </xsl:otherwise>
+      </xsl:choose>
+      woody_calendar.setWeekStartDay(1);
+      woody_calendar.showYearNavigation();
+      woody_calendar.showYearNavigationInput();
+      document.write(woody_calendar.getStyles());
+      
+    </script>
+  </xsl:template>
+  
+  <!-- must be called in <head> to load calendar script and setup the CSS -->
+  <xsl:template name="woody-field-body">
+     <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
+  </xsl:template>
+
   <!--
     Generic wi:field : produce an <input>
   -->
@@ -11,6 +61,9 @@
     <input name="{@id}" value="{wi:value}" title="{wi:help}">
       <xsl:if test="wi:styling">
         <xsl:copy-of select="wi:styling/@*"/>
+      </xsl:if>
+      <xsl:if test="wi:styling/@submit-on-change='true'">
+        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
       </xsl:if>
     </input>
     <xsl:call-template name="woody-field-common"/>
@@ -50,6 +103,9 @@
             <xsl:if test="@value = $value">
               <xsl:attribute name="checked">true</xsl:attribute>
             </xsl:if>
+            <xsl:if test="wi:styling/@submit-on-change='true'">
+              <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+            </xsl:if>
           </input>
           <xsl:copy-of select="wi:label/node()"/>
         </xsl:for-each>
@@ -58,6 +114,9 @@
       <!-- dropdown or listbox -->
       <xsl:otherwise>
         <select title="{wi:help}" name="{@id}">
+          <xsl:if test="wi:styling/@submit-on-change='true'">
+            <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+          </xsl:if>
           <xsl:if test="$liststyle='listbox'">
             <xsl:attribute name="size">
               <xsl:choose>
@@ -89,6 +148,9 @@
   -->
   <xsl:template match="wi:field[@type='textarea']">
     <textarea name="{@id}" title="{wi:help}">
+      <xsl:if test="wi:styling/@submit-on-change='true'">
+        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+      </xsl:if>
       <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
       <xsl:copy-of select="wi:value/node()"/>
     </textarea>
@@ -114,34 +176,15 @@
       </xsl:choose>
     </xsl:variable>
     <input name="{@id}" value="{wi:value}">
+      <xsl:if test="wi:styling/@submit-on-change='true'">
+        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+      </xsl:if>
       <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
     </input>
-    <!-- note: we use forms[0]['{@id}'] and not forms[0].{@id} since @id may not be a valid JS property name -->
-    <a href="#" onClick="woody_calendar.select(document.forms[0]['{@id}'],'{generate-id()}','{$format}'); return false;" NAME="{generate-id()}" ID="{generate-id()}"><img src="resources/cal.gif" border="0" alt="Calendar"/></a>
+    <a href="#" onClick="woody_calendar.select(woody_getForm(this)['{@id}'],'{generate-id()}','{$format}'); return false;" NAME="{generate-id()}" ID="{generate-id()}"><img src="resources/cal.gif" border="0" alt="Calendar"/></a>
     <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
-  <!-- must be called in <head> to load calendar script and setup the CSS -->
-  <xsl:template name="woody-calendar-head">
-    <xsl:param name="uri" select="'resources'"/>
-    <xsl:param name="div"/>
-    <script src="{$uri}/CalendarPopup.js" language="JavaScript"></script>
-    <script language="JavaScript">
-      <xsl:choose>
-        <xsl:when test="$div">
-      var woody_calendar = CalendarPopup('<xsl:value-of select="$div"/>');
-        </xsl:when>
-        <xsl:otherwise>
-      var woody_calendar = CalendarPopup();
-        </xsl:otherwise>
-      </xsl:choose>
-      woody_calendar.setWeekStartDay(1);
-      woody_calendar.showYearNavigation();
-      woody_calendar.showYearNavigationInput();
-      document.write(woody_calendar.getStyles());
-    </script>
-  </xsl:template>
-  
   <!--
     wi:output
   -->
@@ -154,6 +197,9 @@
   -->
   <xsl:template match="wi:booleanfield">
     <input type="checkbox" value="true" name="{@id}" title="{wi:help}">
+      <xsl:if test="wi:styling/@submit-on-change='true'">
+        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+      </xsl:if>
       <xsl:if test="wi:value/text() = 'true'">
         <xsl:attribute name="checked">true</xsl:attribute>
       </xsl:if>
@@ -195,6 +241,9 @@
     <xsl:for-each select="wi:selection-list/wi:item">
       <xsl:variable name="value" select="@value"/>
       <input type="checkbox" value="{@value}" name="{$id}">
+        <xsl:if test="wi:styling/@submit-on-change='true'">
+          <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+        </xsl:if>
         <xsl:if test="$values[.=$value]">
           <xsl:attribute name="checked">true</xsl:attribute>
         </xsl:if>
@@ -246,7 +295,10 @@
   -->
   <xsl:template match="wi:form-template">
     <form>
-      <xsl:apply-templates select="@*|node()"/>
+      <xsl:copy-of select="@*"/>
+      <!-- hidden field to store the submit id -->
+      <input type="hidden" name="woody_submit_id"/>
+      <xsl:apply-templates/>
     </form>
   </xsl:template>
   
@@ -286,7 +338,11 @@
   </xsl:template>
 
   <xsl:template match="wi:aggregatefield">
-    <input name="{@id}" value="{wi:value}" title="{wi:help}"/>
+    <input name="{@id}" value="{wi:value}" title="{wi:help}">
+      <xsl:if test="wi:styling/@submit-on-change='true'">
+        <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
+      </xsl:if>
+    </input>
     <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 

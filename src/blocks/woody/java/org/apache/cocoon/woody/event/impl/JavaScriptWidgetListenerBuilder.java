@@ -48,36 +48,56 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.event.impl;
 
-import java.util.Iterator;
+import java.io.StringReader;
 
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.event.ActionListener;
+import org.apache.cocoon.woody.event.WidgetListener;
+import org.apache.cocoon.woody.event.WidgetListenerBuilder;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Script;
+import org.w3c.dom.Element;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Builds a {@link WidgetListener} based on a JavaScript snippet.
+ * <p>
+ * The syntax for this listener is as follows :
+ * <pre>
+ *   &lt;javascript&gt;
+ *     var widget = event.sourceWidget;
+ *     sourceWidget.setValue("Yeah");
+ *   &lt;/javascript&gt;
+ * </pre>
+ * As shown above, the event that fired this listener is published as the <code>event</code>
+ * variable.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
-    }
-    
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
+        String jsText = DomHelper.getElementText(element);
+        
+        String sourceName = DomHelper.getSystemIdLocation(element);
+        
+        Context ctx = Context.enter();
+        Script script = ctx.compileReader(
+            JavaScriptWidgetListener.getRootScope(), //scope
+            new StringReader(jsText), // in
+            sourceName == null ? "<unknown>" : sourceName, // sourceName
+            DomHelper.getLineLocation(element), // lineNo
+            null // securityDomain
+         );
+         
+         if (listenerClass == ActionListener.class) {
+             return new JavaScriptWidgetListener.JSActionListener(script);
+         } else if (listenerClass == ValueChangedEvent.class) {
+             return new JavaScriptWidgetListener.JSValueChangedListener(script);
+         } else {
+             throw new Exception("Unkonwn event class: " + listenerClass);
+         }
     }
 }

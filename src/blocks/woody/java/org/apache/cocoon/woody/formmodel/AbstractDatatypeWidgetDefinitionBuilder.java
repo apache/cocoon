@@ -50,21 +50,22 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.DynamicSelectionList;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.datatype.SelectionListBuilder;
-import org.apache.cocoon.woody.datatype.DynamicSelectionList;
 import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 /**
  * Abstract base class for WidgetDefinitionBuilders that build widgets that have datatypes/selection lists.
  */
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+    
     /**
      * @return true if a selectionlist has actually been build.
      */

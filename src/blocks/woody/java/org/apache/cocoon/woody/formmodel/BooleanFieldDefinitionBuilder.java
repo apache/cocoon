@@ -50,6 +50,10 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.woody.event.ValueChangedEvent;
+import org.apache.cocoon.woody.event.ValueChangedListener;
 import org.w3c.dom.Element;
 
 /**
@@ -60,6 +64,12 @@ public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuild
         BooleanFieldDefinition definition = new BooleanFieldDefinition();
         setId(widgetElement, definition);
         setLabel(widgetElement, definition);
+        
+        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedEvent.class).iterator();
+        while (iter.hasNext()) {
+            definition.addValueChangedListener((ValueChangedListener)iter.next());
+        }
+
         // TODO default value
         return definition;
     }

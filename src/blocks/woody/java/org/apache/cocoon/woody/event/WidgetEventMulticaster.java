@@ -48,36 +48,70 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.event;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
+import java.awt.AWTEventMulticaster;
+import java.util.EventListener;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Convenience class to handle all widget event listeners. See
+ * <code>java.awt.AWTEventMulticaster</code> for more information on its use.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: WidgetEventMulticaster.java,v 1.1 2003/09/24 20:47:05 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public class WidgetEventMulticaster extends AWTEventMulticaster implements
+    ActionListener, ValueChangedListener, ProcessingPhaseListener {
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
+    protected WidgetEventMulticaster(EventListener a, EventListener b) {
+        super(a, b);
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    public static ActionListener add(ActionListener a, ActionListener b) {
+        return (ActionListener)addInternal(a, b);
+    }
+    
+    public static ActionListener remove(ActionListener l, ActionListener oldl) {
+        return (ActionListener)removeInternal(l, oldl);
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+        ((ActionListener)a).actionPerformed(e);
+        ((ActionListener)b).actionPerformed(e);
+    }
+
+    public static ValueChangedListener add(ValueChangedListener a, ValueChangedListener b) {
+        return (ValueChangedListener)addInternal(a, b);
+    }
+    
+    public static ValueChangedListener remove(ValueChangedListener l, ValueChangedListener oldl) {
+        return (ValueChangedListener)removeInternal(l, oldl);
+    }
+    
+    public void phaseEnded(ProcessingPhaseEvent e) {
+        ((ProcessingPhaseListener)a).phaseEnded(e);
+        ((ProcessingPhaseListener)b).phaseEnded(e);
+    }
+    
+    public static ProcessingPhaseListener add(ProcessingPhaseListener a, ProcessingPhaseListener b) {
+        return (ProcessingPhaseListener)addInternal(a, b);
+    }
+    
+    public static ProcessingPhaseListener remove(ProcessingPhaseListener l, ProcessingPhaseListener oldl) {
+        return (ProcessingPhaseListener)removeInternal(l, oldl);
+    }
+    
+    public void valueChanged(ValueChangedEvent e) {
+        ((ValueChangedListener)a).valueChanged(e);
+        ((ValueChangedListener)b).valueChanged(e);
+    }
+    
+    /**
+     * Can't use the superclass method since it creates an AWTEventMulticaster
+     */
+    protected static EventListener addInternal(EventListener a, EventListener b) {
+        if (a == null)  return b;
+        if (b == null)  return a;
+        return new WidgetEventMulticaster(a, b);
     }
 }

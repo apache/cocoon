@@ -50,11 +50,31 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.cocoon.woody.event.WidgetEventMulticaster;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
+import org.apache.cocoon.woody.event.ValueChangedListener;
+
 /**
  * The {@link WidgetDefinition} part of a BooleanField widget, see {@link BooleanField} for more information.
  */
 public class BooleanFieldDefinition extends AbstractWidgetDefinition {
+    private ValueChangedListener listener;
+
     public Widget createInstance() {
         return new BooleanField(this);
+    }
+    
+    public void addValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+    
+    public void fireValueChangedEvent(ValueChangedEvent event) {
+        if (this.listener != null) {
+            this.listener.valueChanged(event);
+        }
+    }
+
+    public boolean hasValueChangedListeners() {
+        return listener != null;
     }
 }

@@ -52,32 +52,59 @@ package org.apache.cocoon.woody.formmodel;
 
 import java.util.Iterator;
 
-import org.w3c.dom.Element;
 import org.apache.cocoon.woody.event.ActionEvent;
 import org.apache.cocoon.woody.event.ActionListener;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * Builds a <code>&lt;wd:repeater-action/></code>
+ * <p>
+ * Two actions are defined :
+ * <ul>
+ * <li><code>&lt;wd:repeater-action id="add" action-command="add-row" repeater="repeater-id"/></code> :
+ *   when activated, adds a row to the sibling repeater named "repeater-id".
+ * </li>
+ * <li><code>&lt;wd:repeater-action id="rm" action-command="delete-rows" repeater="repeater-id"
+ *   select="select-id"/></code> : removes the selected rows from the sibling repeater named "repeater-id".
+ *   The selected rows are identified by the boolean field "select-id" present in each row.
+ * </ul>
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: RepeaterActionDefinitionBuilder.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+    
+    
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
-
         String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
+        RepeaterActionDefinition definition = createDefinition(widgetElement, actionCommand);
+        setId(widgetElement, definition);
+        setLabel(widgetElement, definition);
 
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
+        definition.setActionCommand(actionCommand);
+
+        Iterator iter = buildEventListeners(widgetElement, "on-activate", ActionEvent.class).iterator();
         while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
+            definition.addActionListener((ActionListener)iter.next());
         }
 
-        return actionDefinition;
+        return definition;
     }
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    protected RepeaterActionDefinition createDefinition(Element element, String actionCommand) throws Exception {
+        
+        if ("delete-rows".equals(actionCommand)) {
+            String repeater = DomHelper.getAttribute(element, "repeater");
+            String select = DomHelper.getAttribute(element, "select");
+            return new DeleteRowsActionDefinition(repeater, select);
+
+        } else if ("add-row".equals(actionCommand)) {
+            String repeater = DomHelper.getAttribute(element, "repeater");
+            return new AddRowActionDefinition(repeater);
+            
+        } else {
+            throw new Exception("Unknown repeater action '" + actionCommand + "' at " + DomHelper.getLineLocation(element));
+        }
     }
 }

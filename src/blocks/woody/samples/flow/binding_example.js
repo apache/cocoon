@@ -47,7 +47,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody.js");
+cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 
 // The purpose of the form2 example is to edit the contents of an XML file
 // or a Java bean through a Woody form
@@ -67,7 +67,7 @@ function form2xml(form) {
     form.load(document);
 
     // shows the form to the user until is validated successfully
-    form.show("form2-display-pipeline", formHandler);
+    form.showForm("form2-display-pipeline");
 
     // bind the form's data back to the document
     form.save(document);
@@ -78,7 +78,6 @@ function form2xml(form) {
     saveDocument(document, makeTargetURI(documentURI));
 
     cocoon.sendPage("form2-success-pipeline");
-    form.finish();
 }
 
 // bean variant of the binding sample
@@ -98,35 +97,11 @@ function form2bean(form) {
     bean.addContact(contact);
 
     form.load(bean);
-    form.show("form2-display-pipeline", formHandler);
+    form.showForm("form2-display-pipeline");
     form.save(bean);
 
     cocoon.sendPage("form2bean-success-pipeline", { "form2bean": bean });
     form.finish();
-}
-
-function formHandler(form) {
-    print("submitId="+form.getSubmitId());
-    var model = form.getModel();
-    switch(form.getSubmitId()) {
-    case "remove-selected-contacts":
-        {
-            for (var i = model.contacts.length-1; i >= 0; i--) {
-                if (model.contacts[i].select) {
-                    model.contacts.remove(i);
-                }
-            }
-        }
-        break;
-    case "add-contact":
-        {
-            model.contacts.length++;
-        }
-        break;
-    default:
-        return true;
-    }
-    return false;
 }
 
 /**

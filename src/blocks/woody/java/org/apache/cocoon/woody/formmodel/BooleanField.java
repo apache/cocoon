@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.event.WidgetEvent;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -70,6 +72,8 @@ import java.util.Locale;
  * is different (missing or empty request parameter means 'false', rather than null value).
  */
 public class BooleanField extends AbstractWidget {
+    // FIXME(SW) : should the initial value be false or null ? This would allow
+    // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
     private BooleanFieldDefinition definition;
 
@@ -82,11 +86,16 @@ public class BooleanField extends AbstractWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
+        Object oldValue = value;
         String param = formContext.getRequest().getParameter(getFullyQualifiedId());
         if (param != null && param.equalsIgnoreCase("true"))
             value = Boolean.TRUE;
         else
             value = Boolean.FALSE;
+        
+        if (value != oldValue) {
+            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
+        }
     }
 
     public boolean validate(FormContext formContext) {
@@ -127,6 +136,15 @@ public class BooleanField extends AbstractWidget {
     public void setValue(Object object) {
         if (!(object instanceof Boolean))
             throw new RuntimeException("Cannot set value of boolean field \"" + getFullyQualifiedId() + "\" to a non-Boolean value.");
+        
+        Object oldValue = value;
         value = (Boolean)object;
+        if (value != oldValue) {
+            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
+        }
+    }
+    
+    public void broadcastEvent(WidgetEvent event) {
+        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
     }
 }

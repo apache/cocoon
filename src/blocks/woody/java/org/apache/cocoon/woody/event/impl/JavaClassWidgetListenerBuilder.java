@@ -48,36 +48,38 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.event.impl;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.woody.event.WidgetListener;
+import org.apache.cocoon.woody.event.WidgetListenerBuilder;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * A {@link WidgetListenerBuilder} that creates java classes.
+ * <p>
+ * The syntax for this listener is as follows :<br/>
+ * <pre>
+ *   &lt;java class="com.my.SuperListener"/&gt;
+ * </pre>
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
+public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder {
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
+    public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
+        
+        String name = DomHelper.getAttribute(element, "class");
 
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
+        Object listener = ClassUtils.newInstance(name);
+        
+        if (listenerClass.isAssignableFrom(listener.getClass())) {
+            
+            // FIXME : apply filecyclehelper
+            return (WidgetListener)listener;
+        } else {
+            throw new Exception("Class " + listener.getClass() + " is not a " + listenerClass);
         }
-
-        return actionDefinition;
-    }
-    
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
     }
 }

@@ -48,36 +48,29 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.flow.javascript;
 
-import java.util.Iterator;
+import java.util.Locale;
 
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.event.ActionListener;
-import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
+import org.apache.cocoon.woody.FormContext;
 
 /**
- * Builds {@link ActionDefinition}s.
+ * A helper class for the flowscript/woody integration.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: WoodyFlowHelper.java,v 1.1 2003/09/24 20:47:06 sylvain Exp $
  */
-public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setId(widgetElement, actionDefinition);
-        setLabel(widgetElement, actionDefinition);
-
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionEvent.class).iterator();
-        while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
-        }
-
-        return actionDefinition;
-    }
+// FOM is really a PITA when the flow has to be integrated with Java classes that use the real
+// environment objects...
+public class WoodyFlowHelper {
     
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
+    /** Only static methods in this class */
+    private WoodyFlowHelper() {}
+    
+    public static final FormContext getFormContext(FOM_Cocoon cocoon, Locale locale) {
+        return new FormContext(cocoon.getRequest(), locale);
     }
+
+
 }

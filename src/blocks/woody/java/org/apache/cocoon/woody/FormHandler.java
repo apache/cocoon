@@ -51,20 +51,15 @@
 package org.apache.cocoon.woody;
 
 import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.woody.formmodel.Form;
 
 /**
  * A FormHandler is (will be) responsible for handling all kinds of form-related events
  * and related stuff (custom validation, ...).
  */
 public interface FormHandler {
-    /**
-     * Should be called once when creating the FormHandler, before any other method is called.
-     */
-    public void setup(Form form);
 
     /**
      * Called when an ActionEvent occured.
      */
-    public void handleActionEvent(ActionEvent actionEvent);
+    public void handleActionEvent(FormContext context, ActionEvent actionEvent);
 }

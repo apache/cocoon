@@ -88,6 +88,46 @@ public class DomHelper {
         else
             return "(location unknown)";
     }
+    
+    public static String getSystemIdLocation(Element element) {
+        String loc = getLocation(element);
+        if (loc.charAt(0) != '(') {
+            int end = loc.lastIndexOf(':');
+            if (end > 0) {
+                int start = loc.lastIndexOf(':', end - 1);
+                if (start >= 0) {
+                    return loc.substring(0, start);
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    public static int getLineLocation(Element element) {
+        String loc = getLocation(element);
+        if (loc.charAt(0) != '(') {
+            int end = loc.lastIndexOf(':');
+            if (end > 0) {
+                int start = loc.lastIndexOf(':', end - 1);
+                if (start >= 0) {
+                    return Integer.parseInt(loc.substring(start + 1, end));
+                }
+            }
+        }
+        return -1;
+    }
+    
+    public static int getColumnLocation(Element element) {
+        String loc = getLocation(element);
+        if (loc.charAt(0) != '(') {
+            int end = loc.lastIndexOf(':');
+            if (end > 0) {
+                return Integer.parseInt(loc.substring(end));
+            }
+        }
+        return -1;
+    }
 
     /**
      * Returns all Element children of an Element that belong to the given namespace.
@@ -155,6 +195,18 @@ public class DomHelper {
         if (attrValue.equals(""))
             throw new Exception("Missing attribute \"" + attributeName + "\" on element \"" + element.getTagName() + "\" at " + getLocation(element));
         return attrValue;
+    }
+
+    /**
+     * Returns the value of an element's attribute, or a default value if the element has no such attribute.
+     */
+    public static String getAttribute(Element element, String attributeName, String defaultValue) throws Exception {
+        String attrValue = element.getAttribute(attributeName);
+        if (attrValue.equals("")) {
+            return defaultValue;
+        } else {
+            return attrValue;
+        }
     }
 
     public static int getAttributeAsInteger(Element element, String attributeName) throws Exception {
@@ -249,7 +301,7 @@ public class DomHelper {
                 System.err.println("except" + ex);
             }
             if (node != null) {
-                String location = locator.getLiteralSystemId() + ": line " + locator.getLineNumber();
+                String location = locator.getLiteralSystemId() + ":" + locator.getLineNumber() + ":" + locator.getColumnNumber();
                 node.setUserData("location", location, null);
             }
         }

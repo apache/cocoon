@@ -56,7 +56,15 @@ import org.apache.cocoon.woody.formmodel.Widget;
  * Currently this event originates from a {@link org.apache.cocoon.woody.formmodel.Action Button}
  * widget.
  */
-public interface ActionEvent {
-    String getActionCommand();
-    Widget getSource();
+public class ActionEvent extends WidgetEvent {
+    String actionCommand;
+    
+    public ActionEvent(Widget source, String actionCommand) {
+        super(source);
+        this.actionCommand = actionCommand;
+    }
+    
+    public String getActionCommand() {
+        return this.actionCommand; 
+    }
 }

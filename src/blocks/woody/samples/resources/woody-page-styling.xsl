@@ -4,15 +4,10 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
   
-  <xsl:include href="woody-field-layout.xsl"/>
-  
-  <xsl:template name="woody-layout-head">
-    <xsl:call-template name="woody-calendar-head">
-      <xsl:with-param name="div">WoodyCalendarDiv</xsl:with-param>
-    </xsl:call-template>
+  <xsl:template name="woody-page-head">
       
     <script language="JavaScript">
-      function showWoodyTab(tabgroup, idx, length, state) {
+      function woody_showTab(tabgroup, idx, length, state) {
         //alert(tabgroup + " - " + idx);
         for (var i = 0; i &lt; length; i++) {
           // Change tab status (selected/unselected)
@@ -34,8 +29,7 @@
       </script>
   </xsl:template>
   
-  <xsl:template name="woody-layout-body">
-     <div id="WoodyCalendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
+  <xsl:template name="woody-page-body">
   </xsl:template>
   
   <!--
@@ -83,7 +77,7 @@
       <!-- div containing the tabs -->
       <div class="woody-tabArea">
         <xsl:for-each select="wi:items/wi:*">
-          <span id="{$id}_tab_{position() - 1}" onclick="showWoodyTab('{$id}', {position() - 1}, {last()}, '{$state-widget}')">
+          <span id="{$id}_tab_{position() - 1}" onclick="woody_showTab('{$id}', {position() - 1}, {last()}, '{$state-widget}')">
             <xsl:choose>
               <xsl:when test="$active = (position() - 1)">
                 <xsl:attribute name="class">woody-tab woody-activeTab</xsl:attribute>
@@ -142,7 +136,7 @@
     <fieldset id="{$id}">
       <legend>
         <xsl:apply-templates select="wi:label/node()"/>
-        <select name="{$state-widget}" onchange="showWoodyTab('{$id}', this.selectedIndex, {count(wi:items/*)}, '{$state-widget}')">
+        <select name="{$state-widget}" onchange="woody_showTab('{$id}', this.selectedIndex, {count(wi:items/*)}, '{$state-widget}')">
           <xsl:for-each select="wi:items/wi:*">
             <option>
               <xsl:attribute name="value">
