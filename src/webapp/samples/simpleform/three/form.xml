@@ -17,12 +17,11 @@
 <page>
 <head>
 <style type="text/css">
-error {
+span.error {
 	font-style:italic;
 	font-weight:bold;
 	color:red;
 	background-color:#fffbe4;
-	display: block;
 }
 </style>
 </head>
