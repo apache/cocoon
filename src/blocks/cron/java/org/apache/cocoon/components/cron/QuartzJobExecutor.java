@@ -34,7 +34,7 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java,v 1.8 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: QuartzJobExecutor.java,v 1.9 2004/06/04 11:08:08 cziegeler Exp $
  *
  * @since 2.1.1
  */
@@ -81,7 +81,7 @@ implements Job {
 		org.apache.cocoon.environment.Context envContext =
 			(org.apache.cocoon.environment.Context)data.get(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT);
         BackgroundEnvironment env;
-        env = new BackgroundEnvironment(logger, envContext, manager);
+        env = new BackgroundEnvironment(logger, envContext);
         boolean release = false;
         try {
             EnvironmentHelper.enterProcessor(env.getProcessor(), manager, env);
