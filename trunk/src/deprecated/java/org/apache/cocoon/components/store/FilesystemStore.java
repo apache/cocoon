@@ -76,7 +76,7 @@ import java.util.Enumeration;
  *
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FilesystemStore.java,v 1.1 2003/03/09 00:07:05 pier Exp $
+ * @version CVS $Id: FilesystemStore.java,v 1.2 2003/09/24 22:34:52 cziegeler Exp $
  */
 public final class FilesystemStore extends AbstractLogEnabled
     implements Store, Contextualizable, Parameterizable, ThreadSafe {
@@ -237,7 +237,7 @@ public final class FilesystemStore extends AbstractLogEnabled
     public synchronized void hold(final Object key, final Object value)
     throws IOException {
         this.store(key, value);
-        final File file = (File) this.fileFromKey(key);
+        final File file = this.fileFromKey(key);
         if (file != null) {
           file.deleteOnExit();
         }
@@ -347,7 +347,7 @@ public final class FilesystemStore extends AbstractLogEnabled
 
     public String getString(final Object key)
     throws IOException {
-        final File file = (File) this.fileFromKey(key);
+        final File file = this.fileFromKey(key);
         if (file != null) {
             return IOUtils.deserializeString(file);
         }
@@ -360,7 +360,7 @@ public final class FilesystemStore extends AbstractLogEnabled
     public synchronized Object getObject(final Object key)
     throws IOException, ClassNotFoundException
     {
-        final File file = (File) this.fileFromKey(key);
+        final File file = this.fileFromKey(key);
         if (file != null) {
             return IOUtils.deserializeObject(file);
         }
@@ -424,7 +424,7 @@ public final class FilesystemStore extends AbstractLogEnabled
         final OutputStreamWriter writer = new OutputStreamWriter( buf );
         for (int i = 0; i < s.length(); i++)
         {
-            int c = (int)s.charAt(i);
+            int c = s.charAt(i);
             if (charactersDontNeedingEncoding.get(c))
             {
                 out.append((char)c);
