@@ -110,6 +110,12 @@ import org.xml.sax.SAXException;
  *     &lt;source:reinsert&gt;[Optional] The XPath (relative to &lt;source:replace/&gt;) to backup the overwritten node to&lt;/source:reinsert&gt; - eg: "foo/versions" or "/doc/versions/foo". NOTE: If specified and a node is replaced, all children of this replaced node will be reinserted at the given path.
  *     &lt;source:fragment&gt;The XML Fragment to be written&lt;/source:fragment&gt; - eg: "&lt;foo&gt;&lt;bar id="dogcow"/&gt;&lt;/foo&gt;" or "&lt;foo/&gt;&lt;bar&gt;&lt;dogcow/&gt;&lt;bar/&gt;" etc.
  * &lt;source:insert&gt;
+ * 
+ * &lt;source:delete &gt; - deletes an existing asset.
+ *     &lt;source:source&gt;The System ID of the asset to be deleted&lt;/source:source&gt; - eg: "docs/blah.xml" or "context://blah.xml" etc.
+ *     &lt;source:path&gt;[Ignored] XPath to specify how your content is wrapped&lt;/source:path&gt;
+ *     &lt;source:fragment&gt;[Ignored]The XML Fragment to be written&lt;/source:fragment&gt; 
+ * &lt;source:delete&gt;
  * </pre>
  *
  *
@@ -248,7 +254,8 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.4 2003/03/16 17:49:15 vgritsenko Exp $
+ * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.5 2003/07/28 11:28:20 gianugo Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer {
@@ -262,6 +269,7 @@ public class SourceWritingTransformer
     public static final String PATH_ELEMENT = "path";
     public static final String FRAGMENT_ELEMENT = "fragment";
     public static final String REPLACE_ELEMENT = "replace";
+    public static final String DELETE_ELEMENT = "delete";
     public static final String SOURCE_ELEMENT = "source";
     public static final String REINSERT_ELEMENT = "reinsert";
     /** outgoing elements */
@@ -281,6 +289,7 @@ public class SourceWritingTransformer
     public static final String ACTION_NONE = "none";
     public static final String ACTION_NEW = "new";
     public static final String ACTION_OVER = "overwritten";
+    public static final String ACTION_DELETE = "deleted";
     /** The current state */
     private static final int STATE_OUTSIDE  = 0;
     private static final int STATE_INSERT   = 1;
@@ -290,6 +299,7 @@ public class SourceWritingTransformer
     private static final int STATE_FILE     = 6;
     private static final int STATE_REINSERT = 7;
     private static final int STATE_WRITE    = 8;
+    private static final int STATE_DELETE = 9;
     private int state;
     private int parent_state;
 
@@ -366,15 +376,20 @@ public class SourceWritingTransformer
             this.stack.push(attr.getValue(SERIALIZER_ATTRIBUTE));
             this.stack.push("END");
 
+        // Element: delete
+        } else if (this.state == STATE_OUTSIDE && name.equals(DELETE_ELEMENT)) {
+            this.state = STATE_DELETE;
+            this.parent_state = state;
+            this.stack.push("END");
         // Element: file
         } else if (name.equals(SOURCE_ELEMENT)
-                   && (this.state == STATE_INSERT || this.state == STATE_WRITE)) {
+                   && (this.state == STATE_INSERT || this.state == STATE_WRITE || this.state == STATE_DELETE)) {
             this.state = STATE_FILE;
             this.startTextRecording();
 
         // Element: path
         } else if (name.equals(PATH_ELEMENT)
-                   && (this.state == STATE_INSERT || this.state == STATE_WRITE)) {
+                   && (this.state == STATE_INSERT || this.state == STATE_WRITE || this.state == STATE_DELETE)) {
             this.state = STATE_PATH;
             this.startTextRecording();
 
@@ -386,7 +401,7 @@ public class SourceWritingTransformer
 
         // Element: fragment
         } else if (name.equals(FRAGMENT_ELEMENT)
-                   &&  (this.state == STATE_INSERT || this.state == STATE_WRITE)) {
+                   &&  (this.state == STATE_INSERT || this.state == STATE_WRITE || this.state == STATE_DELETE)) {
             this.state = STATE_FRAGMENT;
             this.startRecording();
 
@@ -466,6 +481,22 @@ public class SourceWritingTransformer
 
             this.state = STATE_OUTSIDE;
 
+        // Element: delete
+        } else if (name.equals(DELETE_ELEMENT) && this.state == STATE_DELETE) {
+            String sourceName = null;
+            String tag;
+            do {
+                tag = (String)this.stack.pop();
+                if (tag.equals("FILE")) {
+                    sourceName = (String)this.stack.pop();
+                } else if (tag.equals("FRAGMENT")) {
+                    //Get rid of it
+                    this.stack.pop();
+                }
+            } while ( !tag.equals("END"));
+            
+            this.deleteSource(sourceName);
+            this.state = STATE_OUTSIDE;                       
         // Element: file
         } else if (name.equals(SOURCE_ELEMENT) == true && this.state == STATE_FILE) {
             this.state = this.parent_state;
@@ -504,6 +535,34 @@ public class SourceWritingTransformer
         if (this.getLogger().isDebugEnabled() == true) {
             this.getLogger().debug("END endTransformingElement");
         }
+    }
+
+    /**
+     * Deletes a source
+     * @param sourceName
+     */
+    private void deleteSource(String systemID) throws ProcessingException, IOException, SAXException {
+        try {
+            Source source = resolver.resolveURI(systemID);            
+            if ( ! (source instanceof ModifiableSource)) {
+                throw new ProcessingException("Source '"+systemID+"' is not writeable.");
+            }
+            ModifiableSource ms = (ModifiableSource)source;
+            ms.delete();
+        } catch (SourceException se) {
+            reportResult("none", 
+                "delete", 
+                "unable to delete Source:" + se.getMessage(), 
+                systemID, 
+                RESULT_FAILED,
+                ACTION_DELETE);
+        }
+        reportResult("none", 
+            "delete", 
+            "source deleted successfully", 
+            systemID, 
+            RESULT_SUCCESS,
+            ACTION_DELETE);
     }
 
     public void recycle() {
@@ -647,7 +706,7 @@ public class SourceWritingTransformer
                 // import the fragment
                 Node importNode = resource.importNode(fragment, true);
                 if ( path.equals("") ) {  // this is allowed in write
-                    resource.appendChild(importNode);
+                    resource.appendChild(importNode.getFirstChild());
                     message = "entire source overwritten";
 
                 } else {
@@ -730,6 +789,19 @@ public class SourceWritingTransformer
         String action = ACTION_NONE;
         if (!failed) { action = (exists) ? ACTION_OVER : ACTION_NEW; }
 
+        this.reportResult(localSerializer, tagname, message, target, result, action);
+
+        if (this.getLogger().isDebugEnabled() == true) {
+            this.getLogger().debug("END insertFragment");
+        }
+    }
+
+    private void reportResult(String localSerializer, 
+                                String tagname, 
+                                String message, 
+                                String target, 
+                                String result, 
+                                String action) throws SAXException {
         sendStartElementEvent(RESULT_ELEMENT);
             sendStartElementEvent(EXECUTION_ELEMENT);
                 sendTextEvent(result);
@@ -752,10 +824,6 @@ public class SourceWritingTransformer
                 sendEndElementEvent(SERIALIZER_ELEMENT);
             }
         sendEndElementEvent(RESULT_ELEMENT);
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END insertFragment");
-        }
     }
 
 
