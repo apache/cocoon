@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.122 2003/08/15 05:47:41 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.123 2003/08/16 13:30:03 sylvain Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="SW" type="fix">
+     Rewrite handling of internal-redirects (i.e. redirects to "cocoon:" URLs). Previously, internal redirects
+     where not handled for internal requests (i.e. sitemap source). This bug prevented among other cases the use
+     of flow-driven pages enclosed in an aggregation.
+   </action>
    <action dev="CZ" type="fix">
      The jars in /lib/local are used during compilation again.
    </action>

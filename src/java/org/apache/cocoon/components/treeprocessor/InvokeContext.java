@@ -80,7 +80,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.2 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.3 2003/08/16 13:30:04 sylvain Exp $
  */
 
 public class InvokeContext implements Recomposable, Disposable, LogEnabled {
@@ -297,6 +297,17 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
         Object name = mapToName.get(map);
         mapToName.remove(map);
         nameToMap.remove(name);
+    }
+    
+    /**
+     * Prepare this context for reuse
+     *
+     */
+    public final void reset() {
+        this.mapStack.clear();
+        this.mapToName.clear();
+        this.nameToMap.clear();
+        dispose();
     }
 
     /**
