@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <project name="upgrade">
   <description>
     Upgrade targets that help to convert between different Cocoon versions

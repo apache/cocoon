@@ -14,12 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <project name="standalone">
 <!--
     ant include file for "standalone-demo" build
     @author bdelacretaz@codeconsult.ch
-
-    $Id: standalone-demo-build.xml,v 1.4 2004/03/08 06:07:15 antonio Exp $
  -->
 
 <target name="standalone-demo" depends="init, webapp" description="build webapp and copy files for standalone demo">

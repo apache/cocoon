@@ -14,12 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <project name="docs">
 
   <description>
     Documentation Targets
   </description>
-  
+
   <target name="prepare-docs" unless="exclude.documentation" depends="blocks">
 
     <!-- Set classpath for documentation -->
@@ -235,9 +236,9 @@ Not rebuilding docs, as they are up-to-date:
 
   </target>
   -->
-  
+
   <!-- Creates Javadocs -->
-  <target name="javadocs" 
+  <target name="javadocs"
           depends="prepare-blocks"
           description="Builds the API documentation (javadocs)"
           unless="internal.exclude.javadocs">
