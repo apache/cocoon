@@ -1,3 +1,16 @@
+(instructions copied from forrest's KEYS file)
+
+This file contains the PGP keys of various developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Users: pgp < KEYS
+Developers:
+        pgp -kxa <your name> and append it to this file.
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+        (gpg --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: PGPfreeware 7.0.3 for non-commercial use <http://www.pgp.com>
 
