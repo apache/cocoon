@@ -53,16 +53,8 @@
         <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-compile</xsl:for-each></xsl:attribute>
       </target>
 
-      <target name="patch">
-        <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-patch</xsl:for-each></xsl:attribute>
-      </target>
-
-      <target name="roles">
-        <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-roles</xsl:for-each></xsl:attribute>
-      </target>
-
       <target name="samples">
-        <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-samples</xsl:for-each></xsl:attribute>
+        <xsl:attribute name="depends">init<xsl:text>,</xsl:text>patch-samples<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-samples</xsl:for-each></xsl:attribute>
       </target>
 
       <target name="lib">
@@ -74,6 +66,59 @@
       </target>
 
       <xsl:apply-templates select="project[contains(@name,'-block')]" />
+
+      <target name="patch-roles" depends="init">
+         <xpatch file="{string('${build.dest}/org/apache/cocoon/cocoon.roles')}"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.xroles" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
+      </target>
+
+      <target name="patch-conf" depends="init">
+         <xpatch file="{string('${build.webapp}')}/sitemap.xmap"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.xmap" unless="unless.exclude.block.{$block-name}"/>
+               <include name="{$block-name}/conf/**/*.xpipe" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
+         <xpatch file="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.xconf" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
+         <xpatch file="{string('${build.webapp}')}/WEB-INF/logkit.xconf"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.xlog" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
+      </target>
+
+      <target name="patch-samples" depends="init">
+         <xpatch file="{string('${build.webapp}')}/samples/block-samples.xml"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.xsamples" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
+         <xpatch file="{string('${build.webapp}')}/samples/sitemap.xmap"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.samplesxpipe" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
+      </target>
+
    </xsl:template>
 
    <xsl:template match="project">
@@ -103,22 +148,6 @@
          <antcall target="{$block-name}-compile"/>
       </target>
 
-      <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
-         <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:attribute>
-         </xsl:if>
-
-         <antcall target="{$block-name}-patches"/>
-      </target>
-      
-      <target name="{@name}-roles" unless="unless.exclude.block.{$block-name}">
-         <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
-         </xsl:if>
-
-         <antcall target="{$block-name}-roles"/>
-      </target>
-           
       <target name="{@name}-samples" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-samples</xsl:for-each></xsl:attribute>
@@ -281,23 +310,10 @@
          </copy>
       </target>
 
-      <target name="{$block-name}-roles">
-         <xpatch directory="{string('${blocks}')}/{$block-name}/conf" extension="xroles" configuration="{string('${build.dest}/org/apache/cocoon/cocoon.roles')}"/>
-      </target>
-      
-      <target name="{$block-name}-patches" depends="{$block-name}-prepare">
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xmap" configuration="{string('${build.webapp}')}/sitemap.xmap"/>
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xpipe" configuration="{string('${build.webapp}')}/sitemap.xmap"/>
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xconf" configuration="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"/>
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xlog" configuration="{string('${build.webapp}')}/WEB-INF/logkit.xconf"/>
-      </target>
-      
       <target name="{$block-name}-samples" if="{$block-name}.has.samples">
          <copy filtering="on" todir="{string('${build.webapp}')}/samples/{$block-name}">
             <fileset dir="{string('${blocks}')}/{$block-name}/samples"/>
          </copy>
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xsamples" configuration="{string('${build.webapp}')}/samples/block-samples.xml"/>
-         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="samplesxpipe" configuration="{string('${build.webapp}')}/samples/sitemap.xmap"/>
 
          <!-- copy sample classes -->
          <copy todir="{string('${build.webapp.classes}')}" filtering="off">
