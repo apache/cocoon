@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.1 2003/03/26 21:21:30 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.2 2003/05/18 16:20:49 vgritsenko Exp $ -->
 
-<samples>
+<samples name="Aggregation">
 
-  <group name="Aggregation Sample">
+  <group name="Back">
+   <sample name="Back" href="../">
+    Back to the samples home page.
+   </sample>
+  </group>
+
+  <group name="Data Sources">
    <sample name="Slashdot" href="slashdot">
     Live XML Feed from Slashdot.
    </sample>
@@ -14,6 +20,9 @@
    <sample name="XMLHack.com" href="xmlhack">
     Live Channel Feed from XMLHack.com.
    </sample>
+  </group>
+
+  <group name="Aggregation Sample">
    <sample name="Fixed Content Aggregation" href="aggregate">
     Single Web Page with News from all sources above aggregated by
     the sitemap aggregation facilities. This is useful when you know
