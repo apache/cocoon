@@ -57,9 +57,9 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
+import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
 import org.xml.sax.Attributes;
@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.6 2003/12/11 09:30:16 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.7 2003/12/11 09:41:35 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -161,7 +161,14 @@ extends AbstractCopletTransformer {
                     final String path = attr.getValue("path");
                     final String value = attr.getValue("value");
                     
-                    CopletInstanceEvent event = new CopletJXPathEvent(cid, path, value);
+                    JXPathEvent event;
+                    if ( attr.getValue("layout") != null ) {
+                        final String layoutId = attr.getValue("layout");
+                        Object layout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
+                        event = new JXPathEvent(layout, path, value);
+                    } else {
+                        event = new CopletJXPathEvent(cid, path, value);
+                    }
                     newAttrs.addCDATAAttribute("href", linkService.getLinkURI(event));
                 }
             } catch (ServiceException e) {

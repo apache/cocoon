@@ -50,14 +50,12 @@
 */
 package org.apache.cocoon.portal.event.impl;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-
 /**
  * This events changes the value of an instance
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: JXPathEvent.java,v 1.1 2003/12/11 09:30:16 cziegeler Exp $
+ * @version CVS $Id: JXPathEvent.java,v 1.2 2003/12/11 09:41:35 cziegeler Exp $
  */
 public class JXPathEvent
     extends AbstractActionEvent {
@@ -80,7 +78,7 @@ public class JXPathEvent
         return value;
     }
 
-    public JXPathEvent(CopletInstanceData target, String path, Object value) {
+    public JXPathEvent(Object target, String path, Object value) {
         super( target );
         this.path = path;
         this.value = value;
