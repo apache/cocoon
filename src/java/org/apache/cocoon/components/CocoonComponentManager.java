@@ -85,7 +85,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.12 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.13 2003/06/21 14:08:07 jefft Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -112,6 +112,10 @@ implements SourceResolver
     /** The parent component manager for implementing parent aware components */
     private ComponentManager parentManager;
     
+    /** Temporary list of parent-aware components.  Will be null for most of
+     * our lifecycle. */
+    private ArrayList parentAwareComponents = new ArrayList();
+
     /** Create the ComponentManager */
     public CocoonComponentManager() {
         super( null, Thread.currentThread().getContextClassLoader() );
@@ -463,13 +467,32 @@ implements SourceResolver
         this.sourceResolver.release( source );
     }
 
+
     /* (non-Javadoc)
      * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#addComponent(java.lang.String, java.lang.Class, org.apache.avalon.framework.configuration.Configuration)
      */
     public void addComponent(String role, Class clazz, Configuration conf)
-    throws ComponentException {
+        throws ComponentException {
         super.addComponent(role, clazz, conf);
+        // Note that at this point, we're not initialized and cannot do
+        // lookups, so defer parental introductions to initialize().
         if ( ParentAware.class.isAssignableFrom( clazz ) ) {
+            parentAwareComponents.add(role);
+        }
+    }
+
+    public void initialize()
+        throws Exception
+    {
+        super.initialize();
+        if (parentAwareComponents == null) {
+            throw new ComponentException("CocoonComponentManager already initialized");
+        }
+        // Set parents for parentAware components
+        Iterator iter = parentAwareComponents.iterator();
+        while (iter.hasNext()) {
+            String role = (String)iter.next();
+            getLogger().debug(".. "+role);
             if ( parentManager != null && parentManager.hasComponent( role ) ) {
                 // lookup new component
                 Component component = null;
@@ -481,11 +504,10 @@ implements SourceResolver
                 } finally {
                     this.release( component );
                 }
-                
             }
         }
+        parentAwareComponents = null;  // null to save memory, and catch logic bugs.
     }
-
 }
 
 final class EnvironmentDescription {
