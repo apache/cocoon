@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: upload.xsp,v 1.3 2003/05/18 01:53:13 ghoward Exp $ -->
+<!-- CVS $Id: upload.xsp,v 1.1 2003/09/07 06:09:10 vgritsenko Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"

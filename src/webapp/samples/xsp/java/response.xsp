@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: response.xsp,v 1.2 2003/05/07 04:57:16 vgritsenko Exp $ -->
+<!-- CVS $Id: response.xsp,v 1.1 2003/09/07 06:09:10 vgritsenko Exp $ -->
 
-<xsp:page language="javascript"
+<xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"  
           xmlns:xsp-response="http://apache.org/xsp/response/2.0">
 
@@ -35,9 +35,9 @@
 <tr>
   <td>add-date-header</td><td>
     <xsp-response:add-date-header name="X-Cocoon-Date">
-      <xsp-response:date><xsp:expr>new java.util.Date()</xsp:expr></xsp-response:date>
+      <xsp-response:date><xsp:expr>new Date()</xsp:expr></xsp-response:date>
         </xsp-response:add-date-header></td>
-  <td>addDateHeader</td><td><xsp:logic>response.addDateHeader("X-Java-Date", -1);</xsp:logic></td>
+  <td>addDateHeader</td><td><xsp:logic>response.addDateHeader("X-Java-Date", System.currentTimeMillis());</xsp:logic></td>
     </tr>
 
 <tr>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: session.xsp,v 1.2 2003/05/07 04:57:16 vgritsenko Exp $ -->
+<!-- CVS $Id: session.xsp,v 1.1 2003/09/07 06:09:10 vgritsenko Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
@@ -52,7 +52,7 @@ get-id                      <xsp-session:get-id as="xml"/>
 get-last-accessed-time      <xsp-session:get-last-accessed-time as="xml"/>
 get-max-inactive-interval   <xsp-session:get-max-inactive-interval as="xml"/>
 is-new                      <xsp-session:is-new as="xml"/>
-encode-url                  <xsp-session:encode-url href="../" as="xml"/>
+encode-url                  <xsp-session:encode-url href="../"/>
 form-encode-url             <xsp-session:form-encode-url href="../"/>
 </textarea>
 
