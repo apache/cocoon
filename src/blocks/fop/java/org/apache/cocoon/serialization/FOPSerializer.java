@@ -56,7 +56,6 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -68,7 +67,6 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
 import org.apache.cocoon.components.renderer.RendererFactory;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.url.SourceProtocolHandler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -83,12 +81,12 @@ import org.apache.fop.render.Renderer;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.7 2004/02/04 14:39:58 sylvain Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.8 2004/02/07 13:18:16 joerg Exp $
  */
 public class FOPSerializer extends AbstractSerializer implements
-  Configurable, CacheableProcessingComponent, Serviceable, Disposable {
+  Configurable, CacheableProcessingComponent, Serviceable/*, Disposable */{
 
-    protected SourceResolver resolver;
+    //protected SourceResolver resolver;
 
     /**
      * The Renderer Factory to use
@@ -140,13 +138,13 @@ public class FOPSerializer extends AbstractSerializer implements
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        //this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
-
+/*
     public void dispose() {
         this.manager.release(this.resolver);
     }
-
+*/
     /**
      * Set the configurations for this serializer.
      */
@@ -258,7 +256,7 @@ public class FOPSerializer extends AbstractSerializer implements
     public void setOutputStream(OutputStream out) {
         
         // Give the source resolver to Batik which is used by FOP
-        SourceProtocolHandler.setup(this.resolver);
+        //SourceProtocolHandler.setup(this.resolver);
 
         // load the fop driver
         this.driver = new Driver();
