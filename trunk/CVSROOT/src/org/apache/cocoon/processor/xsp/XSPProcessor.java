@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.15 2000-03-25 00:30:40 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.16 2000-03-25 01:39:02 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.15 $ $Date: 2000-03-25 00:30:40 $
+ * @version $Revision: 1.16 $ $Date: 2000-03-25 01:39:02 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -269,8 +269,8 @@ public class XSPProcessor extends AbstractActor
       }
 
       try {
-		// FIXME: This works only with resources and absolute filenames!!!
-		Object resource = this.getLocationResource(location, "");
+                // FIXME: This works only with resources and absolute filenames!!!
+                Object resource = this.getLocationResource(location);
 
         XSPPreprocessor preprocessor = null;
         String preprocessorName =
@@ -279,8 +279,8 @@ public class XSPProcessor extends AbstractActor
           preprocessor = (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
         }
 
-		// Store only after initialization completes successfully
-		this.refreshLogicsheet(resource, preprocessor);
+                // Store only after initialization completes successfully
+                this.refreshLogicsheet(resource, preprocessor);
         byLanguage.put(language, this.store.get(resource.toString()));
       } catch (Exception ex) {
         throw new RuntimeException ("Error loading logicsheet: " + location + ". " + ex);
@@ -343,7 +343,7 @@ public class XSPProcessor extends AbstractActor
 
       pageEntry = new PageEntry(sourceFile, targetFile);
       pageEntry.setLogicsheets(
-        this.getLogicsheets(document, (String) parameters.get("path"))
+        this.getLogicsheets(document, request)
       );
 
       // Was page created during a previous incarnation?
@@ -359,7 +359,7 @@ public class XSPProcessor extends AbstractActor
     if (pageEntry.hasChanged()) {
       // Update logicsheets in page entry
       pageEntry.setLogicsheets(
-        this.getLogicsheets(document, (String) parameters.get("path"))
+        this.getLogicsheets(document, request)
       );
 
       // Build XSP parameters for logicsheet
@@ -488,13 +488,13 @@ public class XSPProcessor extends AbstractActor
   private void refreshLogicsheet(Object resource, XSPPreprocessor preprocessor)
     throws Exception
   {
-	String name = resource.toString();
+        String name = resource.toString();
     XSPLogicsheet logicsheet = (XSPLogicsheet) this.store.get(name);
 
     // Parse logicsheet
-	if (logicsheet == null) {
+        if (logicsheet == null) {
       logicsheet = new XSPLogicsheet(this.transformer, this.parser, name);
-	}
+        }
 
     logicsheet.setStylesheet(getDocument(resource));
     logicsheet.setPreprocessor(preprocessor);
@@ -506,7 +506,7 @@ public class XSPProcessor extends AbstractActor
   }
 
   // FIXME: Utils.java: pass pi type as arg. Provide for sheet building
-  private Vector getLogicsheets(Document document, String path)
+  private Vector getLogicsheets(Document document, HttpServletRequest request)
     throws Exception
   {
     Vector vector = new Vector();
@@ -514,7 +514,7 @@ public class XSPProcessor extends AbstractActor
     Enumeration pis = Utils.getAllPIs(document, LOGICSHEET_PI).elements();
     while (pis.hasMoreElements()) {
       Hashtable attributes =
-	    Utils.getPIPseudoAttributes((ProcessingInstruction) pis.nextElement());
+            Utils.getPIPseudoAttributes((ProcessingInstruction) pis.nextElement());
 
       String location = (String) attributes.get("href");
       if (location != null) {
@@ -526,9 +526,9 @@ public class XSPProcessor extends AbstractActor
               (XSPPreprocessor) Class.forName(preprocessorName).newInstance();
           }
 
-		  Object resource = getLocationResource(location, path);
+                  Object resource = getLocationResource(location, request);
 
-		  this.refreshLogicsheet(resource, preprocessor);
+                  this.refreshLogicsheet(resource, preprocessor);
 
           vector.addElement(resource);
 
@@ -650,19 +650,13 @@ public class XSPProcessor extends AbstractActor
   }
 
   // FIXME: Utils.java. Reuse in XSLTProcessor
-  private static Object getLocationResource(String location, String path)
+  private static Object getLocationResource(String location)
     throws MalformedURLException
   {
-	Object resource = null;
+        Object resource = null;
 
     if (location.indexOf("://") < 0) {
-	  File file = new File(location);
-
-	  if (!(file.isAbsolute() && file.exists())) {
-	    file = new File(path + location);
-	  }
-
-      resource = file;
+      resource = new File(location);
     } else if (location.startsWith("resource://")) {
       resource = ClassLoader.getSystemResource(
         location.substring("resource://".length())
@@ -671,6 +665,36 @@ public class XSPProcessor extends AbstractActor
       resource = new URL(location);
     }
 
-	return resource;
+        return resource;
+  }
+
+  private Object getLocationResource(String location, HttpServletRequest request)
+    throws Exception
+  {
+    Object resource = null;
+
+    if (location.indexOf("://") < 0) {
+      if (location.charAt(0) == '/') {
+        // Location is relative to webserver's root
+        location = this.servletContext.getRealPath(location);
+      } else {
+        // Location is relative to requested page's virtual directory
+        // FIXME: Should be in Utils.java, not here on in ProducerFromFile
+        String basename = Utils.getBasename(request, this.servletContext);
+        String path = basename.substring(0, basename.lastIndexOf('/') + 1);
+
+        location = path + location;
+      }
+
+      resource = new File(location);
+    } else if (location.startsWith("resource://")) {
+      resource = ClassLoader.getSystemResource(
+        location.substring("resource://".length())
+      );
+    } else {
+      resource = new URL(location);
+    }
+
+        return resource;
   }
 }
