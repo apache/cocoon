@@ -61,96 +61,141 @@ import java.io.FileInputStream;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: MIMEUtils.java,v 1.1 2003/03/09 00:09:43 pier Exp $
+ * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
+ * @version CVS $Id: MIMEUtils.java,v 1.2 2003/05/15 08:30:02 stephan Exp $
  */
-
 public class MIMEUtils {
 
-    public static String getMIMEType(File file) throws FileNotFoundException, IOException {
+    final private static HashMap extMap = new HashMap() {
+        {
+            put(null, "application/octet-stream");
+            put(".text", "text/plain");
+            put(".txt", "text/plain");
+            put(".html", "text/html");
+            put(".htm", "text/html");
+            put(".xml", "text/xml");
+            put(".css", "text/css");
+            put(".rtf", "text/rtf");
+            put(".wml", "text/vnd.wap.wml");
+            put(".jpg", "image/jpeg");
+            put(".jpeg", "image/jpeg");
+            put(".jpe", "image/jpeg");
+            put(".png", "image/png");
+            put(".gif", "image/gif");
+            put(".tif", "image/tiff");
+            put(".tiff", "image/tiff");
+            put(".svg", "image/svg-xml");
+            put(".pdf", "application/pdf");
+            put(".wrl", "model/vrml");
+            put(".smil", "application/smil");
+            put(".js", "application/x-javascript");
+            put(".zip", "application/zip");
+            put(".mpeg", "video/mpeg");
+            put(".mpg", "video/mpeg");
+            put(".mpe", "video/mpeg");
+            put(".mov", "video/quicktime");
+            put(".mid", "audio/midi");
+            put(".mp3", "audio/mpeg");
+            put(".vcf", "text/x-vcard");
+            put(".rdf", "text/rdf");
+        }
+    };
+
+    final private static HashMap mimeMap = new HashMap() {
+        {
+            put(null, null);
+            put("text/plain", ".text");
+            put("text/html", ".html");
+            put("text/xml", ".xml");
+            put("text/css", ".css");
+            put("text/rtf", ".rtf");
+            put("application/rtf", ".rtf");
+            put("text/vnd.wap.wml", ".wml");
+            put("image/jpeg", ".jpeg");
+            put("image/jpg", ".jpeg");
+            put("image/jpe", ".jpeg");
+            put("image/png", ".png");
+            put("image/gif", ".gif");
+            put("image/tiff", ".tiff");
+            put("image/tif", ".tiff");
+            put("image/svg-xml", ".svg");
+            put("image/svg+xml", ".svg");
+            put("application/pdf", ".pdf");
+            put("model/vrml", ".wrl");
+            put("application/smil", ".smil");
+            put("application/x-javascript", ".js");
+            put("application/zip", ".zip");
+            put("video/mpeg", ".mpeg");
+            put("video/mpeg", ".mpe");
+            put("video/mpeg", ".mpg");
+            put("video/quicktime", ".mov");
+            put("audio/midi", ".mid");
+            put("audio/mpeg", ".mp3");
+            put("text/x-vcard", ".vcf");
+            put("text/rdf", ".rdf");
+        }
+    };
+
+    /**
+     * Return the MIME type for a given file.
+     *
+     * @param file File.
+     *
+     * @return MIME type.
+     */
+    public static String getMIMEType(final File file)
+      throws FileNotFoundException, IOException {
         BufferedInputStream in = null;
+
         try {
             in = new BufferedInputStream(new FileInputStream(file));
             byte[] buf = new byte[3];
             int count = in.read(buf, 0, 3);
 
-            if (count < 3)
+            if (count<3) {
                 return (null);
+            }
 
-            if ((buf[0]) == (byte) 'G' && (buf[1]) == (byte) 'I' && (buf[2]) == (byte) 'F')
+            if ((buf[0])==(byte) 'G' && (buf[1])==(byte) 'I' &&
+                (buf[2])==(byte) 'F') {
                 return ("image/gif");
+            }
 
-            if ((buf[0]) == (byte) 0xFF && (buf[1]) == (byte) 0xD8)
+            if ((buf[0])==(byte) 0xFF && (buf[1])==(byte) 0xD8) {
                 return ("image/jpeg");
+            }
 
-            return (null);
-        }
-        finally {
-            if (in != null) {
+        } finally {
+            if (in!=null) {
                 try {
                     in.close();
-                }
-                catch (IOException e) {
-                }
+                } catch (IOException e) {}
             }
         }
+        final String name = file.getName();
+
+        return getMIMEType(name.substring(name.lastIndexOf(".")));
     }
 
-    public static String getMIMEType(String ext) {
-        // TODO
-        return null;
+    /**
+     * Return the MIME type for a given filename extension.
+     *
+     * @param ext Filename extension.
+     *
+     * @return MIME type.
+     */
+    public static String getMIMEType(final String ext) {
+        return (String) extMap.get(ext);
     }
 
-    public static String getDefaultExtension(String type) {
-        if (type == null) {
-            return ".html";
-        } else if ("text/html".equals(type)) {
-            return ".html";
-        } else if ("text/xml".equals(type)) {
-            return ".xml";
-        } else if ("text/css".equals(type)) {
-            return ".css";
-        } else if ("text/vnd.wap.wml".equals(type)) {
-            return ".wml";
-        } else if ("image/jpg".equals(type)) {
-            return ".jpg";
-        } else if ("image/jpeg".equals(type)) {
-            return ".jpg";
-        } else if ("image/png".equals(type)) {
-            return ".png";
-        } else if ("image/gif".equals(type)) {
-            return ".gif";
-        } else if ("image/svg-xml".equals(type)) {
-            return ".svg";
-        } else if ("application/pdf".equals(type)) {
-            return ".pdf";
-        } else if ("model/vrml".equals(type)) {
-            return ".wrl";
-        } else if ("text/plain".equals(type)) {
-            return ".txt";
-        } else if ("application/rtf".equals(type)) {
-            return ".rtf";
-        } else if ("text/rtf".equals(type)) {
-            return ".rtf";
-        } else if ("application/smil".equals(type)) {
-            return ".smil";
-        } else if ("application/x-javascript".equals(type)) {
-            return ".js";
-        } else if ("application/zip".equals(type)) {
-            return ".zip";
-        } else if ("video/mpeg".equals(type)) {
-            return ".mpg";
-        } else if ("video/quicktime".equals(type)) {
-            return ".mov";
-        } else if ("audio/midi".equals(type)) {
-            return ".mid";
-        } else if ("audio/mpeg".equals(type)) {
-            return ".mp3";
-        } else if ("text/x-vcard".equals(type)) {
-            return ".vcf";
-        } else if ("text/rdf".equals(type)) {
-            return ".rdf";
-        } else {
-            return "";
-        }
+    /**
+     * Return the default filename extension for a given MIME type.
+     *
+     * @param type MIME type.
+     *
+     * @return Filename extension.
+     */
+    public static String getDefaultExtension(final String type) {
+        return (String) mimeMap.get(type);
     }
 }
