@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.73 2003/07/03 00:01:31 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.74 2003/07/04 08:59:23 cziegeler Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="NN" type="add">Dummy action</action>
+ </release>
+ <release version="2.1m3" date="July 5 2003">
   <action dev="JH" type="update">
     Refactored the XPathDirectoryGenerator: provides all the functionality of DirectoryGenerator now,
     parameter xpath added replacing the xpointer-ish syntax, additional parameter xmlFiles for specifying
