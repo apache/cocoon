@@ -66,6 +66,16 @@ public interface MailSender {
     void setTo(String to);
 
     /**
+     * Sets the reply-to address(es) for the message. The address
+     * is in the format, that
+     * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
+     * (one or more email addresses separated by a commas).
+     * @param replyTo the address(es) that replies should be sent to
+     * @see javax.mail.internet.InternetAddress#parse(String)
+     */
+    void setReplyTo(String replyTo);
+
+    /**
      * Sets the address(es), which should receive a carbon copy of the
      * message. The address is in the format, that
      * {@link javax.mail.internet.InternetAddress#parse(String)} can handle

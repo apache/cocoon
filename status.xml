@@ -202,8 +202,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="add" fixes-bug="28973" due-to="Andrew Thornton" due-to-email="andrew@caret.cam.ac.uk">
+     Mail Block: Add support for replyTo.
+   </action>
    <action dev="UV" type="add">
-      CocoonBean can now process a URL to a SAX ContentHandler (skipping the serialiser), via cocoon.process(uri, handler).
+     CocoonBean can now process a URL to a SAX ContentHandler (skipping the serialiser), via cocoon.process(uri, handler).
    </action>
    <action dev="VG" type="update">
      OJB Block: Integrated OJB logging with Cocoon logging.
@@ -215,13 +218,13 @@
      Updated commons-transaction to 1.0.1, castor to 0.9.6, groovy to beta-9, quartz to 1.4.4.
    </action>
    <action dev="SW" type="update">
-    Remove restrictions on the flowscript object model (FOM): the objects available through the
-    <code>cocoon</code> object (request, session, response, etc) now provide the full API of the
-    corresponding Java classes.
+     Remove restrictions on the flowscript object model (FOM): the objects available through the
+     <code>cocoon</code> object (request, session, response, etc) now provide the full API of the
+     corresponding Java classes.
    </action>
    <action dev="CZ" type="fix">
-    CForms: forms generator and template transformer now use the same object model as the JXTG: access
-            to objects have to use the "cocoon" object, like "cocoon/continuation/id".
+     CForms: forms generator and template transformer now use the same object model as the JXTG: access
+             to objects have to use the "cocoon" object, like "cocoon/continuation/id".
    </action>
    <action dev="RP" type="add">
      hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
@@ -230,7 +233,7 @@
      Apply patch for a better exception handling in the Meta-InputModule when an input module is not found.
    </action>
    <action dev="JH" type="fix" fixes-bug="33097">
-    Fixed caching of i18n bundles when using multiple locations.
+     Fixed caching of i18n bundles when using multiple locations.
    </action>
    <action dev="SW" type="fix" fixes-bug="33178" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
      Fix handling of environment context when returning from a pass-through sitemap mount.
@@ -242,8 +245,8 @@
      Build system: External blocks can be built together with Cocoon.
    </action>
    <action dev="RG" type="fix" fixes-bug="33091">
-      Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
-      now be configured to contain the data required to generated the required events.
+     Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
+     now be configured to contain the data required to generated the required events.
    </action>
    <action dev="AG" type="add">
      Add &lt;compiler-compliance-level&gt; parameter for java XSP compiler.

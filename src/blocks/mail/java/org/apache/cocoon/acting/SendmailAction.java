@@ -32,7 +32,9 @@ import java.util.Map;
  *   <dt>from</dt>
  *   <dd>the email address the mail appears to be from</dd>
  *   <dt>to</dt>
- *   <dd>the email address the mail it sent to</dd>
+ *   <dd>the email address(es) the mail it sent to</dd>
+ *   <dt>replyTo</dt>
+ *   <dd>the email address(es) replies should be sent to</dd>
  *   <dt>subject</dt>
  *   <dd>the subject of the email</dd>
  *   <dt>body</dt>
@@ -42,8 +44,7 @@ import java.util.Map;
  * Action attempts to get all of these parameters from the sitemap, but
  * if they do not exist there it will read them from the request parameters.
  *
- * <p>It also supports all of the {@link Sendmail} action sitemap parameters.
- * </p>
+ * <p>It also supports all of the {@link Sendmail} action sitemap parameters</p>
  *
  * @deprecated Please use the {@link Sendmail Sendmail} action instead.
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
@@ -65,6 +66,9 @@ public class SendmailAction extends Sendmail {
         }
         if (!parameters.isParameter("to")) {
             parameters.setParameter("to", request.getParameter("to"));
+        }
+        if (!parameters.isParameter("replyTo")) {
+            parameters.setParameter("replyTo", request.getParameter("replyTo"));
         }
         if (!parameters.isParameter("subject")) {
             parameters.setParameter("subject", request.getParameter("subject"));

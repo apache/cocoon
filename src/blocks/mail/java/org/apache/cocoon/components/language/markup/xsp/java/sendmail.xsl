@@ -51,6 +51,11 @@
         <xsl:with-param name="content" select="sendmail:to"/>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="reply-to">
+      <xsl:call-template name="get-nested-string">
+        <xsl:with-param name="content" select="sendmail:reply-to"/>
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="subject">
       <xsl:call-template name="get-nested-string">
         <xsl:with-param name="content" select="sendmail:subject"/>
@@ -114,9 +119,12 @@
         </xsl:when>
       </xsl:choose>
 
-        _sendmail_mms.setTo(String.valueOf(<xsl:copy-of select="$to"/>));
         _sendmail_mms.setSubject(String.valueOf(<xsl:copy-of select="$subject"/>));
         _sendmail_mms.setFrom(String.valueOf(<xsl:copy-of select="$from"/>));
+        _sendmail_mms.setTo(String.valueOf(<xsl:copy-of select="$to"/>));
+      <xsl:if test="sendmail:reply-to">
+        _sendmail_mms.setReplyTo(String.valueOf(<xsl:copy-of select="$reply-to"/>));
+      </xsl:if>
       <xsl:if test="sendmail:cc">
         _sendmail_mms.setCc(String.valueOf(<xsl:copy-of select="$cc"/>));
       </xsl:if>

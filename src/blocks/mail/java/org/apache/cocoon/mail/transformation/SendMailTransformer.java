@@ -190,6 +190,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     public static final String ELEMENT_SMTPHOST           = "smtphost";
     public static final String ELEMENT_MAILFROM           = "from";
     public static final String ELEMENT_MAILTO             = "to";
+    public static final String ELEMENT_REPLYTO            = "reply-to";
     public static final String ELEMENT_MAILSUBJECT        = "subject";
     public static final String ELEMENT_MAILBODY           = "body";
     public static final String ELEMENT_ATTACHMENT         = "attachment";
@@ -213,6 +214,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected static final int MODE_BODY               = 5;
     protected static final int MODE_ATTACHMENT         = 6;
     protected static final int MODE_ATTACHMENT_CONTENT = 7;
+    protected static final int MODE_REPLY_TO           = 8;
 
     /*
      * constants, related to parameter from request
@@ -220,6 +222,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     public final static String PARAM_SMTPHOST    = "smtphost";
     public final static String PARAM_FROM        = "from";
     public final static String PARAM_TO          = "to";
+    public final static String PARAM_REPLY_TO    = "reply-to";
     public final static String PARAM_SUBJECT     = "subject";
     public final static String PARAM_BODY        = "body";
     public final static String PARAM_SENDPARTIAL = "sendpartial";
@@ -229,7 +232,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
      * communication parameters, which will be used to send mails
      */
     protected List                 toAddresses;
+    protected List                 replyToAddresses;
     protected List                 defaultToAddresses;
+    protected List                 defaultReplyToAddresses;
     protected List                 attachments;
     protected String               subject;
     protected String               body;
@@ -268,7 +273,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
      */
     public void setup(SourceResolver resolver, Map objectModel, String src,
                       Parameters par)
-               throws ProcessingException, SAXException, IOException {
+   throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
         this.mailHost    = par.getParameter(PARAM_SMTPHOST, this.defaultSmtpHost);
@@ -277,15 +282,15 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         this.contextPath = this.request.getContextPath();
         this.sendPartial = par.getParameterAsBoolean(PARAM_SENDPARTIAL, true);
 
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("overwritten by Transformer-Parameters in Pipeline");
-            this.getLogger().debug("overwritten Parameters=" + mailHost + ":" +
-                                   fromAddress);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Using host " + mailHost + ", from address " + fromAddress);
         }
 
         this.attachments = new ArrayList();
         this.defaultToAddresses = new ArrayList();
         appendToAddress(this.defaultToAddresses, par.getParameter(PARAM_TO, ""));
+        this.defaultReplyToAddresses = new ArrayList();
+        appendToAddress(this.defaultReplyToAddresses, par.getParameter(PARAM_REPLY_TO, ""));
 
   	    this.subject = par.getParameter(PARAM_SUBJECT, null);
    	    this.body = par.getParameter(PARAM_BODY, null);
@@ -296,27 +301,29 @@ public class SendMailTransformer extends AbstractSAXTransformer {
      */
     public void startTransformingElement(String uri, String name, String raw,
                                          Attributes attr)
-                                  throws SAXException {
+    throws SAXException {
         if (name.equals(ELEMENT_SENDMAIL)) {
             // Clean from possible previous usage
             this.toAddresses = new ArrayList(this.defaultToAddresses);
+            this.replyToAddresses = new ArrayList(this.defaultReplyToAddresses);
             this.attachments.clear();
         } else if (name.equals(ELEMENT_SMTPHOST)) {
-            this.startTextRecording();
+            startTextRecording();
             this.mode = MODE_SMTPHOST;
         } else if (name.equals(ELEMENT_MAILFROM)) {
-            //this.fromAddress = attr.getValue(ELEMENT_MAILFROM);
-            this.startTextRecording();
+            startTextRecording();
             this.mode = MODE_FROM;
         } else if (name.equals(ELEMENT_MAILTO)) {
-            this.startTextRecording();
+            startTextRecording();
             this.mode = MODE_TO;
+        } else if (name.equals(ELEMENT_REPLYTO)) {
+            startTextRecording();
+            this.mode = MODE_REPLY_TO;
         } else if (name.equals(ELEMENT_MAILSUBJECT)) {
-            this.startTextRecording();
+            startTextRecording();
             this.mode = MODE_SUBJECT;
         } else if (name.equals(ELEMENT_MAILBODY)) {
             String strBody = attr.getValue("src");
-
             if (strBody != null) {
                 this.bodyURI = strBody;
             }
@@ -328,7 +335,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 this.bodyMimeType = DEFAULT_BODY_MIMETYPE;
             }
 
-            this.startTextRecording();
+            startTextRecording();
             this.mode = MODE_BODY;
         } else if (name.equals(ELEMENT_ATTACHMENT)) {
             this.attachmentDescriptor = new AttachmentDescriptor(attr.getValue("name"),
@@ -337,12 +344,11 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                                                                  attr.getValue("url"));
             this.mode = MODE_ATTACHMENT;
         } else if (name.equals(ELEMENT_ATTACHMENT_CONTENT)) {
-            this.startSerializedXMLRecording(new Properties());
+            startSerializedXMLRecording(new Properties());
             this.mode = MODE_ATTACHMENT_CONTENT;
         } else {
-            throw new SAXException("Unknown element " + name);
+            throw new SAXException("Unknown element <" + name + ">");
         }
-
     }
 
     /* (non-Javadoc)
@@ -351,29 +357,30 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     public void endTransformingElement(String uri, String name, String raw)
                                 throws SAXException, ProcessingException {
         if (name.equals(ELEMENT_SENDMAIL)) {
-            if (this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("Mail contents- Subject: " +
-                                      this.subject + "\n" + "Body: " +
-                                      this.body);
+            if (getLogger().isInfoEnabled()) {
+                getLogger().info("Mail Subject: " + this.subject + "\n" +
+                                 "Body: " + this.body);
             }
 
-            this.sendMail();
+            sendMail();
         } else if (name.equals(ELEMENT_SMTPHOST) ) {
-            this.mailHost = this.endTextRecording();
+            this.mailHost = endTextRecording();
             this.mode     = MODE_NONE;
         } else if (name.equals(ELEMENT_MAILFROM)) {
-            this.fromAddress = this.endTextRecording();
+            this.fromAddress = endTextRecording();
             this.mode        = MODE_NONE;
         } else if (name.equals(ELEMENT_MAILTO)) {
-            this.toAddresses.add(this.endTextRecording());
+            this.toAddresses.add(endTextRecording());
+            this.mode = MODE_NONE;
+        } else if (name.equals(ELEMENT_REPLYTO)) {
+            this.replyToAddresses.add(endTextRecording());
             this.mode = MODE_NONE;
         } else if (name.equals(ELEMENT_MAILSUBJECT)) {
-            String strSubject = this.endTextRecording();
-
+            String strSubject = endTextRecording();
             if (strSubject != null) {
                 this.subject = strSubject;
             } else {
-                this.getLogger().debug("Mail-Subject not available");
+                getLogger().debug("Mail: No Subject");
             }
 
             this.mode = MODE_NONE;
@@ -382,16 +389,15 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             this.attachmentDescriptor = null;
             this.mode                 = MODE_NONE;
         } else if (name.equals(ELEMENT_ATTACHMENT_CONTENT)) {
-            this.attachmentDescriptor.setContent(this.endSerializedXMLRecording());
+            this.attachmentDescriptor.setContent(endSerializedXMLRecording());
             this.mode = MODE_NONE;
         } else if (name.equals(ELEMENT_MAILBODY)) {
             String strB = null;
-
             try {
-                strB = this.endTextRecording();
+                strB = endTextRecording();
             } catch (Exception e) {
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("No Body as String in config-file available");
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Mail: No Body as String in config-file available");
                 }
             }
 
@@ -401,13 +407,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
             this.mode = MODE_NONE;
         } else {
-            throw new SAXException("Unknown element " + name);
+            throw new SAXException("Unknown element <" + name + ">");
         }
     }
 
     private static void appendToAddress(List addresses, String s) {
         StringTokenizer t = new StringTokenizer(s.trim(), ";");
-
         while (t.hasMoreElements()) {
             addresses.add(t.nextToken());
         }
@@ -415,9 +420,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
     /**
      *
-     * @throws SAXException
      */
-    private void sendMail() throws SAXException {
+    private void sendMail() {
         try {
             Properties props = new Properties();
             props.put("mail.smtp.host", this.mailHost);
@@ -440,10 +444,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 return;
             }
 
-            Session   session = Session.getDefaultInstance(props, null);
-            Transport trans = null;
-
-            trans = session.getTransport("smtp");
+            Session session = Session.getDefaultInstance(props, null);
+            Transport trans = session.getTransport("smtp");
             trans.connect();
 
             this.smtpMessage = setUpMessage(session);
@@ -455,18 +457,18 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 for (int i = 0; i < this.toAddresses.size(); i++) {
                     List v = new ArrayList(1);
                     v.add(this.toAddresses.get(i));
-                    this.sendMail(v, trans);
+                    sendMail(v, trans);
                 }
             } else {
-                this.sendMail(this.toAddresses, trans);
+                sendMail(this.toAddresses, trans);
             }
 
             trans.close();
             super.sendEndElementEventNS(ELEMENT_RESULT);
-	    this.ignoreHooksCount--;
-        } catch (Exception sE) {
-            this.getLogger().error("sendMail-Error", sE);
-            this.sendExceptionElement(sE);
+            this.ignoreHooksCount--;
+        } catch (Exception e) {
+            getLogger().error("Exception sending mail", e);
+            sendExceptionElement(e);
         }
     }
 
@@ -487,14 +489,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             InternetAddress[] iaArr = SendMailTransformer.getAddresses(iA);
             this.smtpMessage.setRecipients(Message.RecipientType.TO, iaArr);
             trans.sendMessage(this.smtpMessage, iaArr);
-        } catch (SendFailedException sfEx) {
-            this.getLogger().error("Exception during sending of mail", sfEx);
+        } catch (SendFailedException e) {
+            getLogger().error("Exception during sending of mail", e);
 
-            Address[] adr = sfEx.getInvalidAddresses();
-
+            Address[] adr = e.getInvalidAddresses();
             for (int isfEx = 0; isfEx < iA.length; isfEx++) {
                 String tmpAddress = iA[isfEx].getAddress().getAddress();
-
                 for (int sei = 0; sei < adr.length; sei++) {
                     if (((InternetAddress) adr[sei]).getAddress()
                              .equalsIgnoreCase(tmpAddress)) {
@@ -503,11 +503,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 }
             }
 
-            Address[] ad = sfEx.getValidUnsentAddresses();
-
+            Address[] ad = e.getValidUnsentAddresses();
             for (int isfEx = 0; isfEx < iA.length; isfEx++) {
                 String tmpAddress = iA[isfEx].getAddress().getAddress();
-
                 for (int sei = 0; sei < ad.length; sei++) {
                     if (((InternetAddress) ad[sei]).getAddress()
                              .equalsIgnoreCase(tmpAddress)) {
@@ -516,9 +514,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 }
             }
         } catch (Exception e) {
-            this.getLogger().error("Exception during sending of mail", e);
-            this.sendExceptionElement(e);
-
+            getLogger().error("Exception sending mail", e);
+            sendExceptionElement(e);
             return;
         }
 
@@ -529,6 +526,11 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         Message sm = new MimeMessage(session);
 
         //sm.setAllow8bitMIME(true);
+        Address[] replyTo = new Address[this.replyToAddresses.size()];
+        for (int i = 0 ; i < this.replyToAddresses.size(); i++) {
+            replyTo[i] = new InternetAddress((String) this.replyToAddresses.get(i));
+        }
+        sm.setReplyTo(replyTo);
         sm.setFrom(new InternetAddress(this.fromAddress));
         sm.setSubject(this.subject);
 
@@ -560,14 +562,13 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             messageBodyPart = new MimeBodyPart();
 
             if (!aD.isTextContent()) {
-                Source     inputSource = null;
+                Source inputSource = null;
                 DataSource dataSource = null;
 
                 if (aD.isURLSource()) {
                     inputSource = resolver.resolveURI(aD.strAttrSrc);
 
                     String iSS = inputSource.getURI();
-
                     if (iSS.startsWith("cocoon:")) {
                         iSS = iSS.substring(7, iSS.length());
 
@@ -578,9 +579,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                             iSS = "http://localhost:" + this.port + iSS;
                         }
 
-                        if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug("cocoon-URI changed to " +
-                                                   iSS);
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("cocoon-URI changed to " + iSS);
                         }
 
                         dataSource = new URLDataSource(new URL(iSS));
@@ -636,7 +636,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
     private void sendExceptionElement(Exception ex) {
         try {
-	    this.ignoreHooksCount++;
+            this.ignoreHooksCount++;
             super.sendStartElementEventNS("exception");
             super.sendStartElementEventNS("message");
             super.sendTextEvent(ex.getMessage());
@@ -653,9 +653,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             super.sendEndElementEvent("email:stacktrace");*/
 
             super.sendEndElementEventNS("exception");
-	    this.ignoreHooksCount--;
+            this.ignoreHooksCount--;
         } catch (SAXException e) {
-            this.getLogger().error("Error while sending a SAX-Event", e);
+            getLogger().error("Error while sending a SAX-Event", e);
         }
     }
 
