@@ -2,7 +2,7 @@
 
 <!--+
     | XMLDB Samples Sitemap
-    | CVS $Id: sitemap.xmap,v 1.5 2003/12/12 15:00:31 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.6 2004/01/12 18:08:38 ugo Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
