@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,8 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFFooter;
+import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -36,7 +38,7 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.8 2004/03/05 13:02:04 bdelacretaz Exp $
+ * @version CVS $Id: Sheet.java,v 1.9 2004/07/04 20:57:02 antonio Exp $
  */
 
 // package scope
@@ -186,11 +188,6 @@ class Sheet extends AbstractLogEnabled {
 
     HSSFCellStyle addStyleRegion(Region region) {
         HSSFCellStyle style = _workbook.createStyle();
-        /*
-         * getLogger().debug("region = "+ region.getRowFrom() +
-         * ","+region.getColumnFrom()+
-         * ","+region.getRowTo()+","+region.getColumnTo());
-         */
         regions.put(region, style);
         return style;
     }
@@ -205,14 +202,10 @@ class Sheet extends AbstractLogEnabled {
         Iterator iregions = regions.keySet().iterator();
         while (iregions.hasNext()) {
             Region region = ((Region)iregions.next());
-            //            if (col == 1)
-            //                getLogger().debug("breakpoint support");
             if (region.contains(row, col)) {
-                //getLogger().debug("Returning style for " + row +"," + col);
                 return (HSSFCellStyle)regions.get(region);
             }
         }
-        //getLogger().debug("returning null for "+row+","+col);
         return null;
     }
 
@@ -254,18 +247,13 @@ class Sheet extends AbstractLogEnabled {
         Iterator iregions = regions.keySet().iterator();
         while (iregions.hasNext()) {
             Region region = ((Region)iregions.next());
-            //getLogger().debug("fixing region
-            // "+region.getRowFrom()+","+region.getColumnFrom()+"-"+
-            //          region.getRowTo()+","+region.getColumnTo());
-            for (int rownum = region.getRowFrom();
-                        rownum < region.getRowTo() + 1; rownum++) {
+            for (int rownum = region.getRowFrom(); rownum < region.getRowTo() + 1; rownum++) {
                 HSSFRow row = _sheet.getRow(rownum);
                 for (short colnum = region.getColumnFrom();
                             colnum < region.getColumnTo() + 1; colnum++) {
                     HSSFCellStyle style = (HSSFCellStyle)regions.get(region);
                     if (!isBlank(style)) {
-                        //don't waste time with huge blocks of blankly styled
-                        // cells
+                        //don't waste time with huge blocks of blankly styled cells
                         if (row == null) {
                             if (rownum > Short.MAX_VALUE) {
                                 rownum = Short.MAX_VALUE;
@@ -274,8 +262,6 @@ class Sheet extends AbstractLogEnabled {
                         }
                         HSSFCell cell = row.getCell(colnum);
                         if (cell == null) {
-                            //getLogger().debug("creating blank cell at
-                            // "+rownum + "," +colnum);
                             cell = row.createCell(colnum);
                             cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
                             cell.setCellStyle(
@@ -303,6 +289,138 @@ class Sheet extends AbstractLogEnabled {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Set the paper size.
+     * @param paperSize the paper size.
+     */
+
+    void setPaperSize(short paperSize) {
+        _sheet.getPrintSetup().setPaperSize(paperSize);
+    }
+
+    /**
+     * Set whether to print in landscape
+     * @param ls landscape
+     */
+
+    void setOrientation(boolean ls) {
+        _sheet.getPrintSetup().setLandscape(ls);
+    }
+
+    /**
+     * Set whether or not the grid is printed for the worksheet
+     * @param gridLines boolean to turn on or off the printing of
+     * gridlines
+     */
+
+    void setPrintGridLines(boolean gridLines) {
+        _sheet.setPrintGridlines(gridLines);
+    }
+    
+    /**
+     * Set whether or not the worksheet content is centered (horizontally)
+     * on the page when it is printed
+     * @param ls landscape
+     */
+    void setHCenter(boolean hCenter) {
+        _sheet.setHorizontallyCenter(hCenter);
+    }
+
+    /**
+     * Setwhether or not the worksheet content is centered (vertically)
+     * on the page when it is printed
+     * @param ls landscape
+     */
+    void setVCenter(boolean vCenter) {
+        _sheet.setVerticallyCenter(vCenter);
+    }
+    
+    /**
+     * Setup whether or not printing is in monochrome (no color)
+     * @param ls landscape
+     */
+    void setMonochrome(boolean noColor) {
+        _sheet.getPrintSetup().setNoColor(noColor);
+    }
+    
+    /**
+     * Setup whether or not the worksheet is printed in draft format
+     * @param draftMode
+     */
+    void setDraft(boolean draftMode) {
+        _sheet.getPrintSetup().setDraft(draftMode);
+    }
+    
+    /**
+     * Set text to be printed at the top of every page
+     * @param ls landscape
+     */
+    void setHeader(String left, String middle, String right) {
+        HSSFHeader header = _sheet.getHeader();
+        header.setLeft(left);
+        header.setCenter(middle);
+        header.setRight(right);
+    }
+    
+    /**
+     * Set text to be printed at the bottom of every page
+     * @param ls landscape
+     */
+    void setFooter(String left, String middle, String right) {
+        HSSFFooter footer = _sheet.getFooter();
+        footer.setLeft(left);
+        footer.setCenter(middle);
+        footer.setRight(right);
+    }
+    
+    /**
+     * Set the top margin of the page
+     * @param ls landscape
+     */
+    void setTopMargin(double points) {
+        _sheet.setMargin(HSSFSheet.TopMargin, points);
+    }
+    
+    /**
+     * Set the left margin of the page
+     * @param ls landscape
+     */
+    void setLeftMargin(double points) {
+        _sheet.setMargin(HSSFSheet.LeftMargin, points);
+    }
+    
+    /**
+     * Set the right margin of the page
+     * @param ls landscape
+     */
+    void setRightMargin(double points) {
+        _sheet.setMargin(HSSFSheet.RightMargin, points);
+    }
+    
+    /**
+     * Set the bottom margin of the page
+     * @param ls landscape
+     */
+    void setBottomMargin(double points) {
+        _sheet.setMargin(HSSFSheet.BottomMargin, points);
+    }
+    
+    /**
+     * Set the header margin of the page
+     * @param ls landscape
+     */
+    void setHeaderMargin(double points) {
+        _sheet.getPrintSetup().setHeaderMargin(points);
+    }
+    
+    /**
+     * Set the header margin of the page
+     * @param ls landscape
+     */
+    void setFooterMargin(double points) {
+        _sheet.getPrintSetup().setFooterMargin(points);
     }
 
 } // end package scope class Sheet

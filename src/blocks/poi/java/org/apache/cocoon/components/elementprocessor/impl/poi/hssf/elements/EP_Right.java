@@ -26,10 +26,8 @@ import java.io.IOException;
  *
  * This element has two attributes: Points and PrefUnit
  *
- * This element is not used in HSSFSerializer 1.0
- *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Right.java,v 1.5 2004/03/05 13:02:04 bdelacretaz Exp $
+ * @version CVS $Id: EP_Right.java,v 1.6 2004/07/04 20:57:02 antonio Exp $
  */
 public class EP_Right extends BaseElementProcessor {
     private static final String _points_attribute    = "Points";
@@ -54,8 +52,7 @@ public class EP_Right extends BaseElementProcessor {
 
     double getPoints() throws IOException {
         if (_points == null) {
-            _points =
-                NumericConverter.extractDouble(getValue(_points_attribute));
+            _points = NumericConverter.extractDouble(getValue(_points_attribute));
         }
         return _points.doubleValue();
     }
@@ -68,9 +65,16 @@ public class EP_Right extends BaseElementProcessor {
 
     int getPrefUnit() throws IOException {
         if (_pref_unit == null) {
-            _pref_unit =
-                PrintUnits.extractPrintUnits(getValue(_pref_unit_attribute));
+            _pref_unit = PrintUnits.extractPrintUnits(getValue(_pref_unit_attribute));
         }
         return _pref_unit.intValue();
+    }
+    
+    /**
+     * Setup the right margin
+     * @exception IOException
+     */
+    public void endProcessing() throws IOException{
+        this.getSheet().setRightMargin(getPoints());
     }
 }   // end public class EP_Right
