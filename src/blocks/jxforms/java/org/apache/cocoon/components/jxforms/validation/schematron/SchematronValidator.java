@@ -72,7 +72,7 @@ import java.util.Map;
  * See http://jakarta.apache.org/commons/
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: SchematronValidator.java,v 1.1 2003/07/12 19:22:30 coliver Exp $
+ * @version CVS $Id: SchematronValidator.java,v 1.2 2003/07/13 21:36:09 coliver Exp $
  */
 public class SchematronValidator implements Validator {
 
@@ -287,8 +287,7 @@ public class SchematronValidator implements Validator {
             nextFailedRule.setContext(ptr.asPath());
 
             // switch to the context of the rule
-            JXPathContext localJxpContext = JXPathContext.newContext(jxpContext,
-                                                ptr.getValue());
+            JXPathContext localJxpContext = jxpContext.getRelativeContext(ptr);
 
             // evaluate asserts
             Iterator assertIter = rule.getAssert().iterator();
