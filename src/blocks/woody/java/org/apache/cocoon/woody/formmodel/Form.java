@@ -73,14 +73,14 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.13 2003/12/29 17:52:12 stefano Exp $
+ * @version CVS $Id: Form.java,v 1.14 2003/12/30 14:48:37 mpo Exp $
  */
 public class Form extends AbstractContainerWidget {
     
     private Boolean endProcessing;
     private Locale locale = Locale.getDefault();
     private CursorableLinkedList events;
-    private FormDefinition definition;
+//    private FormDefinition definition;
     private FormHandler formHandler;
     private Widget submitWidget;
     private ProcessingPhase phase = ProcessingPhase.LOAD_MODEL;
