@@ -57,12 +57,48 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
+ * This Transformer is used to transform this incomming SAX stream using
+ * a XSLT stylesheet. Use the following sitemap declarations to define, configure
+ * and parameterize it:
+ *
+ * <b>In the map:sitemap/map:components/map:transformers:</b><br>
+ *
+ * &lt;map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"&gt;<br>
+ *   &lt;use-store map:value="true"/&gt;
+ *   &lt;use-request-parameters map:value="false"/&gt;
+ *   &lt;use-browser-capabilities-db map:value="false"/&gt;
+ * &lt;/map:transformer&gt;
+ *
+ * The &lt;use-store&gt; configuration forces the transformer to put the
+ * <code>Templates</code> generated from the XSLT stylesheet into the
+ * <code>Store</code>. This property is true by default.
+ *
+ * The &lt;use-request-parameter&gt; configuration forces the transformer to make all
+ * request parameters available in the XSLT stylesheet. Note that this might have issues
+ * concerning cachability of the generated output of this transformer.
+ * This property is false by default.
+ *
+ * The &lt;use-browser-capabilities-db&gt; configuration forces the transformer to make all
+ * properties from the browser capability database available in the XSLT stylesheetas.
+ * Note that this might have issues concerning cachability of the generated output of this
+ * transformer.
+ * This property is false by default.
+ *
+ * <b>In a map:sitemap/map:pipelines/map:pipeline:</b><br>
+ *
+ * &lt;map:transform type="xslt" src="stylesheets/yours.xsl"&gt;<br>
+ *   &lt;parameter name="myparam" value="myvalue"/&gt;
+ * &lt;/map:transform&gt;
+ *
+ * All <parameter> declarations will be made available in the XSLT stylesheet as
+ * xsl:variables.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-30 14:17:45 $
+ * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
+ * @version CVS $Id: TraxTransformer.java,v 1.1.2.30 2001-05-04 13:49:32 giacomo Exp $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
@@ -83,7 +119,15 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     /** Is the store turned on? (default is on) */
     private boolean useStore = true;
 
+    /** Should we make the request parameters available in the stylesheet? (default is off) */
+    private boolean useParameters = false;
+
+    /** Should we make the browser capability properties available in the stylesheet? (default is off) */
+    private boolean useBrowserCap = false;
+
     private ComponentManager manager;
+
+    private long xslFileLastModified;
 
     /** The InputSource */
     private InputSource inputSource;
@@ -94,8 +138,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     private EntityResolver resolver;
 
     TransformerHandler getTransformerHandler(EntityResolver resolver)
-      throws SAXException, ProcessingException, IOException, TransformerConfigurationException
-    {
+      throws SAXException, ProcessingException, IOException, TransformerConfigurationException {
         Templates templates = getTemplates(systemID, xsluri);
         if(templates == null) {
             getLogger().debug("Creating new Templates in " + this + " for" + systemID + ":" + xsluri);
@@ -119,8 +162,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     }
 
     private Templates getTemplates (String systemID, String xsluri)
-       throws IOException
-    {
+       throws IOException {
         Templates templates = null;
         if (this.useStore == false)
             return null;
@@ -154,8 +196,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     }
 
     private void putTemplates (String systemID, String xsluri, Templates templates)
-       throws IOException
-    {
+       throws IOException {
         if (this.useStore == false)
             return;
 
@@ -174,8 +215,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     /**
      * Helper for TransformerFactory.
      */
-    private synchronized SAXTransformerFactory getTransformerFactory()
-    {
+    private synchronized SAXTransformerFactory getTransformerFactory() {
         if(tfactory == null)  {
             tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
             tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
@@ -192,6 +232,12 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
             Configuration child = conf.getChild("use-store");
             this.useStore = child.getValueAsBoolean(true);
             getLogger().debug("Use store is " + this.useStore + " for " + this);
+            child = conf.getChild("use-request-parameters");
+            this.useParameters = child.getValueAsBoolean(false);
+            getLogger().debug("Use parameters is " + this.useParameters + " for " + this);
+            child = conf.getChild("use-browser-capabilities-db");
+            this.useBrowserCap = child.getValueAsBoolean(false);
+            getLogger().debug("Use browser capabilities is " + this.useBrowserCap + " for " + this);
         }
     }
 
@@ -229,6 +275,10 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         this.inputSource = resolver.resolveEntity(null, this.xsluri);
         this.systemID = inputSource.getSystemId();
         this.resolver = resolver;
+        if (this.systemID.startsWith("file:") == true) {
+            File xslFile = new File(this.systemID.substring("file:".length()));
+            this.xslFileLastModified = xslFile.lastModified();
+        }
     }
 
     /**
@@ -254,12 +304,15 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
     public CacheValidity generateValidity() {
         HashMap map = getLogicSheetParameters();
 
-        if (this.systemID.startsWith("file:") == true) {
-            File xslFile = new File(this.systemID.substring("file:".length()));
-            return new CompositeCacheValidity(
+        if (this.xslFileLastModified != 0) {
+            if (map == null) {
+                return new TimeStampCacheValidity(this.xslFileLastModified);
+            } else {
+                return new CompositeCacheValidity(
                                     new ParametersCacheValidity(map),
-                                    new TimeStampCacheValidity(xslFile.lastModified())
+                                    new TimeStampCacheValidity(this.xslFileLastModified)
                                     );
+            }
         }
         return null;
     }
@@ -290,10 +343,12 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         }
 
         HashMap map = getLogicSheetParameters();
-        Iterator iterator = map.keySet().iterator();
-        while(iterator.hasNext()) {
-            String name = (String)iterator.next();
-            transformerHandler.getTransformer().setParameter(name,map.get(name));
+        if (map != null) {
+            Iterator iterator = map.keySet().iterator();
+            while(iterator.hasNext()) {
+                String name = (String)iterator.next();
+                transformerHandler.getTransformer().setParameter(name,map.get(name));
+            }
         }
 
         super.setContentHandler(transformerHandler);
@@ -306,26 +361,8 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         this.setContentHandler(consumer);
     }
 
-    private HashMap getLogicSheetParameters()
-    {
-        HashMap map = new HashMap();
-
-        /** The Request object */
-        Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
-
-        if (request != null) {
-            Enumeration parameters = request.getParameterNames();
-            if ( parameters != null ) {
-                while (parameters.hasMoreElements()) {
-                    String name = (String) parameters.nextElement();
-                    if (isValidXSLTParameterName(name)) {
-                        String value = request.getParameter(name);
-                        map.put(name,value);
-                    }
-                }
-            }
-        }
-
+    private HashMap getLogicSheetParameters() {
+        HashMap map = null;
         if (par != null) {
             Iterator params = par.getParameterNames();
             while (params.hasNext()) {
@@ -333,47 +370,71 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
                 if (isValidXSLTParameterName(name)) {
                     String value = par.getParameter(name,null);
                     if (value != null) {
+                        if (map == null) {
+                            map = new HashMap();
+                        }
                         map.put(name,value);
                     }
                 }
             }
         }
 
-// FIXME(DIMS): Commented out pending discussion.
-//        try
-//        {
-//            /* Get the accept header; it's needed to get the browser type. */
-//            String accept = request.getParameter("accept");
-//            if (accept == null)
-//                accept = request.getHeader("accept");
-//
-//            /* Get the user agent; it's needed to get the browser type. */
-//            String agent = request.getParameter("user-Agent");
-//            if (agent == null)
-//                agent = request.getHeader("user-Agent");
-//
-//            /* add the accept param */
-//            transformerHandler.getTransformer().setParameter("accept", accept);
-//
-//            /* add the user agent param */
-//            transformerHandler.getTransformer().setParameter("user-agent", java.net.URLEncoder.encode(agent));
-//
-//            /* add the map param */
-//            HashMap map = browser.getBrowser(agent, accept);
-//            transformerHandler.getTransformer().setParameter("browser",map);
-//
-//            /* add the media param */
-//            String browserMedia = browser.getMedia(map);
-//            transformerHandler.getTransformer().setParameter("browser-media",map);
-//
-//            /* add the uaCapabilities param */
-//            org.w3c.dom.Document uaCapabilities = browser.getUACapabilities(map);
-//            transformerHandler.getTransformer().setParameter("ua-capabilities", uaCapabilities);
-//        } catch (Exception e) {
-//            /** FIXME - i don't have a logger
-//                (GP) now you have one :) */
-//            getLogger().error("Error setting Browser info", e);
-//        }
+        if (this.useParameters) {
+            /** The Request object */
+            Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
+
+            if (request != null) {
+                Enumeration parameters = request.getParameterNames();
+                if ( parameters != null ) {
+                    while (parameters.hasMoreElements()) {
+                        String name = (String) parameters.nextElement();
+                        if (isValidXSLTParameterName(name)) {
+                            String value = request.getParameter(name);
+                            if (map == null) {
+                                map = new HashMap();
+                            }
+                            map.put(name,value);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (this.useBrowserCap) try {
+            Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
+            if (map == null) {
+                map = new HashMap();
+            }
+            /* Get the accept header; it's needed to get the browser type. */
+            String accept = request.getParameter("accept");
+            if (accept == null)
+                accept = request.getHeader("accept");
+
+            /* Get the user agent; it's needed to get the browser type. */
+            String agent = request.getParameter("user-Agent");
+            if (agent == null)
+                agent = request.getHeader("user-Agent");
+
+            /* add the accept param */
+            map.put("accept", accept);
+
+            /* add the user agent param */
+            map.put("user-agent", java.net.URLEncoder.encode(agent));
+
+            /* add the map param */
+            HashMap agmap = browser.getBrowser(agent, accept);
+            map.put("browser", agmap);
+
+            /* add the media param */
+            String browserMedia = browser.getMedia(agmap);
+            map.put("browser-media", browserMedia);
+
+            /* add the uaCapabilities param */
+            org.w3c.dom.Document uaCapabilities = browser.getUACapabilities(agmap);
+            map.put("ua-capabilities", uaCapabilities);
+        } catch (Exception e) {
+            getLogger().error("Error setting Browser info", e);
+        }
 
         return map;
     }
@@ -458,6 +519,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         this.systemID = null;
         this.xsluri = null;
         this.resolver = null;
+        this.xslFileLastModified = 0;
         super.recycle();
     }
 }
