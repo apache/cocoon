@@ -25,6 +25,7 @@ import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.component.Component;
+import org.apache.log.Logger;
 import org.apache.excalibur.pool.Poolable;
 import org.apache.avalon.Disposable;
 import org.apache.excalibur.datasource.DataSourceComponent;
@@ -48,7 +49,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-23 17:53:10 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-24 08:41:07 $ $Author: cziegeler $
  */
 
 public class SQLTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
@@ -430,6 +431,12 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
         }
     }
 
+    public final Logger getTheLogger()
+    {
+        return getLogger();
+    }
+
+
     class Query {
 
         /** Who's your daddy? **/
@@ -504,7 +511,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
                     try {
                         sb.append(query.getColumnValue(av.name));
                     } catch (SQLException e) {
-                        getLogger().debug("SQLTransformer", e);
+                        transformer.getTheLogger().debug("SQLTransformer", e);
                         close();
                         throw e;
                     }
@@ -532,10 +539,10 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
                         md = rs.getMetaData();
                 }
             } catch (SQLException e) {
-                getLogger().error("Caught a SQLException", e);
+                transformer.getTheLogger().error("Caught a SQLException", e);
                 throw e;
             } catch (ComponentException cme) {
-                getLogger().error("Could not use connection: " + connection, cme);
+                transformer.getTheLogger().error("Could not use connection: " + connection, cme);
             } finally {
                 conn.close();
                 if (datasource != null) dbSelector.release(datasource);
@@ -546,7 +553,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
             try {
                 return transformer.getStringValue(rs.getObject(i));
             } catch (SQLException e) {
-                getLogger().debug("SQLTransformer", e);
+                transformer.getTheLogger().debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -556,7 +563,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
             try {
                 return transformer.getStringValue(rs.getObject(name));
             } catch (SQLException e) {
-                getLogger().debug("SQLTransformer", e);
+                transformer.getTheLogger().debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -574,7 +581,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
                 }
                 return true;
             } catch (SQLException e) {
-                getLogger().debug("SQLTransformer", e);
+                transformer.getTheLogger().debug("SQLTransformer", e);
                 close();
                 throw e;
             }
@@ -603,7 +610,7 @@ public class SQLTransformer extends AbstractTransformer implements Composable, P
                     try {
                         transformer.data(getColumnValue(i));
                     } catch (SQLException e) {
-                        getLogger().debug("SQLTransformer", e);
+                        transformer.getTheLogger().debug("SQLTransformer", e);
                         close();
                         throw e;
                     }
