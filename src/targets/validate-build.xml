@@ -49,7 +49,9 @@
     <xslt in="${lib}/jars.xml" out="${build.temp}/jars.xml"
           processor="trax"
           style="${tools}/src/check-jars.xsl">
-      <param name="current-files" expression="../../${build.temp}/current-jars.xml"/>
+      <param name="stylesheet-path" expression="${tools}/src"/>
+      <param name="current-jars-path" expression="${build.temp}"/>
+      <param name="current-jars-file" expression="current-jars.xml"/>
     </xslt>
   </target>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--+
-    | CVS $Id: check-jars.xsl,v 1.2 2003/03/26 13:49:25 vgritsenko Exp $
+    | CVS $Id: check-jars.xsl,v 1.3 2003/09/22 17:11:55 joerg Exp $
     |
     | Simple stylesheet to verify that files defined in lib/jars.xml
     | actually appear in the lib/ directory, and vice-versa, that files
@@ -13,17 +13,47 @@
     |
     +-->
 
-<xsl:stylesheet
-  version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:output indent="yes" method="xml" doctype-public="-//APACHE//DTD Documentation V1.0//EN" doctype-system="../dtd/document-v10.dtd" />
 
   <xsl:strip-space elements="*" />
 
-  <xsl:param name="current-files"/>
+  <xsl:param name="stylesheet-path" select="''"/>
+  <xsl:param name="current-jars-path" select="''"/>
+  <xsl:param name="current-jars-file" select="''"/>
 
-  <xsl:variable name="directory" select="document($current-files)"/>
+  <xsl:variable name="current-jars">
+    <xsl:choose>
+      <xsl:when test="starts-with($current-jars-path, '/')">
+        <!-- absolute current-jars-path => simply use it -->
+        <xsl:value-of select="concat($current-jars-path, '/', $current-jars-file)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- relative current-jars-path -->
+        <xsl:choose>
+          <xsl:when test="starts-with($stylesheet-path, '/')">
+            <!-- absolute stylesheet path outside of COCOON_HOME, no way until now to find the path back -->
+            <xsl:message terminate="yes">
+              <xsl:text>Absolute stylesheet path makes it impossible to find the current-jars.xml. </xsl:text>
+              <xsl:text>If you need this feature, you have to pass the COCOON_HOME directory as </xsl:text>
+              <xsl:text>param to the stylesheet.</xsl:text>
+            </xsl:message>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- relative stylesheet-path => build the path to current-jars-path -->
+            <xsl:call-template name="relativize-path">
+              <xsl:with-param name="current-directory" select="$stylesheet-path"/>
+            </xsl:call-template>
+            <xsl:value-of select="concat($current-jars-path, '/', $current-jars-file)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="current-jars.xml" select="document($current-jars)"/>
+
   <xsl:variable name="jars.xml" select="/"/>
 
   <xsl:template match="/">
@@ -50,17 +80,17 @@
     </xsl:for-each>
 
     <!-- Verify if files declared in jars.xml appear in the lib/ directory -->
-    <xsl:apply-templates select="jars//lib" mode="declared-but-doesnt-appear"/>
+    <xsl:apply-templates select="jars/file/lib" mode="declared-but-doesnt-appear"/>
 
     <!-- Verify that files that appear in lib/ are declared in jars.xml -->
-    <xsl:apply-templates select="$directory/jars" mode="appears-but-not-declared"/>
+    <xsl:apply-templates select="$current-jars.xml/jars" mode="appears-but-not-declared"/>
     
 	<!-- create the documentation -->
 	<document>
 	 <header>
 	  <title>Cocoon JARs</title>
 	  <authors>
-	   <person name="John Morrison" email="morrijr@apache.org"/>
+	   <person name="Cocoon Developers" email="dev@cocoon.apache.org"/>
 	  </authors>
 	 </header>
 	 <body>
@@ -74,7 +104,7 @@
 	     <th>Description</th>
 	     <th>Used by</th>
 	   </tr>
-	   <xsl:apply-templates select="//file" mode="documentation"/>
+	   <xsl:apply-templates select="jars/file" mode="documentation"/>
 	  </table>
      </s1>
     </body>
@@ -86,7 +116,7 @@
   -->
   <xsl:template match="lib" mode="declared-but-doesnt-appear">
     <xsl:variable name="this" select="normalize-space(text())"/>
-    <xsl:if test="count($directory/jars/jar[normalize-space(text()) = $this]) = 0">
+    <xsl:if test="count($current-jars.xml/jars/jar[normalize-space(text()) = $this]) = 0">
       <xsl:message terminate="yes">
   File <xsl:value-of select="$this"/> is declared in lib/jars.xml, but doesn't appear in the lib/ directory.
 
@@ -164,6 +194,16 @@
 		<td><xsl:value-of select="description"/></td>
 		<td><xsl:value-of select="used-by"/></td>
 	</tr>
+  </xsl:template>
+
+  <xsl:template name="relativize-path">
+    <xsl:param name="current-directory" select="''"/>
+    <xsl:if test="string($current-directory)">
+      <xsl:text>../</xsl:text>
+      <xsl:call-template name="relativize-path">
+        <xsl:with-param name="current-directory" select="substring-after($current-directory, '/')"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="file" mode="no-tag" priority="-1"/>
