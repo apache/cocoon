@@ -95,7 +95,7 @@
 		</s2> 
 		<s2 title="cocoon.xconf"> 
 		  <p><code>cocoon.xconf</code> is the file that defines the
-			 <link href="avalon/avalon.html">Avalon</link> Components.</p>
+			 <link href="avalon.html">Avalon</link> Components.</p>
 		  <p>For our study, we need the standard <code>cocoon.xconf</code> file
 			 of Cocoon.</p>
 		  <p>It can be found in <code>${cocoon}/WEB-INF/cocoon.xconf</code>.</p> 
@@ -208,7 +208,7 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 				<p>The init file (normally <code>cocoon.xconf</code>, as defined in
 				  <code>${cocoon}/WEB-INF/web.xml</code>) contains the necessary information for
 				  Cocoon to decide which classes to use for which roles (refer to
-				  <link href="avalon/avalon.html">Avalon</link>).</p>
+				  <link href="avalon.html">Avalon</link>).</p>
 				<p>This is a feature that is added for increased configurability.
 				  If you were developing a one time solution, the information in this file would
 				  normally be hard coded, but the use of this file increases potential
@@ -219,7 +219,7 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 				  <code>cocoon.xconf</code>) which describes the classes to use for which
 				  roles.</p> 
 				<p>"Roles" are a concept of <link
-				href="avalon/avalon.html">Avalon</link>.</p> 
+				href="avalon.html">Avalon</link>.</p> 
 				<p>The handling of <code>cocoon.xconf</code> goes as follows:</p> 
 				<ol> 
 				  <li>Get the parser: This is something necessary for
@@ -231,9 +231,9 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 					 <code>org.apache.cocoon.components.parser.JaxpParser</code> (a hard-coded
 					 default).</li> 
 				  <li>Get the components: Cocoon uses roles (refer to
-					 <link href="avalon/avalon.html">Avalon</link>) as its working classes. Each role is
+					 <link href="avalon.html">Avalon</link>) as its working classes. Each role is
 				implemented by one or more real classes (components, again an
-				<link href="avalon/avalon.html">Avalon</link> concept). This is where they are
+				<link href="avalon.html">Avalon</link> concept). This is where they are
 				retrieved.</li> 
 				<li>Get the sitemap: Here the location of the sitemap is retrieved.
 				  The actual compilation of the sitemap occurs in the HttpRequest handling.</li> 
@@ -263,7 +263,7 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 				  with the asked URL.</li> 
 				<li>The <code>Manager</code> sets the <code>Composable</code> and the
 				  <code>Configuration</code> of the <code>Handler</code>. (These are
-				  <link href="avalon/avalon.html">Avalon</link> things).</li> 
+				  <link href="avalon.html">Avalon</link> things).</li> 
 			 <li>If necessary, the <code>Manager</code> asks the
 				<code>Handler</code> to regenerate its sitemap class. (FIXME: As of today,
 				2000-11-08, I'm not sure if the "if necessary" check is working). Regeneration
@@ -321,13 +321,13 @@ value="resource://org/apache/cocoon/components/language/markup/sitemap/java/site
 		</s2> 
 		<s2 title="Configuration"> 
 		  <p><code>org.apache.avalon.Configuration</code></p> 
-		  <p>This is an <link href="avalon/avalon.html">Avalon</link> interface. It
+		  <p>This is an <link href="avalon.html">Avalon</link> interface. It
 		  assigns classes to roles. If an object needs a class for a specific role, it
 		  can ask a Configuration which class it has to use.</p> 
 		</s2> 
 		<s2 title="DefaultComponentManager"> 
 		  <p><code>org.apache.avalon.DefaultComponentManager</code></p> 
-		  <p>Something that manages <link href="avalon/avalon.html">Avalon</link>
+		  <p>Something that manages <link href="avalon.html">Avalon</link>
 		  Components.</p> 
 		</s2> 
 		<s2 title="Manager"> 

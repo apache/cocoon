@@ -2,7 +2,7 @@
 <!DOCTYPE changes PUBLIC "-//APACHE//DTD Changes V1.0//EN" "../dtd/changes-v10.dtd">
 <!--
   History of Cocoon Documentation changes
-  $Id: changes-doc.xml,v 1.4 2003/09/27 12:55:25 joerg Exp $
+  $Id: changes-doc.xml,v 1.5 2003/10/12 13:31:55 cziegeler Exp $
 -->
 <changes title="Documentation History of Changes">
   <devs>
@@ -80,9 +80,9 @@
       <link href="../faq/faq-xsp.html">XSP</link>.
     </action>
     <action dev="DS" type="update">
-      Edited <link href="../userdocs/components/matchers/matchers.html">Matchers</link>,
-      <link href="../userdocs/components/selectors/selectors.html">Selectors</link>, and a number
-      of other user guide doc files to address grammar, typos, and general Global English issues.
+   Edited <link href="../userdocs/matchers/matchers.html">Matchers</link>, 
+   <link href="../userdocs/selectors/selectors.html">Selectors</link>, and a number of other
+   user guide doc files to address grammar, typos, and general Global English issues.
     </action>
     <action dev="DS" type="update">
       Added stylesheet, src/documentation/stylesheets/faqcommon.xsl, which places two

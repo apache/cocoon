@@ -737,7 +737,7 @@ public class XindiceManager {
         using information stored in the DB. Remember that everything you
         have just built is reusable for different user agents. You would
         only need to use
-        <link href="../userdocs/user/advanced/matchers_selectors.html">matchers
+        <link href="../userdocs/concepts/matchers_selectors.html">matchers
         and selectors</link> and to choose the appropriate transformation.
         We hope this how-to was helpful for you.
       </p>
