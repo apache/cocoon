@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <!-- Written by Ricardo Rocha <rrocha@plenix.org> -->
+<!-- Fixed for C2 by Davanum Srinivas <dims@yahoo.com> -->
 
 <!-- A quick'n'dirty XML colorizer -->
 
@@ -11,10 +12,9 @@
 
   <xsp:structure>
    <xsp:include>java.net.*</xsp:include>
-   <xsp:include>org.apache.cocoon.components.parser.XercesParser</xsp:include>
    <xsp:include>org.apache.cocoon.xml.XMLConsumer</xsp:include>
    <xsp:include>org.apache.cocoon.xml.dom.DOMStreamer</xsp:include>
-   <xsp:include>org.apache.cocoon.util.DOMUtils</xsp:include>
+   <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
    <xsp:include>javax.servlet.ServletContext</xsp:include>
    <xsp:include>javax.servlet.http.HttpServletRequest</xsp:include>
   </xsp:structure>
@@ -32,8 +32,6 @@
     private static final String XSL_ELEMENT_COLOR = "purple";
     private static final String XSP_ELEMENT_COLOR = "green";
     private static final String XSP_TEXT_COLOR = "red";
-
-    private XercesParser xercesParser = new XercesParser();
 
     protected void colorize(Node node, Document factory, org.xml.sax.ContentHandler contentHandler) throws SAXException {
       Element element = factory.createElement("pre");
@@ -282,7 +280,7 @@
 
   <html>
     <xsp:logic>
-      Document document = xercesParser.newDocument();
+      Document document = parser.newDocument();
     </xsp:logic>
     <head>
       <title>Source Code</title>
@@ -309,7 +307,7 @@
           InputSource is = null;
           try {
             is = new InputSource (new FileReader (filepath));
-            this.colorize(DOMUtils.DOMParse(is), document, this.contentHandler);
+            this.colorize(XSPUtil.getDocument(is,parser), document, this.contentHandler);
           } catch (FileNotFoundException fnfe) {
             throw new SAXException (fnfe);
           } catch (IOException ie) {
@@ -331,7 +329,7 @@
           InputSource is = null;
           try {
             is = new InputSource (resource.openStream());
-            this.colorize(DOMUtils.DOMParse(is), document, this.contentHandler);
+            this.colorize(XSPUtil.getDocument(is,parser), document, this.contentHandler);
           } catch (FileNotFoundException fnfe) {
             throw new SAXException (fnfe);
           } catch (IOException ie) {
