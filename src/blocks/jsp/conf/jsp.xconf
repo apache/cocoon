@@ -3,7 +3,7 @@
 <xconf xpath="/cocoon" unless="jsp-engine">
    
   <!-- JSP Engine:
-    The JspGenerator selects a JSPEngine component. The JSPEngine component
+    The JSPGenerator and JSPReader select a JSPEngine component. The JSPEngine component
     launches a JSP servlet engine of your servlet container, feeds the
     HttpRequest into the JSP servlet engine, and pipes the jsp response as
     SAX events into Cocoon2. The JSP page is specified by the HttpRequest.
@@ -14,7 +14,16 @@
   -->
   <jsp-engine logger="core.jsp-engine">
     <parameter name="servlet-class" value="org.apache.jasper.servlet.JspServlet"/>
-    <parameter name="servlet-name" value="*.jsp"/>
   </jsp-engine>
-
+  
+  <!--
+    Alternative implementation that uses a RequestDispatcher for running named Servlets.
+  -->
+  <!--
+  <jsp-engine logger="core.jsp-engine" class="org.apache.cocoon.components.jsp.JSPEngineImplNamedDispatcherInclude">
+    <parameter name="servlet-name" value="*.jsp"/>
+    <parameter name="forward" value="false"/>
+  </jsp-engine>
+  -->
+  
 </xconf>
