@@ -29,7 +29,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:44 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-13 12:02:47 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
     /**
@@ -50,13 +50,13 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
             streamer.stream(doc);
         } catch (IOException e){
-            log.warn("HTMLGenerator.generate()", e);
+            getLogger().warn("HTMLGenerator.generate()", e);
             throw new ResourceNotFoundException("Could not get Resource for HTMLGenerator", e);
         } catch (SAXException e){
-            log.error("HTMLGenerator.generate()", e);
+            getLogger().error("HTMLGenerator.generate()", e);
             throw(e);
         } catch (Exception e){
-            log.error("Could not get parser", e);
+            getLogger().error("Could not get parser", e);
             throw new ProcessingException(e.getMessage());
         }
     }
