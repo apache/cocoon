@@ -70,137 +70,136 @@ import java.io.InputStream;
  * a file is uploaded.
  *
  * @author <a href="mailto:paul.crabtree@dna.co.uk">Paul Crabtree</a>
- * @version CVS $Id: PartSource.java,v 1.2 2003/10/25 22:31:39 ghoward Exp $
+ * @version CVS $Id: PartSource.java,v 1.3 2003/11/09 16:17:13 vgritsenko Exp $
  */
 public class PartSource implements Source
 {
-	/* hold a private ref to the protocol used to call the Source */
-	private String protocol;
+    /* hold a private ref to the protocol used to call the Source */
+    private String protocol;
 
-	/* hold a private ref to the full uri */
-	private String uri;
+    /* hold a private ref to the full uri */
+    private String uri;
 
-	/* hold a private ref to the Part which has been uploaded. */
-	private Part part;
+    /* hold a private ref to the Part which has been uploaded. */
+    private Part part;
 
-	/**
+    /**
      * Builds a PartSource given an URI.
      * @param uri e.g., upload://formField1
      * @throws SourceException
      * @throws MalformedURLException
      */
-	public PartSource(String uri, Map objectModel) throws MalformedURLException, SourceException
-	{
-		// set the uri for use in getURI()
-	    this.uri = uri;
+    public PartSource(String uri, Map objectModel) throws MalformedURLException, SourceException
+    {
+        // set the uri for use in getURI()
+        this.uri = uri;
 
-		int position = uri.indexOf(':') + 1;
-		if (position != 0)
-		{
-			// set the protocol for use in getScheme()
-			this.protocol = uri.substring(0, position-1);
-		}
-		else
-		{
-			// if the URI is not correctly formatted then throw an excpetion
-			throw new MalformedURLException("No protocol found for part source in " + uri);
+        int position = uri.indexOf(':') + 1;
+        if (position != 0)
+        {
+            // set the protocol for use in getScheme()
+            this.protocol = uri.substring(0, position-1);
+        }
+        else
+        {
+            // if the URI is not correctly formatted then throw an excpetion
+            throw new MalformedURLException("No protocol found for part source in " + uri);
         }
 
-		// get the request parameter name: the bit after ://
-		String location = uri.substring(position + 2);
+        // get the request parameter name: the bit after ://
+        String location = uri.substring(position + 2);
 
-		// get the cocoon request from the object model.
-		Request request = ObjectModelHelper.getRequest(objectModel);
+        // get the cocoon request from the object model.
+        Request request = ObjectModelHelper.getRequest(objectModel);
 
-		// try and cast the request object to a Part
-		Object obj = request.get(location);
-		if (obj instanceof Part)
-		{
-		     part = (Part) obj;
-		}
-		else
-		{
-		     throw new SourceException("Request object " + location + " is not an uploaded Part");
-		}
-	}
+        // try and cast the request object to a Part
+        Object obj = request.get(location);
+        if (obj instanceof Part)
+        {
+             part = (Part) obj;
+        }
+        else
+        {
+             throw new SourceException("Request object " + location + " is not an uploaded Part");
+        }
+    }
 
-	/**
-	 * @see org.apache.excalibur.source.Source#getInputStream()
-	 */
-	public InputStream getInputStream() throws IOException, SourceNotFoundException
-	{
-		try
-		{
-			return part.getInputStream();
-		}
-		catch (Exception ex)
-		{
-			throw new SourceNotFoundException("The part source can not be found.");
-		}
-	}
+    /**
+     * @see org.apache.excalibur.source.Source#getInputStream()
+     */
+    public InputStream getInputStream() throws IOException, SourceNotFoundException
+    {
+        try
+        {
+            return part.getInputStream();
+        }
+        catch (Exception ex)
+        {
+            throw new SourceNotFoundException("The part source can not be found.");
+        }
+    }
 
-	/**
-	 * @see org.apache.excalibur.source.Source#getMimeType()
-	 */
-	public String getMimeType()
-	{
-		return part.getMimeType();
-	}
+    /**
+     * @see org.apache.excalibur.source.Source#getMimeType()
+     */
+    public String getMimeType()
+    {
+        return part.getMimeType();
+    }
 
-	/**
-	  * @return true if the resource exists.
-	  */
-	public boolean exists()
-	{
-		return part != null;
-	}
+    /**
+      * @return true if the resource exists.
+      */
+    public boolean exists()
+    {
+        return part != null;
+    }
 
-	/*
-	 * @see org.apache.excalibur.source.Source#getURI()
-	 */
-	public String getURI()
-	{
-		return uri;
-	}
+    /*
+     * @see org.apache.excalibur.source.Source#getURI()
+     */
+    public String getURI()
+    {
+        return uri;
+    }
 
-	/*
-	 * @see org.apache.excalibur.source.Source#getScheme()
-	 */
-	public String getScheme()
-	{
-		return this.protocol;
-	}
+    /*
+     * @see org.apache.excalibur.source.Source#getScheme()
+     */
+    public String getScheme()
+    {
+        return this.protocol;
+    }
 
-	/*
-	 * Not used, Parts are not cacheable.
-	 */
-	public SourceValidity getValidity()
-	{
-		// not sure what happens here.
-		return null;
-	}
+    /*
+     * Not used, Parts are not cacheable.
+     */
+    public SourceValidity getValidity()
+    {
+        // not sure what happens here.
+        return null;
+    }
 
-	/**
-	  * @see org.apache.excalibur.source.Source#refresh()
-	  */
-	public void refresh()
-	{
-	}
+    /**
+      * @see org.apache.excalibur.source.Source#refresh()
+      */
+    public void refresh()
+    {
+    }
 
-	/**
-	 * @see org.apache.excalibur.source.Source#getContentLength()
-	 */
-	public long getContentLength()
-	{
-		return part.getSize();
-	}
+    /**
+     * @see org.apache.excalibur.source.Source#getContentLength()
+     */
+    public long getContentLength()
+    {
+        return part.getSize();
+    }
 
-	/**
-	 * @see org.apache.excalibur.source.Source#getLastModified()
-	 */
-	public long getLastModified()
-	{
-		return 0;
-	}
-
+    /**
+     * @see org.apache.excalibur.source.Source#getLastModified()
+     */
+    public long getLastModified()
+    {
+        return 0;
+    }
 }
