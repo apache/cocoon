@@ -176,7 +176,7 @@ public class ProxyTransformer
         
         final String startURI = (String)copletData.getAttribute(START_URI);
 
-        this.link = (String) this.copletInstanceData.getAttribute(LINK);
+        this.link = (String) this.copletInstanceData.getTemporaryAttribute(LINK);
 
         this.documentBase = (String) this.copletInstanceData.getAttribute(DOCUMENT_BASE);
 
