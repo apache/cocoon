@@ -65,26 +65,29 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
+ * @version CVS $Id: QuartzJobExecutor.java,v 1.3 2003/09/04 16:04:10 giacomo Exp $
+ *
  * @since 2.1.1
  */
 public class QuartzJobExecutor
-    implements Job {
+implements Job {
     /** Map key for the run status */
-    private static final String DATA_MAP_KEY_ISRUNNING = "QuartzJobExecutor.isRunning";
+    static final String DATA_MAP_KEY_ISRUNNING = "QuartzJobExecutor.isRunning";
 
     /* (non-Javadoc)
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
     public void execute(final JobExecutionContext context)
-        throws JobExecutionException {
+    throws JobExecutionException {
         final JobDataMap data = context.getJobDetail().getJobDataMap();
+        data.put(QuartzJobScheduler.DATA_MAP_JOB_EXECUTION_CONTEXT, context);
+
         final Logger logger = (Logger)data.get(QuartzJobScheduler.DATA_MAP_LOGGER);
         final String name = (String)data.get(QuartzJobScheduler.DATA_MAP_NAME);
         final Boolean canRunConcurrentlyB = ((Boolean)data.get(QuartzJobScheduler.DATA_MAP_RUN_CONCURRENT));
-        final boolean canRunConcurrently = (canRunConcurrentlyB == null ? true : canRunConcurrentlyB.booleanValue());
+        final boolean canRunConcurrently = ((canRunConcurrentlyB == null) ? true : canRunConcurrentlyB.booleanValue());
 
-        if ( !canRunConcurrently) {
+        if (!canRunConcurrently) {
             Boolean isRunning = (Boolean)data.get(DATA_MAP_KEY_ISRUNNING);
 
             if ((null != isRunning) && isRunning.booleanValue()) {
@@ -120,6 +123,7 @@ public class QuartzJobExecutor
             }
 
             data.put(DATA_MAP_KEY_ISRUNNING, new Boolean(true));
+
             if (job instanceof Job) {
                 ((Job)job).execute(context);
             } else if (job instanceof CronJob) {
