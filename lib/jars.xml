@@ -1092,7 +1092,7 @@
       API for compiling java
     </description>
     <used-by>javaflow</used-by>
-    <lib>optional/jci-20041213.jar</lib>
+    <lib>optional/jci-20041217.183004.jar</lib>
     <homepage></homepage>
   </file>
 
