@@ -2,7 +2,7 @@
 
 <!--+
     | Populates XMLDB with some samples data
-    | CVS $Id: populate.xml,v 1.4 2004/02/13 00:19:59 vgritsenko Exp $
+    | CVS $Id: populate.xml,v 1.5 2004/02/13 00:38:35 joerg Exp $
     +-->
 
 <html>
@@ -15,7 +15,7 @@
 
   <h3>Import sitemap.xmap ...</h3>
   <textarea cols="75" rows="3">
-    <x:query type="create" collection="cocoon" oid="sitemap.xmap" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+    <x:query type="create" collection="cocoon" oid="sitemap" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
       <i:include src="sitemap.xmap" xmlns:i="http://apache.org/cocoon/include/1.0"/>
     </x:query>
   </textarea>

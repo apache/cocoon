@@ -2,7 +2,7 @@
 
 <!--+
     | XMLDB Samples Sitemap
-    | CVS $Id: sitemap.xmap,v 1.8 2004/02/12 18:37:25 joerg Exp $
+    | CVS $Id: sitemap.xmap,v 1.9 2004/02/13 00:38:35 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -49,7 +49,7 @@
       </map:match>
 
       <map:match pattern="xmount/**">
-        <map:mount uri-prefix="xmount" src="xmldb:xindice-embed:///db/cocoon/sitemap.xmap" check-reload="yes"/>
+        <map:mount uri-prefix="xmount" src="xmldb:xindice-embed:///db/cocoon/sitemap" check-reload="yes"/>
       </map:match>
 
       <map:match pattern="populate">
