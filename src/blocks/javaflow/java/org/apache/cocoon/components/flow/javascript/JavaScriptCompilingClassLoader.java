@@ -16,18 +16,25 @@
 
 package org.apache.cocoon.components.flow.javascript;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.net.MalformedURLException;
-import java.util.*;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.avalon.framework.component.*;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.service.*;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.excalibur.source.*;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.mozilla.javascript.*;
+import org.apache.excalibur.source.SourceUtil;
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
 public class JavaScriptCompilingClassLoader extends ClassLoader implements Serviceable {
