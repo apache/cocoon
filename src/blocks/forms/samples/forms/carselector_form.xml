@@ -17,7 +17,8 @@
 <!-- form used to illustrate programmatic changing of listbox content. -->
 <fd:form
   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
-  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+  id="carselector">
 
   <fd:widgets>
     <fd:field id="make" required="true">
