@@ -44,10 +44,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.core.container.CocoonServiceManager;
 import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;

@@ -41,7 +41,7 @@ implements ServiceSelector, Serviceable, Configurable {
     
     /** The application context for components
      */
-    private ServiceManager serviceManager;
+    protected ServiceManager serviceManager;
 
     /** The parent selector, if any */
     protected CocoonServiceSelector parentSelector;

@@ -16,11 +16,6 @@
 package org.apache.cocoon.components.language.generator;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -28,6 +23,10 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -53,10 +52,10 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.3 2004/07/12 13:29:57 antonio Exp $
+ * @version CVS $Id$
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
-    implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
+    implements ProgramGenerator, Contextualizable, Serviceable, Parameterizable,
                Disposable, ThreadSafe {
 
     /** The auto-reloading option */
@@ -75,13 +74,13 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
     protected GeneratorSelector cache;
 
     /** The component manager */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     /** The markup language component selector */
-    protected ComponentSelector markupSelector;
+    protected ServiceSelector markupSelector;
 
     /** The programming language component selector */
-    protected ComponentSelector languageSelector;
+    protected ServiceSelector languageSelector;
 
     /** The working directory */
     protected File workDir;
@@ -133,12 +132,12 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * and programming languages.
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         if (this.manager == null && manager != null) {
             this.manager = manager;
             this.cache = (GeneratorSelector) this.manager.lookup(GeneratorSelector.ROLE + "Selector");
-            this.markupSelector = (ComponentSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
-            this.languageSelector = (ComponentSelector)this.manager.lookup(ProgrammingLanguage.ROLE + "Selector");
+            this.markupSelector = (ServiceSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
+            this.languageSelector = (ServiceSelector)this.manager.lookup(ProgrammingLanguage.ROLE + "Selector");
             this.classManager = (ClassLoaderManager)this.manager.lookup(ClassLoaderManager.ROLE);
         }
     }
@@ -182,7 +181,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * @exception Exception If an error occurs during generation or loading
      * @deprecated Pass Source object instead of file name.
      */
-    public CompiledComponent load(ComponentManager newManager,
+    public CompiledComponent load(ServiceManager newManager,
                                   String fileName,
                                   String markupLanguageName,
                                   String programmingLanguageName,
@@ -209,7 +208,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * @return The loaded program instance
      * @exception Exception If an error occurs during generation or loading
      */
-    public CompiledComponent load(ComponentManager newManager,
+    public CompiledComponent load(ServiceManager newManager,
                                   Source source,
                                   String markupLanguageName,
                                   String programmingLanguageName,
@@ -367,22 +366,14 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                 }
             }
 
-            // Recompose with the new manager if program needs it.
-            // This is required to provide XSP with manager from the correct
-            // sitemap so it will be able to find all components declared in
-            // the sitemap.
-            if (programInstance instanceof Recomposable) {
-                ((Recomposable) programInstance).recompose(newManager);
-            }
-
-            return (programInstance);
+            return programInstance;
         } finally {
             this.markupSelector.release(markupLanguage);
             this.languageSelector.release(programmingLanguage);
         }
     }
 
-    private CompiledComponent loadProgram(ComponentManager newManager,
+    private CompiledComponent loadProgram(ServiceManager newManager,
                                           String normalizedName,
                                           MarkupLanguage markupLanguage,
                                           ProgrammingLanguage programmingLanguage)

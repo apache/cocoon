@@ -15,17 +15,14 @@
  */
 package org.apache.cocoon.components.language.programming.javascript;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
-
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
+import org.apache.cocoon.core.container.AbstractComponentHandler;
 
 import java.io.File;
 import java.util.Collection;
@@ -35,7 +32,7 @@ import java.util.Iterator;
  * This class represents program in the Javascript language.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavascriptProgram.java,v 1.1 2004/03/10 12:58:08 stephan Exp $
+ * @version CVS $Id$
  */
 public class JavascriptProgram implements Program {
 
@@ -65,14 +62,12 @@ public class JavascriptProgram implements Program {
         return file.toString();
     }
 
-    public ComponentHandler getHandler(ComponentManager manager,
-                                       Context context,
-                                       RoleManager roles,
-                                       LogkitLoggerManager logKitManager)
-            throws Exception {
+    public AbstractComponentHandler getHandler(ServiceManager manager,
+                                       Context context)
+    throws Exception {
 
-        return ComponentHandler.getComponentHandler(
-                clazz, config, manager, context, roles, logKitManager, null, "N/A");
+        return AbstractComponentHandler.getComponentHandler(
+                clazz, config, manager, context, null, null, null);
     }
 
     public CompiledComponent newInstance() throws Exception {

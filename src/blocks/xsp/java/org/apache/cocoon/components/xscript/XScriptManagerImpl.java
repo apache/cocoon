@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.xscript;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -45,7 +44,7 @@ import java.util.Map;
  */
 public class XScriptManagerImpl
         extends AbstractLogEnabled
-        implements XScriptManager, Serviceable, Component, Parameterizable, Contextualizable, ThreadSafe, Disposable
+        implements XScriptManager, Serviceable, Parameterizable, Contextualizable, ThreadSafe, Disposable
 {
     public static final String CONTEXT = "org.apache.cocoon.components.xscript.scope";
 

@@ -16,13 +16,12 @@
 package org.apache.cocoon.generation;
 
 import org.apache.commons.collections.ArrayStack;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -56,10 +55,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.1 2004/03/10 15:20:51 unico Exp $
+ * @version CVS $Id$
  */
 public class ServerPagesGenerator extends ServletGenerator
-        implements Disposable, CacheableProcessingComponent, Configurable {
+        implements CacheableProcessingComponent, Configurable {
     /**
      * The sitemap-defined server pages program generator
      */
@@ -73,13 +72,13 @@ public class ServerPagesGenerator extends ServletGenerator
     private CompletionPipe completionPipe;
 
     /**
-     * Set the global component manager. This method sets the sitemap-defined
+     * Set the global service manager. This method sets the sitemap-defined
      * program generator
      *
-     * @param manager The global component manager
+     * @param manager The global service manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
 
         if (programGenerator == null) {
             this.programGenerator =
@@ -87,6 +86,9 @@ public class ServerPagesGenerator extends ServletGenerator
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
         boolean autoComplete = config.getChild("autocomplete-documents").getValueAsBoolean(false);
 
@@ -149,6 +151,9 @@ public class ServerPagesGenerator extends ServletGenerator
      */
     public final static String DEFAULT_PROGRAMMING_LANGUAGE = "java";
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
 
@@ -273,9 +278,11 @@ public class ServerPagesGenerator extends ServletGenerator
      * dispose
      */
     public void dispose() {
-        this.manager.release(this.programGenerator);
-        this.programGenerator = null;
-        this.manager = null;
+        if ( this.manager != null ) {
+            this.manager.release(this.programGenerator);
+            this.programGenerator = null;
+            this.manager = null;
+        }
     }
 
     /* Completion pipe */

@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.xscript.XScriptManager;
 import org.apache.cocoon.components.xscript.XScriptObject;
@@ -38,7 +38,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: SOAPHelper.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id$
  * @since July 16, 2001
  */
 public class SOAPHelper {
@@ -48,9 +48,9 @@ public class SOAPHelper {
     XScriptObject xscriptObject;
     String authorization = "";
 
-    public SOAPHelper(ComponentManager manager, String urlContext, String url,
+    public SOAPHelper(ServiceManager manager, String urlContext, String url,
                       String action, String authorization, XScriptObject xscriptObject)
-            throws MalformedURLException, ComponentException
+            throws MalformedURLException, ServiceException
     {
         this.xscriptManager = (XScriptManager) manager.lookup(XScriptManager.ROLE);
         URL context = new URL(urlContext);

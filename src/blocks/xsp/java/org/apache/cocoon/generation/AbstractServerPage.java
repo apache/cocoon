@@ -15,10 +15,6 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.Recomposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.environment.Request;
@@ -37,11 +33,12 @@ import java.io.Serializable;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: AbstractServerPage.java,v 1.2 2004/05/24 11:58:06 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractServerPage
   extends ServletGenerator 
-  implements CompiledComponent, CacheableProcessingComponent, Recomposable {
+  implements CompiledComponent, CacheableProcessingComponent {
+    
     /**
      * Code generators should produce a constructor
      * block that initializes the generator's
@@ -61,14 +58,6 @@ public abstract class AbstractServerPage
     protected long dateCreated = -1L;
     /** The dependency file list */
     protected File[] dependencies = null;
-
-    /**
-     * Recompose with the actual <code>ComponentManager</code> that should
-     * be used.
-     */
-    public void recompose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }
 
     /**
      * Determines whether this generator's source files have changed

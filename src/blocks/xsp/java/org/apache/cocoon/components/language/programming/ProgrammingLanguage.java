@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.framework.component.Component;
-
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 
@@ -26,9 +24,9 @@ import java.io.File;
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ProgrammingLanguage.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  */
-public interface ProgrammingLanguage extends Component {
+public interface ProgrammingLanguage {
 
     String ROLE = ProgrammingLanguage.class.getName();
 

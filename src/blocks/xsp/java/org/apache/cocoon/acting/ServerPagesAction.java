@@ -19,19 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-import org.apache.avalon.excalibur.component.ComponentHandler;
-
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
+import org.apache.cocoon.core.container.AbstractComponentHandler;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -76,43 +72,31 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * @version CVS $Id$
  */
 public class ServerPagesAction
-        extends AbstractAction
-        implements Disposable, ThreadSafe, Configurable, Composable {
+        extends ServiceableAction
+        implements Disposable, ThreadSafe, Configurable {
 
     public static final String REDIRECTOR_OBJECT = "xsp-action:redirector";
     public static final String ACTION_RESULT_OBJECT = "xsp-action:result";
     public static final String ACTION_SUCCESS_OBJECT = "xsp-action:success";
 
-    private ComponentHandler generatorHandler;
+    private AbstractComponentHandler generatorHandler;
 
-    /** The component manager instance */
-    private ComponentManager manager;
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager=manager;
-    }
-    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration conf)
     throws ConfigurationException {
         try {
-            this.generatorHandler = ComponentHandler.getComponentHandler(
+            this.generatorHandler = AbstractComponentHandler.getComponentHandler(
                 ServerPagesGenerator.class,
                 conf,
                 this.manager,
-                null, // Context
-                null,  // RoleManager
-                null,  // LogkitLoggerManager
-                null, // InstrumentManager
-                "N/A" // instrumentableName
+                null,  // Context
+                this.getLogger(),
+                null,  // LoggerManager
+                null   // RoleManager
             );
 
-            this.generatorHandler.enableLogging(getLogger());
             this.generatorHandler.initialize();
 
         } catch(Exception e) {
@@ -152,8 +136,6 @@ public class ServerPagesAction
         XMLByteStreamCompiler compiler = null;
 
         try {
-            generator.enableLogging(getLogger());
-            generator.compose(this.manager);
             generator.setup(resolver, objectModel, source, parameters);
 
             // Setup generator output

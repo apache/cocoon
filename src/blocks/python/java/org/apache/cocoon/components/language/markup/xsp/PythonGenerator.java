@@ -43,7 +43,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * written in Python language
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PythonGenerator.java,v 1.4 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PythonGenerator extends XSPGenerator
         implements Configurable, Initializable {
@@ -59,6 +59,9 @@ public class PythonGenerator extends XSPGenerator
     private Exception compileError;
 
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         this.file = new File(configuration.getChild("file").getValue());
 
@@ -89,6 +92,9 @@ public class PythonGenerator extends XSPGenerator
         return false;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() throws Exception {
         try {
             Properties properties = new Properties();
@@ -116,6 +122,9 @@ public class PythonGenerator extends XSPGenerator
     }
 
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
@@ -132,6 +141,9 @@ public class PythonGenerator extends XSPGenerator
         python.set("parameters", this.parameters);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.generation.Generator#generate()
+     */
     public void generate() throws IOException, ProcessingException {
         try {
             python.set("contentHandler", this.contentHandler);
@@ -145,6 +157,9 @@ public class PythonGenerator extends XSPGenerator
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public void recycle() {
         python.set("contentHandler", null);
 
@@ -158,6 +173,9 @@ public class PythonGenerator extends XSPGenerator
         super.recycle();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         python.set("page", null);
         python.set("logger", null);

@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.excalibur.source.Source;
 
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
@@ -26,9 +25,9 @@ import org.apache.cocoon.environment.SourceResolver;
  * documents written in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ProgramGenerator.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id$
  */
-public interface ProgramGenerator extends Component {
+public interface ProgramGenerator {
 
     String ROLE = ProgramGenerator.class.getName();
 
@@ -47,7 +46,7 @@ public interface ProgramGenerator extends Component {
      * @deprecated Pass Source object instead of file name.
      */
     CompiledComponent load(
-            ComponentManager newManager,
+            ServiceManager newManager,
             String fileName,
             String markupLanguage,
             String programmingLanguage,
@@ -67,7 +66,7 @@ public interface ProgramGenerator extends Component {
      * @exception Exception If an error occurs during generation or loading
      */
     CompiledComponent load(
-            ComponentManager newManager,
+            ServiceManager newManager,
             Source source,
             String markupLanguage,
             String programmingLanguage,

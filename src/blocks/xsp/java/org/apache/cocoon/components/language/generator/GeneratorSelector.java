@@ -15,27 +15,18 @@
  */
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.logger.LogKitManager;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.Program;
+import org.apache.cocoon.core.container.AbstractComponentHandler;
+import org.apache.cocoon.core.container.CocoonServiceSelector;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This interface is the common base of all Compiled Components.  This
@@ -43,96 +34,58 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: GeneratorSelector.java,v 1.2 2004/06/03 12:38:54 vgritsenko Exp $
+ * @version CVS $Id$
  */
-public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
+public class GeneratorSelector 
+extends CocoonServiceSelector  {
 
     public static String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
 
-    private ClassLoaderManager classManager;
-
-    /** The component manager */
-    protected ComponentManager manager;
-
-    private LogkitLoggerManager logKitManager;
-
-    protected Context context;
-
-    protected RoleManager roles;
-
-    protected Map componentHandlers = new HashMap();
-
-    /** Dynamic component handlers mapping. */
-    private Map componentMapping = new HashMap();
-
-
-    public void contextualize(Context context) {
-        super.contextualize(context);
-        this.context = context;
-    }
-
-    public void setRoleManager(RoleManager roleMgr) {
-        super.setRoleManager(roleMgr);
-        this.roles = roleMgr;
-    }
-
-    /**
-     * Configure the LogKitManager
+    protected ClassLoaderManager classManager;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void setLogKitManager( final LogKitManager logkit ) {
-        super.setLogKitManager(logkit);
-        if (null == this.logKitManager) {
-             this.logKitManager = new LogkitLoggerManager( null, logkit );
-        }
-    }
+    public void service(ServiceManager manager) 
+    throws ServiceException {
+        super.service(manager);
 
-    /**
-     * Configure the LoggerManager.
-     */
-    public void setLoggerManager( final LoggerManager logkit ) {
-        super.setLoggerManager(logkit);
-        if (null ==  this.logKitManager) {
-             this.logKitManager = new LogkitLoggerManager( logkit, null );
-        }
-    }
-
-    public void compose (ComponentManager manager) throws ComponentException {
-        super.compose(manager);
-        this.manager = manager;
+        this.classManager = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
 
         try {
-            this.classManager = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
-        } catch (ComponentException cme) {
-            throw new ComponentException(ClassLoaderManager.ROLE, "GeneratorSelector", cme);
-        }
-
-        try {
-            this.classManager.addDirectory((File) this.m_context.get(Constants.CONTEXT_WORK_DIR));
+            this.classManager.addDirectory((File) this.context.get(Constants.CONTEXT_WORK_DIR));
         } catch (Exception e) {
-            throw new ComponentException(ROLE, "Could not add repository to ClassLoaderManager", e);
+            throw new ServiceException(ROLE, "Could not add repository to ClassLoaderManager", e);
         }
     }
 
-    public Component select(Object hint) throws ComponentException {
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.ServiceSelector#select(java.lang.Object)
+     */
+    public Object select(Object hint) throws ServiceException {
 
-        ComponentHandler handler = (ComponentHandler) this.componentHandlers.get(hint);
+        AbstractComponentHandler handler = (AbstractComponentHandler) this.componentHandlers.get(hint);
         if (handler == null) {
-            throw new ComponentException(ROLE, "Could not find component for hint: " + hint);
+            throw new ServiceException(ROLE, "Could not find component for hint: " + hint);
         }
 
         try {
-            Component component = handler.get();
+            Object component = handler.get();
             componentMapping.put(component, handler);
             return component;
         } catch (Exception ce) {
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Could not access component for hint: " + hint, ce);
-            throw new ComponentException(ROLE, "Could not access component for hint: " + hint, ce);
+            }
+            throw new ServiceException(ROLE, "Could not access component for hint: " + hint, ce);
         }
     }
 
-    public void release(Component component) {
-        ComponentHandler handler = (ComponentHandler)componentMapping.remove(component);
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
+     */
+    public void release(Object component) {
+        AbstractComponentHandler handler = (AbstractComponentHandler)componentMapping.remove(component);
         if (handler != null) {
             try {
                 handler.put(component);
@@ -142,13 +95,12 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
         }
     }
 
-    public void addGenerator(ComponentManager newManager,
+    public void addGenerator(ServiceManager newManager,
                              Object hint, Program generator)
-            throws Exception {
+    throws Exception {
         try {
-            final ComponentHandler handler =
-                    generator.getHandler(newManager, this.context, this.roles, this.logKitManager);
-            handler.enableLogging(getLogger());
+            final AbstractComponentHandler handler =
+                    generator.getHandler(newManager, this.context );
             handler.initialize();
             this.componentHandlers.put(hint, handler);
             if (getLogger().isDebugEnabled()) {
@@ -164,7 +116,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
     }
 
     public void removeGenerator(Object hint) {
-        ComponentHandler handler = (ComponentHandler) this.componentHandlers.remove(hint);
+        AbstractComponentHandler handler = (AbstractComponentHandler) this.componentHandlers.remove(hint);
         if (handler != null) {
             handler.dispose();
             this.classManager.reinstantiate();
@@ -174,8 +126,11 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-        this.manager.release(this.classManager);
+        this.serviceManager.release(this.classManager);
 
         synchronized(this) {
             Iterator keys = this.componentHandlers.keySet().iterator();
@@ -183,8 +138,8 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
 
             while(keys.hasNext()) {
                 Object key = keys.next();
-                ComponentHandler handler =
-                    (ComponentHandler)this.componentHandlers.get(key);
+                AbstractComponentHandler handler =
+                    (AbstractComponentHandler)this.componentHandlers.get(key);
 
                 handler.dispose();
 
