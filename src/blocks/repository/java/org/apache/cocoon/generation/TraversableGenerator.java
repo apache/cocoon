@@ -76,6 +76,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.TimeZone;
 
 /**
  * Generates an XML source hierarchy listing from a Traversable Source.
@@ -115,6 +116,10 @@ import java.util.Comparator;
  *   <dd> Sets the format for the date attribute of each node, as
  *        described in java.text.SimpleDateFormat. If unset, the default
  *        format for the current locale will be used.
+ *   <dt> <i>timeZone</i> (optional)
+ *   <dd> Sets the time zone offset ID for the date attribute, as 
+ *        described in java.util.TimeZone. If unset, the default
+ *        system time zone will be used.
  *   <dt> <i>refreshDelay</i> (optional)
  *   <dd> Sets the delay (in seconds) between checks on the source hierarchy
  *        for changed content. Defaults to 1 second.
@@ -127,7 +132,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.3 2003/10/28 16:46:52 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.4 2003/11/03 17:13:33 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -220,6 +225,11 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         } else {
             this.dateFormatter = new SimpleDateFormat();
         }
+        
+        String timeZone = par.getParameter("timeZone",null);
+        if (timeZone != null) {
+            this.dateFormatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+        }
 
         this.sort = par.getParameter("sort", "name");
         this.cacheKeyParList.add(this.sort);
@@ -233,6 +243,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("depth: " + this.depth);
             this.getLogger().debug("dateFormat: " + this.dateFormatter.toPattern());
+            this.getLogger().debug("timeZone: " + timeZone);
             this.getLogger().debug("sort: " + this.sort);
             this.getLogger().debug("reverse: " + this.reverse);
             this.getLogger().debug("refreshDelay: " + this.refreshDelay);
