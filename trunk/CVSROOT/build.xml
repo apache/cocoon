@@ -34,7 +34,7 @@ Fixme:
 Copyright:
   Copyright (c) 1999 The Apache Software Foundation.
   
-   $Id: build.xml,v 1.3 1999-12-03 23:46:16 stefano Exp $
+   $Id: build.xml,v 1.4 1999-12-07 00:26:58 stefano Exp $
    
 ==================================================================== -->
 
@@ -52,12 +52,9 @@ Copyright:
   <property name="sheets.dir" value="./stylesheets"/>
   <property name="images.dir" value="./resources"/>
   <property name="version.file" value="org/apache/cocoon/Defaults.java"/>
-  
-  <!-- this sucks! we should have a way to tell something like "org.apache.cocoon.*"
-       let stupid javadoc do the job. I love javadoc's idea but I hate who
-       wrote it. -->
-  <property name="packages" value="org.apache.cocoon"/>
 
+  <property name="packages" value="org.apache.cocoon.*"/>
+  
   <property name="build.dir" value="./build"/>
   <property name="build.src" value="./build/src"/>
   <property name="build.dest" value="./build/classes"/>
@@ -68,31 +65,42 @@ Copyright:
 
   <property name="site.dir" value="../xml-site/sources/cocoon"/>
 
-  <target name="prepare">
-    <!-- create temporary build dirs -->
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="build-prepare">
     <mkdir dir="${build.dir}"/>
-    <mkdir dir="${build.src}"/>
-    <mkdir dir="${build.dest}"/>
-    <mkdir dir="${build.docs}"/>
-    <mkdir dir="${build.javadocs}"/>
-
-    <!-- copy src files dirs -->
-    <copydir src="${src.dir}" dest="${build.src}"/>
-    
-    <!-- substitute tokens as needed ("replace" not yet implemented) -->
-    <!-- <replace file="${build.src}/${version.file}" token="@version@" value="${version}"/> -->
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Compiles the source code                                            -->
+  <!-- =================================================================== -->
   <target name="compile" depends="prepare">
+    <!-- create directories -->
+    <mkdir dir="${build.src}"/>
+    <mkdir dir="${build.dest}"/>
+
+    <!-- copy src files -->
+    <copydir src="${src.dir}" dest="${build.src}"/>
+    
+    <!-- substitute tokens as needed -->
+    <replace file="${build.src}/${version.file}" token="@version@" value="${version}"/>
+
+    <!-- do the compilation -->
     <javac srcdir="${build.src}" destdir="${build.dest}" debug="${debug}"/>
   </target>
 
+  <target name="package" depends="compile">
+    <!-- create the package -->
+    <jar jarfile="${build.dir}/${name}-${version}.jar" basedir="${build.dest}" manifest="${build.src}/MANIFEST.mf" items="org"/>
+  </target>
+  
   <target name="javadocs" depends="prepare">
     <mkdir dir="${build.javadocs}"/>
     <copyfile src="${stylesheets}/javadoc.css" dest="{$build.javadocs}/stylesheet.css"/>
-    <javadoc2 sourcepath="${build.src}" 
+    <javadoc2 packagenames="${packages}"
+              sourcepath="${build.src}" 
               destdir="${build.javadocs}"
-              packagenames="${packages}"
               author="true" 
               version="true" 
               use="true"
@@ -102,16 +110,27 @@ Copyright:
     />
   </target>
 
-  <target name="docs" depends="javadocs">
+  <target name="docs" depends="prepare">
     <mkdir dir="${build.docs}"/>
-    <!-- here should go the <stylebook > stuff -->
+    <copyfile src="${docs.dir}/docs-book.xml" dest="${build.docs}/book.xml"/>
+    <xslt src="${docs.dir}/index.xml" dest="${build.docs}/index-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/installing.xml" dest="${build.docs}/installing-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/cocoon2.xml" dest="${build.docs}/cocoon2-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/dcpprocessor.xml" dest="${build.docs}/dcpprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/sqlprocessor.xml" dest="${build.docs}/sqlprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/license.xml" dest="${build.docs}/license-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/javadoc.xml" dest="${build.docs}/javadoc-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/guide.xml" dest="${build.docs}/guide-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/technologies.xml" dest="${build.docs}/technologies-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/dynamic.xml" dest="${build.docs}/dynamic-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/faq.xml" dest="${build.docs}/faq-sbk.xml" sheet="${sheets.dir}/faq-stylebook.xsl"/>
+    <xslt src="${docs.dir}/WD-xsp.xml" dest="${build.docs}/WD-xsp-sbk.xml" sheet="${sheets.dir}/spec-stylebook.xsl"/>
+    <xslt src="changes.xml" dest="${build.docs}/changes-sbk.xml" sheet="${sheets.dir}/changes-stylebook.xsl"/>
+    <xslt src="todo.xml" dest="${build.docs}/todo-sbk.xml" sheet="${sheets.dir}/todo-stylebook.xsl"/>
+    <copydir src="${images.dir}" dest="${build.docs}/images"/>  
   </target>
 
-  <target name="package" depends="compile">
-    <jar jarfile="${build.dir}/${name}-${version}.jar" basedir="${build.dest}" manifest="${build.src}/MANIFEST.mf" items="org"/>
-  </target>
-  
-  <target name="dist" depends="package, docs">
+  <target name="dist" depends="package, docs, javadocs">
     <mkdir dir="${dist.dir}"/>
     
     <!-- yet to finish! -->
@@ -119,7 +138,7 @@ Copyright:
   </target>
   
   <target name="site">
-    <copyfile src="${docs.dir}/book.xml" dest="${site.dir}/../cocoon.xml"/>
+    <copyfile src="${docs.dir}/site-book.xml" dest="${site.dir}/../cocoon.xml"/>
     <xslt src="${docs.dir}/index.xml" dest="${site.dir}/index-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
     <xslt src="${docs.dir}/installing.xml" dest="${site.dir}/installing-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
     <xslt src="${docs.dir}/cocoon2.xml" dest="${site.dir}/cocoon2-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
@@ -135,6 +154,7 @@ Copyright:
     <xslt src="changes.xml" dest="${site.dir}/changes-sbk.xml" sheet="${sheets.dir}/changes-stylebook.xsl"/>
     <xslt src="todo.xml" dest="${site.dir}/todo-sbk.xml" sheet="${sheets.dir}/todo-stylebook.xsl"/>
     <copydir src="${images.dir}" dest="${site.dir}/images"/>
+    <stylebook 
   </target>            
                        
   <target name="clean">
