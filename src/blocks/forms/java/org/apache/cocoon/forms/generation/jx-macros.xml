@@ -93,6 +93,20 @@
     </jx:macro>
 
     <!--
+        ft:group : just increase the nesting level
+    -->
+    <jx:macro name="group" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+      <jx:parameter name="id"/>
+
+      <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
+      <jx:if test="${cformsHelper.isVisible(widget)}">
+        <fi:group id="${widget.getRequestParameterName()}">
+          <jx:evalBody/>
+        </fi:group>
+      </jx:if>
+    </jx:macro>
+
+    <!--
         ft:new
     -->
     <jx:macro name="new" targetNamespace="http://apache.org/cocoon/forms/1.0#template">

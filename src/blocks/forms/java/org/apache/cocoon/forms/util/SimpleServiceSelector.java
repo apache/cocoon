@@ -84,7 +84,6 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
 					getLogger(),
 					context,
 					serviceManager,
-					null, // RoleManager
 					componentConfs[i]);
             } catch (Exception e) {
                 throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i].getLocation(), e);

@@ -45,9 +45,6 @@ public class EnumConvertorBuilderTestCase extends TestCase {
         parser = factory.newDocumentBuilder();
     }
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
 
     public EnumConvertorBuilderTestCase(String name) {
         super(name);

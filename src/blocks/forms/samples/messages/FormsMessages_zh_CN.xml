@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -16,40 +16,40 @@
 -->
 <!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue>
-  <message key="general.field-required">æ­¤åŸŸæ˜¯å¿…é¡»çš„</message>
+  <message key="general.field-required">此域是必须的</message>
 
-  <message key="datatype.conversion-failed">ä¸æ˜¯ä¸€ä¸ªæœ‰æ•ˆçš„{0}ç±»åž‹.</message>
-  <message key="datatype.decimal">å°æ•°</message> 
-  <message key="datatype.integer">æ•´æ•°</message> 
-  <message key="datatype.long">æ•´æ•°</message>
-  <message key="datatype.float">å°æ•°</message> 
-  <message key="datatype.double">å°æ•°</message> 
-  <message key="datatype.date.date">æ—¥æœŸ</message>
+  <message key="datatype.conversion-failed">不是一个有效的{0}类型.</message>
+  <message key="datatype.decimal">小数</message> 
+  <message key="datatype.integer">整数</message> 
+  <message key="datatype.long">整数</message>
+  <message key="datatype.float">小数</message> 
+  <message key="datatype.double">小数</message> 
+  <message key="datatype.date.date">日期</message>
   <message key="datatype.date.time">#time#</message>
   <message key="datatype.date.datetime">#date-time#</message>
 
-  <message key="validation.string.exact-length">åº”ä¸º{0}ä¸ªå­—ç¬¦.</message>
-  <message key="validation.string.range-length">åº”åŒ…å«{0}åˆ°{1}ä¸ªå­—ç¬¦.</message>
-  <message key="validation.string.min-length">åº”åŒ…å«è‡³å°‘{0}ä¸ªå­—ç¬¦.</message>
-  <message key="validation.string.max-length">ä¸åº”è¶…è¿‡{0}ä¸ªå­—ç¬¦.</message>
-  <message key="validation.string.regexp">ä¸èƒ½æ»¡è¶³å¦‚ä¸‹è¡¨è¾¾å¼: {0}</message>
+  <message key="validation.string.exact-length">应为{0}个字符.</message>
+  <message key="validation.string.range-length">应包含{0}到{1}个字符.</message>
+  <message key="validation.string.min-length">应包含至少{0}个字符.</message>
+  <message key="validation.string.max-length">不应超过{0}个字符.</message>
+  <message key="validation.string.regexp">不能满足如下表达式: {0}</message>
 
-  <message key="validation.string.invalidemail">åŸŸä¸åŒ…å«æœ‰æ•ˆçš„é‚®ä»¶åœ°å€</message>
+  <message key="validation.string.invalidemail">域不包含有效的邮件地址</message>
 
-  <message key="validation.array.exact-valuecount">åº”æœ‰{0}ä¸ªé¡¹ç›®è¢«é€‰ä¸­.</message>
-  <message key="validation.array.range-valuecount">è‡³å°‘{0}ä¸ªå’Œæœ€å¤š{1}ä¸ªé¡¹ç›®åº”è¢«é€‰ä¸­.</message>
-  <message key="validation.array.min-valuecount">è‡³å°‘{0}ä¸ªé¡¹ç›®åº”è¢«é€‰ä¸­.</message>
-  <message key="validation.array.max-valuecount">è‡³å¤š{0}ä¸ªé¡¹ç›®åº”è¢«é€‰ä¸­.</message>
+  <message key="validation.array.exact-valuecount">应有{0}个项目被选中.</message>
+  <message key="validation.array.range-valuecount">至少{0}个和最多{1}个项目应被选中.</message>
+  <message key="validation.array.min-valuecount">至少{0}个项目应被选中.</message>
+  <message key="validation.array.max-valuecount">至多{0}个项目应被选中.</message>
 
-  <message key="multivaluefield.conversionfailed">é€‰ä¸­çš„å€¼å½“ä¸­æœ‰ä¸€ä¸ªç±»åž‹ä¸æ­£ç¡®.</message>
+  <message key="multivaluefield.conversionfailed">选中的值当中有一个类型不正确.</message>
 
-  <message key="validation.numeric.range">æ•°å­—èŒƒå›´åº”åœ¨{0}åˆ°{1}ä¹‹é—´.</message>
-  <message key="validation.numeric.min">æ•°å­—åº”å¤§äºŽç­‰äºŽ{0}.</message>
-  <message key="validation.numeric.max">æ•°å­—åº”å°äºŽç­‰äºŽ{0}.</message>
+  <message key="validation.numeric.range">数字范围应在{0}到{1}之间.</message>
+  <message key="validation.numeric.min">数字应大于等于{0}.</message>
+  <message key="validation.numeric.max">数字应小于等于{0}.</message>
 
-  <message key="validation.mod10">Mod 10 æ£€æŸ¥å¤±è´¥.</message>
+  <message key="validation.mod10">Mod 10 检查失败.</message>
 
 
-  <message key="aggregatedfield.split-failed">åŸŸçš„å†…å®¹ä¸èƒ½æ»¡è¶³å¦‚ä¸‹è¡¨è¾¾å¼: {0}</message>
-  <message key="upload.invalid-type">å†…å®¹ç±»åž‹ä¸æ­£ç¡®.</message>
+  <message key="aggregatedfield.split-failed">域的内容不能满足如下表达式: {0}</message>
+  <message key="upload.invalid-type">内容类型不正确.</message>
 </catalogue>
