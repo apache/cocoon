@@ -24,10 +24,10 @@ import org.odmg.ODMGException;
  * Interface of the ODMG Implementation. It is used to get the Implementation Object to interact with ODMG using OJB
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: OdmgImplementation.java,v 1.2 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version CVS $Id: OdmgImplementation.java,v 1.3 2004/06/25 14:49:56 cziegeler Exp $
  */
-public interface OdmgImplementation
-    extends Component {
+public interface OdmgImplementation extends Component {
+
     /** The ROLE */
     String ROLE = OdmgImplementation.class.getName();
 

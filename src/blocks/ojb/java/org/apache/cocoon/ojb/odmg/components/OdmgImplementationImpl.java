@@ -19,11 +19,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ojb.components.AbstractOjbImpl;
 import org.apache.ojb.odmg.OJB;
@@ -36,11 +31,11 @@ import org.odmg.ODMGException;
  * Implementation of the OdmgImplementation. Create a ODMG Implementation and store it for future use
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: OdmgImplementationImpl.java,v 1.3 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version CVS $Id: OdmgImplementationImpl.java,v 1.4 2004/06/25 14:49:56 cziegeler Exp $
  */
 public class OdmgImplementationImpl
     extends AbstractOjbImpl
-    implements OdmgImplementation, Configurable, Initializable, Disposable, ThreadSafe {
+    implements OdmgImplementation, ThreadSafe {
 
     private final static String DEFAULT_CONNECTION ="default";
     private final static int DEFAULT_MODE = Database.OPEN_READ_WRITE;
@@ -48,16 +43,6 @@ public class OdmgImplementationImpl
     
     private Hashtable databases = new Hashtable();
     
-    /*  (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration myconf)
-        throws ConfigurationException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("OJB-ODMG: configuration");
-        }
-    }
-
     /*  (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -108,7 +93,7 @@ public class OdmgImplementationImpl
      */
     public Implementation getInstance() throws ODMGException {
         Database db = (Database)this.databases.get( DEFAULT_CONNECTION );
-        if(null == db ) {
+        if (null == db ) {
             db = this.odmg.newDatabase();
             db.open(DEFAULT_CONNECTION, DEFAULT_MODE);
             synchronized (this.databases) {
@@ -123,7 +108,7 @@ public class OdmgImplementationImpl
      */
     public Implementation getInstance(String connection, int mode) throws ODMGException {
         Database db = (Database)this.databases.get( connection + mode);
-        if(null == db ) {
+        if (null == db ) {
             db = this.odmg.newDatabase();
             db.open(connection, mode);
             synchronized (this.databases) {
@@ -138,7 +123,7 @@ public class OdmgImplementationImpl
      */
     public Implementation getInstance(String connection) throws ODMGException {
         Database db = (Database)this.databases.get( connection + DEFAULT_MODE);
-        if(null == db ) {
+        if (null == db ) {
             db = this.odmg.newDatabase();
             db.open(connection, DEFAULT_MODE);
             synchronized (this.databases) {
@@ -150,10 +135,9 @@ public class OdmgImplementationImpl
     /* (non-Javadoc)
      * @see org.apache.cocoon.ojb.odmg.components.OdmgImplementation#getInstance(int)
      */
-    public Implementation getInstance( int mode ) throws ODMGException 
-    {
+    public Implementation getInstance( int mode ) throws ODMGException  {
         Database db = (Database)this.databases.get( DEFAULT_CONNECTION+ mode);
-        if(null == db ) {
+        if (null == db ) {
             db = this.odmg.newDatabase();
             db.open(DEFAULT_CONNECTION, mode);
             synchronized (this.databases) {
