@@ -63,7 +63,7 @@
    <authentication-manager>
     <handlers>
      <handler name="slidehandler" xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-      <redirect-to    uri="cocoon://slide-samples/login.html"/>
+      <redirect-to    uri="cocoon://samples/slide/login.html"/>
       <authentication uri="cocoon:raw:/authenticate"/>
      </handler>
     </handlers>
