@@ -77,7 +77,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver;
@@ -86,13 +85,9 @@ import org.apache.cocoon.i18n.Bundle;
 import org.apache.cocoon.i18n.BundleFactory;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.transformation.helpers.MirrorRecorder;
-
+import org.apache.cocoon.xml.ParamSaxBuffer;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.excalibur.source.SourceValidity;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -253,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.17 2003/11/27 18:40:03 joerg Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.18 2003/12/10 15:37:36 vgritsenko Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -530,25 +525,34 @@ public class I18nTransformer extends AbstractTransformer
      */
     public static final String I18N_NUMBER_ELEMENT      = "number";
 
-    /** currency element */
+    /**
+     * Currency element name 
+     */
     public static final String I18N_CURRENCY_ELEMENT    = "currency";
 
-    /** percent element */
+    /**
+     * Percent element name
+     */
     public static final String I18N_PERCENT_ELEMENT     = "percent";
 
-    /** integer currency element */
-    public static final String I18N_INT_CURRENCY_ELEMENT
-            = "int-currency";
+    /**
+     * Integer currency element name
+     */
+    public static final String I18N_INT_CURRENCY_ELEMENT = "int-currency";
 
-    /** currency without unit element */
-    public static final String I18N_CURRENCY_NO_UNIT_ELEMENT =
-            "currency-no-unit";
+    /**
+     * Currency without unit element name
+     */
+    public static final String I18N_CURRENCY_NO_UNIT_ELEMENT = "currency-no-unit";
 
-    /** integer currency without unit element */
-    public static final String I18N_INT_CURRENCY_NO_UNIT_ELEMENT =
-            "int-currency-no-unit";
+    /**
+     * Integer currency without unit element name
+     */
+    public static final String I18N_INT_CURRENCY_NO_UNIT_ELEMENT = "int-currency-no-unit";
 
+    //
     // i18n general attributes
+    //
 
     /**
      * This attribute is used with i18n:text element to indicate the key of
@@ -570,7 +574,9 @@ public class I18nTransformer extends AbstractTransformer
      */
     public static final String I18N_ATTR_ATTRIBUTE          = "attr";
 
+    //
     // i18n number and date formatting attributes
+    //
 
     /**
      * This attribute is used with date and number formatting elements to
@@ -666,13 +672,14 @@ public class I18nTransformer extends AbstractTransformer
      */
     public static final String I18N_CATALOGUE_ATTRIBUTE = "catalogue";
 
+    //
     // Configuration parameters
+    //
 
     /**
      * This configuration parameter specifies the default locale to be used.
      */
     public static final String I18N_LOCALE      = "locale";
-
 
     /**
      * This configuration parameter specifies the message catalog name.
@@ -705,24 +712,16 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_CACHE_STARTUP       = "cache-at-startup";
 
     /**
-     * This constant specifies the XPath prefix that will be used
-     * to retrieve a value from a message catalogue. The resulting XPath is
-     * looks like this:
-     * <code>/catalogue/message[@key='key_value']</code>
-     *<br/>
-     * FIXME (KP): We need a more generic way of key interpretation: to use
-     * XPath expression as keys, or keys with non-XML dictionaries.
-     */
-    public static final String I18N_CATALOGUE_PREFIX    = "/catalogue/message";
-
-    /**
      * <code>fraction-digits</code> attribute is used with
      * <code>i18:number</code> to
      * indicate the number of digits behind the fraction
      */
     public static final String I18N_FRACTION_DIGITS_ATTRIBUTE = "fraction-digits";
 
+    //
     // States of the transformer
+    //
+    
     private static final int STATE_OUTSIDE                       = 0;
     private static final int STATE_INSIDE_TEXT                   = 10;
     private static final int STATE_INSIDE_PARAM                  = 20;
@@ -734,7 +733,6 @@ public class I18nTransformer extends AbstractTransformer
     private static final int STATE_INSIDE_DATE_TIME              = 61;
     private static final int STATE_INSIDE_TIME                   = 62;
     private static final int STATE_INSIDE_NUMBER                 = 63;
-
 
     // All date-time related parameter types and element names
     private static final Set dateTypes;
@@ -773,30 +771,87 @@ public class I18nTransformer extends AbstractTransformer
     }
 
 
-    // Component manager for this component
+    /**
+     * Component Manager
+     */
     protected ComponentManager manager;
 
+    /**
+     * Source Resolver
+     */
     private SourceResolver sourceResolver;
 
+    //
+    // i18n configuration variables
+    //
+
+    /**
+     * Default catalogue id
+     */
+    private String defaultCatalogueId;
+
+    /**
+     * Default (global) untranslated message value
+     */
+    private String globalUntranslated;
+
+    /**
+     * Current (local) untranslated message value
+     */
+    private String untranslated;
+
+    /**
+     * SaxBuffer containing the contents of {@link #untranslated}.
+     */
+    private ParamSaxBuffer untranslatedRecorder;
+
+    /**
+     * Cache at startup configuration parameter value
+     */
+    private boolean cacheAtStartup;
+
+    // Default catalogue
+    private Bundle defaultCatalogue;
+
+    // All catalogues (hashed on catalgue id). The values are instances of CatalogueInfo.
+    private Map catalogues = new HashMap();
+
+    // Dictionary loader factory
+    protected BundleFactory factory;
+
+    //
+    // Current state of the transformer
+    //
+    
     protected Map objectModel;
 
-    // Current state of the transformer. The value is STATE_OUTSIDE by default.
+    /**
+     * Current state of the transformer. Default value is STATE_OUTSIDE.
+     */
     private int current_state;
 
-    // Previous state. Used in text translation inside params and translate
-    // elements.
+    /**
+     * Previous state of the transformer.
+     * Used in text translation inside params and translate elements.
+     */
     private int prev_state;
 
-    // Character data buffer, used to concat chunked character data
+    /**
+     * Character data buffer. used to concat chunked character data
+     */
     private StringBuffer strBuffer;
 
-    // The i18n:key attribute is stored for the current element.
-    // If no translation found for the key then the character data of element is
-    // used as default value.
+    /**
+     * The i18n:key attribute is stored for the current element.
+     * If no translation found for the key then the character data of element is
+     * used as default value.
+     */
     private String current_key;
 
-    // Contains the id of the current catalogue if it was explicitely mentioned
-    // on an i18n:text element, otherwise it is null.
+    /**
+     * Contains the id of the current catalogue if it was explicitely mentioned
+     * on an i18n:text element, otherwise it is null.
+     */
     private String currentCatalogueId;
 
     // A flag for copying the node when doing in-place translation
@@ -806,14 +861,14 @@ public class I18nTransformer extends AbstractTransformer
     // when doing in-place translation whitin i18n:choose
     private boolean translate_end;
 
-    // Translated text
-    private MirrorRecorder tr_text_recorder;
+    // Translated text. Inside i:translate, collects character events.
+    private ParamSaxBuffer tr_text_recorder;
 
-    // Current "i:text" events
-    private MirrorRecorder text_recorder;
+    // Current "i18n:text" events
+    private ParamSaxBuffer text_recorder;
 
     // Current parameter events
-    private MirrorRecorder param_recorder;
+    private SaxBuffer param_recorder;
 
     // Param count when not using i:param name="..."
     private int param_count;
@@ -835,34 +890,6 @@ public class I18nTransformer extends AbstractTransformer
 
     // Date and number elements and params formatting attributes with values.
     private HashMap formattingParams;
-
-    // Default catalogue
-    private Bundle defaultCatalogue;
-
-    // All catalogues (hashed on catalgue id). The values are instances of CatalogueInfo.
-    private Map catalogues = new HashMap();
-
-    // Dictionary loader factory
-    protected BundleFactory factory;
-
-    //
-    // i18n configuration variables
-    //
-
-    // id of the default catalogue
-    private String defaultCatalogueId;
-
-    // Untranslated message value
-    private String untranslated;
-
-    /* A MirrorRecorder containing the contents of {@link #untranslated}. */
-    private MirrorRecorder untranslatedRecorder;
-
-    // Cache at startup setting value
-    private boolean cacheAtStartup;
-
-    // Helper variable used to hold the old untranslated value
-    private String globalUntranslated;
 
 
     /**
@@ -952,9 +979,9 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         // obtain default text to use for untranslated messages
-        untranslated = conf.getChild(I18N_UNTRANSLATED).getValue(null);
+        globalUntranslated = conf.getChild(I18N_UNTRANSLATED).getValue(null);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Default untranslated text is '" + untranslated + "'");
+            getLogger().debug("Default untranslated text is '" + globalUntranslated + "'");
         }
 
         // obtain config option, whether to cache messages at startup time
@@ -977,34 +1004,19 @@ public class I18nTransformer extends AbstractTransformer
         this.objectModel = objectModel;
 
         try {
-            // check parameters to see if anything has been locally overloaded
-            String localUntranslated = null;
-            String lc = null;
-            String localDefaultCatalogueId = null;
-
-            if (parameters != null) {
-                localUntranslated =
-                        parameters.getParameter(I18N_UNTRANSLATED, null);
-                lc = parameters.getParameter(I18N_LOCALE, null);
-                localDefaultCatalogueId = parameters.getParameter(I18N_DEFAULT_CATALOGUE_ID, null);
-            }
-
-            // if untranslated-text has been overridden, save the original
-            // value so it can be restored when this object is recycled.
-            if (localUntranslated != null) {
-                globalUntranslated = untranslated;
-                untranslated = localUntranslated;
-            }
-
+            untranslated = parameters.getParameter(I18N_UNTRANSLATED, globalUntranslated);
             if (untranslated != null) {
-                untranslatedRecorder = new MirrorRecorder();
+                untranslatedRecorder = new ParamSaxBuffer();
                 untranslatedRecorder.characters(untranslated.toCharArray(), 0, untranslated.length());
             }
+
+            String lc = parameters.getParameter(I18N_LOCALE, null);
+            String localDefaultCatalogueId = parameters.getParameter(I18N_DEFAULT_CATALOGUE_ID, null);
 
             // Get current locale
             Locale locale = I18nUtils.parseLocale(lc);
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using locale " + locale.toString());
+                getLogger().debug("Using locale '" + locale.toString() + "'");
             }
 
             // Initialize instance state variables
@@ -1015,7 +1027,7 @@ public class I18nTransformer extends AbstractTransformer
             this.currentCatalogueId = null;
             this.translate_copy     = false;
             this.tr_text_recorder   = null;
-            this.text_recorder      = new MirrorRecorder();
+            this.text_recorder      = new ParamSaxBuffer();
             this.param_count        = 0;
             this.param_name         = null;
             this.param_value        = null;
@@ -1192,7 +1204,7 @@ public class I18nTransformer extends AbstractTransformer
             }
 
             if (current_key != null) {
-                tr_text_recorder = getMirrorRecorder(current_key, null);
+                tr_text_recorder = getMessage(current_key, (ParamSaxBuffer)null);
             }
 
         } else if (I18N_TRANSLATE_ELEMENT.equals(name)) {
@@ -1222,7 +1234,7 @@ public class I18nTransformer extends AbstractTransformer
                 param_name = String.valueOf(param_count++);
             }
 
-            param_recorder = new MirrorRecorder();
+            param_recorder = new SaxBuffer();
             setFormattingParams(attr);
             current_state = STATE_INSIDE_PARAM;
         } else if (I18N_CHOOSE_ELEMENT.equals(name)) {
@@ -1440,28 +1452,25 @@ public class I18nTransformer extends AbstractTransformer
         }
     }
 
-    private void i18nCharacters(String textValue)
-    throws SAXException {
-
-        if (textValue == null) {
-            return;
-        }
+    private void i18nCharacters(String textValue) throws SAXException {
         // Trim text values to avoid parsing errors.
         textValue = textValue.trim();
-        if (textValue.length() == 0)
+        if (textValue.length() == 0) {
             return;
+        }
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug( "i18n message text = '" + textValue + "'" );
         }
 
+        char[] ch = textValue.toCharArray();
         switch (current_state) {
             case STATE_INSIDE_TEXT:
-                text_recorder.characters(textValue);
+                text_recorder.characters(ch, 0, ch.length);
                 break;
 
             case STATE_INSIDE_PARAM:
-                param_recorder.characters(textValue);
+                param_recorder.characters(ch, 0, ch.length);
                 break;
 
             case STATE_INSIDE_WHEN:
@@ -1471,9 +1480,9 @@ public class I18nTransformer extends AbstractTransformer
 
             case STATE_INSIDE_TRANSLATE:
                 if(tr_text_recorder == null) {
-                    tr_text_recorder = new MirrorRecorder();
+                    tr_text_recorder = new ParamSaxBuffer();
                 }
-                tr_text_recorder.characters(textValue);
+                tr_text_recorder.characters(ch, 0, ch.length);
                 break;
 
             case STATE_INSIDE_CHOOSE:
@@ -1493,16 +1502,14 @@ public class I18nTransformer extends AbstractTransformer
                 break;
 
             default:
-                throw new IllegalStateException(
-                        this.getClass().getName()
-                        + " developer's fault: characters not handled"
-                        + "Current state: " + current_state);
+                throw new IllegalStateException(getClass().getName() +
+                                                " developer's fault: characters not handled. " +
+                                                "Current state: " + current_state);
         }
     }
 
     // Translate all attributes that are listed in i18n:attr attribute
     private Attributes translateAttributes(String name, Attributes attr) {
-
         if (attr == null) {
             return attr;
         }
@@ -1533,15 +1540,13 @@ public class I18nTransformer extends AbstractTransformer
                     // check if the text2translate contains a colon, if so the text before
                     // the colon denotes a catalogue id
                     int colonPos = text2translate.indexOf(":");
-                    String catalogueId = null;
+                    String catalogueID = null;
                     if (colonPos != -1) {
-                        catalogueId = text2translate.substring(0, colonPos);
+                        catalogueID = text2translate.substring(0, colonPos);
                         text2translate = text2translate.substring(colonPos + 1, text2translate.length());
                     }
-                    String result =
-                            getString(text2translate, catalogueId, (untranslated == null)
-                                                      ? text2translate
-                                                      : untranslated);
+                    String result = getString(catalogueID, text2translate,
+                                              untranslated == null? text2translate : untranslated);
 
                     // set the translated value
                     if (result != null) {
@@ -1568,18 +1573,18 @@ public class I18nTransformer extends AbstractTransformer
             case STATE_OUTSIDE:
                 if (tr_text_recorder == null) {
                     if (current_key == null) {
-                        // Use the text as key
-                        // Really not recommended for big strings, moreover if they
-                        // include markup.
-                        tr_text_recorder = getMirrorRecorder(text_recorder.text(), text_recorder);
+                        // Use the text as key. Not recommended for large strings,
+                        // especially if they include markup.
+                        tr_text_recorder = getMessage(text_recorder.toString(), text_recorder);
                     } else {
-                        // We have the key, but couldn't find a transltation
+                        // We have the key, but couldn't find a translation
                         if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("translation not found for key " + current_key);
+                            getLogger().debug("Translation not found for key '" + current_key + "'");
                         }
-                        // use the untranslated-text only when the content of the i18n:text
+                        
+                        // Use the untranslated-text only when the content of the i18n:text
                         // element was empty
-                        if (text_recorder.empty() && untranslatedRecorder != null) {
+                        if (text_recorder.isEmpty() && untranslatedRecorder != null) {
                             tr_text_recorder = untranslatedRecorder;
                         } else {
                             tr_text_recorder = text_recorder;
@@ -1588,7 +1593,7 @@ public class I18nTransformer extends AbstractTransformer
                 }
 
                 if (tr_text_recorder != null) {
-                    tr_text_recorder.send(this.contentHandler);
+                    tr_text_recorder.toSAX(this.contentHandler);
                 }
 
                 text_recorder.recycle();
@@ -1599,10 +1604,12 @@ public class I18nTransformer extends AbstractTransformer
 
             case STATE_INSIDE_TRANSLATE:
                 if (tr_text_recorder == null) {
-                    if (!text_recorder.empty()) {
-                        tr_text_recorder = getMirrorRecorder(text_recorder.text(), text_recorder);
-                        if (tr_text_recorder == text_recorder) // if the default value was returned
-                            tr_text_recorder = (MirrorRecorder) text_recorder.clone();
+                    if (!text_recorder.isEmpty()) {
+                        tr_text_recorder = getMessage(text_recorder.toString(), text_recorder);
+                        if (tr_text_recorder == text_recorder) {
+                            // If the default value was returned, make a copy
+                            tr_text_recorder = new ParamSaxBuffer(text_recorder);
+                        }
                     }
                 }
 
@@ -1610,11 +1617,11 @@ public class I18nTransformer extends AbstractTransformer
                 break;
 
             case STATE_INSIDE_PARAM:
-                // We send the translated text to the param recorder,after trying to translate it.
+                // We send the translated text to the param recorder, after trying to translate it.
                 // Remember you can't give a key when inside a param, that'll be nonsense!
                 // No need to clone. We just send the events.
-                if (!text_recorder.empty()) {
-                    getMirrorRecorder(text_recorder.text(), text_recorder).send(param_recorder);
+                if (!text_recorder.isEmpty()) {
+                    getMessage(text_recorder.toString(), text_recorder).toSAX(param_recorder);
                     text_recorder.recycle();
                 }
                 break;
@@ -1664,16 +1671,17 @@ public class I18nTransformer extends AbstractTransformer
             return;
         }
 
-        indexedParams.put(param_name, param_recorder.clone());
+        indexedParams.put(param_name, param_recorder);
+        param_recorder = null;
     }
 
     private void endTranslateElement() throws SAXException {
         if (tr_text_recorder != null) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("End of translate with params");
-                getLogger().debug("Fragment for substitution : " + tr_text_recorder.text());
+                getLogger().debug("End of translate with params. " +
+                                  "Fragment for substitution : " + tr_text_recorder);
             }
-            tr_text_recorder.send(super.contentHandler, indexedParams);
+            tr_text_recorder.toSAX(super.contentHandler, indexedParams);
             tr_text_recorder = null;
             text_recorder.recycle();
         }
@@ -2012,20 +2020,20 @@ public class I18nTransformer extends AbstractTransformer
     //-- Dictionary handling routins
 
     /**
-     * Helper method to retrieve a message Node from the dictionary.
-     * A default value is returned if message is not found.
+     * Helper method to retrieve a message from the dictionary.
      *
-     * @param catalogueId if not null, this catalogue will be used instead of the default one.
+     * @param catalogueID if not null, this catalogue will be used instead of the default one.
+     * @return SaxBuffer containing message, or null if not found.
      */
-    private Node getNode(String catalogueId, String key) {
+    private ParamSaxBuffer getMessage(String catalogueID, String key) {
         try {
             Bundle catalogue = defaultCatalogue;
-            if (catalogueId != null) {
-                CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(catalogueId);
+            if (catalogueID != null) {
+                CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(catalogueID);
                 if (catalogueInfo == null) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Catalogue not found: " + catalogueId +
-                                          ", could not translate key " + key);
+                    if (getLogger().isWarnEnabled()) {
+                        getLogger().warn("Catalogue not found: " + catalogueID +
+                                         ", will not translate key " + key);
                     }
                     return null;
                 }
@@ -2039,8 +2047,7 @@ public class I18nTransformer extends AbstractTransformer
                     return null;
                 }
             }
-            return (Node)catalogue.getObject(I18N_CATALOGUE_PREFIX +
-                                             "[@key='" + key + "']");
+            return (ParamSaxBuffer)catalogue.getObject(key);
         } catch (MissingResourceException e)  {
             getLogger().debug("Untranslated key: '" + key + "'");
             return null;
@@ -2054,55 +2061,30 @@ public class I18nTransformer extends AbstractTransformer
      *
      * @param catalogueId if not null, this catalogue will be used instead of the default one.
      */
-    private String getString(String key, String catalogueId, String defaultValue) {
-        final Node res = getNode(catalogueId, key);
+    private String getString(String catalogueID, String key, String defaultValue) {
+        final SaxBuffer res = getMessage(catalogueID, key);
         if (res == null) {
             return defaultValue;
         }
-        return getTextValue(res);
-    }
-
-    // Helper method to get the text value of the node.
-    private static String getTextValue(Node node) {
-        if (node == null) {
-            return null;
-        } 
-
-        NodeList list = node.getChildNodes();
-        int listsize = list.getLength();
-        Node item = null;
-        StringBuffer itemValue = new StringBuffer();
-        for (int i = 0; i < listsize; i++) {
-            item = list.item(i);
-            // only TEXT and CDATA nodes are processed
-            if (item.getNodeType() == Node.TEXT_NODE
-                    || item.getNodeType() == Node.CDATA_SECTION_NODE) {
-
-                itemValue.append(item.getNodeValue());
-            }
-        }
-
-        return itemValue.toString();
+        return res.toString();
     }
 
     /**
-     * Helper method to retrieve a message from the dictionary.
+     * Helper method to retrieve a message from the current dictionary.
      * A default value is returned if message is not found.
+     *
+     * @return SaxBuffer containing message, or defaultValue if not found.
      */ 
-    private MirrorRecorder getMirrorRecorder(String key, MirrorRecorder defaultValue) {
-        Node value = getNode(currentCatalogueId, key);
+    private ParamSaxBuffer getMessage(String key, ParamSaxBuffer defaultValue) {
+        SaxBuffer value = getMessage(currentCatalogueId, key);
         if (value == null) {
             return defaultValue;
         }
 
-        return new MirrorRecorder(value);
+        return new ParamSaxBuffer(value);
     }
 
     public void recycle() {
-        // restore untranslated-text if necessary
-        if (globalUntranslated != null) {
-            untranslated = globalUntranslated;
-        }
         untranslatedRecorder = null;
 
         // clean up default catalogue
@@ -2110,9 +2092,9 @@ public class I18nTransformer extends AbstractTransformer
         defaultCatalogue = null;
 
         // clean up the other catalogues
-        Iterator catalogueIt = catalogues.values().iterator();
-        while (catalogueIt.hasNext()) {
-            CatalogueInfo catalogueInfo = (CatalogueInfo)catalogueIt.next();
+        Iterator i = catalogues.values().iterator();
+        while (i.hasNext()) {
+            CatalogueInfo catalogueInfo = (CatalogueInfo)i.next();
             catalogueInfo.releaseCatalog();
         }
 
@@ -2122,10 +2104,11 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     public void dispose() {
-        if (this.manager != null) {
-            this.manager.release(this.factory);
+        if (manager != null) {
+            manager.release(this.factory);
         }
         factory = null;
+        manager = null;
     }
 
     /**

@@ -57,17 +57,23 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 
 /**
- * Bundle Factory realizations are responsible for loading and providing
+ * Bundle Factory implementations are responsible for loading and providing
  * particular types of resource bundles, implementors of Bundle interface.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: BundleFactory.java,v 1.3 2003/11/27 02:55:28 vgritsenko Exp $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id: BundleFactory.java,v 1.4 2003/12/10 15:37:37 vgritsenko Exp $
  */
 public interface BundleFactory extends ComponentSelector {
 
+    /**
+     * Bundle factory ROLE name
+     */
     String ROLE = BundleFactory.class.getName();
 
-    /** Constants for configuration keys */
+    /**
+     * Constants for configuration keys
+     */
     static class ConfigurationKeys {
         public static final String CACHE_AT_STARTUP = "cache-at-startup";
         public static final String ROOT_DIRECTORY = "catalogue-location";
@@ -83,7 +89,7 @@ public interface BundleFactory extends ComponentSelector {
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    Component select(String base, String bundleName, String locale) throws ComponentException;
+    Bundle select(String base, String bundleName, String locale) throws ComponentException;
 
     /**
      * Select a bundle based on the catalogue base location, bundle name,
@@ -95,7 +101,7 @@ public interface BundleFactory extends ComponentSelector {
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    Component select(String base, String bundleName, Locale locale) throws ComponentException;
+    Bundle select(String base, String bundleName, Locale locale) throws ComponentException;
 
     /**
      * Select a bundle based on the bundle name and the locale name from
@@ -106,7 +112,7 @@ public interface BundleFactory extends ComponentSelector {
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    Component select(String bundleName, String locale) throws ComponentException;
+    Bundle select(String bundleName, String locale) throws ComponentException;
 
     /**
      * Select a bundle based on the bundle name and the locale from
@@ -117,5 +123,5 @@ public interface BundleFactory extends ComponentSelector {
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    Component select(String bundleName, Locale locale) throws ComponentException;
+    Bundle select(String bundleName, Locale locale) throws ComponentException;
 }

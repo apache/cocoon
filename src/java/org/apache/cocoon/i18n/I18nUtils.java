@@ -58,12 +58,16 @@ import java.util.StringTokenizer;
  * Contains static methods only.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: I18nUtils.java,v 1.1 2003/03/09 00:09:32 pier Exp $
+ * @version CVS $Id: I18nUtils.java,v 1.2 2003/12/10 15:37:37 vgritsenko Exp $
  */
 public class I18nUtils {
 
     // Locale string delimiter
     private static final String LOCALE_DELIMITER = "_-@.";
+
+    private I18nUtils() {
+        // Disable instantiation
+    }
 
     /**
      * Parses given locale string to Locale object. If the string is null
@@ -99,9 +103,5 @@ public class I18nUtils {
      */
     public static Locale parseLocale(String localeString) {
         return parseLocale(localeString, Locale.getDefault());
-    }
-
-    // Hide constructor to prevent class instance creation
-    private I18nUtils() {
     }
 }
