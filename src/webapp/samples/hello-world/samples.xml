@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.17 2004/06/11 21:38:10 vgritsenko Exp $ -->
+<!-- CVS $Id$ -->
 
 <samples name="Hello, World!">
 
@@ -120,6 +120,9 @@
    </sample>
    <sample name="PDF" href="../blocks/fop/hello.pdf">
     Hello from the fop block in Portable Document Format.
+   </sample>
+   <sample name="PS" href="../blocks/fop/hello.ps">
+    Hello from the fop block in PostScript format.
    </sample>
    <sample name="PDF" href="../blocks/itext/hello.pdf">
     Another hello in Portable Document Format, from the itext block.
