@@ -38,12 +38,13 @@ import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.JavaArchiveFilter;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id: JavaLanguage.java,v 1.2 2004/07/11 20:40:07 antonio Exp $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
         implements Initializable, ThreadSafe, Serviceable, Disposable {
@@ -121,13 +122,14 @@ public class JavaLanguage extends CompiledProgrammingLanguage
 
         // Initialize the classpath
         String systemBootClasspath = System.getProperty("sun.boot.class.path");
-        String systemClasspath = System.getProperty("java.class.path");
-        String systemExtDirs = System.getProperty("java.ext.dirs");
-        String systemExtClasspath = null;
+        String systemClasspath = SystemUtils.JAVA_CLASS_PATH;
+        String systemExtDirs = SystemUtils.JAVA_EXT_DIRS;
+        String systemExtClasspath;
 
         try {
             systemExtClasspath = expandDirs(systemExtDirs);
         } catch (Exception e) {
+            systemExtClasspath = null;
             getLogger().warn("Could not expand Directory:" + systemExtDirs, e);
         }
 
@@ -179,8 +181,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
             String filename = name.substring(pos + 1);
 
             final String basePath = baseDirectory.getCanonicalPath();
-            String filepath = basePath + File.separator
-                    + name + "." + getSourceExtension();
+            String filepath = basePath + File.separator + name + "." + getSourceExtension();
 
             compiler.setFile(filepath);
             compiler.setSource(basePath);
@@ -258,7 +259,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage
             File dir = new File(d);
             if (!dir.isDirectory()) {
                 // The absence of a listed directory may not be an error.
-                if (getLogger().isWarnEnabled()) getLogger().warn("Attempted to retrieve directory listing of non-directory " + dir.toString());
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Attempted to retrieve directory listing of non-directory " + dir.toString());
+                }
             } else {
                 File[] files = dir.listFiles(new JavaArchiveFilter());
                 for (int i = 0; i < files.length; i++) {
@@ -266,7 +269,6 @@ public class JavaLanguage extends CompiledProgrammingLanguage
                 }
             }
         }
-
         return buffer.toString();
     }
 
