@@ -40,54 +40,62 @@ import org.apache.cocoon.acting.LangSelect;
 
 /**
  * I18nTransformer. Cocoon2 port of Infozone groups I18nProcessor.
- *
+ * <p>
  * Sitemap configuration:
- *
- * &lt;map:transformer
- *	name="translate"
- *	src="org.apache.cocoon.transformation.I18nTransformer"/&gt;
- *
- *
- * &lt;map:match pattern="file"&gt;
- *	&lt;map:generate src="file.xml"/&gt;
- * 	&lt;map:transform type="translate"&gt;
- *		&lt;parameter name="default_lang" value="fi"/&gt;
- *		&lt;parameter name="available_lang_1" value="fi"/&gt;
- *		&lt;parameter name="available_lang_2" value="en"/&gt;
- *		&lt;parameter name="available_lang_3" value="sv"/&gt;
- *		&lt;parameter name="src"
- *			value="translations/file_trans.xml"/&gt;
- *	&lt;/map:transform&gt;
- *
- *
- * When user requests .../file?lang=fi
+ * </p>
+ * <p>
+ * &lt;map:transformer<br>
+ *	name="translate"<br>
+ *	src="org.apache.cocoon.transformation.I18nTransformer"/&gt;<br>
+ * </p>
+ * <p>
+ * &lt;map:match pattern="file"&gt;<br>
+ *	&lt;map:generate src="file.xml"/&gt;<br>
+ * 	&lt;map:transform type="translate"&gt;<br>
+ *		&lt;parameter name="default_lang" value="fi"/&gt;<br>
+ *		&lt;parameter name="available_lang_1" value="fi"/&gt;<br>
+ *		&lt;parameter name="available_lang_2" value="en"/&gt;<br>
+ *		&lt;parameter name="available_lang_3" value="sv"/&gt;<br>
+ *		&lt;parameter name="src"<br>
+ *			value="translations/file_trans.xml"/&gt;<br>
+ *	&lt;/map:transform&gt;<br>
+ * </p>
+ * <p>
+ * When user requests .../file?lang=fi<br>
  * transformer substitutes text surrounded &lt;i:tr&gt; or &lt;some-elem i:tr="y"&gt; with
  * translations from file_trans.xml.
- *
- * file.xml:
- * &lt;root xmlns:i="http://apache.org/cocoon/i18n"&gt;
- * 	&lt;elem i:tr="y"&gt;Translate me&lt;/elem&gt;
- * 	&lt;elem&gt;&lt;i:tr&gt;Translate me&lt;/i:tr&gt;&lt;/elem&gt;
+ * </p>
+ * <p>
+ * file.xml:<br>
+ * &lt;root xmlns:i="http://apache.org/cocoon/i18n"&gt;<br>
+ * 	&lt;elem i:tr="y"&gt;Translate me&lt;/elem&gt;<br>
+ * 	&lt;elem&gt;&lt;i:tr&gt;Translate me&lt;/i:tr&gt;&lt;/elem&gt;<br>
  * &lt;/root&gt;
- *
- * file_trans.xml:
- * &lt;translations&gt;
- * 	&lt;entry&gt;&lt;key&gt;Translate me&lt;/key&gt;
- * 		&lt;translation lang="sv"&gt;÷vers‰tta mej&lt;/translation&gt;
- * 		&lt;translation lang="fi"&gt;K‰‰nn‰ minut&lt;/translation&gt;
- *	&lt;/entry&gt;
- * &lt;/translations&gt;
- *
+ * </p>
+ * <p>
+ * file_trans.xml:<br>
+ * &lt;translations&gt;<br>
+ * 	&lt;entry&gt;&lt;key&gt;Translate me&lt;/key&gt;<br>
+ * 		&lt;translation lang="sv"&gt;÷vers‰tta mej&lt;/translation&gt;<br>
+ * 		&lt;translation lang="fi"&gt;K‰‰nn‰ minut&lt;/translation&gt;<br>
+ *	&lt;/entry&gt;<br>
+ * &lt;/translations&gt;<br>
+ * </p>
+ * <p>
  *It also provides path substitution to images that has to be translated:
- *
+ * </p>
+ * <p>
  *&lt;elem&gt;&lt;i:image&gt;image.jpg&lt;/i:image&gt;&lt;/elem&gt;
- *
+ * </p>
+ * <p>
  * is substituted to be according to language
- *
+ * </p>
+ * <p>
  *&lt;elem&gt;en/image.jpg&lt;/elem&gt;,&lt;elem&gt;fi/image.jpg&lt;/elem&gt;,etc
+ * </p>
  *
  *
- *TODO 	-Caching dictionaries in memory.
+ *TODO 	-Caching dictionaries in memory.<br>
  * 		-Implementing Infozone group I18nProcessors param substitutions
  * 		where you can enter params in the translated text.
  *
