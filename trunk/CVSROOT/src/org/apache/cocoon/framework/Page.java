@@ -1,4 +1,4 @@
-/*-- $Id: Page.java,v 1.5 2000-11-20 01:43:54 greenrd Exp $ -- 
+/*-- $Id: Page.java,v 1.6 2000-12-22 11:51:08 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.w3c.dom.*;
  * The Page wrapper class.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-11-20 01:43:54 $
+ * @version $Revision: 1.6 $ $Date: 2000-12-22 11:51:08 $
  */
 
 public class Page implements java.io.Serializable, Changeable, Cacheable {
@@ -120,8 +120,9 @@ public class Page implements java.io.Serializable, Changeable, Cacheable {
         // Surprisingly, according to HTTP 1.1 spec, POST is
         // not one of them!
         String method = request.getMethod ();
-        if (method.equals ("OPTIONS") || method.equals ("PUT") ||
-            method.equals ("DELETE") || method.equals ("TRACE"))
+        if (method != null
+            && (method.equals ("OPTIONS") || method.equals ("PUT") ||
+                method.equals ("DELETE") || method.equals ("TRACE")))
             return false;
 
         Enumeration e = getChangeables();

@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.34 2000-12-13 15:27:52 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.35 2000-12-22 11:51:09 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.34 $ $Date: 2000-12-13 15:27:52 $
+ * @version $Revision: 1.35 $ $Date: 2000-12-22 11:51:09 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -215,7 +215,7 @@ public class XSPProcessor extends AbstractActor
     // Try to get the classpath from conf or Catalina or Tomcat or Resin first;
     // if that all fails, use the standard one.
     String classpath = (String) conf.get ("localclasspath");
-    if (classpath == null) {
+    if (classpath == null && this.servletContext != null) {
       classpath = (String)
         this.servletContext.getAttribute("org.apache.catalina.jsp_classpath");
       if (classpath == null) {
