@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.110 2000-09-16 19:06:47 greenrd Exp $
+  $Id: changes.xml,v 1.111 2000-09-16 23:02:29 greenrd Exp $
 -->
 
 <changes title="History of Changes">
@@ -29,6 +29,9 @@
    Fixed some synchronization errors in Engine. You can now call a Cocoon
    page from a Cocoon page, if you really want (this is inefficient and a
    bad architecture, but it's possible.)
+  </action>
+  <action dev="RDG" type="fix">
+   Made response taglib work on Servlet API 2.0 engines
   </action>
   <action dev="DB" type="add">
    Added xspdoc comments to esql logicsheet and added xspdoc to document convertor in the xml.apache.org site skin directory. god only knows how i'm supposed to add it to the build procedure... help?
