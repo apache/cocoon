@@ -69,7 +69,7 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
- * @version $Id: AbstractDatatypeBuilder.java,v 1.9 2004/02/11 09:53:44 antonio Exp $
+ * @version $Id: AbstractDatatypeBuilder.java,v 1.10 2004/03/02 06:51:46 antonio Exp $
  */
 public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable {
     protected ServiceManager serviceManager;
@@ -129,10 +129,11 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Servic
             Element[] validationElements = DomHelper.getChildElements(validationElement, Constants.WD_NS);
             for (int i = 0; i < validationElements.length; i++) {
                 ValidationRule rule = datatypeManager.createValidationRule(validationElements[i]);
-                if (!rule.supportsType(datatype.getTypeClass(), datatype.isArrayType())) {
+                if (rule.supportsType(datatype.getTypeClass(), datatype.isArrayType())) {
+                    datatype.addValidationRule(rule);
+                } else {
                     throw new Exception("Validation rule \"" + validationElements[i].getLocalName() + "\" cannot be used with strings, error at " + DomHelper.getLocation(validationElements[i]));
                 }
-                datatype.addValidationRule(rule);
             }
         }
     }
