@@ -113,19 +113,40 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
 /**
  *
- *  <p>Provides a tag library with embedded JSTL and XPath expression substitution
- *  to access data sent by Cocoon flowscripts.</p>
+ *  <p>Provides a generic page template with embedded JSTL and XPath expression substitution
+ *  to access data sent by Cocoon Flowscripts.</p>
  *  The embedded expression language allows a page author to access an 
  *  object using a simplified syntax such as
  *  <p><pre>
  *  &lt;site signOn="${accountForm.signOn}"&gt;
  *  </pre></p>
- * <p>Embedded Jexl expressions are contained in <code>${}</code>.</p>
+ * <p>Embedded JSTL expressions are contained in <code>${}</code>.</p>
  * <p>Embedded XPath expressions are contained in <code>#{}</code>.</p>
  * <p>Note that since this generator uses <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a> and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the referenced 
  * objects may be Java Beans, DOM, JDOM, or JavaScript objects from a 
- * Flowscript. The current Web Continuation from the Flowscript 
- * is also available as an variable named <code>continuation</code>. You would 
+ * Flowscript. In addition the following implicit objects are available as
+ * both XPath and JSTL variables:</p>
+ * <p>
+ * <dl>
+ * <dt><code>request</code> (<code>org.apache.cocoon.environment.Request</code>)</dt>
+ * <dd>The Cocoon current request</dd>
+ *
+ * <dt><code>response</code> (<code>org.apache.cocoon.environment.Response</code>)</dt>
+ * <dd>The Cocoon response associated with the current request</dd>
+ *
+ * <dt><code>session</code> (<code>org.apache.cocoon.environment.Session</code>)</dt>
+ * <dd>The Cocoon session associated with the current request</dd>
+ *
+ * <dt><code>context</code> (<code>org.apache.cocoon.environment.Context</code>)</dt>
+ * <dd>The Cocoon context associated with the current request</dd>
+ *
+ * <dt><code>parameters</code> (<code>org.apache.avalon.framework.parameters.Parameters</code>)</dt>
+ * <dd>Any parameters passed to the generator in the pipeline</dd>
+ * </dl>
+ * </p>
+ *
+ * The current Web Continuation from the Flowscript 
+ * is also available as a variable named <code>continuation</code>. You would 
  * typically access its <code>id</code>:
  * <p><pre>
  *    &lt;form action="${continuation.id}"&gt;
@@ -134,6 +155,20 @@ import org.xml.sax.helpers.LocatorImpl;
  * <p><pre>
  *     &lt;form action="${continuation.getContinuation(1).id}" >
  * </pre></p>
+ * <p>
+ * <p>The <code>template</code> tag defines a new template:</p><pre>
+ *    &lt;template&gt;
+ *        body
+ *    &lt;/template&gt;
+ * </pre></p>
+ * <p>The <code>import</code> tag allows you to include another template within the current template. The content of the imported template is compiled and will be executed in place of the <code>import</code> tag:</p><pre>
+ *    &lt;import uri="${root}/foo/bar.xml"/&gt;
+ * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>.</p>
+ * <p>The <code>set</code> tag creates a local alias of an object. The <code>var</code> attribute specifies the name of a variable assign the object to. The <code>value</code> attribute specifies the object (defaults to <code>body</code> if not present):</p><pre>
+ *    &lt;set var="Name" [value="Value"]&gt;
+ *        [body]
+ *    &lt;/set&gt;
+ * </pre></p><p>If used within a <code>macro</code> definition (see below) variables created by <code>set</code> are only visible within the body of the <code>macro</code>.</p>
  * <p>The <code>if</code> tag allows the conditional execution of its body 
  * according to value of a <code>test</code> attribute:</p>
  * <p><pre>
@@ -165,31 +200,100 @@ import org.xml.sax.helpers.LocatorImpl;
  * <p>The <code>forEach</code> tag allows you to iterate over a collection 
  * of objects:<p>
  * <p><pre>
- *   &lt;forEach var="name" items="Expression" begin="n" end="n" step="n"&gt;
- *     body
- *  &lt;/forEach&gt;
- *   &lt;forEach select="XPathExpression" begin="n" end="n" step="n"&gt;
+ *   &lt;forEach [var="Name"] [items="Expression"] [begin="Number"] [end="Number"] [step="Number"]&gt;
  *     body
  *  &lt;/forEach&gt;
  * </pre></p>
+ * <p>The <code>items</code> attribute specifies the list of items to iterate over. The <code>var</code> attribute specifies the name of a variable to hold the current item. The <code>begin</code> attribute specifies the element to start with 
+ * (<code>0</code> = first item, <code>1</code> = second item, ...). 
+ * If unspecified it defaults to <code>0</code>. The <code>end</code> 
+ * attribute specifies the item to end with (<code>0</code> = first item, 
+ * <code>1</code> = second item, ...). If unspecified it defaults to the last item in the list. Every <code>step</code> items are
+ * processed (defaults to <code>1</code> if <code>step</code> is absent). Either <code>items</code> or both <code>begin</code> and <code>end</code> must be present.<p>
  *
- *
+ * <p>The <code>macro</code> tag allows you define a new custom tag.</p><p><pre>
+ * &lt;macro name="Name" [targetNamespace="Namespace"]&gt;
+ *   &lt;parameter name="Name" [optional="Boolean"] [default="Value"]/&gt;*
+ *   body
+ * &lt/macro&gt;
+ * </pre></p>
+ *<p> For example:</p><p><pre>
+ * &lt;c:macro name="d"&gt;
+ *   &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+ * &lt;/c:macro&gt;
+ * </pre></p>
+ * <p>The tag being defined in this example is <code>&lt;d&gt;</code> and it 
+ * can be used like any other tag:</p><p><pre>
+ *   &lt;d/&gt;
+ * </pre></p>
+ * <p>However, when this tag is used it will be replaced with a row containing a single empty data cell.</p>
+ * <p> When such a tag is used, the attributes and content of the tag become available as variables in the body of the <code>macro</code>'s definition, for example:</p><p><pre>
+ * &lt;c:macro name="tablerows"&gt;
+ *   &lt;c:parameter name="list"/&gt;
+ *   &lt;c:parameter name="color"/&gt;
+ *   &lt;c:forEach var="item" items=${list}&gt;
+ *     &lt;tr&gt;&lt;td bgcolor="${color}"&gt;${item}&lt;/td&gt;&lt;/tr&gt;
+ *   &lt;/c:forEach&gt;
+ * &lt;/c:macro&gt;
+ * </pre></p>
+ * <p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${body}</code>.</p><p>Assuming you had this code in your flowscript:</p>
+ *    <code>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</code></p><p><code> sendPage(uri, {greatlakes: greatlakes});</code>
+ * </p><p>and a template like this:</p><p><pre>
+ * &lt;table&gt;
+ *    &lt;tablerows list="${greatlakes}" color="blue"/&gt;
+ * &lt;/table&gt;
+ * </pre></p>
+ * <p>When the <code>tablerows</code> tag is used in this situation the following output would be generated:
+ * </p>
+ *<p><pre>
+ * &lt;table&gt;
+ *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Superior&lt;/td&gt;&lt;/tr&gt;
+ *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Michigan&lt;/td&gt;&lt;/tr&gt;
+ *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Huron&lt;/td&gt;&lt;/tr&gt;
+ *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Erie&lt;/td&gt;&lt;/tr&gt;
+ *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
+ * &lt;/table&gt;
+ * </pre></p>
  */
 
 public class JexlTemplate extends AbstractGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
+
     private static final char[] EMPTY_CHARS = "".toCharArray();
+
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
+
+    private static final Iterator EMPTY_ITER = new Iterator() {
+            public boolean hasNext() {
+                return false;
+            }
+            public Object next() {
+                return null;
+            }
+            public void remove() {
+            }
+        };
+
+    private static final Iterator NULL_ITER = new Iterator() {
+            public boolean hasNext() {
+                return true;
+            }
+            public Object next() {
+                return null;
+            }
+            public void remove() {
+            }
+        };
 
     /**
      * Jexl Introspector that supports Rhino JavaScript objects
      * as well as Java Objects
      */
-    static public class JSIntrospector extends UberspectImpl {
+    static class JSIntrospector extends UberspectImpl {
         
-        public static class JSMethod implements VelMethod {
+        static class JSMethod implements VelMethod {
             
             Scriptable scope;
             String name;
@@ -255,7 +359,7 @@ public class JexlTemplate extends AbstractGenerator {
             
         }
         
-        public static class JSPropertyGet implements VelPropertyGet {
+        static class JSPropertyGet implements VelPropertyGet {
             
             Scriptable scope;
             String name;
@@ -297,7 +401,7 @@ public class JexlTemplate extends AbstractGenerator {
             
         }
         
-        public static class JSPropertySet implements VelPropertySet {
+        static class JSPropertySet implements VelPropertySet {
             
             Scriptable scope;
             String name;
@@ -340,7 +444,7 @@ public class JexlTemplate extends AbstractGenerator {
             }
         }
         
-        public static class NativeArrayIterator implements Iterator {
+        static class NativeArrayIterator implements Iterator {
             
             NativeArray arr;
             int index;
@@ -375,7 +479,7 @@ public class JexlTemplate extends AbstractGenerator {
             }
         }
         
-        public static class ScriptableIterator implements Iterator {
+        static class ScriptableIterator implements Iterator {
             
             Scriptable scope;
             Object[] ids;
@@ -568,7 +672,7 @@ public class JexlTemplate extends AbstractGenerator {
     }
 
 
-    final static String JEXL_NS = 
+    final static String NS = 
         "http://cocoon.apache.org/transformation/jexl/1.0";
 
     final static String TEMPLATE = "template";
@@ -579,8 +683,9 @@ public class JexlTemplate extends AbstractGenerator {
     final static String OTHERWISE = "otherwise";
     final static String OUT = "out";
     final static String IMPORT = "import";
-    final static String DEFINE = "macro";
     final static String SET = "set";
+    final static String MACRO = "macro";
+    final static String PARAMETER = "parameter";
 
 
     /**
@@ -1257,23 +1362,75 @@ public class JexlTemplate extends AbstractGenerator {
     }
 
     class StartDefine extends Event {
-        StartDefine(Locator location, String namespace, String name,
-                    Map formalParameters) {
+        StartDefine(Locator location, String namespace, String name) {
             super(location);
             this.namespace = namespace;
             this.name = name;
             this.qname = "{"+namespace+"}"+name;
-            this.parameters = formalParameters;
+            this.parameters = new HashMap();
         }
-        final String namespace;
         final String name;
+        final String namespace;
         final String qname;
         final Map parameters;
+        Event body;
         EndDefine endDefine;
+        void finish(EndDefine endDef) throws SAXException {
+            Event e = next;
+            boolean params = true;
+            while (e != null) {
+                if (e instanceof StartParameter) {
+                    StartParameter startParam = (StartParameter)e;
+                    if (!params) {
+                        throw new SAXParseException("<parameter> not allowed here: \""+startParam.name +"\"", startParam.location, null);
+                    }
+                    Object prev = 
+                        parameters.put(startParam.name, startParam);
+                    if (prev != null) {
+                        throw new SAXParseException("duplicate parameter: \""+startParam.name +"\"", location, null);
+                    }
+                } else if (e instanceof IgnorableWhitespace) {
+                } else if (e instanceof EndParameter) {
+                } else if (e instanceof Characters) {
+                    // fix me: check for whitespace
+                } else {
+                    if (params) {
+                        params = false;
+                        System.out.println("body="+e);
+                        body = e;
+                    }
+                }
+                e = e.next;
+            }
+            this.endDefine = endDef;
+            if (this.body == null) {
+                this.body = this.endDefine;
+            }
+        }
     }
 
     class EndDefine extends Event {
         EndDefine(Locator location) {
+            super(location);
+        }
+    }
+
+    class StartParameter extends Event {
+        StartParameter(Locator location, String name, String optional,
+                       String default_) {
+            super(location);
+            this.name = name;
+            this.optional = optional;
+            this.default_ = default_;
+        }
+        final String name;
+        final String optional;
+        final String default_;
+        EndParameter endParameter;
+    }
+
+    class EndParameter extends Event {
+        EndParameter(Locator location) {
             super(location);
         }
     }
@@ -1353,7 +1510,7 @@ public class JexlTemplate extends AbstractGenerator {
             throws SAXException {
             Event start = (Event)stack.pop();
             Event newEvent = null;
-            if (JEXL_NS.equals(namespaceURI)) {
+            if (NS.equals(namespaceURI)) {
                 if (start instanceof StartForEach) {
                     StartForEach startForEach = 
                         (StartForEach)start;
@@ -1401,8 +1558,12 @@ public class JexlTemplate extends AbstractGenerator {
                         startTemplate.endTemplate = new EndTemplate(locator);
                 } else if (start instanceof StartDefine) {
                     StartDefine startDefine = (StartDefine)start;
+                    startDefine.finish(new EndDefine(locator));
+                    newEvent = startDefine.endDefine;
+                } else if (start instanceof StartParameter) {
+                    StartParameter startParameter = (StartParameter)start;
                     newEvent = 
-                        startDefine.endDefine = new EndDefine(locator);
+                        startParameter.endParameter = new EndParameter(locator);
                 } else if (start instanceof StartSet) {
                     EndSet endSet = new EndSet(locator);
                     StartSet startSet = (StartSet)start;
@@ -1456,7 +1617,7 @@ public class JexlTemplate extends AbstractGenerator {
                                  Attributes attrs) 
             throws SAXException {
             Event newEvent = null;
-            if (JEXL_NS.equals(namespaceURI)) {
+            if (NS.equals(namespaceURI)) {
                 if (localName.equals(FOR_EACH)) {
                     String items = attrs.getValue("items");
                     String select = attrs.getValue("select");
@@ -1528,33 +1689,43 @@ public class JexlTemplate extends AbstractGenerator {
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
-                } else if (localName.equals(DEFINE)) {
-                    // <tag name="myTag" targetNamespace="myNamespace">
+                } else if (localName.equals(MACRO)) {
+                    // <macro name="myTag" targetNamespace="myNamespace">
+                    // <parameter name="paramName" required="Boolean" default="value"/>
                     // body
-                    // </tag>
-                    String namespace = attrs.getValue(JEXL_NS, 
-                                                      "targetNamespace");
+                    // </macro>
+                    String namespace = attrs.getValue("targetNamespace");
                     if (namespace == null) {
                         namespace = "";
                     }
-                    String name = attrs.getValue(JEXL_NS, "name");
+                    String name = attrs.getValue("name");
                     if (name == null) {
-                        throw new SAXParseException("tag: \"{"+JEXL_NS+"}name\" is required", locator, null);
-                    }
-                    Map formalParams = new HashMap();
-                    for (int i = 0, len = attrs.getLength(); i < len; i++) {
-                        String uri = attrs.getURI(i);
-                        if (uri.equals("")) {
-                            String n = attrs.getLocalName(i);
-                            String v = attrs.getValue(i);
-                            if (v == null) v = "";
-                            formalParams.put(n, v);
-                        }
+                        throw new SAXParseException("macro: \"name\" is required", locator, null);
                     }
                     StartDefine startDefine = 
-                        new StartDefine(locator, namespace, name, 
-                                        formalParams);
+                        new StartDefine(locator, namespace, name); 
                     newEvent = startDefine;
+                } else if (localName.equals(PARAMETER)) {
+                    boolean syntaxErr = false;
+                    if (stack.size() < 1 ||
+                        !(stack.peek() instanceof StartDefine)) {
+                        syntaxErr = true;
+                    } else {
+                        StartDefine startDefine = (StartDefine)stack.peek();
+                        String name = attrs.getValue("name");
+                        String optional = attrs.getValue("optional");
+                        String default_ = attrs.getValue("default");
+                        if (name == null) {
+                            throw new SAXParseException("parameter: \"name\" is required", locator, null);
+                        }
+                        StartParameter startParameter = 
+                            new StartParameter(locator, 
+                                               name, optional, default_);
+                        newEvent = startParameter;
+                    }
+                    if (syntaxErr) {
+                        throw new SAXParseException("<parameter> not allowed here", locator, null);
+                    }
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
                     String value = attrs.getValue("value");
@@ -1933,20 +2104,11 @@ public class JexlTemplate extends AbstractGenerator {
             } else if (ev instanceof StartForEach) {
                 StartForEach startForEach = (StartForEach)ev;
                 Object items = startForEach.items;
-                Iterator iter;
+                Iterator iter = null;
                 boolean xpath = false;
                 try {
                     if (items == null) {
-                        iter = new Iterator() {
-                                public boolean hasNext() {
-                                    return true;
-                                }
-                                public Object next() {
-                                    return null;
-                                }
-                                public void remove() {
-                                }
-                            };
+                        iter = NULL_ITER;
                     } else if (items instanceof CompiledExpression) {
                         CompiledExpression compiledExpression = 
                             (CompiledExpression)items;
@@ -1957,8 +2119,16 @@ public class JexlTemplate extends AbstractGenerator {
                         org.apache.commons.jexl.Expression e = 
                             (org.apache.commons.jexl.Expression)items;
                         Object result = e.evaluate(jexlContext);
-                        iter =
-                            org.apache.commons.jexl.util.Introspector.getUberspect().getIterator(result, null);
+                        if (result != null) {
+                            iter =
+                                org.apache.commons.jexl.util.Introspector.getUberspect().getIterator(result, new Info(ev.location.getSystemId(),
+                                                                                                                      ev.location.getLineNumber(),
+                                                                                                                      ev.location.getColumnNumber()));
+
+                        }
+                        if (iter == null) {
+                            iter = EMPTY_ITER;
+                        }
                     }
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(),
@@ -1978,7 +2148,7 @@ public class JexlTemplate extends AbstractGenerator {
                 for (i = 0; i < begin && iter.hasNext(); i++) {
                     iter.next();
                 }
-                for (; i < end && iter.hasNext(); i++) {
+                for (; i <= end && iter.hasNext(); i++) {
                     Object value;
                     if (xpath) {
                         Pointer ptr = (Pointer)iter.next();
@@ -2061,26 +2231,152 @@ public class JexlTemplate extends AbstractGenerator {
                 } else {
                     DOMBuilder builder = new DOMBuilder();
                     builder.startDocument();
-                    builder.startElement(JEXL_NS,
+                    builder.startElement(NS,
                                          "set",
                                          "set",
                                          EMPTY_ATTRS);
                     execute(builder, jexlContext, jxpathContext,
                             startSet.next, 
                             startSet.endSet);
-                    builder.endElement(JEXL_NS,
+                    builder.endElement(NS,
                                        "set",
                                        "set");
                     builder.endDocument();
                     Node node = builder.getDocument().getDocumentElement();
-                    value = node;
+                    NodeList nodeList = node.getChildNodes();
+                    int len = nodeList.getLength(); 
+                    List children = new ArrayList(len);
+                    for (int i = 0; i < len; i++) {
+                        children.add(nodeList.item(i));
+                    }
+                    value = children;
                 }
-                jxpathContext.getVariables().declareVariable(startSet.var, value);
+                jxpathContext.getVariables().declareVariable(startSet.var, 
+                                                             value);
                 jexlContext.put(startSet.var, value);
                 ev = startSet.endSet.next;
                 continue;
             } else if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement)ev;
+                StartDefine def = 
+                    (StartDefine)definitions.get(startElement.qname);
+                if (def != null) {
+                    Map attributeMap = new HashMap();
+                    Iterator i = startElement.attributeEvents.iterator();
+                    while (i.hasNext()) {
+                        String attributeName;
+                        Object attributeValue;
+                        AttributeEvent attrEvent = (AttributeEvent)
+                            i.next();
+                        attributeName = attrEvent.localName;
+                        if (attrEvent instanceof CopyAttribute) {
+                            CopyAttribute copy =
+                                (CopyAttribute)attrEvent;
+                            attributeValue = copy.value;
+                        } else if (attrEvent instanceof 
+                                   SubstituteAttribute) {
+                            SubstituteAttribute substEvent =
+                                (SubstituteAttribute)attrEvent;
+                            if (substEvent.substitutions.size() == 1 &&
+                                substEvent.substitutions.get(0) instanceof 
+                                Expression) {
+                                Expression expr = (Expression)
+                                    substEvent.substitutions.get(0);
+                                Object val;
+                                try {
+                                    val = 
+                                        getValue(expr.compiledExpression,
+                                                 jexlContext,
+                                                 jxpathContext);
+                                } catch (Exception e) {
+                                    throw new SAXParseException(e.getMessage(),
+                                                                ev.location,
+                                                                e);
+                                }
+                                attributeValue = val;
+                            } else {
+                                StringBuffer buf = new StringBuffer();
+                                Iterator ii = substEvent.substitutions.iterator();
+                                while (ii.hasNext()) {
+                                    Subst subst = (Subst)ii.next();
+                                    if (subst instanceof Literal) {
+                                        Literal lit = (Literal)subst;
+                                        buf.append(lit.value);
+                                    } else if (subst instanceof Expression) {
+                                        Expression expr = (Expression)subst;
+                                        Object val;
+                                        try {
+                                            val = 
+                                                getValue(expr.compiledExpression,
+                                                         jexlContext,
+                                                         jxpathContext);
+                                        } catch (Exception e) {
+                                            throw new SAXParseException(e.getMessage(),
+                                                                        ev.location,
+                                                                        e);
+                                        }
+                                        if (val == null) {
+                                            val = "";
+                                        }
+                                        buf.append(val.toString());
+                                    }
+                                }
+                                attributeValue = buf.toString();
+                            }
+                        } else {
+                            throw new Error("this shouldn't have happened");
+                        }
+                        attributeMap.put(attributeName, attributeValue);
+                    }
+                    DOMBuilder builder = new DOMBuilder();
+                    builder.startDocument();
+                    builder.startElement(startElement.namespaceURI,
+                                         startElement.localName,
+                                         startElement.raw,
+                                         EMPTY_ATTRS);
+                    execute(builder, jexlContext, jxpathContext,
+                            startElement.next, 
+                            startElement.endElement);
+                    builder.endElement(startElement.namespaceURI,
+                                       startElement.localName,
+                                       startElement.raw);
+                    builder.endDocument();
+                    Node node = builder.getDocument().getDocumentElement();
+                    MyVariables vars = 
+                        (MyVariables)jxpathContext.getVariables();
+                    Map saveLocals = vars.localVariables;
+                    vars.localVariables = new HashMap();
+                    MyJexlContext localJexlContext = 
+                        new MyJexlContext(globalJexlContext);
+                    NodeList children = node.getChildNodes();
+                    List items = new ArrayList(children.getLength());
+                    for (int j = 0, len = children.getLength(); j < len; j++) {
+                        items.add(children.item(j));
+                    }
+                    localJexlContext.put("body", items);
+                    Iterator iter = def.parameters.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        Map.Entry e = (Map.Entry)iter.next();
+                        String key = (String)e.getKey();
+                        StartParameter startParam = 
+                            (StartParameter)e.getValue();
+                        Object default_ = startParam.default_;
+                        Object val = attributeMap.get(key);
+                        if (val == null) {
+                            val = default_;
+                        }
+                        localJexlContext.put(key, val);
+                        vars.localVariables.put(key, val);
+                    }
+                    JXPathContext localJXPathContext =
+                        jxpathContextFactory.newContext(jxpathContext, items);
+                    execute(consumer, 
+                            localJexlContext, localJXPathContext,
+                            def.body, def.endDefine);
+                    vars.localVariables = saveLocals;
+                    ev = startElement.endElement.next;
+                    continue;
+                }
                 Iterator i = startElement.attributeEvents.iterator();
                 AttributesImpl attrs = new AttributesImpl();
                 while (i.hasNext()) {
@@ -2130,52 +2426,6 @@ public class JexlTemplate extends AbstractGenerator {
                                            attrEvent.type,
                                            buf.toString());
                     }
-                }
-                StartDefine def = 
-                    (StartDefine)definitions.get(startElement.qname);
-                if (def != null) {
-                    DOMBuilder builder = new DOMBuilder();
-                    builder.startDocument();
-                    builder.startElement(startElement.namespaceURI,
-                                         startElement.localName,
-                                         startElement.raw,
-                                         attrs);
-                    execute(builder, jexlContext, jxpathContext,
-                            startElement.next, 
-                            startElement.endElement);
-                    builder.endElement(startElement.namespaceURI,
-                                       startElement.localName,
-                                       startElement.raw);
-                    builder.endDocument();
-                    Node node = builder.getDocument().getDocumentElement();
-                    MyVariables vars = 
-                        (MyVariables)jxpathContext.getVariables();
-                    MyJexlContext localJexlContext = 
-                        new MyJexlContext(globalJexlContext);
-                    NodeList children = node.getChildNodes();
-                    List items = new ArrayList(children.getLength());
-                    for (int j = 0, len = children.getLength(); j < len; j++) {
-                        items.add(children.item(j));
-                    }
-                    localJexlContext.put("items", items);
-                    Iterator iter = def.parameters.entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry e = (Map.Entry)iter.next();
-                        String key = (String)e.getKey();
-                        Object def = e.getValue();
-                        Object val = attrs.getValue(key);
-                        if (val == null) {
-                            val = def;
-                        }
-                        localJexlContext.put(key, val);
-                    }
-                    JXPathContext localJXPathContext =
-                        jxpathContextFactory.newContext(jxpathContext, node);
-                    execute(consumer, 
-                            localJexlContext, localJXPathContext,
-                            def.next, def.endDefine);
-                    ev = startElement.endElement.next;
-                    continue;
                 }
                 consumer.startElement(startElement.namespaceURI,
                                       startElement.localName,
