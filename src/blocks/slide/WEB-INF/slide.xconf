@@ -47,37 +47,6 @@
             </store>
             <scope match="/" store="tx"/>
         </definition>
-        
-        <!--
-        <definition>
-            
-            <store name="context">
-                <nodestore classname="org.apache.cocoon.components.slide.impl.ContextFileDescriptorsStore">
-                    <parameter name="rootpath">samples/slide/content</parameter>
-                </nodestore>
-                <securitystore>
-                    <reference store="nodestore" />
-                </securitystore>
-                <lockstore>
-                    <reference store="nodestore" />
-                </lockstore>
-                <revisiondescriptorsstore>
-                    <reference store="nodestore" />
-                </revisiondescriptorsstore>
-                <revisiondescriptorstore>
-                    <reference store="nodestore" />
-                </revisiondescriptorstore>
-                <contentstore classname="org.apache.cocoon.components.slide.impl.ContextFileContentStore">
-                    <parameter name="rootpath">samples/slide/content</parameter>
-                    <parameter name="version">false</parameter>
-                    <parameter name="resetBeforeStarting">false</parameter>
-                </contentstore>
-            </store>
-
-            <scope match="/" store="context"/>
-
-        </definition>
-        -->
 
         <configuration>
             <!-- Actions mapping -->
@@ -113,8 +82,7 @@
             <parameter name="standalone">true</parameter>
             <parameter name="acl_inheritance_type">path</parameter>
             
-            <!--
-            <content-interceptor class="org.apache.cocoon.components.slide.impl.JSMEventCacheContentInterceptor">
+            <content-interceptor class="org.apache.cocoon.components.slide.impl.JMSEventCacheContentInterceptor">
               <parameter name="topic-factory">JmsTopicConnectionFactory</parameter>
               <parameter name="topic">topic1</parameter>
               <parameter name="ack-mode">dups</parameter>
@@ -122,7 +90,6 @@
               <parameter name="priority">4</parameter>
               <parameter name="time-to-live">1000</parameter>
             </content-interceptor>
-            -->
             
         </configuration>
         <data>
