@@ -23,6 +23,10 @@
     <menu-item label="Developing Webapps" href="webapps/index.html"/>
   </menu>
 
+  <menu label="Portal">
+    <menu-item label="Building a portal" href="portal/index.html"/>
+  </menu>
+  
   <menu label="Blocks">
     <menu-item label="Connect to SAP R/3" href="web3.html"/>
   </menu>

@@ -42,7 +42,7 @@
     </s1>
     <s1 title="More News about Cocoon">
       <p>
-Check out our <link href="news.html">news page</link> for more up-to-date news about Cocoon.
+Check out our <link href="http://cocoon.apache.org/news/">news page</link> for more up-to-date news about Cocoon.
           </p>
     </s1>
     <figure src="images/cocoon-built.gif" alt="Built with Apache Cocoon"/>
