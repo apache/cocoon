@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.38 2001-01-18 23:06:40 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.39 2001-01-23 02:01:31 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.38 $ $Date: 2001-01-18 23:06:40 $
+ * @version $Revision: 1.39 $ $Date: 2001-01-23 02:01:31 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -166,7 +166,6 @@ public class XSPProcessor extends AbstractActor
         try {
             String languageName = t.nextToken();
             Configurations c = conf.getConfigurations(languageName);
-            XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, null);
 
             // Make XSP Processor class configurable via cocoon.properties (i.e. compiler)
             Configurations cc = c.getConfigurations("processor");
@@ -180,6 +179,10 @@ public class XSPProcessor extends AbstractActor
             InputStream logicsheetInputStream = this.getClass().getResourceAsStream(logicsheetName);
             if (logicsheetInputStream == null) 
                 throw new Exception("Resource '" + logicsheetName + "' could not be found.");
+
+            XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, 
+                    this.getClass().getResource(logicsheetName).toString()); 
+                    
             logicsheet.setStylesheet(this.parser.parse(new InputSource(logicsheetInputStream)));
    
             String preprocessorName = (String) c.get("preprocessor");
@@ -473,7 +476,7 @@ public class XSPProcessor extends AbstractActor
           node = node.getNextSibling();
         }
         String sourceCode = languageProcessor.formatCode(buffer.toString());      
-  
+
         sourceCode = languageProcessor.formatCode(sourceCode);
   
         // Store source code in repository
