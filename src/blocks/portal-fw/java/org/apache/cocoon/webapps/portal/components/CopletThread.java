@@ -84,7 +84,7 @@ import org.w3c.dom.NodeList;
  * This is the thread for loading one coplet in the background.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CopletThread.java,v 1.2 2003/05/16 07:19:44 cziegeler Exp $
+ * @version CVS $Id: CopletThread.java,v 1.3 2003/06/18 12:36:45 cziegeler Exp $
 */
 public final class CopletThread implements Runnable {
 
@@ -137,7 +137,7 @@ public final class CopletThread implements Runnable {
             // the customization resource is loaded, otherwise the resource
             String resource = null;
             boolean showCustomizePage = p.getParameterAsBoolean(PortalConstants.PARAMETER_CUSTOMIZE, false);
-            if (showCustomizePage == true) {
+            if (showCustomizePage) {
                 final String value = DOMUtil.getValueOf(copletConf, "customization/@uri", null);
                 if (value == null) {
                     this.logger.error("The coplet '"+this.copletID+"' is customizable but has no customization info.");
@@ -149,7 +149,7 @@ public final class CopletThread implements Runnable {
             }
             boolean handlesSizable = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesSizable", false);
 
-            if (handlesSizable == false && p.getParameter("size", "max").equals("max") == false) {
+            if (!handlesSizable && !p.getParameter("size", "max").equals("max")) {
                 // do nothing here
                 loadedCoplet[0] = new byte[0];
             } else {
@@ -185,8 +185,8 @@ public final class CopletThread implements Runnable {
                     boolean handlesParameters = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesParameters", true);
                     String size = p.getParameter("size", "max");
                     includeFragment = size.equals("max");
-                    if (includeFragment == false) {
-                        if (this.logger.isWarnEnabled() == true) {
+                    if (!includeFragment) {
+                        if (this.logger.isWarnEnabled()) {
                             this.logger.warn("Minimized coplet '"+copletID+"' not handled correctly.");
                         }
                     }
@@ -205,7 +205,7 @@ public final class CopletThread implements Runnable {
                         try {
                             source = SourceUtil.getSource(resource, 
                                                           null, 
-                                                          (handlesParameters == true ? p : null), 
+                                                          (handlesParameters ? p : null), 
                                                           resolver);
                             SourceUtil.toSAX(source, xc);
                         } finally {

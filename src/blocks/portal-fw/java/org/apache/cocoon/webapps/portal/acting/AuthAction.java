@@ -63,7 +63,7 @@ import org.apache.cocoon.webapps.portal.components.PortalManager;
  *  This action protecteds a pipeline by using a coplet ID.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthAction.java,v 1.1 2003/03/09 00:05:17 pier Exp $
+ * @version CVS $Id: AuthAction.java,v 1.2 2003/06/18 12:36:46 cziegeler Exp $
 */
 public final class AuthAction
 extends ComposerAction
@@ -75,7 +75,7 @@ implements ThreadSafe {
                    String source,
                    Parameters par)
     throws Exception {
-        if (getLogger().isDebugEnabled() == true) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("BEGIN act resolver="+resolver+
                               ", objectModel="+objectModel+
                               ", source="+source+
@@ -93,7 +93,7 @@ implements ThreadSafe {
             this.manager.release( portal );
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END act map={}");
         }
         return EMPTY_MAP;

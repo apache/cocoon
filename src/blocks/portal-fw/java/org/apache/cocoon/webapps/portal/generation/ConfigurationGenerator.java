@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.1 2003/03/09 00:05:19 pier Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.2 2003/06/18 12:36:46 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ComposerGenerator {
@@ -82,7 +82,7 @@ extends ComposerGenerator {
             if (request.getSession(false) != null) {
                 if (this.source == null
                     || this.source.equals("")
-                    || this.source.equals("user") == true) {
+                    || this.source.equals("user")) {
                     portal.showPortal(this.xmlConsumer, true, false);
                 } else {
                     portal.showAdminConf(this.xmlConsumer);
