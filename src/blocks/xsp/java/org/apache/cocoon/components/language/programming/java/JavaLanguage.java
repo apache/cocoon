@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.language.programming.java;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -37,14 +38,13 @@ import org.apache.cocoon.components.language.programming.CompiledProgrammingLang
 import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.commons.lang.SystemUtils;
 
 /**
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.2 2004/07/11 20:40:07 antonio Exp $
+ * @version CVS $Id: JavaLanguage.java,v 1.3 2004/07/12 12:47:29 antonio Exp $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
         implements Initializable, ThreadSafe, Serviceable, Disposable {
@@ -263,7 +263,13 @@ public class JavaLanguage extends CompiledProgrammingLanguage
                     getLogger().warn("Attempted to retrieve directory listing of non-directory " + dir.toString());
                 }
             } else {
-                File[] files = dir.listFiles(new JavaArchiveFilter());
+                File[] files = dir.listFiles(new FileFilter() {
+                        public boolean accept(File file) {
+                            String name = file.getName().toLowerCase();
+                            return (name.endsWith(".jar") || name.endsWith(".zip"));
+                        }
+                    }
+                );
                 for (int i = 0; i < files.length; i++) {
                     buffer.append(files[i]).append(File.pathSeparator);
                 }
