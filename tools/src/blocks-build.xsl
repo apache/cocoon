@@ -98,6 +98,7 @@
         <then>
           <echo message="==================== WARNING ======================="/>
           <xsl:for-each select="$cocoon-blocks[@status='unstable']">
+            <xsl:sort select="@name"/>
             <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
             <echo message=" Block '{$block-name}' should be considered unstable."/>
           </xsl:for-each>
@@ -121,6 +122,7 @@
         <then>
           <echo message="==================== NOTICE ========================"/>
           <xsl:for-each select="$cocoon-blocks">
+            <xsl:sort select="@name"/>
             <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
             <if>
               <istrue value="${{internal.exclude.block.{$block-name}}}"/>
