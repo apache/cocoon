@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.12 2000-03-13 21:26:27 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.13 2000-03-17 00:02:01 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,14 +73,16 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.12 $ $Date: 2000-03-13 21:26:27 $
+ * @version $Revision: 1.13 $ $Date: 2000-03-17 00:02:01 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
 {
   public static final String DEFAULT_LANGUAGE = "java";
   public static final String LOGICSHEET_PI = "xml-logicsheet";
+  public static final String XSP_ROOT = "org/apache/cocoon/processor/xsp/";
 
+  protected Factory factory;
   protected Parser parser;
   protected Transformer transformer;
 
@@ -100,6 +102,9 @@ public class XSPProcessor extends AbstractActor
 
   public void init(Director director) {
     super.init(director);
+
+    // Initialize Cocoon factory
+    this.factory = (Factory) director.getActor("factory");
 
     // Initialize Cocoon cache
     this.store = (Store) director.getActor("store");
@@ -124,7 +129,7 @@ public class XSPProcessor extends AbstractActor
       Document document = this.parser.parse(
         new InputSource(
           new InputStreamReader(
-            this.getClass().getResourceAsStream("xsp.xml")
+            this.factory.createResource(XSP_ROOT + "xsp.xml")
           )
         ), false
       );
@@ -167,9 +172,9 @@ public class XSPProcessor extends AbstractActor
 
         String logicsheetName = languageElement.getAttribute("template");
         Document logicsheetStylesheet = this.parser.parse(
-          new InputSource(  
+          new InputSource(
             new InputStreamReader(
-              this.getClass().getResourceAsStream(logicsheetName)
+              this.factory.createResource(XSP_ROOT + logicsheetName)
             )
           ), false
         );
@@ -190,7 +195,7 @@ public class XSPProcessor extends AbstractActor
           // Add to namespace logicsheet list
       this.byNamespace.put("xsp", xspLogicsheets);
     } catch (Exception e) {
-      throw new RuntimeException("Error during initialization: " + e);
+      throw new RuntimeException("Error during initialization: " + e.getMessage());
     }
   }
 
@@ -493,7 +498,7 @@ public class XSPProcessor extends AbstractActor
 
     logicsheet.setStylesheet(getDocument(resource));
     logicsheet.setPreprocessor(preprocessor);
- 
+
     // Hold logicsheet in store
     this.store.hold(name, logicsheet);
     this.monitor.invalidate(name);
@@ -619,7 +624,7 @@ public class XSPProcessor extends AbstractActor
         int logicsheetCount = this.logicsheets.size();
         for (int i = 0; i < logicsheetCount; i++) {
           Object resource = this.logicsheets.elementAt(i);
-  
+
           if (
             monitor.hasChanged(resource.toString()) ||
             this.target.lastModified() < monitor.timestamp(resource)
