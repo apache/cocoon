@@ -180,6 +180,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JT" type="fix">
+    Command-line will no longer add a 'null' suffix to files with an unknown MIME type.
+  </action>
   <action dev="CZ" type="add">
     The object model and the components stored in the object model are now available
     via the component context.
