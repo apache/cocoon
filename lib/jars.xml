@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.102 2003/09/25 08:12:37 antonio Exp $
+    | CVS $Id: jars.xml,v 1.103 2003/09/25 09:10:58 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -672,10 +672,14 @@
 
   <file>
     <title>WSDL</title>
-    <description>???</description>
+    <description>
+      The Web Services Description Language for Java Toolkit (WSDL4J) allows
+      the creation, representation, and manipulation of WSDL documents
+      describing services
+    </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/wsdl4j.jar</lib>
-    <homepage>#</homepage>
+    <lib>axis/lib/wsdl4j-1.4.jar</lib>
+    <homepage>http://www-124.ibm.com/developerworks/projects/wsdl4j/</homepage>
   </file>
 
   <file>
