@@ -54,6 +54,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,14 +71,14 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.continuations.Continuation;
-
+import org.apache.cocoon.components.flow.Interpreter.Argument;
 /**
  * Implementation of FOM (Flow Object Model).
  *
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.4 2003/07/17 17:12:52 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.5 2003/07/19 20:16:27 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -154,9 +155,13 @@ public class FOM_Cocoon extends ScriptableObject {
         if(! uri.startsWith( "cocoon://" ) ) {
             redUri = "cocoon://" + this.environment.getURIPrefix() + uri;
         }
-        
+        FOM_WebContinuation fom_wk = 
+            new FOM_WebContinuation(wk);
+        fom_wk.setParentScope(getParentScope());
+        fom_wk.setPrototype(getClassPrototype(getParentScope(), 
+                                              fom_wk.getClassName()));
         interpreter.forwardTo(getParentScope(), this, redUri,
-                              bizData, wk, environment);
+                              bizData, fom_wk, environment);
 
         FOM_WebContinuation result = null;
         if (wk != null) {
@@ -674,70 +679,6 @@ public class FOM_Cocoon extends ScriptableObject {
         }
     }
 
-    public static class FOM_WebContinuation extends ScriptableObject {
-        
-        WebContinuation wk;
-
-        public FOM_WebContinuation() {
-        }
-
-        public FOM_WebContinuation(Object wk) {
-            this.wk = (WebContinuation)unwrap(wk);
-        }
-
-        public String getClassName() {
-            return "FOM_WebContinuation";
-        }
-
-        public String jsGet_id() {
-            return wk.getId();
-        }
-
-        public FOM_WebContinuation jsFunction_getParent() {
-            WebContinuation parent = wk.getParentContinuation();
-            if (parent == null) return null;
-            FOM_WebContinuation pwk = new FOM_WebContinuation(parent);
-            pwk.setParentScope(getParentScope());
-            pwk.setPrototype(getClassPrototype(getParentScope(), 
-                                               pwk.getClassName()));
-            return pwk;
-        }
-
-        public NativeArray jsFunction_getChildren() throws Exception {
-            List list = wk.getChildren();
-            NativeArray arr = 
-                (NativeArray)org.mozilla.javascript.Context.getCurrentContext().newObject(getParentScope(), 
-                                               "Array",
-                                               new Object[]{new Integer(list.size())});
-            Iterator iter = list.iterator();
-            for (int i = 0; iter.hasNext(); i++) {
-                WebContinuation child = (WebContinuation)iter.next();
-                FOM_WebContinuation cwk = new FOM_WebContinuation(child);
-                cwk.setParentScope(getParentScope());
-                cwk.setPrototype(getClassPrototype(getParentScope(), 
-                                                   cwk.getClassName()));
-                arr.put(i, arr, cwk);
-            }
-            return arr;
-        }
-
-        public void jsFunction_invalidate() throws Exception {
-            ContinuationsManager contMgr = null;
-            FOM_Cocoon cocoon = 
-                (FOM_Cocoon)getProperty(getTopLevelScope(this),
-                                        "cocoon");
-            ComponentManager componentManager = 
-                cocoon.getComponentManager();
-            contMgr = (ContinuationsManager)
-                componentManager.lookup(ContinuationsManager.ROLE);
-            contMgr.invalidateWebContinuation(wk);
-        }
-
-        public WebContinuation getWebContinuation() {
-            return wk;
-        }
-    }
-
     public FOM_Request jsGet_request() {
         if (request != null) {
             return request;
@@ -814,11 +755,11 @@ public class FOM_Cocoon extends ScriptableObject {
      * the Sitemap parameters from <map:call>
      */
     public Scriptable jsGet_parameters() {
-	return parameters;
+        return parameters;
     }
 
     void setParameters(Scriptable value) {
-	parameters = value;
+        parameters = value;
     }
 
     // unwrap Wrapper's and convert undefined to null
@@ -833,36 +774,123 @@ public class FOM_Cocoon extends ScriptableObject {
 
     // Make everything available to JavaScript objects implemented in Java:
 
+    /**
+     * Get the current request
+     * @return The request
+     */
     public Request getRequest() {
         return jsGet_request().request;
     }
 
+    /**
+     * Get the current session
+     * @return The session (may be null)
+     */
     public Session getSession() {
+        if (getRequest().getSession(false) == null) {
+            return null;
+        }
         return jsGet_session().session;
     }
 
+    /**
+     * Get the current response
+     * @return The response
+     */
     public Response getResponse() {
         return jsGet_response().response;
     }
 
+    /**
+     * Get the current context
+     * @return The context
+     */
     public org.apache.cocoon.environment.Context getContext() {
         return jsGet_context().context;
     }
 
-    public Environment getEnvironment() {
-        return environment;
+    /**
+     * Get the current object model
+     * @return The object model
+     */
+    public Map getObjectModel() {
+        return environment.getObjectModel();
     }
+
+    /**
+     * Get the current Sitemap's component manager
+     * @return The component manager
+     */
 
     public ComponentManager getComponentManager() {
         return componentManager;
     }
 
-    public FOM_JavaScriptInterpreter getInterpreter() {
-        return interpreter;
+    /**
+     * Call the Cocoon Sitemap to process a page
+     * @param uri Uri to match
+     * @param bean Input to page
+     * @param fom_wk Current Web continuation (may be null)
+     */
+
+    public void forwardTo(String uri,
+                          Object bean,
+                          FOM_WebContinuation fom_wk) 
+        throws Exception {
+        interpreter.forwardTo(getTopLevelScope(this),
+                              this, 
+                              "cocoon://" + environment.getURIPrefix() + uri,
+                              bean,
+                              fom_wk,
+                              environment);
     }
 
-    public FOM_WebContinuation makeWebContinuation(WebContinuation wk) {
-        if (wk == null) return null;
+    /**
+     * Perform the behavior of <map:call continuation="blah">
+     * This can be used in cases where the continuation id is not encoded 
+     * in the request in a form convenient to access in the sitemap.
+     * Your script can extract the id from the request and then call 
+     * this method to process it as normal.
+     * @param kontId The continuation id
+     * @param parameters Any parameters you want to pass to the continuation (may be null)
+     */
+    public void handleContinuation(String kontId, Scriptable parameters) 
+        throws Exception {
+        List list = null;
+        if (parameters == null || parameters == Undefined.instance) {
+            parameters = this.parameters;
+        }
+        Object[] ids = parameters.getIds();
+        list = new ArrayList();
+        for (int i = 0; i < ids.length; i++) {
+            String name = ids[i].toString();
+            Argument arg = new Argument(name,
+                                        org.mozilla.javascript.Context.toString(getProperty(parameters, name)));
+            list.add(arg);
+        }
+        interpreter.handleContinuation(kontId, list, environment);
+    }
+
+    /**
+     * Create a Web Continuation from a JS Continuation
+     * @param k The JS continuation (may be null - null will be returned in that case)
+     * @param parent The parent of this continuation (may be null)
+     * @param timeToLive Lifetime for this continuation (zero means no limit)
+     */
+
+
+    public FOM_WebContinuation makeWebContinuation(Continuation k,
+                                                   FOM_WebContinuation parent,
+                                                   int timeToLive) 
+        throws Exception {
+        if (k == null) return null;
+        WebContinuation wk;
+        ContinuationsManager contMgr;
+        contMgr = (ContinuationsManager)
+            componentManager.lookup(ContinuationsManager.ROLE);
+        wk = contMgr.createWebContinuation(unwrap(k),
+                                           (WebContinuation)(parent == null ? null : parent.getWebContinuation()),
+                                           timeToLive);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
         result.setParentScope(getParentScope());
         result.setPrototype(getClassPrototype(getParentScope(), 
