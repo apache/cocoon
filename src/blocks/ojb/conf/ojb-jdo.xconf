@@ -17,5 +17,5 @@
 
 <xconf xpath="/cocoon" unless="ojb-jdo">
   <!-- Persistent Manager Factory for JDO -->
-  <ojb-jdo logger="core.ojb.jdo"/>
+  <!-- <ojb-jdo logger="core.ojb.jdo"/> -->
 </xconf>
