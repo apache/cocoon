@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {GroupDefinition}s.
  *
- * @version $Id: GroupDefinitionBuilder.java 47104 2004-09-23 14:16:39Z sylvain $
+ * @version $Id$
  */
 public class GroupDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 

@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.1 2004/03/09 10:34:02 reinhard Exp $
+    | CVS $Id$
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
