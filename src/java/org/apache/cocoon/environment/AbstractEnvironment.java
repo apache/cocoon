@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.19 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -92,7 +92,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 
     /** Do we have our components ? */
     protected boolean initializedComponents = false;
-    
+
     /**
      * Constructs the abstract environment
      */
@@ -196,7 +196,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * Get the current Context
      */
     public String getContext() {
-        if ( !this.initializedComponents) {
+        if (!this.initializedComponents) {
             this.initComponents();
         }
         return this.context;
@@ -244,7 +244,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public void changeContext(String prefix, String newContext)
     throws IOException {
-        if ( !this.initializedComponents) {
+        if (!this.initializedComponents) {
             this.initComponents();
         }
 
@@ -254,6 +254,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             getLogger().debug("  to context(" + newContext + ") and prefix(" + prefix + ")");
             getLogger().debug("  at URI " + this.uris);
         }
+
         int l = prefix.length();
         if (l >= 1) {
             if (!this.uris.startsWith(prefix)) {
@@ -278,7 +279,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Base context is zip: " + this.context);
             }
-            
+
             org.apache.excalibur.source.Source source = null;
             try {
                 source = this.sourceResolver.resolveURI(this.context + newContext);
@@ -305,7 +306,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             if (i != -1 && i + 1 < sContext.length()) {
                 sContext = sContext.substring(0, i + 1);
             }
-            
+
             org.apache.excalibur.source.Source source = null;
             try {
                 source = this.sourceResolver.resolveURI(sContext);
@@ -368,13 +369,17 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public Source resolve(String systemId)
     throws ProcessingException, SAXException, IOException {
-        if ( !this.initializedComponents) {
-            this.initComponents();
+        if (!this.initializedComponents) {
+            initComponents();
         }
+
         if (getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Resolving '"+systemId+"' in context '" + this.context + "'");
+            getLogger().debug("Resolving '" + systemId + "' in context '" + this.context + "'");
         }
-        if (systemId == null) throw new SAXException("Invalid System ID");
+
+        if (systemId == null) {
+            throw new SAXException("Invalid System ID");
+        }
 
         // get the wrapper class - we don't want to import the wrapper directly
         // to avoid a direct dependency from the core to the deprecation package
@@ -386,8 +391,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                                           +"Please either update your code to use the new resolveURI() method or"
                                           +" install the deprecation support.", e);
         }
-        if ( null == avalonToCocoonSourceWrapper ) {
-            synchronized (this.getClass()) {
+
+        if (null == avalonToCocoonSourceWrapper) {
+            synchronized (getClass()) {
                 try {
                     avalonToCocoonSourceWrapper = clazz.getDeclaredMethod("createProxy",
                            new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
@@ -400,13 +406,13 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                                                   +" install the deprecation support.", e);
                 }
             }
-           
         }
+
         try {
-            org.apache.excalibur.source.Source source = this.resolveURI( systemId );
-            Source wrappedSource;
-            wrappedSource = (Source)avalonToCocoonSourceWrapper.invoke(clazz,
-                        new Object[] {source, this.sourceResolver, this, this.manager});
+            org.apache.excalibur.source.Source source = resolveURI(systemId);
+            Source wrappedSource = (Source)avalonToCocoonSourceWrapper.invoke(
+                    clazz,
+                    new Object[] {source, this.sourceResolver, this, this.manager});
             return wrappedSource;
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
@@ -504,7 +510,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     throws IOException {
         if (this.secureOutputStream != null) {
             this.secureOutputStream.realFlush();
-        } else if ( this.outputStream != null ){
+        } else if (this.outputStream != null) {
             this.outputStream.flush();
         }
     }
@@ -513,8 +519,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * Get a <code>Source</code> object.
      */
     public org.apache.excalibur.source.Source resolveURI(final String location)
-    throws MalformedURLException, IOException, SourceException
-    {
+    throws MalformedURLException, IOException, SourceException {
         return this.resolveURI(location, null, null);
     }
 
@@ -523,9 +528,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public org.apache.excalibur.source.Source resolveURI(final String location,
                                                          String baseURI,
-                                                         final Map    parameters)
+                                                         final Map parameters)
     throws MalformedURLException, IOException, SourceException {
-        if ( !this.initializedComponents) {
+        if (!this.initializedComponents) {
             this.initComponents();
         }
         return this.sourceResolver.resolveURI(location, baseURI, parameters);
@@ -534,9 +539,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     /**
      * Releases a resolved resource
      */
-    public void release( final org.apache.excalibur.source.Source source ) {
-        if ( null != source ) {
-            this.sourceResolver.release( source );
+    public void release(final org.apache.excalibur.source.Source source) {
+        if (null != source) {
+            this.sourceResolver.release(source);
         }
     }
 
@@ -554,7 +559,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
                 try {
                     source = this.sourceResolver.resolveURI(this.tempInitContext);
                     this.context = source.getURI();
-                    
+
                     if (this.rootContext == null) // hack for EnvironmentWrapper
                         this.rootContext = this.context;
                 } finally {
@@ -569,7 +574,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             throw new CascadingRuntimeException("Unable to resolve URI: "+this.tempInitContext, ie);
         }
     }
-    
+
     /**
      * Notify that the processing starts.
      */
@@ -582,14 +587,14 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * This can be used to cleanup the environment object
      */
     public void finishingProcessing() {
-        if ( null != this.manager ) {
-            this.manager.release( this.sourceResolver );
+        if (null != this.manager) {
+            this.manager.release(this.sourceResolver);
             this.manager = null;
             this.sourceResolver = null;
         }
         this.initializedComponents = false;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#isInternRedirect()
      */
