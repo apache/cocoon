@@ -6,8 +6,9 @@
     <xsp:include>org.apache.cocoon.woody.formmodel.*</xsp:include>
   </xsp:structure>
 
-  <html>
-    <body>
+  <page>
+    <title>Sample form result</title>
+    <content>
       <xsp:logic>
         // get reference to form and some of the widgets on it
         Form form = (Form)request.getAttribute("form1");
@@ -24,6 +25,6 @@
       <br/>
       The value of the checkbox is:
       <xsp:expr>booleanField.getValue()</xsp:expr>
-    </body>
-  </html>
+    </content>
+  </page>
 </xsp:page>
