@@ -81,6 +81,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLTeePipe;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentHelper;
@@ -95,12 +96,12 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 
 /**
  * 
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
  * @avalon.component
  * @avalon.service type=Processor
@@ -395,7 +396,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
             final LocationAugmentationPipe pipe = new LocationAugmentationPipe();
             pipe.setConsumer(XMLUtils.getConsumer(transformHandler));
             
-            parser.parse(new InputSource(source.getInputStream()),pipe);
+            parser.parse(SourceUtil.getInputSource(source), pipe);
             if ( domBuilder != null ) {
                 this.getLogger().debug("Configuration from sitemap: " + this.m_source.getURI());
                 this.getLogger().debug(XMLUtils.serializeNodeToXML(domBuilder.getDocument()));
@@ -497,7 +498,6 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
                         for(int m = 0; m < childs.length; m++) {
                             //FIXME - get the role
                             final String r = childs[m].getName();
-                            //final String r = this.roleManager.getRoleForName(childs[m].getName());
                             this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
                                     (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
                         }
