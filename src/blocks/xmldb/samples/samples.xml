@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--+
+    | XMLDB Samples
+    |
+    | CVS $Id: samples.xml,v 1.1 2003/12/10 14:33:16 vgritsenko Exp $
+    +-->
+
+<samples name="XMLDB Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
+
+  <group name="Init Database">
+    <sample name="Init" href="populate">
+      Populate sample XMLDB Database
+    </sample>
+  </group>
+
+  <group name="XMLDB Samples">
+    <sample name="From DB" href="xwelcome">
+      This samples page, but obtained from the XMLDB database
+      (don't forget to Init database first)
+    </sample>
+  </group>
+</samples>

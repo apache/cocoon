@@ -2,25 +2,6 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-<!-- ========================= Components ================================ -->
-
-  <map:components>
-    <map:generators default="file">
-      <!-- =================== XML:DB Generators ========================= -->
-      <!-- BEWARE: these are unmaintained XML:DB generators, going to be   -->
-      <!-- removed soon.                                                   -->
-      <!-- You might want  to use the XML:DB pseudo protocol instead.      -->
-      <map:generator name="xmldb" src="org.apache.cocoon.generation.XMLDBGenerator" label="content">
-        <driver>org.apache.xindice.client.xmldb.DatabaseImpl</driver>
-        <base>xmldb:xindice-embed:///db/</base>
-      </map:generator>
-      <map:generator name="xmldbcollection" src="org.apache.cocoon.generation.XMLDBCollectionGenerator" label="content">
-        <driver>org.apache.xindice.client.xmldb.DatabaseImpl</driver>
-        <base>xmldb:xindice-embed:///db/</base>
-      </map:generator>
-    </map:generators>
-  </map:components>
-
 <!-- =========================== Views =================================== -->
 
   <map:views>
@@ -42,23 +23,34 @@
 
   <map:pipelines>
     <map:pipeline>
-      <!-- =================== XML:DB Generators ========================= -->
-      <!-- BEWARE: the following examples use the unmaintained XML:DB      -->
-      <!-- generators, going to be deprecated soon.                        -->
-      <!-- You might want  to use the XML:DB pseudo protocol instead.      -->
-      <map:match pattern="xmldb-generator/db/**/">
-        <map:generate type="xmldbcollection" src="/{1}"/>
-        <map:serialize type="xml"/>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
       </map:match>
-      <map:match pattern="xmldb-generator/db/**">
-        <map:generate type="xmldb" src="/{1}"/>
-        <map:serialize type="xml"/>
+   
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
       </map:match>
-    </map:pipeline>
+   
+      <map:match pattern="xwelcome">
+        <map:generate src="xmldb:xindice-embed:///db/cocoon/welcome"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
 
-    <map:pipeline>
-      <!-- ======================= XML:DB ============================== -->
-      <map:match pattern="**">
+      <map:match pattern="populate">
+        <map:generate src="populate.xml"/>
+        <map:transform type="cinclude"/>
+        <map:transform type="xmldb"/>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="db/**">
         <map:match type="request-parameter" pattern="xpath">
           <map:generate src="xmldb:xindice-embed:///db/{../1}#{1}"/>
           <map:serialize type="xml"/>
