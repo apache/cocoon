@@ -28,9 +28,9 @@
     <content>
       <xsp:logic>
         Form form = (Form)request.getAttribute("employeeform");
-        Field fid = (Field)form.getWidget("id");
-        Field fname = (Field)form.getWidget("name");
-        Field fdepartment_id = (Field)form.getWidget("department_id");
+        Field fid = (Field)form.lookupWidget("id");
+        Field fname = (Field)form.lookupWidget("name");
+        Field fdepartment_id = (Field)form.lookupWidget("department_id");
       </xsp:logic>
       <p>The values of the form:</p>
       ID: <xsp:expr>fid.getValue()</xsp:expr>

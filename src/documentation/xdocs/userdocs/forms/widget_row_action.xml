@@ -57,7 +57,7 @@
       <p>Then, you can access the submitted row either using an event handler
       with event.getSourceWidget().getParent(), or from the flow using
       form.getWidget().getSubmitWidget().getParent(). The row itself has a
-      getWidget(widgetName) method that can be used to access specific
+      lookupWidget(widgetName) method that can be used to access specific
       widgets for the row.</p>
     </s1>
   </body>
