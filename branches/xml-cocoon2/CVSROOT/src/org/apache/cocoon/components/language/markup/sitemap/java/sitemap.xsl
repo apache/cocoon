@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2000-08-22 23:05:11 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2000-08-23 22:44:27 $
 -->
 
 <xsl:stylesheet 
@@ -511,9 +511,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     </xsl:choose>
   </xsl:template> <!-- match="map:redirect-to" -->
  
+<!-- FIXME (SM) what is this for?
   <xsl:template match="parameter"> 
     param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@value"/>"); 
   </xsl:template> 
+ -->
  
   <xsl:template match="map:param"> 
     param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@map:value"/>"); 
@@ -717,8 +719,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
             <xsl:choose>
               <xsl:when test="$required = 'true'">
                 <xsl:call-template name="error">
-                  <xsl:with-param name="message">[Logicsheet processor]
-Parameter '<xsl:value-of select="$parname"/>' missing in dynamic tag &lt;<xsl:value-of select="name(.)"/>&gt;
+                  <xsl:with-param name="message">
+                    [Logicsheet processor] Parameter '<xsl:value-of select="$parname"/>' missing in dynamic tag &lt;<xsl:value-of select="name(.)"/>&gt;
                   </xsl:with-param>
                 </xsl:call-template>
               </xsl:when>

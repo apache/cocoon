@@ -41,23 +41,26 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.18 $ $Date: 2000-08-17 17:03:15 $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.4.2.19 $ $Date: 2000-08-23 22:44:26 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor {
 
-    /*
-     * Cocoon Default Strings
-     */
-    public static final String NAME = "Cocoon";
-    public static final String VERSION = "@version@";
-    public static final String YEAR = "@year@";
-
-    public static final String RELOAD_PARAM = "cocoon-reload";
-    public static final String SHOWTIME_PARAM = "cocoon-showtime";
-    public static final String VIEW_PARAM = "cocoon-view";
-
-    public static final String TEMPDIR_PROPERTY = "org.apache.cocoon.properties.tempdir";
+    /* Cocoon Default Strings */
+    
+    public static final String NAME               = "@name@";
+    public static final String VERSION            = "@version@";
+    public static final String YEAR               = "@year@";
+    public static final String RELOAD_PARAM       = "cocoon-reload";
+    public static final String SHOWTIME_PARAM     = "cocoon-showtime";
+    public static final String VIEW_PARAM         = "cocoon-view";
+    public static final String TEMPDIR_PROPERTY   = "org.apache.cocoon.properties.tempdir";
+    public static final String DEFAULT_CONF_FILE  = "cocoon.xconf";
+    public static final String DEFAULT_DEST_DIR   = "./site";
+    public static final String LINK_CONTENT_TYPE  = "x-application/x-cocoon-links";
+    public static final String LINK_VIEW          = "links";
+    public static final String LINK_CRAWLING_ROLE = "static";
     
     /** The table of role-class */
     private Hashtable components = new Hashtable();
@@ -87,17 +90,26 @@ public class Cocoon
                             "org.apache.cocoon.components.parser.XercesParser");
         this.components.put("parser", this.getClass(parser,null));
     }
-
+    
     /**
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(String configuration)
+    public Cocoon(String configurationFile)
+    throws SAXException, IOException, ConfigurationException {
+        this(new File(configurationFile).getCanonicalFile());
+    }
+    
+    /**
+     * Create a new <code>Cocoon</code> object, parsing configuration from
+     * the specified file.
+     */
+    public Cocoon(File configurationFile)
     throws SAXException, IOException, ConfigurationException {
         this();
-        this.configurationFile = new File(configuration).getCanonicalFile();
-        if (!this.configurationFile.isFile())
-            throw new FileNotFoundException(configuration);
+        this.configurationFile = configurationFile;
+        if (!configurationFile.isFile())
+            throw new FileNotFoundException(configurationFile.toString());
             
         Parser p = (Parser) this.getComponent("parser");
         SAXConfigurationBuilder b = new SAXConfigurationBuilder();
