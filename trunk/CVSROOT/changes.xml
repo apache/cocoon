@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.180 2001-01-17 16:02:19 greenrd Exp $ 
+  $Id: changes.xml,v 1.181 2001-01-18 23:40:19 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add">
+   Added &lt;?cocoon-disable-caching?&gt; processing instruction to disable
+   caching for a page. This is most useful for cases like samples/fp,
+   which behaves strangely without it, because of Last-Modified support
+   introduced in Cocoon 1.8.1.
+  </action>
   <action dev="RDG" type="update">
    Obsolete XObject now replaced by org.apache.cocoon.xml.XMLFragment. 
    This change was necessitated by the move to SAX2 in Cocoon 2.

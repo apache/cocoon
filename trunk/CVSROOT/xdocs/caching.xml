@@ -23,6 +23,8 @@
   <p>
    Please read the comments in <code>cocoon.properties</code> for an
    explanation of the global caching parameters that Cocoon accepts.
+   In particular, disabling Last-Modified support appears to disable all
+   <em>external</em> caching (i.e. caching in web browsers, proxies, etc.)
   </p>
 
   <s2 title="What is cached and what is not?">
@@ -43,6 +45,13 @@
     such as PUT are never cached under any circumstances (however, POST is
     not one of these types - although 99% of the time it is not advisable to
     cache a POST request, it is possible to do so.)
+   </p>
+
+   <p>
+    The easiest way to disable caching for a particular page is to add
+    the <code>&lt;?cocoon-disable-caching?&gt;</code> processing instruction.
+    (But this won't work if inserted dynamically, except if it is inserted by
+     a Producer.)
    </p>
  
    <note>This document is accurate with respect to Cocoon 1.8.1. Older and

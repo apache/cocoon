@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.45 2001-01-16 15:50:29 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.46 2001-01-18 23:40:18 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,10 +77,16 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.45 $ $Date: 2001-01-16 15:50:29 $
+ * @version $Revision: 1.46 $ $Date: 2001-01-18 23:40:18 $
  */
 
 public class Engine implements Defaults {
+
+    public static final Changeable UNCACHEABLE = new Changeable () {
+      public boolean hasChanged (Object context) {
+        return true;
+      }
+    };
 
     private Block blocker = new Block();
     private boolean VERBOSE, PROFILE, LASTMODIFIED;
@@ -354,6 +360,11 @@ public class Engine implements Defaults {
                         if (PROFILE) profiler.finishEvent (requestMarker, producer.getClass ());
 
                         if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
+
+                        // See if disable caching processing instruction exists
+                        if (Utils.getFirstPI (document, DISABLE_CACHING_PI, true) != null) {
+                            page.setChangeable (UNCACHEABLE);
+                        }
 
                         // pass needed parameters to the processor pipeline
                         Hashtable environment = new Hashtable();

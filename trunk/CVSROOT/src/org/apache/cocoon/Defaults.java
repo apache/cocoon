@@ -1,4 +1,4 @@
-/*-- $Id: Defaults.java,v 1.13 2000-09-16 16:04:29 greenrd Exp $ --
+/*-- $Id: Defaults.java,v 1.14 2001-01-18 23:40:18 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,7 +54,7 @@ package org.apache.cocoon;
  * The Cocoon strings.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.13 $ $Date: 2000-09-16 16:04:29 $
+ * @version $Revision: 1.14 $ $Date: 2001-01-18 23:40:18 $
  */
 
 public interface Defaults {
@@ -94,6 +94,7 @@ public interface Defaults {
     public static final String COCOON_PROCESS_PI = "cocoon-process";
     public static final String COCOON_FORMAT_PI = "cocoon-format";
     public static final String STYLESHEET_PI = "xml-stylesheet";
+    public static final String DISABLE_CACHING_PI = "cocoon-disable-caching";
 
     public static final String DEFAULT_BROWSER = "default";
 

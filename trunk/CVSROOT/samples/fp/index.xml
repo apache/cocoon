@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <!-- Written by Jeremy Quinn "sharkbait@mac.com" -->
+
+<!-- Disable caching for this page -->
+<?cocoon-disable-caching?>
+
 <?cocoon-process type="xslt"?>
 <?xml-stylesheet href="page-html.xsl" type="text/xsl"?>
 <page>  
