@@ -75,7 +75,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.3 2003/12/08 15:55:43 vgritsenko Exp $
+ * @version CVS $Id: PortletRequest.java,v 1.1 2004/02/23 15:14:01 cziegeler Exp $
  */
 public abstract class PortletRequest implements Request {
 

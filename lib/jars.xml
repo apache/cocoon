@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.169 2004/02/22 22:43:52 antonio Exp $
+    | CVS $Id: jars.xml,v 1.170 2004/02/23 15:14:05 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -1019,17 +1019,6 @@
     <homepage>http://java.sun.com/jndi</homepage>
   </file>
   JMS block end -->
-  <file>
-    <title>JSR-168 Portlet Spec</title>
-    <description>
-      JSR-168 Portlet Specification. This implentation developed by the
-      Jakarta Pluto project is an open source implementation from the
-      original spec.
-    </description>
-    <used-by>Scratchpad (JSR-168 Portlet Environment)</used-by>
-    <lib>scratchpad/lib/portlet-api-20031202.jar</lib>
-    <homepage>http://jakarta.apache.org/pluto/</homepage>
-  </file>
   <file>
     <title>JSR-168 Portlet Spec</title>
     <description>

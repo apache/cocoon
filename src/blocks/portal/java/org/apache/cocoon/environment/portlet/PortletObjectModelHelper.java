@@ -69,7 +69,7 @@ import java.util.Map;
  * transformers, etc).
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
- * @version CVS $Id: PortletObjectModelHelper.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
+ * @version CVS $Id: PortletObjectModelHelper.java,v 1.1 2004/02/23 15:14:01 cziegeler Exp $
  */
 public final class PortletObjectModelHelper {
 

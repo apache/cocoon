@@ -56,7 +56,7 @@ package org.apache.cocoon.environment.portlet;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RenderRequest.java,v 1.3 2004/02/19 22:13:28 joerg Exp $
+ * @version CVS $Id: RenderRequest.java,v 1.1 2004/02/23 15:14:01 cziegeler Exp $
  */
 public final class RenderRequest extends PortletRequest {
 
