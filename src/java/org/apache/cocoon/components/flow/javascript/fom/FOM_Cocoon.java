@@ -66,6 +66,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
@@ -76,7 +77,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.http.HttpResponse;
+import org.apache.cocoon.util.ClassUtils;
 import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
@@ -91,7 +94,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.20 2003/11/24 12:12:44 antonio Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.21 2003/12/09 21:21:07 sylvain Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -321,6 +324,50 @@ public class FOM_Cocoon extends ScriptableObject {
              null,// configuration
              true);
          return obj;
+    }
+    
+    /**
+     * Create and setup an object so that it can access the information provided to regular components.
+     * This is done by calling the various Avalon lifecycle interfaces implemented by the object, which
+     * are <code>LogEnabled</code>, <code>Contextualizable</code>, <code>ServiceManageable</code>,
+     * <code>Composable</code> (even if deprecated) and <code>Initializable</code>.
+     * <p>
+     * <code>Contextualizable</code> is of primary importance as it gives access to the whole object model
+     * (request, response, etc.) through the {@link org.apache.cocoon.components.ContextHelper} class.
+     * <p>
+     * Note that <code>Configurable</code> is ignored, as no configuration exists in a flowscript that
+     * can be passed to the object.
+     *
+     * @param classObj the class to instantiate, either as a String or a Rhino NativeJavaClass object
+     * @return an set up instance of <code>clazz</code>
+     * @throws Exception if something goes wrong either during instantiation or setup.
+     */
+    public Object jsFunction_createObject(Object classObj) throws Exception {
+        Object result;
+        
+        if (classObj instanceof String) {
+            result = ClassUtils.newInstance((String)classObj);
+            
+        } else if (classObj instanceof NativeJavaClass) {
+            Class clazz = ((NativeJavaClass)classObj).getClassObject();
+            result = clazz.newInstance();
+            
+        } else {
+            throw new IllegalArgumentException("cocoon.createObject expects either a String or Class argument, but got "
+                + classObj.getClass());
+        }
+
+        return jsFunction_setupObject(result);
+    }
+    
+    /**
+     * Dispose an object that has been created using {@link #jsFunction_createObject(Class)}.
+     * 
+     * @param obj
+     * @throws Exception
+     */
+    public void jsFunction_disposeObject(Object obj) throws Exception {
+        LifecycleHelper.decommission(obj);
     }
 
     public static class FOM_Request extends ScriptableObject {
