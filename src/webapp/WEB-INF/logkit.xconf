@@ -125,15 +125,6 @@
         <log-target id-ref="error"/>
       </category>
 
-      <!--+
-          | This is the deprecation category. If this category is set to WARN
-          | the log will contain messages about deprecated stuff used by
-          | your application.
-          +-->
-      <category log-level="WARN" name="deprecation">
-        <log-target id-ref="deprecation"/>
-      </category>
-
       <category name="roles" log-level="@loglevel@">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
@@ -166,6 +157,15 @@
 
       <log-target id-ref="core"/>
       <log-target id-ref="error"/>
+    </category>
+
+    <!--+
+        | This is the deprecation category. If this category is set to WARN
+        | the log will contain messages about deprecated stuff used by
+        | your application.
+        +-->
+    <category log-level="WARN" name="deprecation">
+      <log-target id-ref="deprecation"/>
     </category>
 
     <category name="sitemap" log-level="@loglevel@">
