@@ -16,12 +16,27 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.3 2004/05/07 21:32:32 mpo Exp $
+    | CVS $Id: form1.xml,v 1.4 2004/06/23 10:53:41 stephan Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
          xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
-  
+
+  <fd:validation>
+    <!-- This demonstrates form level validation -->
+    <fd:javascript>
+      var success = true;
+      var price = widget.lookupWidget("dieselprice");
+      if (price.value &lt; 1) {
+          price.setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("It can not be that low!", false));
+          success = false;
+      }
+      
+      // Must return true/false
+      return success;
+    </fd:javascript>
+  </fd:validation>
+
   <fd:widgets>
     <fd:field id="tab-state">
       <fd:datatype base="string"/>
@@ -30,9 +45,9 @@
     <fd:field id="email" required="true">
       <fd:datatype base="string"/>
       <!-- new-style validation, outside of the datatype -->
-	  <fd:validation>
-	    <fd:email/>
-	  </fd:validation>
+      <fd:validation>
+        <fd:email/>
+      </fd:validation>
       <fd:label>Enter an <b>email</b> address:</fd:label>
       <fd:help>
         An email address must be in <i>[name]@[domain].[tld]</i> format.
@@ -100,7 +115,7 @@
           java.lang.System.err.println("Was here!");
           var newValue = event.source.value;
           if (newValue != null) {
-            var number2 = event.source.lookupWidget("../number2");
+            var number2 = event.source.parent.lookupWidget("number2");
             if (number2.value == null) {
               number2.setValue(new java.lang.Long(newValue.intValue() + 1));
             }
@@ -112,11 +127,11 @@
     <fd:field id="number2" required="true">
       <fd:label>Enter another number, larger than the other number:</fd:label>
       <fd:datatype base="long"/>
-	  <fd:validation>
-	    <fd:range min="number1 + 1">
-		  <fd:failmessage>This number should be larger than the first number.</fd:failmessage>
-	    </fd:range>
-	  </fd:validation>
+      <fd:validation>
+        <fd:range min="number1 + 1">
+          <fd:failmessage>This number should be larger than the first number.</fd:failmessage>
+        </fd:range>
+      </fd:validation>
     </fd:field>
   
     <fd:multivaluefield id="drinks">
@@ -235,31 +250,31 @@
   
     <fd:repeater id="contacts">
       <fd:validation>
-      	<!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
-      		 A validator cannot itself display a validation error, and therefore sets a validation
-      		 error on a field in the offenting row. -->
+        <!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
+           A repeater cannot itself display a validation error, and therefore sets a validation
+           error on a field in the offenting row. -->
         <fd:javascript>
           var list = new java.util.ArrayList();
           var success = true;
           // Iterate on all rows
-      	  for (var i = 0; i &lt; widget.size; i++) {
-      	    // Get the row
-      	    var row = widget.getRow(i);
-      	    // Compute a key combining the first and last name
-      	    var key = row.lookupWidget("firstname").value + "/" + row.getWidget("lastname").value;
-      	    if (list.contains(key)) {
-      	      // already in the list
-      	      row.lookupWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
-      	      success = false;
-      	      break; // no need to continue
-      	    }
-      	    // Add the current row's key to the list
-      	    list.add(key);
-      	  }
-      	  
-      	  // Must return true/false
-      	  return success;
-      	  
+          for (var i = 0; i &lt; widget.size; i++) {
+            // Get the row
+            var row = widget.getRow(i);
+            // Compute a key combining the first and last name
+            var key = row.lookupWidget("firstname").value + "/" + row.lookupWidget("lastname").value;
+            if (list.contains(key)) {
+              // already in the list
+              row.lookupWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
+              success = false;
+              break; // no need to continue
+            }
+            // Add the current row's key to the list
+            list.add(key);
+          }
+          
+          // Must return true/false
+          return success;
+          
         </fd:javascript>
       </fd:validation>
       <fd:widgets>
@@ -281,6 +296,16 @@
           <fd:validation>
             <fd:email/>
           </fd:validation>
+        </fd:field>
+        <fd:field id="birthdate">
+          <fd:label>Birthdate (dd/MM/yyyy):</fd:label>
+          <fd:datatype base="date">
+            <fd:convertor>
+              <fd:patterns>
+                <fd:pattern>dd/MM/yyyy</fd:pattern>
+              </fd:patterns>
+            </fd:convertor>
+          </fd:datatype>
         </fd:field>
         <fd:booleanfield id="select">
           <fd:label>Select</fd:label>
