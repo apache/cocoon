@@ -32,7 +32,7 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDataHandler.java,v 1.6 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id: DefaultAspectDataHandler.java,v 1.7 2004/03/10 12:28:29 cziegeler Exp $
  */
 public class DefaultAspectDataHandler 
     implements AspectDataHandler {
@@ -83,7 +83,7 @@ public class DefaultAspectDataHandler
      * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectDatas(org.apache.cocoon.portal.aspect.Aspectalizable)
      */
     public Map getAspectDatas(Aspectalizable owner)  {
-        Map datas = new AspectDatasHashMap(owner, this);
+        AspectDatasHashMap datas = new AspectDatasHashMap(owner, this);
         Iterator iter = this.description.getAspectDescriptions().iterator();
         while ( iter.hasNext() ) {
             AspectDescription current = (AspectDescription)iter.next();
@@ -92,6 +92,7 @@ public class DefaultAspectDataHandler
                 datas.put( current.getName(), data );
             }
         }
+        datas.initialize();
         return datas;
     }
 
@@ -166,6 +167,7 @@ final class AspectDatasHashMap extends HashMap {
     
     protected AspectDataHandler handler;
     protected Aspectalizable owner;
+    protected boolean init = false;
     
     public AspectDatasHashMap(Aspectalizable owner, AspectDataHandler handler) {
         this.handler = handler;
@@ -176,9 +178,14 @@ final class AspectDatasHashMap extends HashMap {
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public Object put(Object key, Object value) {
-        this.handler.setAspectData(this.owner, key.toString(), value);
-        value = this.handler.getAspectData(this.owner, key.toString());
+        if ( this.init ) {
+            this.handler.setAspectData(this.owner, key.toString(), value);
+            value = this.handler.getAspectData(this.owner, key.toString());
+        }
         return super.put(key, value);
     }
 
+    public void initialize() {
+        this.init = true;
+    }
 }
