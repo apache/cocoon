@@ -51,7 +51,8 @@
   <esql:connection>
     <esql:dbpool>mypool</esql:dbpool>
     <esql:execute-query>
-      <esql:query>SELECT userid FROM users WHERE name=<esql:parameter>name</esql:parameter> AND password=<esql:parameter>password</esql:parameter></esql:query>
+      <esql:query>SELECT userid FROM users WHERE name=<esql:parameter>name</esql:parameter> 
+        AND password=<esql:parameter>password</esql:parameter></esql:query>
       <esql:row-results>
         <xsp:logic>
           userid = <esql:get-int column="userid"/>

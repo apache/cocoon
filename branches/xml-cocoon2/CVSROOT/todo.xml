@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.31 2001-04-20 13:04:57 cziegeler Exp $
+  $Id: todo.xml,v 1.6.2.32 2001-04-21 10:09:30 giacomo Exp $
 -->
 
 
@@ -97,7 +97,7 @@
   </action>
 
   <action context="code">
-   Implement a internal profiling tool that should indicate the load and history of
+   Implement an internal profiling tool that should indicate the load and history of
    such along with the status page. Something both useful and fancy to show the
    power of C2.
   </action>

@@ -170,8 +170,10 @@
      <source>
       <![CDATA[
        <map:components>
-        <map:transformer type="xslt" src="class:///org.apache.cocoon.transformation.XSLTTransformer">
-         <compile-stylesheets value="true"/>  <!-- This is a parameter to the transformer component -->
+        <map:transformer type="xslt"
+           src="class:///org.apache.cocoon.transformation.XSLTTransformer">
+         <!-- This is a parameter to the transformer component -->
+         <compile-stylesheets value="true"/>  
         </map:transformer>
        </map:components>
       ]]>
@@ -223,10 +225,12 @@
      <source>
       <![CDATA[
        <map:transformers default="xslt">
-        <map:transformer type="xslt" src="class:///org.apache.cocoon.transformation.XSLTTransformer">
+        <map:transformer type="xslt" 
+                         src="class:///org.apache.cocoon.transformation.XSLTTransformer">
          <compile-stylesheets value="true"/>
         </map:transformer>
-        <map:transformer type="xinclude" src="class:///org.apache.cocoon.transformation.XIncludeTransformer"/>
+        <map:transformer type="xinclude" 
+                         src="class:///org.apache.cocoon.transformation.XIncludeTransformer"/>
        </map:transformers>
       ]]>
      </source>
@@ -288,15 +292,18 @@
      <source>
       <![CDATA[
        <map:selectors default="browser">
-        <map:selector type="load" src="class:///org.apache.cocoon.selection.MachineLoadSelector">
+        <map:selector type="load"
+                      src="class:///org.apache.cocoon.selection.MachineLoadSelector">
          ...
         </map:selector>
 
-        <map:selector type="user" src="class:///org.apache.cocoon.selection.AuthenticationSelector">
+        <map:selector type="user"
+                      src="class:///org.apache.cocoon.selection.AuthenticationSelector">
          ...
         </map:selector>
 
-        <map:selector type="browser" factory="class:///org.apache.cocoon.selection.BrowserSelectorFactory">
+        <map:selector type="browser" 
+                      factory="class:///org.apache.cocoon.selection.BrowserSelectorFactory">
          ...
         </map:selection>
        </map:selection>
@@ -324,11 +331,13 @@
      <source>
       <![CDATA[
        <map:matchers default="uri-wildcard">
-        <map:matcher type="uri-wildcard" factory="class:///org.apache.cocoon.matcher.WildcardURIMatcherFactory">
+        <map:matcher type="uri-wildcard" 
+                     factory="class:///org.apache.cocoon.matcher.WildcardURIMatcherFactory">
          ...
         </map:matcher>
 
-        <map:matcher type="uri-regexp" src="class:///org.apache.cocoon.matcher.RegexpURIMatcher">
+        <map:matcher type="uri-regexp" 
+                     src="class:///org.apache.cocoon.matcher.RegexpURIMatcher">
          ...
         </map:matcher>
        </map:matchers>
@@ -415,8 +424,10 @@
      <source>
       <![CDATA[
        <map:components>
-        <map:transformer type="xslt" src="class:///org.apache.cocoon.transformation.XSLTTransformer">
-         <compile-stylesheets value="true"/>  <!-- This is a parameter to the transformer component -->
+        <map:transformer type="xslt" 
+                         src="class:///org.apache.cocoon.transformation.XSLTTransformer">
+         <!-- This is a parameter to the transformer component -->
+         <compile-stylesheets value="true"/>
         </map:transformer>
        </map:components>
       ]]>
@@ -539,7 +550,8 @@
        ================================ -->
     <map:components>
      <map:matchers default="wildcard">
-      <map:matcher name="wildcard" factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+      <map:matcher name="wildcard"
+                   factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
      </map:matchers>
  
     <map:selectors default="host">
@@ -574,7 +586,8 @@
      <source>
 <![CDATA[
    <map:match pattern="faq/*"> 
-    <map:mount uri-prefix="faq/" check-reload="no" src="faq/sitemap.xmap" reload-method="asynchron"/> 
+    <map:mount uri-prefix="faq/" check-reload="no" 
+               src="faq/sitemap.xmap" reload-method="asynchron"/> 
    </map:match> 
 ]]>
     </source>
@@ -681,7 +694,8 @@
 
     <source>
      <![CDATA[
-      public interface Transformer extends XMLProducer, XMLConsumer, SitemapModelComponent {
+      public interface Transformer 
+             extends   XMLProducer, XMLConsumer, SitemapModelComponent {
       }
      ]]>
     </source>

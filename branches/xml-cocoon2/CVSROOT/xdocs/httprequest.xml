@@ -49,28 +49,33 @@
           <map:components>
           
             <map:generators default="file">
-               <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator" label="content"/> 
+               <map:generator name="file" label="content" 
+                              src="org.apache.cocoon.generation.FileGenerator"/> 
             </map:generators> 
             
             <map:transformers default="xslt">
-               <map:transformer name="xslt" src="org.apache.cocoon.transformation.XalanTransformer">
+               <map:transformer name="xslt"
+                                src="org.apache.cocoon.transformation.XalanTransformer">
                   <compile-stylesheets map:value="true"/> 
                </map:transformer> 
             </map:transformers>
             
             <map:serializers default="html">
-               <map:serializer name="html" mime-type="text/html" src="org.apache.cocoon.serialization.HTMLSerializer"/> 
+               <map:serializer name="html" mime-type="text/html" 
+                               src="org.apache.cocoon.serialization.HTMLSerializer"/> 
             </map:serializers>
           
             <map:selectors default="browser">
-               <map:selector name="browser" factory="org.apache.cocoon.selection.BrowserSelectorFactory">
+               <map:selector name="browser" 
+                  factory="org.apache.cocoon.selection.BrowserSelectorFactory">
                   <browser name="explorer" useragent="MSIE"/>
                   <browser name="netscape" useragent="Mozilla"/> 
                </map:selector> 
             </map:selectors>
             
             <map:matchers default="uri">
-               <map:matcher name="uri" factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+               <map:matcher name="uri" 
+                  factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
             </map:matchers> 
           
           </map:components> 
@@ -109,7 +114,7 @@
   <component role="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector" 
              class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="java" 
-                        class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
+             class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
       <parameter name="compiler" 
                  value="org.apache.cocoon.components.language.programming.java.Javac"/>
       <parameter name="code-formatter" 
@@ -124,38 +129,39 @@
 
   <component role="org.apache.cocoon.components.language.markup.MarkupLanguageSelector" 
              class="org.apache.cocoon.CocoonComponentSelector">
-    <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
+    <component-instance name="xsp" 
+                 class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>
       <parameter name="uri" value="http://apache.org/xsp"/>
 
       <target-language name="java">
         <parameter name="core-logicsheet" 
-                   value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
+         value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
 
         <builtin-logicsheet>
           <parameter name="prefix" value="xsp-request"/>
           <parameter name="uri" value="http://apache.org/xsp/request"/>
           <parameter name="href" 
-                     value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+          value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
         </builtin-logicsheet>
 
         <builtin-logicsheet>
           <parameter name="prefix" value="xsp-response"/>
           <parameter name="uri" value="http://apache.org/xsp/response"/>
           <parameter name="href" 
-                     value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
+          value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
         </builtin-logicsheet>
       </target-language>
     </component-instance>
 
     <component-instance name="sitemap" 
-                        class="org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage">
+              class="org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage">
       <parameter name="prefix" value="map"/>
       <parameter name="uri" value="http://apache.org/cocoon/sitemap/1.0"/>
 
       <target-language name="java">
         <parameter name="core-logicsheet" 
-                   value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
+        value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
       </target-language>
     </component-instance>
   </component>
