@@ -152,7 +152,7 @@ public class DomHelper {
      */
     public static String getAttribute(Element element, String attributeName) throws Exception {
         String attrValue = element.getAttribute(attributeName);
-        if (attrValue == null)
+        if (attrValue.equals(""))
             throw new Exception("Missing attribute \"" + attributeName + "\" on element \"" + element.getTagName() + "\" at " + getLocation(element));
         return attrValue;
     }
