@@ -48,18 +48,22 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody;
-
-import org.apache.cocoon.woody.event.ActionEvent;
+package org.apache.cocoon.woody.event;
 
 /**
- * A FormHandler is (will be) responsible for handling all kinds of form-related events
- * and related stuff (custom validation, ...).
+ * A FormHandler can be registered with a {@link org.apache.cocoon.woody.formmodel.Form Form},
+ * and will then receive all events fired by widgets on the form.
+ *
+ * <p>It provides an alternative way of handling events, instead of specifying the eventhandlers
+ * in the form definition.
+ *
+ * <p>It is useful when you want to write your event-handling code in Java, have all events
+ * handled by one class (which could of course again delegate to other classes), and when
+ * you want the event handler to have access to objects it would not be able to get access
+ * to if they were part of the form definition.
  */
 public interface FormHandler {
 
-    /**
-     * Called when an ActionEvent occured.
-     */
-    public void handleActionEvent(FormContext context, ActionEvent actionEvent);
+    public void handleEvent(WidgetEvent widgetEvent);
+
 }
