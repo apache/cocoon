@@ -61,6 +61,7 @@ import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.cocoon.woody.transformation.WoodyPipelineConfig;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
@@ -79,25 +80,31 @@ import org.xml.sax.SAXException;
  */
 public class WoodyGenerator extends AbstractGenerator {
     
-    protected Form form;
+    protected WoodyPipelineConfig config;
+    private static final String FORM_GENERATED_EL = "form-generated";
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
-        WoodyPipelineConfig config = WoodyPipelineConfig.createConfig(objectModel, parameters);
-        form = config.findForm();     
+        this.config = WoodyPipelineConfig.createConfig(objectModel, parameters);            
     }
 
     public void recycle() {
         super.recycle();
-        form = null;
+        this.config = null;
     }
 
     public void generate() throws IOException, SAXException, ProcessingException {
         contentHandler.startDocument();
         contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
+        Attributes formAtts = this.config.getFormAttributes();
+        
+        contentHandler.startElement(Constants.WI_NS, FORM_GENERATED_EL, Constants.WI_PREFIX_COLON +FORM_GENERATED_EL, formAtts);
+        Form form = config.findForm(); 
         form.generateSaxFragment(contentHandler, Locale.US);
+        contentHandler.endElement(Constants.WI_NS, FORM_GENERATED_EL, Constants.WI_PREFIX_COLON +FORM_GENERATED_EL);
+        
         contentHandler.endPrefixMapping(Constants.WI_PREFIX);
         contentHandler.endDocument();
     }
