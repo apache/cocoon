@@ -15,7 +15,7 @@
   <project name="cocoon">
     <package>org.apache.cocoon</package>
 
-    <ant target="gump-core">
+    <ant target="package">
       <property name="version" value="@@DATE@@"/>
       <depend property="logkit.jar"    project="dist-avalon-logkit"/>
       <depend property="avalonapi.jar" project="avalon"/>
@@ -71,8 +71,7 @@
     <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org">
-      <regexp pattern="/BUILD FAILED/"   subject="Build Failure - Cocoon"/>
-      <!--regexp pattern="/Missing prereq/" subject="Prereq failure - Cocoon"/-->
+      <regexp pattern="/BUILD FAILED/" subject="Build Failure - Cocoon"/>
     </nag>
   </project>
 
