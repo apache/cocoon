@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.10 2000-03-26 13:18:58 stefano Exp $ --
+/*-- $Id: MemoryStore.java,v 1.11 2000-04-08 10:17:36 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,16 +66,37 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000-03-26 13:18:58 $
+ * @author <a href="mailto:michel.lehon@outwares.com">Michel Lehon</a>
+ * @version $Revision: 1.11 $ $Date: 2000-04-08 10:17:36 $
  */
 
-public class MemoryStore implements Store, Status {
-
+public class MemoryStore implements Store, Status, Configurable, Runnable {
     /**
      * Indicates how much memory should be left free in the JVM for
      * normal operation.
      */
-    private static final int MEMORY = 500000;
+    private int freememory;
+
+    /**
+     * Indicates how big the heap size can grow to before the cleanup thread kicks in.
+     * The default value is based on the default maximum heap size of 64Mb.
+     */
+    private int heapsize;
+
+    /**
+     * Indicates the time in millis to sleep between memory checks.
+     */ 
+    private long interval;
+ 
+    /**
+     * Indicates whether we use a cleanup thread or not.
+     */
+    private boolean useThread;
+
+    /**
+     * Indicates the daemon thread priority.
+     */
+    private int priority;
 
     private Runtime jvm;
     private Hashtable hashtable;
@@ -90,10 +111,71 @@ public class MemoryStore implements Store, Status {
         }
     }
 
-    public MemoryStore() {
+    /**
+     * Initialize the MemoryStore. 
+     * A few options can be used :
+     * <UL>
+     *  <LI>freememory = How much memory to keep free for normal jvm operation. (Default: 1 Mb)</LI>
+     *  <LI>heapsize = The size of the heap before cleanup starts. (Default: 60 Mb)</LI>
+     *  <LI>usethread = use a cleanup daemon thread. (Default: true)</LI>
+     *  <LI>threadpriority = priority to run cleanup thread (1-10). (Default: 10)</LI>
+     *  <LI>interval = time in millis to sleep between memory checks (Default: 100 millis)</LI> 
+     * </UL>
+     */
+    public void init(Configurations conf) throws InitializationException {
         this.jvm = Runtime.getRuntime();
         this.hashtable = new Hashtable(101, 0.75f); // tune later on
+
+        this.priority = Thread.MAX_PRIORITY;
+
+        try {
+            this.freememory = Integer.parseInt((String)conf.get("freememory","1000000"));
+            this.heapsize   = Integer.parseInt((String)conf.get("heapsize","60000000"));
+            this.interval   = Integer.parseInt((String)conf.get("interval","100"));
+            String pri = (String)conf.get("threadpriority");
+            if (pri != null) { 
+                this.priority = Integer.parseInt(pri);
+                if ((this.priority < 1) || (this.priority > 10)) {
+                    throw new InitializationException("Thread priority must be between 1 and 10");
+                }
+            }
+        } catch (NumberFormatException e) {
+            throw new InitializationException("freememory, heapsize, interval and threadpriority must be valid whole numbers");
+        }
+
+        this.useThread = conf.get("usethread","true").equals("true");
+
+        if (useThread) {
+            Thread checker = new Thread(this);
+            checker.setPriority(this.priority);
+            checker.setDaemon(true);
+            checker.start();
+        }
     }
+
+    /** 
+     * Background memory check. 
+     * Checks that memory is not running too low in the JVM because of the Store.
+     * It will try to keep overall memory usage below the requested levels.
+     */
+    public void run() {
+        while (true) {
+            if (this.jvm.totalMemory() > this.heapsize) {
+                this.jvm.runFinalization();
+                this.jvm.gc();
+                synchronized (this) {
+                    while ((this.hashtable.size() > 0) && (this.jvm.freeMemory() < this.freememory)) {
+                        this.free();
+                    }
+                }
+            }
+            
+            try {
+                Thread.currentThread().sleep(this.interval);
+            } catch (InterruptedException ignore) {}
+        }
+    }
+
 
     /**
      * Store the given object in a persistent state. It is up to the
@@ -101,7 +183,7 @@ public class MemoryStore implements Store, Status {
      * different JVM executions.
      */
     public void store(Object key, Object value) {
-    	throw new RuntimeException("Method MemoryStore.store() not implemented!");
+        throw new RuntimeException("Method MemoryStore.store() not implemented!");
     }
 
     /**
@@ -110,7 +192,7 @@ public class MemoryStore implements Store, Status {
      * virtual machine is restarted or some error happens.
      */
     public synchronized void hold(Object key, Object object) {
-        if (jvm.freeMemory() < MEMORY) this.free();
+        if ((this.jvm.totalMemory() > this.heapsize) && (this.jvm.freeMemory() < this.freememory)) this.free();
         this.hashtable.put(key, new Container(object));
     }
 
@@ -154,11 +236,11 @@ public class MemoryStore implements Store, Status {
     /**
      * Frees some of the fast memory used by this store.
      */
-    public void free() {
+    public synchronized void free() {
         Object worst = this.getWorst();
         if (worst != null) this.hashtable.remove(worst);
-        jvm.runFinalization();
-        jvm.gc();
+        this.jvm.runFinalization();
+        this.jvm.gc();
     }
 
     /**
@@ -213,12 +295,19 @@ public class MemoryStore implements Store, Status {
     /**
      * Returns the signature of this store implementation
      */
-    public String getStatus() {
+    public synchronized String getStatus() {
         // give back info on the total memory used.
         StringBuffer buffer = new StringBuffer();
         buffer.append("Memory Object Storage System:<br>");
-        buffer.append("Minimum required free memory:  " + MEMORY + "<br>");
-        buffer.append("Current free memory: " + this.jvm.freeMemory() + "<br><ul>");
+        buffer.append("Using daemon thread: "+ this.useThread+ "<br>");
+        if (useThread) {
+            buffer.append("Daemon thread priority: "+ this.priority +"<br>");
+            buffer.append("Daemon thread check interval: "+ this.interval +"<br>");
+        }
+        buffer.append("Minimum required free memory: " + this.freememory + "<br>");
+        buffer.append("Minimum heap size: " + this.heapsize + "<br>");
+        buffer.append("Current free memory: " + this.jvm.freeMemory() + "<br>");
+        buffer.append("Current heap size: " + this.jvm.totalMemory() + "<br><ul>");
         Enumeration e = list();
         while (e.hasMoreElements()) {
             buffer.append("<li>");
