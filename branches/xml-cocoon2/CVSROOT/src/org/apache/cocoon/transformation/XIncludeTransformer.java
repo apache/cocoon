@@ -28,6 +28,8 @@ import org.w3c.dom.Document;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
@@ -35,10 +37,6 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.xpath.XPathAPI;
-
-import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
-
 import javax.xml.transform.TransformerException;
 
 /**
@@ -49,9 +47,9 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-12 13:30:46 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-12 14:17:45 $ $Author: bloritsch $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composer, Loggable {
+public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
     protected URLFactory urlFactory;
 
@@ -88,11 +86,11 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             throws ProcessingException, SAXException, IOException {}
     /*
         try {
-            log.debug("SOURCE: "+source);
+            getLogger().debug("SOURCE: "+source);
             base_xmlbase_uri = urlFactory.getURL(source);
-            log.debug("SOURCE URI: "+base_xmlbase_uri.toString());
+            getLogger().debug("SOURCE URI: "+base_xmlbase_uri.toString());
         } catch (MalformedURLException e) {
-            log.debug("XincludeTransformer", e);
+            getLogger().debug("XincludeTransformer", e);
             throw new ProcessingException(e.getMessage());
         }
     }
@@ -103,7 +101,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         try {
             this.urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
         } catch (Exception e) {
-            log.error("cannot obtain URLFactory", e);
+            getLogger().error("cannot obtain URLFactory", e);
         }
     }
 
@@ -113,7 +111,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             try {
                 startXMLBaseAttribute(uri,name,value);
             } catch (MalformedURLException e) {
-                log.debug("XincludeTransformer", e);
+                getLogger().debug("XincludeTransformer", e);
                 throw new SAXException(e);
             }
         }
@@ -123,10 +121,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             try {
                 processXIncludeElement(href, parse);
             } catch (MalformedURLException e) {
-                log.debug("XincludeTransformer", e);
+                getLogger().debug("XincludeTransformer", e);
                 throw new SAXException(e);
             } catch (IOException e) {
-                log.debug("XincludeTransformer", e);
+                getLogger().debug("XincludeTransformer", e);
                 throw new SAXException(e);
             }
             return;
@@ -150,7 +148,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             if (current_xmlbase_uri == null) {
                 current_xmlbase_uri = base_xmlbase_uri;
             }
-        } catch (MalformedURLException e) {log.debug("XincludeTransformer", e);}
+        } catch (MalformedURLException e) {getLogger().debug("XincludeTransformer", e);}
         super.setDocumentLocator(locator);
     }
 
@@ -178,7 +176,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
     }
 
     protected void processXIncludeElement(String href, String parse) throws SAXException,MalformedURLException,IOException {
-        log.debug("Processing XInclude element: href="+href+", parse="+parse);
+        getLogger().debug("Processing XInclude element: href="+href+", parse="+parse);
         URL url;
         String suffix;
         int index = href.indexOf('#');
@@ -189,13 +187,13 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             url = urlFactory.getURL(current_xmlbase_uri,href.substring(0,index));
             suffix = href.substring(index+1);
         }
-        log.debug("URL: "+url+"\nSuffix: "+suffix);
+        getLogger().debug("URL: "+url+"\nSuffix: "+suffix);
         Object object = url.getContent();
-        log.debug("Object: "+object);
+        getLogger().debug("Object: "+object);
         if (parse.equals("text")) {
-            log.debug("Parse type is text");
+            getLogger().debug("Parse type is text");
             if (object instanceof Loggable) {
-                ((Loggable)object).setLogger(this.log);
+                ((Loggable)object).setLogger(getLogger());
             }
             if (object instanceof Reader) {
                 Reader reader = (Reader)object;
@@ -220,18 +218,18 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 }
             }
         } else if (parse.equals("xml")) {
-            log.debug("Parse type is XML");
+            getLogger().debug("Parse type is XML");
             Parser parser = null;
             try {
-                log.debug("Looking up " + Roles.PARSER);
+                getLogger().debug("Looking up " + Roles.PARSER);
                 parser = (Parser)manager.lookup(Roles.PARSER);
             } catch (Exception e) {
-                log.error("Could not find component", e);
+                getLogger().error("Could not find component", e);
                 return;
             }
             InputSource input;
             if (object instanceof Loggable) {
-                ((Loggable)object).setLogger(this.log);
+                ((Loggable)object).setLogger(getLogger());
             }
             if (object instanceof Reader) {
                 input = new InputSource((Reader)object);
@@ -242,7 +240,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             }
             if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
                 String xpath = suffix.substring(9,suffix.length()-1);
-                log.debug("XPath is "+xpath);
+                getLogger().debug("XPath is "+xpath);
                 DOMBuilder builder = new DOMBuilder(parser);
                 parser.setContentHandler(builder);
                 parser.setLexicalHandler(builder);
@@ -256,11 +254,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                         streamer.stream(list.item(i));
                     }
                 } catch (TransformerException e){
-                    log.error("TransformerException", e);
+                    getLogger().error("TransformerException", e);
                     return;
                 }
             } else {
                 XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);
+		xinclude_handler.setLogger(getLogger());
                 parser.setContentHandler(xinclude_handler);
                 parser.setLexicalHandler(xinclude_handler);
                 parser.parse(input);
@@ -268,7 +267,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         }
     }
 
-    class XIncludeContentHandler implements ContentHandler, LexicalHandler {
+    class XIncludeContentHandler extends AbstractLoggable implements ContentHandler, LexicalHandler {
 
         private ContentHandler content_handler;
         LexicalHandler lexical_handler;
@@ -283,12 +282,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         }
 
         public void startDocument() {
-            log.debug("Internal start document received");
+            getLogger().debug("Internal start document received");
             /** We don't pass start document on to the "real" handler **/
         }
 
         public void endDocument() {
-            log.debug("Internal end document received");
+            getLogger().debug("Internal end document received");
             /** We don't pass end document on to the "real" handler **/
         }
 
@@ -304,7 +303,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
         public void startElement(String namespace, String name, String raw,
             Attributes attr) throws SAXException {
-            log.debug("Internal element received: "+name);
+            getLogger().debug("Internal element received: "+name);
             content_handler.startElement(namespace,name,raw,attr);
         }
 

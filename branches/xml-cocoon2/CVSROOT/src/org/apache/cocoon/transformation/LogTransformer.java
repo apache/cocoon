@@ -45,7 +45,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-08 20:40:40 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-12 14:17:44 $
  *
  */
 public class LogTransformer extends AbstractTransformer {
@@ -84,7 +84,7 @@ public class LogTransformer extends AbstractTransformer {
                 else
                     logfile = new FileWriter(java.io.FileDescriptor.out);
             } catch (IOException e) {
-                log.debug("LogTransformer", e);
+                getLogger().debug("LogTransformer", e);
                 isValid = false;
                 throw e;
             }
@@ -303,7 +303,7 @@ public class LogTransformer extends AbstractTransformer {
                     logfile.write( logEntry.toString(), 0, logEntry.length());
                     logfile.flush();
                 }
-                catch(IOException ioe) { log.debug("LogTransformer.log", ioe); }
+                catch(IOException ioe) { getLogger().debug("LogTransformer.log", ioe); }
             }
         }
     }
@@ -314,6 +314,6 @@ public class LogTransformer extends AbstractTransformer {
     public void destroy() {
         try {
             logfile.close();
-        } catch (Exception e) {log.debug("LogTransformer.destroy()", e);}
+        } catch (Exception e) {getLogger().debug("LogTransformer.destroy()", e);}
     }
 }

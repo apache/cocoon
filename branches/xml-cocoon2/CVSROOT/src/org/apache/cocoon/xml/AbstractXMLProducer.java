@@ -10,8 +10,7 @@ package org.apache.cocoon.xml;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Recyclable;
 
 /**
@@ -20,11 +19,9 @@ import org.apache.avalon.Recyclable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:47 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-12 14:17:47 $
  */
-public abstract class AbstractXMLProducer implements XMLProducer, Loggable, Recyclable {
-
-    protected Logger log;
+public abstract class AbstractXMLProducer extends AbstractLoggable implements XMLProducer, Recyclable {
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     protected ContentHandler contentHandler;
@@ -41,12 +38,6 @@ public abstract class AbstractXMLProducer implements XMLProducer, Loggable, Recy
     public void setConsumer(XMLConsumer consumer) {
         this.contentHandler = consumer;
         this.lexicalHandler = consumer;
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     /**

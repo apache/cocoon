@@ -61,7 +61,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-12 13:30:44 $ */
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-12 14:17:32 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
@@ -141,7 +141,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
             try {
                 url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(input.getSystemId());
             } catch (Exception e) {
-                log.error("cannot obtain the URLFactory");
+                getLogger().error("cannot obtain the URLFactory");
                 throw new SAXException ("cannot obtain the URLFactory", e);
             }
             path = new File(url.getFile());
@@ -157,7 +157,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
         } catch (IOException ioe) {
-            log.warn("Could not get resource", ioe);
+            getLogger().warn("Could not get resource", ioe);
             throw new ResourceNotFoundException("Could not get directory", ioe);
         }
 

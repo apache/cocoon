@@ -13,7 +13,7 @@ import org.apache.log.LogKit;
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.5 $ $Date: 2000-12-08 20:39:37 $
+ * @version $Revision: 1.1.2.6 $ $Date: 2001-02-12 14:17:35 $
  */
 public class ImageDirectoryGenerator extends DirectoryGenerator implements Poolable {
 
@@ -34,9 +34,9 @@ public class ImageDirectoryGenerator extends DirectoryGenerator implements Poola
             int dim[] = getSize(path);
             attributes.addAttribute("",IMAGE_WIDTH_ATTR_NAME,IMAGE_WIDTH_ATTR_NAME,"CDATA",""+dim[0]);
             attributes.addAttribute("",IMAGE_HEIGHT_ATTR_NAME,IMAGE_HEIGHT_ATTR_NAME,"CDATA",""+dim[1]);
-        } catch (RuntimeException e) {log.debug("ImageDirectoryGenerator.setNodeAttributes", e);}
+        } catch (RuntimeException e) {getLogger().debug("ImageDirectoryGenerator.setNodeAttributes", e);}
         catch (Exception e) {
-            log.error("ImageDirectoryGenerator.setNodeAttributes", e);
+            getLogger().error("ImageDirectoryGenerator.setNodeAttributes", e);
             throw new SAXException(e);
         }
     }

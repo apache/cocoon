@@ -20,7 +20,7 @@ import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-08 20:40:10 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-12 14:17:39 $
  */
 
 public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
@@ -36,7 +36,7 @@ public class HTMLSerializer extends AbstractTextSerializer implements Poolable {
             super.setOutputStream(out);
             this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
         } catch (Exception e) {
-            log.error("HTMLSerializer.setOutputStream()", e);
+            getLogger().error("HTMLSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());
         }
     }

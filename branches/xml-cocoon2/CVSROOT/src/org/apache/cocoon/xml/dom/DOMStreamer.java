@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-23 17:59:41 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-12 14:17:49 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 
@@ -86,7 +86,7 @@ public class DOMStreamer extends AbstractXMLProducer {
         try {
             processNode((Node)object);
         } catch (ClassCastException e) {
-            log.error("DOMStreamer", e);
+            getLogger().error("DOMStreamer", e);
             throw new SAXException(e);
         }
     }
@@ -136,7 +136,7 @@ public class DOMStreamer extends AbstractXMLProducer {
                                            " class "+n.getClass().getName());
             }
         } catch (ClassCastException e) {
-            log.error("Error casting node to appropriate type", e);
+            getLogger().error("Error casting node to appropriate type", e);
             throw new SAXException("Error casting node to appropriate type");
         }
     }

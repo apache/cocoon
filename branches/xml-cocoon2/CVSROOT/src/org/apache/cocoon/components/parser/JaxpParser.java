@@ -29,7 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
  * If only we can get rid of the need for the Document...
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-08 11:59:37 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-12 14:17:30 $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, ThreadSafe {
@@ -52,7 +52,7 @@ implements Parser, ErrorHandler, ThreadSafe {
         try {
             parser = this.factory.newSAXParser();
         } catch (Exception e) {
-            log.error("Cannot produce a valid parser", e);
+            getLogger().error("Cannot produce a valid parser", e);
             throw new SAXException("Could not get valid parser" + e.getMessage());
         }
 
@@ -76,7 +76,7 @@ implements Parser, ErrorHandler, ThreadSafe {
         try {
             builder = this.docfactory.newDocumentBuilder();
         } catch (ParserConfigurationException pce) {
-            log.error("Could not create DocumentBuilder", pce);
+            getLogger().error("Could not create DocumentBuilder", pce);
             return null;
         }
         return builder.newDocument();
@@ -99,7 +99,7 @@ implements Parser, ErrorHandler, ThreadSafe {
         try {
             builder = this.docfactory.newDocumentBuilder();
         } catch (ParserConfigurationException pce) {
-            log.error("Could not build DocumentBuilder", pce);
+            getLogger().error("Could not build DocumentBuilder", pce);
             return null;
         }
 

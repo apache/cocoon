@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-03 13:49:00 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-12 14:17:39 $
  *
  */
 public class FOPSerializer extends AbstractSerializer implements MessageListener, Poolable {
@@ -70,10 +70,10 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
             driver.format();
             driver.render();
         } catch (IOException e) {
-            log.error("FOPSerializer.endDocument()", e);
+            getLogger().error("FOPSerializer.endDocument()", e);
             throw new SAXException (e);
         } catch (FOPException e) {
-            log.error("FOPSerializer.endDocument()", e);
+            getLogger().error("FOPSerializer.endDocument()", e);
             throw new SAXException (e);
         } finally {
             driver = null;

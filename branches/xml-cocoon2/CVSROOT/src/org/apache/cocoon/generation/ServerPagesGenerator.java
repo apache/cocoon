@@ -39,7 +39,7 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-12 13:30:44 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-12 14:17:35 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -60,12 +60,12 @@ public class ServerPagesGenerator
     super.compose(manager);
 
     if (programGenerator == null) {
-      log.debug("Looking up " + Roles.PROGRAM_GENERATOR);
+      getLogger().debug("Looking up " + Roles.PROGRAM_GENERATOR);
       try {
           programGenerator = (ProgramGenerator)
               this.manager.lookup(Roles.PROGRAM_GENERATOR);
       } catch (Exception e) {
-          log.error("Could not find ProgramGenerator", e);
+          getLogger().error("Could not find ProgramGenerator", e);
       }
     }
   }
@@ -111,7 +111,7 @@ public class ServerPagesGenerator
     try {
         url = ((URLFactory)manager.lookup(Roles.URL_FACTORY)).getURL(systemId);
     } catch (Exception e) {
-        log.error ("cannot obtain the URLFactory");
+        getLogger().error ("cannot obtain the URLFactory");
         throw new SAXException("cannot obtain the URLFactory", e);
     }
     if (!url.getProtocol().equals("file")) {
@@ -137,12 +137,12 @@ public class ServerPagesGenerator
       generator = (Generator)
         programGenerator.load(file, markupLanguage, programmingLanguage, resolver);
     } catch (Exception e) {
-      log.warn("ServerPagesGenerator.generate()", e);
+      getLogger().warn("ServerPagesGenerator.generate()", e);
       throw new ResourceNotFoundException(e.getMessage(), e);
     }
 
     if (generator instanceof Loggable) {
-        ((Loggable)generator).setLogger(this.log);
+        ((Loggable)generator).setLogger(getLogger());
     }
 
     // Delegate XML production to loaded generator
@@ -150,7 +150,7 @@ public class ServerPagesGenerator
         try {
             ((Composer) generator).compose(this.manager);
         } catch (Exception e) {
-            log.error("Could not compose generator", e);
+            getLogger().error("Could not compose generator", e);
             throw new ProcessingException("Could not compose generator");
         }
     }

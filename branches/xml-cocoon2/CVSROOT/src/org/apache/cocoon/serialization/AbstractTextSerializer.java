@@ -20,7 +20,7 @@ import org.apache.avalon.ConfigurationException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-10 13:42:21 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-12 14:17:39 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 
@@ -52,7 +52,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 format.setEncoding(encoding.getValue());
             } catch (ConfigurationException ce) {
-                log.debug("No value for encoding--but expected", ce);
+                getLogger().debug("No value for encoding--but expected", ce);
             }
         }
 
@@ -60,7 +60,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 doctypePublic = dtPublic.getValue();
             } catch (ConfigurationException ce) {
-                log.debug("No Public Doctype--but expected", ce);
+                getLogger().debug("No Public Doctype--but expected", ce);
             }
         }
 
@@ -68,7 +68,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 format.setDoctype(doctypePublic, dtSystem.getValue());
             } catch (ConfigurationException ce) {
-                log.debug("No System Doctype--but expected", ce);
+                getLogger().debug("No System Doctype--but expected", ce);
             }
         }
 
@@ -77,7 +77,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 format.setIndent(indent.getValueAsInt());
             } catch (ConfigurationException ce) {
-                log.debug("No indent value or invalid value--but expected", ce);
+                getLogger().debug("No indent value or invalid value--but expected", ce);
             }
         }
 
@@ -85,7 +85,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 format.setPreserveSpace(preserveSpace.getValueAsBoolean());
             } catch (ConfigurationException ce) {
-                log.debug("No preserve-space value--but expected", ce);
+                getLogger().debug("No preserve-space value--but expected", ce);
             }
         }
 
@@ -93,7 +93,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 format.setOmitXMLDeclaration(!declaration.getValueAsBoolean());
             } catch (ConfigurationException ce) {
-                log.debug("No declaration value or invalid value--but expected", ce);
+                getLogger().debug("No declaration value or invalid value--but expected", ce);
             }
         }
 
@@ -102,7 +102,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
             try {
                 format.setLineWidth(lineWidth.getValueAsInt());
             } catch (ConfigurationException ce) {
-                log.debug("No line-width value or invalid value--but expected", ce);
+                getLogger().debug("No line-width value or invalid value--but expected", ce);
             }
         }
     }

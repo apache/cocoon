@@ -28,7 +28,7 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-11 19:19:40 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-12 14:17:33 $
  */
 public class FragmentExtractorGenerator extends AbstractGenerator implements Poolable {
     
@@ -58,7 +58,7 @@ public class FragmentExtractorGenerator extends AbstractGenerator implements Poo
     
     public void generate() throws SAXException {
         // Obtain the fragmentID  (which is simply the filename portion of the source)
-        log.debug("FragmentExtractorGenerator retrieving document " + source + ".");
+        getLogger().debug("FragmentExtractorGenerator retrieving document " + source + ".");
         Document doc = (Document) fragmentStore.get(source);
         DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
         

@@ -36,8 +36,6 @@ import java.util.Hashtable;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-
-
 /**
  * I18nTransformer. Cocoon2 port of Infozone groups I18nProcessor.
  * <p>
@@ -150,7 +148,7 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
             tr = ((URLFactory)manager.lookup(Roles.URL_FACTORY))
                 .getURL(resolver.resolveEntity(null, translations_file).getSystemId());
         } catch (Exception e) {
-            log.error("cannot obtain the URLFactory", e);
+            getLogger().error("cannot obtain the URLFactory", e);
             throw new SAXException("cannot obtain the URLFactory", e);
         }
         initialiseDictionary(tr);
@@ -309,12 +307,12 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
             parser = (Parser)(manager.lookup(Roles.PARSER));
 
         } catch (Exception e) {
-            log.error("Could not find component", e);
+            getLogger().error("Could not find component", e);
             return;
         }
         InputSource input;
         if (object instanceof Loggable) {
-            ((Loggable)object).setLogger(this.log);
+            ((Loggable)object).setLogger(getLogger());
         }
         if (object instanceof Reader) {
             input = new InputSource((Reader)(object));

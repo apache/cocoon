@@ -57,7 +57,7 @@ import org.apache.avalon.Parameters;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-11 19:13:19 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-12 14:17:33 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -77,10 +77,10 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
     public void compose(ComponentManager manager) {
         super.compose(manager);
         try {
-            log.debug("Looking up " + Roles.STORE);
+            getLogger().debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
         } catch (Exception e) {
-            log.error("Could not find component", e);
+            getLogger().error("Could not find component", e);
         }
     }
 
@@ -145,7 +145,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
                     XMLMulticaster multicaster = new XMLMulticaster(compiler, null,
                               this.contentHandler, this.lexicalHandler);
 
-                    log.debug("Looking up " + Roles.PARSER);
+                    getLogger().debug("Looking up " + Roles.PARSER);
                     Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
 
                     parser.setContentHandler(multicaster);
@@ -158,7 +158,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
                     cxmlAndTime[1] = new Long(System.currentTimeMillis());
                     store.hold(systemID, cxmlAndTime);
                 } else {
-                    log.debug("Looking up " + Roles.PARSER);
+                    getLogger().debug("Looking up " + Roles.PARSER);
                     Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
 
                     parser.setContentHandler(this.contentHandler);
@@ -174,13 +174,13 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
                 interpreter.parse(bais);
             }
         } catch (IOException e) {
-            log.error("FileGenerator.generate()", e);
+            getLogger().error("FileGenerator.generate()", e);
             throw new ResourceNotFoundException("FileGenerator could not find resource", e);
         } catch (SAXException e) {
-            log.error("FileGenerator.generate()", e);
+            getLogger().error("FileGenerator.generate()", e);
             throw(e);
         } catch (Exception e){
-            log.error("Could not get parser", e);
+            getLogger().error("Could not get parser", e);
             throw new ProcessingException(e.getMessage());
         }
     }
