@@ -82,9 +82,9 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  *       See Stefano's proposal?</li>
  * </ul>
  * 
- * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
+ * @author <a href="mailto:reinhard@apache.org">Reinhard Poetz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.11 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Serviceable {
     
