@@ -2,6 +2,7 @@
 
 <project name="Cocoon" default="package" basedir=".">
 
+	<target name="init">
   <property name="project" value="Cocoon"/>
   <property name="name" value="cocoon"/>
   <property name="vers" value="2.0"/>
@@ -18,8 +19,9 @@
   
   <property name="copyright.name" value="Apache Software Foundation"/>
   <property name="copyright.year" value="1998-2000"/>
+  </target>
   
-  <target name="prepare">
+  <target name="prepare" depends="init">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dst}"/>
@@ -32,7 +34,7 @@
 
   <target name="package" depends="compile">
     <mkdir dir="${bin.dir}"/>
-    <jar jarfile="${bin.dir}/${name}-${vers}-${ptch}.jar" basedir="${build.dst}" items="org"/>
+    <jar jarfile="${bin.dir}/${name}-${vers}-${ptch}.jar" basedir="${build.dst}" includes="org/**"/>
   </target>
 
   <target name="javadoc" depends="prepare">
