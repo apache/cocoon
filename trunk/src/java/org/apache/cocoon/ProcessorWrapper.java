@@ -54,7 +54,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
@@ -63,7 +62,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * It is necessary to avoid infinite dispose loops
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.10 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.11 2004/02/06 11:42:46 cziegeler Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Disposable, ThreadSafe {
@@ -92,16 +91,9 @@ implements Processor, Disposable, ThreadSafe {
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
-    public ProcessingPipeline buildPipeline(Environment environment)
+    public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
         return this.processor.buildPipeline(environment);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
-     */
-    public void releasePipeline(Environment environment, ProcessingPipeline pipeline) {
-        this.processor.releasePipeline(environment, pipeline);
     }
 
     /* (non-Javadoc)

@@ -69,7 +69,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -86,7 +85,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.35 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.36 2004/02/06 11:42:46 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=CompilingProcessor
@@ -410,12 +409,10 @@ public class Cocoon
         }
     }
 
-    /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
-    public ProcessingPipeline buildPipeline(Environment environment)
+    public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
         if (disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
@@ -523,21 +520,5 @@ public class Cocoon
         return this.environmentHelper.getContext();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
-     */
-    public void releasePipeline(Environment environment, ProcessingPipeline pipeline) {
-        Processor processor = null;
-        try {
-            processor = (Processor) this.serviceManager.lookup( Processor.ROLE );
-            processor.releasePipeline(environment, pipeline);
-        } catch (ServiceException ignore) {
-            // In fact this can never happen, therefore we ignore it
-            this.getLogger().error("Unable to lookup processor.", ignore);
-        } finally {
-            this.serviceManager.release(processor);
-        }
-    }
-    
 }
 

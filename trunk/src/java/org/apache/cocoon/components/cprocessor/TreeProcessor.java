@@ -79,7 +79,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -452,12 +451,13 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         return processor.process(newEnv, context);
     }
     
-    public ProcessingPipeline buildPipeline(Environment environment) throws Exception {
+    public InternalPipelineDescription buildPipeline(Environment environment) throws Exception {
         InvokeContext context = new InvokeContext(true);
         context.enableLogging(getLogger());
+        context.setLastProcessor(this);
         try {
             if (process(environment, context)) {
-                return context.getProcessingPipeline();
+                return context.getInternalPipelineDescription();
             } else {
                 return null;
             }
@@ -540,13 +540,6 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
      */
     public EnvironmentHelper getEnvironmentHelper() {
         return m_environmentHelper;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
-     */
-    public void releasePipeline(Environment environment, ProcessingPipeline pipeline) {
-        pipeline.releaseInternalPipeline();
     }
 
     /**

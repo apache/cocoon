@@ -61,13 +61,13 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.TreeProcessor;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -75,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.6 2004/01/28 10:17:12 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.7 2004/02/06 11:42:46 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -141,9 +141,9 @@ implements ProcessingNode, Contextualizable, Disposable {
 
             if (context.isBuildingPipelineOnly()) {
                 // Propagate pipelines
-                ProcessingPipeline pp = processor.buildPipeline(env);
+                Processor.InternalPipelineDescription pp = processor.buildPipeline(env);
                 if (pp != null) {
-                    context.setProcessingPipeline(pp);
+                    context.setInternalPipelineDescription(pp);
                     return true;
                 } else {
                     return false;

@@ -52,6 +52,7 @@ package org.apache.cocoon;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -61,12 +62,32 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.14 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.15 2004/02/06 11:42:46 cziegeler Exp $
  */
 public interface Processor {
 
     String ROLE = Processor.class.getName();
 
+    public class InternalPipelineDescription {
+        
+        public InternalPipelineDescription(ProcessingPipeline pp, ServiceManager s) {
+            this.processingPipeline = pp;
+            this.pipelineManager = s;
+        }
+        public ProcessingPipeline processingPipeline;
+        public ServiceManager pipelineManager;
+        public Processor lastProcessor;
+        
+        public void release() {
+            if (this.pipelineManager != null) {
+                this.pipelineManager.release(this.processingPipeline);
+                this.pipelineManager = null;
+            }
+            this.lastProcessor = null;
+            this.processingPipeline = null;
+        }
+    }
+    
     /**
      * Process the given <code>Environment</code> producing the output.
      * @return If the processing is successful <code>true</code> is returned.
@@ -84,18 +105,12 @@ public interface Processor {
      * Process the given <code>Environment</code> to assemble
      * a <code>ProcessingPipeline</code>.
      * Don't forget to release the pipeline using
-     * {@link releasePipeline(Environment, ProcessingPipeline)}.
+     * {@link releasePipeline(Environment, InternalPipelineDescription)}.
      * @since 2.1
      */
-    ProcessingPipeline buildPipeline(Environment environment)
+    InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception;
 
-    /**
-     * Release the pipeline delivered by {@link buildPipeline(Environment)}
-     * @since 2.2
-     */
-    void releasePipeline(Environment environment, ProcessingPipeline pipeline);
-    
     /**
      * Get the sitemap component configurations
      * @since 2.1

@@ -63,7 +63,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -87,7 +86,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.25 2004/01/31 16:56:24 unico Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.26 2004/02/06 11:42:46 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -108,14 +107,11 @@ implements Source, XMLizable {
     /** The processor */
     private Processor processor;
 
-    /** The pipeline processor */
-    private Processor pipelineProcessor;
+    /** The pipeline description */
+    private Processor.InternalPipelineDescription pipelineDescription;
 
     /** The environment */
     private MutableEnvironmentFacade environment;
-
-    /** The <code>ProcessingPipeline</code> */
-    private ProcessingPipeline processingPipeline;
 
     /** The redirect <code>Source</code> */
     private Source redirectSource;
@@ -230,12 +226,12 @@ implements Source, XMLizable {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
-            EnvironmentHelper.enterProcessor(this.pipelineProcessor, 
+            EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor, 
                                             this.manager,
                                             this.environment);
             try {
                 
-                this.processingPipeline.process(this.environment);
+                this.pipelineDescription.processingPipeline.process(this.environment);
             } finally {
                 EnvironmentHelper.leaveProcessor();
             }
@@ -308,20 +304,19 @@ implements Source, XMLizable {
         this.systemIdForCaching = this.systemId;
         try {
             this.processKey = EnvironmentHelper.startProcessing(this.environment);
-            this.processingPipeline = this.processor.buildPipeline(this.environment);
-            this.pipelineProcessor = EnvironmentHelper.getLastProcessor(this.environment);
-            this.pipelineProcessor.getEnvironmentHelper().setContext(this.environment);
+            this.pipelineDescription = this.processor.buildPipeline(this.environment);
+            this.pipelineDescription.lastProcessor.getEnvironmentHelper().setContext(this.environment);
 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {
 
-                EnvironmentHelper.enterProcessor(this.pipelineProcessor,
+                EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
                                                  this.manager,
                                                  this.environment);
                 try {
-                    this.processingPipeline.prepareInternal(this.environment);
-                    this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
-                    final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
+                    this.pipelineDescription.processingPipeline.prepareInternal(this.environment);
+                    this.sourceValidity = this.pipelineDescription.processingPipeline.getValidityForEventPipeline();
+                    final String eventPipelineKey = this.pipelineDescription.processingPipeline.getKeyForEventPipeline();
                     if (eventPipelineKey != null) {
                         StringBuffer buffer = new StringBuffer(this.systemId);
                         if (this.systemId.indexOf('?') == -1) {
@@ -385,11 +380,11 @@ implements Source, XMLizable {
 	            }
                 // We have to add an environment changer
                 // for clean environment stack handling.
-                EnvironmentHelper.enterProcessor(this.pipelineProcessor,
+                EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
                                                  this.manager,
                                                  this.environment);
                 try {
-                    this.processingPipeline.process(this.environment,
+                    this.pipelineDescription.processingPipeline.process(this.environment,
                                  EnvironmentHelper.createEnvironmentAwareConsumer(consumer)); 
                 } finally {
                     EnvironmentHelper.leaveProcessor();
@@ -410,9 +405,9 @@ implements Source, XMLizable {
      * Reset everything
      */
     private void reset() {
-        if (this.processingPipeline != null) {
-            this.processor.releasePipeline(this.environment, this.processingPipeline);
-            this.processingPipeline = null;
+        if (this.pipelineDescription != null) {
+            this.pipelineDescription.release();
+            this.pipelineDescription = null;
         }
         if (this.processKey != null) {
             EnvironmentHelper.endProcessing(this.environment, this.processKey);
@@ -427,7 +422,6 @@ implements Source, XMLizable {
         this.redirectValidity = null;
         this.exception = null;
         this.needsRefresh = true;
-        this.pipelineProcessor = null;
     }
 
     /**

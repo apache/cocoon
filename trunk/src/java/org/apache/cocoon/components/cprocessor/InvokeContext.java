@@ -61,6 +61,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 
@@ -77,7 +78,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.6 2004/02/05 13:58:55 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.7 2004/02/06 11:42:46 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 
@@ -105,6 +106,12 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
     /** The ProcessingPipeline used */
     protected ProcessingPipeline processingPipeline;
 
+    /** The internal pipeline description */
+    protected Processor.InternalPipelineDescription internalPipelineDescription;
+    
+    /** The last processor */
+    protected Processor lastProcessor;
+    
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
      * the current request is external.
@@ -166,9 +173,6 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
             this.pipelinesManager = this.currentManager;
 
             this.processingPipeline = (ProcessingPipeline)this.pipelinesManager.lookup(ProcessingPipeline.ROLE);
-            if (this.isBuildingPipelineOnly) {
-                this.processingPipeline.setInternalServiceManager(this.pipelinesManager);
-            }
             this.processingPipeline.reservice( this.pipelinesManager );
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
@@ -181,8 +185,29 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
     /**
      * Set the processing pipeline for sub-sitemaps
      */
-    public void setProcessingPipeline(ProcessingPipeline pipeline) {
-        this.processingPipeline = pipeline;
+    public void setInternalPipelineDescription(Processor.InternalPipelineDescription desc) {
+        this.processingPipeline = desc.processingPipeline;
+        this.pipelinesManager = desc.pipelineManager;
+        this.lastProcessor = desc.lastProcessor;
+    }
+
+    /**
+     * Get the pipeline description
+     */
+    public Processor.InternalPipelineDescription getInternalPipelineDescription() {
+        if ( this.internalPipelineDescription == null ) {
+            this.internalPipelineDescription = new Processor.InternalPipelineDescription(
+                    this.processingPipeline, this.pipelinesManager);
+            this.internalPipelineDescription.lastProcessor = this.lastProcessor;
+        }
+        return this.internalPipelineDescription;
+    }
+    
+    /** 
+     * Set the last processor
+     */
+    public void setLastProcessor(Processor p) {  
+        this.lastProcessor = p;
     }
 
     /**
@@ -289,7 +314,7 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
      */
     public void dispose() {
         // Release pipelines, if any
-        if (!this.isBuildingPipelineOnly && this.pipelinesManager != null) {
+        if (this.internalPipelineDescription == null && this.pipelinesManager != null) {
             if (this.processingPipeline != null) {
                 this.pipelinesManager.release( this.processingPipeline );
                 this.processingPipeline = null;

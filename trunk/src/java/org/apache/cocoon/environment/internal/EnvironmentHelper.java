@@ -81,7 +81,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.5 2004/01/28 10:17:14 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.6 2004/02/06 11:42:46 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -96,11 +96,6 @@ implements SourceResolver, Serviceable, Disposable {
      * in the object model */
     static protected final String PROCESS_KEY = EnvironmentHelper.class.getName();
 
-    /** The key used to store the last processor information
-     * in the environment context
-     */
-    static protected final String LAST_PROCESSOR_KEY = "global:" + PROCESS_KEY + "/processor";
-    
     /** The environment information */
     static protected final InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
     
@@ -411,7 +406,6 @@ implements SourceResolver, Serviceable, Disposable {
         stack.setOffset(stack.size()-1);
         
         EnvironmentContext ctx = (EnvironmentContext)env.getObjectModel().get(PROCESS_KEY);
-        ctx.addAttribute(LAST_PROCESSOR_KEY, processor);
         
         ForwardRedirector redirector = new ForwardRedirector(env);
         redirector.enableLogging(processor.getEnvironmentHelper().getLogger());
@@ -532,14 +526,6 @@ implements SourceResolver, Serviceable, Disposable {
             return info.manager;
         }
         return null;
-    }
-
-    /**
-     * Return the processor that is actually processing the request
-     */
-    public static Processor getLastProcessor(Environment env) {
-        EnvironmentContext context = (EnvironmentContext) env.getObjectModel().get(PROCESS_KEY);
-        return (Processor)env.getAttribute(LAST_PROCESSOR_KEY);
     }
 
     /**

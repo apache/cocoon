@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.8 2004/02/05 13:59:01 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.9 2004/02/06 11:42:46 cziegeler Exp $
  */
 public interface ProcessingPipeline {
 
@@ -157,22 +157,6 @@ public interface ProcessingPipeline {
     boolean process(Environment environment)
     throws ProcessingException;
 
-    /**
-     * Release this component if it is used as an internal pipeline
-     * When the pipeline is used during an internal processing, the part looking
-     * up the pipeline object is not able to release it anymore.
-     * So, in this case the pipeline itself remembers the service manager
-     * and can release itself using this method.
-     */
-    void releaseInternalPipeline();
-
-    /**
-     * Set the manager that looked up this pipeline for internal
-     * pipeline processing. This allows the {@link #releaseInternalPipeline}
-     * method to release itself
-     */
-    void setInternalServiceManager(ServiceManager manager);
-    
     /**
      * Prepare an internal processing
      * @param environment          The current environment.
