@@ -51,10 +51,12 @@
 package org.apache.cocoon.components.flow.javascript.fom;
 
 import java.io.OutputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
@@ -82,7 +84,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.7 2003/07/28 11:07:31 bruno Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.8 2003/08/04 21:07:47 ugo Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -274,7 +276,7 @@ public class FOM_Cocoon extends ScriptableObject {
         public FOM_Request(Object request) {
             this.request = (Request)unwrap(request);
         }
-
+		
         public String getClassName() {
             return "FOM_Request";
         }
@@ -371,12 +373,61 @@ public class FOM_Cocoon extends ScriptableObject {
             return request.getRemoteAddr();
         }
         
+        public String jsFunction_getRemoteHost() {
+            return request.getRemoteHost();
+        }
+        
         public int jsFunction_getServerPort() {
             return request.getServerPort();
         }
         
         public String jsFunction_getScheme() {
             return request.getScheme();
+        }
+        
+        public String jsFunction_getMethod() {
+            return request.getMethod();
+        }
+        
+        public boolean jsFunction_isSecure() {
+            return request.isSecure();
+        }
+        
+        public Locale jsFunction_getLocale() {
+            return request.getLocale();
+        }
+        
+        public Enumeration jsFunction_getLocales() {
+            return request.getLocales();
+        }
+        
+        public FOM_Cookie[] jsFunction_getCookies() {
+            Cookie[] cookies = request.getCookies();
+            FOM_Cookie[] FOM_cookies = new FOM_Cookie[cookies.length];
+            for (int i = 0 ; i < cookies.length ; ++i) {
+                FOM_cookies[i] = new FOM_Cookie(cookies[i]);
+            }
+            return FOM_cookies;
+        }
+        
+        public String jsFunction_getHeader(String name) {
+            return request.getHeader(name);
+        }
+        
+        public Enumeration jsFunction_getHeaders(String name) {
+            return request.getHeaders(name);
+        }
+        
+        public Enumeration jsFunction_getHeaderNames() {
+            return request.getHeaderNames();
+        }
+        
+        public Principal jsFunction_getUserPrincipal() {
+            return request.getUserPrincipal();
+        }
+
+        public boolean jsFunction_isUserInRole(String role) {
+            return request.isUserInRole(role);
         }
     }
 
@@ -649,6 +700,12 @@ public class FOM_Cocoon extends ScriptableObject {
             }
             return value;
         }
+        
+        /* TODO: Vote on the inclusion of this method
+        public String jsFunction_getRealPath(String path) {
+        	return context.getRealPath(path);
+        }
+        */
     }
 
     public static class FOM_Log extends ScriptableObject {
