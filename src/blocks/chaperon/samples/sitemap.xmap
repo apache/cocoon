@@ -20,7 +20,7 @@
                   src="org.apache.cocoon.generation.DirectoryGenerator"/>
 
  <map:generator name="text" 
-                src="net.sourceforge.chaperon.adapter.cocoon.TextGenerator" 
+                src="org.apache.cocoon.generation.TextGenerator" 
                 logger="sitemap.generator.textgenerator"/>
   </map:generators>
 
