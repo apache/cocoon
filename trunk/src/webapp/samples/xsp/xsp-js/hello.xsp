@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: hello.xsp,v 1.1 2003/03/26 21:21:38 stefano Exp $ -->
+<!-- CVS: $Id: hello.xsp,v 1.2 2003/03/27 17:55:45 stefano Exp $ -->
 
 <xsp:page language="javascript" xmlns:xsp="http://apache.org/xsp">
   <page>
@@ -13,12 +13,7 @@
       </xsp:element>
 
       <para>
-        <xsp:logic>
-          align = "center";
-        </xsp:logic>
-        <p>
-          <xsp:attribute name="align"><xsp:expr>align</xsp:expr></xsp:attribute>
-    
+        <p align="center">
           <xsp:logic>
             msg = "Executed at: ";
             <xsp:content>

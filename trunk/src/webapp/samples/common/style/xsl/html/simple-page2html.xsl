@@ -18,7 +18,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-  <xsl:variable name="path" select="concat($contextPath,'/samples/view-file?filename=')"/>
+  <xsl:variable name="path" select="concat($contextPath,'/samples/view-source?filename=')"/>
   <xsl:variable name="view-source" select="concat($realpath,$file)"/>
   <xsl:variable name="directory" select="substring-before($servletPath,$sitemapURI)"/>
   <!-- assume that sitemapURIs don't occur in servletPath more than once -->
@@ -26,7 +26,7 @@
 
   <xsl:template match="page">
    <html>
-     <link rel="stylesheet" href="{concat($contextPath,'/samples/samples.css')}" title="Default Style"/>
+     <link rel="stylesheet" href="/styles/main.css" title="Default Style"/>
     <head>
      <title>
       <xsl:value-of select="title"/>
@@ -35,20 +35,8 @@
     <body>
       <xsl:call-template name="resources"/>
       <xsl:apply-templates/>
-      <xsl:call-template name="footer"/>
     </body>
    </html>
-  </xsl:template>
-
-  <xsl:template name="footer">
-    <div class="footer">
-      <table>
-        <tbody>
-          <tr><td>Source:  </td><td>$COCOON<xsl:value-of select="$view-source"/></td></tr>
-          <tr><td>Sitemap: </td><td>$COCOON<xsl:value-of select="$sitemap"/></td></tr>
-        </tbody>
-      </table>
-    </div>
   </xsl:template>
 
   <xsl:template name="resources">
@@ -57,7 +45,7 @@
         <tbody>
           <tr>
             <td>
-              <a target="_blank" href="{concat($contextPath,$servletPath,'?cocoon-view=content')}">Content</a>
+              <a target="_blank" href="{concat($contextPath,$servletPath,'?cocoon-view=content')}">Content View</a>
             </td>
             <td>
               <a target="_blank" href="{concat($path,$view-source)}">Source</a>
