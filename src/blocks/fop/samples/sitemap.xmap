@@ -2,7 +2,7 @@
 
 <!--+
     | FOP block samples sitemap
-    | CVS $Id: sitemap.xmap,v 1.6 2003/06/10 23:58:43 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.7 2003/06/22 06:47:40 jefft Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -52,6 +52,13 @@
             <!-- xsl-fo document access -->
             <map:match pattern="**/*.fo.xml">
                 <map:generate src="{1}/{2}.fo.xml"/>
+                <!-- This stylesheet makes image URLs absolute, so that FOP can
+                display images. {realpath:/} returns the absolute path of the
+                context root. -->
+                <map:transform src="misc/fix-imagelinks.xsl">
+                  <map:parameter name="ctxroot" value="{realpath:/}"/>
+                  <map:parameter name="dir" value="samples/fop/{1}/"/>
+                </map:transform>
                 <map:serialize type="xml"/>
             </map:match>
 
