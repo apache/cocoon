@@ -18,7 +18,7 @@
 <!--+
     | Convert Gump descriptor with Cocoon blocks to the Blocks Samples page
     |
-    | CVS $Id: gump2samples.xsl,v 1.3 2004/04/02 20:40:57 joerg Exp $
+    | CVS $Id: gump2samples.xsl,v 1.4 2004/05/01 00:51:21 joerg Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -26,7 +26,7 @@
   <xsl:template match="/root">
     <samples name="Blocks Samples">
       <group name="Back">
-        <sample href="./" name="Back">
+        <sample href=".." name="Back">
           Back to the samples home page.
         </sample>
       </group>
