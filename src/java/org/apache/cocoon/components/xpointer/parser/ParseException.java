@@ -111,45 +111,50 @@ public class ParseException extends Exception {
         if (!specialConstructor) {
             return super.getMessage();
         }
-        String expected = "";
+        StringBuffer expected = new StringBuffer();
         int maxSize = 0;
         for (int i = 0; i < expectedTokenSequences.length; i++) {
             if (maxSize < expectedTokenSequences[i].length) {
                 maxSize = expectedTokenSequences[i].length;
             }
             for (int j = 0; j < expectedTokenSequences[i].length; j++) {
-                expected += tokenImage[expectedTokenSequences[i][j]] + " ";
+                expected.append(tokenImage[expectedTokenSequences[i][j]]);
+                expected.append(" ");
             }
             if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1]
                 != 0) {
-                expected += "...";
+                expected.append("...");
             }
-            expected += eol + "    ";
+            expected.append(eol);
+            expected.append("    ");
         }
-        String retval = "Encountered \"";
+        StringBuffer retval = new StringBuffer("Encountered \"");
         Token tok = currentToken.next;
         for (int i = 0; i < maxSize; i++) {
             if (i != 0)
-                retval += " ";
+                retval.append(" ");
             if (tok.kind == 0) {
-                retval += tokenImage[0];
+                retval.append(tokenImage[0]);
                 break;
             }
-            retval += add_escapes(tok.image);
+            retval.append(add_escapes(tok.image));
             tok = tok.next;
         }
-        retval += "\" at line "
-            + currentToken.next.beginLine
-            + ", column "
-            + currentToken.next.beginColumn;
-        retval += "." + eol;
-        if (expectedTokenSequences.length == 1) {
-            retval += "Was expecting:" + eol + "    ";
-        } else {
-            retval += "Was expecting one of:" + eol + "    ";
+        retval.append("\" at line ");
+        retval.append(currentToken.next.beginLine);
+        retval.append(", column ");
+        retval.append(currentToken.next.beginColumn);
+        retval.append(".");
+        retval.append(eol);
+        retval.append("Was expecting");
+        if (expectedTokenSequences.length != 1) {
+            retval.append(" one of");
         }
-        retval += expected;
-        return retval;
+        retval.append(":");
+        retval.append(eol);
+        retval.append("    ");
+        retval.append(expected);
+        return retval.toString();
     }
 
     /**
