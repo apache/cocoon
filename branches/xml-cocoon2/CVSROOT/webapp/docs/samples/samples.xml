@@ -53,8 +53,13 @@
    </sample>
    <sample name="Simple SQL" href="sql/sql-page" xlink:role="dynamic">
     Simple SQL example. You should make sure that you have a database and 
-    table according to the conf/sitemap.xmap and the documens/sql/sql-page.sql 
-    definitions.
+    table according to the conf/sitemap.xmap and the
+    docs/samples/sql/sql-page.sql definitions.
+   </sample>
+   <sample name="ESQL" href="xsp/esql" xlink:role="dynamic">
+    Simple ESQL example.  You should make sure that you have a database
+    and table according to the docs/samples/xsp/esql.xsp and the
+    docs/samples/sql/sql-page.sql definitions.
    </sample>
   </group>
 
