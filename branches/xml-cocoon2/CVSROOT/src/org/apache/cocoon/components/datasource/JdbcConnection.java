@@ -31,7 +31,7 @@ import org.apache.log.LogKit;
  * total number of Connection objects that are created.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-08 20:25:43 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-11 21:01:45 $
  */
 public class JdbcConnection implements Connection, Recyclable {
     private Connection conn;
@@ -67,6 +67,7 @@ public class JdbcConnection implements Connection, Recyclable {
         this.conn.rollback();
     }
     public void close() throws SQLException {
+        this.setAutoCommit(false);
         this.pool.put(this);
     }
     public void recycle() {

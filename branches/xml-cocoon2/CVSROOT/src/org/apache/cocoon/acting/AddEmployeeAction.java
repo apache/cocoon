@@ -34,7 +34,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-10 22:07:00 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-11 21:01:41 $
  */
 public class AddEmployeeAction extends ComposerAction {
 
@@ -100,6 +100,12 @@ public class AddEmployeeAction extends ComposerAction {
                 conn.rollback();
             }
         } catch (SQLException se) {
+            try {
+                conn.rollback();
+            } catch (SQLException sse) {
+                log.error("Caught an exception trying to roll back transaction", sse);
+            }
+
             log.error("There was a SQL error", se);
         } finally {
             try {
