@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.15 2003/10/20 10:13:42 antonio Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.16 2003/10/24 14:12:18 sylvain Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -909,14 +909,22 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static private Object getValue(Expression expr, JexlContext jexlContext,
-                            JXPathContext jxpathContext) 
+                            JXPathContext jxpathContext, Boolean lenient) 
         throws Exception {
         if (expr == null) return null;
         Object compiled = expr.compiledExpression;
         try {
             if (compiled instanceof CompiledExpression) {
                 CompiledExpression e = (CompiledExpression)compiled;
-                return e.getValue(jxpathContext);
+                boolean oldLenient = jxpathContext.isLenient();
+                if (lenient != null) {
+                    jxpathContext.setLenient(lenient.booleanValue());
+                }
+                try {
+                    return e.getValue(jxpathContext);
+                } finally {
+                    jxpathContext.setLenient(oldLenient);
+                }
             } else if (compiled instanceof org.apache.commons.jexl.Expression) {
                 org.apache.commons.jexl.Expression e = 
                     (org.apache.commons.jexl.Expression)compiled;
@@ -930,6 +938,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             throw (Error)t;
         }
+    }
+    
+    static private Object getValue(Expression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
+        return getValue(expr, jexlContext, jxpathContext, null);
     }
 
     static private int getIntValue(Expression expr, JexlContext jexlContext,
@@ -980,13 +992,19 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     // Hack: try to prevent JXPath from converting result to a String
     private Object getNode(Expression expr, JexlContext jexlContext,
-                           JXPathContext jxpathContext) 
+                           JXPathContext jxpathContext, Boolean lenient) 
         throws Exception {
         try {
             Object compiled = expr.compiledExpression;
             if (compiled instanceof CompiledExpression) {
                 CompiledExpression e = (CompiledExpression)compiled;
-                return e.getPointer(jxpathContext, expr.raw).getNode();
+                boolean oldLenient = jxpathContext.isLenient();
+                if (lenient != null) jxpathContext.setLenient(lenient.booleanValue());
+                try {
+                    return e.getPointer(jxpathContext, expr.raw).getNode();
+                } finally {
+                    jxpathContext.setLenient(oldLenient);
+                }
             } else if (compiled instanceof org.apache.commons.jexl.Expression) {
                 org.apache.commons.jexl.Expression e = 
                     (org.apache.commons.jexl.Expression)compiled;
@@ -1000,6 +1018,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             throw (Error)t;
         }
+    }
+    
+    private Object getNode(Expression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
+        return getNode(expr, jexlContext, jxpathContext, null);
     }
 
     static class Event {
@@ -1470,19 +1492,21 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     static class StartForEach extends StartInstruction {
         StartForEach(StartElement raw,
                      Expression items, String var,
-                     Expression begin, Expression end, Expression step) {
+                     Expression begin, Expression end, Expression step, Boolean lenient) {
             super(raw);
             this.items = items;
             this.var = var;
             this.begin = begin;
             this.end = end;
             this.step = step;
+            this.lenient = lenient;
         }
         final Expression items;
         final String var;
         final Expression begin;
         final Expression end;
         final Expression step;
+        final Boolean lenient;
     }
     
     static class StartIf extends StartInstruction {
@@ -1518,11 +1542,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartOut extends StartInstruction {
-        StartOut(StartElement raw, Expression expr) {
+        StartOut(StartElement raw, Expression expr, Boolean lenient) {
             super(raw);
             this.compiledExpression = expr;
+            this.lenient = lenient;
         }
         final Expression compiledExpression;
+        final Boolean lenient;
     }
 
     static class StartImport extends StartInstruction {
@@ -2234,9 +2260,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Expression expr;
                     expr = compileExpr(items == null ? select : items,
                                        null, locator);
+                    String lenientValue = attrs.getValue("lenient");
+                    Boolean lenient = (lenientValue == null) ? null : Boolean.valueOf(lenientValue);
                     StartForEach startForEach = 
                         new StartForEach(startElement, expr, 
-                                         var, begin, end, step);
+                                         var, begin, end, step,lenient);
                     newEvent = startForEach;
                 } else if (localName.equals(FORMAT_NUMBER)) {
                     Expression value = 
@@ -2350,7 +2378,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Expression expr = compileExpr(value, 
                                               "out: \"value\": ", 
                                               locator);
-                    newEvent = new StartOut(startElement, expr);
+                    String lenientValue = attrs.getValue("lenient");
+                    Boolean lenient = lenientValue == null ? null: Boolean.valueOf(lenientValue);
+                    newEvent = new StartOut(startElement, expr, lenient);
                 } else if (localName.equals(OTHERWISE)) {
                     if (stack.size() == 0 ||
                         !(stack.peek() instanceof StartChoose)) {
@@ -2667,6 +2697,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
         jxpathContext.setVariables(variables);
+        jxpathContext.setLenient(parameters.getParameterAsBoolean("lenient-xpath", false));
         globalJexlContext = new MyJexlContext();
         globalJexlContext.setVars(map);
         map = globalJexlContext.getVars();
@@ -2974,7 +3005,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 StartIf startIf = (StartIf)ev;
                 Object val;
                 try {
-                    val = getValue(startIf.test, jexlContext, jxpathContext);
+                    val = getValue(startIf.test, jexlContext, jxpathContext, Boolean.TRUE);
                 } catch (Exception e) {
                     throw new SAXParseException(e.getMessage(),
                                                 ev.location,
@@ -3116,7 +3147,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Object val;
                     try {
                         val = getValue(startWhen.test, jexlContext,
-                                       jxpathContext);
+                                       jxpathContext, Boolean.TRUE);
                     } catch (Exception e) {
                         throw new SAXParseException(e.getMessage(),
                                                     ev.location,
@@ -3447,7 +3478,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 try {
                     val = getNode(startOut.compiledExpression,
                                   jexlContext,
-                                  jxpathContext);
+                                  jxpathContext,
+                                  startOut.lenient);
                     if (val instanceof Node) {
                         executeDOM(consumer,
                                    jexlContext,
