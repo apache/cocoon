@@ -12,11 +12,6 @@
     
     <xsl:template match="/">
         <sitemap location="{$location}" filename="{$filename}" >
-            <info>
-                <xsl:call-template name="normalize-path">
-                    <xsl:with-param name="path"  select="'123/hoep/..'"/>
-                </xsl:call-template>
-            </info>
             <xsl:apply-templates/>
         </sitemap>
     </xsl:template>

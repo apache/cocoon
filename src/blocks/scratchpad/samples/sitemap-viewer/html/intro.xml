@@ -4,17 +4,15 @@
     This is a Sitemap-viewer, made by Jelle Alten.
 </p>
 <p>
-    This viewer reads a sitemap, attempts to follow links, references and other interesting lines in the &apos;match&apos; elements and generates an HTML file from this information. If you use IE or Mozilla, the resulting HTML has clickable buttons for folding and unfoling elements. 
+    This viewer reads a sitemap, attempts to follow links, references and other interesting lines in the &apos;match&apos; elements and generates an HTML file from this information. If you use IE or Mozilla, the resulting HTML has clickable buttons for folding and unfolding elements. 
 </p>
 <p>
     <b>Warning: This tool can show the contents of sitemaps, don't put this tool in a production environment for security reasons.</b>
-    The source-viewing is turned on and off in the sitemap, by setting the internal-only attribute of the "srcviewing"-pipeline. 
-    To be able to use all of the viewer, make sure to set internal-only attribute of the pipeline labeled "srcviewing" 
-    to "no". To have a secure version, set it to "yes" (default).
+    The source-viewing is turned on and off in the sitemap, in the "showsources" parameter and by setting the internal-only attribute of the "srcviewing"-pipeline.
 </p>
 <p>See this <a href="example.html">example of a difficult sitemap</a> to see where it won't work.</p>
 <p>
-    It is in a testing stage, and some work, cleanup and documentation should still be done. 
+    It is in a testing stage, and some work, cleanup and documentation should still be done. It works fine on Cocoon 2.1.2+
 </p>
 <p>
     <h4>Known bugs</h4>

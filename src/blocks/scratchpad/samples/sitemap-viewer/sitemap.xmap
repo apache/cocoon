@@ -8,7 +8,6 @@
   <map:generators   default="file"/>
   <map:transformers default="xslt"/>
   <map:readers      default="resource"/>
-  <map:serializers  default="html"/>
   <map:matchers     default="wildcard"/>
   <map:selectors    default="browser">
     <map:selector name="resource-exists"
@@ -25,7 +24,7 @@
  
   <map:pipes        default="caching"/>
 
-  <map:serializers>
+  <map:serializers default="html">
 
    <map:serializer name="xhtml-transitional"     src="org.apache.cocoon.serialization.XMLSerializer"  mime-type="text/html"      logger="sitemap.serializer.xhtml"
              pool-grow="2" pool-max="64" pool-min="2">
@@ -51,7 +50,7 @@
             
             <map:transform src="transforms/sitemapdescr2html.xsl">
 
-                <!-- set showsources to 0 if you don't want the link to the sources (secure) or to 1 
+                <!-- change showsources to 0 if you don't want the link to the sources (secure) or to 1 
                        if you want to show the sources (unsecure) -->
                 <map:parameter name="showsources" value="{showsources}"/>
             </map:transform>
@@ -66,7 +65,7 @@
                 </map:otherwise>
             </map:select>
 
-            <map:serialize type="xhtml-transitional"/>
+            <map:serialize/>
 
 
       </map:resource>
@@ -146,7 +145,7 @@
 
         </map:pipeline>
             
-        <map:pipeline internal-only="yes">
+        <map:pipeline internal-only="no">
             
             <map:match pattern="*.descr01">
                 <map:act type="request">
