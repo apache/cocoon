@@ -69,7 +69,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNode.java,v 1.1 2003/03/09 00:09:21 pier Exp $
+ * @version CVS $Id: MatchNode.java,v 1.2 2003/05/11 01:49:54 vgritsenko Exp $
  */
 
 public class MatchNode extends SimpleSelectorProcessingNode
@@ -133,14 +133,13 @@ public class MatchNode extends SimpleSelectorProcessingNode
         }
 
         if (result != null) {
-            if (getLogger().isInfoEnabled()) {
-                getLogger().info("Matcher '" + this.componentName + "' matched pattern '" + this.pattern +
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Matcher '" + this.componentName + "' matched pattern '" + this.pattern +
                     "' at " + this.getLocation());
             }
 
             // Invoke children with the matcher results
             return this.invokeNodes(children, env, context, name, result);
-
         } else {
             // Matcher failed
             return false;
