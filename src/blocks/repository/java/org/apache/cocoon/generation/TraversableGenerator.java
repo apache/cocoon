@@ -132,7 +132,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.5 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.6 2003/11/24 22:05:22 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -408,6 +408,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             throws SAXException, ProcessingException {
         if (source.isCollection()) {
             startNode(COL_NODE_NAME, source);
+            addContent(source);
             if (depth > 0) {
 
                 Collection contents = null;
@@ -465,8 +466,6 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
                         }
                     });
                 }
-                
-                addContent(source);
                 
                 for (int i = 0; i < contents.size(); i++) {
                     if (isIncluded((TraversableSource) contents.toArray()[i]) && !isExcluded((TraversableSource) contents.toArray()[i])) {
