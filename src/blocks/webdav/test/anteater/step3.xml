@@ -8,6 +8,7 @@
 
   <target name="webdav-step3">
     <property name="step3.samples" value="${anteater.env.cocoon}/samples/webdav"/>
+    <property name="step3.newTitle" value="Title changed by anteater step3 test"/>
 
     <echo>samples=${samples}</echo>
 
@@ -36,7 +37,7 @@
     <httpRequest href="${anteater.env.cocoon}${action}"
                  useTidy="false"
                  description="Test the 'step3' sample">
-      <parameter name="title" value="Title B"/>
+      <parameter name="title" value="${step3.newTitle}"/>
       <parameter name="para" value="test2"/>
       <parameter name="para" value="test2"/>
       <match>
@@ -48,7 +49,7 @@
     <httpRequest href="${step3.samples}/step3/repo/dir2/contentB.xml"
                  description="Test the 'step3' sample">
       <match>
-        <xpath select="/html/body/form/p/input[@name='title']/@value" pattern="Title B"/>
+        <xpath select="/html/body/form/p/input[@name='title']/@value" pattern="${step3.newTitle}"/>
         <xpath select="/html/body/form/p/textarea" pattern="test2"/>
         <xpath select="/html/body/form/@action" assign="action"/>
       </match>
@@ -67,6 +68,10 @@
     </httpRequest>
 
     <!-- check success of undo -->
+    <!--
+        on my macosx system this sometimes fails, but if I check the URL with
+        a browser right after the test it is ok. Timing or cache problem?
+    -->
     <httpRequest href="${step3.samples}/step3/repo/dir2/contentB.xml"
                  description="Test the 'step3' sample">
       <match>
