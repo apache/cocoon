@@ -69,12 +69,12 @@ public class Invoker {
                     char[] chars;
                     if (subst instanceof Literal) {
                         chars = ((Literal)subst).getCharArray();
-			consumer.characters(chars, 0, chars.length);
+                        consumer.characters(chars, 0, chars.length);
                     } else {
                         JXTExpression expr = (JXTExpression) subst;
                         try {
                             Object val = expr.getNode(expressionContext);
-			    executeNode(consumer, val);
+                            executeNode(consumer, val);
                         } catch (Exception e) {
                             throw new SAXParseException(e.getMessage(),
                                                         ev.getLocation(), e);
@@ -149,31 +149,9 @@ public class Invoker {
                                 }
                                 attributeValue = val != null ? val : "";
                             } else {
-                                StringBuffer buf = new StringBuffer();
-                                Iterator iterSubst =
-                                    substEvent.getSubstitutions().iterator();
-                                while (iterSubst.hasNext()) {
-                                    Subst subst = (Subst) iterSubst.next();
-                                    if (subst instanceof Literal) {
-                                        Literal lit = (Literal) subst;
-                                        buf.append(lit.getValue());
-                                    } else if (subst instanceof JXTExpression) {
-                                        JXTExpression expr = (JXTExpression) subst;
-                                        Object val;
-                                        try {
-                                            val = expr.getValue(expressionContext);
-                                        } catch (Exception e) {
-                                            throw new SAXParseException(e.getMessage(),
-                                                                        ev.getLocation(), e);
-                                        } catch (Error err) {
-                                            throw new SAXParseException(err.getMessage(),
-                                                                        ev.getLocation(),
-                                                                        new ErrorHolder(err));
-                                        }
-                                        buf.append(val != null ? val.toString() : "");
-                                    }
-                                }
-                                attributeValue = buf.toString();
+                                attributeValue =
+                                    substEvent.getSubstitutions().toString(ev.getLocation(),
+                                                                           expressionContext);
                             }
                         } else {
                             throw new Error("this shouldn't have happened");
@@ -215,33 +193,13 @@ public class Invoker {
                                            copy.getLocalName(), copy.getRaw(),
                                            copy.getType(), copy.getValue());
                     } else if (attrEvent instanceof SubstituteAttribute) {
-                        StringBuffer buf = new StringBuffer();
                         SubstituteAttribute substEvent = (SubstituteAttribute) attrEvent;
-                        Iterator iterSubst = substEvent.getSubstitutions().iterator();
-                        while (iterSubst.hasNext()) {
-                            Subst subst = (Subst) iterSubst.next();
-                            if (subst instanceof Literal) {
-                                Literal lit = (Literal) subst;
-                                buf.append(lit.getValue());
-                            } else if (subst instanceof JXTExpression) {
-                                JXTExpression expr = (JXTExpression) subst;
-                                Object val;
-                                try {
-                                    val = expr.getValue(expressionContext);
-                                } catch (Exception e) {
-                                    throw new SAXParseException(e.getMessage(),
-                                                                ev.getLocation(), e);
-                                } catch (Error err) {
-                                    throw new SAXParseException(err.getMessage(),
-                                                                ev.getLocation(),
-                                                                new ErrorHolder(err));
-                                }
-                                buf.append(val != null ? val.toString() : "");
-                            }
-                        }
+                        String attributeValue =
+                            substEvent.getSubstitutions().toString(ev.getLocation(),
+                                                                   expressionContext);
                         attrs.addAttribute(attrEvent.getNamespaceURI(),
                                            attrEvent.getLocalName(), attrEvent.getRaw(),
-                                           attrEvent.getType(), buf.toString());
+                                           attrEvent.getType(), attributeValue);
                     }
                 }
                 consumer.startElement(startElement.getNamespaceURI(),
@@ -313,32 +271,32 @@ public class Invoker {
     }
 
     public static void executeNode(final XMLConsumer consumer, Object val)
-	throws SAXException {
+        throws SAXException {
 
-	if (val instanceof Node) {
-	    executeDOM(consumer, (Node) val);
-	} else if (val instanceof NodeList) {
-	    NodeList nodeList = (NodeList) val;
-	    int len = nodeList.getLength();
-	    for (int i = 0; i < len; i++) {
-		Node n = nodeList.item(i);
-		executeDOM(consumer, n);
-	    }
-	} else if (val instanceof Node[]) {
-	    Node[] nodeList = (Node[]) val;
-	    int len = nodeList.length;
-	    for (int i = 0; i < len; i++) {
-		Node n = nodeList[i];
-		executeDOM(consumer, n);
-	    }
-	} else if (val instanceof XMLizable) {
-	    ((XMLizable) val).toSAX(new IncludeXMLConsumer(consumer));
-	} else {
-	    char[] ch =
-		val == null ? ArrayUtils.EMPTY_CHAR_ARRAY
-		: val.toString().toCharArray();
-	    consumer.characters(ch, 0, ch.length);
-	}
+        if (val instanceof Node) {
+            executeDOM(consumer, (Node) val);
+        } else if (val instanceof NodeList) {
+            NodeList nodeList = (NodeList) val;
+            int len = nodeList.getLength();
+            for (int i = 0; i < len; i++) {
+                Node n = nodeList.item(i);
+                executeDOM(consumer, n);
+            }
+        } else if (val instanceof Node[]) {
+            Node[] nodeList = (Node[]) val;
+            int len = nodeList.length;
+            for (int i = 0; i < len; i++) {
+                Node n = nodeList[i];
+                executeDOM(consumer, n);
+            }
+        } else if (val instanceof XMLizable) {
+            ((XMLizable) val).toSAX(new IncludeXMLConsumer(consumer));
+        } else {
+            char[] ch =
+                val == null ? ArrayUtils.EMPTY_CHAR_ARRAY
+                : val.toString().toCharArray();
+            consumer.characters(ch, 0, ch.length);
+        }
     }
 
     /**
