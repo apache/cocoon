@@ -34,9 +34,6 @@
              <include name="*.jar"/>
           </fileset>
         -->
-        <fileset dir="${{lib.optional}}">
-          <include name="*.jar"/>
-        </fileset>
         <fileset dir="${{build.blocks}}">
           <include name="*.jar"/>
         </fileset>
@@ -278,7 +275,8 @@
   <xsl:template match="project">
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
-
+    <xsl:variable name="non-cocoon-block-dependencies" select="depend[not(starts-with(@project,'cocoon'))]"/>
+    
     <target name="{@name}-excluded" if="internal.exclude.block.{$block-name}">
       <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
     </target>
@@ -531,18 +529,23 @@
         </xsl:attribute>
       </xsl:if>
 
-      <!-- Test if this block has libraries -->
-      <if>
-        <available type="dir" file="${{blocks}}/{$block-name}/lib/"/>
-        <then>
-          <copy filtering="off" todir="${{build.webapp.lib}}">
-            <fileset dir="${{blocks}}/{$block-name}/lib">
-              <include name="*.jar"/>
-              <exclude name="servlet*.jar"/>
-            </fileset>
-          </copy>
-        </then>
-      </if>
+      <!-- Copy the library depencies -->
+      <copy filtering="off" todir="${{build.webapp.lib}}">
+        <fileset dir="${{lib.optional}}">
+          <xsl:for-each select="$non-cocoon-block-dependencies">
+            <xsl:choose>
+              <xsl:when test="library">
+                <xsl:for-each select="library">
+                  <include name="{@name}*.jar"/>
+                </xsl:for-each>
+              </xsl:when>
+              <xsl:otherwise>
+                <include name="{@project}*.jar"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </fileset>
+      </copy>
 
       <!-- Test if this block has global WEB-INF files -->
       <if>
@@ -573,8 +576,19 @@
 
       <path id="{$block-name}.classpath">
         <path refid="classpath"/>
-        <fileset dir="${{blocks}}/{$block-name}">
-          <include name="lib/*.jar"/>
+        <fileset dir="${{lib.optional}}">
+          <xsl:for-each select="$non-cocoon-block-dependencies">
+            <xsl:choose>
+              <xsl:when test="library">
+                <xsl:for-each select="library">
+                  <include name="{@name}*.jar"/>
+                </xsl:for-each>
+              </xsl:when>
+              <xsl:otherwise>
+                <include name="{@project}*.jar"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
         </fileset>
         <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
         <pathelement location="${{build.blocks}}/{$block-name}/dest"/>

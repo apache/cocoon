@@ -36,7 +36,7 @@ import org.apache.cocoon.caching.EventRegistry;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.12 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultEventRegistryImpl 
         extends AbstractDoubleMapEventRegistry
@@ -72,8 +72,7 @@ public class DefaultEventRegistryImpl
     protected void persist(EventRegistryDataWrapper registryWrapper) {
         ObjectOutputStream oos = null;
         try {
-            oos = new ObjectOutputStream(
-                                        new FileOutputStream(this.m_persistentFile));       
+            oos = new ObjectOutputStream(new FileOutputStream(this.m_persistentFile));
             oos.writeObject(registryWrapper);
             oos.flush();
         } catch (FileNotFoundException e) {
@@ -99,7 +98,7 @@ public class DefaultEventRegistryImpl
             try {
                 ois = new ObjectInputStream(
                     new FileInputStream(this.m_persistentFile));
-                ecdw = (EventRegistryDataWrapper)ois.readObject();
+                ecdw = (EventRegistryDataWrapper) ois.readObject();
             } catch (FileNotFoundException e) {
                 getLogger().error("Unable to retrieve EventRegistry", e);
                 createBlankCache();

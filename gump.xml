@@ -122,7 +122,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-fop-maintenance"/>
+    <depend project="xml-fop-maintenance">
+      <library name="fop"/>
+    </depend>
     <depend project="cocoon-block-batik"/>
 
     <work nested="tools/anttasks"/>
@@ -146,14 +148,19 @@
     <depend project="castor"/>
     <depend project="commons-jexl" inherit="all"/>
     <depend project="commons-betwixt" inherit="all"/>
-    <depend project="jakarta-velocity" inherit="all"/>
-    <depend project="jakarta-servletapi-4"/>
+    <depend project="jakarta-velocity" inherit="all">
+      <library name="velocity"/>
+    </depend>
+    <depend project="jakarta-servletapi-4">
+      <library name="servlet-2_3"/>
+    </depend>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-cron"/>
     <depend project="cocoon-block-batik" type="samples"/>
     <depend project="cocoon-block-xsp"/>
     <depend project="cocoon-block-faces"/>
     <depend project="cocoon-block-axis"/>
+    <depend project="apache-garbage"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -172,7 +179,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-batik"/>
+    <depend project="xml-batik">
+      <library name="batik-all"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -193,6 +202,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="chaperon"/>
+    <depend project="castor"/>
     <depend project="cocoon-block-xsp" type="samples"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/chaperon/dest"/>
@@ -370,7 +380,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-poi"/>
+    <depend project="jakarta-poi">
+      <library name="poi"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -468,7 +480,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-lucene"/>
+    <depend project="jakarta-lucene">
+      <library name="lucene"/>
+    </depend>
     <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="cocoon-block-forms" type="samples"/>
 
@@ -490,6 +504,9 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jtidy"/>
+    <depend project="jakarta-servletapi">
+      <library name="servlet"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -509,6 +526,11 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="bsf"/>
+    <depend project="groovy"/>
+    <depend project="asm">
+      <library name="asm"/>
+      <library name="asm-util"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -545,7 +567,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-velocity"/>
+    <depend project="jakarta-velocity">
+      <library name="velocity"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -606,8 +630,14 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-repository"/>
     <depend project="cocoon-block-jms"/>
-    <depend project="jta"/>
-    <depend project="jakarta-slide"/>
+    <depend project="jta">
+      <library name="geronimo-spec-jta"/>
+    </depend>
+    <depend project="jakarta-slide">
+      <library name="slide-kernel"/>
+      <library name="slide-stores"/>
+      <library name="slide-webdavservlet"/>
+    </depend>
     <depend project="jdom"/>
 
     <work nested="tools/anttasks"/>
@@ -629,6 +659,9 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="commons-httpclient"/>
     <depend project="commons-logging"/>
+    <depend project="jakarta-servletapi">
+      <library name="servlet"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -648,7 +681,18 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases"/>
-    <depend project="xmldb"/>
+    <depend project="xmldb">
+      <library name="xmldb-api"/>
+      <library name="xmldb-common"/>
+      <library name="xmldb-xupdate"/>
+    </depend>
+    <depend project="ws-xmlrpc">
+      <library name="xmlrpc"/>
+    </depend>
+    <depend project="xml-xindice">
+      <library name="xindice"/>
+    </depend>
+    
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -668,6 +712,11 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="deli"/>
+    <depend project="jena"/>
+    <depend project="icu4j"/>
+    <depend project="jakarta-servletapi">
+      <library name="servlet"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -707,7 +756,6 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-asciiart"/>
-    <depend project="cocoon-block-scratchpad"/>
     <depend project="javamail"/>
     <depend project="jaf"/>
 
@@ -728,7 +776,17 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-axis"/>
+    <depend project="ws-axis">
+      <library name="axis"/>
+      <library name="axis-saaj"/>
+      <library name="axis-jaxrpc"/>
+    </depend>
+    <depend project="excalibur-util" inherit="all"/>
+    <depend project="wsdl4j" inherit="all"/>
+    <depend project="commons-discovery" inherit="all"/>
+    <depend project="jakarta-servletapi">
+      <library name="servlet"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -834,6 +892,10 @@
     <depend project="jtidy"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
+    <depend project="jakarta-pluto">
+      <library name="pluto"/>
+      <library name="portlet-api"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -913,7 +975,10 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-repository"/>
-    <depend project="jakarta-slide"/>
+    <depend project="commons-httpclient"/>
+    <depend project="jakarta-slide">
+      <library name="jakarta-slide-webdavlib"/>
+    </depend>
 
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/test"/>
@@ -1012,6 +1077,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="quartz"/>
+    <depend project="excalibur-datasource"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1032,6 +1098,10 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases"/>
     <depend project="cocoon-block-forms" type="samples"/>
+    <depend project="db-ojb"/>
+    <depend project="antlr"/>
+    <depend project="commons-dbcp"/>
+    <depend project="commons-pool"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1054,6 +1124,9 @@
     <!--depend project="cocoon-block-eventcache" type="samples"/-->
     <depend project="cocoon-block-databases" type="samples"/>
     <depend project="cocoon-block-hsqldb"/>
+    <depend project="gump.resource.geronimo-spec-jms">
+      <library name="geronimo-spec-jms"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1092,7 +1165,9 @@
       <property name="version" value="@@DATE@@"/>
     </ant>
 
-    <depend project="jakarta-servletapi"/>
+    <depend project="jakarta-servletapi">
+      <library name="servlet"/>
+    </depend>
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>
@@ -1136,7 +1211,7 @@
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
-    <jar name="blocks/serializers-block.jar"/>
+    <jar name="blocks/javaflow-block.jar"/>
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
@@ -1150,6 +1225,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-serializers-charsets"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1193,9 +1269,12 @@
     <depend project="cocoon-block-portal"/>
     <depend project="commons-beanutils-core" inherit="all"/>
     <depend project="commons-digester" inherit="all"/>
-    <!-- FIXME Add commons-el dependency -->
+    <depend project="commons-el" inherit="all"/>
     <depend project="jakarta-servletapi-5" inherit="all"/>
-    <!-- FIXME Add myfaces dependency -->
+    <depend project="myfaces" inherit="all">
+      <library name="myfaces"/>
+      <library name="myfaces-jsf-api"/>
+    </depend>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1282,8 +1361,7 @@
     <description>
       Spark is a library for converting XML to Flash (swf)
     </description>
-    <home nested="src/blocks/swf/lib"/>
-    <jar name="spark-0.2.jar"/>
+    <jar name="lib/optional/spark-0.2.jar"/>
   </project>
 
   <project name="xreporter-expression">
@@ -1329,7 +1407,20 @@
     <description>
       A simple, fast and thread safe cache for Java
     </description>
-    <home nested="src/blocks/scratchpad/lib"/>
-    <jar name="ehcache-0.9.jar"/>
+    <jar name="lib/optional/ehcache-1.0.jar"/>
   </project>
+
+  <project name="asm">
+    <jar name="lib/optional/asm-1.4.3.jar"/>
+    <jar name="lib/optional/asm-util-1.4.3.jar"/>
+  </project>
+
+  <project name="apache-garbage">
+    <jar name="lib/optional/apache-garbage-0.0.jar"/>
+  </project>
+
+  <project name="cocoon-serializers-charsets">
+    <jar name="lib/optional/cocoon-serializers-charsets-0.1.jar"/>
+  </project>
+
 </module>

@@ -360,7 +360,7 @@
       the Scalable Vector Graphics (SVG) format for various purposes, such as
       viewing, generation or manipulation.</description>
     <used-by>SVG serializer (batik block)</used-by>
-    <lib>batik/lib/batik-all-1.5.1.jar</lib>
+    <lib>optional/batik-all-1.5.1.jar</lib>
     <homepage>http://xml.apache.org/batik/</homepage>
   </file>
 
@@ -375,7 +375,7 @@
       support the additional languages.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/bsf-2.3.0.jar</lib>
+    <lib>optional/bsf-2.3.0.jar</lib>
     <homepage>http://jakarta.apache.org/bsf/</homepage>
   </file>
 
@@ -387,7 +387,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/groovy-1.0-beta-6.jar</lib>
+    <lib>optional/groovy-1.0-beta-6.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
@@ -400,7 +400,7 @@
 	  before they are loaded into the Java Virtual Machine.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/asm-1.4.3.jar</lib>
+    <lib>optional/asm-1.4.3.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
@@ -411,7 +411,7 @@
       class visitors that can be useful for programming and debugging purposes.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>bsf/lib/asm-util-1.4.3.jar</lib>
+    <lib>optional/asm-util-1.4.3.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
@@ -426,7 +426,7 @@
       delivery context.
     </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/deli-x020904.jar</lib>
+    <lib>optional/deli-x020904.jar</lib>
     <homepage>http://delicon.sourceforge.net</homepage>
   </file>
 
@@ -459,7 +459,7 @@
     <title>iText XML to PDF/HTML/RTF converter (Renderer)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
-    <lib>itext/lib/itext-1.02b.jar</lib>
+    <lib>optional/itext-1.02b.jar</lib>
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
@@ -467,7 +467,7 @@
     <title>iText XML to PDF/HTML/RTF converter (XML APIs)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
-    <lib>itext/lib/itext-xml-1.02.jar</lib>
+    <lib>optional/itext-xml-1.02.jar</lib>
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
@@ -478,7 +478,7 @@
       the XSL recommendation and then turns it into a PDF document.
     </description>
     <used-by>FOP serializer (fop block)</used-by>
-    <lib>fop/lib/fop-0.20.5.jar</lib>
+    <lib>optional/fop-0.20.5.jar</lib>
     <homepage>http://xml.apache.org/fop/</homepage>
   </file>
 
@@ -490,7 +490,7 @@
       common wordprocessors.
     </description>
     <used-by>RTF serializer (jfor block)</used-by>
-    <lib>jfor/lib/jfor-0.7.1.jar</lib>
+    <lib>optional/jfor-0.7.1.jar</lib>
     <homepage>http://www.jfor.org</homepage>
   </file>
 
@@ -502,7 +502,7 @@
       database engine which offers both in memory and disk based tables.
     </description>
     <used-by>Cocoon samples webapp</used-by>
-    <lib>hsqldb/lib/hsqldb-1.7.1.jar</lib>
+    <lib>optional/hsqldb-1.7.1.jar</lib>
     <homepage>http://hsqldb.sourceforge.net/</homepage>
   </file>
 
@@ -513,7 +513,7 @@
       based upon Microsoft's OLE 2 Compound Document format using pure Java.
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
-    <lib>poi/lib/poi-2.5.1-final-20040804.jar</lib>
+    <lib>optional/poi-2.5.1-final-20040804.jar</lib>
     <homepage>http://jakarta.apache.org/poi/</homepage>
   </file>
 
@@ -521,7 +521,7 @@
     <title>Jena RDF framework</title>
     <description>Jena is a java API for manipulating RDF models.</description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/jena-2.1.jar</lib>
+    <lib>optional/jena-2.1.jar</lib>
     <homepage>http://jena.sourceforge.net/</homepage>
   </file>
 
@@ -531,7 +531,7 @@
     provides robust and full-featured Unicode services on a wide variety 
     of platforms. </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/icu4j-3.0.jar</lib>
+    <lib>optional/icu4j-3.0.jar</lib>
     <homepage>http://oss.software.ibm.com/icu4j/</homepage>
   </file>
 
@@ -555,7 +555,7 @@
     <title>Transform HTML to XML</title>
     <description>Tidy is a HTML syntax checker and pretty printer.</description>
     <used-by>HTML generator (html block), RSSTransformer (Portal block)</used-by>
-    <lib>html/lib/jtidy-04aug2000r7-dev.jar</lib>
+    <lib>optional/jtidy-04aug2000r7-dev.jar</lib>
     <homepage>http://jtidy.sourceforge.net/</homepage>
   </file>
 
@@ -566,7 +566,7 @@
       searching of documents.
     </description>
     <used-by>Lucene block</used-by>
-    <lib>lucene/lib/lucene-1.4.1.jar</lib>
+    <lib>optional/lucene-1.4.1.jar</lib>
     <homepage>http://jakarta.apache.org/lucene/</homepage>
   </file>
 
@@ -617,7 +617,7 @@
     <title>Velocity engine</title>
     <description>Velocity is a general purpose template engine written in Java.</description>
     <used-by>Velocity Generator (velocity block)</used-by>
-    <lib>velocity/lib/velocity-1.4.jar</lib>
+    <lib>optional/velocity-1.4.jar</lib>
     <homepage>http://jakarta.apache.org/velocity/</homepage>
   </file>
 
@@ -719,7 +719,7 @@
       data format to XML conforming to a specialized DTD and vice versa
     </description>
     <used-by>SWF Serializer (swf block)</used-by>
-    <lib>swf/lib/spark-0.2.jar</lib>
+    <lib>optional/spark-0.2.jar</lib>
     <homepage>http://www.tivano.de/software/spark/</homepage>
   </file>
 
@@ -730,7 +730,7 @@
       those to XML files.
     </description>
     <used-by>Chaperon block</used-by>
-    <lib>chaperon/lib/chaperon-20040205.jar</lib>
+    <lib>optional/chaperon-20040205.jar</lib>
     <homepage>http://chaperon.sourceforge.net</homepage>
   </file>
 
@@ -761,7 +761,7 @@
       A large list of character sets used for XML/HTML serialization.
     </description>
     <used-by>serializers</used-by>
-    <lib>serializers/lib/cocoon-serializers-charsets-0.1.jar</lib>
+    <lib>optional/cocoon-serializers-charsets-0.1.jar</lib>
     <homepage>http://cocoon.apache.org/</homepage>
   </file>
 
@@ -769,7 +769,7 @@
     <title>Slide kernel</title>
     <description>The Jakarta Slide kernel API.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-kernel-2.0.jar</lib>
+    <lib>optional/slide-kernel-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -777,7 +777,7 @@
     <title>Slide stores</title>
     <description>The Jakarta Slide stores implementation.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-stores-2.0.jar</lib>
+    <lib>optional/slide-stores-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -785,7 +785,7 @@
     <title>Slide WebDAV Servlet</title>
     <description>The Jakarta Slide WebDAV servlet.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-webdavservlet-2.0.jar</lib>
+    <lib>optional/slide-webdavservlet-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -793,7 +793,7 @@
     <title>Slide WebDAV Client library</title>
     <description>The Jakarta Slide WebDAV client library.</description>
     <used-by>WebDAV block</used-by>
-    <lib>webdav/lib/jakarta-slide-webdavlib-2.0.jar</lib>
+    <lib>optional/jakarta-slide-webdavlib-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -812,7 +812,7 @@
       Implementation taken from the Apache Geronimo project for license compatibility.
     </description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/geronimo-spec-jta-DEV-20040202.jar</lib>
+    <lib>optional/geronimo-spec-jta-DEV-20040202.jar</lib>
     <homepage>http://java.sun.com/products/jta/</homepage>
   </file>
 
@@ -824,7 +824,7 @@
       describing services
     </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/wsdl4j-1.4.jar</lib>
+    <lib>optional/wsdl4j-1.4.jar</lib>
     <homepage>http://www-124.ibm.com/developerworks/projects/wsdl4j/</homepage>
   </file>
 
@@ -835,7 +835,7 @@
       SOAP 1.1 specification and SOAP with Attachments note.
     </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/axis-saaj-1.1.jar</lib>
+    <lib>optional/axis-saaj-1.1.jar</lib>
     <homepage>http://java.sun.com/xml/saaj/</homepage>
   </file>
 
@@ -843,7 +843,7 @@
     <title>Avalon Excalibur Util</title>
     <description>???</description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/excalibur-util-1.0.jar</lib>
+    <lib>optional/excalibur-util-1.0.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
@@ -855,7 +855,7 @@
       general, and for lifecycle management of singleton (factory) classes.
     </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/commons-discovery-0.2.jar</lib>
+    <lib>optional/commons-discovery-0.2.jar</lib>
     <homepage>http://jakarta.apache.org/commons/discovery/</homepage>
   </file>
 
@@ -868,7 +868,7 @@
       on the Java platform.
     </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/axis-jaxrpc-1.1.jar</lib>
+    <lib>optional/axis-jaxrpc-1.1.jar</lib>
     <homepage>http://java.sun.com/xml/jaxrpc/</homepage>
   </file>
 
@@ -879,7 +879,7 @@
       Protocol")
     </description>
     <used-by>Axis block</used-by>
-    <lib>axis/lib/axis-1.1.jar</lib>
+    <lib>optional/axis-1.1.jar</lib>
     <homepage>http://ws.apache.org/axis/</homepage>
   </file>
 
@@ -916,7 +916,7 @@
     <title>Joost</title>
     <description>Streaming Transformation for XML (STX) library</description>
     <used-by>STX block</used-by>
-    <lib>stx/lib/joost-20040330.jar</lib>
+    <lib>optional/joost-20040330.jar</lib>
     <homepage>http://joost.sourceforge.net/</homepage>
   </file>
 
@@ -927,7 +927,7 @@
       definitions from source files complete with JavaDoc @tags.
     </description>
     <used-by>QDoxSource (qdox block)</used-by>
-    <lib>qdox/lib/qdox-1.5.jar</lib>
+    <lib>optional/qdox-1.5.jar</lib>
     <homepage>http://qdox.codehaus.org/</homepage>
    </file>
 
@@ -935,7 +935,7 @@
     <title>Quartz</title>
     <description>Quartz Scheduler</description>
     <used-by>Cron block</used-by>
-    <lib>cron/lib/quartz-1.4.2.jar</lib>
+    <lib>optional/quartz-1.4.2.jar</lib>
     <homepage>http://sourceforge.net/projects/quartz/</homepage>
    </file>
 
@@ -943,7 +943,7 @@
     <title>Garbage</title>
     <description>Garbage</description>
     <used-by>Scratchpad block</used-by>
-    <lib>scratchpad/lib/apache-garbage-0.0.jar</lib>
+    <lib>optional/apache-garbage-0.0.jar</lib>
     <homepage>http://cocoon.apache.org/</homepage>
    </file>
 
@@ -970,7 +970,7 @@
       The BeanUtils component provides easy-to-use wrappers around these capabilities.
     </description>
     <used-by>Faces block, BetwixtTransformer</used-by>
-    <lib>faces/lib/commons-beanutils-core-1.7.jar</lib>
+    <lib>optional/commons-beanutils-core-1.7.jar</lib>
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
@@ -983,7 +983,7 @@
        available for your use, or you can also create your own.
     </description>
     <used-by>Faces block, BetwixtTransformer</used-by>
-    <lib>faces/lib/commons-digester-1.5.jar</lib>
+    <lib>optional/commons-digester-1.5.jar</lib>
     <homepage>http://jakarta.apache.org/commons/digester/</homepage>
   </file>  
 
@@ -995,7 +995,7 @@
       translators from grammatical descriptions containing Java, C#, or C++ actions
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/antlr-2.7.3.jar</lib>
+    <lib>optional/antlr-2.7.3.jar</lib>
     <homepage>http://www.antlr.org/</homepage>
   </file>
 
@@ -1005,7 +1005,7 @@
        Database Connection Pool API
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/commons-dbcp-1.2.1.jar</lib>
+    <lib>optional/commons-dbcp-1.2.1.jar</lib>
     <homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
   </file>
 
@@ -1016,7 +1016,7 @@
        may be useful when creating new pool implementations.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/commons-pool-1.2.jar</lib>
+    <lib>optional/commons-pool-1.2.jar</lib>
     <homepage>http://jakarta.apache.org/commons/pool/</homepage>
   </file>
 
@@ -1027,7 +1027,7 @@
         for Java Objects against relational databases.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/db-ojb-1.0.0.jar</lib>
+    <lib>optional/db-ojb-1.0.0.jar</lib>
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
@@ -1103,7 +1103,7 @@
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/portlet-api-1.0.jar</lib>
+    <lib>optional/portlet-api-1.0.jar</lib>
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
   <file>
@@ -1114,7 +1114,7 @@
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/pluto-1.0.1-rc1.jar</lib>
+    <lib>optional/pluto-1.0.1-rc1.jar</lib>
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
 
