@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.10 2000-12-20 19:33:49 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.11 2000-12-21 16:38:37 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -111,20 +111,20 @@
             <xsp:include>java.text.DecimalFormat</xsp:include>
         </xsp:structure>
         <xsp:logic>
-                 class EsqlSession {
+             class EsqlSession {
                   Connection connection=null;
                   boolean close_connection = true;
-          String query;
+                  String query;
                   Statement statement;
-          PreparedStatement prepared_statement;
+                  PreparedStatement prepared_statement;
                   ResultSet resultset;
                   ResultSetMetaData resultset_metadata;
                   int count;
                   int max_rows;
                   int skip_rows;
                   boolean has_resultset;
-          int update_count;
-                 }
+                  int update_count;
+             }
         </xsp:logic>
         <xsl:for-each select=".//esql:execute-query[not(@inner-method='no')]">
          <xsl:call-template name="generate-code">
