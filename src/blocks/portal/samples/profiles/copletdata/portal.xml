@@ -219,6 +219,8 @@
       </aspect>
    </coplet-data>
 
+
+
    <!--
      +  JSR-168 portlets from the Pluto testsuite
    -->
@@ -256,6 +258,52 @@
       <attribute>
       	<name>buffer</name>
       	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+   </coplet-data>
+
+   <!--
+        This is an application integration sample:
+        - the flow based calculator
+        - and a forms sample
+   -->
+   <coplet-data id="app-test-one" name="standard">
+      <title>Application Test</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>handleParameters</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/html/application</value>
+      </attribute>
+      <attribute>
+      	<name>temporary:application-uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/coplets/samples/form</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="app-test-two" name="standard">
+      <title>Application Test</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>handleParameters</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+      <attribute>
+      	<name>uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/html/application</value>
+      </attribute>
+      <attribute>
+      	<name>temporary:application-uri</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/flow/jxcalc/</value>
       </attribute>
    </coplet-data>
 </coplets>

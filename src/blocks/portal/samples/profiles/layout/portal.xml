@@ -144,24 +144,56 @@
     <named-item name="JSR-168">
         <composite-layout name="row">
             <item>
-                <coplet-layout name="coplet">
+                <coplet-layout name="coplet" layout-renderer-name="portlet-window">
   	   	            <coplet-instance-data>TestPortlet-1</coplet-instance-data>
                 </coplet-layout>
             </item>
             <item>
                 <composite-layout name="column">  
                     <item>
-                        <coplet-layout name="coplet">
+                        <coplet-layout name="coplet" layout-renderer-name="portlet-window">
   	   	                    <coplet-instance-data>Portlet-1</coplet-instance-data>
                         </coplet-layout>
                     </item>
                     <item>
-                        <coplet-layout name="coplet">
+                        <coplet-layout name="coplet" layout-renderer-name="portlet-window">
   	       	                <coplet-instance-data>Portlet-2</coplet-instance-data>
                         </coplet-layout>
                     </item>
                 </composite-layout>
             </item>
+        </composite-layout>
+    </named-item>
+    <named-item name="Apps">
+        <composite-layout name="row">
+            <item>
+                <composite-layout name="column">  
+                    <item>
+                        <coplet-layout name="coplet" >
+                            <coplet-instance-data>app-test-1</coplet-instance-data>
+                        </coplet-layout>
+                    </item> 
+                    <item>
+                        <coplet-layout name="coplet" >
+                            <coplet-instance-data>app-test-2</coplet-instance-data>
+                        </coplet-layout>
+                    </item> 
+                </composite-layout>
+            </item> 
+            <item>
+                <composite-layout name="column">  
+                    <item>
+                        <coplet-layout name="coplet" >
+                            <coplet-instance-data>app-test-3</coplet-instance-data>
+                        </coplet-layout>
+                    </item> 
+                    <item>
+                        <coplet-layout name="coplet" >
+                            <coplet-instance-data>app-test-4</coplet-instance-data>
+                        </coplet-layout>
+                    </item> 
+                </composite-layout>
+            </item> 
         </composite-layout>
     </named-item>
 </composite-layout>
