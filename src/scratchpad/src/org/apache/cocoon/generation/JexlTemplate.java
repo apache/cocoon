@@ -588,15 +588,15 @@ public class JexlTemplate extends AbstractGenerator {
      * (contained in #{}) 
      */
 
-    private Object compileExpr(String expr, String errorMessage, 
+    private Object compileExpr(String expr, String errorPrefix, 
                                Locator location) throws SAXParseException {
         try {
             return compileExpr(expr);
         } catch (Exception exc) {
-            throw new SAXParseException(exc.getMessage(),
+            throw new SAXParseException(errorPrefix + exc.getMessage(),
                                         location, exc);
         } catch (Error err) {
-            throw new SAXParseException(err.getMessage(),
+            throw new SAXParseException(errorPrefix + err.getMessage(),
                                         location, null);
         }
     }
