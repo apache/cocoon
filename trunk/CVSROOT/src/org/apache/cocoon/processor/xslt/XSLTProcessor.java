@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.14 2000-05-05 03:35:56 balld Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.15 2000-05-06 11:12:48 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,8 +54,9 @@ package org.apache.cocoon.processor.xslt;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.text.StringCharacterIterator;
+import java.text.*;
 import org.w3c.dom.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
@@ -72,7 +73,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.14 $ $Date: 2000-05-05 03:35:56 $
+ * @version $Revision: 1.15 $ $Date: 2000-05-06 11:12:48 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -97,22 +98,38 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         if (sheet != null) return sheet;
 
         HttpServletRequest request = (HttpServletRequest) parameters.get("request");
+        ServletContext context = (ServletContext) parameters.get("context");
         String path = (String) parameters.get("path");
         String browser = (String) parameters.get("browser");
+        Hashtable params = this.filterParameters(request);
 
+        try {
+            Object resource = getResource(context, request, document, path, browser);
+            Document stylesheet = getStylesheet(resource, request);
+            Document result = this.parser.createEmptyDocument();
+            return transformer.transform(document, null, stylesheet, resource.toString(), result, params);
+        } catch (PINotFoundException e) {
+            return document;
+        }
+    }
+
+    private Hashtable filterParameters(HttpServletRequest request) {
         Hashtable params = new Hashtable();
-        Enumeration enum = request.getParameterNames();
-        if (enum != null) {
-            while (enum.hasMoreElements()) {
-                String name = (String) enum.nextElement();
+        Enumeration parameters = request.getParameterNames();
+
+        if (parameters != null) {
+            while (parameters.hasMoreElements()) {
+                String name = (String) parameters.nextElement();
 				StringCharacterIterator iter = new StringCharacterIterator(name);
 				boolean valid_name = true;
 				char c = iter.first();
+				
 				if (!(Character.isLetter(c) || c == '_')) {
 					valid_name = false;
 				} else {
 					c = iter.next();
 				}
+				
 				while (valid_name && c != iter.DONE) {
 					if (!(Character.isLetterOrDigit(c) ||
 						c == '-' ||
@@ -123,23 +140,17 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
 						c = iter.next();
 					}
 				}
+				
 				if (valid_name) {
                 	params.put(name, request.getParameter(name));
 				}
             }
         }
-
-        try {
-            Object resource = getResource(document, path, browser);
-            Document stylesheet = getStylesheet(resource, request);
-            Document result = this.parser.createEmptyDocument();
-            return transformer.transform(document, null, stylesheet, resource.toString(), result, params);
-        } catch (PINotFoundException e) {
-            return document;
-        }
+        
+        return params;
     }
-
-    private Object getResource(Document document, String path, String browser) throws ProcessorException {
+    
+    private Object getResource(ServletContext context, HttpServletRequest request, Document document, String path, String browser) throws ProcessorException {
 
         Object resource = null;
 
@@ -154,8 +165,10 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
                     Object local = null;
 
                     try {
-                        if (url.indexOf("://") < 0) {
-                            local = new File(path + url);
+                        if (url.charAt(0) == '/') {
+                            local = new File(Utils.getRootpath(request, context) + url);
+                        } else if (url.indexOf("://") < 0) {
+                            local = new File(Utils.getBasepath(request, context) + url);
                         } else {
                             local = new URL(url);
                         }

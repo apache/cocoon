@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.25 2000-04-26 23:32:09 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.26 2000-05-06 11:13:00 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.25 $ $Date: 2000-04-26 23:32:09 $
+ * @version $Revision: 1.26 $ $Date: 2000-05-06 11:13:00 $
  */
 
 public class Engine implements Defaults {
@@ -295,6 +295,7 @@ public class Engine implements Defaults {
                     environment.put("browser", browsers.map(agent));
                     environment.put("request", request);
                     environment.put("response", response);
+                    environment.put("context", servletContext);
 
                     // process the document through the document processors
                     while (true) {

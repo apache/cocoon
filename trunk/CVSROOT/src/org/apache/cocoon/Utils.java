@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.13 2000-05-03 12:57:36 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.14 2000-05-06 11:13:00 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.13 $ $Date: 2000-05-03 12:57:36 $
+ * @version $Revision: 1.14 $ $Date: 2000-05-06 11:13:00 $
  */
 
 public final class Utils {
@@ -173,7 +173,7 @@ public final class Utils {
               key = key.replace('=',' ').trim(); // remove whitespace and '='
               attributes.put(key, token);    
           }
-        } catch(NoSuchElementException nsee) {
+        } catch (NoSuchElementException nsee) {
           // ignore white-space at the end of pseudo-list
         }
     }
@@ -230,12 +230,14 @@ public final class Utils {
      * So, for now, leave the dirty code even if totally deprecated and work
      * out a better solution in the future.
      */
-    public static String getBasename(HttpServletRequest request, Object context) {
+    public static final String getBasename(HttpServletRequest request, Object context) {
+        String path;
+        
         try {
             // detect if the engine supports at least Servlet API 2.2
             request.getContextPath();
             // we need to check this in case we've been included in a servlet or jsp
-            String path = (String) request.getAttribute("javax.servlet.include.servlet_path");
+            path = (String) request.getAttribute("javax.servlet.include.servlet_path");
             // otherwise, we find it out ourselves
             if (path == null) path = request.getServletPath();
 
@@ -249,8 +251,6 @@ public final class Utils {
                 throw new RuntimeException("Cannot access non-file/war resources");
             }
         } catch (NoSuchMethodError e) {
-            String path;
-            
             // if there is no such method we must be in Servlet API 2.1
             if (request.getPathInfo() != null) {
                 // this must be Apache JServ
@@ -268,6 +268,25 @@ public final class Utils {
     }
 
     /*
+     * Returns the base path for the request.
+     */
+    public static final String getBasepath(HttpServletRequest request, Object context) {
+        String basename = getBasename(request, context);
+        return basename.substring(0, basename.lastIndexOf('/') + 1);
+    }
+
+    /*
+     * Returns the base path for the request.
+     */
+    public static final String getRootpath(HttpServletRequest request, Object context) {
+        // FIXME (SM): I have _no_absolute_idea_ how much this is portable. The whole
+        // architecture should be based on URL rather than Files to allow the 
+        // use of Servlet 2.2 getResource() to void calling such nasty methods
+        // but for now, well, it's the best I can do :(
+        return request.getRealPath("/");
+    }    
+
+    /*
      * Returns the stack trace as a string
      */
     public static final String getStackTraceAsString(Throwable e) {
@@ -276,7 +295,7 @@ public final class Utils {
         e.printStackTrace(writer);
         return bytes.toString();
     }
-    
+
     /*
      * Returns the resource pointed by the given location.
      */
@@ -319,5 +338,5 @@ public final class Utils {
         }
         
         return resource;
-    }    
+    }
 }
