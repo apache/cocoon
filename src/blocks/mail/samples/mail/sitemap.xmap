@@ -16,7 +16,7 @@
 -->
 
 <!--
-  Version <![CDATA[ $Id: sitemap.xmap,v 1.3 2004/03/11 16:25:48 stephan Exp $ ]]>
+  Version <![CDATA[ $Id: sitemap.xmap,v 1.4 2004/05/29 19:33:47 huber Exp $ ]]>
   
   Cocoon Webmail sitemap definition
 -->
@@ -26,7 +26,6 @@
 <!-- =========================== Components ================================ -->
 
 <map:components>
-
 
   <!-- ===== selectors =====
   -->
@@ -38,6 +37,9 @@
     <map:selector name="request-attribute" src="org.apache.cocoon.selection.RequestAttributeSelector"
       logger="sitemap.selector.request-attribute">
       <parameter-name>cmd</parameter-name>
+    </map:selector>
+    <map:selector name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"
+      logger="sitemap.selector.request-exists">
     </map:selector>
   </map:selectors>
   
@@ -122,16 +124,25 @@
   <!-- mail/ handling, mail/ URI denotes pages of Cocoon Webmail,
     presenting javamail objects 
   -->
-  <map:pipeline internal-only="true">
+  <map:pipeline>
   
     <map:match pattern="page-mail/*-head-col-1">
-      <map:act type="resource-exists" src="docs/head-col-1/{1}.xsp">
-        <map:call resource="load-xsp-page">
-          <map:parameter name="sect" value="head-col-1"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+      <map:select type="resource-exists">
+        <map:when test="docs/head-col-1/{1}.xsp">
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="head-col-1"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="head-col-1"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <map:match pattern="page-mail/mail-mid-col-1">
@@ -141,13 +152,22 @@
     </map:match>
     
     <map:match pattern="page-mail/*-mid-col-1">
-      <map:act type="resource-exists" src="docs/mid-col-1/{1}.xsp">
-        <map:call resource="load-xsp-page">
-          <map:parameter name="sect" value="mid-col-1"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+      <map:select type="resource-exists">
+        <map:when test="docs/mid-col-1/{1}.xsp">
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="mid-col-1"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="mid-col-1"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <map:match pattern="page-mail/mail-mid-col-2">
@@ -188,63 +208,108 @@
     </map:match>
     
     <map:match pattern="page-mail/*-mid-col-2">
-      <map:act type="resource-exists" src="docs/mid-col-2/{1}.xsp">
-        <map:call resource="load-xsp-page">
-          <map:parameter name="sect" value="mid-col-2"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+      <map:select type="resource-exists">
+        <map:when test="docs/mid-col-2/{1}.xsp">
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="mid-col-2"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="{resource-exists}"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="mid-col-2"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <map:match pattern="page-mail/*-mid-col-3">
-      <map:act type="resource-exists" src="docs/mid-col-3/{1}.xml">
-        <map:call resource="load-page">
-          <map:parameter name="sect" value="mid-col-3"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+      <map:select type="resource-exists">
+        <map:when test="docs/mid-col-3/{1}.xml">
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="mid-col-3"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-xsp-page">
+            <map:parameter name="sect" value="mid-col-3"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
   </map:pipeline>
   
   <!-- general page section handling
   -->
-  <map:pipeline internal-only="true">
+  <map:pipeline>
     <!-- pipeline matching a section of a page
     -->
     
     <!-- matched by simple URI *.html, eg. index.html becomes page-index-top-col-1 
       and mail/*.html, eg. mail/logout.html becomes page-mail/logout-top-col-1
     -->
-    <map:match pattern="page-**-top-col-1">
-      <map:act type="resource-exists" src="docs/top-col-1/{1}.xml">
-        <map:call resource="load-page">
-          <map:parameter name="sect" value="top-col-1"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+    <map:match pattern="page-*-top-col-1">
+      <map:select type="resource-exists">
+        <map:when test="docs/top-col-1/{1}.xml">
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="top-col-1"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="top-col-1"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <map:match pattern="page-*-head-col-1">
-      <map:act type="resource-exists" src="docs/head-col-1/{1}.xml">
-        <map:call resource="load-page">
-          <map:parameter name="sect" value="head-col-1"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+      <map:select type="resource-exists">
+        <map:when test="docs/head-col-1/{1}.xml">
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="head-col-1"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="head-col-1"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <map:match pattern="page-*-mid-col-1">
-      <map:act type="resource-exists" src="docs/mid-col-1/{1}.xml">
-        <map:call resource="load-page">
-          <map:parameter name="sect" value="mid-col-1"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>      
+      <map:select type="resource-exists">
+        <map:when test="docs/mid-col-1/{1}.xml">
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="mid-col-1"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="mid-col-1"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <map:match pattern="page-*-mid-col-2">
@@ -253,25 +318,43 @@
     </map:match>
     
     <map:match pattern="page-*-mid-col-3">
-      <map:act type="resource-exists" src="docs/mid-col-3/{1}.xml">
-        <map:call resource="load-page">
-          <map:parameter name="sect" value="mid-col-3"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+      <map:select type="resource-exists">
+        <map:when test="docs/mid-col-3/{1}.xml">
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="mid-col-3"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="mid-col-3"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
     
     <!-- bottom-col matches mail/*, too
     -->
-    <map:match pattern="page-**-bottom-col-1">
-      <map:act type="resource-exists" src="docs/bottom-col-1/{1}.xml">
-        <map:call resource="load-page">
-          <map:parameter name="sect" value="bottom-col-1"/>
-          <map:parameter name="page" value="{../1}"/>
-          <map:parameter name="resource-exists" value="{resource-exists}"/>
-        </map:call>
-      </map:act>
+    <map:match pattern="page-*-bottom-col-1">
+      <map:select type="resource-exists">
+        <map:when test="docs/bottom-col-1/{1}.xml">
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="bottom-col-1"/>
+            <map:parameter name="page" value="{1}"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:when>
+        <map:otherwise>
+          <map:call resource="load-page">
+            <map:parameter name="sect" value="bottom-col-1"/>
+            <map:parameter name="page" value="index"/>
+            <map:parameter name="resource-exists" value="true"/>
+          </map:call>
+        </map:otherwise>
+      </map:select>
     </map:match>
   </map:pipeline>
 
