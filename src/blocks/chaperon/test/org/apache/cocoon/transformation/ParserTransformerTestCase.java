@@ -59,7 +59,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformerTestCase.java,v 1.2 2003/04/16 13:47:57 stephan Exp $
+ * @version CVS $Id: ParserTransformerTestCase.java,v 1.3 2003/04/17 07:36:25 stephan Exp $
  */
 public class ParserTransformerTestCase extends AbstractTransformerTestCase {
 
@@ -87,12 +87,12 @@ public class ParserTransformerTestCase extends AbstractTransformerTestCase {
         assertEqual(load(result), transform("recovery-parser", src, parameters, load(input)));
     }
 
-    public void testParserTransformer3() {
+    /*public void testParserTransformer3() {
         String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/parsertest-input3.xml";
         String result = "resource://org/apache/cocoon/transformation/parsertest-result3.xml";
 
         assertEqual(load(result), transform("recovery-parser", src, parameters, load(input)));
-    }
+    }*/
 }
