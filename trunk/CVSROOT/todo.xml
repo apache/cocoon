@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.48 2000-11-20 18:35:56 greenrd Exp $
+  $Id: todo.xml,v 1.49 2000-11-21 21:57:01 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -142,6 +142,10 @@
   </action>
   <action context="code">
    Semi-portable (to C2) XSP redirect semantics (topic for xsp-dev list).
+  </action>
+  <action context="code">
+   Support disable-output-escaping for MathML using IBM TechExplorer and
+   other uses.
   </action>
  </actions>
 
