@@ -4,7 +4,7 @@
   <connection>personnel</connection>
   <table name="employee_table">
     <keys>
-      <key param="employee" dbcol="id" type="int"/>
+      <key param="employee" dbcol="id" type="int" mode="manual"/>
     </keys>
     <values>
       <value param="name" dbcol="name" type="string"/>

@@ -141,7 +141,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-27 17:06:00 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-27 18:19:05 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
@@ -249,7 +249,7 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
     /**
      * Set the Statement column so that the results are mapped correctly.
      */
-    protected final void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry) throws Exception {
+    protected void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry) throws Exception {
         Integer typeObject = (Integer) AbstractDatabaseAction.typeConstants.get(entry.getAttribute("type"));
 
         if (typeObject == null) {

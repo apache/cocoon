@@ -40,10 +40,11 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-27 16:49:13 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-27 18:19:07 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
+    private static final Map selectStatements = new HashMap();
 
     /**
      * Delete a record from the database.  This action assumes that
@@ -60,11 +61,22 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
+            conn.setAutoCommit(false);
 
             PreparedStatement statement = conn.prepareStatement(query);
 
+            Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
             Iterator values = conf.getChild("table").getChild("values").getChildren("value");
             int currentIndex = 1;
+
+
+            while (keys.hasNext()) {
+                Configuration key = (Configuration) keys.next();
+                if ("manual".equals(key.getAttribute("mode", "automatic"))) {
+                    this.setColumn(statement, currentIndex, request, key);
+                    currentIndex++;
+                }
+            }
 
             for (int i = currentIndex; values.hasNext(); i++) {
                 Configuration itemConf = (Configuration) values.next();
@@ -73,7 +85,12 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             }
 
             statement.execute();
+            conn.commit();
+            statement.close();
         } catch (Exception e) {
+            if (conn != null) {
+                conn.rollback();
+            }
             throw new ProcessingException("Could not add record", e);
         } finally {
             if (conn != null) {
@@ -104,12 +121,27 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             if (query == null) {
                 Configuration table = conf.getChild("table");
                 Iterator values = table.getChild("values").getChildren("value");
+                Iterator keys = table.getChild("keys").getChildren("key");
 
                 StringBuffer queryBuffer = new StringBuffer("INSERT INTO ");
                 queryBuffer.append(table.getAttribute("name"));
                 queryBuffer.append(" (");
 
                 boolean firstIteration = true;
+
+                while (keys.hasNext()) {
+                    Configuration key = (Configuration) keys.next();
+                    if ("manual".equals(key.getAttribute("mode", "automatic"))) {
+                        if (firstIteration) {
+                            firstIteration = false;
+                        } else {
+                            queryBuffer.append(", ");
+                        }
+
+                        queryBuffer.append(key.getAttribute("dbcol"));
+                        this.setSelectQuery(conf, key);
+                    }
+                }
 
                 while (values.hasNext()) {
                     if (firstIteration) {
@@ -143,5 +175,47 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
         }
 
         return query;
+    }
+
+    protected final void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry) throws Exception {
+        super.setColumn(statement, position, request, entry);
+
+        if ("key".equals(entry.getName())) {
+            String mode = entry.getAttribute("mode", "automatic");
+
+            if ("manual".equals(mode)) {
+                String query = this.getSelectQuery(entry);
+                Connection conn = statement.getConnection();
+
+                ResultSet set = conn.createStatement().executeQuery(query);
+                int value = set.getInt("maxid");
+
+                getLogger().info("Reassigning column " + position + "'" + entry.getAttribute("dbcol") + "' to: " + value);
+                statement.setInt(position, value);
+
+                set.getStatement().close();
+            }
+        }
+    }
+
+    /**
+     * Set the String representation of the MaxID lookup statement.  This is
+     * mapped to the Configuration object itself, so if it doesn't exist,
+     * it will be created.
+     */
+    private final synchronized void setSelectQuery(Configuration conf, Configuration entry) throws ConfigurationException {
+        Configuration table = conf.getChild("table");
+        Iterator values = table.getChild("values").getChildren("value");
+
+        StringBuffer queryBuffer = new StringBuffer("SELECT max(");
+        queryBuffer.append(entry.getAttribute("dbcol"));
+        queryBuffer.append(") AS maxid FROM ");
+        queryBuffer.append(table.getAttribute("name"));
+
+        DatabaseAddAction.addStatements.put(entry, queryBuffer.toString());
+    }
+
+    private final synchronized String getSelectQuery(Configuration entry) throws ConfigurationException {
+        return (String) DatabaseAddAction.selectStatements.get(entry);
     }
 }
