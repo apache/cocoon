@@ -17,10 +17,12 @@ package org.apache.butterfly.components.pipeline.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.butterfly.components.pipeline.ConnectionResetException;
 import org.apache.butterfly.components.pipeline.InvalidPipelineException;
 import org.apache.butterfly.components.pipeline.PipelineProcessingException;
 import org.apache.butterfly.components.pipeline.ProcessingPipeline;
@@ -161,8 +163,41 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
      * @see org.apache.butterfly.components.pipeline.ProcessingPipeline#process()
      */
     public boolean process(Environment environment) {
-        // TODO Auto-generated method stub
-        return false;
+        // If this is an internal request, lastConsumer was reset!
+        /*
+        if (null == this.lastConsumer) {
+            this.lastConsumer = this.serializer;
+        } else {
+            this.preparePipeline(environment);
+        }
+        if ( this.reader != null ) {
+            this.preparePipeline(environment);            
+        }
+        */
+        
+        // See if we need to set an "Expires:" header
+        /*
+        if (this.expires != 0) {
+            Response res = ObjectModelHelper.getResponse(environment.getObjectModel());
+            res.setDateHeader("Expires", System.currentTimeMillis() + expires);
+            res.setHeader("Cache-Control", "max-age=" + expires/1000 + ", public");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Setting a new Expires object for this resource");
+            }
+            environment.getObjectModel().put(ObjectModelHelper.EXPIRES_OBJECT,
+                                             new Long(expires + System.currentTimeMillis()));
+        }
+        */
+        
+        if (this.reader != null) {
+            if (checkIfModified(environment, this.reader.getLastModified())) {
+                return true;
+            }
+            return this.processReader(environment);
+        } else {
+            this.connectPipeline(environment);
+            return this.processXMLPipeline(environment);
+        }
     }
 
     /* (non-Javadoc)
@@ -260,6 +295,47 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
     public String getKeyForEventPipeline() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    protected boolean checkIfModified(Environment environment,
+                                        long lastModified) {
+        // has the read resource been modified?
+        if(!environment.isResponseModified(lastModified)) {
+            // environment supports this, so we are finished
+            environment.setResponseIsNotModified();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Process the pipeline using a reader.
+     * @throws ProcessingException if
+     */
+    protected boolean processReader(Environment environment) {
+        try {
+            if (this.reader.shouldSetContentLength()) {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                this.reader.setOutputStream(os);
+                this.reader.generate();
+                environment.setContentLength(os.size());
+                os.writeTo(environment.getOutputStream(0));
+            } else {
+                this.reader.setOutputStream(environment.getOutputStream(this.outputBufferSize));
+                this.reader.generate();
+            }
+        } catch ( SocketException se ) {
+            if (se.getMessage().indexOf("reset") > 0
+                    || se.getMessage().indexOf("aborted") > 0
+                    || se.getMessage().indexOf("connection abort") > 0) {
+                throw new ConnectionResetException("Connection reset by peer", se);
+            } else {
+                throw new PipelineProcessingException("Failed to execute reader pipeline.", se);
+            }
+        } catch ( Exception e ) {
+            throw new PipelineProcessingException("Error executing reader pipeline.",e);
+        }
+        return true;
     }
 
 }

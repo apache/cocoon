@@ -49,25 +49,4 @@
     <Set name="defaultsDescriptor"><SystemProperty name="home" default="."/>/tools/jetty/conf/webdefaults.xml</Set>
   </Call>
 
-  <!-- =============================================================== -->
-  <!-- Configure the Authentication Realms                             -->
-  <!-- =============================================================== -->
-  <Call name="addRealm">
-    <Arg>
-      <New class="org.mortbay.http.HashUserRealm">
-        <Arg>Quicksilver</Arg>
-        <Arg><SystemProperty name="jetty.home" default="."/>/tools/jetty/conf/quicksilver.realm.properties</Arg>
-      </New>
-    </Arg>
-  </Call>
-  
-  <Call name="addRealm">
-    <Arg>
-      <New class="org.mortbay.http.HashUserRealm">
-        <Arg>PetStore</Arg>
-        <Arg><SystemProperty name="jetty.home" default="."/>/tools/jetty/conf/petstore.realm.properties</Arg>
-      </New>
-    </Arg>
-  </Call>
-
 </Configure>

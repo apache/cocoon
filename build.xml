@@ -63,6 +63,10 @@
     </copy>
     <!-- Copy applicationContext file -->
     <copy file="src/java/applicationContext.xml" todir="${webapp.dir}/WEB-INF"/>
+    <!-- Copy Groovy scripts -->
+    <copy todir="${classes.dir}">
+      <fileset dir="src/java" includes="*.groovy"/>
+    </copy>
   </target>
 	
 </project>

@@ -15,6 +15,9 @@
  */
 package org.apache.butterfly.servlet;
 
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -30,6 +33,7 @@ import org.apache.butterfly.environment.http.HttpEnvironment;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -103,7 +107,28 @@ public class ButterflyServlet extends HttpServlet {
 
         Environment env = getEnvironment(uri, req, res);
         
-        // TODO: process the request with the given environment
+        // Process the request with the given environment
+        ClassLoader parent = getClass().getClassLoader();
+        GroovyClassLoader loader = new GroovyClassLoader(parent);
+        try {
+            Class pipelineClass = loader.parseClass(getClass().getResourceAsStream("Pipeline.groovy"));
+            Class sitemapClass = loader.parseClass(getClass().getResourceAsStream("sitemap.groovy"));
+            GroovyObject sitemap = (GroovyObject) sitemapClass.newInstance();
+            sitemap.setProperty("beanFactory", this.applicationContext);
+            Object[] args = { uri };
+            sitemap.invokeMethod("setup", args);
+            sitemap.invokeMethod("process", new Object[] { env });
+        } catch (CompilationFailedException e) {
+            logger.error("Cannot compile Groovy sitemap.", e);
+            throw new ServletException(e);
+        } catch (InstantiationException e) {
+            logger.error("Cannot instantiate sitemap.", e);
+            throw new ServletException(e);
+        } catch (IllegalAccessException e) {
+            logger.error("Cannot access sitemap method.", e);
+            throw new ServletException(e);
+        }
+
     }
 
     /**
