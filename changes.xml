@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.1 2003/03/09 00:01:33 pier Exp $
+  $Id: changes.xml,v 1.2 2003/03/09 00:20:09 pier Exp $
 -->
 
 <changes title="History of Changes">
@@ -41,6 +41,9 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="PF" type="fix"> 
+    The CVS repository for Cocoon 2.1 is now called "cocoon-2.1" (no branches, just HEAD).
+  </action>
   <action dev="TC" type="add">
    Added support for Pervasive db to ESQL.
   </action>
