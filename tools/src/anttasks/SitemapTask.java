@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.8 $ $Date: 2004/05/03 11:36:06 $
+ * @version CVS $Revision: 1.9 $ $Date: 2004/05/03 11:56:28 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -88,9 +88,19 @@ public final class SitemapTask extends AbstractQdoxTask {
     /** Cache for classes */
     private static Map cache = new HashMap();
     
-    /** The directory */
+    /** The directory containing the sources*/
     private String directory;
     
+    private String blockName;
+    
+    private boolean deprecated = false;
+    
+    private boolean stable = true;
+    
+    /**
+     * Set the directory containg the source files.
+     * Only .java files will be scannend
+     */
     public void setSource(File dir) {
         try {
             this.directory = dir.toURL().toExternalForm();
@@ -106,12 +116,39 @@ public final class SitemapTask extends AbstractQdoxTask {
         super.addFileset(set);
     }
     
+    /**
+     * The location of the sitemap
+     */
     public void setSitemap( final File sitemap ) {
         this.sitemap = sitemap;
     }
 
+    /**
+     * The location of the documentation files
+     */
     public void setDocDir( final File dir ) {
         this.docDir = dir;        
+    }
+    
+    /**
+     * Set the block name
+     */
+    public void setBlock(String value) {
+        this.blockName = value;
+    }
+    
+    /**
+     * Is the block deprecated?
+     */
+    public void setDeprecated(boolean value) {
+        this.deprecated = value;
+    }
+    
+    /**
+     * Is the block stable?
+     */
+    public void setStable(boolean value) {
+        this.stable = value;
     }
     
     /**
@@ -250,12 +287,24 @@ public final class SitemapTask extends AbstractQdoxTask {
             final File templateFile = this.getProject().resolveFile("src/documentation/templates/sitemap-component.xml");
             Document template = DocumentCache.getDocument(templateFile, this);
             
-            component.generateDocs(template, this.docDir, this.getProject());
+            // create directory - if required
+            final File componentsDir = new File(this.docDir, component.getType()+'s');
+            componentsDir.mkdir();
+            
+            // get file name
+            String fileName = component.getName() + "-" + component.getType() + ".xml";
+            if ( this.blockName != null ) {
+                fileName = this.blockName + "-" + fileName;
+            }
+            final File docFile = new File(componentsDir, fileName);
+            
+            // generate the doc
+            component.generateDocs(template, docFile, this.getProject());
         }
         
     }
 
-    static final class SitemapComponent {
+    final class SitemapComponent {
         
         final protected JavaClass javaClass;
         final String    name;
@@ -292,7 +341,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             StringBuffer buffer = new StringBuffer();
             
             // first check: deprecated?
-            if ( this.getTagValue("deprecated", null) != null ) {
+            if ( deprecated || this.getTagValue("deprecated", null) != null ) {
                 indent(parent, 3);
                 buffer.append("The ")
                 .append(this.type)
@@ -304,6 +353,20 @@ public final class SitemapTask extends AbstractQdoxTask {
                 newLine(parent);
                 buffer = new StringBuffer();
             }
+            // unstable block?
+            if ( !stable ) {
+                indent(parent, 3);
+                buffer.append("The ")
+                .append(this.type)
+                .append(" ")
+                .append(this.name)
+                .append(" is in an unstable block");
+                node = doc.createComment(buffer.toString());
+                parent.appendChild(node);
+                newLine(parent);
+                buffer = new StringBuffer();                
+            }
+            
             indent(parent, 3);
             node = doc.createElement("map:" + this.type);
             ((Element)node).setAttribute("name", this.name);
@@ -353,12 +416,12 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
         }
         
-        private static void newLine(Node node) {
+        private void newLine(Node node) {
             final Node n = node.getOwnerDocument().createTextNode(LINE_SEPARATOR);
             node.appendChild(n);
         }
         
-        private static void indent(Node node, int depth) {
+        private void indent(Node node, int depth) {
             final StringBuffer buffer = new StringBuffer();
             for(int i=0; i < depth*2; i++ ) {
                 buffer.append(' ');
@@ -367,12 +430,8 @@ public final class SitemapTask extends AbstractQdoxTask {
             node.appendChild(n);
         }
         
-        public void generateDocs(Document template, File parentDir, Project project) 
+        public void generateDocs(Document template, File docFile, Project project) 
         throws TransformerException {
-            final File componentsDir = new File(parentDir, this.type+'s');
-            componentsDir.mkdir();
-            
-            final File docFile = new File(componentsDir, this.name + "-" + this.type +".xml");
 
             final String doc = this.getDocumentation();
             if ( doc == null ) {
@@ -401,7 +460,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                      descriptionDoc.getDocumentElement().getChildNodes());
             
             // check: deprecated?
-            if ( this.getTagValue("deprecated", null) != null ) {
+            if ( deprecated || this.getTagValue("deprecated", null) != null ) {
                 Node node = XPathAPI.selectSingleNode(body, "s1[@title='Description']");
                 // node is never null - this is ensured by the test above
                 Element e = node.getOwnerDocument().createElement("note");
@@ -412,6 +471,14 @@ public final class SitemapTask extends AbstractQdoxTask {
                     e.appendChild(node.getOwnerDocument().createTextNode(info));
                 }
             }
+            // check: stable?
+            if ( !stable ) {
+                Node node = XPathAPI.selectSingleNode(body, "s1[@title='Description']");
+                // node is never null - this is ensured by the test above
+                Element e = node.getOwnerDocument().createElement("note");
+                node.appendChild(e);
+                e.appendChild(node.getOwnerDocument().createTextNode("This component is in an unstable block."));
+            }
             
             // Info Table
             final Node tableNode = XPathAPI.selectSingleNode(body, "s1[@title='Info']/table");
@@ -419,6 +486,11 @@ public final class SitemapTask extends AbstractQdoxTask {
             // Info - Name
             this.addRow(tableNode, "Name", this.name);
 
+            // Info - Block
+            if ( blockName != null ) {
+                this.addRow(tableNode, "Block", blockName);
+            }
+            
             // Info - Class
             this.addRow(tableNode, "Class", this.javaClass.getFullyQualifiedName());
 
@@ -518,7 +590,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             table.appendChild(row);
         }
         
-        private static String getType(JavaClass clazz) {
+        private String getType(JavaClass clazz) {
             if ( clazz.isA(GENERATOR) ) {
                 return "generator";
             } else if ( clazz.isA(TRANSFORMER) ) {
@@ -540,7 +612,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             }            
         }
         
-        private static void setValue(Node node, String xpath, String value) {
+        private void setValue(Node node, String xpath, String value) {
             try {
                 final Node insertNode = (xpath == null ? node : XPathAPI.selectSingleNode(node, xpath));
                 if ( insertNode == null ) {
@@ -556,7 +628,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
         }
 
-        private static void setValue(Node node, String xpath, NodeList nodes) {
+        private void setValue(Node node, String xpath, NodeList nodes) {
             try {
                 final Node insertNode = (xpath == null ? node : XPathAPI.selectSingleNode(node, xpath));
                 if ( insertNode == null ) {
