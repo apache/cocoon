@@ -1,4 +1,4 @@
-/*-- $Id: Configurations.java,v 1.9 2000-07-21 23:54:08 stefano Exp $ --
+/*-- $Id: Configurations.java,v 1.10 2000-11-10 21:12:29 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,16 +58,18 @@ import java.io.*;
  * class to work.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-07-21 23:54:08 $
+ * @version $Revision: 1.10 $ $Date: 2000-11-10 21:12:29 $
  */
 
 public class Configurations {
 
+    protected Configurations root;
     protected String baseName;
     protected Properties properties;
 
     public Configurations() {
         properties = new Properties();
+        root = this;
     }
 
     /**
@@ -89,6 +91,7 @@ public class Configurations {
         InputStream input = new FileInputStream(file);
         properties.load(input);
         input.close();
+        root = this;
     }
 
     /**                                                                  
@@ -108,6 +111,7 @@ public class Configurations {
             properties = new Properties();
         }
         properties.load(stream);
+        root = this;
     }
 
     /**
@@ -115,6 +119,27 @@ public class Configurations {
      */
     public Configurations(Configurations c) {
         properties = new Properties(c.properties);
+        root = this;
+    }
+
+    /** 
+     * Create a subconfiguration starting from the base node.
+     */
+    public Configurations(Configurations parent, String base) {
+        root = parent.root;
+        setBasename((parent.baseName == null) ? base : parent.baseName + "." + base);
+        String prefix = base + ".";
+
+        Enumeration keys = parent.properties.propertyNames();
+        while (keys.hasMoreElements()) {
+            String key = (String) keys.nextElement();
+
+            if (key.startsWith(prefix)) {
+                set(key.substring(prefix.length()), parent.get(key));
+            } else if (key.equals(base)) {
+                set("", parent.get(key));
+            }
+        }
     }
 
     /**
@@ -152,7 +177,8 @@ public class Configurations {
     public Object getNotNull(String key) {
         Object o = properties.get(key);
         if (o == null) {
-            throw new RuntimeException("Cocoon configuration item '" + ((baseName == null) ? "" : baseName + "." + key) + "' is not set");
+            throw new RuntimeException("Cocoon configuration item '" + 
+              ((baseName == null) ? "" : baseName + "." + key) + "' is not set");
         } else {
             return o;
         }
@@ -177,22 +203,26 @@ public class Configurations {
      * Create a subconfiguration starting from the base node.
      */
     public Configurations getConfigurations(String base) {
-        Configurations c = new Configurations();
-        c.setBasename((baseName == null) ? base : baseName + "." + base);
-        String prefix = base + ".";
+        return new Configurations(this, base);
+    }
 
-        Enumeration keys = properties.propertyNames();
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
-
-            if (key.startsWith(prefix)) {
-                c.set(key.substring(prefix.length()), this.get(key));
-            } else if (key.equals(base)) {
-                c.set("", this.get(key));
-            }
-        }
-
-        return c;
+    /**
+     * For use by superclasses and support classes.
+     * Gets the configuration for the
+     * specified class from the root configurations object.
+     *
+     * @param c - the superclass that is to be configured.
+     * @param x - the object that is to be configured, for validation.
+     * @throws IllegalAccessException if this object is not allowed
+     * to access configuration information for the given class.
+     */
+    public Configurations getAnyConfig (Class c, Object x) 
+    throws IllegalAccessException {
+      if (!c.isInstance (x)) {
+        throw new IllegalAccessException 
+          (x + " cannot access configuration for " + c);
+      }
+      return root.getConfigurations (c.getName ());
     }
 
     /**
