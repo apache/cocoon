@@ -70,7 +70,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @author Stefano Mazzocchi
- * @version CVS $Id: MultipartHttpServletRequest.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
+ * @version CVS $Id: MultipartHttpServletRequest.java,v 1.2 2003/05/18 01:50:46 ghoward Exp $
  */
 public class MultipartHttpServletRequest implements HttpServletRequest {
 
@@ -97,7 +97,7 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
     public void cleanup() throws IOException {
         Enumeration e = getParameterNames();
         while (e.hasMoreElements()) {
-            Object o = e.nextElement();
+            Object o = get( (String)e.nextElement() );
             if (o instanceof PartOnDisk) {
                 File file = ((PartOnDisk) o).getFile();
                 file.delete();
