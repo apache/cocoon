@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.3 2003/03/13 01:33:31 vgritsenko Exp $
+  $Id: changes.xml,v 1.4 2003/03/13 08:57:16 jefft Exp $
 -->
 
 <changes title="History of Changes">
@@ -36,11 +36,15 @@
   <person name="Peter Royal" email="proyal@apache.org" id="PAR"/>
   <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
+  <person name="Jeff Turner" email="jefft@apache.org" id="JT"/>
   <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="JT" type="fix">
+   XMLFileModule: rename 'cachable' to 'cacheable' in configation.
+  </action>
   <action dev="VG" type="update">
     FOP serializer's &lt;user-config&gt; relative path now resolves relative
     to sitemap's directory. All Cocoon URIs are supported too.
