@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.88 2003/07/11 18:32:25 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.89 2003/07/12 13:30:02 joerg Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="4934" due-to="Ryder Rishel" due-to-email="	ryderblue@yahoo.com">
+   Made JSPs working in Resin that don't end on *.jsp.
+  </action>
   <action dev="JH" type="update">
    All Reader accessing Avalon components now extend the ServiceableReader
    instead of deprecated ComposerReader. It pertains the JSPReader, the
