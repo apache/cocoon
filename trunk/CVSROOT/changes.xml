@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.58 2000-04-20 22:10:46 stefano Exp $
+  $Id: changes.xml,v 1.59 2000-04-24 20:40:22 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add" due-to="Kevin Sonney" due-to-email="kevin@webslingerZ.com">
+   Added code to XSP SQL library to automatically choose execute update v.s. execute query
+  </action>
   <action dev="SM" type="add">
    Added XHTML formatter.
   </action>
