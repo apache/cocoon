@@ -329,6 +329,10 @@ implements Processor, Disposable {
         this.rootNode = null;
 	}
     
+    public String toString() {
+        return "ConcreteTreeProcessor - " + wrappingProcessor.source.getURI();
+    }
+    
     private class TreeProcessorRedirector extends ForwardRedirector {
         
         private InvokeContext context;

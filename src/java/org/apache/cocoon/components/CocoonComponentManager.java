@@ -131,7 +131,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
      */
     public static void leaveEnvironment() {
-        leaveEnvironment(false);
+        // Calling with true will avoid any change on the active processor
+        leaveEnvironment(true);
     }
 
     /**
@@ -160,7 +161,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
             env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
         } else {
             if (!success) {
-                // Restore the current environment as being the active one
+                // Restore the current processor as being the active one
                 getCurrentEnvironment().setAttribute(PROCESSOR_ATTR, getCurrentProcessor());
             }
         }
@@ -263,8 +264,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /**
      * Return the processor that has actually processed the request
      */
-    public static Processor getActiveProcessor() {
-        return (Processor) getCurrentEnvironment().getAttribute(PROCESSOR_ATTR);
+    public static Processor getActiveProcessor(Environment env) {
+        return (Processor) env.getAttribute(PROCESSOR_ATTR);
     }
 
     /**
@@ -771,6 +772,6 @@ final class CloningInheritableThreadLocal
         } else {
             return null;
         }
-    }
+    }  
 }
 
