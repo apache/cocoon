@@ -176,9 +176,10 @@
      <code>&lt;util:include-expr&gt;</code> (making sure to declare the util
      logicsheet namespace in your <code>&lt;xsp:page&gt;</code> tag - instructions for 
      this can be found in the XSP documentation). You must either use the form
-     <code>&lt;util:include-expr expr="mymethod()"/&gt;</code> or
+     <code>&lt;util:include-expr expr="constant string"/&gt;</code> for literals or
      <code>&lt;util:include-expr&gt;&lt;util:expr&gt;mymethod()&lt;/util:expr&gt;
-      &lt;/util:include-expr&gt;</code> However this is not necessarily the 
+      &lt;/util:include-expr&gt;</code> for methods and expressions which evaluate
+     to strings. However this is not necessarily the 
      most efficient way, because it invokes the installed XML parser to parse the 
      string into an in-memory representation used throughout Cocoon 1.x called a 
      <link href="http://www.w3.org/DOM/">DOM <strong>(Document Object Model)</strong>
