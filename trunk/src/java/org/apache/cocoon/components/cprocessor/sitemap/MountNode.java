@@ -75,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.3 2004/01/05 08:16:00 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.4 2004/01/05 10:53:35 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -151,8 +151,7 @@ implements ProcessingNode, Contextualizable, Disposable {
             }
         } finally {
             // Restore context
-            //FIXME - Reset the context
-            processor.getEnvironmentHelper().setContext(env);
+            processor.getEnvironmentHelper().resetContext(env);
 
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2

@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.12 2004/01/05 08:16:00 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.13 2004/01/05 10:53:35 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -96,9 +96,6 @@ implements SourceResolver, Serviceable, Disposable {
      /** The Context path */
     protected String context;
 
-    /** The root context path */
-    protected String rootContext;
-
     /** The last prefix, which is stripped off from the request uri */
     protected String lastPrefix;
     
@@ -109,12 +106,14 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public EnvironmentHelper(String context) {
         this.context = context;
-        this.rootContext = context;
     }
     
+    /**
+     * Constructor
+     *
+     */
     public EnvironmentHelper(EnvironmentHelper parent) {
         this.context = parent.context;
-        this.rootContext = parent.rootContext;
         this.lastPrefix = parent.lastPrefix;
         this.prefix = parent.prefix;
     }
@@ -126,21 +125,15 @@ implements SourceResolver, Serviceable, Disposable {
         this.manager = manager;
         this.resolver = (org.apache.excalibur.source.SourceResolver)
                           this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-        if (this.context != null) {
-            Source source = null;
-            try {
-                source = this.resolver.resolveURI(this.context);
-                this.context = source.getURI();
-                    
-                if (this.rootContext == null) {// hack for EnvironmentWrapper
-                    this.rootContext = this.context;
-                }
-            } catch (IOException ioe) {
-                throw new ServiceException("EnvironmentHelper", "Unable to resolve environment context. ", ioe);
-            } finally {
-                this.resolver.release(source);
-            }
-            //this.context = null;
+        Source source = null;
+        try {
+            source = this.resolver.resolveURI(this.context);
+            this.context = source.getURI();
+                
+        } catch (IOException ioe) {
+            throw new ServiceException("EnvironmentHelper", "Unable to resolve environment context. ", ioe);
+        } finally {
+            this.resolver.release(source);
         }
     }
 
@@ -196,6 +189,12 @@ implements SourceResolver, Serviceable, Disposable {
         return this.prefix;
     }
     
+    /**
+     * Change the context of the environment.
+     * Call {@link #resetContext(Environment) to undo the change
+     * @param env The environment to change
+     * @throws ProcessingException
+     */
     public void changeContext(Environment env) 
     throws ProcessingException {
         if ( this.lastPrefix != null ) {
@@ -212,12 +211,30 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
     
+    /**
+     * Reset the context of the environment. Use this together 
+     * with {@link #changeContext(environment)}
+     * @param env The environment to change
+     * @throws ProcessingException
+     */
+    public void resetContext(Environment env) 
+    throws ProcessingException {
+        if (this.lastPrefix != null ) {
+            // FIXME - This is not correct!
+            env.setURI("", this.lastPrefix + env.getURI());
+        }
+    }
+
+    /**
+     * Set the context of the environment.
+     * @param env The environment to change
+     * @throws ProcessingException
+     */
     public void setContext(Environment env) 
     throws ProcessingException {
-        //TODO
-        /*
         if ( this.prefix != null ) {
-            String uris = env.getURI();
+            // FIXME - This is not correct!
+            String uris = env.getURIPrefix() + env.getURI();
             if (!uris.startsWith(this.prefix)) {
                 String message = "The current URI (" + uris +
                                  ") doesn't start with given prefix (" + this.prefix + ")";
@@ -228,7 +245,6 @@ implements SourceResolver, Serviceable, Disposable {
             final int l = this.prefix.length();
             env.setURI(this.prefix, uris.substring(l));
         }
-        */
     }
 
     /**
