@@ -85,25 +85,25 @@ import org.w3c.dom.Element;
  * <li>The &lt;wb:save-form&gt; snippet should be ommitted if the "direction" attribute is set to "load".</li>
  * <li>The &lt;wb:load-form&gt; snippet should be ommitted if the "direction" attribute is set to "save".</li>
  * </ul>
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.3 2003/12/18 07:57:21 mpo Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.4 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(element); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(element);
+
             String id = DomHelper.getAttribute(element, "id");
             String path = DomHelper.getAttribute(element, "path");
-            
+
             Script loadScript = null;
             if (commonAtts.loadEnabled) {
                 Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
                 loadScript = JavaScriptHelper.buildScript(loadElem);
             }
-            
+
             Script saveScript = null;
             if (commonAtts.saveEnabled) {
                 Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
@@ -116,5 +116,4 @@ public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
             throw new BindingException("Cannot build binding at " + DomHelper.getLocation(element), e);
         }
     }
-
 }

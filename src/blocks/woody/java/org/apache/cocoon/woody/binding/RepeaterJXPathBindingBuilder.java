@@ -85,6 +85,8 @@ import org.w3c.dom.Element;
  *
  * &lt;/wb:repeater&gt;
  * </code></pre>
+ *
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.9 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class RepeaterJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -102,8 +104,8 @@ public class RepeaterJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+
             String repeaterId = DomHelper.getAttribute(bindingElm, "id");
             String parentPath =
                 DomHelper.getAttribute(bindingElm, "parent-path");
@@ -133,7 +135,7 @@ public class RepeaterJXPathBindingBuilder
                     "on-bind");
 
             if (childWrapElement == null) throw new BindingException("RepeaterBinding misses '<on-bind>' child definition. " + DomHelper.getLocation(bindingElm));
-            
+
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(childWrapElement);
 
             Element deleteWrapElement =
@@ -154,7 +156,7 @@ public class RepeaterJXPathBindingBuilder
             JXPathBindingBase insertBinding = null;
             if (insertWrapElement != null) {
                 insertBinding = assistant.makeChildBindings(insertWrapElement)[0];
-                
+
             }
 
             RepeaterJXPathBinding repeaterBinding =
@@ -162,7 +164,7 @@ public class RepeaterJXPathBindingBuilder
                     commonAtts,
                     repeaterId, parentPath, rowPath, rowPathForInsert,
                     uniqueRowId, uniqueRowIdPath,
-                    convertor, convertorLocale, 
+                    convertor, convertorLocale,
                     childBindings, insertBinding, deleteBindings);
 
             return repeaterBinding;

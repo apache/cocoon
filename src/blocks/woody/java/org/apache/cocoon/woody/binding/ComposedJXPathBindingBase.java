@@ -57,16 +57,18 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * ComposedJXPathBindingBase provides a helper base class for subclassing 
- * into specific {@link JXPathBindingBase} implementations that have nested 
+ * ComposedJXPathBindingBase provides a helper base class for subclassing
+ * into specific {@link JXPathBindingBase} implementations that have nested
  * child-bindings.
+ *
+ * @version CVS $Id: ComposedJXPathBindingBase.java,v 1.6 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class ComposedJXPathBindingBase extends JXPathBindingBase {
     private final JXPathBindingBase[] subBindings;
 
     /**
      * Constructs ComposedJXPathBindingBase
-     * 
+     *
      * @param childBindings sets the array of childBindings
      */
     protected ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts, JXPathBindingBase[] childBindings) {
@@ -79,7 +81,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
         }
     }
 
-    /** 
+    /**
      * Receives the logger to use for logging activity, and hands it over to
      * the nested children.
      */
@@ -132,7 +134,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel 
+     * Actively performs the binding from the Woody-form to the ObjectModel
      * by passing the task onto it's children.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

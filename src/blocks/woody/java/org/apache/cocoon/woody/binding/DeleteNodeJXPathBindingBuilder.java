@@ -54,14 +54,15 @@ import org.apache.cocoon.woody.binding.JXPathBindingManager.Assistant;
 import org.w3c.dom.Element;
 
 /**
- * DeleteNodeJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link DeleteNodeJXPathBinding} out of the configuration in the 
+ * DeleteNodeJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link DeleteNodeJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:delete-node /&gt;
  * </code></pre>
- * 
+ *
+ * @version CVS $Id: DeleteNodeJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class DeleteNodeJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -70,8 +71,8 @@ public class DeleteNodeJXPathBindingBuilder
      * Creates an instance of {@link DeleteNodeJXPathBinding}.
      */
     public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
-        CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
-        
+        CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+
         return new DeleteNodeJXPathBinding(commonAtts);
     }
 }

@@ -55,13 +55,15 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * AggregateJXPathBinding provides an implementation of a {@link Binding} 
- * that narrows the context towards provided childbindings. 
+ * AggregateJXPathBinding provides an implementation of a {@link Binding}
+ * that narrows the context towards provided childbindings.
  * <p>
  * NOTES: <ol>
- * <li>This Binding assumes that the provided widget-id points to a widget 
+ * <li>This Binding assumes that the provided widget-id points to a widget
  * that contains other widgets.</li>
  * </ol>
+ *
+ * @version CVS $Id: AggregateJXPathBinding.java,v 1.6 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -83,7 +85,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
@@ -97,7 +99,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

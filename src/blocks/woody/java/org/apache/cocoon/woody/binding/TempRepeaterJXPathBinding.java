@@ -68,15 +68,15 @@ import org.w3c.dom.NodeList;
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
- * CVS $Id: TempRepeaterJXPathBinding.java,v 1.2 2004/01/06 12:32:47 joerg Exp $
  * @author Timothy Larson
+ * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.3 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
-//    private final String rowPathInsert;
+    private final String rowPathInsert;
     private final boolean clearOnLoad;
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
@@ -92,7 +92,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
-//        this.rowPathInsert = rowPathInsert;
+        this.rowPathInsert = rowPathInsert;
         this.rowBinding = rowBinding;
         this.rowBinding.setParent(this);
         this.insertRowBinding = insertBinding;
@@ -104,7 +104,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jctx) {
         // Find the repeater and clear it
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
-        
+
         // TODO: RAD
         if (repeater == null) {
             throw new RuntimeException(
@@ -120,7 +120,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         Pointer ptr = jctx.getPointer(this.repeaterPath);
         if (ptr.getNode() != null) {
             // There are some nodes to load from
-            
+
             JXPathContext repeaterContext = jctx.getRelativeContext(ptr);
             // build a jxpath iterator for pointers
             Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
@@ -136,11 +136,11 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                     thisRow = repeater.addRow();
                 }
                 rowNum++;
-     
+
                 // make a jxpath sub context on the iterated element
                 Pointer jxp = (Pointer) rowPointers.next();
                 JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
-    
+
                 this.rowBinding.loadFormFromModel(thisRow, rowContext);
             }
         }
@@ -159,7 +159,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
         } else {
             // Repeater is not empty
-            
+
             // Move to repeater context and create the path if needed
             JXPathContext repeaterContext = jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
 
@@ -209,7 +209,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         if (this.insertRowBinding != null) {
-            this.insertRowBinding.enableLogging(logger);            
+            this.insertRowBinding.enableLogging(logger);
         }
         this.rowBinding.enableLogging(logger);
     }

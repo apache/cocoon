@@ -54,15 +54,17 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * AggregateJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link AggregateJXPathBinding} out of the configuration in the 
+ * AggregateJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link AggregateJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:aggregate id="<i>widget-id</i>" path="<i>xpath-expression</i>"&gt;
  *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
  * &lt;/wb:aggregate&gt;
  * </code></pre>
+ *
+ * @version CVS $Id: AggregateJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class AggregateJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -70,7 +72,7 @@ public class AggregateJXPathBindingBuilder
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
             throws BindingException {
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 

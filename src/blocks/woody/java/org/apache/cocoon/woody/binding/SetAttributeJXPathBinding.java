@@ -54,12 +54,14 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * SetAttributeJXPathBinding provides an implementation of a {@link Binding} 
- * that sets a particular attribute to a fixed value upon save. 
+ * SetAttributeJXPathBinding provides an implementation of a {@link Binding}
+ * that sets a particular attribute to a fixed value upon save.
  * <p>
  * NOTES: <ol>
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
+ *
+ * @version CVS $Id: SetAttributeJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class SetAttributeJXPathBinding extends JXPathBindingBase {
 
@@ -94,5 +96,4 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
     public String toString() {
         return "SetAttributeJXPathBinding [attName=" + this.name + ", attValue=" + this.value + "]";
     }
-
 }

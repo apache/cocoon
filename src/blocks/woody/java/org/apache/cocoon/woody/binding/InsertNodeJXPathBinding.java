@@ -59,19 +59,21 @@ import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
 
 /**
- * InsertNodeJXPathBinding provides an implementation of a {@link Binding} 
+ * InsertNodeJXPathBinding provides an implementation of a {@link Binding}
  * that inserts a clone of some 'template document-fragment' into the target
- * back-end model upon save. 
+ * back-end model upon save.
  * <p>
  * NOTES: <ol>
  * <li>This Binding does not perform any actions when loading.</li>
  * <li>This expects the back-end model to be an XML file.</li>
  * </ol>
+ *
+ * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class InsertNodeJXPathBinding extends JXPathBindingBase {
 
     private final DocumentFragment template;
-    
+
     /**
      * Constructs InsertNodeJXPathBinding
      */
@@ -90,7 +92,7 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
     /**
      * Registers a JXPath Factory on the JXPath Context.
      * <p>
-     * The factory will inserts a clone of the 'template' DocumentFragment 
+     * The factory will inserts a clone of the 'template' DocumentFragment
      * inside this object into the target objectmodel.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) {
@@ -113,9 +115,8 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
         if (getLogger().isDebugEnabled())
             getLogger().debug("done registered factory for inserting node -- " + toString());
     }
-    
+
     public String toString() {
         return "InsertNodeJXPathBinding [for nested template]";
     }
-
 }

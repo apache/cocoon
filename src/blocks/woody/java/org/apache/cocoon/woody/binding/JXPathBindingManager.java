@@ -73,14 +73,14 @@ import org.xml.sax.InputSource;
  * JXPathBindingManager provides an implementation of {@link BindingManager}
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
- * 
- * @version CVS $ID$
+ *
+ * @version CVS $Id: JXPathBindingManager.java,v 1.13 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled
         implements BindingManager, Serviceable, Disposable,
                    Initializable, Configurable, ThreadSafe {
 
-    //TODO caching of the Bindings. 
+    // TODO caching of the Bindings.
 
     private ServiceManager serviceManager;
     private DatatypeManager datatypeManager;
@@ -107,7 +107,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
         try {
             InputSource is = new InputSource(bindSrc.getInputStream());
             is.setSystemId(bindSrc.getURI());
-            
+
             Document doc = DomHelper.parse(is);
             Element rootElm = doc.getDocumentElement();
             JXPathBindingBase newBinding = null;
@@ -146,12 +146,12 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     /**
-     * Assistant Inner class discloses enough features to the created 
-     * childBindings to recursively 
-     * 
+     * Assistant Inner class discloses enough features to the created
+     * childBindings to recursively
+     *
      * This patterns was chosen to prevent Inversion Of Control between
      * this factory and its builder classes (that could be provided by third
-     * parties)  
+     * parties)
      */
     public class Assistant {
 
@@ -164,7 +164,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
         }
 
         /**
-         * Creates a {@link Binding} following the specification in the 
+         * Creates a {@link Binding} following the specification in the
          * provided config element.
          */
         public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
@@ -177,7 +177,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
         }
 
         /**
-         * Makes an array of childBindings for the child-elements of the 
+         * Makes an array of childBindings for the child-elements of the
          * provided configuration element.
          */
         public JXPathBindingBase[] makeChildBindings(Element parentElement) throws BindingException {

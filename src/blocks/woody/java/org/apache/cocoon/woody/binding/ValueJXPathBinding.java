@@ -63,6 +63,8 @@ import java.util.Locale;
  * that loads and saves the information behind a specific xpath expresion
  * (pointing to an attribute or text-node) to and from a specific Woody
  * widget as identified by its id.
+ *
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.10 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -120,8 +122,8 @@ public class ValueJXPathBinding extends JXPathBindingBase {
             if (value instanceof String) {
                 value = convertor.convertFromString((String)value, convertorLocale, null);
             } else {
-                getLogger().warn("Convertor ignored on backend-value which isn't of type String.");   
-            }                
+                getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
+            }
         }
 
         widget.setValue(value);

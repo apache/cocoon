@@ -55,16 +55,16 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * StructJXPathBinding provides an implementation of a {@link Binding} 
- * that narrows the context towards provided childbindings. 
+ * StructJXPathBinding provides an implementation of a {@link Binding}
+ * that narrows the context towards provided childbindings.
  * <p>
  * NOTES: <ol>
- * <li>This Binding assumes that the provided widget-id points to a widget 
+ * <li>This Binding assumes that the provided widget-id points to a widget
  * that contains other widgets.</li>
  * </ol>
  *
- * CVS $Id: StructJXPathBinding.java,v 1.2 2004/01/06 12:31:17 joerg Exp $
  * @author Timothy Larson
+ * @version CVS $Id: StructJXPathBinding.java,v 1.3 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -86,7 +86,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
@@ -105,7 +105,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

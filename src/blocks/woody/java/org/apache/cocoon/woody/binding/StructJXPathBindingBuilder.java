@@ -54,9 +54,9 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * StructJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link StructJXPathBinding} out of the configuration in the 
+ * StructJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link StructJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:struct id="<i>widget-id</i>" path="<i>xpath-expression</i>"
@@ -65,8 +65,8 @@ import org.w3c.dom.Element;
  * &lt;/wb:struct&gt;
  * </code></pre>
  *
- * CVS $Id: StructJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
  * @author Timothy Larson
+ * @version CVS $Id: StructJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class StructJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -75,7 +75,7 @@ public class StructJXPathBindingBuilder
             throws BindingException {
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);

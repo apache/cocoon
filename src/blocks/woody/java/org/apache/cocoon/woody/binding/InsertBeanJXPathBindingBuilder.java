@@ -55,26 +55,27 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * InsertBeanJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link InsertBeanJXPathBinding} out of the configuration in the 
+ * InsertBeanJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link InsertBeanJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:insert-bean classname="..child-bean-class.." addmethod="..method-to-add.."/&gt; 
+ * &lt;wb:insert-bean classname="..child-bean-class.." addmethod="..method-to-add.."/&gt;
  * </code></pre>
+ *
+ * @version CVS $Id: InsertBeanJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
-public class InsertBeanJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+public class InsertBeanJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
     /**
-     * Creates an instance of {@link InsertBeanJXPathBinding} configured 
-     * with the nested template of the bindingElm. 
+     * Creates an instance of {@link InsertBeanJXPathBinding} configured
+     * with the nested template of the bindingElm.
      */
     public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+
             String className =
                 DomHelper.getAttribute(bindingElm, "classname");
             String addMethod =
@@ -87,5 +88,4 @@ public class InsertBeanJXPathBindingBuilder
             throw new BindingException("Error building a insert-bean binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
-
 }

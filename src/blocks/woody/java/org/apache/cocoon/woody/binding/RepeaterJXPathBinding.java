@@ -65,9 +65,11 @@ import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 
 /**
- * RepeaterJXPathBinding provides an implementation of a {@link Binding} 
+ * RepeaterJXPathBinding provides an implementation of a {@link Binding}
  * that allows for bidirectional binding of a repeater-widget to/from
- * repeating structures in the back-end object model. 
+ * repeating structures in the back-end object model.
+ *
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.15 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -87,10 +89,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, 
-                                 String repeaterId, String repeaterPath, 
+    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts,
+                                 String repeaterId, String repeaterPath,
                                  String rowPath, String rowPathForInsert,
-                                 String uniqueRowId, String uniqueRowPath, 
+                                 String uniqueRowId, String uniqueRowPath,
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
         this(commonAtts, repeaterId, repeaterPath, rowPath, rowPathForInsert, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
@@ -99,11 +101,11 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, 
-                                 String repeaterId, String repeaterPath, 
+    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts,
+                                 String repeaterId, String repeaterPath,
                                  String rowPath, String rowPathForInsert,
-                                 String uniqueRowId, String uniqueRowPath, 
-                                 Convertor convertor, Locale convertorLocale, 
+                                 String uniqueRowId, String uniqueRowPath,
+                                 Convertor convertor, Locale convertorLocale,
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
         super(commonAtts);
@@ -125,14 +127,14 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
         this.deleteRowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, deleteBindings);
         if (this.deleteRowBinding != null) {
-            this.deleteRowBinding.setParent(this);            
+            this.deleteRowBinding.setParent(this);
         }
     }
 
 
     /**
-     * Binds the unique-id of the repeated rows, and narrows the context on 
-     * objectModelContext and Repeater to the repeated rows before handing 
+     * Binds the unique-id of the repeated rows, and narrows the context on
+     * objectModelContext and Repeater to the repeated rows before handing
      * over to the actual binding-children.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
@@ -164,7 +166,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
 
     /**
-     * Uses the mapped unique-id of each row to detect if rows have been 
+     * Uses the mapped unique-id of each row to detect if rows have been
      * updated, inserted or removed.  Depending on what happened the appropriate
      * child-bindings are alowed to visit the narrowed contexts.
      */
@@ -178,10 +180,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
         // create set of updatedRowIds
         Set updatedRowIds = new HashSet();
-        //create list of rows to insert at end 
+        //create list of rows to insert at end
         List rowsToInsert = new ArrayList();
 
-        // iterate rows...        
+        // iterate rows...
         int formRowCount = repeater.getSize();
         for (int i = 0; i < formRowCount; i++) {
             Repeater.RepeaterRow thisRow = repeater.getRow(i);
@@ -190,7 +192,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             Object rowIdValue = rowIdWidget.getValue();
 
             if (rowIdValue != null) {
-                //if rowIdValue != null --> iterate nodes to find match 
+                //if rowIdValue != null --> iterate nodes to find match
                 Iterator rowPointers =
                     repeaterContext.iteratePointers(this.rowPath);
                 boolean found = false;
@@ -205,7 +207,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                             matchId = this.uniqueRowIdConvertor.convertFromString((String)matchId, this.uniqueRowIdConvertorLocale, null);
                         } else {
                             getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
-                        }                            
+                        }
                     }
 
                     if (rowIdValue.equals(matchId)) {
@@ -229,7 +231,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             }
         }
 
-        //again iterate nodes for deletion  
+        //again iterate nodes for deletion
         Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
         List rowsToDelete = new ArrayList();
         while (rowPointers.hasNext()) {
@@ -242,7 +244,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     matchId = this.uniqueRowIdConvertor.convertFromString((String)matchId, this.uniqueRowIdConvertorLocale, null);
                 } else {
                     getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
-                }                            
+                }
             }
 
             // check if matchPath was in list of updates, if not --> bind for delete
@@ -288,13 +290,13 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     this.rowBinding.saveFormToModel(thisRow, newRowContext);
                     getLogger().debug("bound new row");
                     indexCount++;
-                }                
+                }
             } else {
                 getLogger().warn("RepeaterBinding has detected rows to insert, " +
                     "but misses the <on-insert-row> binding to do it.");
             }
         }
-        
+
 
         if (getLogger().isDebugEnabled())
             getLogger().debug("done saving rows " + toString());
@@ -311,7 +313,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             this.deleteRowBinding.enableLogging(logger);
         }
         if (this.insertRowBinding != null) {
-            this.insertRowBinding.enableLogging(logger);            
+            this.insertRowBinding.enableLogging(logger);
         }
         this.rowBinding.enableLogging(logger);
     }

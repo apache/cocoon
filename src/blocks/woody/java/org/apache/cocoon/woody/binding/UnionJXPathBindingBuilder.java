@@ -54,9 +54,9 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * UnionJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link UnionJXPathBinding} out of the configuration in the 
+ * UnionJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link UnionJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:union id="<i>widget-id</i>" path="<i>xpath-expression</i>"
@@ -65,8 +65,8 @@ import org.w3c.dom.Element;
  * &lt;/wb:union&gt;
  * </code></pre>
  *
- * CVS $Id: UnionJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
  * @author Timothy Larson
+ * @version CVS $Id: UnionJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class UnionJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
@@ -74,7 +74,7 @@ public class UnionJXPathBindingBuilder extends JXpathBindingBuilderBase {
             throws BindingException {
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);

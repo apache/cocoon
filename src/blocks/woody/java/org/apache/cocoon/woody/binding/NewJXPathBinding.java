@@ -54,7 +54,7 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * NewJXPathBinding provides an implementation of a {@link Binding} 
+ * NewJXPathBinding provides an implementation of a {@link Binding}
  * that references a class of bindings.
  * <p>
  * NOTES: <ol>
@@ -62,8 +62,8 @@ import org.apache.commons.jxpath.JXPathContext;
  * class that contains other widgets.</li>
  * </ol>
  *
- * CVS $Id: NewJXPathBinding.java,v 1.2 2003/12/31 05:50:12 antonio Exp $
  * @author Timothy Larson
+ * @version CVS $Id: NewJXPathBinding.java,v 1.3 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class NewJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -73,7 +73,7 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Constructs NewJXPathBinding
-     * @param commonAtts 
+     * @param commonAtts
      * @param widgetId
      * @param childBindings
      */
@@ -89,7 +89,7 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
@@ -110,7 +110,7 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

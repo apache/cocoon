@@ -53,9 +53,11 @@ package org.apache.cocoon.woody.binding;
 import org.apache.cocoon.woody.formmodel.Widget;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
+ * Binding declares the methods to 'bind' (i.e. 'load' and 'save')
+ * information elements from some back-end model (2nd argument) to and from
  * a existing Woody Widget.
+ *
+ * @version CVS $Id: Binding.java,v 1.5 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public interface Binding {
 
@@ -76,14 +78,14 @@ public interface Binding {
      */
     Binding getClass(String id);
 
-    /** 
+    /**
      * Loads the information-elements from the objModel to the frmModel.
-     *  
+     *
      * @param frmModel
      * @param objModel
      */
     void loadFormFromModel(Widget frmModel, Object objModel);
-    
+
     /**
      * Saves the infortmation-elements to the objModel from the frmModel.
      * @param frmModel

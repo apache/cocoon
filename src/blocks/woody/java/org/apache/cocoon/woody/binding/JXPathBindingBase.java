@@ -61,22 +61,24 @@ import org.apache.commons.jxpath.JXPathContext;
 import org.w3c.dom.Node;
 
 /**
- * Provides a base class for hooking up Binding implementations that use the 
+ * Provides a base class for hooking up Binding implementations that use the
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
+ *
+ * @version CVS $Id: JXPathBindingBase.java,v 1.10 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
-    /** 
+    /**
      * Avalon Logger to use in all subclasses.
      */
     private Logger logger;
-    
+
     /**
      * Object holding the values of the common objects on all Bindings.
      */
     private final JXpathBindingBuilderBase.CommonAttributes commonAtts;
-    
+
     /**
      * Parent binding of this binding.
      */
@@ -90,11 +92,11 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     private JXPathBindingBase() {
         this(JXpathBindingBuilderBase.CommonAttributes.DEFAULT);
     }
-    
+
     protected JXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts) {
         this.commonAtts = commonAtts;
     }
-    
+
     /**
      * Sets parent binding.
      */
@@ -124,7 +126,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             classBinding = parent.getClass(id);
             // Cache result
             if (classes == null)
-               classes = new HashMap(); 
+               classes = new HashMap();
             classes.put(id, classBinding);
         }
         return classBinding;
@@ -147,17 +149,17 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     public abstract void doLoad(Widget frmModel, JXPathContext jxpc);
 
     /**
-     * Redefines the Binding action as working on a JXPathContext Type rather 
+     * Redefines the Binding action as working on a JXPathContext Type rather
      * then on generic objects.
-     * Executes the actual loading {@see #doLoad(Widget, JXPathContext)} 
+     * Executes the actual loading {@see #doLoad(Widget, JXPathContext)}
      * depending on the value of {@see #loadEnabled}
      */
     public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
-        boolean inheritedLeniency = jxpc.isLenient(); 
+        boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         if (this.commonAtts.loadEnabled) {
             doLoad(frmModel, jxpc);
-        }    
+        }
         jxpc.setLenient(inheritedLeniency);
     }
 
@@ -180,22 +182,22 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Abstract method that subclasses need to implement for specific activity.
      */
     public abstract void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException;
-    
+
     /**
-     * Redefines the Binding action as working on a JXPathContext Type rather 
+     * Redefines the Binding action as working on a JXPathContext Type rather
      * then on generic objects.
-     * Executes the actual saving {@see #doSave(Widget, JXPathContext)} 
+     * Executes the actual saving {@see #doSave(Widget, JXPathContext)}
      * depending on the value of {@see #saveEnabled}
      */
     public final void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException{
-        boolean inheritedLeniency = jxpc.isLenient(); 
+        boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         if (this.commonAtts.saveEnabled) {
             doSave(frmModel, jxpc);
         }
         jxpc.setLenient(inheritedLeniency);
     }
-    
+
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
      * it up in a JXPathContext object and then transfering control over to
@@ -215,7 +217,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             jxpc.setLenient(this.commonAtts.leniency.booleanValue());
         }
     }
-    
+
     private JXPathContext makeJXPathContext(Object objModel) {
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {

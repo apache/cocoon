@@ -64,18 +64,18 @@ import org.apache.commons.jxpath.Pointer;
 import org.mozilla.javascript.Script;
 
 /**
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.4 2003/12/18 07:57:21 mpo Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
-    
+
     private final String id;
     private final String path;
     private final Script loadScript;
     private final Script saveScript;
-    
-    public JavaScriptJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String id, String path, Script loadScript, Script saveScript) {        
+
+    public JavaScriptJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String id, String path, Script loadScript, Script saveScript) {
         super(commonAtts);
         this.id = id;
         this.path = path;
@@ -84,18 +84,18 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     }
 
     public void doLoad(Widget frmModel, JXPathContext jctx) {
-        
+
         if (this.loadScript == null) return;
-        
+
         Widget widget = frmModel.getWidget(this.id);
-        
+
         // Move to widget context
         Pointer pointer = jctx.getPointer(this.path);
 
         // FIXME: remove this ugly hack and get the request from the Avalon context once
         // binding builder are real components
         Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
-        
+
         try {
             Map values = new HashMap(3);
             values.put("widget", widget);
@@ -103,9 +103,9 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             if (pointer.getNode() != null) {
                 values.put("jxpathContext", jctx.getRelativeContext(pointer));
             }
-            
+
             JavaScriptHelper.execScript(this.loadScript, values, request);
-            
+
         } catch(RuntimeException re) {
             // rethrow
             throw re;
@@ -116,7 +116,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
     public void doSave(Widget frmModel, JXPathContext jctx) throws BindingException {
         if (this.saveScript == null) return;
-        
+
         Widget widget = frmModel.getWidget(this.id);
 
         // Move to widget context and create the path if needed
@@ -133,7 +133,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             values.put("jxpathPointer", pointer);
 
             JavaScriptHelper.execScript(this.saveScript, values, request);
-                
+
         } catch(RuntimeException re) {
             // rethrow
             throw re;
@@ -141,5 +141,4 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
         }
     }
-
 }
