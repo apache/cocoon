@@ -642,6 +642,23 @@
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
 
+  <project name="cocoon-block-taglib" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="taglib"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="taglib.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
