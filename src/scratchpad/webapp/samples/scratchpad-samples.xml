@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.5 2003/04/24 12:54:13 stevenn Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.6 2003/04/27 01:57:04 coliver Exp $ -->
 
 <samples>
 
@@ -11,6 +11,12 @@
  <group name="Pet Store">
     <sample name="Pet Store" href="petstore/">
       The Cocoon flowscript version of the J2EE PetStore.
+    </sample>
+  </group>
+
+ <group name="JXForms">
+    <sample name="JXForms" href="jxforms/">
+      JXForms Feedback Wizard Sample 
     </sample>
   </group>
   
