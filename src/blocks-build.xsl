@@ -103,6 +103,16 @@
       </xsl:attribute>
     </target>
 
+    <target name="prepare-anteater-tests">
+      <xsl:attribute name="depends">
+        <xsl:text>init</xsl:text>
+        <xsl:for-each select="$cocoon-blocks">
+          <xsl:text>,</xsl:text>
+          <xsl:value-of select="concat(@name, '-prepare-anteater-tests')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </target>
+
       <!-- Check if javadocs have to be generated -->
     <target name="javadocs-check">
       <mkdir dir="{string('${build.javadocs}')}"/>
@@ -528,6 +538,20 @@
           </fileset>
         </batchtest>
       </junit>
+    </target>
+    <target name="{@name}-prepare-anteater-tests" unless="unless.exclude.block.{$block-name}">
+
+      <!-- Test if this block has Anteater tests -->
+      <available property="{$block-name}.has.anteater-tests" file="{string('${blocks}')}/{$block-name}/test/anteater"/>
+
+      <antcall target="{$block-name}-prepare-anteater-tests"/>
+    </target>
+
+    <target name="{$block-name}-prepare-anteater-tests" if="{$block-name}.has.anteater-tests">
+      <copy todir="{string('${build.test}')}/anteater">
+        <fileset dir="{string('${blocks}')}/{$block-name}/test/anteater"/>
+        <mapper type="glob" from="*.xml" to="{$block-name}-*.xml"/>
+      </copy>
     </target>
   </xsl:template>
 </xsl:stylesheet>
