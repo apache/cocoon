@@ -5,14 +5,14 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.FileReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -26,6 +26,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationBuilder;
 import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.components.parser.Parser;
@@ -34,38 +35,37 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.DefaultComponentManager;
-import org.apache.cocoon.xml.SAXConfigurationBuilder;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.33 $ $Date: 2000-10-19 16:39:05 $
+ * @version CVS $Revision: 1.4.2.34 $ $Date: 2000-11-01 15:52:29 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
 
     /** The table of role-class */
     private HashMap components = new HashMap();
-    
+
     /** The table of role-configuration */
     private HashMap configurations = new HashMap();
-    
-    /** The configuration file */ 
-    private File configurationFile; 
-    
-    /** The sitemap file */ 
-    private String sitemapFileName; 
-    
+
+    /** The configuration file */
+    private File configurationFile;
+
+    /** The sitemap file */
+    private String sitemapFileName;
+
     /** The configuration tree */
     private Configuration configuration;
-    
+
     /** The sitemap manager */
     private Manager sitemapManager;
-    
+
     /** The root uri/path */
     private URL root;
 
@@ -94,7 +94,7 @@ public class Cocoon
             throw new ConfigurationException("Could not load parser " + parser + ": " + e.getMessage());
         }
         this.componentManager.addComponentInstance(Roles.COCOON, this);
-         
+
         String processor = System.getProperty(PROCESSOR_PROPERTY, DEFAULT_PROCESSOR);
         try {
         org.apache.trax.Processor.setPlatformDefaultProcessor(processor);
@@ -103,7 +103,7 @@ public class Cocoon
             throw new ConfigurationException("Error creating processor (" + processor + ")");
         }
     }
-    
+
     /**
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
@@ -113,22 +113,21 @@ public class Cocoon
         this();
 
         this.classpath = classpath;
-        
+
         this.workDir = workDir;
-                
+
         this.configurationFile = configurationFile;
         if (!configurationFile.isFile()) {
             throw new FileNotFoundException(configurationFile.toString());
         }
-            
+
         Parser p = (Parser) this.lookup(Roles.PARSER);
-        SAXConfigurationBuilder b = new SAXConfigurationBuilder();
-        p.setContentHandler(b);
-        String path = this.configurationFile.getPath();
+        ConfigurationBuilder b = new ConfigurationBuilder();
+	String path = this.configurationFile.getPath();
         InputSource is = new InputSource(new FileReader(path));
-        is.setSystemId(path);
-        p.parse(is);
-        this.configure(b.getConfiguration());
+	is.setSystemId(path);
+	b.setXMLReader(p.getXMLReader());
+        this.configure(b.build(is));
         this.root = this.configurationFile.getParentFile().toURL();
     }
 
@@ -161,17 +160,17 @@ public class Cocoon
      */
     public void configure(Configuration conf)
     throws ConfigurationException {
-    
+
         this.configuration = conf;
-        
+
         if (!"cocoon".equals(conf.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
         }
         if (!CONF_VERSION.equals(conf.getAttribute("version"))) {
-            throw new ConfigurationException("Invalid configuration schema version. Must be '" 
+            throw new ConfigurationException("Invalid configuration schema version. Must be '"
                 + CONF_VERSION + "'."/*, conf*/);
         }
-            
+
         // Set components
         Iterator e = conf.getChildren("component");
         while (e.hasNext()) {
@@ -209,7 +208,7 @@ public class Cocoon
     throws ComponentNotFoundException, ComponentNotAccessibleException {
         return this.componentManager.lookup(role);
     }
-    
+
     /**
      * Queries the class to estimate its ergodic period termination.
      */
@@ -220,7 +219,7 @@ public class Cocoon
     /**
      * Process the given <code>Environment</code> to produce the output.
      */
-    public boolean process(Environment environment) 
+    public boolean process(Environment environment)
     throws Exception {
         String file = new URL(environment.resolveEntity(null, this.sitemapFileName).getSystemId()).getFile();
         return this.sitemapManager.invoke(environment, "", file, true);
@@ -228,7 +227,7 @@ public class Cocoon
 
   /**
    * Sets required system properties .
-   */    
+   */
     protected void setSystemProperties()
     {
       java.util.Properties props = new java.util.Properties();
@@ -236,7 +235,7 @@ public class Cocoon
       // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
       // to locate the SAX2 driver.
       props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
-      
+
       java.util.Properties systemProps = System.getProperties();
       Enumeration propEnum = props.propertyNames();
       while(propEnum.hasMoreElements())

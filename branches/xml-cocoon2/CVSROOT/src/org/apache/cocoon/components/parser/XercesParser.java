@@ -17,27 +17,39 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 import org.w3c.dom.Document;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-05 17:27:50 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-01 15:52:37 $
  */
 public class XercesParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, DOMFactory {
+
+    final SAXParser parser;
+
+    public XercesParser ()
+    throws SAXException {
+        this.parser = new SAXParser();
+
+	this.parser.setFeature("http://xml.org/sax/features/validation",false);
+	this.parser.setFeature("http://xml.org/sax/features/namespaces",true);
+	this.parser.setProperty("http://xml.org/sax/properties/lexical-handler",
+	              super.lexicalHandler);
+    }
     
     public void parse(InputSource in)
     throws SAXException, IOException {
-        SAXParser p=new SAXParser();
-        p.setFeature("http://xml.org/sax/features/validation",false);
-        p.setFeature("http://xml.org/sax/features/namespaces",true);
-        p.setProperty("http://xml.org/sax/properties/lexical-handler",
-                      super.lexicalHandler);
-        p.setErrorHandler(this);
-        p.setContentHandler(super.contentHandler);
-        p.parse(in);
+        this.parser.setErrorHandler(this);
+        this.parser.setContentHandler(super.contentHandler);
+        this.parser.parse(in);
+    }
+
+    public XMLReader getXMLReader() {
+        return this.parser;
     }
         
     /** 
