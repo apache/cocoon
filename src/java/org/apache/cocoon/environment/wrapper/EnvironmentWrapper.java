@@ -427,21 +427,22 @@ public class EnvironmentWrapper
     public Object getAttribute(String name)
     {
         Object value = super.getAttribute(name);
-        if (value == null)
+        
+        // get it from the wrapped env only if it's not defined here with a null value
+        if (value == null  && !hasAttribute(name)) {
             value = this.environment.getAttribute(name);
+        }
 
         return value;
     }
 
     /**
-     * Remove attribute from the current instance, as well as from the
-     * wrapped environment.
+     * Remove attribute from the current instance.
      *
      * @param name a <code>String</code> value
      */
     public void removeAttribute(String name) {
         super.removeAttribute(name);
-        this.environment.removeAttribute(name);
     }
 
     /**

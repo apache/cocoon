@@ -140,12 +140,12 @@ implements Source, XMLizable {
         String prefix;
         if (uri.startsWith("//", position)) {
             position += 2;
-            this.processor = CocoonComponentManager.getCurrentProcessor().getRootProcessor();
+            this.processor = CocoonComponentManager.getActiveProcessor().getRootProcessor();
             prefix = ""; // start at the root
         } else if (uri.startsWith("/", position)) {
             position ++;
             prefix = null;
-            this.processor = CocoonComponentManager.getCurrentProcessor();
+            this.processor = CocoonComponentManager.getActiveProcessor();
         } else {
             throw new MalformedURLException("Malformed cocoon URI: " + uri);
         }
@@ -330,7 +330,7 @@ implements Source, XMLizable {
         try {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
-            this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment);
+            this.pipelineProcessor = CocoonComponentManager.getActiveProcessor();
 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {

@@ -58,6 +58,9 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
 
     /** The key used to store the current process environment */
     private static final String PROCESS_KEY = CocoonComponentManager.class.getName();
+    
+    /** The environment attribute used to keep track of the actual environment in which the pipeline was built. */
+    private static final String PROCESSOR_ATTR = "CocoonComponentManager.processor";
 
     /** The environment information */
     private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
@@ -120,7 +123,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
 		stack.push(new Object[] {env, processor, manager, new Integer(stack.getOffset())});
         stack.setOffset(stack.size()-1);
 
-        env.setAttribute("CocoonComponentManager.processor", processor);
+        env.setAttribute(PROCESSOR_ATTR, processor);
     }
 
     /**
@@ -128,9 +131,20 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
      */
     public static void leaveEnvironment() {
+        leaveEnvironment(false);
+    }
+
+    /**
+     * This hook must be called by the sitemap each time a sitemap is left.
+     * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
+     * 
+     * @param success indicates if the request was successfully handled by the environment that's being left
+     */
+    public static void leaveEnvironment(boolean success) {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         final Object[] objs = (Object[])stack.pop();
         stack.setOffset(((Integer)objs[3]).intValue());
+
         if ( stack.isEmpty() ) {
             final Environment env = (Environment)objs[0];
             final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
@@ -144,6 +158,11 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                 }
             }
             env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
+        } else {
+            if (!success) {
+                // Restore the current environment as being the active one
+                getCurrentEnvironment().setAttribute(PROCESSOR_ATTR, getCurrentProcessor());
+            }
         }
     }
 
@@ -242,10 +261,10 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     }
 
     /**
-     * Return the processor that is actually processing the request
+     * Return the processor that has actually processed the request
      */
-    public static Processor getLastProcessor(Environment env) {
-        return (Processor) env.getAttribute("CocoonComponentManager.processor");
+    public static Processor getActiveProcessor() {
+        return (Processor) getCurrentEnvironment().getAttribute(PROCESSOR_ATTR);
     }
 
     /**

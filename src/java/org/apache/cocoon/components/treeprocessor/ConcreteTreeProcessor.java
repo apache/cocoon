@@ -235,14 +235,15 @@ implements Processor, Disposable {
     	        setupLogger(redirector);
     	        context.setRedirector(redirector);
 
-                objectModel.put(ProcessingNode.OBJECT_SOURCE_RESOLVER, environment);
+            objectModel.put(ProcessingNode.OBJECT_SOURCE_RESOLVER, environment);
+            boolean success = false;
     	        try {
-    	            boolean success = this.rootNode.invoke(environment, context);
+    	            success = this.rootNode.invoke(environment, context);
     	            
     	            return success;
 
     	        } finally {
-                    CocoonComponentManager.leaveEnvironment();
+                    CocoonComponentManager.leaveEnvironment(success);
                     // Restore old redirector and resolver
      	            context.setRedirector(oldRedirector);
                     objectModel.put(ProcessingNode.OBJECT_SOURCE_RESOLVER, oldResolver);

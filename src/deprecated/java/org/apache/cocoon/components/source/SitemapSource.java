@@ -133,7 +133,7 @@ implements ModifiableSource {
         } else if (uri.startsWith("/", position)) {
             position ++;
             this.prefix = null;
-            this.processor = CocoonComponentManager.getCurrentProcessor();
+            this.processor = CocoonComponentManager.getActiveProcessor();
         } else {
             throw new ProcessingException("Malformed cocoon URI.");
         }
@@ -243,7 +243,7 @@ implements ModifiableSource {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
             this.environment.setURI(this.prefix, this.uri);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
-            this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment); 
+            this.pipelineProcessor = CocoonComponentManager.getActiveProcessor(); 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL != null) {
                 if (redirectURL.indexOf(":") == -1) {
