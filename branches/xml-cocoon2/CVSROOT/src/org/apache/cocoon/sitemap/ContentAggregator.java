@@ -16,6 +16,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.Attributes;
 import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Component;
@@ -40,7 +41,7 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.1 2001-04-19 11:30:31 giacomo Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.2 2001-04-19 16:06:16 giacomo Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper 
@@ -92,9 +93,12 @@ public class ContentAggregator extends ContentHandlerWrapper
 
     /** The <code>ComponentManager</code> */
     protected ComponentManager manager;
-    
-    private final AttributesImpl attrs = new AttributesImpl();
+
+    /** Holds all collected <code>EventPipeline</code>s */
     private ArrayList partEventPipelines = new ArrayList();
+
+    /** Stacks namespaces during processing */
+    private ArrayList currentNS = new ArrayList();
 
     /**
      * Pass the <code>ComponentManager</code> to the <code>composer</code>.
@@ -118,11 +122,14 @@ public class ContentAggregator extends ContentHandlerWrapper
         getLogger().debug("ContentAggregator: generating aggregated content"); 
         collectParts();
         this.documentHandler.startDocument();
-        this.documentHandler.startElement(this.rootElementNS, this.rootElement, this.rootElement, attrs);
+        this.startElem(this.rootElementNS, this.rootElement);
         try {
             for (int i = 0; i < this.partEventPipelines.size(); i++) {
-                this.documentHandler.startElement((String)this.partNSs.get(i), (String)this.partElements.get(i), 
-                        (String)this.partElements.get(i), attrs);
+                String ns = (String)this.partNSs.get(i);
+                if (ns.equals("")) {
+                    ns = this.getNS();
+                }
+                this.startElem(ns, (String)this.partElements.get(i));
                 EventPipeline ep = (EventPipeline)this.partEventPipelines.get(i);
                 ((XMLProducer)ep).setConsumer(this);
                 try {
@@ -134,16 +141,14 @@ public class ContentAggregator extends ContentHandlerWrapper
                 } finally {
                     this.manager.release(ep);
                     this.environment.popURI();
-                    this.documentHandler.endElement((String)this.partNSs.get(i), (String)this.partElements.get(i), 
-                            (String)this.partElements.get(i));
+                    this.endElem((String)this.partElements.get(i));
                 }
             }
         } finally {
-            this.documentHandler.endElement(this.rootElementNS, this.rootElement, this.rootElement);
+            this.endElem(this.rootElement);
             this.documentHandler.endDocument();
         }
-        getLogger().debug("ContentAggregator: finished aggregating content"); 
-
+        getLogger().debug("ContentAggregator: finished aggregating content");
     }
 
     private void collectParts() throws ProcessingException {
@@ -291,6 +296,7 @@ public class ContentAggregator extends ContentHandlerWrapper
         this.partNSs.clear();
         this.environment = null;
         this.partEventPipelines.clear();
+        this.currentNS.clear();
         this.xmlConsumer = null;
         this.contentHandler = null;
         this.lexicalHandler = null;
@@ -308,6 +314,43 @@ public class ContentAggregator extends ContentHandlerWrapper
         this.parameters=par;
     }
 
+    private String pushNS(String ns) {
+        getLogger().debug("pushed '" + ns + "'");
+        currentNS.add(ns);
+        return ns;
+    }
+    
+    private String popNS() {
+        int last = currentNS.size()-1;
+        String ns = (String)currentNS.get(last);
+        getLogger().debug("poped '" + ns + "'");
+        currentNS.remove(last);
+        return ns;
+    }
+    
+    private String getNS() {
+        int last = currentNS.size()-1;
+        return (String)currentNS.get(last);
+    }
+    
+    private void startElem(String namespaceURI, String name) throws SAXException {
+        this.pushNS(namespaceURI);
+        AttributesImpl attrs = new AttributesImpl();
+        if (!namespaceURI.equals("")) {
+            this.documentHandler.startPrefixMapping("", namespaceURI);
+            attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
+        }
+        this.documentHandler.startElement(namespaceURI, name, name, attrs);
+    }
+    
+    private void endElem(String name) throws SAXException {
+        String ns = this.popNS();
+        this.documentHandler.endElement(ns, name, name);
+        if (!ns.equals("")) {
+            this.documentHandler.endPrefixMapping("");
+        }
+    }
+    
     /**
      * Ignore start and end document events
      */
@@ -315,5 +358,19 @@ public class ContentAggregator extends ContentHandlerWrapper
     }
     
     public void endDocument () throws SAXException {
+    }
+
+    public void startElement (String namespaceURI, String localName,
+			      String qName, Attributes atts) throws SAXException {
+        String ns = namespaceURI;
+        if (ns.equals("")) {
+            ns = (String)this.getNS();
+        }        
+        this.documentHandler.startElement(this.pushNS(ns), localName, qName, atts);
+    }
+
+    public void endElement (String namespaceURI, String localName,
+			      String qName) throws SAXException {
+        this.documentHandler.endElement((String)this.popNS(), localName, qName);
     }
 }
