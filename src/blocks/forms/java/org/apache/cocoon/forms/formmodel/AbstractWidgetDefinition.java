@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -31,7 +30,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.5 2004/04/28 16:34:12 bruno Exp $
+ * @version $Id: AbstractWidgetDefinition.java,v 1.6 2004/04/29 08:46:19 cziegeler Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;

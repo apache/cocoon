@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.cocoon.forms.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -25,7 +24,7 @@ import org.xml.sax.SAXException;
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
  * 
- * @version CVS $Id: WidgetDefinition.java,v 1.4 2004/04/28 16:34:12 bruno Exp $
+ * @version CVS $Id: WidgetDefinition.java,v 1.5 2004/04/29 08:46:19 cziegeler Exp $
  */
 public interface WidgetDefinition {
 
