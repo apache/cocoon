@@ -66,8 +66,8 @@ import org.w3c.dom.Element;
  * </code></pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:15 vgritsenko Exp $
-s */
+ * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.3 2004/01/11 23:55:47 vgritsenko Exp $
+ */
 public class CaseJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
