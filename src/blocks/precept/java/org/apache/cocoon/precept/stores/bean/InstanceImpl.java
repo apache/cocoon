@@ -50,45 +50,36 @@
 */
 package org.apache.cocoon.precept.stores.bean;
 
-import org.apache.avalon.framework.component.ComponentException;
+import java.util.Collection;
 
 import org.apache.avalon.framework.configuration.Configurable;
-
 import org.apache.avalon.framework.configuration.Configuration;
-
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
-
+import org.apache.cocoon.precept.Context;
+import org.apache.cocoon.precept.InvalidXPathSyntaxException;
+import org.apache.cocoon.precept.Preceptor;
+import org.apache.cocoon.precept.PreceptorViolationException;
+import org.apache.cocoon.precept.stores.AbstractInstance;
 import org.apache.cocoon.xml.DocumentHandlerAdapter;
 
 import org.apache.commons.jxpath.JXPathContext;
 
 import org.exolab.castor.mapping.Mapping;
-
 import org.exolab.castor.mapping.MappingException;
-
 import org.exolab.castor.xml.MarshalException;
-
 import org.exolab.castor.xml.Marshaller;
-
 import org.exolab.castor.xml.ValidationException;
 
 import org.xml.sax.ContentHandler;
-
 import org.xml.sax.SAXException;
-
-import org.apache.cocoon.precept.*;
-
-import org.apache.cocoon.precept.stores.AbstractInstance;
-
-
-import java.util.Collection;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 15, 2002
- * @version CVS $Id: InstanceImpl.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: InstanceImpl.java,v 1.3 2003/11/20 16:39:32 joerg Exp $
  */
 public class InstanceImpl extends AbstractInstance implements Configurable {
 
@@ -122,7 +113,7 @@ public class InstanceImpl extends AbstractInstance implements Configurable {
                 clazzLoader = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
                 Class clazz = clazzLoader.loadClass(clazzName);
                 setBean(clazz.newInstance());
-            } catch (ComponentException e) {
+            } catch (ServiceException e) {
                 throw new ConfigurationException("", e);
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("", e);

@@ -50,43 +50,61 @@
 */
 package org.apache.cocoon.precept.preceptors.easyrelax;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
-import org.apache.cocoon.xml.EmbeddedXMLPipe;
-import org.apache.cocoon.xml.AbstractXMLConsumer;
-import org.xml.sax.*;
-import org.xml.sax.helpers.AttributesImpl;
-import org.apache.cocoon.precept.Preceptor;
 import org.apache.cocoon.precept.Constraint;
+import org.apache.cocoon.precept.Preceptor;
 import org.apache.cocoon.precept.preceptors.PreceptorBuilder;
+import org.apache.cocoon.xml.AbstractXMLConsumer;
+import org.apache.cocoon.xml.EmbeddedXMLPipe;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
-import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
-import java.net.URL;
-import java.util.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 23, 2002
- * @version CVS $Id: PreceptorBuilderImpl.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: PreceptorBuilderImpl.java,v 1.3 2003/11/20 16:39:31 joerg Exp $
  */
-public class PreceptorBuilderImpl extends AbstractXMLConsumer implements PreceptorBuilder, Composable, Disposable, Poolable {
+public class PreceptorBuilderImpl extends AbstractXMLConsumer
+        implements PreceptorBuilder, Serviceable, Disposable, Poolable {
     //public final static String ROLE = "org.apache.cocoon.precept.PreceptorBuilderImpl";
 
     public final static Attributes NOATTR = new AttributesImpl();
 
     public final static String NS = "http://www.dff.st/ns/desire/easyrelax/grammar/1.0";
 
-    private ComponentManager manager;
+    private ServiceManager manager;
 
     private SAXConfigurationHandler configurationHandler;
     private PreceptorImpl preceptor;
@@ -410,7 +428,7 @@ public class PreceptorBuilderImpl extends AbstractXMLConsumer implements Precept
         int len = 0;
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         //this.constraintFactory = (ConstraintFactory) manager.lookup(ConstraintFactory.ROLE);
         //this.preceptorRepository = (PreceptorRepository) manager.lookup(PreceptorRepository.ROLE);

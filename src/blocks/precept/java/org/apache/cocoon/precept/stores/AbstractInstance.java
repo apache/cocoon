@@ -51,34 +51,27 @@
 package org.apache.cocoon.precept.stores;
 
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import org.apache.avalon.framework.component.Composable;
-
-import org.apache.avalon.framework.component.ComponentManager;
-
-import org.apache.avalon.framework.component.ComponentException;
-
-import org.apache.avalon.framework.activity.Disposable;
-
-import org.apache.cocoon.precept.Instance;
-
-
+import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import javax.servlet.http.HttpSessionBindingEvent;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.precept.Instance;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 18, 2002
- * @version CVS $Id: AbstractInstance.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: AbstractInstance.java,v 1.3 2003/11/20 16:39:32 joerg Exp $
  */
 public abstract class AbstractInstance extends AbstractLogEnabled
-        implements Instance, Composable, Disposable, HttpSessionBindingListener {
+        implements Instance, Serviceable, Disposable, HttpSessionBindingListener {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
