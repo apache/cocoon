@@ -52,17 +52,18 @@ public class PortalServiceInfo {
     public void setup(Map objectModel, Map managers) {
         this.objectModel = objectModel;
         this.portalComponentManagers = managers;
-		Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-		if (context != null) {
-			String portalName = (String)context.get(Constants.PORTAL_NAME_KEY);
-			if (portalName != null) {
-                this.setPortalName(portalName);
-			} else if ( this.portalComponentManagers.size() == 1 ) {
-                // if we only have one portal, just use it
-                portalName = this.portalComponentManagers.keySet().iterator().next().toString();
-                this.setPortalName(portalName);
+        Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+        if (context != null) {
+            String pm = (String)context.get(Constants.PORTAL_NAME_KEY);
+            if (pm != null) {
+                this.setPortalName(pm);
             }
-		}
+        }
+        if ( this.portalName == null && this.portalComponentManagers.size() == 1 ) {
+                // if we only have one portal, just use it
+            String pm = this.portalComponentManagers.keySet().iterator().next().toString();
+            this.setPortalName(pm);
+	}
     }
 
     public String getPortalName() {

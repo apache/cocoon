@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -31,7 +30,7 @@ import org.apache.cocoon.portal.PortalService;
  * This action logs the user into the portal
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LoginAction.java,v 1.5 2004/03/15 18:18:19 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class LoginAction
 extends ServiceableAction
@@ -56,10 +55,7 @@ implements ThreadSafe {
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            service.setPortalName(par.getParameter("portal-name"));
             service.getComponentManager().getProfileManager().login();
-        } catch (ParameterException pe) {
-            throw new ProcessingException("Parameter portal-name is required.");
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {

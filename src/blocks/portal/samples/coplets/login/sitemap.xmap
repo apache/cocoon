@@ -24,8 +24,8 @@
      <!-- this is a login coplet -->
     <map:match pattern="coplet">
         <map:generate src="login.xml"/>
-        <map:transform src="../../{global:skin}styles/login-html.xsl"/>
-	   	<map:serialize type="xml"/>
+        <map:transform src="{portal-skin:skin.basepath}/styles/login-html.xsl"/>
+	<map:serialize type="xml"/>
     </map:match>
     
   </map:pipeline>

@@ -26,10 +26,10 @@
    <!-- These are the skins the user can choose from: -->
    <skins>
      <skin name="basic" base-path="context://samples/blocks/portal/skins/basic">
-       <thumbnail-path>images/thumbnail.jpg</thumbnail-path>
+       <thumbnail-path>images/thumb.jpg</thumbnail-path>
      </skin>
      <skin name="common" base-path="context://samples/blocks/portal/skins/common">
-       <thumbnail-path>images/thumbnail.jpg</thumbnail-path>
+       <thumbnail-path>images/thumb.jpg</thumbnail-path>
      </skin>
    </skins>
  </portal>

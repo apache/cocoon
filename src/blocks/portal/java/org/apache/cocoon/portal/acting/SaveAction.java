@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -56,10 +55,7 @@ implements ThreadSafe {
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            service.setPortalName(par.getParameter("portal-name"));
             service.getComponentManager().getProfileManager().saveUserProfiles(null);
-        } catch (ParameterException pe) {
-            throw new ProcessingException("Parameter portal-name is required.");
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
