@@ -395,6 +395,20 @@
 </faqsection>
 
 <faqsection title="Database Access">
+ <faq id="dbdoesnothing">
+  <question>My database page throws a NullPointerException, 
+   or just outputs the driver, username, etc. as if
+   Cocoon hadn't processed it at all</question>
+  <answer>
+   <p>Firstly, have you checked that cocoon is working by going to Cocoon.xml ?</p>
+   <p>Secondly, if you have upgraded to Cocoon 1.8.1 and are using esql, 
+    <connect href="esql.xml">esql has changed</connect>
+    since the previous release, so you need to rewrite your esql pages.</p>
+   <p>If that isn't the problem, you've probably misspelled or left out necessary
+    database namespaces or tags. Consult the documentation or the samples.</p>
+  </answer>
+ </faq>
+
  <faq id="illegalcharacter">
   <question>When I use the SQL/EQSL taglib or the SQL procesor, I get an exception
     <em>DOM-002: Illegal Character</em> - what does this mean?</question>
@@ -413,19 +427,24 @@
     change your stylesheet, if necessary, to match on the new element name.)</p>
    </answer>
  </faq>
-
- <faq id="dbdoesnothing">
-  <question>My database access page just outputs the driver, username, etc. as if
-   Cocoon hadn't processed it at all</question>
-  <answer>
-   <p>Firstly, have you checked that cocoon is working by going to Cocoon.xml ?</p>
-   <p>If that isn't the problem, you've probably misspelled or left out the necessary
-    database namespace. Consult the documentation or the samples.</p>
-  </answer>
- </faq>
 </faqsection>
 
 <faqsection title="Output Formatting and Internationalization">
+ <faq id="entities">
+  <question>
+   Why doesn't Cocoon recognise HTML entities like &amp;nbsp; ?
+  </question>
+  <answer>
+   <p>In HTML documents a large set of entities are implicitly defined, but in XML documents 
+   only a few are defined. So you must either use the numerical character codes, or 
+   declare the entities explicitly. A limited list is supplied in
+   <code>xdocs/dtd/characters.ent</code>. For example, one way to write a non-breaking
+   space is to write <code>&amp;#160;</code> - just <code>&amp;nbsp;</code> won't work, unless you
+   explicitly define <code>&amp;nbsp;</code>.
+   Anyway this is a basic XML question, so please don't ask on cocoon-users about it!</p>
+  </answer>
+ </faq>
+
  <faq id="xspencoding2">
   <question>
    When I use XSP and non-English characters, they just come out as question marks
