@@ -17,7 +17,11 @@
 importClass(Packages.org.apache.cocoon.components.search.LuceneCocoonSearcher);
 importClass(Packages.org.apache.cocoon.components.search.LuceneCocoonHelper);
 importClass(Packages.org.apache.cocoon.Constants);
-importPackage(Packages.org.apache.cocoon.bean.query);
+importClass(Packages.org.apache.cocoon.bean.query.SimpleLuceneQuery)
+importClass(Packages.org.apache.cocoon.bean.query.SimpleLuceneQueryBean)
+importClass(Packages.org.apache.cocoon.bean.query.SimpleLuceneCriterion)
+importClass(Packages.org.apache.cocoon.bean.query.SimpleLuceneCriterionBean)
+importClass(Packages.org.apache.cocoon.bean.query.ContextAccess)
 
 cocoon.load("flow/pager.js");
 
