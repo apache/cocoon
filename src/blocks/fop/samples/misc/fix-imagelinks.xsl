@@ -22,7 +22,7 @@ usable yet).  -->
       <xsl:value-of select="$ctxroot"/>
       <xsl:choose>
         <xsl:when test="starts-with(., '/')">
-          <xsl:value-of select="substring(., 2)"/>
+          <xsl:value-of select="."/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="$dir"/>
