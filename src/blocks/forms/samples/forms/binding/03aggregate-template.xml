@@ -19,7 +19,7 @@
     | CForms aggregate sample binding. Represent values of two aggregate
     | fields as single input fields.
     |
-    | CVS $Id$
+    | @version $Id$
     +-->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
