@@ -3,7 +3,7 @@
  * fix this with link translation later on.
  */
 var configPath = cocoon.context.getRealPath("/") + "samples/linotype/";
-var home = "webdav://dav:dav@localhost:9999/dav/samples/linotype/";
+var home = "webdav://user:password@host/dav/samples/linotype/";
 
 var stream = new java.io.FileInputStream(configPath + "linotype.users.properties");
 var users = new Packages.org.apache.cocoon.components.UserManager.getInstance(stream);
