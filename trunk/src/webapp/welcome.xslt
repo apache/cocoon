@@ -1,13 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: welcome.xslt,v 1.7 2003/05/08 00:05:04 vgritsenko Exp $ -->
+<!-- CVS $Id: welcome.xslt,v 1.8 2003/10/21 09:43:32 joerg Exp $ -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                              xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:param name="contextPath" select="'/cocoon'"/>
 
   <xsl:template match="welcome">
-    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <html xml:lang="en" lang="en">
       <head>
         <title>Welcome to Apache Cocoon!</title>
         <!-- 
@@ -26,7 +27,7 @@
         <h1>Welcome to Apache Cocoon!</h1>
         <xsl:apply-templates/>
         <p class="copyright">
-         Copyright © @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
+         Copyright Â© @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
         </p>
         <p class="block">
           <a href="http://cocoon.apache.org/"><img src="{$contextPath}/images/powered.gif" alt="Powered by Apache Cocoon"/></a>
