@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: Attribute.java,v 1.2 2004/03/05 10:07:24 bdelacretaz Exp $
+ * @version CVS $Id: Attribute.java,v 1.3 2004/03/24 18:54:23 joerg Exp $
  */
 public class Attribute extends LocatedEvents implements Evaluation {
 
@@ -109,7 +109,7 @@ public class Attribute extends LocatedEvents implements Evaluation {
      * Evaluate the current event and return its <code>String</code> value to
      * be included as a part of an attribute value.
      *
-     * @param runtime The <code>Runtime</code> receiving events notifications.
+     * @param context
      * @throws SAXException In case of error processing this event.
      */
     public String evaluate(JXPathContext context)

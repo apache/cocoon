@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: TemplateIf.java,v 1.2 2004/03/05 10:07:24 bdelacretaz Exp $
+ * @version CVS $Id: TemplateIf.java,v 1.3 2004/03/24 18:54:23 joerg Exp $
  */
 public class TemplateIf extends LocatedEvent {
 
@@ -37,8 +37,6 @@ public class TemplateIf extends LocatedEvent {
 
     /**
      * Create a new <code>TemplateIf</code> instance.
-     *
-     * @param data The data of this expression.
      */
     public TemplateIf() {
         this(null);
@@ -49,7 +47,6 @@ public class TemplateIf extends LocatedEvent {
      *
      * @param locator The <code>Locator</code> instance where location
      *                information should be read from.
-     * @param data The data of this expression.
      */
     public TemplateIf(Locator locator) {
         super(locator);
