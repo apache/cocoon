@@ -50,31 +50,29 @@
 */
 package org.apache.cocoon.environment.http;
 
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.request.RequestFactory;
-import org.apache.cocoon.environment.AbstractEnvironment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.components.source.SourceUtil;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.NetUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.1 2003/03/09 00:09:30 pier Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.2 2003/04/04 13:19:07 stefano Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -108,24 +106,20 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
                             ServletContext servletContext,
                             HttpContext context,
                             String containerEncoding,
-                            String defaultFormEncoding,
-                            RequestFactory requestFactory)
+                            String defaultFormEncoding)
      throws MalformedURLException, IOException {
         super(uri, req.getParameter(Constants.VIEW_PARAM), rootURL, extractAction(req));
 
-        this.request = new HttpRequest(req, this, requestFactory);
+        this.request = new HttpRequest(req, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
         this.request.setContainerEncoding(containerEncoding);
         this.response = new HttpResponse(res);
         this.webcontext = context;
         this.outputStream = response.getOutputStream();
+        
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, this.webcontext);
-        // This is a hack for the Php Generator
-        this.objectModel.put(HTTP_REQUEST_OBJECT, req);
-        this.objectModel.put(HTTP_RESPONSE_OBJECT, res);
-        this.objectModel.put(HTTP_SERVLET_CONTEXT, servletContext);
     }
 
    /**

@@ -48,54 +48,56 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request;
+package org.apache.cocoon.servlet.multipart;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.Vector;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
+ * This class represents a file part parsed from a http post stream.
  *
- * Extends the {@link RequestFactory} class
- *
- * @author <a href="mailto:dims@apache.org">Davanum Srinivas</a>
- * @version CVS $Id: SimpleRequestFactoryImpl.java,v 1.1 2003/03/09 00:09:09 pier Exp $
+ * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
+ * @version CVS $Id: PartInMemory.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public final class SimpleRequestFactoryImpl extends RequestFactory {
+public class PartInMemory extends Part {
+
+    private InputStream in;
+
+    private int size;
 
     /**
-     * Return a wrapped request object
+     * Constructor FilePartArray
+     *
+     * @param headers
+     * @param in
+     * @param size
      */
-    public HttpServletRequest getServletRequest(HttpServletRequest request,
-                                                       boolean saveUploadedFilesToDisk,
-                                                       File    uploadDirectory,
-                                                       boolean allowOverwrite,
-                                                       boolean silentlyRename,
-                                                       int     maxUploadSize) {
-        return request;
+    protected PartInMemory(Map headers, InputStream in, int size) {
+        super(headers);
+        this.in = in;
+        this.size = size;
     }
 
     /**
-     * Implementation of the get method
+     * Returns the filename
      */
-    public Object get(HttpServletRequest request, String name) {
-        String[] values = request.getParameterValues(name);
+    public String getFileName() {
+        return (String) headers.get("filename");
+    }
 
-        if (values == null) return null;
+    /**
+     * Returns the filename
+     */
+    public int getSize() {
+        return this.size;
+    }
 
-        if (values.length == 1) {
-            return values[0];
-        }
-
-        if (values.length > 1) {
-            Vector vect = new Vector(values.length);
-
-            for (int i = 0; i < values.length; i++) {
-                vect.add(values[i]);
-            }
-
-            return vect;
-        }
-        return null;
+    /**
+     * Returns a (ByteArray)InputStream containing the file data
+     *
+     * @throws Exception
+     */
+    public InputStream getInputStream() throws Exception {
+        return in;
     }
 }

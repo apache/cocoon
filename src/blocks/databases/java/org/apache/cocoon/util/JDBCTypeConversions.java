@@ -68,7 +68,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Collections;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.cocoon.components.request.multipart.FilePart;
+import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.excalibur.source.Source;
 
 
@@ -107,7 +107,7 @@ import org.apache.excalibur.source.Source;
  * <tr><td>object     </td><td>Object      </td><td>        </td><td>Object       </td></tr>
  * </table></p>
  *
- * @version CVS $Id: JDBCTypeConversions.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
+ * @version CVS $Id: JDBCTypeConversions.java,v 1.3 2003/04/04 13:19:07 stefano Exp $
  */
 public class JDBCTypeConversions {
     public static final Map typeConstants;
@@ -308,8 +308,8 @@ public class JDBCTypeConversions {
                 asciiStream = new BufferedInputStream(new FileInputStream(asciiFile));
                 length = (int) asciiFile.length();
                 clob = new ClobHelper(asciiStream, length);
-            } else if (value instanceof FilePart) {
-                FilePart anyFile = (FilePart) value;
+            } else if (value instanceof Part) {
+                Part anyFile = (Part) value;
                 asciiStream = new BufferedInputStream(anyFile.getInputStream());
                 length = (int) anyFile.getSize();
                 clob = new ClobHelper(asciiStream, length);
@@ -344,8 +344,8 @@ public class JDBCTypeConversions {
             } else if (value instanceof Source) {
                 asciiStream = ((Source) value).getInputStream();
                 length = (int)((Source) value).getContentLength();
-            } else if (value instanceof FilePart) {
-                FilePart anyFile = (FilePart) value;
+            } else if (value instanceof Part) {
+                Part anyFile = (Part) value;
                 asciiStream = new BufferedInputStream(anyFile.getInputStream());
                 length = (int) anyFile.getSize();
                 clob = new ClobHelper(asciiStream, length);
@@ -511,8 +511,8 @@ public class JDBCTypeConversions {
                 } else if (value instanceof String) {
                     file = new File((String)value);
                     blob = new BlobHelper(new FileInputStream(file), (int) file.length());
-                } else if (value instanceof FilePart) {
-                    FilePart anyFile = (FilePart) value;
+                } else if (value instanceof Part) {
+                    Part anyFile = (Part) value;
                     blob = new BlobHelper(new BufferedInputStream(anyFile.getInputStream()), anyFile.getSize());
                 } else {
                     throw new SQLException("Invalid type for blob: "+value.getClass().getName());
@@ -527,8 +527,8 @@ public class JDBCTypeConversions {
                 statement.setBinaryStream(position, ((JDBCxlobHelper)value).inputStream, ((JDBCxlobHelper)value).length);
             } else if (value instanceof Source){
                 statement.setBinaryStream(position, ((Source)value).getInputStream(), (int)((Source)value).getContentLength());
-            } else if (value instanceof FilePart) {
-                statement.setBinaryStream(position, ((FilePart)value).getInputStream(), ((FilePart)value).getSize());
+            } else if (value instanceof Part) {
+                statement.setBinaryStream(position, ((Part)value).getInputStream(), ((Part)value).getSize());
             } else {
                 if (value instanceof File) {           
                    file = (File)value;
