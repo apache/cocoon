@@ -16,13 +16,15 @@
 package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.forms.event.ActionEvent;
-import org.apache.cocoon.forms.event.ActionListener;
 
 /**
  * The definition for a repeater action that deletes the selected rows of a sibling repeater.
+ * <p>
+ * The action listeners attached to this action, if any, are called <em>before</em> the rows
+ * are actually removed
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: DeleteRowsActionDefinition.java,v 1.2 2004/05/07 16:43:42 mpo Exp $
+ * @version CVS $Id$
  */
 public class DeleteRowsActionDefinition extends RepeaterActionDefinition {
     
@@ -31,17 +33,24 @@ public class DeleteRowsActionDefinition extends RepeaterActionDefinition {
     public DeleteRowsActionDefinition(String repeaterName, String selectName) {
         super(repeaterName);
         this.selectName = selectName;
+    }
+    
+    public boolean hasActionListeners() {
+        // we always want to be notified
+        return true;
+    }
         
-        this.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
-                for (int i = repeater.getSize() - 1; i >= 0; i--) {
-                    Repeater.RepeaterRow row = repeater.getRow(i);
-                    if (Boolean.TRUE.equals(row.getChild(DeleteRowsActionDefinition.this.selectName).getValue())) {
-                        repeater.removeRow(i);
-                    }
-                }
+    public void fireActionEvent(ActionEvent event) {
+        // Call action listeners, if any
+        super.fireActionEvent(event);
+        
+        // and actually delete the rows
+        Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+        for (int i = repeater.getSize() - 1; i >= 0; i--) {
+            Repeater.RepeaterRow row = repeater.getRow(i);
+            if (Boolean.TRUE.equals(row.getChild(DeleteRowsActionDefinition.this.selectName).getValue())) {
+                repeater.removeRow(i);
             }
-        });
+        }
     }
 }

@@ -21,7 +21,7 @@ import org.apache.cocoon.forms.event.ActionListener;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RowActionDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id$
  */
 public class RowActionDefinition extends ActionDefinition {
     
@@ -29,19 +29,32 @@ public class RowActionDefinition extends ActionDefinition {
         return new RowAction(this);
     }
     
+    /**
+     * Deletes the row containing this action. Action listeners, if any, are called <em>before</em>
+     * the row is deleted.
+     */
     public static class DeleteRowDefinition extends RowActionDefinition {
-        public DeleteRowDefinition() {
-            super.addActionListener(new ActionListener() {
+        
+        public boolean hasActionListeners() {
+            // We always want to be notified
+            return true;
+        }
+        
+        public void fireActionEvent(ActionEvent event) {
+            // Call event listeners, if any (the row still exists)
+            super.fireActionEvent(event);
 
-                public void actionPerformed(ActionEvent event) {
-                    Repeater.RepeaterRow row = Repeater.getParentRow(event.getSourceWidget());
-                    Repeater repeater = (Repeater)row.getParent();
-                    repeater.removeRow(repeater.indexOf(row));
-                }
-            });
+            // and delete the row
+            Repeater.RepeaterRow row = Repeater.getParentRow(event.getSourceWidget());
+            Repeater repeater = (Repeater)row.getParent();
+            repeater.removeRow(repeater.indexOf(row));
         }
     }
     
+    /**
+     * Moves up the row containing this action. Action listeners, if any, are called <em>after</em>
+     * the row has been moved.
+     */
     public static class MoveUpDefinition extends RowActionDefinition {
         public MoveUpDefinition() {
             super.addActionListener(new ActionListener() {
@@ -56,6 +69,10 @@ public class RowActionDefinition extends ActionDefinition {
         }
     }
     
+    /**
+     * Moves up the row containing this action. Action listeners, if any, are called <em>after</em>
+     * the row has been moved.
+     */
     public static class MoveDownDefinition extends RowActionDefinition {
         public MoveDownDefinition() {
             super.addActionListener(new ActionListener() {
@@ -70,6 +87,10 @@ public class RowActionDefinition extends ActionDefinition {
         }
     }
     
+    /**
+     * Adds a row after the one containing this action. Action listeners, if any, are called <em>after</em>
+     * the new row has been created.
+     */
     public static class AddAfterDefinition extends RowActionDefinition {
         public AddAfterDefinition() {
             super.addActionListener(new ActionListener() {
@@ -82,6 +103,4 @@ public class RowActionDefinition extends ActionDefinition {
             });
         }
     }
-
-
 }
