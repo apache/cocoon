@@ -6,9 +6,7 @@
     <property name="usetidy" value="false"/>
   </group>
 
-  <!-- Simulate the behavior of a user that opens a browser, starts
-  the calculator example, and goes back in the processing several
-  times. -->
+  <!-- test samples/test/simpletest -->
   <target name="internal-request-test">
     <property name="internal-request-test" value="${cocoon}/samples/test/simpletest"/>
 
