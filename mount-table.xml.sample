@@ -17,8 +17,12 @@
       the sources, often leading to sync problems.
   -->
   
-  <!-- example: mount the woody source samples at "woody-samples/" -->
+  <!--
+      example: mount the woody source samples at "woody-samples/"     
+      (don't forget the / at the end of the path name)
+   -->
   <mount uri-prefix="woody-samples" src="../../src/blocks/woody/samples/"/>
+
   
   <!-- example: mount a prototype located elsewhere on the filesystem at "proto/"
        (kept commented as the path is not likely to exist on your filesystem) -->
