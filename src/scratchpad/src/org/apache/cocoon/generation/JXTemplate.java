@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -773,7 +774,11 @@ public class JXTemplate extends AbstractGenerator {
             }
             return expr;
         } catch (InvocationTargetException e) {
-            throw e.getTargetException();
+            Throwable t = e.getTargetException();
+            if (t instanceof Exception) {
+                throw (Exception)t;
+            }
+            throw (Error)t;
         }
     }
 
@@ -792,7 +797,11 @@ public class JXTemplate extends AbstractGenerator {
             }
             return expr;
         } catch (InvocationTargetException e) {
-            throw e.getTargetException();
+            Throwable t = e.getTargetException();
+            if (t instanceof Exception) {
+                throw (Exception)t;
+            }
+            throw (Error)t;
         }
     }
 
