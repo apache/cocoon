@@ -62,7 +62,7 @@ import org.apache.turbine.util.Log;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.9 $ $Date: 2000-07-06 03:40:22 $
+ * @version $Revision: 1.10 $ $Date: 2000-08-07 02:24:28 $
  */
 
 public class XSPSQLLibrary {
@@ -313,7 +313,13 @@ public class XSPSQLLibrary {
 							formatted_value = value.toString();
 						}
 					} else {
-						formatted_value = format.format(value);
+						if (value instanceof byte[]) {
+							formatted_value = format.format(new String((byte[])value));
+						} else if (value instanceof char[]) {
+							formatted_value = format.format(new String((char[])value));
+						} else {
+							formatted_value = format.format(value);
+						}
 					}
 						if (create_row_elements &&
 							create_id_attribute &&
