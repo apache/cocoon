@@ -115,7 +115,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.21 2004/02/11 18:15:29 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.22 2004/02/13 00:24:31 vgritsenko Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -203,7 +203,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             while (iter.hasNext()) {
                 Map.Entry e = (Map.Entry)iter.next();
                 String uri = (String)e.getKey();
-                SourceValidity validity = 
+                SourceValidity validity =
                     (SourceValidity)e.getValue();
                 int valid = validity.isValid();
                 if (valid == SourceValidity.UNKNOWN) {
@@ -293,7 +293,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                         javaSourcePath[i++] = izer.nextToken();
                     }
                 } else {
-                    javaSourcePath = new String[]{""};                    
+                    javaSourcePath = new String[]{""};
                 }
                 updateSourcePath();
             }
@@ -339,7 +339,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             }
             if (reload) {
                 classLoader = new CompilingClassLoader(
-                        Thread.currentThread().getContextClassLoader(), 
+                        Thread.currentThread().getContextClassLoader(),
                         (SourceResolver)manager.lookup(SourceResolver.ROLE),
                         javaClassRepository);
                 classLoader.addSourceListener(
@@ -350,7 +350,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
                             public void sourceCompilationError(Source src,
                                                                String errMsg) {
-                                
+
                                 if (src != null) {
                                     throw Context.reportRuntimeError(errMsg);
                                 }
@@ -518,9 +518,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             context.newObject(thrScope, "FOM_Cocoon", args);
         cocoon.setParentScope(thrScope);
         thrScope.put("cocoon", thrScope, cocoon);
-        ((ScriptableObject)thrScope).defineProperty(LAST_EXEC_TIME,
-                new Long(0),
-                ScriptableObject.DONTENUM | ScriptableObject.PERMANENT);
+        thrScope.defineProperty(LAST_EXEC_TIME,
+                                new Long(0),
+                                ScriptableObject.DONTENUM | ScriptableObject.PERMANENT);
 
         thrScope.reset();
         return thrScope;
@@ -533,7 +533,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * <p>If you want to maintain the state of global variables across
      * multiple invocations of <code>&lt;map:call
      * function="..."&gt;</code>, you need to instanciate the session
-     * object which is a property of the cocoon object 
+     * object which is a property of the cocoon object
      * <code>var session = cocoon.session</code>. This will place the
      * newly create Scriptable object in the user's session, where it
      * will be retrieved from at the next invocation of {@link #callFunction}.</p>
@@ -568,7 +568,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
         thrScope.setupPackages(getClassLoader(needsRefresh));
-        cocoon.pushCallContext(this, environment, manager, serviceManager, 
+        cocoon.pushCallContext(this, environment, manager, serviceManager,
                                avalonContext, getLogger(), null);
 
         // Check if we need to compile and/or execute scripts
@@ -620,7 +620,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     /**
      * Compile filename as JavaScript code
-     * 
+     *
      * @param cx Rhino context
      * @param environment source resolver
      * @param fileName resource uri
@@ -642,7 +642,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 }
                 compiledScript = entry.getScript(cx, this.scope, false, this);
                 return compiledScript;
-            }    
+            }
         } else {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
@@ -659,7 +659,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 return compiledScript;
             } finally {
                 is.close();
-            }            
+            }
         } else {
             throw new ResourceNotFoundException(src.getURI() + ": not found");
         }
@@ -689,7 +689,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             try {
                 setupContext(environment, context, thrScope, classLoader);
                 cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
-                
+
                 // Register the current scope for scripts indirectly called from this function
                 cocoon.getRequest().setAttribute(
                         FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
@@ -773,8 +773,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.pushCallContext(this, environment, manager, 
-                                   serviceManager, avalonContext, 
+            cocoon.pushCallContext(this, environment, manager,
+                                   serviceManager, avalonContext,
                                    getLogger(), wk);
             // Register the current scope for scripts indirectly called from this function
             cocoon.getRequest().setAttribute(
@@ -792,7 +792,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             cocoon.setParameters(parameters);
             FOM_WebContinuation fom_wk = new FOM_WebContinuation(wk);
             fom_wk.setParentScope(kScope);
-            fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope, 
+            fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
                                                                    fom_wk.getClassName()));
             Object[] args = new Object[] {k, fom_wk};
             try {
@@ -842,9 +842,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             Object bizData, FOM_WebContinuation fom_wk,
             Environment environment) throws Exception {
         setupView(scope, cocoon, environment, fom_wk);
-        super.forwardTo(uri, bizData, 
+        super.forwardTo(uri, bizData,
                         fom_wk == null ? null :
-                           fom_wk.getWebContinuation(), 
+                           fom_wk.getWebContinuation(),
                         environment);
     }
 
