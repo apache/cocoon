@@ -57,7 +57,6 @@ import java.util.Enumeration;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -65,11 +64,9 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.helpers.NOPRecorder;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.xml.sax.SAXParser;
-import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -92,18 +89,20 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.5 2003/09/23 20:39:09 joerg Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.6 2003/09/25 12:59:53 vgritsenko Exp $
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 
     /** The URI of the namespace of this generator. */
-    private String PREFIX = "h";
-    private String URI = "http://apache.org/cocoon/request/2.0";
+    private static final String PREFIX = "h";
+    private static final String URI = "http://apache.org/cocoon/request/2.0";
+
     private String global_container_encoding;
     private String global_form_encoding;
+    private boolean global_generate_attributes;
+
     private String container_encoding;
     private String form_encoding;
-    private boolean global_generate_attributes;
     private boolean generate_attributes;
 
     public void parameterize(Parameters parameters)
@@ -113,14 +112,12 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
         global_generate_attributes = parameters.getParameterAsBoolean("generate-attributes", false);
     }
 
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, src, par);
-
-        container_encoding = par.getParameter("container-encoding", global_container_encoding);
-        form_encoding = par.getParameter("form-encoding", global_form_encoding);
-        generate_attributes = "false no off".indexOf(par.getParameter("generate-attributes",
-								      "" + global_generate_attributes)) < 0;
+        super.setup(resolver, objectModel, src, parameters);
+        container_encoding = parameters.getParameter("container-encoding", global_container_encoding);
+        form_encoding = parameters.getParameter("form-encoding", global_form_encoding);
+        generate_attributes = parameters.getParameterAsBoolean("generate-attributes", global_generate_attributes);
     }
 
     /**
@@ -128,87 +125,89 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
      */
     public void generate()
     throws SAXException {
-        Request request = ObjectModelHelper.getRequest(objectModel);
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+        final AttributesImpl attr = new AttributesImpl();
+
         this.contentHandler.startDocument();
-        AttributesImpl attr = new AttributesImpl();
+        this.contentHandler.startPrefixMapping(PREFIX, URI);
+        attribute(attr, "target", request.getRequestURI());
+        attribute(attr, "source", (this.source != null ? this.source : ""));
+        start("request", attr);
 
-        this.attribute(attr, "target", request.getRequestURI());
-        this.attribute(attr, "source", (this.source != null ? this.source : ""));
-        this.start("request", attr);
-
-        this.start("requestHeaders", attr);
+        start("requestHeaders", attr);
         Enumeration headers = request.getHeaderNames();
         while (headers.hasMoreElements()) {
             String header = (String) headers.nextElement();
-            this.attribute(attr, "name", header);
-            this.start("header", attr);
-            this.data(request.getHeader(header));
-            this.end("header");
+            attribute(attr, "name", header);
+            start("header", attr);
+            data(request.getHeader(header));
+            end("header");
         }
-        this.end("requestHeaders");
+        end("requestHeaders");
 
-        this.start("requestParameters", attr);
+        start("requestParameters", attr);
         Enumeration parameters = request.getParameterNames();
         while (parameters.hasMoreElements()) {
             String parameter = (String)parameters.nextElement();
-            this.attribute(attr, "name", parameter);
-            this.start("parameter", attr);
+            attribute(attr, "name", parameter);
+            start("parameter", attr);
             String values[] = request.getParameterValues(parameter);
             if (values != null) {
                 for (int x = 0; x < values.length; x++) {
-                    this.start("value",attr);
+                    start("value",attr);
                     if (form_encoding != null) {
                         try {
-                            this.data(values[x], container_encoding, form_encoding);
+                            data(values[x], container_encoding, form_encoding);
                         } catch (UnsupportedEncodingException uee) {
                             throw new CascadingRuntimeException("The suggested encoding is not supported.", uee);
                         }
                     } else if (parameter.startsWith("xml:")) {
                         try {
-                            this.parse(values[x]);
+                            parse(values[x]);
                         } catch (Exception e) {
                             throw new CascadingRuntimeException("Could not parse the xml parameter", e);
                         }
                     } else {
-                        this.data(values[x]);
+                        data(values[x]);
                     }
-                    this.end("value");
+                    end("value");
                 }
             }
-            this.end("parameter");
+            end("parameter");
         }
-        this.end("requestParameters");
+        end("requestParameters");
 
         if (generate_attributes) {
-            this.start("requestAttributes", attr);
+            start("requestAttributes", attr);
             Enumeration attributes = request.getAttributeNames();
             while (attributes.hasMoreElements()) {
                 String attribute = (String)attributes.nextElement();
-                this.attribute(attr, "name", attribute);
-                this.start("attribute", attr);
+                attribute(attr, "name", attribute);
+                start("attribute", attr);
                 Object value = request.getAttribute(attribute);
                 if (value != null) {
-                    this.start("value", attr);
+                    start("value", attr);
                     XMLUtils.valueOf(this.contentHandler, value);
-                    this.end("value");
+                    end("value");
                 }
-                this.end("attribute");
+                end("attribute");
             }
-            this.end("requestAttributes");
+            end("requestAttributes");
         }
 
         this.start("configurationParameters", attr);
         String[] confparams = super.parameters.getNames();
         for (int i = 0; i < confparams.length; i++) {
-            this.attribute(attr, "name", confparams[i]);
-            this.start("parameter", attr);
-            this.data(super.parameters.getParameter(confparams[i], ""));
-            this.end("parameter");
+            attribute(attr, "name", confparams[i]);
+            start("parameter", attr);
+            data(super.parameters.getParameter(confparams[i], ""));
+            end("parameter");
         }
-        this.end("configurationParameters");
+        end("configurationParameters");
 
-        this.end("request");
+        end("request");
 
+        this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
     }
 
@@ -240,50 +239,12 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
     private void parse(String data)
     throws Exception {
         SAXParser parser = null;
-
         try {
             parser = (SAXParser) manager.lookup(SAXParser.ROLE);
-            StringReader inputStream = new StringReader(data);
-            InputSource is = new InputSource(inputStream);
-            parser.parse(is, new FilteringXMLConsumer(super.xmlConsumer));
-        } catch (Exception e) {
-            throw e;
+            InputSource is = new InputSource(new StringReader(data));
+            parser.parse(is, new IncludeXMLConsumer(super.xmlConsumer));
         } finally {
-            if (parser != null) manager.release((Component)parser);
+            manager.release(parser);
         }
     }
-    
-    private class FilteringXMLConsumer extends NOPRecorder {
-        XMLConsumer c;
-        
-        FilteringXMLConsumer(XMLConsumer c) {
-            this.c = c;
-        }
-        
-        public void startPrefixMapping(String prefix, String uri)
-         throws SAXException {
-             this.c.startPrefixMapping(prefix, uri);
-         }
-        
-         public void endPrefixMapping(String prefix)
-         throws SAXException {
-             this.c.endPrefixMapping(prefix);
-         }
-        
-         public void startElement(String namespace, String name, String raw, Attributes attr)
-         throws SAXException {
-             this.c.startElement(namespace, name, raw, attr);
-         }
-        
-         public void endElement(String namespace, String name, String raw)
-         throws SAXException {
-             this.c.endElement(namespace, name, raw);
-         }
-        
-         public void characters(char ary[], int start, int length)
-         throws SAXException {
-             this.c.characters(ary, start, length);
-         }
-    }
-
 }
