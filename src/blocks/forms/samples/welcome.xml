@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.1 2004/03/09 10:34:13 reinhard Exp $-->
+<!-- $Id: welcome.xml,v 1.2 2004/03/09 15:07:50 reinhard Exp $-->
 <samples>
 
  <group name="Main examples page.">
@@ -30,7 +30,7 @@
  </group>
 
  <group name="Basic Samples">
-  <sample name="Various" href="various.action">This sample shows validation, event handling and various Cocoon Forms features.</sample>
+  <sample name="Various" href="form1">This sample shows validation, event handling and various Cocoon Forms features.</sample>
   <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form.</sample>
   <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
