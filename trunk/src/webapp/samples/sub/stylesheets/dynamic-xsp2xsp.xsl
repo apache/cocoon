@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: dynamic-xsp2xsp.xsl,v 1.1 2003/03/09 00:11:25 pier Exp $ -->
+<!-- CVS: $Id: dynamic-xsp2xsp.xsl,v 1.2 2003/03/18 19:02:44 vgritsenko Exp $ -->
 
 <xsl:stylesheet version="1.0" 
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -20,7 +20,7 @@
   </xsl:template>
 
   <xsl:template match="*[namespace-uri() = 'urn:xsp-request']">
-    <xsl:element name="xsp-request:{local-name()}">
+    <xsl:element name="xsp-request:{local-name()}" namespace="http://apache.org/xsp/request/2.0">
       <xsl:for-each select="@*">
         <xsl:attribute name="{name(.)}">
           <xsl:value-of select="."/>
