@@ -1,24 +1,21 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.7 2001-04-25 17:05:06 donaldp Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.8 2001-04-25 21:01:46 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.parameters.Parameters;
-import org.apache.cocoon.*;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.util.Tokenizer;
 import org.apache.excalibur.datasource.DataSourceComponent;
+import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 
 /**
  * This action is used to authenticate user by comparing several request
@@ -53,7 +50,7 @@ import org.xml.sax.InputSource;
  * not verified.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:05:06 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 21:01:46 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -226,5 +223,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.7 2001-04-25 17:05:06 donaldp Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.8 2001-04-25 21:01:46 dims Exp $
 // vim: set et ts=4 sw=4:

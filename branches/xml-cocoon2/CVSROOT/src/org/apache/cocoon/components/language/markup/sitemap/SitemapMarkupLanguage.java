@@ -9,15 +9,17 @@ package org.apache.cocoon.components.language.markup.sitemap;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.logger.Loggable;
-import org.apache.cocoon.components.language.markup.*;
-import org.apache.cocoon.components.language.markup.sitemap.*;
+import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
+import org.apache.cocoon.components.language.markup.LogicsheetCodeGenerator;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.log.Logger;
 import org.xml.sax.Attributes;
@@ -33,7 +35,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-25 17:05:42 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 21:01:58 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 

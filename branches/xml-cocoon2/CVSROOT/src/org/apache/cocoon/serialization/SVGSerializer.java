@@ -8,40 +8,41 @@
 
 package org.apache.cocoon.serialization;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.Iterator;
-import org.apache.avalon.component.ComponentException;
+import java.awt.Color;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.batik.transcoder.*;
-import org.apache.cocoon.*;
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.TranscodingHints;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.NOPCacheValidity;
-import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.xml.*;
-import org.apache.cocoon.xml.dom.*;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.dom.SVGBuilder;
 import org.apache.excalibur.pool.Poolable;
-import org.w3c.dom.*;
-import org.w3c.dom.svg.*;
-import org.xml.sax.*;
-import org.xml.sax.ext.*;
+import org.apache.log.Logger;
+import org.w3c.dom.Document;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * A Batik based Serializer for generating PNG/JPEG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-25 17:54:26 $
+ * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-04-25 21:02:16 $
  */
 public class SVGSerializer extends SVGBuilder
         implements Composable, Serializer, Configurable, Poolable, Cacheable {

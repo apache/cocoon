@@ -1,17 +1,10 @@
-// $Id: AbstractValidatorAction.java,v 1.1.2.4 2001-04-25 17:05:04 donaldp Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.5 2001-04-25 21:01:44 dims Exp $
 package org.apache.cocoon.acting;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.cocoon.*;
-import org.apache.cocoon.util.Tokenizer;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.log.Logger;
 
 /**
  * Abstract implementation of action that needs to perform validation of
@@ -48,7 +41,7 @@ import org.xml.sax.InputSource;
  * octal values as accepted by java.Lang.decode (String s).
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:05:04 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 21:01:44 $
  */
 public abstract class AbstractValidatorAction
 extends AbstractComplementaryConfigurableAction
@@ -287,5 +280,5 @@ implements Configurable
     }
 }
 
-// $Id: AbstractValidatorAction.java,v 1.1.2.4 2001-04-25 17:05:04 donaldp Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.5 2001-04-25 21:01:44 dims Exp $
 // vim: set et ts=4 sw=4:

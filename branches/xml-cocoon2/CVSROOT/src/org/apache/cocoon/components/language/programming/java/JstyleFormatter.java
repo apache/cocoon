@@ -15,7 +15,8 @@ import java.io.UnsupportedEncodingException;
 import jstyle.JSBeautifier;
 import jstyle.JSFormatter;
 import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.cocoon.components.language.programming.*;
+import org.apache.cocoon.components.language.programming.CodeFormatter;
+import org.apache.log.Logger;
 
 /**
  * This class implements <code>CodeFormatter</code> based on
@@ -23,7 +24,7 @@ import org.apache.cocoon.components.language.programming.*;
  * beautifier. This implementation is very improvised...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:06:05 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 21:02:03 $
  */
 public class JstyleFormatter extends AbstractLoggable implements CodeFormatter {
   /**

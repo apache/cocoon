@@ -8,17 +8,25 @@
 
 package org.apache.cocoon.components.language.programming.java;
 
-import java.io.*;
-import java.util.*;
-import org.apache.cocoon.components.language.programming.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.log.LogKit;
+import org.apache.log.Logger;
+import sun.tools.javac.Main;
 
 /**
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.12 $ $Date: 2001-02-08 21:37:45 $
+ * @version $Revision: 1.1.2.13 $ $Date: 2001-04-25 21:02:02 $
  * @since 2.0
  */
 

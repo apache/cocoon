@@ -1,19 +1,17 @@
-// $Id: SessionPropagatorAction.java,v 1.1.2.2 2001-04-25 17:05:12 donaldp Exp $
+// $Id: SessionPropagatorAction.java,v 1.1.2.3 2001-04-25 21:01:48 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.parameters.Parameters;
-import org.apache.cocoon.*;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.util.Tokenizer;
+import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 
 /**
  * This is the action used to propagate parameters into session. It
@@ -29,7 +27,7 @@ import org.xml.sax.InputSource;
  * </pre>
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:05:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 21:01:48 $
  */
 public class SessionPropagatorAction extends ComposerAction
 {
@@ -79,6 +77,6 @@ public class SessionPropagatorAction extends ComposerAction
     }
 }
 
-// $Id: SessionPropagatorAction.java,v 1.1.2.2 2001-04-25 17:05:12 donaldp Exp $
+// $Id: SessionPropagatorAction.java,v 1.1.2.3 2001-04-25 21:01:48 dims Exp $
 // vim: set et ts=4 sw=4:
 

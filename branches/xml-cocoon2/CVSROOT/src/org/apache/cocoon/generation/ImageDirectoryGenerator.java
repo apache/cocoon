@@ -7,17 +7,23 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.log.LogKit;
+import org.apache.log.Logger;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * An extension of DirectoryGenerators that adds extra attributes for image
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.9 $ $Date: 2001-04-25 18:20:39 $
+ * @version $Revision: 1.1.2.10 $ $Date: 2001-04-25 21:02:12 $
  */
 public class ImageDirectoryGenerator extends DirectoryGenerator {
 

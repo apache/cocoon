@@ -8,15 +8,24 @@
 
 package org.apache.cocoon.components.language.programming.java;
 
-import java.io.*;
-import java.util.*;
-import org.apache.cocoon.components.language.programming.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.cocoon.components.language.programming.CompilerError;
+import org.apache.log.Logger;
 
 /**
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.11 $ $Date: 2001-04-24 08:41:04 $
+ * @version $Revision: 1.1.2.12 $ $Date: 2001-04-25 21:02:02 $
  * @since 2.0
  */
 
