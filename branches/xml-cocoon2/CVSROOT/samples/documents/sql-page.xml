@@ -7,19 +7,22 @@
  <!ELEMENT paragraph (#PCDATA)>
 ]>
 
-<page>
+<page
+	xmlns:sql="http://xml.apache.org/cocoon/SQL"
+>
  <title>Hello</title>
  <content>
   <paragraph>This is my first Cocoon2 page filled with sql data!</paragraph>
 
   <execute-query xmlns="http://xml.apache.org/cocoon/SQL"> 
-   <query>select * from foo_table</query>
-  </execute-query>
-
-  <execute-query xmlns="http://xml.apache.org/cocoon/SQL"> 
-   <driver>org.gjt.mm.mysql.Driver</driver>
-   <dburl>jdbc:mysql://localhost/test</dburl>
-   <query>select * from foo_table</query>
+   <query>
+   	select id,name from department_table
+   </query>
+	<execute-query>
+	 <query>
+	  select id,name from employee_table where department_id = <ancestor-value sql:name="id" sql:level="1"/>
+	 </query>
+	</execute-query>
   </execute-query>
 
  </content>
