@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.79 2003/09/04 16:55:13 cziegeler Exp $
+  CVS $Id: gump.xml,v 1.80 2003/09/10 15:01:51 reinhard Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -104,6 +104,9 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="castor"/>
     <depend project="commons-jexl" inherit="all"/>
+    <depend project="commons-betwixt" inherit="all"/>
+    <depend project="commons-beanutils" inherit="all"/>
+    <depend project="commons-digester" inherit="all"/>        
     <depend project="jakarta-velocity" inherit="all"/>
     <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon-block-velocity"/>
@@ -1147,5 +1150,6 @@
     <home nested="src/blocks/stx/lib"/>
     <jar name="joost-20030502.jar"/>
   </project>
+
   
 </module>
