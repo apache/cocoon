@@ -43,7 +43,6 @@ public class ResourceExistsActionTestCase extends MockObjectTestCase {
     public void testExists() throws Exception {
         String src = "don't care";
         Parameters parameters = new Parameters();
-
         ResourceExistsAction action = new ResourceExistsAction();
         action.enableLogging(new MockLogger(action.getClass()));
         Mock resolver = new Mock(SourceResolver.class);
@@ -62,7 +61,6 @@ public class ResourceExistsActionTestCase extends MockObjectTestCase {
     public void testNotExists() throws Exception {
         String src = "don't care";
         Parameters parameters = new Parameters();
-
         ResourceExistsAction action = new ResourceExistsAction();
         action.enableLogging(new MockLogger(action.getClass()));
         Mock resolver = new Mock(SourceResolver.class);
