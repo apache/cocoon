@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: host-selector.xml,v 1.1 2003/09/02 12:03:18 cziegeler Exp $ 
+  <![CDATA[ CVS Version: $Id: host-selector.xml,v 1.2 2003/09/02 13:17:33 cziegeler Exp $ 
   ]]>
 -->
 
@@ -175,7 +175,7 @@
       <p>
         <!-- Links to related components pages. -->
         A general documentation about selectors is available at
-        <link href="../concepts/matchers_selectors.html">Matchers and Selectors</link>.
+        <link href="../../user/advanced/matchers_selectors.html">Matchers and Selectors</link>.
       </p>
       <p>
         For a detailed <code>Host</code> header documentation 

@@ -39,7 +39,7 @@
                     select the appropriate JSPEngine component. 
                     The default is a JSPEngine working with Tomcat's JSP servlet engine Jasper.
                     You may override the cocoon.roles by your own my.roles, as described 
-                    in the <link href="../../faq/index.html">FAQs</link>.
+                    in the <link href="../../../faq/index.html">FAQs</link>.
                   </p>
                   <p>The JSPEngine component of Tomcat's JSPEngine is implemented in JSPEngineImpl. 
                     If you want to use another JSPEngine component, you may specify it in a my.roles file.

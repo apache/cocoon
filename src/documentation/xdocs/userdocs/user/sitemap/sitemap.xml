@@ -455,7 +455,7 @@
      transform and present the requested resource(s) to the client. 
     </p>
     <p>See also 
-      <link href="matchers_selectors.html">Implementing Matchers And Selectors</link>
+      <link href="../advanced/matchers_selectors.html">Implementing Matchers And Selectors</link>
     </p>
    </s2>
    
@@ -475,7 +475,7 @@
      using the XSLT <code><![CDATA[<xsl:test> statement]]></code>.
     </p>
     <p>See also 
-      <link href="matchers_selectors.html">Implementing Matchers And Selectors</link>
+      <link href="../advanced/matchers_selectors.html">Implementing Matchers And Selectors</link>
     </p>
    </s2>
    

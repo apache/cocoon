@@ -12,7 +12,7 @@
   <s1 title="Velocity Generator">
    <p>If called from a Flowscript, the Cocoon
     <link href="http://jakarta.apache.org/velocity">Velocity</link>
-    <link href="../generators/velocity-generator.html">Generator</link>
+    <link href="../../components/generators/velocity-generator.html">Generator</link>
     provides access to the immediate properties of the context object passed to
     <link href="api.html#sendPage"><code>cocoon.sendPage</code></link> and
     <link href="api.html#sendPageAndWait"><code>cocoon.sendPageAndWait</code></link>. In addition, the current <link href="api.html#WebContinuation"><code>WebContinuation</code></link>
