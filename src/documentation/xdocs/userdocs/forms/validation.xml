@@ -63,7 +63,7 @@
       <fd:failmessage>Not a valid email address!</fd:failmessage>
     </fd:email>
   </fd:validation>
-</fd:datatype>]]></source>
+</fd:field>]]></source>
 
         <p>To provide locale-dependent messages, use i18n tags in
         combination with the I18nTransformer.</p>

@@ -18,15 +18,14 @@
 
 <document>
   <header>
-    <title>Apache Cocoon Forms: Forms Generator</title>
+    <title>Cocoon Forms: Java API</title>
     <authors>
       <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
     </authors>
   </header>
   <body>
-    <s1 title="Concept">
-      <p>The FormsGenerator is a Cocoon generator that generates an XML
-      representation of a form instance object.</p>
+    <s1 title="To be done">
+      <p>To be done.</p>
     </s1>
   </body>
 </document>

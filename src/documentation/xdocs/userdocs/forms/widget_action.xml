@@ -24,17 +24,20 @@
     </authors>
   </header>
   <body>
-    <s1 title="action widget">
+    <s1 title="Concept">
       <p>Used to trigger an action event on the server side. Usually presented
       as a button the user can press (though this is not required). When an
       action widget was activated, validation will not be performed. This
       is because usually it would be strange to have other fields validated
       when the user's intention wasn't really to submit the form. If you want
-      validation to happen, use the submit widget. After pressing an action
+      validation to happen, use the <link href="widget_submit.html">submit widget</link>.
+      After pressing an action
       button, the form will normally always be redisplayed, unless the event
-      handling code explicitely disables this (by using the endFormProcessing
-      method on the form object).</p>
+      handling code explicitely disables this (by using the method <code>endFormProcessing</code>
+      method on the <code>Form</code> object).</p>
+    </s1>
 
+    <s1 title="Configuration">
       <source><![CDATA[<fd:action id="..." action-command="...">
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>

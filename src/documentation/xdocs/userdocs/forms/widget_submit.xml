@@ -24,13 +24,38 @@
     </authors>
   </header>
   <body>
-    <s1 title="submit widget">
+    <s1 title="Concept">
       <p>The submit widget, usually rendered as a button, is used by
       the user to submit the form. The submit widget is a special kind
       of action widget, thus also has the same functionality as an action
       widget, however the submit widget does trigger validation and its
       purpose is to end the form.</p>
 
+      <p>You don't need to use a submit widget to submit a form. For example,
+      in your HTML template you can simply put:</p>
+
+      <source><![CDATA[<input type="submit"/>]]></source>
+
+      <p>to be able to submit the form. Using a submit widget enables
+      some extra functionality. You can control whether validation
+      should be performed. You can put multiple submit widgets on
+      a form and add different event handlers to them.</p>
+
+      <p>While a submit widget has the explicit purpose to submit a
+      form, a form can also be submitted by other widgets. One example
+      is the already mentioned <link href="widget_action.html">action
+      widget</link>. It is however also possible to automatically submit
+      a form when a widget changes its value, so that server-side event
+      value-changed event listeners can be triggerd. This can be specified
+      using <code>&lt;fi:styling submit-on-change="true"/&gt;</code> in
+      the form template (see <link href="xslt.html">XSLT</link> for more
+      information on the <code>fi:styling</code> directive).</p>
+
+      <p>To know which widget caused the form to be submitted, use the
+      method <code>getSubmitWidget</code> of the <code>Form</code> object.</p>
+    </s1>
+
+    <s1 title="Configuration">
       <source><![CDATA[<fd:submit id="..." action-command="..." validate="true|false">
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>
@@ -44,10 +69,10 @@
       be used to disable validation. The difference between an action
       widget and a submit widget with validate="false" is that a submit
       widget with validate="false" will end form processing, thus the form
-      will not be redisplayed (ultimately, it is of course the controller
+      will not be redisplayed. Ultimately, it is of course the controller
       who decides this, but the forms hint towards the controller is that
       it shouldn't be redisplayed, and this is exactly what the flowscript
-      integration library does).</p>
+      integration library does.</p>
     </s1>
   </body>
 </document>

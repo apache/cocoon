@@ -34,6 +34,10 @@
       it instead as a listbox with true and false values, you could also
       use a regular field widget. Since the styling preference might change over
       time, it is however better to use consistently the fd:booleanfield widget.</p>
+
+      <p>A booleanfield cannot be marked as "required", because it is
+      always required. It is either true or false. If you want tripples
+      (true/false/none), use a normal field widget with a selection list.</p>
     </s1>
 
     <s1 title="Configuration">

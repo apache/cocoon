@@ -18,7 +18,7 @@
 
 <document>
   <header>
-    <title>Apache Cocoon Forms: Template Transformer</title>
+    <title>Cocoon Forms: Template Transformer</title>
     <authors>
       <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
     </authors>
@@ -54,7 +54,7 @@
         It looks for it in the following locations:</p>
 
         <ol>
-          <li>if the wt:form-template element has a location attribute, then the
+          <li>if the ft:form-template element has a location attribute, then the
           value of that attribute will be evaluated as a JXPath expression.
           The result of this expression should be the form object.</li>
           <li>if a parameter called "attribute-name" was supplied to the
@@ -123,11 +123,11 @@
         <source><![CDATA[<ft:form-template location="getAttribute($session, getParameter($parameters, 'sessionattr'))" ...]]></source>
 
         <p>As mentioned before, ft:form-template elements cannot be nested, but you can
-        have multiple wt:form-template elements on one page. Together with the location
+        have multiple ft:form-template elements on one page. Together with the location
         attribute, this can be used to handle multiple forms occuring on one template.</p>
       </s2>
 
-      <s2 title="wt:widget">
+      <s2 title="ft:widget">
         <p>The ft:widget element is replaced by the forms transformer by the XML
         representation of a widget. Which widget is specified by the id attribute.
         The ft:widget element can contain a fi:styling element containing parameters
@@ -158,7 +158,7 @@
         The label will not be wrapped in another element.</p>
       </s2>
 
-      <s2 title="wt:continuation-id">
+      <s2 title="ft:continuation-id">
         <p>The ft:continuation-id element will be replaced by the forms transformer by:</p>
 
         <source><![CDATA[<fi:continuation-id>
@@ -168,7 +168,7 @@
         <p>This might be useful for embedding the continuation ID in a hidden form field, for example.</p>
       </s2>
 
-      <s2 title="Working with repeaters: wt:repeater-widget, wt:repeater-widget-label, wt:repeater-size">
+      <s2 title="Working with repeaters: ft:repeater-widget, ft:repeater-widget-label, ft:repeater-size">
         <p>The ft:repeater-widget element is similar to the ft:widget element but
         provides special treatment for repeaters. The content of the ft:repeater-widget
         element will be used as a template to generate each of the rows of the repeater.</p>

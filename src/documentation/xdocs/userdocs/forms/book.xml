@@ -36,8 +36,8 @@
     <menu-item label="booleanfield" href="widget_booleanfield.html"/>
     <menu-item label="repeater" href="widget_repeater.html"/>
     <menu-item label="output" href="widget_output.html"/>
-    <menu-item label="action" href="widget_action.html"/>
     <menu-item label="submit" href="widget_submit.html"/>
+    <menu-item label="action" href="widget_action.html"/>
     <menu-item label="repeater-action" href="widget_repeater_action.html"/>
     <menu-item label="row-action" href="widget_row_action.html"/>
     <menu-item label="aggregatefield" href="widget_aggregatefield.html"/>
@@ -47,6 +47,7 @@
   
   <menu label="Widget concepts">
     <menu-item label="Validation" href="validation.html"/>
+    <menu-item label="Event Handling" href="eventhandling.html"/>
     <menu-item label="Datatypes" href="datatypes.html"/>
   </menu>
 
@@ -59,5 +60,14 @@
 
   <menu label="Binding">
     <menu-item label="Binding Framework" href="binding.html"/>
+  </menu>
+
+  <menu label="API">
+    <menu-item label="Java" href="api_java.html"/>
+    <menu-item label="Javascript (Flowscript)" href="api_javascript.html"/>
+  </menu>
+
+  <menu label="Other resources">
+    <menu-item label="Forms @ Wiki" href="http://wiki.cocoondev.org/Wiki.jsp?page=Forms"/>
   </menu>
 </book>
