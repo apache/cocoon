@@ -65,9 +65,9 @@ import org.xml.sax.ContentHandler;
 /**
  * TBD
  *
- * @author  <a href="mailto:mge@efp.co.at>Michael Gerzabek</a>
+ * @author  <a href="mailto:mge@efp.co.at">Michael Gerzabek</a>
  * @since 21. Oct. 2002
- * @version CVS $Id: DefaultWeb3StreamerImpl.java,v 1.3 2003/03/19 09:04:40 haul Exp $
+ * @version CVS $Id: DefaultWeb3StreamerImpl.java,v 1.4 2003/03/31 11:14:11 haul Exp $
  */
 public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
 
@@ -80,6 +80,7 @@ public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
             Web3.INCLUDE_NAME_ATTR, "CDATA", function.getName().toUpperCase() );
         contentHandler.startElement( Web3.URI, Web3.INCLUDE_ELEM, 
             Web3.INCLUDE_ELEM, attributes );
+        attributes.clear();
         contentHandler.startElement( Web3.URI, Web3.IMPORT_ELEM, 
             Web3.IMPORT_ELEM, attributes );
         streamParameterList( function.getImportParameterList(), contentHandler );
@@ -119,7 +120,8 @@ public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
                                 "CDATA", sapTable.getName(k).toUpperCase());
                             contentHandler.startElement(Web3.URI, 
                                 Web3.FIELD_ELEM, Web3.FIELD_ELEM, attributes);
-                            String theValue = sapTable.getString(k);
+                            String theValue = ( sapTable.getString(k) == null) 
+                                ? "" : sapTable.getString(k).trim();
                             contentHandler.characters(theValue.toCharArray(), 0, 
                                 theValue.length());
                             contentHandler.endElement(Web3.URI, Web3.FIELD_ELEM, 
@@ -162,7 +164,8 @@ public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
                             sapStructure.getName(j).toUpperCase());
                         contentHandler.startElement(Web3.URI, Web3.FIELD_ELEM, 
                             Web3.FIELD_ELEM, attributes);
-                        String theValue = sapStructure.getString(j);
+                        String theValue = (sapStructure.getString(j) == null) 
+                            ? "" : sapStructure.getString(j).trim();
                         contentHandler.characters(theValue.toCharArray(), 0, 
                             theValue.length());
                         contentHandler.endElement(Web3.URI, Web3.FIELD_ELEM, 
@@ -178,7 +181,8 @@ public class DefaultWeb3StreamerImpl implements Web3Streamer, Poolable {
                         pList.getName(i).toUpperCase());
                     contentHandler.startElement(Web3.URI, Web3.FIELD_ELEM, 
                         Web3.FIELD_ELEM, attributes);
-                    String theValue = pList.getString(i);
+                    String theValue = (pList.getString(i) == null)
+                        ? "" : pList.getString(i).trim();
                     contentHandler.characters(theValue.toCharArray(), 0, 
                         theValue.length());
                     contentHandler.endElement(Web3.URI, Web3.FIELD_ELEM, 
