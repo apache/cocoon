@@ -85,6 +85,8 @@
             
             <!--
             <content-interceptor class="org.apache.cocoon.components.slide.impl.JMSContentInterceptor">
+              <parameter name="java.naming.factory.initial">org.exolab.jms.jndi.InitialContextFactory</parameter>
+              <parameter name="java.naming.provider.url">rmi://localhost:1099/</parameter>
               <parameter name="topic-factory">JmsTopicConnectionFactory</parameter>
               <parameter name="topic">topic1</parameter>
               <parameter name="ack-mode">dups</parameter>
