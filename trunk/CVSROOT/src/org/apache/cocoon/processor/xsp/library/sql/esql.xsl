@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.46 2001-01-17 00:09:20 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.47 2001-01-17 02:24:48 balld Exp $-->
 <!--
 
  ============================================================================
@@ -734,10 +734,11 @@
 <xsl:template name="get-string-encoded">
   <xsl:param name="column-spec"/>
   <xsl:param name="resultset"/>
+  <xsl:variable name="encoding"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:encoding"/></xsl:call-template></xsl:variable>
   <xsl:choose>
-    <xsl:when test="@encoding">
+    <xsl:when test="esql:encoding">
       new String (<xsl:value-of select="$resultset"/>.getBytes
-        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="@encoding"/>)
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
     </xsl:when>
     <xsl:otherwise>
       <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
