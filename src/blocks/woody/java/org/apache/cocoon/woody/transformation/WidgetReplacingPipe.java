@@ -55,13 +55,12 @@ import java.io.StringReader;
 import java.util.Locale;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
-import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -79,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.16 2003/12/08 21:32:26 vgritsenko Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.17 2003/12/22 16:43:11 mpo Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -92,11 +91,6 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
     private static final String STYLING_EL = "styling";
-
-    /**
-     * Default key under which the woody form is stored in the JXPath context.
-     */
-    public static final String WOODY_FORM = "woody-form";
 
     protected Widget contextWidget;
 
@@ -133,7 +127,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected boolean repeaterWidget;
 
     protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
-    protected WoodyTemplateTransformer pipeContext;
+    protected WoodyPipeLineConfig pipeContext;
 
     /**
      * Have we encountered a <wi:style> element in a widget ?
@@ -146,7 +140,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected String namespacePrefix;
     
 
-    public void init(Widget newContextWidget, WoodyTemplateTransformer newPipeContext) {
+    public void init(Widget newContextWidget, WoodyPipeLineConfig newPipeContext) {
         contextWidget = newContextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;
@@ -214,34 +208,11 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     AttributesImpl attrsCopy = new AttributesImpl(attributes);
                     attrsCopy.removeAttribute(attributes.getIndex(LOCATION));
                     attributes = attrsCopy;
-
-                    Object form = pipeContext.getJXPathContext().getValue(formJXPath);
-                    if (form == null) {
-                        throw new SAXException("No form found at location \"" + formJXPath + "\".");
-                    }
-                    if (!(form instanceof Form)) {
-                        throw new SAXException("Object returned by expression \"" + formJXPath + "\" is not a Woody Form.");
-                    }
-                    contextWidget = (Form)form;
-                } else if (pipeContext.getAttributeName() != null) { // then see if an attribute-name was specified
-                    contextWidget = (Form)pipeContext.getRequest().getAttribute(pipeContext.getAttributeName());
-                    if (contextWidget == null) {
-                        throw new SAXException("No form found in request attribute with name \"" + pipeContext.getAttributeName() + "\"");
-                    }
-                } else { // and then see if we got a form from the flow
-                    formJXPath = "/" + WoodyTemplateTransformer.WOODY_FORM;
-                    Object form = null;
-                    try {
-                        form = pipeContext.getJXPathContext().getValue(formJXPath);
-                    } catch (JXPathException e) { /* do nothing */ }
-                    if (form != null) {
-                        contextWidget = (Form)form;
-                    } else {
-                        throw new SAXException("No Woody form found.");
-                    }
                 }
+                contextWidget = pipeContext.findForm(formJXPath);
 
                 // ====> Determine the Locale
+                //TODO pull this locale stuff also up in the Config object?
 
                 String localeAttr = attributes.getValue("locale");
                 if (localeAttr != null) { // first use value of locale attribute if any

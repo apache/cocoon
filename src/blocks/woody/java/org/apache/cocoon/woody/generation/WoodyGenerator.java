@@ -50,20 +50,18 @@
 */
 package org.apache.cocoon.woody.generation;
 
-import org.apache.cocoon.generation.AbstractGenerator;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.woody.formmodel.Form;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.AbstractGenerator;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.cocoon.woody.transformation.WoodyPipeLineConfig;
+import org.xml.sax.SAXException;
 
 /**
  * A generator that streams an XML representation of a Woody {@link Form}. This will
@@ -73,8 +71,11 @@ import java.util.Locale;
  * <p>An alternative approach that requires less (or even none) XSLT work is offered by
  * the {@link org.apache.cocoon.woody.transformation.WoodyTemplateTransformer WoodyTemplateTransformer}.
  *
- * <p>The Form whose XML should be produced should reside in a request attribute, whose
- * name should be provided to this generator as a sitemap parameter called "attribute-name".
+ * <p>The Form whose XML should be produced should reside either 
+ * <ol><li> In a request attribute, whose name should be provided to this 
+ * generator as a sitemap parameter called "attribute-name".</li>
+ * <li> Or else at its default-location in the flow context-object.</li>
+ * </ol>
  */
 public class WoodyGenerator extends AbstractGenerator {
     
@@ -83,18 +84,9 @@ public class WoodyGenerator extends AbstractGenerator {
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        // get the form from a request attribute
-        String formAttribute;
-        try {
-            formAttribute = parameters.getParameter("attribute-name");
-        } catch (ParameterException e) {
-            throw new ProcessingException("Missing 'attribute-name' parameter for WoodyGenerator.");
-        }
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        form = (Form)request.getAttribute(formAttribute);
-        if (form == null) {
-            throw new ProcessingException("WoodyGenerator cannot find a form in the request attribute named " + formAttribute);
-        }
+        
+        WoodyPipeLineConfig config = WoodyPipeLineConfig.createConfig(objectModel, parameters);
+        form = config.findForm();     
     }
 
     public void recycle() {
