@@ -61,6 +61,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -75,7 +76,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.http.HttpResponse;
-import org.mozilla.javascript.Context;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
@@ -90,12 +90,12 @@ import org.mozilla.javascript.continuations.Continuation;
  *
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
- * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.19 2003/11/23 20:57:03 ricardo Exp $
+ * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pï¿½tz</a>
+ * @version CVS $Id: FOM_Cocoon.java,v 1.20 2003/11/24 12:12:44 antonio Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
-    private org.apache.avalon.framework.context.Context avalonContext;
+    private Context avalonContext;
 
     private ServiceManager serviceManager;
 
@@ -134,7 +134,7 @@ public class FOM_Cocoon extends ScriptableObject {
                Environment env, 
                ComponentManager manager,
                ServiceManager serviceManager,
-               org.apache.avalon.framework.context.Context avalonContext,
+               Context avalonContext,
                Logger logger) {
         this.interpreter = interp;
         this.environment = env;
@@ -472,7 +472,7 @@ public class FOM_Cocoon extends ScriptableObject {
         }
         
         public Scriptable jsGet_cookies() {
-            return Context.getCurrentContext().newArray(getParentScope(), jsFunction_getCookies());
+            return org.mozilla.javascript.Context.getCurrentContext().newArray(getParentScope(), jsFunction_getCookies());
         }
             
         public FOM_Cookie jsFunction_getCookie(String name) {
