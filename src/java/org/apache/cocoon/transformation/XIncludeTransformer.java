@@ -84,7 +84,7 @@ import java.util.Map;
  * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.15 2004/02/15 10:07:35 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.16 2004/02/20 18:46:49 sylvain Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -179,7 +179,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         }
 
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
-            if (xIncludeLevel == 1 && useFallback && name.equals(XINCLUDE_FALLBACK_ELEMENT) && uri.equals(XINCLUDE_NAMESPACE_URI)) {
+            if (xIncludeLevel == 1 && useFallback && XINCLUDE_NAMESPACE_URI.equals(uri) && XINCLUDE_FALLBACK_ELEMENT.equals(name)) {
                 fallbackLevel++;
 
                 // don't need these anymore
@@ -193,7 +193,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             }
 
             xmlBaseSupport.startElement(uri, name, raw, attr);
-            if (uri.equals(XINCLUDE_NAMESPACE_URI)) {
+            if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
                 if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
                     String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
                     if (href == null) {
