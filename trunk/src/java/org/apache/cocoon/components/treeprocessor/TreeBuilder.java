@@ -51,6 +51,7 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.excalibur.source.Source;
@@ -60,7 +61,7 @@ import java.util.List;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.1 2003/03/09 00:09:18 pier Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.2 2003/07/28 12:55:45 cziegeler Exp $
  */
 
 public interface TreeBuilder extends Component {
@@ -133,4 +134,9 @@ public interface TreeBuilder extends Component {
      * @throws ConfigurationException if the default type could not be found.
      */
     String getTypeForStatement(Configuration statement, String role) throws ConfigurationException;
+
+    /**
+     * Return the sitemap component manager
+     */
+    ComponentManager getSitemapComponentManager();
 }

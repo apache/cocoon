@@ -88,7 +88,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.2 2003/07/28 12:55:45 cziegeler Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
@@ -453,6 +453,13 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         return this.disposableNodes;
     }
 
+    /**
+     * Return the sitemap component manager
+     */
+    public ComponentManager getSitemapComponentManager() {
+        return this.manager;
+    }
+    
     /**
      * Setup a <code>ProcessingNode</code> by setting its location, calling all
      * the lifecycle interfaces it implements and giving it the parameter map if
