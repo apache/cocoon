@@ -4,7 +4,7 @@
   (see "eclipse-project" target in build.xml)
   
   @author Sylvain Wallez
-  @version CVS $Id: make-classpath.xsl,v 1.3 2003/07/14 22:04:10 joerg Exp $
+  @version CVS $Id: make-classpath.xsl,v 1.4 2003/07/14 22:39:06 joerg Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -35,14 +35,14 @@
                                                  substring-after(substring-after(substring-after(., '/'), '/'), '/'),
                                                                  substring-after(substring-after(., '/'), '/'))"/>
         <classpathentry kind="lib" path="{.}"/>
-      </xsl:for-each>     
+      </xsl:for-each>
 
       <!-- 3. JRE runtime -->
       <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
      
       <!-- 4. output directory
-      	   Build in a separate dir since Eclipse is confused
-      	   by classes compiled externally by Sun's Javac -->
+           Build in a separate dir since Eclipse is confused
+           by classes compiled externally by Sun's Javac -->
       <classpathentry kind="output" path="{output}"/>
 
     </classpath>
