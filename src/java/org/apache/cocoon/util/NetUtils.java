@@ -35,7 +35,7 @@ import org.apache.excalibur.source.SourceParameters;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.14 2004/04/29 20:10:04 ugo Exp $
+ * @version CVS $Id: NetUtils.java,v 1.15 2004/05/01 17:04:10 ugo Exp $
  */
 
 public class NetUtils {
@@ -325,22 +325,29 @@ public class NetUtils {
         if ("".equals(uri)) {
             return uri;
         }
-        boolean isAbs = (uri.charAt(0) == '/');
+        int leadingSlashes = 0;
+        for (leadingSlashes = 0 ; leadingSlashes < uri.length()
+                && uri.charAt(leadingSlashes) == '/' ; ++leadingSlashes) {}
         boolean isDir = (uri.charAt(uri.length() - 1) == '/');
         StringTokenizer st = new StringTokenizer(uri, "/");
         LinkedList clean = new LinkedList();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             if ("..".equals(token)) {
-                if (! clean.isEmpty()) {
+                if (! clean.isEmpty() && ! "..".equals(clean.getLast())) {
                     clean.removeLast();
+                    if (! st.hasMoreTokens()) {
+                        isDir = true;
+                    }
+                } else {
+                    clean.add("..");
                 }
             } else if (! ".".equals(token) && ! "".equals(token)) {
                 clean.add(token);
             }
         }
         StringBuffer sb = new StringBuffer();
-        if (isAbs) {
+        while (leadingSlashes-- > 0) {
             sb.append('/');
         }
         for (Iterator it = clean.iterator() ; it.hasNext() ; ) {
