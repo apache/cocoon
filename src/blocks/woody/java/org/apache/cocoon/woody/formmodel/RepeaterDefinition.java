@@ -56,8 +56,13 @@ import java.util.*;
  * The {@link WidgetDefinition} part of a Repeater widget, see {@link Repeater} for more information.
  */
 public class RepeaterDefinition extends AbstractWidgetDefinition {
+    private int initialSize = 0;
     private List widgetDefinitions = new ArrayList();
     private Map widgetDefinitionsById = new HashMap();
+
+    public RepeaterDefinition(int initialSize) {
+        this.initialSize = initialSize;
+    }
 
     protected void addWidget(WidgetDefinition widgetDefinition) throws DuplicateIdException {
         if (widgetDefinitionsById.containsKey(widgetDefinition.getId()))
@@ -75,6 +80,10 @@ public class RepeaterDefinition extends AbstractWidgetDefinition {
     }
 
     public Widget createInstance() {
-        return new Repeater(this);
+        Repeater result = new Repeater(this);
+        for (int i = 0; i < this.initialSize; i++) {
+            result.addRow();
+        }
+        return result;
     }
 }

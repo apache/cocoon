@@ -218,6 +218,19 @@ public class DomHelper {
         }
     }
 
+    public static int getAttributeAsInteger(Element element, String attributeName, int defaultValue) throws Exception {
+        String attrValue = element.getAttribute(attributeName);
+        if (attrValue.equals("")) {
+            return defaultValue;
+        } else {
+            try {
+                return Integer.parseInt(attrValue);
+            } catch (NumberFormatException e) {
+                throw new Exception("Cannot parse the value \"" + attrValue + "\" as an integer in the attribute \"" + attributeName + "\" on the element \"" + element.getTagName() + "\" at " + getLocation(element));
+            }
+        }
+    }
+
     public static boolean getAttributeAsBoolean(Element element, String attributeName, boolean defaultValue) throws Exception {
         String attrValue = element.getAttribute(attributeName);
         if (attrValue.equals(""))

@@ -50,31 +50,53 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.woody.event.ActionListener;
 import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
 import org.w3c.dom.Element;
 
 /**
- * Builds {@link RepeaterDefinition}s.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: RowActionDefinitionBuilder.java,v 1.1 2003/11/03 17:05:32 sylvain Exp $
  */
-public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+    
+    
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
+        RowActionDefinition definition = createDefinition(widgetElement, actionCommand);
+        setId(widgetElement, definition);
+        setDisplayData(widgetElement, definition);
 
-    public WidgetDefinition buildWidgetDefinition(Element repeaterElement) throws Exception {
-        
-        int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
-        
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize);
-        setId(repeaterElement, repeaterDefinition);
-        setDisplayData(repeaterElement, repeaterDefinition);
+        definition.setActionCommand(actionCommand);
 
-        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.WD_NS, "widgets", true);
-        // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
-        for (int i = 0; i < widgetElements.length; i++) {
-            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
-            repeaterDefinition.addWidget(widgetDefinition);
+        Iterator iter = buildEventListeners(widgetElement, "on-activate", ActionListener.class).iterator();
+        while (iter.hasNext()) {
+            definition.addActionListener((ActionListener)iter.next());
         }
 
-        return repeaterDefinition;
+        return definition;
+    }
+    
+    protected RowActionDefinition createDefinition(Element element, String actionCommand) throws Exception {
+
+        if ("delete".equals(actionCommand)) {
+            return new RowActionDefinition.DeleteRowDefinition();
+
+        } else if ("add-after".equals(actionCommand)) {
+            return new RowActionDefinition.AddAfterDefinition();
+
+        } else if ("move-up".equals(actionCommand)) {
+            return new RowActionDefinition.MoveUpDefinition();
+
+        } else if ("move-down".equals(actionCommand)) {
+            return new RowActionDefinition.MoveDownDefinition();
+
+        } else {
+            throw new Exception("Unknown repeater row action '" + actionCommand + "' at " + DomHelper.getLineLocation(element));
+        }
     }
 }
+

@@ -50,31 +50,51 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.w3c.dom.Element;
+import java.util.Locale;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * Builds {@link RepeaterDefinition}s.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: RowAction.java,v 1.1 2003/11/03 17:05:32 sylvain Exp $
  */
-public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-
-    public WidgetDefinition buildWidgetDefinition(Element repeaterElement) throws Exception {
-        
-        int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
-        
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize);
-        setId(repeaterElement, repeaterDefinition);
-        setDisplayData(repeaterElement, repeaterDefinition);
-
-        Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.WD_NS, "widgets", true);
-        // All child elements of the widgets element are widgets
-        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
-        for (int i = 0; i < widgetElements.length; i++) {
-            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElements[i]);
-            repeaterDefinition.addWidget(widgetDefinition);
+public class RowAction extends Action {
+    public RowAction(RowActionDefinition definition) {
+        super(definition);
+    }
+    
+    public static class MoveUpAction extends RowAction {
+        public MoveUpAction(RowActionDefinition.MoveUpDefinition definition) {
+            super(definition);
         }
 
-        return repeaterDefinition;
+        public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+            
+            // Only generate if we're not at the top
+            Repeater.RepeaterRow row = Repeater.getParentRow(this);
+            if (((Repeater)row.getParent()).indexOf(row) > 0) {
+                super.generateSaxFragment(contentHandler, locale);
+            }
+        }
+    }
+
+    public static class MoveDownAction extends RowAction {
+        public MoveDownAction(RowActionDefinition.MoveDownDefinition definition) {
+            super(definition);
+        }
+
+        public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+            
+            // Only generate if we're not at the bottom
+            Repeater.RepeaterRow row = Repeater.getParentRow(this);
+            Repeater repeater = (Repeater)row.getParent();
+            
+            if (repeater.indexOf(row) < repeater.getSize() - 1) {
+                super.generateSaxFragment(contentHandler, locale);
+            }
+        }
     }
 }
+
