@@ -50,32 +50,39 @@
 */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.CascadingRuntimeException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.util.Map;
+
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.xpointer.XPointer;
-import org.apache.cocoon.components.xpointer.parser.XPointerFrameworkParser;
-import org.apache.cocoon.components.xpointer.parser.ParseException;
 import org.apache.cocoon.components.xpointer.XPointerContext;
+import org.apache.cocoon.components.xpointer.parser.ParseException;
+import org.apache.cocoon.components.xpointer.parser.XPointerFrameworkParser;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.NetUtils;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLBaseSupport;
-import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.util.Map;
 
 /**
  * Implementation of an XInclude transformer. It supports xml:base attributes,
@@ -84,11 +91,11 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.12 2003/12/06 21:22:07 cziegeler Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.13 2004/02/06 22:24:40 joerg Exp $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composable {
+public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
 
     public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
@@ -122,7 +129,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
         xIncludePipe.setLexicalHandler(handler);
     }
 
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 

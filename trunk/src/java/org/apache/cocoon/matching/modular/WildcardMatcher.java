@@ -52,13 +52,13 @@ package org.apache.cocoon.matching.modular;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.matching.AbstractWildcardMatcher;
@@ -76,7 +76,7 @@ import org.apache.cocoon.matching.AbstractWildcardMatcher;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardMatcher.java,v 1.3 2004/01/05 08:17:31 cziegeler Exp $
+ * @version CVS $Id: WildcardMatcher.java,v 1.4 2004/02/06 22:24:40 joerg Exp $
  */
 public class WildcardMatcher extends AbstractWildcardMatcher
     implements Serviceable, Configurable
@@ -122,7 +122,7 @@ public class WildcardMatcher extends AbstractWildcardMatcher
         }
 
         InputModule input = null;
-        ComponentSelector inputSelector = null;
+        ServiceSelector inputSelector = null;
         Object result = null;
 
         // one could test whether the input module is ThreadSafe and
@@ -134,8 +134,8 @@ public class WildcardMatcher extends AbstractWildcardMatcher
 
         try {
             // obtain input module
-            inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (inputName != null && inputSelector != null && inputSelector.hasComponent(inputName)){
+            inputSelector = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+            if (inputName != null && inputSelector != null && inputSelector.isSelectable(inputName)){
                 input = (InputModule) inputSelector.select(inputName);
             }
             if (input != null) {

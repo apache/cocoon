@@ -52,9 +52,9 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
@@ -73,16 +73,16 @@ import java.util.Map;
  * An Abstract DOM Transformer, for use when a transformer needs a DOM-based
  * view of the document.
  * Subclass this interface and implement <code>transform(Document doc)</code>.
- * If you need a ComponentManager there is an instance variable
+ * If you need a ServiceManager there is an instance variable
  * <code>manager</code> for use.
  *
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: AbstractDOMTransformer.java,v 1.3 2003/12/06 21:22:07 cziegeler Exp $
+ * @version CVS $Id: AbstractDOMTransformer.java,v 1.4 2004/02/06 22:24:40 joerg Exp $
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer
-        implements Transformer, DOMBuilder.Listener, Composable, Disposable, Recyclable {
+        implements Transformer, DOMBuilder.Listener, Serviceable, Disposable, Recyclable {
 
     /**
      *  The SAX entity resolver
@@ -105,9 +105,9 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
     protected Parameters parameters;
 
     /**
-     * A <code>ComponentManager</code> which is available for use.
+     * A <code>ServiceManager</code> which is available for use.
      */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     /**
      * The <code>DOMBuilder</code> used to build DOM tree out of
@@ -122,9 +122,9 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
     }
 
     /**
-     * Set the component manager.
+     * Set the service manager.
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 

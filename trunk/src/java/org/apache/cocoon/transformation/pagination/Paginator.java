@@ -50,17 +50,23 @@
 */
 package org.apache.cocoon.transformation.pagination;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractTransformer;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -68,14 +74,11 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * A paginating transformer.
@@ -83,16 +86,16 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.7 2003/12/08 10:23:46 cziegeler Exp $
+ * @version    CVS $Id: Paginator.java,v 1.8 2004/02/06 22:24:41 joerg Exp $
  */
 public class Paginator extends AbstractTransformer
-  implements Composable, Disposable, CacheableProcessingComponent {
+  implements Serviceable, Disposable, CacheableProcessingComponent {
 
     public static final String PAGINATE_URI = "http://apache.org/cocoon/paginate/1.0";
     public static final String PAGINATE_PREFIX = "page";
     public static final String PAGINATE_PREFIX_TOKEN = PAGINATE_PREFIX+":";
 
-    private ComponentManager manager;
+    private ServiceManager manager;
     private SAXParser parser;
     private Store store;
     private SourceResolver resolver;
@@ -107,12 +110,12 @@ public class Paginator extends AbstractTransformer
     private boolean prefixMapping;
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
      * @param  manager  Description of the Parameter
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         try {
             this.manager = manager;
             getLogger().debug("Looking up "+SAXParser.ROLE);
@@ -129,7 +132,7 @@ public class Paginator extends AbstractTransformer
      */
     public void dispose() {
         if (this.parser!=null) {
-            this.manager.release((Component) this.parser);
+            this.manager.release(this.parser);
         } else {
             this.parser = null;
         }

@@ -52,7 +52,7 @@ package org.apache.cocoon.components.modules.input;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.Map;
@@ -95,7 +95,7 @@ import java.util.Iterator;
  * (<code>&lt;empty-as-null/&gt;</code>).</p>
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: ChainMetaModule.java,v 1.1 2003/03/09 00:09:02 pier Exp $
+ * @version CVS $Id: ChainMetaModule.java,v 1.2 2004/02/06 22:24:40 joerg Exp $
  */
 public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -141,7 +141,7 @@ public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
         try {
             // obtain input modules
             if (!this.initialized) {
-                this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                this.inputSelector = (ServiceSelector)this.manager.lookup(INPUT_MODULE_SELECTOR); 
                 if (this.inputSelector != null && this.inputSelector instanceof ThreadSafe) {
                     
                     for (int i=0; i<this.inputs.length; i++) {

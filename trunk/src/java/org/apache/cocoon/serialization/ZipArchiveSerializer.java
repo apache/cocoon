@@ -101,7 +101,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.8 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.9 2004/02/06 22:24:40 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type=Serializer
@@ -159,7 +159,7 @@ public class ZipArchiveSerializer
 
 
     /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      * 
      * @avalon.dependency type=SourceResolver
      */

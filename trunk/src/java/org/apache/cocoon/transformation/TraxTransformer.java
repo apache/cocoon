@@ -63,14 +63,14 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -163,7 +163,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.12 2003/12/27 15:11:57 unico Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.13 2004/02/06 22:24:40 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type=Transformer
@@ -171,10 +171,10 @@ import org.xml.sax.SAXException;
  * @x-avalon.info name=trax-transformer
  */
 public class TraxTransformer extends AbstractTransformer
-implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
+implements Transformer, Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
-    /** The component manager (protected because used by subclasses) */
-    protected ComponentManager manager;
+    /** The service manager (protected because used by subclasses) */
+    protected ServiceManager manager;
 
     /** The object model (protected because used by subclasses) */
     protected Map objectModel;
@@ -272,7 +272,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
             if (traxFactory != null) {
                 this.xsltProcessor.setTransformerFactory(traxFactory);
             }
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new ConfigurationException("Cannot load XSLT processor", e);
         }
 
@@ -288,10 +288,10 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     }
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 

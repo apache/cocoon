@@ -51,24 +51,24 @@
 package org.apache.cocoon.i18n;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * Bundle factory implementation base class.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: AbstractBundleFactory.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: AbstractBundleFactory.java,v 1.3 2004/02/06 22:24:40 joerg Exp $
  */
 public abstract class AbstractBundleFactory 
   extends AbstractLogEnabled
-  implements BundleFactory, Composable, Configurable, Disposable, LogEnabled, ThreadSafe {
+  implements BundleFactory, Serviceable, Configurable, Disposable, LogEnabled, ThreadSafe {
 
     /** Should we load bundles to cache on startup or not. */
     protected boolean cacheAtStartup = false;
@@ -76,9 +76,9 @@ public abstract class AbstractBundleFactory
     /** Root directory to all bundle names */
     protected String directory;
 
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 

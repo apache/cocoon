@@ -52,9 +52,6 @@ package org.apache.cocoon.components.language.markup;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -62,6 +59,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -93,11 +93,11 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: AbstractMarkupLanguage.java,v 1.4 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: AbstractMarkupLanguage.java,v 1.5 2004/02/06 22:24:40 joerg Exp $
  */
 public abstract class AbstractMarkupLanguage
         extends AbstractLogEnabled
-        implements MarkupLanguage, Composable, Configurable, Parameterizable,
+        implements MarkupLanguage, Serviceable, Configurable, Parameterizable,
                    Recyclable, Disposable
 {
     /** The 'file' URL protocol. */
@@ -121,8 +121,8 @@ public abstract class AbstractMarkupLanguage
     /** The markup language's namespace prefix */
     protected String prefix;
 
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The service manager */
+    protected ServiceManager manager;
 
     /** The URL factory source resolver used to resolve URIs */
     private SourceResolver resolver;
@@ -217,10 +217,10 @@ public abstract class AbstractMarkupLanguage
     }
 
     /**
-     * Set the global component manager.
-     * @param manager The sitemap-specified component manager
+     * Set the global service manager.
+     * @param manager The sitemap-specified service manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
 
         // Initialize logicsheet cache

@@ -57,11 +57,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -125,7 +124,7 @@ import org.w3c.dom.Node;
  * <p>Produces Objects of type {@link org.apache.cocoon.xml.dom.DocumentWrapper DocumentWrapper}</p>
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: XMLMetaModule.java,v 1.2 2003/12/18 14:46:21 cziegeler Exp $
+ * @version CVS $Id: XMLMetaModule.java,v 1.3 2004/02/06 22:24:40 joerg Exp $
  */
 public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -355,10 +354,10 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#compose(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
 
@@ -367,7 +366,7 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release((Component)this.xpathProcessor);
+            this.manager.release(this.xpathProcessor);
             this.xpathProcessor = null;
         }
         super.dispose();

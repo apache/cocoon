@@ -51,12 +51,12 @@
 
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.source.Source;
@@ -86,10 +86,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.10 2003/09/23 12:35:43 vgritsenko Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.11 2004/02/06 22:24:40 joerg Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
-    implements Composable, ThreadSafe {
+    implements Serviceable, ThreadSafe {
 
     /** Static (cocoon.xconf) configuration location, for error reporting */
     String staticConfLocation;
@@ -103,7 +103,7 @@ public class XMLFileModule extends AbstractJXPathModule
     String src = null;
 
     SourceResolver resolver = null;
-    ComponentManager manager = null;
+    ServiceManager manager = null;
     
 
     /**
@@ -144,7 +144,7 @@ public class XMLFileModule extends AbstractJXPathModule
          * @return a <code>Document</code> value
          * @exception Exception if an error occurs
          */
-        public synchronized Document getDocument(ComponentManager manager, 
+        public synchronized Document getDocument(ServiceManager manager, 
                                                  SourceResolver resolver, 
                                                  Logger logger) throws Exception {
             Source src = null;
@@ -196,10 +196,10 @@ public class XMLFileModule extends AbstractJXPathModule
 
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
     }
