@@ -55,13 +55,13 @@ package org.apache.cocoon.woody.formmodel;
  * common to many widgets.
  */
 public abstract class AbstractWidget implements Widget {
-    private ContainerWidget parent;
+    private Widget parent;
 
-    public ContainerWidget getParent() {
+    public Widget getParent() {
         return parent;
     }
 
-    public void setParent(ContainerWidget widget) {
+    public void setParent(Widget widget) {
         this.parent = widget;
     }
 
@@ -87,5 +87,9 @@ public abstract class AbstractWidget implements Widget {
 
     public boolean isRequired() {
         return false;
+    }
+
+    public Widget getWidget(String id) {
+        return null;
     }
 }

@@ -51,7 +51,6 @@
 package org.apache.cocoon.woody.transformation;
 
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.woody.formmodel.ContainerWidget;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.Constants;
@@ -92,7 +91,7 @@ import java.util.Locale;
  * <p>Woody ships with an XSL that can style all the widgets that are provided by the core Woody framework.
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
-    private ContainerWidget contextWidget;
+    private Widget contextWidget;
     /** Indicates whether we're currently in a widget element. */
     private boolean inWidgetElement;
     /** Compiler used to record the XML inside wi:widget elements. */
@@ -115,7 +114,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     private static final String STYLING_EL = "styling";
 
-    public void init(ContainerWidget contextWidget) {
+    public void init(Widget contextWidget) {
         this.contextWidget = contextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;

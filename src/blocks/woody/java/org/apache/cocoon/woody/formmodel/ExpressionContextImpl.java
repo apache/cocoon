@@ -71,7 +71,7 @@ public class ExpressionContextImpl implements ExpressionContext {
      * @param referenceChildren if true, variables will be resolved among the children of the given
      * container widget, rather than among the siblings of the widget.
      */
-    public ExpressionContextImpl(ContainerWidget widget, boolean referenceChildren) {
+    public ExpressionContextImpl(Widget widget, boolean referenceChildren) {
         this.widget = widget;
         this.referenceChildren = referenceChildren;
     }
@@ -100,7 +100,7 @@ public class ExpressionContextImpl implements ExpressionContext {
         if (!referenceChildren)
             widget = this.widget.getParent().getWidget(name);
         else
-            widget = ((ContainerWidget)this.widget).getWidget(name);
+            widget = this.widget.getWidget(name);
         if (widget != null) {
             Object value = widget.getValue();
 
