@@ -138,14 +138,11 @@
     </xsl:variable>
     <match-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:if test="not(@type)">
-        <!-- set the default type -->
-        <xsl:if test="/map:sitemap/map:components/map:matchers/@default">
-          <xsl:attribute name="type">
-            <xsl:value-of select="/map:sitemap/map:components/map:matchers/@default" />
-            <xsl:text>-matcher</xsl:text>
-          </xsl:attribute>
-        </xsl:if>
+      <xsl:if test="@type">
+        <xsl:attribute name="type">
+          <xsl:value-of select="@type"/>
+          <xsl:text>-matcher</xsl:text>
+        </xsl:attribute>
       </xsl:if>
       <xsl:for-each select="map:match|map:select|map:act|map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
         <xsl:element name="{local-name()}">
@@ -170,13 +167,11 @@
     </xsl:variable>
     <select-node id="{$id}" logger="sitemap.processor">
       <xsl:apply-templates select="@*" mode="copy" />
-      <xsl:if test="not(@type)">
-        <!-- set the default type -->
-        <xsl:if test="/map:sitemap/map:components/map:selectors/@default">
-          <xsl:attribute name="type">
-            <xsl:value-of select="/map:sitemap/map:components/map:selectors/@default" />
-          </xsl:attribute>
-        </xsl:if>
+      <xsl:if test="@type">
+        <xsl:attribute name="type">
+          <xsl:value-of select="@type" />
+          <xsl:text>-selector</xsl:text>
+        </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="map:parameter" mode="copy" />
       <xsl:apply-templates select="map:when|map:otherwise" mode="config">
