@@ -95,14 +95,15 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
      */
     protected static CommonAttributes getCommonAttributes(Element bindingElm) throws BindingException {
         try {
+            String location = DomHelper.getLocation(bindingElm);
             //TODO: should we eventually remove this?
             //throw an error if people are still using the old-style @read-only or @readonly
             if (DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false)) {
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
+                throw new BindingException("Error in binding file " + location
                         + "\nThe usage of the attribute @readonly has been deprecated in favour of @direction.");
             }
             if (DomHelper.getAttributeAsBoolean(bindingElm, "read-only", false)) {
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
+                throw new BindingException("Error in binding file " + location
                         + "\nThe usage of the attribute @read-only has been deprecated in favour of @direction.");
             }
 
@@ -110,7 +111,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
             String leniency = DomHelper.getAttribute(bindingElm, "lenient", null);
 
-            return new CommonAttributes(direction, leniency);
+            return new CommonAttributes(location, direction, leniency);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
@@ -124,6 +125,11 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
       * actions of a given binding.
       */
      protected static class CommonAttributes{
+
+        /**
+         * Source location of this binding.
+         */
+        final String location;
         /**
          * Flag which controls whether a binding is active during loading.
          */
@@ -134,13 +140,14 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
         final boolean saveEnabled;
         final Boolean leniency;
 
-        final static CommonAttributes DEFAULT = new CommonAttributes(true, true, null);
+        final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null);
 
-        CommonAttributes(String direction, String leniency){
-            this(isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency));
+        CommonAttributes(String location, String direction, String leniency){
+            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency));
         }
 
-        CommonAttributes(boolean loadEnabled, boolean saveEnabled, Boolean leniency){
+        CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency){
+            this.location = location;
             this.loadEnabled = loadEnabled;
             this.saveEnabled = saveEnabled;
             this.leniency = leniency;

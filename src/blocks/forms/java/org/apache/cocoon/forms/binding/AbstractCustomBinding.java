@@ -27,9 +27,15 @@ public abstract class AbstractCustomBinding implements Binding {
     private Binding parent;
     private String id;
 
+    /**
+     * Sets parent binding.
+     */
     public void setParent(Binding binding) {
         this.parent = binding;
     }
+    /**
+     * Returns binding definition id.
+     */
     public String getId() {
         return this.id;
     }
