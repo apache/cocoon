@@ -104,6 +104,10 @@ import java.util.Map;
  * </pre>
  * <p>By default, parallel processing is turned off.</p>
  *
+ * @cocoon.sitemap.component.documentation
+ * <p>A simple transformer including resolvable sources (accessed through
+ * Cocoon's SourceResolver from its input.</p>
+ *
  * @cocoon.sitemap.component.name   include
  * @cocoon.sitemap.component.logger sitemap.transformer.include
  *
