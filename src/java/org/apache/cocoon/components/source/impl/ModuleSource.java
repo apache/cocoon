@@ -145,6 +145,8 @@ public class ModuleSource
             return (InputStream)obj;
         } else if ( obj instanceof String ) {
             return new ByteArrayInputStream( ((String)obj).getBytes() );
+        } else if (obj instanceof byte[]) {
+            return new ByteArrayInputStream((byte[]) obj);
         } else {
             throw new SourceException( "The object type: " + obj.getClass() +
                                        " could not be serialized as a InputStream " + obj );
