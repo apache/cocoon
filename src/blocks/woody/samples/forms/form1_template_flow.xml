@@ -1,76 +1,60 @@
 <?xml version="1.0"?>
 <!-- The only difference between this file and the form1_template_action.xml
      is the value of the action attribute on the wt:form-template element -->
-<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
   <title>Sample form</title>
   <content>
     <wt:form-template action="#{$continuation/id}.continue" method="POST">
-      <table border="1">
-        <tr>
-          <td valign="top"><wt:widget-label id="email"/></td>
-          <td valign="top"><wt:widget id="email"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="fourchars"/></td>
-          <td valign="top">
-            <!-- The extra content inside the widget element will be
-            used by the XSL to determine its behaviour -->
-            <wt:widget id="fourchars">
-              <list-style>listbox</list-style>
-              <listbox-size>4</listbox-size>
-            </wt:widget>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="number1"/></td>
-          <td valign="top"><wt:widget id="number1"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="number2"/></td>
-          <td valign="top"><wt:widget id="number2"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="account"/></td>
-          <td valign="top"><wt:widget id="account"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="cowheight"/></td>
-          <td valign="top">
-            <wt:widget id="cowheight">
-              <list-style>radio</list-style>
-            </wt:widget>
-          </td>
-        </tr>
-        <tr>
-          <td/>
-          <td><wt:widget id="somebool"/> <wt:widget-label id="somebool"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="drinks"/></td>
-          <td valign="top"><wt:widget id="drinks"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="visa"/></td>
-          <td valign="top"><wt:widget id="visa"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="ipaddress"/></td>
-          <td valign="top"><wt:widget id="ipaddress"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="birthdate"/></td>
-          <td valign="top"><wt:widget id="birthdate"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="altbirthdate"/></td>
-          <td valign="top"><wt:widget id="altbirthdate"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><wt:widget-label id="dieselprice"/></td>
-          <td valign="top"><wt:widget id="dieselprice"/></td>
-        </tr>
-      </table>
+    <table align="center">
+     <tr><td>
+     
+      <!-- a wi:group produces a columnized layout of fields, along with a <fieldset>
+           frame if there is a <wi:label> -->
+      <wi:group>
+        <wi:label>String fields</wi:label>
+        <wi:items>
+          <wt:widget id="email"/>
+          <wt:widget id="fourchars">
+            <!-- particular styling for the enumeration -->
+            <wi:styling list-type="listbox" listbox-size="4"/>
+          </wt:widget>
+        </wi:items>
+      </wi:group>
+      
+      <wi:group>
+        <wi:label>Number fields</wi:label>
+        <wi:items>
+          <wt:widget id="number1"/>
+          <wt:widget id="number2"/>
+          <wt:widget id="account"/>
+          <wt:widget id="cowheight">
+            <wi:styling list-type="radio"/>
+          </wt:widget>
+        </wi:items>
+      </wi:group>
+      
+      <!-- wi:group with no label : columnized layout without a surrounding frame -->
+      <wi:group>
+        <wi:label>Boolean fields</wi:label>
+        <wi:items>
+          <wt:widget id="somebool"/>
+          <wt:widget id="drinks"/>
+        </wi:items>
+      </wi:group>
 
+
+      <wi:group>
+        <wi:items>
+          <wt:widget id="visa"/>
+          <wt:widget id="ipaddress"/>
+          <wt:widget id="birthdate"><wi:styling type="date" format="dd/MM/yyyy"/></wt:widget>
+          <wt:widget id="altbirthdate"/>
+          <wt:widget id="dieselprice"/>
+        </wi:items>
+      </wi:group>
+
+
+      <!-- manual layout of fieldw, without use of a wi:group -->
       <wt:widget-label id="contacts"/><br/>
       <wt:repeater-size id="contacts"/>
       <table border="1">
@@ -103,6 +87,8 @@
       </table>
 
       <input type="submit"/>
+     </td></tr>
+    </table>
     </wt:form-template>
   </content>
 </page>
