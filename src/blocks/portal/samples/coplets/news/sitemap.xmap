@@ -15,9 +15,9 @@
 
         <map:match pattern="live.weblog-rss">
             <map:generate type="file" src="{request-param:feed}" label="content" />
-<!--
+
             <map:transform type="rss"/>
--->        
+       
             <map:transform type="xslt" src="styles/rss2html.xsl">
                 <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
             </map:transform>
