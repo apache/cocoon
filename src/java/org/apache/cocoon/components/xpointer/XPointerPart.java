@@ -50,16 +50,15 @@
 */
 package org.apache.cocoon.components.xpointer;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.Locator;
-import org.xml.sax.helpers.LocatorImpl;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Component;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.cocoon.xml.XMLConsumer;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.LocatorImpl;
 
 /**
  * Partly implementation of the xpointer() scheme. Only the XPath subset of xpointer is supported.
