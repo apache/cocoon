@@ -1,6 +1,18 @@
-/* ============================================================================ *
- * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved. *
- * ============================================================================ */
+/*
+ * Copyright 1999-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 options{
   LOOKAHEAD = 1;
@@ -27,53 +39,21 @@ options{
 
 
 PARSER_BEGIN(Parser)
-/* ============================================================================ *
- *                   The Apache Software License, Version 1.1                   *
- * ============================================================================ *
- *                                                                              *
- * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved. *
- *                                                                              *
- * Redistribution and use in source and binary forms, with or without modifica- *
- * tion, are permitted provided that the following conditions are met:          *
- *                                                                              *
- * 1. Redistributions of  source code must  retain the above copyright  notice, *
- *    this list of conditions and the following disclaimer.                     *
- *                                                                              *
- * 2. Redistributions in binary form must reproduce the above copyright notice, *
- *    this list of conditions and the following disclaimer in the documentation *
- *    and/or other materials provided with the distribution.                    *
- *                                                                              *
- * 3. The end-user documentation included with the redistribution, if any, must *
- *    include  the following  acknowledgment:  "This product includes  software *
- *    developed  by the  Apache Software Foundation  (http://www.apache.org/)." *
- *    Alternately, this  acknowledgment may  appear in the software itself,  if *
- *    and wherever such third-party acknowledgments normally appear.            *
- *                                                                              *
- * 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be *
- *    used to  endorse or promote  products derived from  this software without *
- *    prior written permission. For written permission, please contact          *
- *    apache@apache.org.                                                        *
- *                                                                              *
- * 5. Products  derived from this software may not  be called "Apache", nor may *
- *    "Apache" appear  in their name,  without prior written permission  of the *
- *    Apache Software Foundation.                                               *
- *                                                                              *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, *
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND *
- * FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE *
- * APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT, *
- * INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU- *
- * DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS *
- * OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON *
- * ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT *
- * (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF *
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            *
- *                                                                              *
- * This software  consists of voluntary contributions made  by many individuals *
- * on  behalf of the Apache Software  Foundation.  For more  information on the *
- * Apache Software Foundation, please see <http://www.apache.org/>.             *
- *                                                                              *
- * ============================================================================ */
+/*
+ * Copyright 1999-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.apache.garbage.parser;
 
@@ -125,7 +105,7 @@ import org.xml.sax.SAXParseException;
  * several times (the parser will automatically re-initialize its state once the
  * method is invoked).
  * </p>
- * 
+ *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  */
 public class Parser implements Locator, ParserTables {
@@ -198,7 +178,7 @@ public class Parser implements Locator, ParserTables {
     if (this.source != null) return(source.getPublicId());
     return(null);
   }
-  
+
   /**
    * Return the system identifier for the current document event.
    *
@@ -209,7 +189,7 @@ public class Parser implements Locator, ParserTables {
     if (this.source != null) return(source.getSystemId());
     return(null);
   }
-  
+
   /**
    * Return the line number where the current document event ends.
    *
@@ -219,7 +199,7 @@ public class Parser implements Locator, ParserTables {
     if (this.token != null) return(token.endLine);
     return(-1);
   }
-  
+
   /**
    * Return the column number where the current document event ends.
    *
@@ -236,7 +216,7 @@ public class Parser implements Locator, ParserTables {
    * @param kind An array of integers specifying the possible kind
    *             of the next returned token.
    * @return The next available token with the correct kind.
-   * @throws ParseException If the token kind doesn't match one of 
+   * @throws ParseException If the token kind doesn't match one of
    *                        those specified.
    */
   final public Token getNextToken(int kind[])
@@ -274,7 +254,7 @@ public class Parser implements Locator, ParserTables {
    *             of the next returned token.
    * @param state The state in which the next token should be matched.
    * @return The next available token with the correct kind.
-   * @throws ParseException If the token kind doesn't match one of 
+   * @throws ParseException If the token kind doesn't match one of
    *                        those specified.
    */
   final public Token getNextToken(int kind[], int state)
@@ -309,7 +289,7 @@ public class Parser implements Locator, ParserTables {
   throws ParseException {
     this.generateParseInternalError(null);
   }
- 
+
   /**
    * Generate a parser internal error exception.
    *
@@ -455,44 +435,44 @@ TOKEN : {
 | < #XML_Ideographic :  ( [ "\u3021" - "\u3029" ] | [ "\u4E00" - "\u9FA5" ] | "\u3007" ) >
 
 /* http://www.w3.org/TR/REC-xml#NT-CombiningChar */
-| < #XML_CombinChar :   ( [ "\u0300" - "\u0345" ] | [ "\u0360" - "\u0361" ] | [ "\u0483" - "\u0486" ] | 
-                          [ "\u0591" - "\u05A1" ] | [ "\u05A3" - "\u05B9" ] | [ "\u05BB" - "\u05BD" ] | 
-                          [ "\u05C1" - "\u05C2" ] | [ "\u064B" - "\u0652" ] | [ "\u06D6" - "\u06DC" ] | 
-                          [ "\u06DD" - "\u06DF" ] | [ "\u06E0" - "\u06E4" ] | [ "\u06E7" - "\u06E8" ] | 
-                          [ "\u06EA" - "\u06ED" ] | [ "\u0901" - "\u0903" ] | [ "\u093E" - "\u094C" ] | 
-                          [ "\u0951" - "\u0954" ] | [ "\u0962" - "\u0963" ] | [ "\u0981" - "\u0983" ] | 
-                          [ "\u09C0" - "\u09C4" ] | [ "\u09C7" - "\u09C8" ] | [ "\u09CB" - "\u09CD" ] | 
-                          [ "\u09E2" - "\u09E3" ] | [ "\u0A40" - "\u0A42" ] | [ "\u0A47" - "\u0A48" ] | 
-                          [ "\u0A4B" - "\u0A4D" ] | [ "\u0A70" - "\u0A71" ] | [ "\u0A81" - "\u0A83" ] | 
-                          [ "\u0ABE" - "\u0AC5" ] | [ "\u0AC7" - "\u0AC9" ] | [ "\u0ACB" - "\u0ACD" ] | 
-                          [ "\u0B01" - "\u0B03" ] | [ "\u0B3E" - "\u0B43" ] | [ "\u0B47" - "\u0B48" ] | 
-                          [ "\u0B4B" - "\u0B4D" ] | [ "\u0B56" - "\u0B57" ] | [ "\u0B82" - "\u0B83" ] | 
-                          [ "\u0BBE" - "\u0BC2" ] | [ "\u0BC6" - "\u0BC8" ] | [ "\u0BCA" - "\u0BCD" ] | 
-                          [ "\u0C01" - "\u0C03" ] | [ "\u0C3E" - "\u0C44" ] | [ "\u0C46" - "\u0C48" ] | 
-                          [ "\u0C4A" - "\u0C4D" ] | [ "\u0C55" - "\u0C56" ] | [ "\u0C82" - "\u0C83" ] | 
-                          [ "\u0CBE" - "\u0CC4" ] | [ "\u0CC6" - "\u0CC8" ] | [ "\u0CCA" - "\u0CCD" ] | 
-                          [ "\u0CD5" - "\u0CD6" ] | [ "\u0D02" - "\u0D03" ] | [ "\u0D3E" - "\u0D43" ] | 
-                          [ "\u0D46" - "\u0D48" ] | [ "\u0D4A" - "\u0D4D" ] | [ "\u0E34" - "\u0E3A" ] | 
-                          [ "\u0E47" - "\u0E4E" ] | [ "\u0EB4" - "\u0EB9" ] | [ "\u0EBB" - "\u0EBC" ] | 
-                          [ "\u0EC8" - "\u0ECD" ] | [ "\u0F18" - "\u0F19" ] | [ "\u0F71" - "\u0F84" ] | 
-                          [ "\u0F86" - "\u0F8B" ] | [ "\u0F90" - "\u0F95" ] | [ "\u0F99" - "\u0FAD" ] | 
-                          [ "\u0FB1" - "\u0FB7" ] | [ "\u20D0" - "\u20DC" ] | [ "\u302A" - "\u302F" ] | 
-                          "\u05BF" | "\u05C4" | "\u0670" | "\u093C" | "\u094D" | "\u09BC" | "\u09BE" | 
-                          "\u09BF" | "\u09D7" | "\u0A02" | "\u0A3C" | "\u0A3E" | "\u0A3F" | "\u0ABC" | 
-                          "\u0B3C" | "\u0BD7" | "\u0D57" | "\u0E31" | "\u0EB1" | "\u0F35" | "\u0F37" | 
-                          "\u0F39" | "\u0F3E" | "\u0F3F" | "\u0F97" | "\u0FB9" | "\u20E1" | "\u3099" | 
+| < #XML_CombinChar :   ( [ "\u0300" - "\u0345" ] | [ "\u0360" - "\u0361" ] | [ "\u0483" - "\u0486" ] |
+                          [ "\u0591" - "\u05A1" ] | [ "\u05A3" - "\u05B9" ] | [ "\u05BB" - "\u05BD" ] |
+                          [ "\u05C1" - "\u05C2" ] | [ "\u064B" - "\u0652" ] | [ "\u06D6" - "\u06DC" ] |
+                          [ "\u06DD" - "\u06DF" ] | [ "\u06E0" - "\u06E4" ] | [ "\u06E7" - "\u06E8" ] |
+                          [ "\u06EA" - "\u06ED" ] | [ "\u0901" - "\u0903" ] | [ "\u093E" - "\u094C" ] |
+                          [ "\u0951" - "\u0954" ] | [ "\u0962" - "\u0963" ] | [ "\u0981" - "\u0983" ] |
+                          [ "\u09C0" - "\u09C4" ] | [ "\u09C7" - "\u09C8" ] | [ "\u09CB" - "\u09CD" ] |
+                          [ "\u09E2" - "\u09E3" ] | [ "\u0A40" - "\u0A42" ] | [ "\u0A47" - "\u0A48" ] |
+                          [ "\u0A4B" - "\u0A4D" ] | [ "\u0A70" - "\u0A71" ] | [ "\u0A81" - "\u0A83" ] |
+                          [ "\u0ABE" - "\u0AC5" ] | [ "\u0AC7" - "\u0AC9" ] | [ "\u0ACB" - "\u0ACD" ] |
+                          [ "\u0B01" - "\u0B03" ] | [ "\u0B3E" - "\u0B43" ] | [ "\u0B47" - "\u0B48" ] |
+                          [ "\u0B4B" - "\u0B4D" ] | [ "\u0B56" - "\u0B57" ] | [ "\u0B82" - "\u0B83" ] |
+                          [ "\u0BBE" - "\u0BC2" ] | [ "\u0BC6" - "\u0BC8" ] | [ "\u0BCA" - "\u0BCD" ] |
+                          [ "\u0C01" - "\u0C03" ] | [ "\u0C3E" - "\u0C44" ] | [ "\u0C46" - "\u0C48" ] |
+                          [ "\u0C4A" - "\u0C4D" ] | [ "\u0C55" - "\u0C56" ] | [ "\u0C82" - "\u0C83" ] |
+                          [ "\u0CBE" - "\u0CC4" ] | [ "\u0CC6" - "\u0CC8" ] | [ "\u0CCA" - "\u0CCD" ] |
+                          [ "\u0CD5" - "\u0CD6" ] | [ "\u0D02" - "\u0D03" ] | [ "\u0D3E" - "\u0D43" ] |
+                          [ "\u0D46" - "\u0D48" ] | [ "\u0D4A" - "\u0D4D" ] | [ "\u0E34" - "\u0E3A" ] |
+                          [ "\u0E47" - "\u0E4E" ] | [ "\u0EB4" - "\u0EB9" ] | [ "\u0EBB" - "\u0EBC" ] |
+                          [ "\u0EC8" - "\u0ECD" ] | [ "\u0F18" - "\u0F19" ] | [ "\u0F71" - "\u0F84" ] |
+                          [ "\u0F86" - "\u0F8B" ] | [ "\u0F90" - "\u0F95" ] | [ "\u0F99" - "\u0FAD" ] |
+                          [ "\u0FB1" - "\u0FB7" ] | [ "\u20D0" - "\u20DC" ] | [ "\u302A" - "\u302F" ] |
+                          "\u05BF" | "\u05C4" | "\u0670" | "\u093C" | "\u094D" | "\u09BC" | "\u09BE" |
+                          "\u09BF" | "\u09D7" | "\u0A02" | "\u0A3C" | "\u0A3E" | "\u0A3F" | "\u0ABC" |
+                          "\u0B3C" | "\u0BD7" | "\u0D57" | "\u0E31" | "\u0EB1" | "\u0F35" | "\u0F37" |
+                          "\u0F39" | "\u0F3E" | "\u0F3F" | "\u0F97" | "\u0FB9" | "\u20E1" | "\u3099" |
                           "\u309A" ) >
 
 /* http://www.w3.org/TR/REC-xml#NT-Digit */
-| < #XML_Digit :        ( [ "\u0030" - "\u0039" ] | [ "\u0660" - "\u0669" ] | [ "\u06F0" - "\u06F9" ] | 
-                          [ "\u0966" - "\u096F" ] | [ "\u09E6" - "\u09EF" ] | [ "\u0A66" - "\u0A6F" ] | 
-                          [ "\u0AE6" - "\u0AEF" ] | [ "\u0B66" - "\u0B6F" ] | [ "\u0BE7" - "\u0BEF" ] | 
-                          [ "\u0C66" - "\u0C6F" ] | [ "\u0CE6" - "\u0CEF" ] | [ "\u0D66" - "\u0D6F" ] | 
+| < #XML_Digit :        ( [ "\u0030" - "\u0039" ] | [ "\u0660" - "\u0669" ] | [ "\u06F0" - "\u06F9" ] |
+                          [ "\u0966" - "\u096F" ] | [ "\u09E6" - "\u09EF" ] | [ "\u0A66" - "\u0A6F" ] |
+                          [ "\u0AE6" - "\u0AEF" ] | [ "\u0B66" - "\u0B6F" ] | [ "\u0BE7" - "\u0BEF" ] |
+                          [ "\u0C66" - "\u0C6F" ] | [ "\u0CE6" - "\u0CEF" ] | [ "\u0D66" - "\u0D6F" ] |
                           [ "\u0E50" - "\u0E59" ] | [ "\u0ED0" - "\u0ED9" ] | [ "\u0F20" - "\u0F29" ] ) >
 
 /* http://www.w3.org/TR/REC-xml#NT-Extender */
-| < #XML_Extender :     ( [ "\u3031" - "\u3035" ] | [ "\u309D" - "\u309E" ] | [ "\u30FC" - "\u30FE" ] | 
-                          "\u00B7" | "\u02D0" | "\u02D1" | "\u0387" | "\u0640" | "\u0E46" | "\u0EC6" | 
+| < #XML_Extender :     ( [ "\u3031" - "\u3035" ] | [ "\u309D" - "\u309E" ] | [ "\u30FC" - "\u30FE" ] |
+                          "\u00B7" | "\u02D0" | "\u02D1" | "\u0387" | "\u0640" | "\u0E46" | "\u0EC6" |
                           "\u3005" ) >
 
 /* http://www.w3.org/TR/REC-xml#NT-Letter */
@@ -515,7 +495,7 @@ TOKEN : {
 TOKEN : {
 /* http://www.w3.org/TR/REC-xml#NT-S */
   < #S :          ( ( " " | "\t" | "\r" | "\n" )+ ) >
-  
+
 /* http://www.w3.org/TR/REC-xml#NT-Name */
 | < #Name :       ( ( <XML_Letter> | "_" | ":" ) ( <XML_NameChar> )* ) >
 }
@@ -623,7 +603,7 @@ void p_doctype (Events events) : {
     name = token.image;
   }
 
-  ( 
+  (
     ( <T_DOCTYPE_SYSTEM> ) {
       system_id = p_doctype_id(DOCTYPE_SYSTEM);
     }
@@ -710,7 +690,7 @@ void p_element (Events events) : {
     ( <T_ELEMENT_OPEN> ) {
       name = token.image.substring(1);
       element = new ElementStart(this, name);
-      
+
     }
 
     ( p_attribute(element) )*
@@ -792,13 +772,13 @@ void p_attribute_data (Attribute attribute) : {
             attribute.append(new Characters(p_entityref_data()));
             popState();
             break;
-          
+
           case T_ATTRIBUTE_EXPR:
             pushState(EXPRESSION);
             attribute.append(new Expression(p_expression_data()));
             popState();
             break;
-          
+
           default:
             attribute.append(new Characters(local.image));
             break;
