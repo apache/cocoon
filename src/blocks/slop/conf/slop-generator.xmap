@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<xmap xpath="/sitemap/components/generators" unless="generator[@name='slop']">
+    <map:generator
+        name="slop"
+        logger="sitemap.generator.slop"
+        src="org.apache.cocoon.slop.generation.SlopGenerator"
+    />
+</xmap>
