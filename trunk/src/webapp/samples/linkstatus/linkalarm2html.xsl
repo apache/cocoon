@@ -15,7 +15,7 @@
    a sequence of transformations to pretty-print the data.
   </p>
   <p>Please help to
-   <a href="../../documents/plan/linkstatus.html">mend the broken links</a>.
+   <a href="../../docs/plan/linkstatus.html">mend the broken links</a>.
   </p>
 
     <xsl:apply-templates/>
