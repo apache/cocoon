@@ -51,7 +51,6 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -59,20 +58,16 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.ExtendedCachedResponse;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.xml.ContentHandlerWrapper;
-import org.apache.cocoon.xml.XMLConsumer;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * This class implements a proxy like source that uses another source
@@ -80,7 +75,7 @@ import org.xml.sax.SAXException;
  * a given period of time
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AsyncCachingSource.java,v 1.2 2003/10/25 18:06:19 joerg Exp $
+ * @version CVS $Id: AsyncCachingSource.java,v 1.3 2004/02/15 20:48:53 haul Exp $
  * @since 2.1.1
  */
 public class AsyncCachingSource
@@ -123,21 +118,10 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
             
             this.initSource();
             
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final byte[] buffer = new byte[2048];
-            final InputStream inputStream = this.source.getInputStream();
-            int length;
-        
-            while ((length = inputStream.read(buffer)) > -1) {
-                baos.write(buffer, 0, length);
-            }
-            baos.flush();
-            inputStream.close();
-            
             // update cache
             final byte[] xmlResponse = this.cachedResponse.getAlternativeResponse();
             this.cachedResponse = new ExtendedCachedResponse(this.cachedResponse.getValidityObjects(),
-                                                             baos.toByteArray());
+                                                             this.readBinaryResponse());
             this.cachedResponse.setAlternativeResponse(xmlResponse);
             try {
                 this.cache.store(this.streamKey, this.cachedResponse);
@@ -164,26 +148,6 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
      */
     public void initialize() throws Exception {
         this.validity = this.cachedResponse.getValidityObjects()[0];
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.xml.sax.XMLizable#toSAX(org.xml.sax.ContentHandler)
-     */
-    public void toSAX(ContentHandler contentHandler) throws SAXException {
-       XMLDeserializer deserializer = null;
-       try {
-           deserializer = (XMLDeserializer) this.manager.lookup(XMLDeserializer.ROLE);
-           if ( contentHandler instanceof XMLConsumer) {
-               deserializer.setConsumer((XMLConsumer)contentHandler);
-           } else {
-               deserializer.setConsumer(new ContentHandlerWrapper(contentHandler));
-           }
-           deserializer.deserialize( this.cachedResponse.getAlternativeResponse() );
-       } catch (ServiceException se ) {
-           throw new SAXException("Unable to lookup xml deserializer.", se);
-       } finally {
-           this.manager.release(deserializer);
-       }
     }
 
 }
