@@ -73,7 +73,7 @@
     <xsp:expr>
       <xsl:choose>
         <xsl:when test="$as = 'node'">
-          XSPRequestLibrary.getCharacterEncoding(response, document)
+          XSPResponseLibrary.getCharacterEncoding(response, document)
         </xsl:when>
         <xsl:when test="$as = 'string'">
           response.getCharacterEncoding()
@@ -93,7 +93,7 @@
     <xsp:expr>
       <xsl:choose>
         <xsl:when test="$as = 'node'">
-          XSPRequestLibrary.getLocale(response, document)
+          XSPResponseLibrary.getLocale(response, document)
         </xsl:when>
         <xsl:when test="$as = 'string'">
           response.getLocale(response).toString()
@@ -226,7 +226,7 @@
     </xsp:logic>
   </xsl:template>
 
-  <xsl:template match="response:add-header">
+  <xsl:template match="response:add-int-header">
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
@@ -457,7 +457,7 @@
     </xsp:logic>
   </xsl:template>
 
-  <xsl:template match="response:set-header">
+  <xsl:template match="response:set-int-header">
     <xsl:variable name="name">
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
