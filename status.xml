@@ -252,7 +252,7 @@
      Updated antlr to 2.7.4, db-ojb to 1.0.1.
    </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
-     Javaflow block: Support inherited methoda.s
+     Javaflow block: Support inherited methods.
    </action>
    <action dev="TC" type="add">
      Javaflow block: Add parameter support.
