@@ -53,7 +53,7 @@ package org.apache.cocoon.components.source.helpers;
  * This class represents a source permission for groups
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: GroupSourcePermission.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: GroupSourcePermission.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
 public class GroupSourcePermission extends AbstractSourcePermission {
 

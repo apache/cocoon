@@ -66,7 +66,7 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: GIFSourceInspector.java,v 1.5 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: GIFSourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
 public class GIFSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {

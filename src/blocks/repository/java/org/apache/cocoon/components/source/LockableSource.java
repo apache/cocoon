@@ -49,37 +49,35 @@
 */
 package org.apache.cocoon.components.source;
 
-import org.apache.cocoon.components.source.helpers.SourceProperty;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
+import org.apache.cocoon.components.source.helpers.SourceLock;
+
+import java.util.Enumeration;
+
 /**
- * A source, which owns meta informations in form of properties
+ * A source, which could be locked
  *
- * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: InspectableSource.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
+ * @version CVS $Id: LockableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface InspectableSource extends Source {
-
-    /** 
-     * To get a meta information from a source 
-     */
-    public SourceProperty getSourceProperty(String namespace, String name) throws SourceException;
-
-    /** 
-     * To set a meta information 
-     */
-    public void setSourceProperty(SourceProperty property) throws SourceException;
-
-    /** 
-     * Get alll informations 
-     */
-    public SourceProperty[] getSourceProperties() throws SourceException;
+public interface LockableSource extends Source {
 
     /**
-     * Remove property
+     * Add a lock to this source
+     *
+     * @param sourcelock Lock, which should be added
+     *
+     * @throws SourceException If an exception occurs during this operation
      */
-    public void removeSourceProperty(String namespace, String name) throws SourceException;
+    public void addSourceLocks(SourceLock sourcelock) throws SourceException;
+
+    /**
+     * Returns a enumeration of the existing locks
+     *
+     * @return Enumeration of SourceLock
+     */
+    public Enumeration getSourceLocks() throws SourceException;
 }
 

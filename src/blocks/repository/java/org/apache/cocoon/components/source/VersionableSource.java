@@ -47,71 +47,47 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source.helpers;
+package org.apache.cocoon.components.source;
+
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
 
 /**
- * This class is an abstract implementation of a source permission
+ * A source, which could exist in different versions
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractSourcePermission.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: VersionableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public abstract class AbstractSourcePermission implements SourcePermission{
+public interface VersionableSource extends Source {
 
-    private String  privilege;
-    private boolean inheritable;
-    private boolean negative;
-
-    /**
-     * Sets the privilege of the permission
-     *
-     * @param privilege Privilege of the permission
+    /** 
+     * If this source versioned
      */
-    public void setPrivilege(String privilege) {
-        this.privilege   = privilege;
-    }
+    public boolean isVersioned() throws SourceException;
 
-    /**
-     * Returns the privilege of the permission
-     * 
-     * @return Privilege of the permission
+    /** 
+     * Get the current revision of the source
      */
-    public String getPrivilege() {
-        return this.privilege;
-    }
+    public String getSourceRevision() throws SourceException;
 
-    /**
-     * Sets the inheritable flag
-     *
-     * @param inheritable If the permission is inheritable
+    /** 
+     * Sets the wanted revision of the source
      */
-    public void setInheritable(boolean inheritable) {
-        this.inheritable = inheritable;
-    }
+    public void setSourceRevision(String sourcerevision) throws SourceException;
 
-    /**
-     * Returns the inheritable flag
-     *
-     * @return If the permission is inheritable
+    /** 
+     * Get the current branch of the revision from the source
      */
-    public boolean isInheritable() {
-        return this.inheritable;
-    }
+    public String getSourceRevisionBranch() throws SourceException;
 
-    /**
-     * Sets the negative flag
-     *
-     * @param negative If the permission is a negative permission
+    /** 
+     * Sets the wanted branch of the revision from the source
      */
-    public void setNegative(boolean negative) {
-        this.negative = negative;
-    }
+    public void setSourceRevisionBranch(String sourcerevisionbranch) throws SourceException;
 
-    /**
-     * Returns the negative flag
-     * 
-     * @return If the permission is a negative permission
+    /** 
+     * Get the latest revision
      */
-    public boolean isNegative() {
-        return this.negative;
-    }
+    public String getLatestSourceRevision() throws SourceException;
 }
+

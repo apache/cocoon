@@ -49,53 +49,37 @@
 */
 package org.apache.cocoon.components.source;
 
-import org.apache.cocoon.components.source.helpers.SourceCredential;
-import org.apache.cocoon.components.source.helpers.SourcePermission;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * A source, which is restrictable, which means you need a username and password.
+ * A source, which owns meta informations in form of properties
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: RestrictableSource.java,v 1.3 2003/09/05 07:31:45 cziegeler Exp $
+ * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
+ * @version CVS $Id: InspectableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface RestrictableSource extends Source {
+public interface InspectableSource extends Source {
 
     /** 
-     * Get the current credential for the source
+     * To get a meta information from a source 
      */
-    public SourceCredential getSourceCredential() throws SourceException;
+    public SourceProperty getSourceProperty(String namespace, String name) throws SourceException;
 
     /** 
-     * Set the credential for the source
+     * To set a meta information 
      */
-    public void setSourceCredential(SourceCredential sourcecredential) throws SourceException;
+    public void setSourceProperty(SourceProperty property) throws SourceException;
 
-    /**
-     * Add a permission to this source
-     *
-     * @param sourcepermission Permission, which should be set
-     *
-     * @throws SourceException If an exception occurs during this operation
-     **/
-    public void addSourcePermission(SourcePermission sourcepermission) throws SourceException;
-
-    /**
-     * Remove a permission from this source
-     *
-     * @param sourcepermission Permission, which should be removed
-     *
-     * @throws SourceException If an exception occurs during this operation
-     **/
-    public void removeSourcePermission(SourcePermission sourcepermission) throws SourceException;
-
-    /**
-     * Returns a list of the existing permissions
-     *
-     * @return Array of SourcePermission
+    /** 
+     * Get alll informations 
      */
-    public SourcePermission[] getSourcePermissions() throws SourceException;
+    public SourceProperty[] getSourceProperties() throws SourceException;
+
+    /**
+     * Remove property
+     */
+    public void removeSourceProperty(String namespace, String name) throws SourceException;
 }
 

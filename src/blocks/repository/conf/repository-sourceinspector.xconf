@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.source.SourceInspector']">
+
+ <!-- Source inspectors:
+   Each source inspectors helps to retrieve properties from sources
+   -->
+ <component role="org.apache.cocoon.components.source.SourceInspector" 
+            class="org.apache.cocoon.components.source.impl.SourceInspectorManager"
+            logger="core.source.sourceinspector">
+
+  <sourceinspector class="org.apache.cocoon.components.source.impl.XPathSourceInspector">
+   <parameter name="namespace" value="http://xml.apache.org/cocoon/xdoc/1.0"/>
+   <parameter name="name"      value="title"/>
+   <parameter name="extension" value=".xdoc"/>
+   <parameter name="xpath"     value="/document/header/title"/>
+  </sourceinspector>
+
+  <sourceinspector class="org.apache.cocoon.components.source.impl.JPEGSourceInspector"/>
+  <sourceinspector class="org.apache.cocoon.components.source.impl.GIFSourceInspector"/>
+ </component>
+</xconf>

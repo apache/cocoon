@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.91 2003/10/14 16:40:08 haul Exp $
+    | CVS $Id: gump.xml,v 1.92 2003/10/22 18:53:06 gcasper Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -109,7 +109,7 @@
     <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-cron"/>
-    <depend project="cocoon-block-slide"/>
+    <depend project="cocoon-block-repository"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -600,6 +600,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-authentication-fw"/>
+    <depend project="cocoon-block-repository"/>
     <depend project="jta"/>
     <depend project="jakarta-slide"/>
     <depend project="jdom"/>
@@ -920,7 +921,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-slide"/>
+    <depend project="cocoon-block-repository"/>
     <depend project="jakarta-slide"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/dest"/>
@@ -1066,6 +1067,23 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-repository" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="repository"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/repository-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
 
   <!--
     ********************************************

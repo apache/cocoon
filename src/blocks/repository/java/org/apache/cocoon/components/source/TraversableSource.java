@@ -49,27 +49,41 @@
 */
 package org.apache.cocoon.components.source;
 
-import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * A source, which can be a directory or collection of sources, which can
- * can be modfied.
+ * A source, which can be a directory or collection of sources.
  *
  * WARNING: Do not use this interface, it will be removed soon. Use
  *          the version from avalon excalibur instead.
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ModifiableTraversableSource.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: TraversableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface ModifiableTraversableSource extends TraversableSource, ModifiableSource {
+public interface TraversableSource extends Source {
+
+    /** 
+     * If the source a directory or a collection
+     */
+    public boolean isSourceCollection() throws SourceException;
 
     /**
-     * Create a collection of sources.
-     *
-     * @param collectionname Name of the collectiom, which 
-     *                       should be created.
+     * Returns the count of child sources.
      */
-    void createCollection(String collectionname) throws SourceException;
+    public int getChildSourceCount()  throws SourceException;
+
+    /**
+     * Return the system id of a child source.
+     *
+     * @param index Index of the child
+     */
+    public String getChildSource(int index)  throws SourceException;
+
+    /**
+     * Return the system if of the parent source. The method should return
+     * null if the source hasn't a parent. 
+     */
+    public String getParentSource();
 }
 

@@ -49,41 +49,27 @@
 */
 package org.apache.cocoon.components.source;
 
+import org.apache.avalon.framework.component.Component;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+
 /**
- * A source, which can be a directory or collection of sources.
+ * A source inspector helps to get properties from sources
  *
- * WARNING: Do not use this interface, it will be removed soon. Use
- *          the version from avalon excalibur instead.
- * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: TraversableSource.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: SourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface TraversableSource extends Source {
+public interface SourceInspector extends Component {
 
-    /** 
-     * If the source a directory or a collection
-     */
-    public boolean isSourceCollection() throws SourceException;
+    public final static String ROLE = "org.apache.cocoon.components.source.SourceInspector";
 
-    /**
-     * Returns the count of child sources.
-     */
-    public int getChildSourceCount()  throws SourceException;
+    public SourceProperty getSourceProperty(Source source, String namespace, String name) 
+        throws SourceException;
 
-    /**
-     * Return the system id of a child source.
-     *
-     * @param index Index of the child
-     */
-    public String getChildSource(int index)  throws SourceException;
+    public SourceProperty[] getSourceProperties(Source source) throws SourceException;
 
-    /**
-     * Return the system if of the parent source. The method should return
-     * null if the source hasn't a parent. 
-     */
-    public String getParentSource();
 }
 

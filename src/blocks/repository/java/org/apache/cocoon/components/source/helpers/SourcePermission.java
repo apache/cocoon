@@ -47,47 +47,82 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
-
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
+package org.apache.cocoon.components.source.helpers;
 
 /**
- * A source, which could exist in different versions
+ * This interface represents a permission for a source
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: VersionableSource.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: SourcePermission.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface VersionableSource extends Source {
+public interface SourcePermission {
 
-    /** 
-     * If this source versioned
-     */
-    public boolean isVersioned() throws SourceException;
+    public final static String PRIVILEGE_ALL               = "all";
+    public final static String PRIVILEGE_READ              = "read";
+    public final static String PRIVILEGE_WRITE             = "write";
 
-    /** 
-     * Get the current revision of the source
-     */
-    public String getSourceRevision() throws SourceException;
+    public final static String PRIVILEGE_READ_ACL          = "read-acl";
+    public final static String PRIVILEGE_WRITE_ACL         = "write-acl";
 
-    /** 
-     * Sets the wanted revision of the source
-     */
-    public void setSourceRevision(String sourcerevision) throws SourceException;
+    public final static String PRIVILEGE_READ_SOURCE       = "read-source";
+    public final static String PRIVILEGE_CREATE_SOURCE     = "create-source";
+    public final static String PRIVILEGE_REMOVE_SOURCE     = "remove-source";
 
-    /** 
-     * Get the current branch of the revision from the source
-     */
-    public String getSourceRevisionBranch() throws SourceException;
+    public final static String PRIVILEGE_LOCK_SOURCE       = "lock-source";
+    public final static String PRIVILEGE_READ_LOCKS        = "read-locks";
 
-    /** 
-     * Sets the wanted branch of the revision from the source
-     */
-    public void setSourceRevisionBranch(String sourcerevisionbranch) throws SourceException;
+    public final static String PRIVILEGE_READ_PROPERTY     = "read-property";
+    public final static String PRIVILEGE_CREATE_PROPERTY   = "create-property";
+    public final static String PRIVILEGE_MODIFY_PROPERTY   = "modify-property";
+    public final static String PRIVILEGE_REMOVE_PROPERTY   = "remove-property";
 
-    /** 
-     * Get the latest revision
+    public final static String PRIVILEGE_READ_CONTENT      = "read-content";
+    public final static String PRIVILEGE_CREATE_CONTENT    = "create-content";
+    public final static String PRIVILEGE_MODIFY_CONTENT    = "modify-content";
+    public final static String PRIVILEGE_REMOVE_CONTENT    = "remove-content";
+
+    public final static String PRIVILEGE_GRANT_PERMISSION  = "grant-permission";
+    public final static String PRIVILEGE_REVOKE_PERMISSION = "revoke-permission";
+
+    /**
+     * Sets the privilege of the permission
+     *
+     * @param privilege Privilege of the permission
      */
-    public String getLatestSourceRevision() throws SourceException;
+    public void setPrivilege(String privilege);
+
+    /**
+     * Returns the privilege of the permission
+     * 
+     * @return Privilege of the permission
+     */
+    public String getPrivilege();
+
+    /**
+     * Sets the inheritable flag
+     *
+     * @param inheritable If the permission is inheritable
+     */
+    public void setInheritable(boolean inheritable);
+
+    /**
+     * Returns the inheritable flag
+     *
+     * @return If the permission is inheritable
+     */
+    public boolean isInheritable();
+
+    /**
+     * Sets the negative flag
+     *
+     * @param negative If the permission is a negative permission
+     */
+    public void setNegative(boolean negative);
+
+    /**
+     * Returns the negative flag
+     * 
+     * @return If the permission is a negative permission
+     */
+    public boolean isNegative();
 }
-

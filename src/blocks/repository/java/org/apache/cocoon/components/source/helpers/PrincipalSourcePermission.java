@@ -47,37 +47,54 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
-
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-
-import org.apache.cocoon.components.source.helpers.SourceLock;
-
-import java.util.Enumeration;
+package org.apache.cocoon.components.source.helpers;
 
 /**
- * A source, which could be locked
+ * This class represents a source permission for users
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: LockableSource.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: PrincipalSourcePermission.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface LockableSource extends Source {
+public class PrincipalSourcePermission extends AbstractSourcePermission {
+
+    public final static String PRINCIPAL_SELF              = "SELF";
+    public final static String PRINCIPAL_ALL               = "ALL";
+    public final static String PRINCIPAL_GUEST             = "GUEST";
+
+    private String principal;
 
     /**
-     * Add a lock to this source
+     * Creates a new permission
      *
-     * @param sourcelock Lock, which should be added
-     *
-     * @throws SourceException If an exception occurs during this operation
+     * @param principal Principal of the permission
+     * @param privilege Privilege of the permission
+     * @param inheritable If the permission is inheritable
+     * @param negative If the permission is negative
      */
-    public void addSourceLocks(SourceLock sourcelock) throws SourceException;
+    public PrincipalSourcePermission(String principal, String privilege, 
+                                     boolean inheritable, boolean negative) {
+
+        this.principal   = principal;
+        setPrivilege(privilege);
+        setInheritable(inheritable);
+        setNegative(negative);
+    }
 
     /**
-     * Returns a enumeration of the existing locks
+     * Sets the principal of the permission
      *
-     * @return Enumeration of SourceLock
+     * @param principal Principal of the permission
      */
-    public Enumeration getSourceLocks() throws SourceException;
+    public void setPrincipal(String principal) {
+        this.principal   = principal;
+    }
+
+    /**
+     * Returns the principal of the permission
+     * 
+     * @return Principal of the permission
+     */
+    public String getPrincipal() {
+        return this.principal;
+    }
 }
-
