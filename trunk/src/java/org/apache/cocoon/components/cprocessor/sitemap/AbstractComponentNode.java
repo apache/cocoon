@@ -82,7 +82,7 @@ public abstract class AbstractComponentNode implements ComponentNode, Serviceabl
     }
     
     public void configure(Configuration config) throws ConfigurationException {
-        m_componentHint = config.getChild("component").getAttribute("hint");
+        m_componentHint = config.getChild("component").getAttribute("hint",null);
         Collection labels = splitLabels(config.getAttribute("label",null));
         m_labels = Collections.unmodifiableCollection(labels);
         m_mimeType = config.getAttribute("mime-type",null);
