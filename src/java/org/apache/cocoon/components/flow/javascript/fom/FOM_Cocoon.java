@@ -87,7 +87,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.14 2003/10/28 17:21:14 vgritsenko Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.15 2003/10/29 12:01:02 ugo Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -134,7 +134,14 @@ public class FOM_Cocoon extends ScriptableObject {
 
     void invalidate() {
         // Clear the scope attribute
-        this.getRequest().removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
+        Request request = this.getRequest();
+        if (request != null) {
+            request.removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
+        }
+        else {
+            // Cannot use logger here, as it might already be null
+            System.err.println("Request is null. Might be trying to invalidate an already invalidated FOM_Cocoon instance.");
+        }
         
         // Cleanup everything
         this.request = null;
@@ -882,7 +889,8 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The request
      */
     public Request getRequest() {
-        return jsGet_request().request;
+        FOM_Request fom_request = jsGet_request(); 
+        return fom_request != null ? fom_request.request : null;
     }
 
     /**
