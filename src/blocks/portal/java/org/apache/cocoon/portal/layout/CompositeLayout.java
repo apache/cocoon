@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.portal.layout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,65 +59,38 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * TODO Make an interface out of this
- * 
- * @version CVS $Id: CompositeLayout.java,v 1.5 2003/05/26 12:49:12 cziegeler Exp $
+ * @version CVS $Id: CompositeLayout.java,v 1.6 2003/05/26 13:18:19 cziegeler Exp $
  */
-public class CompositeLayout extends AbstractLayout {
+public interface CompositeLayout 
+    extends Layout {
 
-	protected List items = new ArrayList();
-
-    /**
-     * Constructor
-     */
-    public CompositeLayout() {}
-    
 	/**
 	 * Add indexed item to the itemList.
 	 * @param index, index for the position inside the list
 	 * @param item, item to add
 	 */
-	public final void addItem(int index, Item item) {
-		items.add(index, item);
-        item.setParent(this);
-	}
+    void addItem(int index, Item item);
 
 	/**
 	 * Add Item to the ItemList.
 	 * @param item, item to add
 	 */
-	public final void addItem(Item item) {
-		items.add(item);
-		item.setParent(this);
-	}
+	void addItem(Item item);
 
-	/**
-	 * Get Item from the ItemList.
-	 * @return Item
-	 */
-	public final Item getItem(int index) {
-		return (Item) items.get(index);
-	}
+	Item getItem(int index);
 
 	/**
 	 * Get the ItemList.
 	 * @return items
 	 */
-	public final List getItems() {
-		return items;
-	}
+	List getItems();
 
 	/**
 	 * Get size of ItemList.
 	 * @return size
 	 */
-	public final int getSize() {
-		return items.size();
-	}
+	int getSize();
     
-    public final void removeItem(Item item) {
-        this.items.remove(item);
-        item.setParent(null);
-    }
+    void removeItem(Item item);
     
 }

@@ -53,7 +53,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.status.SizingStatus;
-import org.apache.cocoon.portal.event.impl.SizingStatusEvent;
+import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingAspect.java,v 1.3 2003/05/22 12:32:46 cziegeler Exp $
+ * @version CVS $Id: SizingAspect.java,v 1.4 2003/05/26 13:18:19 cziegeler Exp $
  */
 public class SizingAspect extends AbstractAspect {
 
@@ -83,21 +83,23 @@ public class SizingAspect extends AbstractAspect {
 
         Boolean sizable = (Boolean)cid.getCopletData().getAspectData("sizable");
         if ( sizable.booleanValue() ) {
-            SizingStatus size = (SizingStatus)cid.getAspectData("size");
-            int status = (size == null ? SizingStatus.STATUS_MAXIMIZED : size.getStatus());
+            Integer size = (Integer)cid.getAspectData("size");
+            if ( size == null ) {
+                size = SizingStatus.STATUS_MAXIMIZED;
+            }
 
-            SizingStatusEvent event;    
+            ChangeCopletInstanceAspectDataEvent event;    
 
-            if ( status != SizingStatus.STATUS_MINIMIZED) {
-                event = new SizingStatusEvent(cid, SizingStatus.STATUS_MINIMIZED, size);
+            if ( !size.equals(SizingStatus.STATUS_MINIMIZED)) {
+                event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MINIMIZED);
                 XMLUtils.createElement(handler, "minimize-uri", service.getLinkService().getLinkURI(event));
             }
 
-            if ( status != SizingStatus.STATUS_MAXIMIZED) {
-                event = new SizingStatusEvent(cid, SizingStatus.STATUS_MAXIMIZED, size);
+            if ( !size.equals(SizingStatus.STATUS_MAXIMIZED)) {
+                event = new ChangeCopletInstanceAspectDataEvent(cid, "size", SizingStatus.STATUS_MAXIMIZED);
                 XMLUtils.createElement(handler, "maximize-uri", service.getLinkService().getLinkURI(event));
             }
-            if (status != SizingStatus.STATUS_MINIMIZED) {
+            if (size != SizingStatus.STATUS_MINIMIZED) {
                 context.invokeNext(layout, service, handler);
             }
         } else {

@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -72,6 +73,12 @@ import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDataHandler;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.EventManager;
+import org.apache.cocoon.portal.event.Filter;
+import org.apache.cocoon.portal.event.LayoutEvent;
+import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.*;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -83,11 +90,18 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.6 2003/05/22 12:32:46 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.7 2003/05/26 13:18:19 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
-    implements ThreadSafe, Component, LayoutFactory, Configurable, Disposable, Composable {
+    implements ThreadSafe, 
+                 Component, 
+                 LayoutFactory, 
+                 Configurable, 
+                 Disposable, 
+                 Composable,
+                 Initializable,
+                 Subscriber {
 
     protected Map layouts = new HashMap();
     
@@ -189,6 +203,7 @@ public class DefaultLayoutFactory
         layout.setDescription( layoutDescription );
         layout.setAspectDataHandler((AspectDataHandler)o[1]);
 
+        // TODO - register this at the profile manager
         return layout;
     }
     
@@ -202,6 +217,14 @@ public class DefaultLayoutFactory
      */
     public void dispose() {
         if ( this.manager != null ) {
+            EventManager eventManager = null;
+            try { 
+                eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+                eventManager.getRegister().unsubscribe( this );
+            } catch (Exception ignore) {
+            } finally {
+                this.manager.release( eventManager ); 
+            }
             this.manager.release( this.storeSelector );
             this.storeSelector = null;
             this.manager = null;
@@ -217,4 +240,53 @@ public class DefaultLayoutFactory
         this.storeSelector = (ComponentSelector)this.manager.lookup( AspectDataStore.ROLE+"Selector" );
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        EventManager eventManager = null;
+        try { 
+            eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
+            eventManager.getRegister().subscribe( this );
+        } finally {
+            this.manager.release( eventManager );
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
+     */
+    public Filter getFilter() {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+     */
+    public Class getEventType() {
+        return LayoutEvent.class;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     */
+    public void inform(Event e) {
+        // event dispatching
+        if ( e instanceof LayoutRemoveEvent ) {
+            LayoutRemoveEvent event = (LayoutRemoveEvent)e;
+            Layout layout = (Layout)event.getTarget();
+            this.remove( layout );
+        }
+    }
+
+    public void remove(Layout layout) {
+        // TODO - if this is a coplet layout remove coplet instance data
+        // TODO - remove this from the profile manager
+        // TODO - if this is a composite layout, recursive remove
+        Item parent = layout.getParent();
+        if ( parent != null && parent.getParent() != null) {
+            parent.getParent().removeItem( parent );
+        }
+        
+    }
 }

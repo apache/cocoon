@@ -185,9 +185,10 @@
             
             <coplet-instance-data-aspects>
                 <aspect name="size"
-                        class="org.apache.cocoon.portal.aspect.AspectStatus"
+                        class="java.lang.Integer"
                         store="session"
-                        auto-create="true"/>
+                        auto-create="true"
+                        value="1"/>
             </coplet-instance-data-aspects>
         </coplet>
     </coplets>

@@ -55,7 +55,7 @@ import java.util.Stack;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.impl.LinkEvent;
+import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -68,7 +68,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
+ * @version CVS $Id: EventLinkTransformer.java,v 1.3 2003/05/26 13:18:20 cziegeler Exp $
  */
 public class EventLinkTransformer 
 extends AbstractCopletTransformer {
@@ -192,7 +192,7 @@ extends AbstractCopletTransformer {
                             linkService = (LinkService)this.manager.lookup(LinkService.ROLE);
         
                             // create event link
-                            LinkEvent event = new LinkEvent(cid, link);
+                            CopletLinkEvent event = new CopletLinkEvent(cid, link);
                             String eventLink = linkService.getLinkURI(event);
         
                             // insert event link
@@ -218,7 +218,7 @@ extends AbstractCopletTransformer {
                         linkService = (LinkService)this.manager.lookup(LinkService.ROLE);
         
                         // create event link
-                        LinkEvent event = new LinkEvent(cid, link);
+                        CopletLinkEvent event = new CopletLinkEvent(cid, link);
                         eventLink = linkService.getLinkURI(event);
                     } catch (ComponentException e) {
                         throw new SAXException(e);
