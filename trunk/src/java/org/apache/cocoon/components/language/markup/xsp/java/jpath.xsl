@@ -28,7 +28,7 @@
         <xsp:include>java.util.Iterator</xsp:include>
         <xsp:include>org.apache.cocoon.environment.Environment</xsp:include>
         <xsp:include>org.apache.cocoon.components.flow.WebContinuation</xsp:include>
-        <xsp:include>org.apache.cocoon.components.flow.Flow</xsp:include>
+        <xsp:include>org.apache.cocoon.components.flow.FlowHelper</xsp:include>
         <xsp:include>org.apache.commons.jxpath.JXPathContext</xsp:include>
         <xsp:include>org.apache.commons.jxpath.CompiledExpression</xsp:include>
       </xsp:structure>
@@ -37,9 +37,9 @@
       </xsp:logic>
 
       <xsp:init-page>
-        Object bean = Flow.getContextObject(this.objectModel);
+        Object bean = FlowHelper.getContextObject(this.objectModel);
         WebContinuation kont
-          = Flow.getWebContinuation(this.objectModel);
+          = FlowHelper.getWebContinuation(this.objectModel);
         JXPathContext jxpathContext = JXPathContext.newContext(bean);
         Object __jxpathResult;
         // Generate the compiled representation of the JXPath
