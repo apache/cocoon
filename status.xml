@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.187 2003/11/07 11:53:47 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.188 2003/11/07 14:28:27 joerg Exp $:-->
 
 <status>
  <developers>
@@ -192,21 +192,24 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="23299" due-to-email="simon.mieth@t-online.de" due-to="Simon Mieth">
+     XMLByteStreamCompiler now handles also text nodes longer than 32 k.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="23538" due-to-email="samc@atnet.net.au" due-to="Sam Coward">
      Applying patch from Sam Coward (samc@atnet.net.au) for reducing 
      setDocumentLocator calls in JXTemplateGenerator and JXFormsGenerator.
-  </action>
+   </action>
    <action dev="BD" type="add" fixes-bug="24294" due-to="Jelle Alten" due-to-email="jelle@ordina.nl">
      sitemap-viewer added to the scratchpad samples
-  </action>
- <action dev="AG" type="fix" fixes-bug="19638" due-to-email="Grigorios.Merenidis@Dresdner-Bank.com" due-to="Grigorios Merenidis">
+   </action>
+   <action dev="AG" type="fix" fixes-bug="19638" due-to-email="Grigorios.Merenidis@Dresdner-Bank.com" due-to="Grigorios Merenidis">
      Fix HSSFSerializer Bug: Same cell definitions blows document. Applying
      patch from Grigorios Merenidis (Grigorios.Merenidis@Dresdner-Bank.com).
-  </action>
+   </action>
    <action dev="CZ" type="fix" fixes-bug="24326" due-to-email="andrzej@chaeron.com" due-to="Andrzej Taramina">
      SQLTransformer: Correcting handling of XML data with XML declarations. Applying
      patch from Andrzej Taramina (andrzej@chaeron.com).
-  </action>
+   </action>
    <action dev="CZ" type="fix" due-to="Volker Schmitt">
      Fixing threading problems in the ExtendedComponentSelector.
    </action>
@@ -216,14 +219,14 @@
    <action dev="CZ" type="fix" due-to="Andrea Poeschl" due-to-email="poeschel@aidossoftware.com">
       Fixing precompilation of the XSPs for the CLI.
    </action>
-    <action dev="BRD" type="update">
+   <action dev="BRD" type="update">
       Woody: in the form definition, for widgets that have child widgets, those
       child widgets should now be embedded inside a wd:widgets element.
       Practical update information can be found 
       <link href="http://wiki.cocoondev.org/Wiki.jsp?page=WoodySyntaxUpdateForWidgetsElement">
       in the wiki</link>.
    </action>
-    <action dev="AG" type="update">
+   <action dev="AG" type="update">
      Updated Xalan to 2.5.2
    </action>
    <action dev="BRD" type="update">
