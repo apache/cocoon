@@ -58,6 +58,7 @@ import java.io.InputStream;
  * org.apache.cocoon.acting.modular.DatabaseAction. Create an input module
  * that returns an instance of this class and use that in your database.xml
  *
+ * @version CVS $Id: JDBCxlobHelper.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
 public class JDBCxlobHelper {
     public int length = 0;

@@ -60,7 +60,7 @@ import org.apache.batik.util.ParsedURLData;
  * It is safe to use this URL with multiple Cocoon webapps running.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version $Id: ParsedResourceURLProtocolHandler.java,v 1.1 2003/03/09 00:02:37 pier Exp $
+ * @version CVS $Id: ParsedResourceURLProtocolHandler.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
 public class ParsedResourceURLProtocolHandler extends AbstractParsedURLProtocolHandler {
 

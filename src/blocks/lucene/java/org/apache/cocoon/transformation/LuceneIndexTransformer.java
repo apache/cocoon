@@ -90,8 +90,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * A lucene index creation transformer.
  * <p>FIXME: Write Documentation.</p>
  *
- * @author     <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version    CVS $Revision: 1.1 $ $Date: 2003/03/09 00:04:30 $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.2 2003/03/11 17:44:23 vgritsenko Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements Disposable, Cacheable, Recyclable, Configurable, Contextualizable {

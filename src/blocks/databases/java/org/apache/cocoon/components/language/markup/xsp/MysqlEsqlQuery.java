@@ -58,8 +58,8 @@ import java.sql.ResultSet;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: MysqlEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
-
 final public class MysqlEsqlQuery extends AbstractEsqlQuery {
 
     public MysqlEsqlQuery(AbstractEsqlConnection connection, String query) {

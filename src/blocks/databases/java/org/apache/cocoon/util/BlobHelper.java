@@ -58,6 +58,8 @@ import java.io.OutputStream;
  * A minimal implementation just enough to send a BLOB to a
  * database. Advanced methods and all methods for modifying the BLOB
  * are not implemented.
+ *
+ * @version CVS $Id: BlobHelper.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
 public class BlobHelper implements Blob{
 

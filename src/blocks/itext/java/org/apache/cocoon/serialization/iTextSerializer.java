@@ -66,8 +66,10 @@ import org.xml.sax.SAXException;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.xml.SAXiTextHandler;
+
 /**
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
+ * @version CVS $Id: iTextSerializer.java,v 1.2 2003/03/11 17:44:20 vgritsenko Exp $
  */
 final public class iTextSerializer extends AbstractSerializer implements Configurable, CacheableProcessingComponent {
 

@@ -56,8 +56,8 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: OracleEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
-
 final public class OracleEsqlQuery extends AbstractEsqlQuery {
 
     public OracleEsqlQuery(AbstractEsqlConnection connection, String query) {

@@ -99,9 +99,9 @@ import java.util.List;
  *		&lt;/lucene-xml-indexer&gt;
  *	</tt></pre></p>
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @author     <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.1 2003/03/09 00:04:29 pier Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
+ * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
          implements LuceneXMLIndexer, Configurable, Composable, ThreadSafe {

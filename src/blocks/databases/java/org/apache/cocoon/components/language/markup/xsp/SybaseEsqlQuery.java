@@ -59,8 +59,8 @@ import java.sql.CallableStatement;
 /**
  * Database specific EsqlQuery
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: SybaseEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
-
 final public class SybaseEsqlQuery extends AbstractEsqlQuery {
 
     public SybaseEsqlQuery(AbstractEsqlConnection connection, String query) {

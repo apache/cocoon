@@ -78,9 +78,9 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * A simple AsciiArt text SVG XML generator.
  *
- * @author     <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version    CVS $Id: AsciiArtSVGGenerator.java,v 1.1 2003/03/09 00:02:08 pier Exp $
- * @since      Cocoon 2.1, 22 December 2002
+ * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
+ * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
+ * @since Cocoon 2.1, 22 December 2002
  */
 public class AsciiArtSVGGenerator extends ComposerGenerator
          implements CacheableProcessingComponent {

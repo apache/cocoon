@@ -57,8 +57,8 @@ import java.sql.ResultSet;
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: PostgresEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
  */
-
 final public class PostgresEsqlQuery extends AbstractEsqlQuery {
 
     public PostgresEsqlQuery(AbstractEsqlConnection connection, String query) {
