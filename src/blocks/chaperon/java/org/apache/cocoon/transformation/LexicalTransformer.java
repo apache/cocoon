@@ -108,20 +108,18 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformer.java,v 1.4 2003/04/09 12:17:20 stephan Exp $
+ * @version CVS $Id: LexicalTransformer.java,v 1.5 2003/09/24 21:54:48 cziegeler Exp $
  */
 public class LexicalTransformer extends LexicalProcessorAdapter
   implements Transformer, LogEnabled, Composable, Recyclable, Disposable,
              Parameterizable, CacheableProcessingComponent {
 
-    private XMLConsumer consumer = null;
+    private String lexicon;
+    private Source lexiconSource;
 
-    private String lexicon = null;
-    private Source lexiconSource = null;
-
-    private Logger logger = null;
-    private ComponentManager manager = null;
-    private SourceResolver resolver = null;
+    private Logger logger;
+    private ComponentManager manager;
+    private SourceResolver resolver;
 
     private LexicalAutomaton automaton = null;
     private LexicalHandlerAdapter adapter = new LexicalHandlerAdapter(true);
@@ -164,8 +162,6 @@ public class LexicalTransformer extends LexicalProcessorAdapter
      * @param consumer
      */
     public void setConsumer(XMLConsumer consumer) {
-        this.consumer = consumer;
-
         setContentHandler(consumer);
         setLexicalHandler(consumer);
 

@@ -95,7 +95,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSource.java,v 1.2 2003/09/05 07:10:54 cziegeler Exp $
+ * @version CVS $Id: BlobSource.java,v 1.3 2003/09/24 21:54:48 cziegeler Exp $
  */
 public class BlobSource extends AbstractLogEnabled implements Source, Composable {
 
@@ -391,7 +391,7 @@ public class BlobSource extends AbstractLogEnabled implements Source, Composable
                     cnx = null;
                     tmp.close();
                 } catch(Exception e) {
-                    String msg = "Error closing the connection for " + BlobSource.this.systemId;
+                    String msg = "Error closing the connection for " + BlobSource.this.getURI();
                     BlobSource.this.getLogger().warn(msg, e);
                     throw new CascadingIOException(msg + " : " + e.getMessage(), e);
                 }

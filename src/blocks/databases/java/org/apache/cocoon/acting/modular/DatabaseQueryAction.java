@@ -84,7 +84,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *</pre>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseQueryAction.java,v 1.1 2003/03/09 00:03:04 pier Exp $
+ * @version CVS $Id: DatabaseQueryAction.java,v 1.2 2003/09/24 21:54:48 cziegeler Exp $
  */
 public class DatabaseQueryAction extends DatabaseAction {
 
@@ -131,7 +131,7 @@ public class DatabaseQueryAction extends DatabaseAction {
                 boolean useValues = true;
                 for (int i=0; i<queries.length; i++) {
                     queryModeName = queries[i].getAttribute("mode",null);
-                    if ( queryModeName.equals((String)modeTypes.get(MODE_OTHERS)) || "all".equals(queryModeName)) {
+                    if ( queryModeName.equals(modeTypes.get(MODE_OTHERS)) || "all".equals(queryModeName)) {
                         query = queries[i].getValue();
                         useValues = queries[i].getAttributeAsBoolean("use-values", useValues);
                         found = true;

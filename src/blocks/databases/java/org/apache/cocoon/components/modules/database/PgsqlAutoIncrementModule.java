@@ -72,7 +72,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * modeConf e.g. &lt;mode name="auto" type="auto" sequence="my_sequence"/&gt;.
  *
  * @author <a href="mailto:pmhahn@titan.lahn.de">Philipp Hahn</a>
- * @version CVS $Id: PgsqlAutoIncrementModule.java,v 1.1 2003/03/09 00:03:09 pier Exp $
+ * @version CVS $Id: PgsqlAutoIncrementModule.java,v 1.2 2003/09/24 21:54:48 cziegeler Exp $
  */
 public class PgsqlAutoIncrementModule implements AutoIncrementModule, ThreadSafe {
 
@@ -98,7 +98,7 @@ public class PgsqlAutoIncrementModule implements AutoIncrementModule, ThreadSafe
             queryBuffer.append('_');
             queryBuffer.append(columnConf.getAttribute("name"));
             queryBuffer.append("_seq");
-        };
+        }
         queryBuffer.append("')");
         
         PreparedStatement pstmt = conn.prepareStatement(queryBuffer.toString());

@@ -67,7 +67,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * (need another one for SERIAL8 ones!)
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: IfxSerialAutoIncrementModule.java,v 1.1 2003/03/09 00:03:08 pier Exp $
+ * @version CVS $Id: IfxSerialAutoIncrementModule.java,v 1.2 2003/09/24 21:54:48 cziegeler Exp $
  */
 public class IfxSerialAutoIncrementModule implements AutoIncrementModule, ThreadSafe {
 
@@ -76,25 +76,25 @@ public class IfxSerialAutoIncrementModule implements AutoIncrementModule, Thread
         throws SQLException, ConfigurationException {
 
         return new Integer(((com.informix.jdbc.IfxStatement) stmt).getSerial());
-    };
+    }
 
 
-    public boolean includeInQuery() { return false; };
+    public boolean includeInQuery() { return false; }
 
 
-    public boolean includeAsValue() { return false; };
+    public boolean includeAsValue() { return false; }
 
 
     public Object getPreValue( Configuration tableConf, Configuration columnConf, Configuration modeConf,
                                Connection conn, Map objectModel ) throws SQLException, ConfigurationException {
 
         return null;
-    };
+    }
 
     public String getSubquery( Configuration tableConf, Configuration columnConf, Configuration modeConf )
         throws ConfigurationException {
 
         return null;
-    };
+    }
 
 }
