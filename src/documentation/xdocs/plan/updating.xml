@@ -71,7 +71,7 @@
        <li>If the used reader has a mime-type definition, it is used.</li>
        <li>If both are not set, the reader itself has to provide the mime-type.</li>
       </ol>
-      <p>You can find further information in <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.</p>
+      <p>You can find further information in <link href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.</p>
     </s2>
   </s1>
   <s1 title="Recompilation">

@@ -368,7 +368,7 @@
       | transformation to deliver the output.
       | WARNING: * if you enable incremental-processing, you should be aware of
       |            the following bug:
-      |            http://nagoya.apache.org/bugzilla/show_bug.cgi?id=13186
+      |            http://issues.apache.org/bugzilla/show_bug.cgi?id=13186
       |          * incremental-processing creates an additional, non-pooled thread.
       |          * using incremental-processing does not save memory, the input
       |            tree will still be build completely.
@@ -431,7 +431,7 @@
       | Transient Store: holds objects that don't have to survive shutdown
       |
       | Common configuration parameters:
-      | maxobjects: Indicates how many objects will be hold in the cache.
+      | maxobjects: Indicates how many objects will be held in the cache.
       |    When the number of maxobjects has been reached. The last object
       |    in the cache will be thrown out.
       +-->

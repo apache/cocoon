@@ -18,7 +18,7 @@
 <!DOCTYPE todo PUBLIC "-//APACHE//DTD Todo V1.0//EN" "todo-v10.dtd">
 
 <!--
-  $Id: todo-doc.xml,v 1.3 2004/05/08 08:57:55 crossley Exp $
+  $Id: todo-doc.xml,v 1.4 2004/06/22 02:41:14 crossley Exp $
 -->
 
 
@@ -189,7 +189,7 @@
    re-organisation of the menus, it is no longer linked in.
    Perhaps some of it should move into the new How-to docs.
    There is also an old patch waiting in Bugzilla ...
-   <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=6435">Bug 6435</link>
+   <link href="http://issues.apache.org/bugzilla/show_bug.cgi?id=6435">Bug 6435</link>
    which contains neglected contributions.
   </action> 
    

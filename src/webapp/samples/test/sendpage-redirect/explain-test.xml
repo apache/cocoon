@@ -15,13 +15,13 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: explain-test.xml,v 1.2 2004/03/06 02:25:57 antonio Exp $ -->
+<!-- CVS $Id: explain-test.xml,v 1.3 2004/06/22 02:41:14 crossley Exp $ -->
 
 <page>
     <title>sendpage-redirect test</title>
     <content>
         <para>Test harness for
-            <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=26571">
+            <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=26571">
                 bugzilla 26571
             </a>, redirecting from within a flow-called pipeline fails.
         </para>
