@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-
 /**
  * The {@link WidgetDefinition} part of a Field widget, see {@link Field} for more information.
  * 

@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    
+
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         ActionDefinition definition = new ActionDefinition();
         setupDefinition(widgetElement, definition);
