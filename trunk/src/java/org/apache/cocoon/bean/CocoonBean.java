@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.avalon.fortress.ContainerManager;
 import org.apache.avalon.fortress.impl.DefaultContainerManager;
+import org.apache.avalon.fortress.impl.role.ECMRoleManager;
 import org.apache.avalon.fortress.util.FortressConfig;
 import org.apache.avalon.fortress.util.LifecycleExtensionManager;
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -233,8 +234,9 @@ public class CocoonBean
         m_confBuilder.setContextClassLoader( m_parentClassLoader );
         m_confBuilder.setCommandFailureHandlerClass( CocoonCommandFailureHandler.class );
         m_confBuilder.setContainerClass(CocoonContainer.class);
+        m_confBuilder.setRoleManagerClass(ECMRoleManager.class);
         m_confBuilder.setRoleManagerConfiguration(m_roleConfigURI);
-        
+
         m_confBuilder.setLifecycleExtensionManager( getLifecycleExtensionManager() );
 
         DefaultContext initContext = new ComponentContext( m_confBuilder.getContext() );

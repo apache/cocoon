@@ -26,6 +26,7 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.fortress.impl.DefaultContainerManager;
+import org.apache.avalon.fortress.util.ContextManagerConstants;
 import org.apache.avalon.fortress.util.FortressConfig;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -35,6 +36,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -305,7 +307,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     
     private void createContainer() throws Exception {
         // create the sitemap container
-        DefaultContext context = new DefaultContext(m_context);
+        DefaultContext context = new HidingContextImpl(m_context);
         context.put(TreeProcessor.CONTEXT_TREE_PROCESSOR, this);
         context.makeReadOnly();
         FortressConfig config = new FortressConfig(context);
@@ -585,4 +587,22 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         }
     }
 
+    protected static final class HidingContextImpl extends DefaultContext {
+        
+        public HidingContextImpl(Context parent) {
+            super(parent);
+        }
+        
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.context.Context#get(java.lang.Object)
+         */
+        public Object get(Object key) throws ContextException {
+            if ( ContextManagerConstants.ROLE_MANAGER_CLASS.equals(key) ) {
+                throw new ContextException("Key " + key + " is not available.");
+            }
+            return super.get(key);
+        }
+    }
 }
+

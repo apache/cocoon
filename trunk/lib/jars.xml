@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.132 2004/03/23 07:59:28 antonio Exp $
+    | CVS $Id: jars.xml,v 1.133 2004/04/05 13:15:27 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -38,7 +38,7 @@
       This is the Avalon container used by Cocoon.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/avalon-fortress-container-1.1.jar</lib>
+    <lib>core/excalibur-fortress-container-20040405.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/fortress/</homepage>
   </file>
   
@@ -469,5 +469,19 @@
     <lib>core/commons-lang-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/commons/lang/</homepage>
   </file>
+
+  <file>
+    <title>Jakarta Commons Beantuils</title>
+    <description>
+      The Java language provides Reflection and Introspection APIs 
+      (see the java.lang.reflect and java.beans packages in the JDK Javadocs). 
+      However, these APIs can be quite complex to understand and utilize. 
+      The BeanUtils component provides easy-to-use wrappers around these capabilities.
+    </description>
+    <used-by>Fortress</used-by>
+    <lib>core/commons-beanutils-1.6.1.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
+  </file>
+
 
 </jars>

@@ -16,7 +16,7 @@
 package org.apache.cocoon.components.container;
 
 import org.apache.avalon.fortress.impl.AbstractContainer;
-import org.apache.avalon.fortress.impl.DefaultContainer;
+import org.apache.avalon.fortress.impl.DefaultECMContainer;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public class CocoonContainer extends DefaultContainer {
+public class CocoonContainer extends DefaultECMContainer {
     
     /**
      * Provide some validation for the core Cocoon components

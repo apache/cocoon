@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<cocoon version="2.2" proxy-type="none">
+<cocoon version="2.2">
 
 <!--+
     |  This is the Apache Cocoon configuration file. This is the place
@@ -23,13 +23,6 @@
     |  like the cache) or handles to the pipeline components
     |  (stuff like XML parsers or XSLT processors).
     +-->
-
-<!-- =========================== Cocoon =============================== -->
-
-  <cocoon
-    id="cocoon"
-    logger="cocoon"
-  />
 
 <!-- =========================== Sitemap =============================== -->
 
@@ -48,359 +41,11 @@
       | For production environment, it is advisable to set check-reload to no.
       +-->
   <sitemap
-    id="sitemap"
     file="context://sitemap.xmap"
     check-reload="yes"
     logger="sitemap"
   />
 
-<!-- ================================= XML ================================ -->
-
-  <!--+
-      | XML Parser
-      |
-      | The default parser used in Apache Cocoon is
-      | org.apache.excalibur.xml.impl.JaxpParser. Apache Cocoon requires a
-      | JAXP 1.1 parser.
-      | If you have problems because your servlet environment uses its own
-      | parser not conforming to JAXP 1.1 try using the alternative
-      | XercesParser instead of the JaxpParser. To activate the XercesParser,
-      | change the class attribute to
-      |   class="org.apache.excalibur.xml.impl.XercesParser"
-      | You will also need to add a system property to your JVM,
-      | probably on the startup of your servlet engine like this:
-      | -Dorg.apache.excalibur.xml.sax.SAXParser=org.apache.excalibur.xml.impl.XercesParser
-      |
-      | Configuration for the JaxpParser (not the XercesParser!):
-      | - validate (boolean, default = false): This parameter causes the parser
-      |     to be a validating parser.
-      |     XML validation is only being used for the documentation build.
-      |     (If you are going to use it elsewhere, then do so with caution.)
-      |     You really should have validated all of your XML documents already,
-      |     according to their proper DTD or schema. Do not expect Cocoon
-      |     to do it.
-      | - namespace-prefixes (boolean, default = false) : do we want
-      |     namespaces declarations also as 'xmlns:' attributes ?
-      |     Note : setting this to true confuses some XSL processors
-      |     (e.g. Saxon).
-      | - stop-on-warning (boolean, default = true) : should the parser
-      |     stop parsing if a warning occurs ?
-      | - stop-on-recoverable-error (boolean, default = true) : should the
-      |     parser stop parsing if a recoverable error occurs ?
-      | - reuse-parsers (boolean, default = true) : do we want to reuse
-      |     parsers or create a new parser for each parse ?
-      |     Note : even if this parameter is true, parsers are not recycled
-      |     in case of parsing errors : some parsers (e.g. Xerces) do not like
-      |     to be reused after failure.
-      | - sax-parser-factory (string) : the name of the SAXParserFactory
-      |     implementation class to be used instead of using the standard
-      |     JAXP mechanism (SAXParserFactory.newInstance()). This allows to
-      |     choose unambiguously the JAXP implementation to be used when
-      |     several of them are available in the classpath.
-      | - document-builder-factory (string) : the name of the
-      |     DocumentBuilderFactory implementation to be used (similar to
-      |     sax-parser-factory for DOM).
-      +-->
-  <xml-parser 
-    id="sax-parser"
-    activation="inline"
-    logger="core.xml-parser" 
-    pool-grow="4" pool-max="32" pool-min="8">
-    
-    <parameter name="validate" value="false"/>
-    <parameter name="namespace-prefixes" value="false"/>
-    <parameter name="stop-on-warning" value="true"/>
-    <parameter name="stop-on-recoverable-error" value="true"/>
-    <parameter name="reuse-parsers" value="false"/>
-    <!-- drop-dtd-comments: causes all comment events originating from DTD
-         comments to be dropped right after parsing -->
-    <parameter name="drop-dtd-comments" value="true"/>
-  </xml-parser>
-
-  <!--+
-      | XSLT Processor
-      |
-      | 'incremental-processing' (only works with Xalan) allows the XSLT
-      | processor to start the output of the transformation as soon as possible.
-      | if set to false, the transforer waits until the end of the
-      | transformation to deliver the output.
-      | WARNING: * if you enable incremental-processing, you should be aware of
-      |            the following bug:
-      |            http://nagoya.apache.org/bugzilla/show_bug.cgi?id=13186
-      |          * incremental-processing creates an additional, non-pooled thread.
-      |          * using incremental-processing does not save memory, the input
-      |            tree will still be build completely.
-      |          * incremental processing is a 'static' thing in Xalan: if you
-      |            enable it on one xslt-processor, enable it on all.
-      +-->
-  <xslt-processor id="xslt" logger="core.xslt-processor" default="true">
-    <parameter name="use-store" value="false"/>
-    <parameter name="incremental-processing" value="false"/>
-  </xslt-processor>
-
-  <!--+
-      | XSLT Processor using xsltc from Xalan
-      +-->
-  <xslt-processor id="xsltc" logger="core.xslt-processor">
-    <parameter name="use-store" value="false"/>
-    <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
-  </xslt-processor>
-  
-  <!--+
-      | Xalan XSLT Processor
-      +-->
-  <xslt-processor id="xalan" logger="core.xslt-processor">
-    <parameter name="use-store" value="false"/>
-    <parameter name="incremental-processing" value="false"/>
-    <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
-  </xslt-processor>
-
-  <!--+
-      | Xpath Processor
-      +-->
-  <xpath-processor id="xpath-processor" logger="core.xpath-processor" />
-
-  <!-- The XMLizers converts different mime-types to XML -->
-  <xmlizer id="xmlizer" logger="core.xmlizer">
-    <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml" />
-  </xmlizer>
-  
-  <!--+
-      | Saxon XSLT Processor
-      | For old (6.5.2) Saxon use:
-      |  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-      | For new (7.x?) Saxon use:
-      |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
-  <component id="saxon"
-             logger="core.xslt-processor">
-     <parameter name="use-store" value="false"/>
-     <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-  </component>
-  +-->
-
-  <!--+
-      | Source Factories
-      |
-      | Each source factory adds a special uri schemes to the system.
-      +-->
-  <url-source id="url" logger="core.source.url" />
-  <context-source id="context" logger="core.source.context" />
-  <cocoon-source id="cocoon" logger="core.source.cocoon" />
-  <file-source id="file" logger="core.source.file" />
-  <resource-source id="resource" logger="core.source.resource" />
-	
-  <!--+
-      | Source Resolver
-      | 
-      | Custom source resolver acting both as Cocoon's own environment
-      | SourceResolver and excalibur SourceResolver.
-      +-->
-  <source-resolver id="cocoon-source-resolver" logger="core.source-resolver" />
-
-    <!--+
-      | Entity resolution catalogs
-      |
-      | The default catalog is distributed at WEB-INF/entities/catalog
-      | This is the contextual pathname for Cocoon resources.
-      | You can override this path, if necessary, using the "catalog" parameter:
-      |
-      |    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
-      |
-      | However, it is probably desirable to leave this default catalog config
-      | and declare your own local catalogs, which are loaded in addition to
-      | the system catalog.
-      |
-      | There are various ways to do local configuration (see "Entity Catalogs"
-      | documentation). One way is via the CatalogManager.properties file.
-      | As an additional method, you can specify the "local-catalog"
-      | parameter here.
-      |
-      | local-catalog:
-      |   The full filesystem pathname to a single local catalog file.
-      |
-      |  <parameter name="local-catalog" value="/usr/local/sgml/mycatalog"/>
-      |
-      | verbosity:
-      | The level of messages for status/debug (messages go to standard output)
-      | The following messages are provided ...
-      |  0 = none
-      |  1 = ? (... not sure yet)
-      |  2 = 1+, Loading catalog, Resolved public, Resolved system
-      |  3 = 2+, Catalog does not exist, resolvePublic, resolveSystem
-      |  10 = 3+, List all catalog entries when loading a catalog
-      |    (Cocoon also logs the "Resolved public" messages.)
-      |
-      |     <parameter name="verbosity" value="2"/>
-      +-->
-  <entity-resolver id="entity-resolver" logger="core.entity-resolver">
-    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
-    <parameter name="verbosity" value="1"/>
-  </entity-resolver>
-
-<!-- =================== Sitemap Input/Output Modules ====================== -->
-
-  <!--+
-      | InputModules are a replacement to reading values directly
-      | e.g. from request parameters. By using this abstraction and
-      | indirection, other components can be more generic and changes
-      | to the application logic are easier.
-      |
-      | A number of components already use InputModules: the sitemap processor, 
-      | flow, some matchers, the linkrewriting transformer, database actions
-      | and more.
-      |
-      | For example the sitemap processor allows to obtain a value
-      | named "foo" from an the InputModule for request parameters by
-      | writing {request-param:foo} wherever a sitemap variable is
-      | allowed. 
-      |
-      | Some InputModules need the help of other InputModules to
-      | obtain values and only apply a function to the obtained value
-      | or change the name of the attribute. These modules usually
-      | carry "Meta" in their name. An example is the ChainMetaModule
-      | which tries several other modules in turn until a non-null
-      | value is obtained or all modules are tied.
-	  |
-      | For details and optional configuration parameters refer to the
-      | accompanying javadocs.
-      +-->
-  <request-param-input 
-    id="request-param" 
-    logger="core.modules.input" 
-  />
-  <request-input 
-    id="request" 
-    logger="core.modules.input" 
-  />
-  <properties-file-input
-    id="cocoon-properties"
-    logger="core.modules.logger">
-    <file src="resource://org/apache/cocoon/cocoon.properties" />
-  </properties-file-input>
-  <global-input 
-    id="global" 
-    logger="core.modules.input" 
-  />
-  <global-variables id="global-variables"/>
-  
-  <notifying-builder id="notifying" />
-  
-  <cache id="cache" />
-  
-<!-- ============================ Object Stores =========================== -->
-
-  <!--+
-      | Store: generic store. The default implementation is an in-memory store
-      | backed by the persistent store (see below). This forms a two-stage
-      | cache composed of a fast in-memory MRU front-end and a persistent
-      | back-end storing less used objects.
-      |
-      | Common configuration parameters:
-      | maxobjects: Indicates how many objects will be hold in the cache.
-      |    When the number of maxobjects has been reached. The last object
-      |    in the cache will be thrown out.
-      +-->
-  <store id="Store" default="true" logger="core.store">
-    <parameter name="maxobjects" value="100"/>
-  </store>
-  
-  <!--+
-      | Transient Store: holds objects that don't have to survive shutdown
-      |
-      | Common configuration parameters:
-      | maxobjects: Indicates how many objects will be hold in the cache.
-      |    When the number of maxobjects has been reached. The last object
-      |    in the cache will be thrown out.
-      +-->
-  <transient-store id="TransientStore" logger="core.store.transient">
-    <parameter name="maxobjects" value="100"/>
-  </transient-store>
-
-  <!--+
-      | Persistent Store: holds objects that have to survive shutdown.
-      | WARNING: FilesystemStore is broken. Cocoon uses DefaultPersistentStore based
-      | on the Avalon Excalibur JispStore instead.
-      |
-      | Common configuration parameters:
-      |  use-cache-directory: Indicates that cache directory specified in
-      |                       web.xml should be used.
-      |  use-work-directory: Indicates that work directory specified in
-      |                      web.xml should be used.
-      |  directory: Specifies directory to use. Absolute or relative to the
-      |             work directory.
-      |
-      | DefaultStore configuration parameters:
-      |  datafile: Name of the store file to use. Defaults to cocoon.dat
-      |  indexfile: Name of the index file to use. Defaults to cocoon.idx
-      |  order: FIXME: put description here.
-      +-->
-  <persistent-store id="PersistentStore" logger="core.store.persistent">
-    <parameter name="use-cache-directory" value="true"/>
-    <parameter name="order" value="2701"/>
-  </persistent-store>
-  
-  <!--+
-      | Store Janitor: the store garbage collector and memory usage controller.
-      |
-      | WARNING: Be careful with the heapsize and freememory parameters.
-      |           Wrong values can cause high cpu usage.
-      |
-      | Example configuration:
-      | Jvm settings:
-      |    -Xmx200000000
-      | store-janitor settings:
-      |    <parameter name="freememory" value="5000000"/>
-      |    <parameter name="heapsize" value="196000000"/>
-      |
-      | It is recommended to have heapsize equal to -Xmx, especially on Sun's
-      | JVM which are unable to shrink its heap once it grows above minimum.
-      | Freememory should be greater than amount of memory necessary for normal
-      | application operation.
-      | BUT: The heap size of the memory of the JVM is a little bit less than
-      |      the value you specify for -Xmx, so you have to set the heapsize
-      |      for the store janitor to a value which is lower (2% less seems
-      |      to be a working value).
-      +-->
-  <store-janitor id="StoreJanitor" logger="core.store.janitor">
-    <!-- How much free memory shall be available in the jvm -->
-    <parameter name="freememory" value="2048000"/>
-    <!-- Indicates the limit of the jvm memory consumption. The default max
-         heapsize for Sun's JVM is (almost) 64Mb -->
-    <parameter name="heapsize" value="66600000"/>
-    <!-- How often shall the cleanup thread check memory -->
-    <parameter name="cleanupthreadinterval" value="10"/>
-    <!-- Experimental adaptive algorithm for cleanup interval
-    <parameter name="adaptivethreadinterval" value="true"/>
-    -->
-    <!-- Indicates the thread priority of the cleanup thread -->
-    <parameter name="threadpriority" value="5"/>
-    <!-- How much percent of the elements of each registered Store
-         shall be removed when low on memory. Default 10% -->
-    <parameter name="percent_to_free" value="10"/>
-    <!-- Invoke the garbage collector when low memory is reached -->
-    <parameter name="invokegc" value="false"/>
-  </store-janitor>
-  
-  <!--+
-      | XML compiler/decompiler
-      |
-      | these components are used to process SAX events and produce a binary
-      | representation that is much more compact and efficient for
-      | subsequent parsing. These are used by the cache system to save
-      | the intermediate results of the pipeline stages reducing the overhead
-      | of xml parsing/serialization.
-      +-->
-  <xml-serializer
-    id="xml-serializer"
-    logger="core.xml-serializer"
-    pool-grow="4" pool-max="32" pool-min="2"
-  />
-  <xml-deserializer
-    id="xml-deserializer"
-    logger="core.xml-serializer"
-    pool-grow="4" pool-max="32" pool-min="2"
-  />
-  
 <!-- ========================= Sitemap Flowscript ========================== -->
 
   <!--+
@@ -428,7 +73,7 @@
       |       whether support for the JavaScript debugger should be enabled
       |       in the control flow.
       +-->
-  <fom-javascript-interpreter id="javascript" logger="flow">
+  <fom-javascript-interpreter logger="flow">
     <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
     <reload-scripts>true</reload-scripts>
     <check-time>4000</check-time>
@@ -446,14 +91,12 @@
       | expiring continuations. Currently only the "periodic" type is
       | supported.
       +-->
-  <continuations-manager id="default" logger="flow" time-to-live="3600000">
+  <continuations-manager logger="flow.manager" time-to-live="3600000">
     <expirations-check type="periodic">
       <offset>180000</offset>
       <period>180000</period>
     </expirations-check>
   </continuations-manager>
-  
-<!-- TODO: entries below are still 2.1 configuration -->
 
 <!-- =================== Sitemap Input/Output Modules ====================== -->
 
@@ -492,6 +135,7 @@
     <component-instance logger="core.modules.input" name="request-attr"     class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>
     <component-instance logger="core.modules.input" name="request-header"   class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/>
     <component-instance logger="core.modules.input" name="session-attr"     class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/>
+    <component-instance logger="core.modules.input" name="system-property"  class="org.apache.cocoon.components.modules.input.SystemPropertyModule"/>
     <component-instance logger="core.modules.input" name="constant"         class="org.apache.cocoon.components.modules.input.StringConstantModule"/>
     <component-instance logger="core.modules.input" name="random"           class="org.apache.cocoon.components.modules.input.RandomNumberModule"/>
     <component-instance logger="core.modules.input" name="digest"       class="org.apache.cocoon.components.modules.input.DigestMetaModule"/>
@@ -516,7 +160,7 @@
     <component-instance class="org.apache.cocoon.components.modules.input.PropertiesFileModule" logger="core.modules.input" name="cocoon-properties">
       <file src="resource://org/apache/cocoon/cocoon.properties" />
     </component-instance>
-
+    
     <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used
          in the samples -->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
@@ -560,6 +204,289 @@
     <component-instance logger="core.modules.output" name="session-attr"   class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
   </output-modules>
 
+<!-- ================================= XML ================================ -->
+
+  <!--+
+      | Source Factories
+      |
+      | Each source factory adds a special uri schemes to the system.
+      +-->
+  <source-factories>
+    <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
+    <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
+    <component-instance class="org.apache.cocoon.components.source.impl.SitemapSourceFactory" name="cocoon"/>
+    <!-- The "file:" protocol is modifiable (can be written to) and traversable (directory structures
+         can be crawled). -->
+    <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
+<!--
+    <component-instance class="org.apache.cocoon.components.source.impl.PartSourceFactory" name="upload"/>
+-->
+    <!-- the "*" protocol handles all uri schemes that are not explicitely specified. This includes all
+         JDK standard protocols. -->
+    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+  </source-factories>
+<!-- ============================ Object Stores =========================== -->
+
+  <!--+
+      | Transient Store: holds objects that don't have to survive shutdown
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be hold in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
+      +-->
+  <transient-store logger="core.store.transient">
+    <parameter name="maxobjects" value="100"/>
+  </transient-store>
+  
+  <!--+
+      | Store: generic store. The default implementation is an in-memory store
+      | backed by the persistent store (see below). This forms a two-stage
+      | cache composed of a fast in-memory MRU front-end and a persistent
+      | back-end storing less used objects.
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be hold in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
+      +-->
+  <store logger="core.store">
+    <parameter name="maxobjects" value="100"/>
+  </store>
+
+  <!--+
+      | Persistent Store: holds objects that have to survive shutdown.
+      | WARNING: FilesystemStore is broken. Cocoon uses DefaultPersistentStore based
+      | on the Avalon Excalibur JispStore instead.
+      |
+      | Common configuration parameters:
+      |  use-cache-directory: Indicates that cache directory specified in
+      |                       web.xml should be used.
+      |  use-work-directory: Indicates that work directory specified in
+      |                      web.xml should be used.
+      |  directory: Specifies directory to use. Absolute or relative to the
+      |             work directory.
+      |
+      | DefaultStore configuration parameters:
+      |  datafile: Name of the store file to use. Defaults to cocoon.dat
+      |  indexfile: Name of the index file to use. Defaults to cocoon.idx
+      |  order: FIXME: put description here.
+      +-->
+  <persistent-store logger="core.store.persistent">
+    <parameter name="use-cache-directory" value="true"/>
+    <parameter name="order" value="2701"/>
+  </persistent-store>
+  
+  <!--+
+      | Store Janitor: the store garbage collector and memory usage controller.
+      |
+      | WARNING: Be careful with the heapsize and freememory parameters.
+      |           Wrong values can cause high cpu usage.
+      |
+      | Example configuration:
+      | Jvm settings:
+      |    -Xmx200000000
+      | store-janitor settings:
+      |    <parameter name="freememory" value="5000000"/>
+      |    <parameter name="heapsize" value="196000000"/>
+      |
+      | It is recommended to have heapsize equal to -Xmx, especially on Sun's
+      | JVM which are unable to shrink its heap once it grows above minimum.
+      | Freememory should be greater than amount of memory necessary for normal
+      | application operation.
+      | BUT: The heap size of the memory of the JVM is a little bit less than
+      |      the value you specify for -Xmx, so you have to set the heapsize
+      |      for the store janitor to a value which is lower (2% less seems
+      |      to be a working value).
+      +-->
+  <store-janitor logger="core.store.janitor">
+    <!-- How much free memory shall be available in the jvm -->
+    <parameter name="freememory" value="2048000"/>
+    <!-- Indicates the limit of the jvm memory consumption. The default max
+         heapsize for Sun's JVM is (almost) 64Mb -->
+    <parameter name="heapsize" value="66600000"/>
+    <!-- How often shall the cleanup thread check memory -->
+    <parameter name="cleanupthreadinterval" value="10"/>
+    <!-- Experimental adaptive algorithm for cleanup interval
+    <parameter name="adaptivethreadinterval" value="true"/>
+    -->
+    <!-- Indicates the thread priority of the cleanup thread -->
+    <parameter name="threadpriority" value="5"/>
+    <!-- How much percent of the elements of each registered Store
+         shall be removed when low on memory. Default 10% -->
+    <parameter name="percent_to_free" value="10"/>
+    <!-- Invoke the garbage collector when low memory is reached -->
+    <parameter name="invokegc" value="false"/>
+  </store-janitor>
+  
+  <!--+
+      | Entity resolution catalogs
+      |
+      | The default catalog is distributed at WEB-INF/entities/catalog
+      | This is the contextual pathname for Cocoon resources.
+      | You can override this path, if necessary, using the "catalog" parameter:
+      |
+      |    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
+      |
+      | However, it is probably desirable to leave this default catalog config
+      | and declare your own local catalogs, which are loaded in addition to
+      | the system catalog.
+      |
+      | There are various ways to do local configuration (see "Entity Catalogs"
+      | documentation). One way is via the CatalogManager.properties file.
+      | As an additional method, you can specify the "local-catalog"
+      | parameter here.
+      |
+      | local-catalog:
+      |   The full filesystem pathname to a single local catalog file.
+      |
+      |  <parameter name="local-catalog" value="/usr/local/sgml/mycatalog"/>
+      |
+      | verbosity:
+      | The level of messages for status/debug (messages go to standard output)
+      | The following messages are provided ...
+      |  0 = none
+      |  1 = ? (... not sure yet)
+      |  2 = 1+, Loading catalog, Resolved public, Resolved system
+      |  3 = 2+, Catalog does not exist, resolvePublic, resolveSystem
+      |  10 = 3+, List all catalog entries when loading a catalog
+      |    (Cocoon also logs the "Resolved public" messages.)
+      |
+      |     <parameter name="verbosity" value="2"/>
+      +-->
+  <entity-resolver logger="core.resolver">
+   <parameter name="catalog" value="WEB-INF/entities/catalog"/>
+   <parameter name="verbosity" value="1"/>
+  </entity-resolver>
+
+  <!--+
+      | XML Parser
+      |
+      | Apache Cocoon requires a JAXP 1.1 parser. The default parser is
+      | org.apache.excalibur.xml.impl.JaxpParser. 
+      | Note: If you have problems because your servlet environment uses its
+      | own parser not conforming to JAXP 1.1 try using the alternative
+      | XercesParser instead of the JaxpParser. To activate the XercesParser,
+      | change the class attribute to
+      |   class="org.apache.excalibur.xml.impl.XercesParser"
+      | You will also need to add a system property to your JVM,
+      | probably on the startup of your servlet engine like this:
+      | -Dorg.apache.excalibur.xml.sax.SAXParser=org.apache.excalibur.xml.impl.XercesParser
+      |
+      | Configuration parameters for the JaxpParser (not the XercesParser!):
+      | - validate (boolean, default = false): should the parser validate
+      |     parsed documents?
+      |     Note: XML validation is only being used for the documentation build.
+      |     (If you are going to use it elsewhere, then do so with caution.)
+      |     You really should have validated all of your XML documents already,
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
+      | - namespace-prefixes (boolean, default = false) : do we want
+      |     namespaces declarations also as 'xmlns:' attributes ?
+      |     Note : setting this to true confuses some XSL processors
+      |     (e.g. Saxon).
+      | - stop-on-warning (boolean, default = true) : should the parser
+      |     stop parsing if a warning occurs ?
+      | - stop-on-recoverable-error (boolean, default = true) : should the
+      |     parser stop parsing if a recoverable error occurs ?
+      | - reuse-parsers (boolean, default = true) : do we want to reuse
+      |     parsers or create a new parser for each parse ?
+      |     Note : even if this parameter is true, parsers are not recycled
+      |     in case of parsing errors : some parsers (e.g. Xerces) do not like
+      |     to be reused after failure.
+      | - sax-parser-factory (string, optional) : the name of the
+      |     SAXParserFactory implementation class to be used instead of using
+      |     the standard JAXP mechanism (SAXParserFactory.newInstance()). This
+      |     allows to choose unambiguously the JAXP implementation to be used
+      |     when several of them are available in the classpath.
+      | - document-builder-factory (string, optional) : the name of the
+      |     DocumentBuilderFactory implementation to be used (similar to
+      |     sax-parser-factory for DOM).
+      | - drop-dtd-comments : should comment() events from DTD's be dropped?
+      |     Note: Since this implementation does not support the DeclHandler
+      |     interface anyway, it is quite useless to only have the comments
+      |     from DTD. And the comment events from the internal DTD subset
+      |     would appear in the serialized output again.
+      +-->
+  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser"
+             logger="core.xml-parser" pool-grow="4" pool-max="32" pool-min="8">
+    <parameter name="validate" value="false"/>
+    <parameter name="namespace-prefixes" value="false"/>
+    <parameter name="stop-on-warning" value="true"/>
+    <parameter name="stop-on-recoverable-error" value="true"/>
+    <parameter name="reuse-parsers" value="false"/>
+    <parameter name="drop-dtd-comments" value="true"/>
+  </xml-parser>
+
+  <!--+
+      | XSLT Processor
+      |
+      | 'incremental-processing' (only works with Xalan) allows the XSLT
+      | processor to start the output of the transformation as soon as possible.
+      | if set to false, the transforer waits until the end of the
+      | transformation to deliver the output.
+      | WARNING: * if you enable incremental-processing, you should be aware of
+      |            the following bug:
+      |            http://nagoya.apache.org/bugzilla/show_bug.cgi?id=13186
+      |          * incremental-processing creates an additional, non-pooled thread.
+      |          * using incremental-processing does not save memory, the input
+      |            tree will still be build completely.
+      |          * incremental processing is a 'static' thing in Xalan: if you
+      |            enable it on one xslt-processor, enable it on all.
+      +-->
+  <xslt-processor logger="core.xslt-processor">
+     <parameter name="use-store" value="true"/>
+    <parameter name="incremental-processing" value="false"/>
+  </xslt-processor>
+
+  <!--+
+      | XSLT Processor using xsltc from Xalan
+      | For Interpreted Xalan use:
+      | <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+      +-->
+  <component logger="core.xslt-processor"
+             role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
+             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
+     <parameter name="use-store" value="true"/>
+    <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
+  </component>
+  
+  <!--+
+      | Xalan XSLT Processor
+      +-->
+  <component logger="core.xslt-processor"
+             role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
+             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
+     <parameter name="use-store" value="true"/>
+    <parameter name="incremental-processing" value="false"/>
+    <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
+  </component>
+
+  <!--+
+      | Saxon XSLT Processor
+      | For old (6.5.2) Saxon use:
+      |  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
+      | For new (7.x?) Saxon use:
+      |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
+  <component logger="core.xslt-processor"
+             role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
+             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
+     <parameter name="use-store" value="true"/>
+     <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
+  </component>
+  +-->
+
+  <!-- Xpath Processor: -->
+  <xpath-processor class="org.apache.excalibur.xml.xpath.XPathProcessorImpl" logger="core.xpath-processor"/>
+	
+  <!-- The XMLizers converts different mime-types to XML -->
+  <xmlizer>
+      <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml"/>
+  </xmlizer>
+
+<!-- ========================= Protocol Handlers =========================== -->
+  
+
 <!-- ================ Internationalization Catalogs =================== -->
 
   <!--+
@@ -572,231 +499,9 @@
       +-->
   <i18n-bundles logger="core.i18n-bundles">
     <catalogue-name>messages</catalogue-name>
-    <catalogue-location>i18n/translations</catalogue-location>
+    <catalogue-location>context://samples/i18n/translations</catalogue-location>
     <cache-at-startup>true</cache-at-startup>
   </i18n-bundles>
-
-<!-- ================ XSP (eXtensible Server Pages) ===================== -->
-
-  <!--+
-      | Program Generator
-      |
-      | The ProgamGenerator builds programs from a XML document written in a
-      | MarkupLanguage.
-      |
-      |    auto-reload: whether the system should check if the source was
-      |                 modified and reload of consequence.
-      |    root-package: the java package to use for the generated classes
-      |    preload: whether the system should preload the necessary components
-      +-->
-  <program-generator logger="core.program-generator">
-    <parameter name="auto-reload" value="true"/>
-    <parameter name="root-package" value="org.apache.cocoon.www"/>
-    <parameter name="preload" value="true"/>
-  </program-generator>
-
-  <!--+
-      | Programming Languages for the XSP pages
-      +-->
-  <programming-languages>
-    <java-language name="java" logger="core.language.java">
-
-      <!-- Specifies which formatter to use to format source code.
-           This parameter is optional.
-           It is commented out because of bug #5689: Java "code-formatter"
-           incorrectly formats double values -->
-      <!--parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/-->
-
-      <!-- A singleton-like implementation of a ClassLoader -->
-      <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
-
-      <!--+
-          | Specifies which Java compiler to use. Possible variants are:
-          |
-          |  - Javac: the java compiler that comes with JDK
-          |  - Pizza: the Pizza java compiler
-          |  - Jikes: the Jikes java compiler
-          |  - EclipseJavaCompiler: the Eclipse JTD java compiler
-          |
-          | NOTE: the Eclipse JTD is the only java compiler that is capable
-          |       of imports classes thru the context classloader. All other
-          |       compilers import classes from the JVM classpath and might
-          |       normally result in ClassNotFound problems at compilation
-          |       time. It is *HIGHLY* suggested that you use this compiler
-          |       or you might experience problems in some servlet containers.
-          +-->
-      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/-->
-      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Pizza"/-->
-      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Jikes"/-->
-      <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.EclipseJavaCompiler"/>
-
-    </java-language>
-
-    <!-- Interpreted JavaScript language -->
-    <js-language name="js" logger="core.language.js"/>
-  </programming-languages>
-
-  <!--+
-      | Logicsheets
-      |
-      | This section defines the XSP logicsheets. A logicsheet is a special
-      | XSLT stylesheet used to translate user-defined dynamic markup into
-      | equivalent XSP markup that embeds directives for a given markup
-      | language.
-      |
-      | Logicsheets are the XSP equivalent of taglibs. For info about
-      | the tags included in the default taglibs, please, refer to the
-      | documentation.
-      +-->
-  <markup-languages>
-    <xsp-language logger="core.markup.xsp" name="xsp">
-      <parameter name="prefix" value="xsp"/>
-      <parameter name="uri" value="http://apache.org/xsp"/>
-
-      <!--+
-          | Properties for the java language
-          +-->
-      <target-language name="java">
-        <!-- Defines the XSP Core logicsheet for the Java language -->
-        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
-
-        <!-- The Request logicsheet: access request parameters -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-request"/>
-          <parameter name="uri" value="http://apache.org/xsp/request/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The Response logicsheet: access response parameters -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-response"/>
-          <parameter name="uri" value="http://apache.org/xsp/response/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The Session logicsheet: manages and access the session -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-session"/>
-          <parameter name="uri" value="http://apache.org/xsp/session/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The Cookie logicsheet: manages and access cookies  -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-cookie"/>
-          <parameter name="uri" value="http://apache.org/xsp/cookie/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/cookie.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The Log logicsheet: access the cocoon logs from an xsp page  -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="log"/>
-          <parameter name="uri" value="http://apache.org/xsp/log/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The Utility logicsheet -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="util"/>
-          <parameter name="uri" value="http://apache.org/xsp/util/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/util.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The xsp-formval taglib serves as interface to retrieve
-             validation results from a request attribute -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-formval"/>
-          <parameter name="uri" value="http://apache.org/xsp/form-validator/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/form-validator.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The sel taglib allows to put multiple pages / view into
-             one xsp. While in general it is good style to put
-             different views into different xsp because they're more
-             easily maintained, this is a useful feature with
-             e.g. with long forms that are broken into parts -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="sel"/>
-          <parameter name="uri" value="http://apache.org/xsp/sel/1.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/sel.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The Action logicsheet -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="action"/>
-          <parameter name="uri" value="http://apache.org/cocoon/action/1.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/action.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The capture taglib is for capturing parts of the XSP-generated
-             XML as XML fragments or DOM nodes -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="capture"/>
-          <parameter name="uri" value="http://apache.org/cocoon/capture/1.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/capture.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The XScript logicsheet -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xscript"/>
-          <parameter name="uri" value="http://apache.org/xsp/xscript/1.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xscript.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The SOAP logicsheet -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="soap"/>
-          <parameter name="uri" value="http://apache.org/xsp/soap/3.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/soap.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The JPath logicsheet -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="jpath"/>
-          <parameter name="uri" value="http://apache.org/xsp/jpath/1.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/jpath.xsl"/>
-        </builtin-logicsheet>
-
-        <!-- The input logicsheet allows easy access to InputModules -->
-        <builtin-logicsheet>
-          <parameter name="prefix" value="input"/>
-          <parameter name="uri" value="http://apache.org/cocoon/xsp/input/1.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/input.xsl"/>
-        </builtin-logicsheet>
-      </target-language>
-
-      <!--+
-          | Properties for the javascript language
-          +-->
-      <target-language name="js">
-        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/xsp.xsl"/>
-
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-request"/>
-          <parameter name="uri" value="http://apache.org/xsp/request/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/request.xsl"/>
-        </builtin-logicsheet>
-
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-response"/>
-          <parameter name="uri" value="http://apache.org/xsp/response/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/response.xsl"/>
-        </builtin-logicsheet>
-
-        <builtin-logicsheet>
-          <parameter name="prefix" value="xsp-session"/>
-          <parameter name="uri" value="http://apache.org/xsp/session/2.0"/>
-          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/session.xsl"/>
-        </builtin-logicsheet>
-      </target-language>
-    </xsp-language>
-  </markup-languages>
-
-  <!-- Xscript -->
-  <xscript logger="core.xscript">
-    <parameter name="xscript:copy-of" value="resource://org/apache/cocoon/components/xscript/xslt/copy-of.xsl"/>
-    <parameter name="xscript:value-of" value="resource://org/apache/cocoon/components/xscript/xslt/value-of.xsl"/>
-  </xscript>
 
 <!-- ====================== System Components =========================== -->
 
@@ -806,22 +511,25 @@
   <classloader class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl" logger="core.classloader"/>
 
   <!--+
+      | XML compiler/decompiler
+          |
+      | these components are used to process SAX events and produce a binary
+      | representation that is much more compact and efficient for
+      | subsequent parsing. These are used by the cache system to save
+      | the intermediate results of the pipeline stages reducing the overhead
+      | of xml parsing/serialization.
+          +-->
+  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml-serializer" pool-grow="4" pool-max="32" pool-min="8"/>
+  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml-deserializer" pool-grow="4" pool-max="32" pool-min="8"/>
+
+  <!--+
       | The Monitor keeps track on changes to a Resource.
       +-->
   <monitor logger="core.monitor">
     <thread frequency="10000" priority="5"/>
   </monitor>
 
-  <!--+
-      | The Cache Manager is a component that can be used to cache content.
-      | It is currently used by the cinclude transformer
-      +-->
-  <component class="org.apache.cocoon.transformation.helpers.DefaultIncludeCacheManager" 
-             role="org.apache.cocoon.transformation.helpers.IncludeCacheManager">
-    <!-- Set the preemptive-loader-url to a pipeline inside Cocoon that
-         contains the preemptive loader action. The URL must be absolute! 
-    <parameter name="preemptive-loader-url" 
-               value="http://localhost:8080/cocoon/samples/cinclude/loader"/>
-    -->
- </component>
+  <cocoon/>
+  <source-resolver/>
+  <cache/>
 </cocoon>

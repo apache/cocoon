@@ -15,20 +15,36 @@
   limitations under the License.
 -->
 <!DOCTYPE role-list [
-<!ELEMENT role-list (role+)>
-<!ELEMENT role (component*)>
-<!ELEMENT component EMPTY>
-<!ATTLIST role name CDATA #REQUIRED>
-<!ATTLIST component 
-  shorthand CDATA #REQUIRED
-  class CDATA #REQUIRED
-  handler CDATA #IMPLIED
+<!ELEMENT role-list (role+)> 
+<!ELEMENT role (hint*)>
+<!ELEMENT hint EMPTY>
+<!ATTLIST role name CDATA #REQUIRED
+               shorthand CDATA #REQUIRED
+               default-class CDATA #IMPLIED
+>
+<!ATTLIST hint shorthand CDATA #REQUIRED
+               class CDATA #REQUIRED
 >
 ]>
 
 <role-list>
 
+  <role name="org.apache.excalibur.source.SourceFactorySelector"
+        shorthand="source-factories"
+        default-class="org.apache.avalon.framework.service.DefaultServiceSelector">
+  </role>
+
+  <role name="org.apache.excalibur.source.SourceResolver"
+        shorthand="source-resolver"
+        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+
+  <!-- The entity resolver used by most parsers -->
+  <role name="org.apache.excalibur.xml.EntityResolver"
+        shorthand="entity-resolver"
+        default-class="org.apache.cocoon.components.resolver.DefaultResolver"/>
+
   <!-- Parser:
+  
        Starting with Cocoon 2.1 we have a bunch of different parser:
        - a SAX parser (producing SAX events)
        - a DOM parser (producint a document)
@@ -36,133 +52,110 @@
        ...
   -->
 
-  <!-- This is the default SAX parser -->
-  <role name="org.apache.excalibur.xml.sax.SAXParser">
-    <component
-      shorthand="xml-parser"
-      class="org.apache.excalibur.xml.impl.JaxpParser"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
+  <!-- This is the usual SAX parser -->
+  <role name="org.apache.excalibur.xml.sax.SAXParser"
+        shorthand="xml-parser"
+        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
 
-  <!-- This is the default DOM parser 
-  <role name="org.apache.excalibur.xml.dom.DOMParser">
-    <component
-      shorthand="dom-parser"
-      class="org.apache.excalibur.xml.impl.JaxpParser"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
-  -->
-  
-  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor">
-    <component 
-      shorthand="xslt-processor"
-      class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
+  <!-- This is the usual DOM parser -->
+  <role name="org.apache.excalibur.xml.dom.DOMParser"
+        shorthand="dom-parser"
+        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
 
-  <role name="org.apache.excalibur.xmlizer.XMLizer">
-    <component 
-      shorthand="xmlizer"
-      class="org.apache.excalibur.xmlizer.DefaultXMLizer"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />  
-  </role>
-  
-  <role name="org.apache.excalibur.xml.xpath.XPathProcessor">
-    <component
-      shorthand="xpath-processor"
-      class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
-  
+  <!-- A Dom Serializer -->
+  <role default-class="org.apache.excalibur.xml.dom.DefaultDOMSerializer" name="org.apache.excalibur.xml.dom.DOMSerializer" shorthand="dom-serializer"/>
+
+  <!-- XSLT: -->
+  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
+        shorthand="xslt-processor"
+        default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
+
+  <role name="org.apache.excalibur.xml.xpath.XPathProcessor"
+        shorthand="xpath-processor"
+        default-class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"/>
+
   <!-- Stores: -->
-  <!--
-  <role name="org.apache.excalibur.store.Store">
-    <component 
-      shorthand="persistent-store"
-      class="org.apache.cocoon.components.store.impl.DefaultStore"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
-  
-  <role name="org.apache.excalibur.store.Store/TransientStore">
-    <component
-      shorthand="transient-store"
-      class="org.apache.excalibur.store.impl.MRUMemoryStore"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
+  <role name="org.apache.excalibur.store.Store"
+       shorthand="store"
+       default-class="org.apache.cocoon.components.store.impl.DefaultStore"/>
 
-  <role name="org.apache.excalibur.store.StoreJanitor">
-    <component
-      shorthand="store-janitor"
-      class="org.apache.excalibur.store.impl.StoreJanitorImpl"
-      handler="org.apache.avalon.fortress.impl.handler.ThreadSafeComponentHandler"
-    />
-  </role>
+  <role name="org.apache.excalibur.store.Store/PersistentStore"
+        shorthand="persistent-store"
+        default-class="org.apache.cocoon.components.store.impl.DefaultPersistentStore"/>
 
-  -->
-  <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder">
-    <component 
-      shorthand="global-variables"
-      class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
-    />
-  </role>
-  
-  <!--
-  <role name="org.apache.cocoon.components.language.generator.ServerPagesSelector"
-       shorthand="server-pages"
-       default-class="org.apache.cocoon.components.language.generator.GeneratorSelector"/>
+  <role name="org.apache.excalibur.store.Store/TransientStore"
+        shorthand="transient-store"
+        default-class="org.apache.cocoon.components.store.impl.DefaultTransientStore"/>
 
-  <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
-        shorthand="markup-languages"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
-    <hint shorthand="sitemap-language" class="org.apache.cocoon.components.language.markup.CocoonMarkupLanguage"/>
-    <hint shorthand="xsp-language" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage"/>
-  </role>
+  <role name="org.apache.excalibur.store.StoreJanitor"
+       shorthand="store-janitor"
+       default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"/>
 
-  <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
-        shorthand="programming-languages"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
-    <hint shorthand="java-language" class="org.apache.cocoon.components.language.programming.java.JavaLanguage"/>
-    <hint shorthand="js-language" class="org.apache.cocoon.components.language.programming.javascript.JavascriptLanguage"/>
-    <hint shorthand="python-language" class="org.apache.cocoon.components.language.programming.python.PythonLanguage"/>
-  </role>
+  <role name="org.apache.cocoon.Processor"
+        shorthand="sitemap"
+        default-class="org.apache.cocoon.components.cprocessor.TreeProcessor"/>
 
-  <role name="org.apache.cocoon.components.language.generator.ProgramGenerator"
-        shorthand="program-generator"
-        default-class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl"/>
+  <role name="org.apache.cocoon.ModifiableProcessor"
+        shorthand="cocoon"
+        default-class="org.apache.cocoon.Cocoon"/>
 
   <role name="org.apache.cocoon.components.classloader.ClassLoaderManager"
         shorthand="classloader"
         default-class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
 
-  <role name="org.apache.cocoon.components.image.ImageEncoderSelector"
-        shorthand="image-encoder"/>
+  <role name="org.apache.excalibur.xmlizer.XMLizer"
+        shorthand="xmlizer"
+        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
 
   <role name="org.apache.avalon.excalibur.monitor.Monitor"
         shorthand="monitor"
         default-class="org.apache.avalon.excalibur.monitor.ActiveMonitor">
   </role>
 
-  <role name="org.apache.cocoon.components.xscript.XScriptManager"
-        shorthand="xscript"
-        default-class="org.apache.cocoon.components.xscript.XScriptManagerImpl"/>
+  <role name="org.apache.cocoon.components.sax.XMLSerializer"
+        shorthand="xml-serializer"
+        default-class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"/>
 
+  <role name="org.apache.cocoon.components.sax.XMLDeserializer"
+        shorthand="xml-deserializer"
+        default-class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"/>
+
+  <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
+        shorthand="notifying-builder"
+        default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>
+
+  <role name="org.apache.cocoon.caching.Cache"
+        shorthand="cache"
+        default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
+
+  <!-- i18n components for resource bundle handling -->
   <role name="org.apache.cocoon.i18n.BundleFactory"
         shorthand="i18n-bundles"
         default-class="org.apache.cocoon.i18n.XMLResourceBundleFactory"/>
 
-  <role name="org.apache.cocoon.components.flow.ContinuationsManager"
+  <role name="org.apache.cocoon.components.flow.ContinuationsManager" 
         shorthand="continuations-manager"
         default-class="org.apache.cocoon.components.flow.ContinuationsManagerImpl" />
 
+  <!-- input/output modules -->
+  <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
+        shorthand="input-modules"
+        default-class="org.apache.avalon.framework.service.DefaultServiceSelector"/>
+
+  <role name="org.apache.cocoon.components.modules.output.OutputModuleSelector"
+        shorthand="output-modules"
+        default-class="org.apache.avalon.framework.service.DefaultServiceSelector"/>
+
+  <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
+        shorthand="global-variables"
+        default-class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"/>
+  
+  <!-- Storing data in the current request -->
   <role name="org.apache.cocoon.components.persistence.RequestDataStore"
         shorthand="request-data-store"
         default-class="org.apache.cocoon.components.persistence.RequestDataStoreImpl"/>
-  -->
+
+  <role name="org.apache.cocoon.components.flow.Interpreter"
+        shorthand="fom-javascript-interpreter"
+        default-class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter"/>
 </role-list>

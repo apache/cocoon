@@ -41,7 +41,7 @@
         <include name="**/*.java"/>
       </fileset>
     </fortress-meta>
-
+    
     <!-- compile mock classes -->
     <mkdir dir="${build.mocks}"/>
     <javac srcdir="${mocks}"
