@@ -49,46 +49,58 @@
 
 */
 package org.apache.cocoon.transformation;
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Stack;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
 import org.apache.cocoon.generation.Generator;
-import org.apache.commons.jexl.*;
-import org.apache.commons.jexl.util.*;
-import org.apache.commons.jexl.util.introspection.*;
+import org.apache.commons.jexl.Expression;
+import org.apache.commons.jexl.ExpressionFactory;
+import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl.JexlHelper;
 import org.apache.commons.jexl.util.Introspector;
+import org.apache.commons.jexl.util.introspection.Info;
+import org.apache.commons.jexl.util.introspection.UberspectImpl;
+import org.apache.commons.jexl.util.introspection.VelMethod;
+import org.apache.commons.jexl.util.introspection.VelPropertyGet;
+import org.apache.commons.jexl.util.introspection.VelPropertySet;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
-import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.Variables;
-import java.beans.PropertyDescriptor;
-import org.mozilla.javascript.*;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
+import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.w3c.dom.DocumentFragment;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Stack;
-import java.util.Iterator;
-import org.apache.avalon.framework.CascadingRuntimeException;
 /**
  * Jexl Transformer.
  *
@@ -100,7 +112,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.1 2003/03/27 19:01:42 coliver Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.2 2003/04/02 21:38:38 stefano Exp $
  */
 
 public class JexlTransformer
@@ -189,7 +201,7 @@ public class JexlTransformer
             }
             
             public Object invoke(Object thisArg) throws Exception {
-                Context cx = Context.enter();
+                Context.enter();
                 try {
                     Scriptable thisObj;
                     if (!(thisArg instanceof Scriptable)) {
@@ -231,7 +243,7 @@ public class JexlTransformer
             }
             
             public Object invoke(Object thisArg, Object rhs) throws Exception {
-                Context cx = Context.enter();
+                Context.enter();
                 try {
                     Scriptable thisObj;
                     Object arg = rhs;
@@ -278,7 +290,7 @@ public class JexlTransformer
             }
             
             public Object next() {
-                Context cx = Context.enter();
+                Context.enter();
                 try {
                     Object result = arr.get(index++, arr);
                     if (result == Undefined.instance ||
@@ -315,7 +327,7 @@ public class JexlTransformer
             }
             
             public Object next() {
-                Context cx = Context.enter();
+                Context.enter();
                 try {
                     Object result = 
                         ScriptableObject.getProperty(scope, 
@@ -333,7 +345,7 @@ public class JexlTransformer
             }
             
             public void remove() {
-                Context cx = Context.enter();
+                Context.enter();
                 try {
                     scope.delete(ids[index].toString());
                 } finally {
@@ -728,14 +740,15 @@ public class JexlTransformer
         }
     }
 
-
     private JexlContext getJexlContext() {
         return jexlContext;
     }
 
+/*
     private JXPathContext getJXPathContext() {
         return jxpathContext;
     }
+*/
 
     private void setContexts(Object contextObject) {
         Map map;
@@ -808,7 +821,6 @@ public class JexlTransformer
      * @return variable value as an <code>Object</code>
      */
     private Object getValue(final String variable) {
-        Object value;
         JexlContext context = getJexlContext();
         try {
             Expression e = ExpressionFactory.createExpression(variable);
@@ -985,7 +997,6 @@ public class JexlTransformer
         final boolean isTrueBoolean =
             value instanceof Boolean && ((Boolean)value).booleanValue() == true;
         if (isTrueBoolean) {
-            Boolean otherwise = (Boolean)chooseStack.pop();
             chooseStack.push(Boolean.FALSE); // don't do otherwise
         } else {
             ++ignoreEventsCount;
