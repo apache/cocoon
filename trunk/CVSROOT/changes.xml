@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.127 2000-10-17 20:17:52 greenrd Exp $ 
+  $Id: changes.xml,v 1.128 2000-10-20 21:39:44 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Didier Villevalois" due-to-email="dvillevalois@sqli.com">
+   Fixed so that XSLT document() function resolves correctly when two arguments used
+  </action>
   <action dev="RDG" type="fix" due-to="Reichel Volker" due-to-email="Volker.Reichel@freenet.de">
    Fixed some stupid bugs in response taglib
   </action>
