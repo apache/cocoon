@@ -268,9 +268,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
                                              PROPERTIES_NODE_QNAME, attributes);
             for (int i = 0; i < properties.length; i++) {
                 property = properties[i];
-                this.contentHandler.startPrefixMapping("",property.getNamespace());
                 property.toSAX(this.contentHandler);
-                this.contentHandler.endPrefixMapping("");
             }
             this.contentHandler.endElement(URI, PROPERTIES_NODE_NAME,
                                            PROPERTIES_NODE_QNAME);
