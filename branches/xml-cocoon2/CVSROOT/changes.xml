@@ -4,18 +4,24 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.5 2000-04-19 16:40:21 balld Exp $
+  $Id: changes.xml,v 1.9.2.6 2000-05-24 23:10:07 stefano Exp $
 -->
 
 <changes title="History of Changes">
+
  <devs>
-  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
-  <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
-  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <!-- in strict alphabetical order -->
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update" due-to="Sven K&uuml;nzler" due-to-email="svenk@tzi.org"> 
+   Improved installation documentation.
+  </action>
   <action dev="DB" type="add" due-to="Zvi" due-to-email="thezvi@ifrance.com">
    Patched SQLFilter so VJ++ was happy
   </action>
@@ -28,7 +34,7 @@
   <action dev="SM" type="add" due-to="Sebastien Sahuc" due-to-email="ssahuc@imediation.com"> 
    Fixed order of filters that was backwards.
   </action>
-  <action dev="SM" type="add" due-to="Giacomo Pati" due-to-email="Giacomo.Pati@pwr.ch">
+  <action dev="GP" type="add">
    Fixed typo in DirectoryGenerator.
   </action>
   <action dev="SM" type="add">

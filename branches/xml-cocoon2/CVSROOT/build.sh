@@ -3,7 +3,6 @@
 echo
 echo "Cocoon Build System"
 echo "-------------------"
-echo
 
 if [ "$JAVA_HOME" = "" ] ; then
   echo "ERROR: JAVA_HOME not found in your environment."
@@ -13,13 +12,22 @@ if [ "$JAVA_HOME" = "" ] ; then
   exit 1
 fi
 
-LOCALCLASSPATH=$JAVA_HOME/lib/tools.jar:./lib/xerces_1_0_3.jar:./lib/xalan_0_20_0.jar:./lib/fop_0_12_1.jar:./lib/servlet_2_2.jar:./lib/jstyle.jar:./lib/svgv_0_8.jar:./lib/js.jar:./lib/ant.jar
 ANT_HOME=./lib
+ANT=./lib/ant.jar
+JAVAC=$JAVA_HOME/lib/tools.jar
+XERCES=./lib/xerces_1_0_3.jar
+XALAN=./lib/xalan_1_0_1.jar
+FOP=./lib/fop_0_12_1.jar
+SVG=./lib/svgv_0_8.jar
+SERVLETS=./lib/servlet_2_2.jar
+LOCALCLASSPATH=$ANT:$JAVAC:$XERCES:$XALAN:$FOP:$SVG:$SERVLETS:$CLASSPATH
 
-echo Building with classpath $CLASSPATH:$LOCALCLASSPATH
 echo
+echo Building with classpath $LOCALCLASSPATH
 
+chmod 0755 $ANT_HOME/bin/antRun
+
+echo
 echo Starting Ant...
-echo
 
-$JAVA_HOME/bin/java -Dant.home=$ANT_HOME -classpath $LOCALCLASSPATH:$CLASSPATH org.apache.tools.ant.Main $*
+$JAVA_HOME/bin/java -Dant.home=$ANT_HOME -classpath $LOCALCLASSPATH org.apache.tools.ant.Main $*
