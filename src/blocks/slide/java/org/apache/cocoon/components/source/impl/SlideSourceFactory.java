@@ -39,7 +39,7 @@ import org.apache.slide.common.NamespaceAccessToken;
 /**
  * A factory for sources from a Jakarta Slide repository.
  *
- * @version CVS $Id: SlideSourceFactory.java,v 1.15 2004/03/27 22:25:10 unico Exp $ 
+ * @version CVS $Id: SlideSourceFactory.java,v 1.16 2004/05/06 08:24:13 cziegeler Exp $ 
  */
 public class SlideSourceFactory extends AbstractLogEnabled 
 implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
@@ -66,7 +66,6 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
      * @param manager ServiceManager.
      */
     public void service(ServiceManager manager) throws ServiceException {
-        m_repository = (SlideRepository) manager.lookup(SlideRepository.ROLE);
         m_manager = manager;
     }
 
@@ -82,6 +81,14 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
     public Source getSource(String location, Map parameters)
     throws MalformedURLException, IOException, SourceException {
 
+        if ( m_repository == null ) {
+            try {
+                m_repository = (SlideRepository) m_manager.lookup(SlideRepository.ROLE);
+            } catch (ServiceException se) {
+                throw new SourceException("Unable to lookup repository.", se);
+            }
+        }
+        
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Creating source object for " + location);
         }
