@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.tools.helper;
 
-import org.apache.cocoon.portal.tools.model.User;
+import org.apache.cocoon.portal.profile.PortalUser;
 
 /**
  * Defines the interface for role matchers.
@@ -27,5 +27,5 @@ public interface RoleMatcher {
     /**
      * @return Whether the user matches this role.
      */
-    boolean matches(User user);
+    boolean matches(PortalUser user);
 }

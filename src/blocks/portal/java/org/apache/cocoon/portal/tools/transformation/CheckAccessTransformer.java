@@ -16,13 +16,9 @@
 package org.apache.cocoon.portal.tools.transformation;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.tools.PortalToolManager;
-import org.apache.cocoon.portal.tools.model.User;
 import org.apache.cocoon.portal.tools.service.UserrightsService;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -34,7 +30,9 @@ import org.xml.sax.SAXException;
  * 
  * @version CVS $Id$
  */
-public class CheckAccessTransformer extends AbstractSAXTransformer implements Parameterizable, Disposable {
+public class CheckAccessTransformer 
+extends AbstractSAXTransformer 
+implements Disposable {
 
     public static final String RIGHTS_NAMESPACE_URI =
         "http://apache.org/cocoon/portal/tools/rights/1.0";
@@ -43,16 +41,8 @@ public class CheckAccessTransformer extends AbstractSAXTransformer implements Pa
     
     private UserrightsService urs;
     private PortalToolManager ptm;
-    private User user;
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters para) throws ParameterException {
-        this.user = new User(para.getParameter("user"), para.getParameter("role"));
-    }
-    
-    /* (non-Javadoc)
+   /* (non-Javadoc)
      * @see org.apache.cocoon.transformation.AbstractSAXTransformer#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -64,11 +54,11 @@ public class CheckAccessTransformer extends AbstractSAXTransformer implements Pa
     /* (non-Javadoc)
      * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
-    public void startElement(String uri, String name, String raw,
-            Attributes attr) throws SAXException {
-        if(RIGHTS_NAMESPACE_URI.equals(uri) && ACCESS_TAG.equals(name)) {
+    public void startElement(String uri, String name, String raw, Attributes attr) 
+    throws SAXException {
+        if (RIGHTS_NAMESPACE_URI.equals(uri) && ACCESS_TAG.equals(name)) {
             String id = attr.getValue(RIGHT_ID);
-            if(!urs.userIsAllowed(id, user)) {
+            if(!urs.userIsAllowed(id, this.ptm.getPortalObjects().getProfileManager().getUser())) {
                 this.stack.push(new Boolean(false));
             } 
             this.startRecording();
