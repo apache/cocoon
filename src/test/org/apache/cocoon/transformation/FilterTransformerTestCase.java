@@ -26,14 +26,10 @@ import org.apache.cocoon.SitemapComponentTestCase;
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: FilterTransformerTestCase.java,v 1.3 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FilterTransformerTestCase extends SitemapComponentTestCase {
 
-    public FilterTransformerTestCase(String name) {
-        super(name);
-    }
-    
     /**
      * Run this test suite from commandline
      *

@@ -25,13 +25,9 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ResourceExistsActionTestCase.java,v 1.4 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ResourceExistsActionTestCase extends SitemapComponentTestCase {
-
-    public ResourceExistsActionTestCase(String name) {
-        super(name);
-    }
 
     public void testExistAction() throws Exception {
 

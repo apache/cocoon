@@ -27,10 +27,6 @@ public class CookieSelectorTestCase extends SitemapComponentTestCase {
 
     private final String COOKIE_SELECTOR = "cookie";
     
-    public CookieSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

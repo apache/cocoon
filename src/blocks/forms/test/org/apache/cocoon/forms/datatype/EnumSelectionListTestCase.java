@@ -25,10 +25,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.transformation.I18nTransformer;
+import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.typeimpl.EnumType;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -38,29 +36,19 @@ import org.w3c.dom.Document;
 
 /**
  * Test case for CForms's DynamicSelectionList datatype.
- * @version CVS $Id: EnumSelectionListTestCase.java,v 1.5 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id$
  */
-public class EnumSelectionListTestCase extends ExcaliburTestCase {
+public class EnumSelectionListTestCase extends ContainerTestCase {
 
-    protected ServiceManager serviceManager;
     protected DatatypeManager datatypeManager;
     protected DocumentBuilder parser;
-
-    /**
-     * Construct a new test case.
-     * @param name The test case's name.
-     */
-    public EnumSelectionListTestCase(String name) {
-        super(name);
-    }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        serviceManager = new WrapperServiceManager(manager); 
-        datatypeManager = (DatatypeManager) serviceManager.lookup(DatatypeManager.ROLE);
+        datatypeManager = (DatatypeManager) this.lookup(DatatypeManager.ROLE);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         parser = factory.newDocumentBuilder();
@@ -71,7 +59,7 @@ public class EnumSelectionListTestCase extends ExcaliburTestCase {
      */
     protected void tearDown() throws Exception {
         if (datatypeManager != null) {
-            serviceManager.release(datatypeManager);
+            this.release(datatypeManager);
         }
         super.tearDown();
     }

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Source;
 import org.apache.cocoon.environment.SourceResolver;
@@ -29,13 +28,13 @@ import org.xml.sax.SAXException;
 /**
  * An adapter for the Excalibur SourceResolver.
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.10 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SourceResolverAdapter implements SourceResolver
 {
     private org.apache.excalibur.source.SourceResolver resolver;
 
-    public SourceResolverAdapter(org.apache.excalibur.source.SourceResolver resolver, ComponentManager manager) {
+    public SourceResolverAdapter(org.apache.excalibur.source.SourceResolver resolver) {
         this.resolver = resolver;
     }
 

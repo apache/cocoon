@@ -25,9 +25,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.WrapperServiceManager;
+import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.impl.ResourceSource;
@@ -37,29 +35,19 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for CForms's DynamicSelectionList datatype.
- * @version CVS $Id: DynamicSelectionListTestCase.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id$
  */
-public class DynamicSelectionListTestCase extends ExcaliburTestCase {
+public class DynamicSelectionListTestCase extends ContainerTestCase {
 
-    protected ServiceManager serviceManager;
     protected DatatypeManager datatypeManager;
     protected DocumentBuilder parser;
-
-    /**
-     * Construct a new test case.
-     * @param name The test case's name.
-     */
-    public DynamicSelectionListTestCase(String name) {
-        super(name);
-    }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        serviceManager = new WrapperServiceManager(manager); 
-        datatypeManager = (DatatypeManager) serviceManager.lookup(DatatypeManager.ROLE);
+        datatypeManager = (DatatypeManager) this.lookup(DatatypeManager.ROLE);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         parser = factory.newDocumentBuilder();
@@ -70,7 +58,7 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
      */
     protected void tearDown() throws Exception {
         if (datatypeManager != null) {
-            serviceManager.release(datatypeManager);
+            this.release(datatypeManager);
         }
         super.tearDown();
     }
@@ -88,7 +76,7 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
         Element datatypeElement = (Element) sourceDoc.getElementsByTagNameNS(Constants.DEFINITION_NS, "convertor").item(0);
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
         DynamicSelectionList list = 
-            new DynamicSelectionList(datatype, null, serviceManager);
+            new DynamicSelectionList(datatype, null, this.getManager());
         list.generateSaxFragment(dest, Locale.ENGLISH, source);
         ResourceSource expectedSource =
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/DynamicSelectionListTestCase.dest.xml");

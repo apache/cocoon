@@ -15,22 +15,14 @@
  */
 package org.apache.cocoon.components.source.impl;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Iterator;
-
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.cocoon.components.source.impl.WebDAVSource;
-import org.apache.commons.httpclient.HttpURL;
-import org.apache.excalibur.source.ModifiableTraversableSource;
+import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
 import org.apache.webdav.lib.WebdavResource;
 
 /**
  * @version $Id$
  */
-public class WebDAVSourceTestCase extends ExcaliburTestCase {
+public class WebDAVSourceTestCase extends ContainerTestCase {
     
     private String m_scheme = "webdav";
     private String m_credentials = "usr:pwd";
@@ -41,10 +33,6 @@ public class WebDAVSourceTestCase extends ExcaliburTestCase {
     private String m_secure = m_scheme + "://" + m_authority + m_path + m_name;
     private String m_options = "?cocoon:webdav-action=" + WebdavResource.NOACTION + "&cocoon:webdav-depth=0";
     
-    
-    public WebDAVSourceTestCase(String name) {
-        super(name);
-    }
     
     public void testResolve() throws Exception {
         SourceResolver resolver = (SourceResolver) lookup(SourceResolver.ROLE);

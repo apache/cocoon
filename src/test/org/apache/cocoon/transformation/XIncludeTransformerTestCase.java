@@ -19,6 +19,8 @@ package org.apache.cocoon.transformation;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
@@ -29,16 +31,9 @@ import org.apache.cocoon.environment.mock.MockEnvironment;
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: XIncludeTransformerTestCase.java,v 1.2 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
-    
-    /** Create new testcase
-     * @param name of testase
-     */
-    public XIncludeTransformerTestCase(String name) {
-        super(name);
-    }
     
     /**
      * Run this test suite from commandline
@@ -75,10 +70,10 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         // the processing context stack
         MockEnvironment env = new
         MockEnvironment(null);
-        Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
+        Processor processor = (Processor)this.lookup(Processor.ROLE);
         
         CocoonComponentManager.enterEnvironment(
-        env, this.manager, processor);
+        env, new WrapperComponentManager(this.getManager()), processor);
         
         assertEqual( load(result),
         transform("xinclude", src, parameters, load(input)));
@@ -102,10 +97,10 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         // the processing context stack
         MockEnvironment env = new
         MockEnvironment(null);
-        Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
+        Processor processor = (Processor)this.lookup(Processor.ROLE);
         
         CocoonComponentManager.enterEnvironment(
-        env, this.manager, processor);
+        env, new WrapperComponentManager(this.getManager()), processor);
         
         assertEqual( load(result),
         transform("xinclude", src, parameters, load(input)));

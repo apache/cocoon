@@ -23,21 +23,14 @@ import org.apache.cocoon.SitemapComponentTestCase;
  * Test case for the MIDISerializer
  * @author Mark Leicester
  */
-public class XMidiSerializerTestCase extends SitemapComponentTestCase
-{
+public class XMidiSerializerTestCase extends SitemapComponentTestCase {
 
-  public XMidiSerializerTestCase(String name)
-  {
-    super(name);
-  }
-
-  public void testMIDISerializer() throws Exception
-  {
-    String type = "midi";
-    String input = "resource://org/apache/cocoon/generation/prelude.xmi";
-    Parameters parameters = new Parameters();
-    String control = "resource://org/apache/cocoon/generation/prelude.mid";
-
-		assertIdentical(loadByteArray(control), serialize(type, parameters, load(input)));
-  }
+    public void testMIDISerializer() throws Exception {
+        String type = "midi";
+        String input = "resource://org/apache/cocoon/generation/prelude.xmi";
+        Parameters parameters = new Parameters();
+        String control = "resource://org/apache/cocoon/generation/prelude.mid";
+        
+        assertIdentical(loadByteArray(control), serialize(type, parameters, load(input)));
+    }
 }

@@ -62,7 +62,6 @@
     <depend project="excalibur-logger"/>
     <depend project="excalibur-event" inherit="runtime"/>
     <depend project="excalibur-legacy" id="i18n"/>
-    <depend project="excalibur-testcase"/>
 
     <depend project="jakarta-regexp"/>
     <depend project="jakarta-servletapi"/>

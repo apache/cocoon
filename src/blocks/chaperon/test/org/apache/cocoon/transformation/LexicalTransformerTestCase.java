@@ -16,8 +16,6 @@
 
 package org.apache.cocoon.transformation;
 
-import java.util.HashMap;
-
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
@@ -25,13 +23,9 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformerTestCase.java,v 1.6 2004/03/05 13:01:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LexicalTransformerTestCase extends SitemapComponentTestCase {
-
-    public LexicalTransformerTestCase(String name) {
-        super(name);
-    }
 
     public void testLexicalTransformer1() throws Exception {
         String src = "resource://org/apache/cocoon/transformation/lexertest-lexicon1.xml";
