@@ -79,7 +79,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.9 2004/01/15 15:24:31 kpiroumian Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.10 2004/01/16 15:55:38 kpiroumian Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -272,10 +272,10 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
                               ", directory: " + directories[index]);
         }
         String fileName = getFileName(directories[index], name, locale);
-        XMLResourceBundle bundle = (XMLResourceBundle)selectCached(fileName);
+        XMLResourceBundle bundle = selectCached(fileName);
         if (bundle == null) {
             synchronized (this) {
-                bundle = (XMLResourceBundle)selectCached(fileName);
+                bundle = selectCached(fileName);
                 if (bundle == null) {
                     XMLResourceBundle parentBundle = null;
                     if (locale != null && !locale.getLanguage().equals("")) {
@@ -414,10 +414,11 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param fileName          file name of the bundle
      * @return                  the cached bundle; null, if not found
      */
-    protected Component selectCached(String fileName) {
-        Component bundle = null;
+    protected XMLResourceBundle selectCached(String fileName) {
+        XMLResourceBundle bundle = null;
         try {
-            bundle = super.select(fileName);
+            bundle = (XMLResourceBundle)super.select(fileName);
+            bundle.update(fileName);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Returning from cache: " + fileName);
             }
