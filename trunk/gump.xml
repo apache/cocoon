@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.61 2003/05/20 10:42:24 cziegeler Exp $
+  CVS $Id: gump.xml,v 1.62 2003/06/17 01:31:11 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -836,6 +836,24 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/stx-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-linotype" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="linotype"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/linotype-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
