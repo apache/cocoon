@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 
-<!--
-  Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.80 2003/09/10 15:01:51 reinhard Exp $
--->
+<!--+
+    | Cocoon GUMP Descriptor
+    |
+    | CVS $Id: gump.xml,v 1.81 2003/09/11 23:53:50 vgritsenko Exp $
+    +-->
 
 <module name="cocoon-2.1">
 
   <url href="http://cocoon.apache.org/"/>
   <description>Java XML Framework</description>
-
   <cvs repository="cocoon"/>
 
   <!--
@@ -58,7 +58,6 @@
     <depend project="jdom"/>
     <depend project="rhino-cocoondev"/>
     <depend project="jisp"/>
-    <depend project="jaxen" inherit="runtime"/>
     
     <depend project="jing"/>
     <depend project="jstyle"/>
@@ -86,6 +85,7 @@
       <regexp pattern="/BUILD FAILED/" subject="Build Failure - Cocoon"/>
     </nag>
   </project>
+
 
  <!--
     *************************************
@@ -119,7 +119,8 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
-    
+
+
   <!--
     ********************************************
     ********       COCOON BLOCKS        ********
@@ -1023,6 +1024,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -1151,5 +1153,4 @@
     <jar name="joost-20030502.jar"/>
   </project>
 
-  
 </module>
