@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
+    xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/2.0"
     xmlns:text="http://chaperon.sourceforge.net/schema/text/1.0"
     exclude-result-prefixes="st">
 

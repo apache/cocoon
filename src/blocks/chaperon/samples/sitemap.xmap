@@ -11,13 +11,18 @@
   <map:generators default="file">
 
    <map:generator name="text" logger="sitemap.generator.textgenerator"
-                  src="org.apache.cocoon.generation.TextGenerator" />
+                  src="org.apache.cocoon.generation.TextGenerator">
+    <parameter name="localizable" value="true"/>
+   </map:generator>
+
+   <map:generator name="exception"
+                  src="org.apache.cocoon.generation.ParseExceptionGenerator"/>
 
   </map:generators>
 
 <!-- =========================== Transformers ================================= -->
 
-  <map:transformers default="xslt">
+  <map:transformers default="xsltc">
 
    <map:transformer name="pattern" 
                     src="org.apache.cocoon.transformation.PatternTransformer" 
@@ -26,15 +31,33 @@
    </map:transformer>
    <map:transformer name="lexer" 
                     src="org.apache.cocoon.transformation.LexicalTransformer" 
-                    logger="sitemap.transformer.lexer"/>
+                    logger="sitemap.transformer.lexer">
+    <parameter name="localizable" value="true"/>
+   </map:transformer>
    <map:transformer name="parser" 
                     src="org.apache.cocoon.transformation.ParserTransformer" 
                     logger="sitemap.transformer.parser">
     <parameter name="flatten" value="true"/>
     <parameter name="recovery" value="true"/>
+    <parameter name="localizable" value="true"/>
+   </map:transformer>
+
+   <map:transformer name="extparser"
+                    src="org.apache.cocoon.transformation.ExtendedParserTransformer"
+                    logger="sitemap.transformer.extendedparser">
    </map:transformer>
 
   </map:transformers>
+
+<!-- =========================== Selectors ================================ -->
+
+  <map:selectors default="browser">
+   <map:selector logger="sitemap.selector.exception" name="exception"
+                 src="org.apache.cocoon.selection.ExceptionSelector">
+     <exception name="syntax" class="net.sourceforge.chaperon.process.ParseException"/>
+     <exception class="java.lang.Throwable" unroll="true"/>
+   </map:selector>
+  </map:selectors>
 
  </map:components>
 
@@ -58,6 +81,12 @@
   </map:view>
 
  </map:views>
+
+<!-- =========================== Flow =================================== -->
+
+ <map:flow language="javascript">
+  <map:script src="misc/wiki.js"/>
+ </map:flow>
 
 <!-- =========================== Pipelines ================================= -->
 
@@ -90,23 +119,33 @@
     <map:serialize type="xml"/>
    </map:match>
 
-
-   <map:match pattern="packages.xml">
-    <map:generate  type="directory" src="misc/">
-     <map:parameter name="depth" value="6"/>
-    </map:generate>
-    <map:transform               src="stylesheets/index4java.xsl"/>
+   <map:match pattern="*.xegrm">
+    <map:generate  type="text"   src="grammars/{1}.egrm"/>
+    <map:transform type="extparser" src="grammars/egrm.xegrm"/>
+    <map:transform               src="stylesheets/egrm2xegrm.xsl"/>
     <map:serialize type="xml"/>
    </map:match>
 
-   <map:match pattern="**/*.java.xml">
-    <map:generate  type="text"   src="misc/{1}/{2}.java"/>
-    <map:serialize type="xml"/>
+   <map:match pattern="wiki/*.html">
+    <map:generate  type="jx"      src="misc/{1}.xml" />
+    <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
+    <map:transform type="parser"  src="cocoon:/wiki.xgrm"         label="ast">
+     <map:parameter name="failsafe" value="true"/>
+    </map:transform>
+    <map:transform                src="stylesheets/error4wiki.xsl"/>
+    <map:transform type="lexer"   src="grammars/error.xlex"/>
+    <map:transform                src="stylesheets/error2page.xsl"/>
+    <map:transform                src="stylesheets/wiki2xdoc.xsl" label="xdoc"/>
+    <map:transform                src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize type="html"/>
    </map:match>
 
   </map:pipeline>
 
   <map:pipeline type="caching">  
+
    <map:match pattern="">
     <map:redirect-to uri="welcome"/>
    </map:match>
@@ -119,11 +158,18 @@
     <map:serialize/>
    </map:match>
 
-   <!-- ========================= Chaperon ================================ -->
+   <map:match pattern="*.kont">
+    <map:call continuation="{1}"/>
+   </map:match>
+                                                                                                                                                                               
+   <map:match pattern="*.do">
+    <map:call function="{1}"/>
+   </map:match>
+
+<!-- ========================= Chaperon ================================ -->
 
    <map:match pattern="mathexp.html">
     <map:generate type="serverpages" src="misc/mathexp.xsp"/>
-<!--    <map:transform                src="stylesheets/mathexp.xsl"/>-->
     <map:transform type="lexer"   src="grammars/mathexp.xlex"/>
     <map:transform type="parser"  src="grammars/mathexp.xgrm"/>
     <map:transform                src="stylesheets/mathexp2html.xsl"/>
@@ -176,19 +222,8 @@
     <map:serialize type="html"/>
    </map:match>
 
-   <map:match pattern="**/index.html">
-    <map:generate                 src="cocoon:/packages.xml"/>
-    <map:transform                src="stylesheets/package2html.xsl">
-     <map:parameter name="package" value="{1}"/>
-    </map:transform>
-    <map:serialize type="html"/>
-   </map:match>
-
    <map:match pattern="**/*.java.html">
-    <map:aggregate element="java">
-     <map:part                    src="cocoon:/packages.xml"/>
-     <map:part                    src="cocoon:/{1}/{2}.java.xml"/>
-    </map:aggregate>
+    <map:generate  type="text"    src="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/java/{1}/{2}.java"/>
     <map:transform type="lexer"   src="grammars/java.xlex"/>
     <map:transform                src="stylesheets/text4javadoc.xsl"/>
     <map:transform type="lexer"   src="grammars/javadoc.xlex" label="ast"/>
@@ -196,23 +231,26 @@
      <map:parameter name="package" value="{1}"/>
      <map:parameter name="class"   value="{2}"/>
     </map:transform>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
     <map:serialize type="html"/>
    </map:match>
 
    <map:match pattern="**/*.class.html">
-    <map:aggregate element="java">
-     <map:part                    src="cocoon:/packages.xml"/>
-     <map:part                    src="cocoon:/{1}/{2}.java.xml"/>
-    </map:aggregate>
+    <map:generate  type="text"    src="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/java/{1}/{2}.java"/>
     <map:transform type="lexer"   src="grammars/java.xlex"/>
     <map:transform                src="stylesheets/remove4class.xsl"/>
-    <map:transform type="parser"  src="grammars/java.xgrm"/>
+    <map:transform type="parser"  src="cocoon:/java.xgrm"/>
     <map:transform                src="stylesheets/text4javadoc2.xsl"/>
-    <map:transform type="lexer"   src="grammars/javadoc.xlex"/>
-    <map:transform type="parser"  src="grammars/javadoc.xgrm" label="ast"/>
+    <map:transform type="lexer"   src="cocoon:/javadoc.xlex"/>
+    <map:transform type="parser"  src="cocoon:/javadoc.xgrm" label="ast"/>
     <map:transform                src="stylesheets/class2html.xsl">
      <map:parameter name="package" value="{1}"/>
      <map:parameter name="class"   value="{2}"/>
+    </map:transform>
+    <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+     <map:parameter name="contextPath" value="{request:contextPath}"/>
     </map:transform>
     <map:serialize type="html"/>
    </map:match>
@@ -225,6 +263,21 @@
     <map:read src="misc/{2}.css"/>
    </map:match>
 
+   <map:handle-errors>
+    <map:select type="exception">
+     <map:when test="syntax">
+      <map:generate  type="exception"/>
+      <map:transform                 src="stylesheets/text4error.xsl"/>
+      <map:transform type="xinclude"/>
+      <map:transform type="lexer"    src="grammars/error.xlex"/>
+      <map:transform                 src="stylesheets/error2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+      <map:serialize type="html"/>
+     </map:when>
+    </map:select>
+   </map:handle-errors>
+                                                                                                                                                             
   </map:pipeline>
 
  </map:pipelines>

@@ -1,31 +1,3 @@
-BODY {
-	FONT-FAMILY: verdana, arial, sans-serif
-}
-
-a:link { 
-  color: #1F354D;
-  FONT-SIZE: 12px;
-}
-
-a:visited { 
-  color: #1F354D;
-  FONT-SIZE: 12px;
-}
-
-a:hover { 
-  color: #FF5A00;
-  FONT-SIZE: 12px;
-}
-
-a:active { 
-  color: #FF5A00;
-  FONT-SIZE: 12px;
-}
-
-TABLE {
-	FONT-SIZE: 9px
-}
-
 TD.titleText {
 	 BACKGROUND: #eff7ff; PADDING-left: 5px;
 }

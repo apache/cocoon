@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
-  exclude-result-prefixes="st">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/2.0"
+                exclude-result-prefixes="st">
 
- <xsl:template match="st:document">
+ <xsl:template match="st:output">
   <document>
    <header>
     <title>Chaperon examples</title>
@@ -44,7 +44,7 @@
        <th>Close</th>
        <th>Volume</th>
       </tr>
-      <xsl:apply-templates select="st:rows"/>
+      <xsl:apply-templates select="st:document/st:rows"/>
      </table>
     </section>
    </body>

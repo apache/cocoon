@@ -1,0 +1,16 @@
+! Introduction
+
+This is a little example how easy it is to write a wiki engine 
+using the Chaperon parser and Apache Cocoon.
+
+Here are some example sites:
+* [Rule of the wiki|rules]
+* [Test document|selftest]
+* [Broken page|broken]
+* [New page|new]
+
+You can edit the page with the little "edit" under the Cocoon logo.
+
+Stephan Michels.
+
+

@@ -1,7 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE grammar PUBLIC "-//Chaperon//DTD grammar 2.0//EN" "grammar-v20.dtd">
-
-<grammar>
+<grammar xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0">
 
  <production symbol="grammar">
   <nonterminal symbol="token_decls"/><terminal symbol="delimiter"/>
@@ -85,6 +83,10 @@
 
  <production symbol="production_def">
   <nonterminal symbol="ids"/>
+ </production>
+
+ <production symbol="production_def">
+  <!-- empty definition -->
  </production>
 
  <production symbol="production_def">

@@ -1,0 +1,107 @@
+This wiki document is a self-describing test of the Cocoon Chaperon wiki grammar. Reading what follows 
+should tell you if the tests are successful.
+
+The page http://wiki.cocoondev.org/Wiki.jsp?page=ChaperonTestPage should be kept in sync with this so as 
+to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax 
+used by the Cocoon wiki.
+
+The "content", "parser-output" and "xdoc" views can be used to check the various stages of parsing and conversion.
+
+Lines like -- THIS TEXT -- are comments about this test, they must appear as is.
+
+-- 0. CURRENT RESULTS --
+
+This must be followed by a section title and a bullet list with some items.
+
+! KNOWN PROBLEMS
+Currently this test shows the following problems:
+
+* 0.1 This bullet list is invisible in the html output if there is no section title (3 bangs) before it
+* 1.1 Headings must be used in the usual order (big contains medium contains small), otherwise unpredictable results can occur due to the conversion from the linear wiki model to the nested xdocs model. 
+* 5.1 relative link points to wiki.cocoondev.org (but is it by design?)
+
+-- 1.HEADINGS --
+
+Test 1.1 headings in the usual order (from big to small): below you should see 3 headings, big, medium, small:
+
+! big heading #1
+
+!! medium heading #1
+
+!!! small heading #1
+
+Test 1.2 same headings with text in-between
+
+! big heading #2
+Text after big heading.
+
+!! medium heading #2
+Text after medium heading.
+
+!!! small heading #2
+Text after small heading.
+
+! new big heading
+The above heading starts a new section in the xdocs version of this document.
+
+-- 2.NUMBERED LISTS --
+
+Test 2.1 This should be followed by a list that counts from one to four:
+# one
+#  two
+# three
+#four
+
+-- 3.BULLET LISTS --
+
+Test 3.1 This should be followed by four bullet points:
+* Bullet one
+* Bullet two
+* Bullet three with a longer text, something like the quick brown fox stuff that you know and like
+* Bullet four
+
+Test 3.2 This should be followed by two bullet points with one line of text in between:
+
+* Bullet one, JSPWiki ends bullet at newline so this is the end.
+and this is not part of bullet one.
+* But this is bullet two.
+
+-- 4.TEXT ATTRIBUTES --
+
+Test 4.1 The words __bold__, ''italic'' and {{monospaced}} in this phrase should be displayed with the corresponding attributes.
+
+Test 4.2 In test 4.1 all words of the phrase should be followed by a space. 
+
+Test 4.3 Same as 4.1 but words with attributes are repeated twice: __bold bold__, ''italic italic'' and {{monospaced monospaced}}.
+
+Test 4.4 The block of text that follows should be shown in the source code style:
+
+
+{{{
+	boolean didThisWork() {
+	  return !failed();
+	}
+}}}
+
+-- 5.LINKS --
+
+Test 5.1 Here a link to this same page: [wikitest.html]
+
+Test 5.2 Link to cocoon.apache.org: [http://cocoon.apache.org]
+
+Test 5.3 A link to another wiki site [Text formating rules|rules].
+
+-- 6.MISCELLANEOUS --
+
+Test 6.1 This paragraph should be followed by a horizontal ruler line.
+----
+
+Test 6.2 There should be a line break between the words one and two that follow: 
+
+ONE\\TWO.
+
+-- 7. TEXT RUNS --
+
+Test 7.1 In this paragraph all
+words should be
+followed by a single space.

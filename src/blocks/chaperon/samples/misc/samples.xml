@@ -12,11 +12,11 @@
  </group>
 
  <group name="Wiki examples">
-  <sample name="Wiki editor" href="wiki.html">In this example the parser is used
+  <sample name="Wiki editor" href="view.do?page=index">In this example the parser is used
    to build an online editor,
    which is based on the very popular syntax of Wiki.
   </sample>
-  <sample name="Wiki self-test" href="wikitest/selftest.html">
+  <sample name="Wiki self-test" href="view.do?page=selftest">
   	A self-describing document that demonstrates and tests the Wiki grammar.
   </sample>
  </group>
@@ -28,11 +28,11 @@
  </group>
 
  <group name="Syntax highlighting example">
-  <sample name="Example 1" href="test/Grammar.java.html">The parser can also
+  <sample name="Example 1" href="org/apache/cocoon/Cocoon.java.html">The parser can also
    be used to colorize some source code.
   </sample>
 
-  <sample name="Example 2" href="test/PatternProcessor.class.html">
+  <sample name="Example 2" href="org/apache/cocoon/Cocoon.class.html">
    This example show a another view of a java class, similar to javadoc.
    (The first use takes 2-3 minutes, for the parser table generation process.)
   </sample>

@@ -1,13 +1,13 @@
-%token ASTERISK     "\*";
+%ignore      "\*";
 //%token DOT          "\.";
 %token TEXT         "[^\ \t\*\r\n@\<\>] ([^\*\r\n@\<\>]* [^\ \*\r\n@\<\>])?";
 %token TAG          "\< (/?) [A-Za-z][A-Za-z0-9]* 
                             ([\ \t\r\n]+ [A-Za-z][A-Za-z0-9]*=\"[^\"]*\")* 
                         [\ \t\r\n]* (/?) \>";
 %token PROPERTYNAME "@[A-Za-z][A-Za-z0-9]*";
-%token SPACES       "(\ )+";
-%token TAB          "\t";
-%token EOL          "\r(\n)?|\n";
+%ignore       "(\ )+";
+%ignore          "\t";
+%ignore          "\r(\n)?|\n";
 
 %start JavaDoc;
 

@@ -10,9 +10,9 @@
 %token tabletitleitem  "\|\|";
 %token tablecolumnitem "\|";
 
-%token titleitem "!!!";
+%token titleitem "!";
 %token subtitleitem "!!";
-%token subsubtitleitem "!";
+%token subsubtitleitem "!!!";
 
 %token emitem "''";
 

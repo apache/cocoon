@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/1.0"
-                xmlns="http://chaperon.sourceforge.net/schema/lexicon/1.0"
                 xmlns:text="http://chaperon.sourceforge.net/schema/text/1.0"
+                xmlns:st="http://chaperon.sourceforge.net/schema/syntaxtree/2.0"
+                xmlns="http://chaperon.sourceforge.net/schema/lexicon/1.0"
                 exclude-result-prefixes="st text">
 
  <xsl:output indent="yes" method="xml" encoding="ASCII"/>
 
- <xsl:template match="st:grammar" >
+ <xsl:template match="st:output/st:grammar" >
   <lexicon><xsl:comment>This file was generated! Don't edit!</xsl:comment>
    <xsl:apply-templates select="st:token_decls/st:token_decl | st:token_decls/st:ignorabletoken_decl"/>
   </lexicon>
@@ -22,13 +22,13 @@
    <xsl:if test="st:token_decl = '%right'">
     <xsl:attribute name="assoc">right</xsl:attribute>
    </xsl:if>
-   <xsl:apply-templates select="st:regexexpression"/>
+   <xsl:apply-templates select="st:output/st:regexexpression"/>
   </lexeme>
  </xsl:template>
 
  <xsl:template match="st:ignorabletoken_decl" >
   <lexeme>
-   <xsl:apply-templates select="st:regexexpression"/>
+   <xsl:apply-templates select="st:output/st:regexexpression"/>
   </lexeme>
  </xsl:template>
 
@@ -113,6 +113,7 @@
 
  <xsl:template match="st:regexdot">
   <cclass exclusive="true">
+   <!--<cset content="&#10;&#13;"/>-->
    <cset code="10"/>
    <cset code="13"/>
   </cclass>
@@ -128,7 +129,7 @@
 
  <xsl:template match="st:regexabref">
   <xsl:variable name="ref" select="translate(normalize-space(st:string), ' ', '')"/>
-  <xsl:apply-templates select="/st:grammar/st:token_decls/st:ab_decl[st:id=$ref]/st:regexexpression"/>
+  <xsl:apply-templates select="/st:output/st:grammar/st:token_decls/st:ab_decl[st:id=$ref]/st:output/st:regexexpression"/>
  </xsl:template>
 
  <xsl:template match="st:string" mode="name">
@@ -167,12 +168,15 @@
   <cset>
    <xsl:choose>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 'n'">
+<!--     <xsl:attribute name="content"><xsl:text disable-output-escaping="yes">&#10;</xsl:text></xsl:attribute>-->
      <xsl:attribute name="code">10</xsl:attribute>
     </xsl:when>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 'r'">
+<!--     <xsl:attribute name="content"><xsl:text disable-output-escaping="yes">&#13;</xsl:text></xsl:attribute>-->
      <xsl:attribute name="code">13</xsl:attribute>
     </xsl:when>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 't'">
+<!--     <xsl:attribute name="content"><xsl:text disable-output-escaping="yes">&#9;</xsl:text></xsl:attribute>-->
      <xsl:attribute name="code">9</xsl:attribute>
     </xsl:when>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 'u'">
@@ -195,18 +199,22 @@
  <xsl:template match="st:maskedcharacter">
   <xsl:choose>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 'n'">
+     <!--<xsl:text disable-output-escaping="yes">&#10;</xsl:text>-->
      <cstring code="10"/>
     </xsl:when>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 'r'">
+     <!--<xsl:text disable-output-escaping="yes">&#13;</xsl:text>-->
      <cstring code="13"/>
     </xsl:when>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 't'">
+     <!--<xsl:text disable-output-escaping="yes">&#9;</xsl:text>-->
      <cstring code="9"/>
     </xsl:when>
     <xsl:when test="substring(translate(normalize-space(.), ' ', ''), 2,1) = 'u'">
      <cstring code="#{substring(translate(normalize-space(.), ' ', ''), 2,6)}"/>
     </xsl:when>
     <xsl:when test="contains(.,'\ ')">
+     <!--<xsl:text disable-output-escaping="yes">&#32;</xsl:text>-->
      <cstring content=" "/>
     </xsl:when>
     <xsl:otherwise>

@@ -51,11 +51,8 @@
 
 package org.apache.cocoon.transformation;
 
-import net.sourceforge.chaperon.build.LexicalAutomatonBuilder;
-import net.sourceforge.chaperon.model.lexicon.Lexicon;
-import net.sourceforge.chaperon.model.lexicon.LexiconFactory;
-import net.sourceforge.chaperon.process.LexicalAutomaton;
-import net.sourceforge.chaperon.process.LexicalProcessor;
+import net.sourceforge.chaperon.model.extended.ExtendedGrammar;
+import net.sourceforge.chaperon.process.extended.ExtendedDirectParserProcessor;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
@@ -74,13 +71,17 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 
-//import org.apache.commons.logging.impl.AvalonLogger;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
 
+import org.exolab.castor.mapping.Mapping;
+import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.xml.UnmarshalHandler;
+import org.exolab.castor.xml.Unmarshaller;
+
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -89,40 +90,20 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * This transfomer transforms special mark text part of a XML file into lexemes by using a lexicon
- * file.
- * 
- * <p>
- * Input:
- * </p>
- * <pre>
- * &lt;text xmlns="http://chaperon.sourceforge.net/schema/text/1.0"&gt;
- *  Text 123 bla
- * &lt;/text&gt;
- * </pre>
- * 
- * <p>
- * were transform into the following output:
- * </p>
- * <pre>
- * &lt;lexemes xmlns="http://chaperon.sourceforge.net/schema/lexemes/1.0"&gt;
- *  &lt;lexeme symbol="word" text="Text"/&gt;
- *  &lt;lexeme symbol="number" text="123"/&gt;
- *  &lt;lexeme symbol="word" text="bla"/&gt;
- * &lt;/lexemes&gt;
- * </pre>
- *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformer.java,v 1.9 2004/01/20 15:23:57 stephan Exp $
+ * @version CVS $Id: ExtendedParserTransformer.java,v 1.1 2004/01/20 15:23:57 stephan Exp $
  */
-public class LexicalTransformer extends LexicalProcessor implements Transformer, LogEnabled,
-                                                                    Composable, Recyclable,
-                                                                    Disposable, Parameterizable,
-                                                                    CacheableProcessingComponent
+public class ExtendedParserTransformer extends ExtendedDirectParserProcessor implements Transformer,
+                                                                                        LogEnabled,
+                                                                                        Composable,
+                                                                                        Parameterizable,
+                                                                                        Recyclable,
+                                                                                        Disposable,
+                                                                                        CacheableProcessingComponent
 {
   private XMLConsumer consumer = null;
-  private String lexicon = null;
-  private Source lexiconSource = null;
+  private String grammar = null;
+  private Source grammarSource = null;
   private Logger logger = null;
   private ComponentManager manager = null;
   private SourceResolver resolver = null;
@@ -137,7 +118,7 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
     this.logger = logger;
 
     // TODO: check if the loglevel is correct LogKitLogger -> Logger
-    // setLog(new AvalonLogger(logger));
+    //setLog(new AvalonLogger(logger));
   }
 
   /**
@@ -161,7 +142,6 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
   public void parameterize(Parameters parameters) throws ParameterException
   {
     //setRecovery(parameters.getParameterAsBoolean("recovery", false));
-    setLocalizable(parameters.getParameterAsBoolean("localizable", false));
   }
 
   /**
@@ -192,51 +172,64 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
   public void setup(SourceResolver resolver, Map objectmodel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException
   {
+    System.out.println("setup");
+
     this.resolver = resolver;
 
     Store store = null;
 
     try
     {
-      this.lexicon = src;
+      this.grammar = src;
 
-      this.lexiconSource = resolver.resolveURI(this.lexicon);
+      this.grammarSource = resolver.resolveURI(this.grammar);
 
-      // Retrieve the parser table from the transient store
+      // Retrieve the parser automaton from the transient store
       store = (Store)this.manager.lookup(Store.TRANSIENT_STORE);
 
-      LexicalAutomatonEntry entry = (LexicalAutomatonEntry)store.get(this.lexiconSource.getURI());
+      GrammarEntry entry = (GrammarEntry)store.get(this.grammarSource.getURI());
 
-      // If the parser table has changed, rebuild the parser table
+      // If the parser automaton has changed, rebuild the parser automaton
       if ((entry==null) || (entry.getValidity()==null) ||
-          (entry.getValidity().isValid(this.lexiconSource.getValidity())<=0))
+          ((entry.getValidity().isValid(this.grammarSource.getValidity()))<=0))
       {
-        this.logger.info("(Re)building the automaton from '"+this.lexiconSource.getURI()+"'");
+        this.logger.info("(Re)building the grammar from '"+this.grammarSource.getURI()+"'");
 
-        if (this.lexiconSource.getInputStream()==null)
-          throw new ProcessingException("Source '"+this.lexiconSource.getURI()+"' not found");
+        if (this.grammarSource.getInputStream()==null)
+          throw new ProcessingException("Source '"+this.grammarSource.getURI()+"' not found");
 
-        LexiconFactory factory = new LexiconFactory();
-        SourceUtil.toSAX(this.manager, this.lexiconSource, null, factory);
+        Mapping mapping = new Mapping();
 
-        Lexicon lexicon = factory.getLexicon();
+        mapping.loadMapping(new InputSource(ExtendedGrammar.class.getResource("mapping.xml")
+                                                                 .openStream()));
 
-        LexicalAutomatonBuilder builder =
-          new LexicalAutomatonBuilder(lexicon/*, new AvalonLogger(this.logger)*/);
+        Unmarshaller unmarshaller = new Unmarshaller(ExtendedGrammar.class);
+        unmarshaller.setMapping(mapping);
 
-        LexicalAutomaton automaton = builder.getLexicalAutomaton();
-        setLexicalAutomaton(automaton);
+        UnmarshalHandler unmarshalHandler = unmarshaller.createHandler();
+        SourceUtil.toSAX(this.manager, this.grammarSource, null,
+                         unmarshaller.getContentHandler(unmarshalHandler));
 
-        this.logger.info("Store automaton into store for '"+this.lexiconSource.getURI()+"'");
+        ExtendedGrammar grammar = (ExtendedGrammar)unmarshalHandler.getObject();
 
-        store.store(this.lexiconSource.getURI(),
-                    new LexicalAutomatonEntry(automaton, this.lexiconSource.getValidity()));
+        if (grammar==null)
+          throw new ProcessingException("Error while reading the grammar from "+src);
+
+        setExtendedGrammar(grammar);
+
+        this.logger.info("Store grammar into store for '"+this.grammarSource.getURI()+"'");
+        store.store(this.grammarSource.getURI(),
+                    new GrammarEntry(grammar, this.grammarSource.getValidity()));
       }
       else
       {
-        this.logger.info("Getting automaton from store for '"+this.lexiconSource.getURI()+"'");
-        setLexicalAutomaton(entry.getLexicalAutomaton());
+        this.logger.info("Getting grammar from store for '"+this.grammarSource.getURI()+"'");
+        setExtendedGrammar(entry.getExtendedGrammar());
       }
+    }
+    catch (MappingException me)
+    {
+      throw new ProcessingException("Error while reading the grammar", me);
     }
     catch (SourceException se)
     {
@@ -260,7 +253,7 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
    */
   public Serializable getKey()
   {
-    return this.lexiconSource.getURI();
+    return this.grammarSource.getURI();
   }
 
   /**
@@ -271,7 +264,7 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
    */
   public SourceValidity getValidity()
   {
-    return this.lexiconSource.getValidity();
+    return this.grammarSource.getValidity();
   }
 
   /**
@@ -279,10 +272,10 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
    */
   public void recycle()
   {
-    if ((this.resolver!=null) && (this.lexiconSource!=null))
+    if ((this.resolver!=null) && (this.grammarSource!=null))
     {
-      this.resolver.release(this.lexiconSource);
-      this.lexiconSource = null;
+      this.resolver.release(this.grammarSource);
+      this.grammarSource = null;
     }
   }
 
@@ -291,39 +284,39 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
    */
   public void dispose()
   {
-    if ((this.resolver!=null) && (this.lexiconSource!=null))
+    if ((this.resolver!=null) && (this.grammarSource!=null))
     {
-      this.resolver.release(this.lexiconSource);
-      this.lexiconSource = null;
+      this.resolver.release(this.grammarSource);
+      this.grammarSource = null;
     }
 
     this.manager = null;
   }
 
   /**
-   * This class represent a entry in a store to cache the lexical automaton.
+   * This class represent a entry in a store to cache the parser automaton.
    */
-  public class LexicalAutomatonEntry implements Serializable
+  public class GrammarEntry implements Serializable
   {
     private SourceValidity validity = null;
-    private LexicalAutomaton automaton = null;
+    private ExtendedGrammar grammar = null;
 
     /**
      * Create a new entry.
      *
-     * @param automaton Lexical automaton.
-     * @param validity Validity of the lexicon file.
+     * @param grammar Extended grammar
+     * @param validity Validity for the grammar file.
      */
-    public LexicalAutomatonEntry(LexicalAutomaton automaton, SourceValidity validity)
+    public GrammarEntry(ExtendedGrammar grammar, SourceValidity validity)
     {
-      this.automaton = automaton;
+      this.grammar = grammar;
       this.validity = validity;
     }
 
     /**
-     * Return the validity of the lexicon file.
+     * Return the validity of the grammar file.
      *
-     * @return Validity of the lexicon file.
+     * @return Validity of the grammar file.
      */
     public SourceValidity getValidity()
     {
@@ -331,27 +324,27 @@ public class LexicalTransformer extends LexicalProcessor implements Transformer,
     }
 
     /**
-     * Return the lexical automaton.
+     * Return the parser automaton.
      *
-     * @return Lexical automaton.
+     * @return Parser automaton.
      */
-    public LexicalAutomaton getLexicalAutomaton()
+    public ExtendedGrammar getExtendedGrammar()
     {
-      return this.automaton;
+      return this.grammar;
     }
 
     private void writeObject(java.io.ObjectOutputStream out)
       throws IOException
     {
       out.writeObject(validity);
-      out.writeObject(automaton);
+      out.writeObject(grammar);
     }
 
     private void readObject(java.io.ObjectInputStream in)
       throws IOException, ClassNotFoundException
     {
       validity = (SourceValidity)in.readObject();
-      automaton = (LexicalAutomaton)in.readObject();
+      grammar = (ExtendedGrammar)in.readObject();
     }
   }
 }
