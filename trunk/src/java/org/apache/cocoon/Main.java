@@ -76,7 +76,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.21 2003/10/08 23:22:00 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.22 2003/10/10 14:11:50 upayavira Exp $
  */
 public class Main {
 
@@ -329,9 +329,6 @@ public class Main {
         if (line.hasOption(BROKEN_LINK_FILE_OPT)) {
             listener.setReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
         }
-        if (line.hasOption(URI_FILE_OPT)) {
-            cocoon.addTargets(BeanConfigurator.processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
-        }
         if (line.hasOption(FOLLOW_LINKS_OPT)) {
             cocoon.setFollowLinks(yesno(line.getOptionValue(FOLLOW_LINKS_OPT)));
         }
@@ -340,6 +337,9 @@ public class Main {
         }
         if (line.hasOption(LOAD_CLASS_OPT)){
             cocoon.addLoadedClasses(Arrays.asList(line.getOptionValues(LOAD_CLASS_OPT)));
+        }
+        if (line.hasOption(URI_FILE_OPT)) {
+            cocoon.addTargets(BeanConfigurator.processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
         }
 
         cocoon.addTargets(line.getArgList(), destDir);
