@@ -42,7 +42,7 @@ import org.apache.avalon.logger.AbstractLoggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-23 17:53:01 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-23 19:06:45 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composable, Contextualizable, Processor, Disposable {
     private Context context;
@@ -139,6 +139,11 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
                 regeneration.setContextClassLoader(this.getClass().getClassLoader());
             } catch (Exception e){}
             this.environment = environment;
+
+            /* clear old exception if any */
+            this.exception = null;
+
+            /* start the thread */
             regeneration.start();
         }
     }
@@ -222,7 +227,8 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     }
 
     public void throwEventualException() throws Exception {
-        if (this.exception != null) throw new ProcessingException("Exception in Handler",this.exception);
+        if (this.exception != null) 
+            throw new ProcessingException("Exception in Handler",this.exception);
     }
 
     public Exception getException() {
