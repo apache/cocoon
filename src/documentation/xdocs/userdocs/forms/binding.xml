@@ -32,6 +32,9 @@
       validated, you copy the data in the form back to the object. To avoid having
       to write actual code for this, a binding framework is available.</p>
 
+      <p>The same illustration as in the introduction,
+      but now extended with the binding, can be viewed <link href="images/forms_schema_withbinding.png">here</link>.</p>
+
       <p>The basic definition of a binding is as follows (if you don't know Java, just ignore this):</p>
 
       <source><![CDATA[public interface Binding {
