@@ -179,4 +179,7 @@
       <log-target id-ref="error"/>
     </category>
   </categories>
+  
+  <!-- Include logging confs from different blocks -->
+  <include dir="context://WEB-INF/logkitconf" postfix=".logkit"/>
 </logkit>

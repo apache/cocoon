@@ -15,56 +15,7 @@
  */
 package org.apache.cocoon.servlet;
 
-import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.ConnectionResetException;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
-import org.apache.cocoon.components.notification.Notifier;
-import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpContext;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
-import org.apache.cocoon.servlet.multipart.RequestFactory;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.StringUtils;
-import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.cocoon.util.log.Log4JConfigurator;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.SystemUtils;
-import org.apache.log.ContextMap;
-import org.apache.log.ErrorHandler;
-import org.apache.log.Hierarchy;
-import org.apache.log.Priority;
-import org.apache.log.output.ServletOutputLogTarget;
-import org.apache.log.util.DefaultErrorHandler;
-import org.apache.log4j.LogManager;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,6 +32,43 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.ConnectionResetException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.container.LoggingHelper;
+import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
+import org.apache.cocoon.components.notification.Notifier;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
+import org.apache.cocoon.servlet.multipart.RequestFactory;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.StringUtils;
+import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.log.ContextMap;
+import org.apache.log.output.ServletOutputLogTarget;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -291,13 +279,10 @@ public class CocoonServlet extends HttpServlet {
         this.workDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
-        // Init logger
-        initLogger();
-
         String path = this.servletContextPath;
-        if (getLogger().isDebugEnabled()) {
+/*        if (getLogger().isDebugEnabled()) {
             getLogger().debug("getRealPath for /: " + path);
-        }
+        }*/
         if (path == null) {
             // Try to figure out the path of the root from that of WEB-INF
             try {
@@ -305,15 +290,14 @@ public class CocoonServlet extends HttpServlet {
             } catch (MalformedURLException me) {
                 throw new ServletException("Unable to get resource 'WEB-INF'.", me);
             }
-            if (getLogger().isDebugEnabled()) {
+           /* if (getLogger().isDebugEnabled()) {
                 getLogger().debug("getResource for /WEB-INF: " + path);
-            }
+            }*/
             path = path.substring(0, path.length() - "WEB-INF".length());
-            if (getLogger().isDebugEnabled()) {
+            /*if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Path for Root: " + path);
-            }
+            }*/
         }
-
         try {
             if (path.indexOf(':') > 1) {
                 this.servletContextURL = path;
@@ -330,6 +314,10 @@ public class CocoonServlet extends HttpServlet {
                 throw new ServletException("Unable to determine servlet context URL.", me);
             }
         }
+        this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.servletContextURL);
+
+        // Init logger
+        initLogger();
 
         this.forceLoadParameter = getInitParameter("load-class", null);
         this.forceSystemProperty = getInitParameter("force-property", null);
@@ -343,7 +331,6 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().debug("Using default work-directory " + this.workDir);
             }
         }
-        this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.servletContextURL);
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
@@ -730,42 +717,14 @@ public class CocoonServlet extends HttpServlet {
         return "";
     }
 
-    /**
-     * Set up the log level and path.  The default log level is
-     * Priority.ERROR, although it can be overwritten by the parameter
-     * "log-level".  The log system goes to both a file and the Servlet
-     * container's log system.  Only messages that are Priority.ERROR
-     * and above go to the servlet context.  The log messages can
-     * be as restrictive (Priority.FATAL_ERROR and above) or as liberal
-     * (Priority.DEBUG and above) as you want that get routed to the
-     * file.
-     */
     protected void initLogger() {
-        final String logLevel = getInitParameter("log-level", "INFO");
-
-        final String accesslogger = getInitParameter("servlet-logger", "cocoon");
-
-        final Priority logPriority = Priority.getPriorityForName(logLevel);
+        // get settings - TODO we will move this to a better place soon
+        final Settings settings = SettingsHelper.getSettings(this.getServletConfig());
 
         final CocoonLogFormatter formatter = new CocoonLogFormatter();
         formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
                             "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
         final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter);
-
-        final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
-        final ErrorHandler errorHandler = new DefaultErrorHandler();
-        defaultHierarchy.setErrorHandler(errorHandler);
-        defaultHierarchy.setDefaultLogTarget(servTarget);
-        defaultHierarchy.setDefaultPriority(logPriority);
-        final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
-        final String loggerManagerClass =
-            this.getInitParameter("logger-class", LogKitLoggerManager.class.getName());
-
-        // the log4j support requires currently that the log4j system is already configured elsewhere
-
-        final LoggerManager loggerManager =
-                newLoggerManager(loggerManagerClass, defaultHierarchy);
-        ContainerUtil.enableLogging(loggerManager, logger);
 
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
@@ -773,77 +732,16 @@ public class CocoonServlet extends HttpServlet {
         if (this.servletContextPath == null) {
             File logSCDir = new File(this.workDir, "log");
             logSCDir.mkdirs();
-            if (logger.isWarnEnabled()) {
-                logger.warn("Setting context-root for LogKit to " + logSCDir);
-            }
             subcontext.put("context-root", logSCDir.toString());
         } else {
             subcontext.put("context-root", this.servletContextPath);
         }
 
-        try {
-            ContainerUtil.contextualize(loggerManager, subcontext);
-            this.loggerManager = loggerManager;
-
-            if (loggerManager instanceof Configurable) {
-                //Configure the logkit management
-                String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
-
-                // test if this is a qualified url
-                InputStream is = null;
-                if (logkitConfig.indexOf(':') == -1) {
-                    is = this.servletContext.getResourceAsStream(logkitConfig);
-                    if (is == null) is = new FileInputStream(logkitConfig);
-                } else {
-                    URL logkitURL = new URL(logkitConfig);
-                    is = logkitURL.openStream();
-                }
-                final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-                final Configuration conf = builder.build(is);
-                ContainerUtil.configure(loggerManager, conf);
-            }
-
-            // let's configure log4j
-            final String log4jConfig = getInitParameter("log4j-config", null);
-            if ( log4jConfig != null ) {
-                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext);
-
-                // test if this is a qualified url
-                InputStream is = null;
-                if ( log4jConfig.indexOf(':') == -1) {
-                    is = this.servletContext.getResourceAsStream(log4jConfig);
-                    if (is == null) is = new FileInputStream(log4jConfig);
-                } else {
-                    final URL log4jURL = new URL(log4jConfig);
-                    is = log4jURL.openStream();
-                }
-                configurator.doConfigure(is, LogManager.getLoggerRepository());
-            }
-
-            ContainerUtil.initialize(loggerManager);
-        } catch (Exception e) {
-            errorHandler.error("Could not set up Cocoon Logger, will use screen instead", e, null);
-        }
-
-        this.log = this.loggerManager.getLoggerForCategory(accesslogger);
+        LoggingHelper lh = new LoggingHelper(settings, servTarget, subcontext);
+        this.loggerManager = lh.getLoggerManager();
+        this.log = lh.getLogger();
     }
-
-    private LoggerManager newLoggerManager(String loggerManagerClass, Hierarchy hierarchy) {
-        if (loggerManagerClass.equals(LogKitLoggerManager.class.getName())) {
-            return new LogKitLoggerManager(hierarchy);
-        } else if (loggerManagerClass.equals(Log4JLoggerManager.class.getName()) ||
-                   loggerManagerClass.equalsIgnoreCase("LOG4J")) {
-            return new Log4JLoggerManager();
-        } else {
-            try {
-                Class clazz = Class.forName(loggerManagerClass);
-                return (LoggerManager)clazz.newInstance();
-            } catch (Exception e) {
-                return new LogKitLoggerManager(hierarchy);
-            }
-        }
-    }
-
+    
     /**
      * Set the ConfigFile for the Cocoon object.
      *

@@ -29,6 +29,7 @@ public class Settings {
     protected String configuration;    
     protected String loggingConfiguration;
     protected String cocoonLogger;    
+    protected String servletLogger;
     protected String logLevel;
     protected String loggerClassName;
     protected boolean allowReload;
@@ -335,5 +336,18 @@ public class Settings {
             return defaultValue;
         }
         return property;
+    }
+    
+    /**
+     * @return Returns the servletLogger.
+     */
+    public String getServletLogger() {
+        return this.servletLogger;
+    }
+    /**
+     * @param servletLogger The servletLogger to set.
+     */
+    public void setServletLogger(String servletLogger) {
+        this.servletLogger = servletLogger;
     }
 }

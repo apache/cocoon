@@ -23,20 +23,22 @@ import java.util.Map;
 import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.log.ErrorHandler;
 import org.apache.log.Hierarchy;
@@ -54,16 +56,9 @@ public class LoggingHelper {
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
-    protected final Settings settings;
     protected Logger log;
     protected LoggerManager loggerManager;
-    protected final SourceResolver resolver;
 
-    public LoggingHelper(Settings settings, SourceResolver resolver) {
-        this.settings = settings;
-        this.resolver = resolver;
-    }
-    
     /**
      * Set up the log level and path.  The default log level is
      * Priority.ERROR, although it can be overwritten by the parameter
@@ -74,24 +69,43 @@ public class LoggingHelper {
      * (Priority.DEBUG and above) as you want that get routed to the
      * file.
      */
-    protected void initLogger(LogTarget defaultTarget, Context context) {
-        final String logLevel = this.settings.get(this.settings.getLogLevel(), "INFO");
+    public LoggingHelper(Settings settings, 
+                         LogTarget defaultTarget, 
+                         Context context) {
+        final String logLevel = settings.get(settings.getLogLevel(), "INFO");
         
-        final String accesslogger = this.settings.get(this.settings.getCocoonLogger(), "cocoon");
+        final String accesslogger = settings.get(settings.getServletLogger(), "cocoon");
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
-        final CocoonLogFormatter formatter = new CocoonLogFormatter();
-        formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
-                            "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
         final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
         final ErrorHandler errorHandler = new DefaultErrorHandler();
         defaultHierarchy.setErrorHandler(errorHandler);
         defaultHierarchy.setDefaultLogTarget(defaultTarget);
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
+
+        // we can't pass the context-root to our resolver
+        Object value = null;
+        try {
+            value = context.get("context-root");
+            ((DefaultContext)context).put("context-root", null);
+        } catch ( ContextException ignore ) {
+            // not available
+        }
+        // Create our own resolver
+        SimpleSourceResolver resolver = new SimpleSourceResolver();
+        resolver.enableLogging(logger);
+        try {
+            resolver.contextualize(context);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Cannot setup source resolver.", ce);
+        }
+        if ( value != null ) {
+            ((DefaultContext)context).put("context-root", value);
+        }
         final String loggerManagerClass =
-            this.settings.get(this.settings.getLoggerClassName(), LogKitLoggerManager.class.getName());
+            settings.get(settings.getLoggerClassName(), LogKitLoggerManager.class.getName());
 
         // the log4j support requires currently that the log4j system is already configured elsewhere
 
@@ -104,27 +118,33 @@ public class LoggingHelper {
 
             if (loggerManager instanceof Configurable) {
                 //Configure the logkit management
-                String logkitConfig = this.settings.get(this.settings.getLoggingConfiguration(), "/WEB-INF/logkit.xconf");
+                String logkitConfig = settings.get(settings.getLoggingConfiguration(), "/WEB-INF/logkit.xconf");
 
                 Source source = null;
                 try {
-                    source = this.resolver.resolveURI(logkitConfig);
+                    source = resolver.resolveURI(logkitConfig);
                     final ConfigurationBuilder builder = new ConfigurationBuilder();
                     final Configuration conf = builder.build(source.getInputStream());
+                    final DefaultConfiguration categories = (DefaultConfiguration)conf.getChild("categories");
+                    final DefaultConfiguration targets = (DefaultConfiguration)conf.getChild("targets");
+                    
+                    // now process includes
                     final Configuration[] children = conf.getChildren("include");
                     for(int i=0; i<children.length; i++) {
                         String directoryURI = children[i].getAttribute("dir");                    
                         final String ending = children[i].getAttribute("postfix", null);
                         Source directory = null;
                         try {
-                            directory = this.resolver.resolveURI(directoryURI, source.getURI(), CONTEXT_PARAMETERS);
+                            directory = resolver.resolveURI(directoryURI, source.getURI(), CONTEXT_PARAMETERS);
                             if ( directory instanceof TraversableSource ) {
                                 final Iterator c = ((TraversableSource)directory).getChildren().iterator();
                                 while ( c.hasNext() ) {
                                     final Source s = (Source)c.next();
                                     if ( ending == null || s.getURI().endsWith(ending) ) {
                                         final Configuration includeConf = builder.build(s.getInputStream());
-                                        ((DefaultConfiguration)conf).addAllChildren(includeConf);
+                                        // add targets and categories
+                                        categories.addAllChildren(includeConf.getChild("categories"));
+                                        targets.addAllChildren(includeConf.getChild("targets"));
                                     }
                                 }
                             } else {
@@ -133,7 +153,7 @@ public class LoggingHelper {
                         } catch (IOException ioe) {
                             throw new ConfigurationException("Unable to read configurations from " + directoryURI);
                         } finally {
-                            this.resolver.release(directory);
+                            resolver.release(directory);
                         }
                         
                         // finally remove include
@@ -141,21 +161,21 @@ public class LoggingHelper {
                     }
                     ContainerUtil.configure(loggerManager, conf);
                 } finally {
-                    this.resolver.release(source);
+                    resolver.release(source);
                 }
             }
 
             // let's configure log4j
-            final String log4jConfig = this.settings.getLog4jConfiguration();
+            final String log4jConfig = settings.getLog4jConfiguration();
             if ( log4jConfig != null ) {
                 final Log4JConfigurator configurator = new Log4JConfigurator(context);
 
                 Source source = null;
                 try {
-                    source = this.resolver.resolveURI(log4jConfig);
+                    source = resolver.resolveURI(log4jConfig);
                     configurator.doConfigure(source.getInputStream(), LogManager.getLoggerRepository());
                 } finally {
-                    this.resolver.release(source);
+                    resolver.release(source);
                 }
             }
 
@@ -167,7 +187,8 @@ public class LoggingHelper {
         this.log = this.loggerManager.getLoggerForCategory(accesslogger);
     }
 
-    private LoggerManager newLoggerManager(String loggerManagerClass, Hierarchy hierarchy) {
+    private LoggerManager newLoggerManager(String loggerManagerClass, 
+                                           Hierarchy hierarchy) {
         if (loggerManagerClass.equals(LogKitLoggerManager.class.getName())) {
             return new LogKitLoggerManager(hierarchy);
         } else if (loggerManagerClass.equals(Log4JLoggerManager.class.getName()) ||
