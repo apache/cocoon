@@ -14,7 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# $Id: create-repository-jars.sh,v 1.13 2004/03/17 07:04:37 crossley Exp $
+# $Id$
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
