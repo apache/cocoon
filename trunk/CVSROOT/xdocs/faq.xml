@@ -1068,44 +1068,10 @@
   <question>Where do I get more information on XSL and XML?</question>
   <answer>
    <p>
-     See also <jump href="#faq-goodbooks">Good Books</jump>.
+     The <link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">
+     Open Directory XML listings</link>.
+     See also <jump href="#faq-goodbooks">Good Books</jump> in this FAQ.
    </p>
-
-   <p>
-     The web community is very excited about XML and XSL and many sources of
-     information are coming up even if these languages are fairly new. Here is a list of
-     locations you might be interested in to continue to gather resources on this
-     state-of-the-art technology:</p>
-
-   <ul>
-    <li><link href="http://www.xml.org">http://www.xml.org</link> - A very nice site for XML
-      information.</li>
-    <li><link href="http://www.w3.org/xml/">http://www.w3.org/xml/</link> - The XML
-      official home page at the W3C</li>
-    <li><link href="http://www.w3.org/style/xsl">http://www.w3.org/style/xsl</link> - The XSL official
-      home page at the W3C</li>
-    <li><link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">
-     http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/</link>
-     - The Open Directory's XML listings</li>
-    <li><link href="http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html">
-     http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html</link>
-      - XML Tutorial from IBM</li>
-    <li><link href="http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml">
-     http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml</link>
-      - XSL Tutorial</li>
-    <li><link href="http://www.oasis-open.org/cover/xml.html">http://www.oasis-open.org/cover/xml.html</link>
-      - XML Resource Listing</li>
-    <li><link href="http://www.oasis-open.org/cover/xsl.html">http://www.oasis-open.org/cover/xsl.html</link>
-      - XSL Resource Listing</li>
-    <li><link href="http://www.xmlsoftware.com">http://www.xmlsoftware.com</link> -
-      XML software listing</li>
-    <li><link href="http://www.xmlinfo.com">http://www.xmlinfo.com</link> - XML
-      information updates on W3C status and others</li>
-    <li><link href="http://www.xslinfo.com">http://www.xslinfo.com</link> - XSL
-      information, updates, example stylesheets</li>
-    <li><link href="http://www.schema.net">http://www.schema.net</link> - Repository
-      of standard DTDs</li>
-   </ul>
   </answer>
  </faq>
 </faqsection>

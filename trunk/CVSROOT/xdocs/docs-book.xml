@@ -13,6 +13,7 @@
   <page id="guide" label="User Guide" source="guide.xml"/>
   <page id="dynamic" label="Dynamic XML" source="dynamic.xml"/>
   <page id="how-it-works" label="How it works" source="how-it-works.xml"/>
+  <external label="XML Links" href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/"/>
 <separator/>
   <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
   <page id="sqltaglib" label="SQL XSP Taglib" source="sqltaglib.xml"/>
