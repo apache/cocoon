@@ -41,7 +41,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:41 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-26 19:24:57 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 
@@ -159,6 +159,10 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         Sitemap sitemap = null;
         EventPipeline eventPipeline = null;
         StreamPipeline pipeline = null;
+        if (element == null) element="";
+        if (ns == null) ns="";
+        if (prefix == null) prefix="";
+
         try {
             selector = (ComponentSelector) manager.lookup(Roles.SERVERPAGES);
             sitemap = (Sitemap) selector.select("sitemap");
@@ -174,7 +178,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
 
             IncludeXMLConsumer consumer = new IncludeXMLConsumer(this);
 
-            if (!element.equals(""))
+            if (!"".equals(element))
                 this.startElem(ns, prefix, element);
 
             ((XMLProducer)eventPipeline).setConsumer(consumer);
@@ -184,7 +188,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             eventPipeline.process(this.environment);
             this.environment.popURI();
 
-            if (!element.equals(""))
+            if (!"".equals(element))
                 this.endElem(prefix, element);
         } catch (Exception e) {
             getLogger().error("Error selecting sitemap",e);
