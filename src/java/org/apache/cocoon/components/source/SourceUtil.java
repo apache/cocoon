@@ -96,7 +96,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.8 2003/09/25 12:54:21 vgritsenko Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.9 2003/10/20 08:47:29 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -152,6 +152,8 @@ public final class SourceUtil {
      * directly implement the LexicalHandler interface!
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
+     * @deprecated Use the {@link #toSAX(ServiceManager, Source, String, ContentHandler)
+     *             method instead.
      */
     static public void toSAX( ComponentManager manager, Source source,
                                 String mimeTypeHint,
@@ -180,12 +182,47 @@ public final class SourceUtil {
     }
 
     /**
+     * Generates SAX events from the given source
+     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
+     * that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!
+     * @param  source    the data
+     * @throws ProcessingException if no suitable converter is found
+     */
+    static public void toSAX( ServiceManager manager, Source source,
+                                String mimeTypeHint,
+                                ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        if ( source instanceof XMLizable ) {
+            ((XMLizable)source).toSAX( handler );
+        } else {
+            String mimeType = source.getMimeType();
+            if ( null == mimeType) mimeType = mimeTypeHint;
+            XMLizer xmlizer = null;
+            try {
+                xmlizer = (XMLizer) manager.lookup( XMLizer.ROLE);
+                xmlizer.toSAX( source.getInputStream(),
+                               mimeType,
+                               source.getURI(),
+                               handler );
+            } catch (SourceException se) {
+                throw SourceUtil.handle(se);
+            } catch (ServiceException ce) {
+                throw new ProcessingException("Exception during streaming source.", ce);
+            } finally {
+                manager.release( xmlizer );
+            }
+        }
+    }
+
+    /**
      * Generates SAX events from the given source by parsing it.
      * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
      * that <code>handler</code> can actually
      * directly implement the LexicalHandler interface!
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
+     * @deprecated Use {@link #parse(ServiceManager, Source, ContentHandler}.
      */
     static public void parse( ComponentManager manager, 
                                 Source source,
