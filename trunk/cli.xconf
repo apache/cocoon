@@ -25,7 +25,15 @@
     |                        to match the mime type 
     |                        (e.g. text/html->.html)
     |
-    | CVS: $Id: cli.xconf,v 1.3 2003/06/07 23:13:35 vgritsenko Exp $
+    |  Note: Whilst using an xconf file to configure the Cocoon 
+    |        Command Line gives access to more features, the use of 
+    |        command line parameters is more stable, as there are 
+    |        currently plans to improve the xconf format to allow 
+    |        greater flexibility. If you require a stable and
+    |        consistent method for accessing the CLI, it is recommended 
+    |        that you use the command line parameters to configure 
+    |        the CLI.</note>
+    | CVS: $Id: cli.xconf,v 1.4 2003/08/07 12:56:39 upayavira Exp $
     +-->
     
 <cocoon verbose="true"  
