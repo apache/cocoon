@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.FileReader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Enumeration;
-import java.util.Hashtable;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
@@ -41,16 +41,16 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.24 $ $Date: 2000-09-06 23:22:21 $
+ * @version CVS $Revision: 1.4.2.25 $ $Date: 2000-09-16 00:18:51 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
 
     /** The table of role-class */
-    private Hashtable components = new Hashtable();
+    private HashMap components = new HashMap();
     
     /** The table of role-configuration */
-    private Hashtable configurations = new Hashtable();
+    private HashMap configurations = new HashMap();
     
     /** The configuration file */ 
     private File configurationFile = null; 
