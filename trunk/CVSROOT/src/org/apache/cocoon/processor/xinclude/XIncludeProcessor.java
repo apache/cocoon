@@ -35,6 +35,7 @@ import org.apache.cocoon.xml.util.XPathAPI;
 import org.apache.cocoon.framework.Status;
 import org.apache.cocoon.framework.AbstractActor;
 import org.apache.cocoon.framework.Director;
+import org.apache.cocoon.framework.Monitor;
 import org.apache.cocoon.processor.Processor;
 import org.apache.cocoon.Utils;
 
@@ -43,7 +44,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.3 $ $Date: 2000-05-09 05:49:49 $ $Author: balld $
+ * @version CVS $Revision: 1.4 $ $Date: 2000-05-09 19:36:55 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -61,11 +62,16 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 	protected Logger logger;
 	protected Object context;
 
+	protected Monitor monitor;
+	protected Hashtable monitored_table;
+
 	public void init(Director director) {
 		super.init(director);
 		parser = (Parser)director.getActor("parser");
 		logger = (Logger)director.getActor("logger");
 		context = director.getActor("context");
+		monitor = new Monitor(10);
+		monitored_table = new Hashtable();
 	}
 
 	public Document process(Document document, Dictionary parameters) throws Exception {
@@ -78,9 +84,15 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 		return "XInclude Processor";
 	}
 
-	/** FIXME - this is obviously the wrong thing to do **/
 	public boolean hasChanged(Object object) {
-		return true;
+		/** I would have thought that the monitor would return false if the
+		    key has no resources being monitored, but it doesn't. I think
+			that might should change, but we'll work around it for now. **/
+		Object key = Utils.encode((HttpServletRequest)object);
+		if (monitored_table.containsKey(key)) {
+			return monitor.hasChanged(key);
+		}
+		return false;
 	}
 
 class XIncludeProcessorWorker {
@@ -101,11 +113,14 @@ class XIncludeProcessorWorker {
 
 	Hashtable namespace_table = new Hashtable();
 
+	Object monitor_key;
+
 	XIncludeProcessorWorker(XIncludeProcessor processor, Document document, Dictionary parameters) throws Exception {
 		this.processor = processor;
 		debug = processor.debug;
 		this.document = document;
 		HttpServletRequest request = (HttpServletRequest)parameters.get("request");
+		monitor_key = Utils.encode(request);
 		String basename = Utils.getBasename(request,context);
 		if (debug) {
 			System.err.println("basename: "+basename);
@@ -200,10 +215,14 @@ class XIncludeProcessorWorker {
 		Object object;
 		if (current_xmlbase_uri != null) {
 			URL url = new URL(current_xmlbase_uri,href);
+			processor.monitored_table.put(monitor_key,"");
+			processor.monitor.watch(monitor_key,url);
 			if (debug) { System.err.println("URL: "+url); }
 			object = url.getContent();
 		} else {
 			File file = new File(base_file,href);
+			processor.monitored_table.put(monitor_key,"");
+			processor.monitor.watch(monitor_key,file);
 			if (debug) { System.err.println("File: "+file); }
 			object = new FileReader(file);
 		}
