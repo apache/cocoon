@@ -57,8 +57,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
@@ -72,7 +70,7 @@ import org.apache.cocoon.components.modules.database.AutoIncrementModule;
  * {@link DatabaseAction} for details.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.3 2003/10/25 18:06:19 joerg Exp $
+ * @version CVS $Id: DatabaseAddAction.java,v 1.4 2003/10/25 18:24:54 joerg Exp $
  */
 public class DatabaseAddAction extends DatabaseAction {
 
@@ -126,14 +124,14 @@ public class DatabaseAddAction extends DatabaseAction {
      */
     protected int setKeyAuto ( Configuration table, Column column, int currentIndex, int rowIndex,
                                Connection conn, PreparedStatement statement, Map objectModel, String outputMode, Map results )
-        throws ConfigurationException, SQLException, ComponentException, Exception {
+        throws ConfigurationException, SQLException, Exception {
 
         int columnCount = 0;
-        ComponentSelector autoincrSelector = null;
+        ServiceSelector autoincrSelector = null;
         AutoIncrementModule autoincr = null;
         try {
-            autoincrSelector=(ComponentSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR);
-            if (column.mode != null && autoincrSelector != null && autoincrSelector.hasComponent(column.mode)){
+            autoincrSelector = (ServiceSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR);
+            if (column.mode != null && autoincrSelector != null && autoincrSelector.isSelectable(column.mode)){
                 autoincr = (AutoIncrementModule) autoincrSelector.select(column.mode);
             }
 
@@ -168,13 +166,13 @@ public class DatabaseAddAction extends DatabaseAction {
      */
     protected void storeKeyValue( Configuration tableConf, Column key, int rowIndex, Connection conn,
                                   Statement statement, Map objectModel, String outputMode, Map results )
-        throws SQLException, ConfigurationException, ComponentException, ServiceException {
+        throws SQLException, ConfigurationException, ServiceException {
 
-        ComponentSelector autoincrSelector = null;
+            ServiceSelector autoincrSelector = null;
         AutoIncrementModule autoincr = null;
         try {
-            autoincrSelector=(ComponentSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR);
-            if (key.mode != null && autoincrSelector != null && autoincrSelector.hasComponent(key.mode)){
+            autoincrSelector=(ServiceSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR);
+            if (key.mode != null && autoincrSelector != null && autoincrSelector.isSelectable(key.mode)){
                 autoincr = (AutoIncrementModule) autoincrSelector.select(key.mode);
             }
 
