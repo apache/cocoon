@@ -102,7 +102,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.20 $ $Date: 2001-01-23 01:23:50 $ $Author: balld $
+ * @version CVS $Revision: 1.21 $ $Date: 2001-02-16 19:57:24 $ $Author: greenrd $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status, Cacheable {
 
@@ -383,7 +383,9 @@ class XIncludeProcessorWorker {
 			try {
 				included_document = parser.parse(input,false);
 				stripDocumentTypeNodes(included_document.getDocumentElement());
-			} catch (Exception e) {}
+			} catch (Exception e) {
+                                throw new ProcessorException ("Error reading XIncluded entity: " + e);
+                        }
 			if (xinclude.xpath != null) {
 				NodeList list = XPathAPI.selectNodeList(included_document,xinclude.xpath);
 				int length = list.getLength();
