@@ -151,7 +151,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.3 2003/04/19 20:38:22 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.4 2003/05/01 21:49:37 coliver Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -178,7 +178,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     private boolean _useSessionInfo = false;
 
     /** The trax TransformerHandler */
-    TransformerHandler transformerHandler;
+    protected TransformerHandler transformerHandler;
 
     /** The validity of the Transformer */
     SourceValidity transformerValidity;
@@ -471,6 +471,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         this.xsltProcessor = null;
         this.manager = null;
     }
+
 
     /**
      * Recyclable
