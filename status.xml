@@ -475,6 +475,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="CZ" type="update">
+     Add a deprecation logger that gives hint about used deprecated stuff.
+   </action>
    <action dev="AG" type="update">
      Updated commons-transaction to 1.0.1.
    </action>

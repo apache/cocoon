@@ -76,6 +76,45 @@
       </rotation-->
     </cocoon>
 
+    <cocoon id="deprecation">
+      <!--+
+          | <filename> is the absolute location of the log file, note how you can
+          | use the ${context-root} variable to indicate the root of the
+          | cocoon web application (the directory that contains WEB-INF, that is)
+          +-->
+      <filename>${context-root}/WEB-INF/logs/deprecation.log</filename>
+
+      <!--+
+          | <format> indicates how the log event should be serialized.
+          | Note that newlines are *not* automatic: you have to specify the
+          | newline as '\n' or everything will appear on a single line!
+          | The first format below is less verbose because it won't print out
+          | the error stacktrace (which tend to be very verbose and for little value).
+          | If you need the stacktraces, uncomment the second format below.
+          +-->
+      <format type="cocoon">%7.7{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
+      <!--format type="cocoon">%7.7{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
+
+      <!--+
+          | <append> if set to 'true' will make cocoon append the events
+          | to the existing file, if set to 'false' cocoon will override
+          | the existing ones at every new start.
+          +-->
+      <append>true</append>
+
+      <!--+
+          | <rotation> allows you to rotate log files one they meet certain
+          | criteria. If you uncomment the example below, the log files will
+          | be rotated once they are a day old or bigger than 100 Mb.
+          +-->
+      <!--rotation type="unique" pattern="yyyyMMdd" suffix=".log">
+        <or>
+          <size>100m</size>
+          <time>24:00:00</time>
+        </or>
+      </rotation-->
+    </cocoon>
+
     <servlet id="servlet">
       <format type="extended">%7.7{priority} %5.5{time} [%8.8{category}] (%{context}): %{message}\n</format>
     </servlet>
@@ -111,6 +150,15 @@
         +-->
     <category log-level="ERROR" name="">
       <log-target id-ref="main"/>
+    </category>
+
+    <!--+
+        | This is the deprecation category. If this category is set to WARN
+        | the log will contain messages about deprecated stuff used by
+        | your application.
+        +-->
+    <category log-level="WARN" name="deprecation">
+      <log-target id-ref="deprecation"/>
     </category>
 
     <!--+
