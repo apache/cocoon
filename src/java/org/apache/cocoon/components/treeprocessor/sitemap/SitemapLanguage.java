@@ -32,11 +32,13 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.classloader.ClassLoaderFactory;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
+import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
@@ -64,7 +66,8 @@ public class SitemapLanguage extends DefaultTreeBuilder {
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ServiceManager createServiceManager(Context context, Configuration tree) throws Exception {
+    protected ServiceManager createServiceManager(Context context, Configuration tree)
+    throws Exception {
 
         // Get the map:component node
         // Don't check namespace here : this will be done by node builders
@@ -121,20 +124,35 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             ContainerUtil.initialize(newManager);
 
             // check for an application specific container
-            Configuration appContainer = config.getChild("application-container", false);
+            final Configuration appContainer = config.getChild("application-container", false);
             if ( appContainer != null ) {
                 final String clazzName = appContainer.getAttribute("class");
 
-                ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
+                final ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
                 // Go through the component lifecycle
-                ContainerUtil.enableLogging(cl, this.getLogger());
-                ContainerUtil.contextualize(cl, context);
-                ContainerUtil.service(cl, newManager);
-                ContainerUtil.configure(cl, appContainer);
-                ContainerUtil.initialize(cl);
+                LifecycleHelper.setupComponent(cl, this.getLogger(), context, newManager, config);
+
                 this.applicationContainer = cl;
 
                 newManager = new ComponentManager(newManager, cl);
+            }
+
+            // and finally the listeners
+            final Configuration listenersWrapper = config.getChild("listeners", false);
+            if ( listenersWrapper != null ) {
+                final Configuration[] listeners = listenersWrapper.getChildren("listener");
+                for(int i = 0; i < listeners.length; i++) {
+                    final Configuration current = listeners[i];
+                    // TODO - we could use a string tokenizer and allow several invoke keys
+                    final String invoke = current.getAttribute("invoke");
+                    if ( "on-enter".equals(invoke) ) {
+                        this.enterSitemapEventListeners.add(this.createListener(newManager, context, current));
+                    } else if ( "on-leave".equals(invoke) ) {
+                        this.leaveSitemapEventListeners.add(this.createListener(newManager, context, current));                        
+                    } else {
+                        throw new ConfigurationException("Unknown invokation key '" + invoke + "' for sitemap listener.");
+                    }
+                }
             }
         } finally {
             currentThread.setContextClassLoader(oldClassLoader);
@@ -143,6 +161,28 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         return newManager;
     }
 
+    /**
+     * Create a listener
+     */
+    protected Object createListener(ServiceManager manager, Context context, Configuration config) 
+    throws Exception {
+        // role or class?
+        final String role = config.getAttribute("role", null);
+        if ( role != null ) {
+            return new TreeBuilder.EventComponent(manager.lookup(role), true);
+        } else {
+            final String className = config.getAttribute("class");
+            final Object component = ClassUtils.newInstance(className);
+
+            LifecycleHelper.setupComponent(component, this.getLogger(), context, manager, config);
+
+            return new TreeBuilder.EventComponent(component, false);
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder#createContext(org.apache.avalon.framework.configuration.Configuration)
+     */
     protected Context createContext(Configuration tree) throws Exception {
         // Create sub-context for this sitemap
         DefaultContext newContext = new DefaultContext(super.createContext(tree));

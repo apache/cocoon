@@ -16,6 +16,8 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -71,6 +73,12 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Optional application container */
     private ComponentLocator applicationContainer;
 
+    /** Optional event listeners for the enter sitemap event */
+    private List enterSitemapEventListeners = new ArrayList();
+
+    /** Optional event listeners for the leave sitemap event */
+    private List leaveSitemapEventListeners = new ArrayList();
+
     /**
      * Builds a concrete processig, given the wrapping processor
      */
@@ -99,6 +107,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.classloader = classloader;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
+        this.enterSitemapEventListeners = enterSitemapEventListeners;
+        this.leaveSitemapEventListeners = leaveSitemapEventListeners;
     }
 
     /** Set the sitemap component configurations (called as part of the tree building process) */
@@ -315,8 +325,27 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // Ensure it won't be used anymore
         this.rootNode = null;
         this.sitemapExecutor = null;
+
+        // dispose listeners
+        this.disposeListeners(this.enterSitemapEventListeners);
+        this.disposeListeners(this.leaveSitemapEventListeners);
+
+        // dispose component locator
         ContainerUtil.dispose(this.applicationContainer);
         this.applicationContainer = null;
+    }
+
+    protected void disposeListeners(List l) {
+        Iterator i = l.iterator();
+        while ( i.hasNext() ) {
+            final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)i.next();
+            if ( current.releaseUsingManager ) {
+                this.manager.release(current.component);
+            } else {
+                ContainerUtil.dispose(current.component);
+            }
+        }
+        l.clear();        
     }
 
     private class TreeProcessorRedirector extends ForwardRedirector {
