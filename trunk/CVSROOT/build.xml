@@ -31,7 +31,7 @@ Fixme:
 Copyright:
   Copyright (c) 1999 The Apache Software Foundation.
 
-   $Id: build.xml,v 1.7 1999-12-11 14:23:31 stefano Exp $
+   $Id: build.xml,v 1.8 1999-12-14 23:56:18 stefano Exp $
 
 ==================================================================== -->
 
@@ -132,7 +132,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
-  <target name="docs" depends="docs-convert">
+  <target name="docs">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${sbk.docs}/book.xml"/>
     <java class="${doc.generator}" args="targetDirectory=${build.docs} ${sbk.docs}/book.xml ${style}"/>

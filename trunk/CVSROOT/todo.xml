@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.8 1999-12-12 11:07:30 stefano Exp $
+  $Id: todo.xml,v 1.9 1999-12-14 23:59:58 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -33,10 +33,6 @@
 
  <action priority="high" context="code">
   Work on external entities inclusion (follows sitemap stuff).
- </action>
-
- <action priority="high" assigned-to="RR" context="code">
-  Integrate Ricardo's XSP compiler.
  </action>
 
 
