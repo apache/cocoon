@@ -101,7 +101,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.17 $ $Date: 2000-11-09 12:06:03 $ $Author: greenrd $
+ * @version CVS $Revision: 1.18 $ $Date: 2000-11-15 05:20:00 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -217,14 +217,14 @@ class XIncludeProcessorWorker {
 		Enumeration e = xinclude_elements.elements();
 		while (e.hasMoreElements()) {
 			XIncludeElement xinclude = (XIncludeElement)e.nextElement();
-			Object object = processXIncludeElement(xinclude);
+			Object object = processXIncludeElement(xinclude); //current_xmlbase gets changed here
 			if (object instanceof Node) {
 				Node node = (Node)object;
 				xinclude.parent.replaceChild(node,xinclude.element);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
-					xmlbase_stack.push(xinclude.base);
+					//xmlbase_stack.push(xinclude.base);
 					scan((Element)node,xinclude.parent);
-					xmlbase_stack.pop();
+					//xmlbase_stack.pop();
 				}
 			} else if (object instanceof Node[]) {
 				Node ary[] = (Node[])object;
@@ -233,11 +233,11 @@ class XIncludeProcessorWorker {
 				}
 				xinclude.parent.removeChild(xinclude.element);
 				for (int i=0; i<ary.length; i++) {
-					xmlbase_stack.push(xinclude.base);
+					//xmlbase_stack.push(xinclude.base);
 					if (ary[i].getNodeType() == Node.ELEMENT_NODE) {
 						scan((Element)ary[i],xinclude.parent);
 					}
-					xmlbase_stack.pop();
+					//xmlbase_stack.pop();
 				}
 
 			}
@@ -350,6 +350,12 @@ class XIncludeProcessorWorker {
 		} else if (xinclude.parse.equals("cdata")) {
 			/** i'm not sure what to do here **/
 		} else {
+			if (local instanceof File) {
+				current_xmlbase = new File(((File)local).getParent());
+				/**for Java2 we could have current_xmlbase = ((File)local).getParentFile()**/
+			} else { /**local instanceof URL**/
+				current_xmlbase = new URL((URL)local,".");
+			}
 			InputSource input;
 			/*if (content instanceof Reader) {
 				input = new InputSource((Reader)content);
