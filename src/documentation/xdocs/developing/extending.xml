@@ -167,6 +167,7 @@
 		<s1 title="About Action">
 			<p>[FIXME: We have to wait until we can see what is going to happen here. Also, I wonder if this belongs here or should deserve a separate page.]</p>
 			<p>The Action part will be used for making Cocoon able to react on form input. This will make Cocoon no longer a simple basis for web publishing, but will make it apt for web interaction as well.</p>
+			<p>See <link href="../userdocs/concepts/actions.html">Actions</link>.</p>
 		</s1>
 		<s1 title="About XSP">
 			<anchor id="xsp"/>
