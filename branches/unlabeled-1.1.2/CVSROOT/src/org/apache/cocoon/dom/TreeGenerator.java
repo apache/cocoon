@@ -7,14 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.dom;
 
-import org.apache.cocoon.XMLConsumer;
+import java.util.Hashtable;
 import org.apache.cocoon.dom.DocumentFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.ProcessingInstruction;
-import org.w3c.dom.Text;
-import org.xml.sax.AttributeList;
+import org.apache.cocoon.sax.XMLConsumer;
+import org.w3c.dom.*;
+import org.xml.sax.Attributes;
 import org.xml.sax.DocumentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -27,9 +24,21 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-10 05:04:53 $
  */
 public class TreeGenerator implements XMLConsumer {
+    /** The Namespaces table */
+    private Hashtable namespaces=null;
+    /** The Namespaces reversed table */
+    private Hashtable namespacesReverse=null;
+    /** The CDATA buffer */
+    private String cdata=null;
+    /** The document name (root tag element name) */
+    private String name=null;
+    /** The document public ID */
+    private String publicId=null;
+    /** The document system ID */
+    private String systemId=null;
     /** The current Document Factory */
     private DocumentFactory fac=null;
     /** The current Document */
@@ -40,6 +49,8 @@ public class TreeGenerator implements XMLConsumer {
     private Locator loc=null;
     /** The current DocumentListener */
     private Listener lis=null;
+    /** The current DTD initialization status */
+    private boolean dtd=false;
 
     /**
      * Construct a new instance of this TreeGenerator.
@@ -69,6 +80,8 @@ public class TreeGenerator implements XMLConsumer {
         super();
         this.setDocumentFactory(fac);
         this.setListener(lis);
+        this.namespaces=new Hashtable();
+        this.namespacesReverse=new Hashtable();
     }
 
     /**
@@ -144,22 +157,75 @@ public class TreeGenerator implements XMLConsumer {
     }
 
     /**
-     * Receive notification of the beginning of an element.
+     * Begin the scope of a prefix-URI Namespace mapping. 
      *
-     * @param name The element tag name.
-     * @param atts The element attributes list.
+     * @param prefix The Namespace prefix being declared.
+     * @param uri The Namespace URI the prefix is mapped to.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void startElement (String name, AttributeList atts)
+    public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
+        this.namespaces.put(uri,prefix);
+        this.namespacesReverse.put(prefix,uri);
+    }
+
+    /**
+     * End the scope of a prefix-URI mapping. 
+     *
+     * @param prefix The Namespace prefix that was being mapped.
+     */
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+        String uri=(String)this.namespacesReverse.remove(prefix);
+        if (uri==null) 
+            throw new SAXException("Namespace \""+prefix+"\" never declared");
+        else this.namespaces.remove(uri);
+    }
+
+    /**
+     * Receive notification of the beginning of an element.
+     * <br>
+     * NOTE: (PF) 
+     *
+     * @parameter uri The Namespace URI, or the empty string if the element
+     *                has no Namespace URI or if Namespace processing is not
+     *                being performed.
+     * @parameter local The local name (without prefix), or the empty
+     *                  string if Namespace processing is not being
+     *                  performed.
+     * @parameter raw The raw XML 1.0 name (with prefix), or the empty
+     *                string if raw names are not available.
+     * @parameter atts The attributes attached to the element. If there are no
+     *                 attributes, it shall be an empty Attributes object.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void startElement (String uri, String local, String raw,
+                              Attributes atts)
+    throws SAXException {
+        // Check for CDATA
+        if(this.cdata!=null)
+            throw new SAXException("Invalid inside CDATA"+getLocation());
+
         if (this.doc==null) {
             this.doc=this.fac.newDocument(name);
             this.cur=this.doc;
         } else if (this.cur==null)
             throw new SAXException("No current node "+getLocation());
-        Element e=this.doc.createElement(name);
-        for(int x=0;x<atts.getLength();x++)
-            e.setAttribute(atts.getName(x),atts.getValue(x));
+
+        String name=this.getQualifiedName(uri,local,raw);
+        Element e=null;
+        if (uri.length()>0) e=this.doc.createElement(name);
+        else e=this.doc.createElementNS(uri,name);
+
+        for(int x=0;x<atts.getLength();x++) {
+            String auri=atts.getURI(x);
+            String alocal=atts.getLocalName(x);
+            String araw=atts.getRawName(x);
+            String avalue=atts.getValue(x);
+            String aname=this.getQualifiedName(auri,alocal,araw);
+            if (auri.length()>0) e.setAttribute(aname,avalue);
+            else e.setAttributeNS(auri,aname,avalue);
+        }
         this.cur.appendChild(e);
         this.cur=e;
     }
@@ -167,11 +233,24 @@ public class TreeGenerator implements XMLConsumer {
     /**
      * Receive notification of the end of an element.
      *
-     * @param name The element tag name.
+     * @parameter uri The Namespace URI, or the empty string if the element
+     *                has no Namespace URI or if Namespace processing is not
+     *                being performed.
+     * @parameter local The local name (without prefix), or the empty
+     *                  string if Namespace processing is not being
+     *                  performed.
+     * @parameter raw The raw XML 1.0 name (with prefix), or the empty
+     *                string if raw names are not available.
+     * @parameter atts The attributes attached to the element. If there are no
+     *                 attributes, it shall be an empty Attributes object.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void endElement (String name)
+    public void endElement (String uri, String local, String raw)
     throws SAXException {
+        // Check for CDATA
+        if(this.cdata!=null)
+            throw new SAXException("Invalid inside CDATA"+getLocation());
+
         // Check if we have a current node.
         if (this.cur==null)
             throw new SAXException("No current node "+getLocation());
@@ -181,6 +260,7 @@ public class TreeGenerator implements XMLConsumer {
                                    getLocation());
         // Check if the current element has the same tag name of this event
         Element e=(Element)this.cur;
+        String name=this.getQualifiedName(uri,local,raw);
         String oldname=e.getTagName();
         if (!oldname.equals(name))
             throw new SAXException("Current element <"+oldname+
@@ -204,8 +284,14 @@ public class TreeGenerator implements XMLConsumer {
     throws SAXException {
         if (this.cur==null)
             throw new SAXException("No current node "+getLocation());
-        Text t=this.doc.createTextNode(new String(chars,start,len));
-        this.cur.appendChild(t);
+
+        // Check for CDATA
+        if(this.cdata!=null) {
+            this.cdata=new String(this.cdata+new String(chars,start,len));
+        } else {
+            Text t=this.doc.createTextNode(new String(chars,start,len));
+            this.cur.appendChild(t);
+        }
     }
 
     /**
@@ -218,6 +304,10 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void ignorableWhitespace (char chars[], int start, int len)
     throws SAXException {
+        // Check for CDATA
+        if(this.cdata!=null)
+            throw new SAXException("Invalid inside CDATA"+getLocation());
+
         if (this.cur==null)
             throw new SAXException("No current node "+getLocation());
         Text t=this.doc.createTextNode(new String(chars,start,len));
@@ -233,10 +323,147 @@ public class TreeGenerator implements XMLConsumer {
      */
     public void processingInstruction (String tgt, String data)
     throws SAXException {
+        // Check for CDATA
+        if(this.cdata!=null)
+            throw new SAXException("Invalid inside CDATA"+getLocation());
+
         if (this.cur==null)
             throw new SAXException("No current node "+getLocation());
         ProcessingInstruction p=this.doc.createProcessingInstruction(tgt,data);
         this.cur.appendChild(p);
+    }
+
+    /**
+     * Receive notification of a skipped entity. 
+     *
+     * @param name The name of the skipped entity. If it is a parameter entity,
+     *             the name will begin with '%'.
+     */
+    public void skippedEntity(java.lang.String name)
+    throws SAXException {
+        // Check for CDATA
+        if(this.cdata!=null)
+            throw new SAXException("Invalid inside CDATA"+getLocation());
+
+        if (this.cur==null)
+            throw new SAXException("No current node "+getLocation());
+        EntityReference e=this.doc.createEntityReference(name);
+        this.cur.appendChild(e);
+    }
+
+    /**
+     * Report an XML comment anywhere in the document. 
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void comment(char[] ch, int start, int len) 
+    throws SAXException {
+        // Check for CDATA
+        if(this.cdata!=null)
+            throw new SAXException("Invalid inside CDATA"+getLocation());
+
+        if (this.cur==null)
+            throw new SAXException("No current node "+getLocation());
+        Comment c=this.doc.createComment(new String(ch,start,len));
+        this.cur.appendChild(c);
+    }
+
+    /**
+     * Report the start of a CDATA section. 
+     *
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void startCDATA() 
+    throws SAXException {
+        if(this.cdata!=null)
+            throw new SAXException("Nested CDATA in CDATA "+getLocation());
+        this.cdata="";
+    }
+
+    /**
+     * Report the end of a CDATA section. 
+     *
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void endCDATA() 
+    throws SAXException {
+        if(this.cdata==null)
+            throw new SAXException("CDATA ends without start "+getLocation());
+        CDATASection c=this.doc.createCDATASection(this.cdata);
+        this.cur.appendChild(c);
+        this.cdata=null;
+    }
+
+    /**
+     * Report the start of DTD declarations, if any. 
+     *
+     * @param name The document type name.
+     * @param publicId The declared public identifier for the external DTD
+     *                 subset, or null if none was declared.
+     * @param systemId The declared system identifier for the external DTD
+     *                 subset, or null if none was declared.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void startDTD(String name, String publicId, String systemId) 
+    throws SAXException {
+        this.name=name;
+        this.publicId=publicId;
+        this.systemId=systemId;
+        this.dtd=true;
+    }
+
+    /**
+     * Report the end of DTD declarations. 
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void endDTD() 
+    throws SAXException {
+        if (!this.dtd)
+            throw new SAXException("DTD Declaration never started");
+    }
+
+    /**
+     * Report the end of an entity. 
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void endEntity(java.lang.String name) 
+    throws SAXException {
+    }
+
+    /**
+     * Report the beginning of an entity. 
+     *
+     * @param chars The characters from the XML document.
+     * @param start The start position in the array.
+     * @param len The number of characters to read from the array.
+     * @exception SAXException If this method was not called appropriately.
+     */
+    public void startEntity(java.lang.String name) 
+    throws SAXException {
+    }
+
+    /** Return the Namespace-Qualified name */
+    private String getQualifiedName(String uri, String local, String raw)
+    throws SAXException {
+        if (uri.length()>0) {
+            if (raw.length()>0) return(raw);
+            String prefix=(String)this.namespaces.get(uri);
+            return(prefix+":"+local);
+        } else if (raw.length()==0)
+            throw new SAXException("No namespace URI and no RAW name "+
+                                   this.getLocation());
+        return(raw);
     }
 
     /** Create a location string */

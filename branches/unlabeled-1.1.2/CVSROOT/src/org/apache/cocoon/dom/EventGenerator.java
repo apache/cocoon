@@ -32,7 +32,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 11:41:16 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-10 05:04:53 $
  * @since Cocoon 2.0
  */
 public class EventGenerator implements XMLProducer {
@@ -150,17 +150,44 @@ public class EventGenerator implements XMLProducer {
     /** Process a Element node */
     private void setElement(Element n, XMLConsumer h)
     throws SAXException {
+        // Setup attributes
         AttributesImpl atts=new AttributesImpl();
         NamedNodeMap map=n.getAttributes();
         for (int x=0; x<map.getLength(); x++) {
             if (map.item(x).getNodeType()!=Node.ATTRIBUTE_NODE) continue;
             Attr a=(Attr)map.item(x);
-            atts.addAttribute("","",a.getName(),"CDATA",a.getValue());
+            // Start getting and normalizing the values from the attribute
+            String uri=a.getNamespaceURI(); uri=(uri==null)?"":uri;
+            String pre=a.getPrefix();       pre=(pre==null)?"":pre;
+            String loc=a.getLocalName();    loc=(loc==null)?"":loc;
+            String raw=a.getName();         raw=(raw==null)?"":raw;
+            String val=a.getValue();        val=(val==null)?"":val;
+            // Check if we need to declare the start of a namespace prefix
+            // Should we rely on URI instead of prefixes???
+            if(pre.equals("xmlns")) {
+                if ((loc.length()==0)||(val.length()==0))
+                    throw new SAXException("Invalid xmlns: attribute");
+                h.startPrefixMapping(loc,val);
+            }
+            atts.addAttribute(uri,loc,raw,"CDATA",val);
         }
-        // TODO: (PF) Try to find out how to send namespace declarations.
-        h.startElement("","",n.getTagName(),atts);
+        // Get and normalize values for the Element
+        String uri=n.getNamespaceURI(); uri=(uri==null)?"":uri;
+        String pre=n.getPrefix();       pre=(pre==null)?"":pre;
+        String loc=n.getLocalName();    loc=(loc==null)?"":loc;
+        String raw=n.getTagName();      raw=(raw==null)?"":raw;
+        h.startElement(uri,loc,raw,atts);
         this.processChildren(n,h);
-        h.endElement("","",n.getTagName());
+        h.endElement(uri,loc,raw);
+        // Rerun through attributes to check for namespaces we declared.
+        // Should we store those before in, maybe, a hashtable?
+        for (int x=0; x<map.getLength(); x++) {
+            if (map.item(x).getNodeType()!=Node.ATTRIBUTE_NODE) continue;
+            Attr a=(Attr)map.item(x);
+            String apre=a.getPrefix();       apre=(apre==null)?"":apre;
+            String aloc=a.getLocalName();    aloc=(aloc==null)?"":aloc;
+            if(apre.equals("xmlns")) h.endPrefixMapping(aloc);
+        }
     }
     
     /** Process a Text node */
