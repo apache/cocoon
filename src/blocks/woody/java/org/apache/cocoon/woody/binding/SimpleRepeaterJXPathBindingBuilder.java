@@ -65,32 +65,40 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBindingBuilder.java,v 1.7 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: SimpleRepeaterJXPathBindingBuilder.java,v 1.8 2004/02/29 12:36:19 antonio Exp $
  */
 public class SimpleRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
 
-    public JXPathBindingBase buildBinding(
-        Element bindingElem,
+    public JXPathBindingBase buildBinding(Element bindingElem,
         JXPathBindingManager.Assistant assistant) throws BindingException {
-
         try {
-            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElem);
+            CommonAttributes commonAtts =
+                JXPathBindingBuilderBase.getCommonAttributes(bindingElem);
 
             String repeaterId = DomHelper.getAttribute(bindingElem, "id");
-            String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
+            String parentPath = DomHelper.getAttribute(
+                    bindingElem, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
-            boolean clearOnLoad = DomHelper.getAttributeAsBoolean(bindingElem, "clear-before-load", true);
-            boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(bindingElem, "delete-parent-if-empty", false);
+            boolean clearOnLoad = DomHelper.getAttributeAsBoolean(
+                    bindingElem, "clear-before-load", true);
+            boolean deleteIfEmpty = DomHelper.getAttributeAsBoolean(
+                    bindingElem, "delete-parent-if-empty", false);
 
-            JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElem);
+            JXPathBindingBase[] childBindings =
+                assistant.makeChildBindings(bindingElem);
 
-            return new SimpleRepeaterJXPathBinding( commonAtts, repeaterId, parentPath, rowPath, clearOnLoad, deleteIfEmpty,
-                new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings));
+            return new SimpleRepeaterJXPathBinding(commonAtts, repeaterId,
+                    parentPath, rowPath, clearOnLoad, deleteIfEmpty,
+                    new ComposedJXPathBindingBase(
+                            JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                            childBindings));
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building repeater binding defined at " + DomHelper.getLocation(bindingElem), e);
+            throw new BindingException(
+                    "Error building repeater binding defined at " +
+                    DomHelper.getLocation(bindingElem), e);
         }
     }
 }

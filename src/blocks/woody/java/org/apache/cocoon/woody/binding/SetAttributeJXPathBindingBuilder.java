@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
  *                      value="<i>attribute-value</i>"/&gt;
  * </code></pre>
  *
- * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.7 2004/02/29 12:36:19 antonio Exp $
  */
 public class SetAttributeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
@@ -73,24 +73,25 @@ public class SetAttributeJXPathBindingBuilder
      * Creates an instance of {@link SetAttributeJXPathBinding} according to
      * the attributes of the provided bindingElm.
      */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
+    public JXPathBindingBase buildBinding(Element bindingElm,
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts =
+                JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             String attName = DomHelper.getAttribute(bindingElm, "name");
             String attValue = DomHelper.getAttribute(bindingElm, "value");
 
             SetAttributeJXPathBinding attBinding =
                 new SetAttributeJXPathBinding(commonAtts, attName, attValue);
-
             return attBinding;
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
-            throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
+            throw new BindingException(
+                    "Error building set-attribute binding defined at " +
+                    DomHelper.getLocation(bindingElm), e);
         }
     }
 }
