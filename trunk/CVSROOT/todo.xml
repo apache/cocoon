@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.51 2000-12-20 19:54:21 greenrd Exp $
+  $Id: todo.xml,v 1.52 2001-01-10 01:08:44 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,19 +16,19 @@
  </devs>
 
  <actions priority="high">
-  <action context="code" assigned-to="RDG">
-   Track down cause of OutOfMemoryError and multiple PDF problems.
+  <action context="code" assigned-to="RDG" bugid="19">
+   Track down cause of multiple PDF problems.
   </action>
-  <action context="code">
+  <action context="code" bugid="5">
    Work out how to integrate inline XSP docs (such as inline esql docs)
    into the build docs procedure. This will fix a dead link which leads
    on to the next item...
   </action>
-  <action context="docs" assigned-to="RDG">
+  <action context="docs" assigned-to="RDG" bugid="6">
    Fix dead links in docs.
   </action>
-  <action context="docs" assigned-to="RDG">
-   Apply corrections to install instructions
+  <action context="docs" assigned-to="RDG" bugid="7">
+   Correct install instructions
   </action>
  </actions>
 
@@ -39,7 +39,7 @@
   <action context="code" assigned-to="RDG">
    Better HTTP support and conformance
   </action>
-  <action context="docs" assigned-to="RDG">
+  <action context="docs" assigned-to="RDG" bugid="8">
    Write a full guide to logicsheets, including: (1) What they are and how
    they work - explaining why XSP results can't be assigned to XSLT variables;
    (2) What all the supplied logicsheets do (long-term aim: document every tag
@@ -47,7 +47,7 @@
    specify logicsheet execution order with the as-yet-undocumented 
    &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
   </action>
-  <action context="code" assigned-to="RDG">
+  <action context="code" assigned-to="RDG" bugid="9">
    Fix stylesheet-chaining bug.
   </action>
   <action context="code" assigned-to="RDG">
@@ -56,19 +56,19 @@
   <action context="docs">
    Cleanup and improve documentation. (in progress.)
   </action>
-  <action context="code">
+  <action context="code" bugid="11">
    Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
   </action>
-  <action context="code" assigned-to="RDG">
+  <action context="code" assigned-to="RDG" bugid="12">
    Class auto-reloading for XSP pages
    (code written; just needs to be merged in and documented.)
   </action>
-  <action context="docs">
+  <action context="docs" bugid="13">
    Ensure that all HTML docs are not too wide for screen/printer width
    (as appropriate - there are separate directories for screen and
    printer docs).
   </action>
-  <action context="docs">
+  <action context="docs" bugid="17">
    FAQ (particularly) and XSP docs are too long lengthwise. Split them
    up. Their length (or complexity)
    causes extremely slow rendering on Netscape 4.x and recent Mozilla builds.
@@ -76,28 +76,28 @@
  </actions>
 
  <actions priority="low">
-  <action context="code">
+  <action context="code" bugid="20">
    Taglib (not part of esql) to dynamically specify connection parameters
    (with or without connection pooling).
   </action>
-  <action context="code">
+  <action context="code" bugid="21">
    Make handle.errors.internally return a suitable HTTP error code.
   </action>
-  <action context="code">
+  <action context="code" bugid="22">
    Add hooks for user-defined error-handling (better than just handle.errors.internally
    flag in cocoon.properties).
   </action>
-  <action context="docs">
+  <action context="docs" bugid="23">
    Make &lt;connect&gt; tags work correctly when xdocs are transformed to HTML docs.
   </action>
-  <action context="code" assigned-to="RDG">
+  <action context="code" assigned-to="RDG" bugid="24">
    Add GroupingProcessor which makes it easy to group elements together in bundles
    of N (this is messy in XSLT).
   </action>
-  <action context="code" assigned-to="RDG">
+  <action context="code" assigned-to="RDG" bugid="14">
    Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
   </action>
-  <action context="code" assigned-to="RDG">
+  <action context="code" assigned-to="RDG" bugid="25">
    Fix redundant XSP namespace declarations output quirk.
   </action>
   <action context="docs">
@@ -106,15 +106,15 @@
   <action context="code">
    Fix Jikes compilation error reporting bug.
   </action>
-  <action context="code">
+  <action context="code" bugid="15">
    Make cache more configurable (e.g. to turn off per-user-agent caching,
    maybe for specific pages only). However, Mark Washeim thinks that this
    offers only "trivial" overhead reduction, even on large sites.
   </action>
-  <action context="code">
+  <action context="code" bugid="16">
    Selection based on domain name not just user agent.
   </action>
-  <action context="code">
+  <action context="code" bugid="26">
    Better error reporting for typos in stylesheet URIs.
   </action>
  </actions>

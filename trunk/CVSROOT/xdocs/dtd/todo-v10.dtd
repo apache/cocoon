@@ -83,6 +83,7 @@ COPYRIGHT:
         <!ELEMENT action (%content.mix;)*>
         <!ATTLIST action %common.att;
                          assigned-to  IDREF           #IMPLIED
+                         bugid        CDATA           #IMPLIED
                          context      (%contexts;)    #REQUIRED>
     
 <!-- =============================================================== -->

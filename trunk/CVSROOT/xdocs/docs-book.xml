@@ -42,9 +42,9 @@
   <page id="livesites" label="Live Sites" source="livesites.xml"/>
   <external label="Cocoon Hosting" href="http://xml.apache.org/cocoon/hosting.html"/>
 <separator/>
+  <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/"/>
   <external label="Code Repository" href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
   <page id="mail-lists" label="Mail Lists" source="mail-lists.xml"/>
   <page id="mail-archives" label="Mail Archives" source="mail-archives.xml"/>
-  <!-- <external label="Bug Database" href="http://xml.apache.org/bugs/"/> -->
 </book>

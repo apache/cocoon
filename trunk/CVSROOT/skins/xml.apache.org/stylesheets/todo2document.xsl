@@ -21,7 +21,16 @@
     <xsl:for-each select="action">
      <li>
       <strong>[<xsl:value-of select="@context"/>]</strong><xsl:text> </xsl:text>
-      <xsl:apply-templates/>
+      <xsl:choose>
+       <xsl:when test="@bugid">
+        <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id={@bugid}">
+         <xsl:apply-templates/>
+        </link>
+       </xsl:when>
+       <xsl:otherwise>
+        <xsl:apply-templates/>
+       </xsl:otherwise>
+      </xsl:choose>
       <xsl:if test="@assigned-to">
        <em>(assigned to <xsl:value-of select="@assigned-to"/>)</em>
       </xsl:if>
@@ -30,5 +39,5 @@
    </sl>
   </s2>
  </xsl:template>
- 
+
 </xsl:stylesheet>
