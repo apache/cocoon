@@ -64,7 +64,7 @@ import java.util.Iterator;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.18 $ $Date: 2004/03/11 15:11:10 $
+ * @version CVS $Revision: 1.19 $ $Date: 2004/03/11 15:13:02 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -76,7 +76,7 @@ public final class XConfToolTask extends MatchingTask {
     private boolean addComments;
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
-		private DocumentBuilderFactory builderFactory;
+    private DocumentBuilderFactory builderFactory;
     private DocumentBuilder builder;
     private Transformer transformer;
 
@@ -154,51 +154,51 @@ public final class XConfToolTask extends MatchingTask {
             boolean hasChanged = false;
             // process recursive
             File patchfile;
-						ArrayList suspended = new ArrayList();
+            ArrayList suspended = new ArrayList();
             for (int i = 0; i < list.length; i++) {
                 patchfile = new File(this.srcdir, list[i]);
                 try {
                     // Adds configuration snippet from the file to the configuration
-										boolean changed = patch(document, patchfile);
+                    boolean changed = patch(document, patchfile);
                     hasChanged |= changed;
-										if (!changed) {
-										    suspended.add(patchfile);
-										}
+                    if (!changed) {
+                        suspended.add(patchfile);
+                    }
                 } catch (SAXException e) {
                     log("Ignoring: "+patchfile+"\n(not a valid XML)");
                 }
             }
 
-						if (hasChanged && !suspended.isEmpty()) {
-						    log("Try to apply suspended patch files");
-						}
+            if (hasChanged && !suspended.isEmpty()) {
+                log("Try to apply suspended patch files");
+            }
 
-						ArrayList newSuspended = new ArrayList();
-						while (hasChanged && !suspended.isEmpty()) {
-							  hasChanged = false;
-							  for(Iterator i=suspended.iterator(); i.hasNext();) {
-									  patchfile = (File)i.next();
-								    try {
-  										 	// Adds configuration snippet from the file to the configuration
-	  										boolean changed = patch(document, patchfile);
-	                      hasChanged |= changed;
-	                      if (!changed) {
-                            newSuspended.add(patchfile);
-		                    }
-		                } catch (SAXException e) {
-						  				  log("Ignoring: "+patchfile+"\n(not a valid XML)");
-										}
-							  }
-						    suspended = newSuspended;
-								newSuspended = new ArrayList();
-						}
-
-						if (!suspended.isEmpty()) {
-						    for(Iterator i=suspended.iterator(); i.hasNext();) {
+            ArrayList newSuspended = new ArrayList();
+            while (hasChanged && !suspended.isEmpty()) {
+                hasChanged = false;
+                for(Iterator i=suspended.iterator(); i.hasNext();) {
                     patchfile = (File)i.next();
-        						log("Dismiss: "+patchfile.toString());
-								}
-						}
+                    try {
+                         // Adds configuration snippet from the file to the configuration
+                        boolean changed = patch(document, patchfile);
+                        hasChanged |= changed;
+                        if (!changed) {
+                            newSuspended.add(patchfile);
+                        }
+                    } catch (SAXException e) {
+                        log("Ignoring: "+patchfile+"\n(not a valid XML)");
+                    }
+                }
+                suspended = newSuspended;
+                newSuspended = new ArrayList();
+            }
+
+            if (!suspended.isEmpty()) {
+                for(Iterator i=suspended.iterator(); i.hasNext();) {
+                    patchfile = (File)i.next();
+                    log("Dismiss: "+patchfile.toString());
+                }
+            }
 
             if (hasChanged) {
                 log("Writing: " + this.file);
@@ -246,8 +246,8 @@ public final class XConfToolTask extends MatchingTask {
                           throws TransformerException, IOException, DOMException, SAXException {
 
         Document component = builder.parse(file.toURL().toExternalForm());
-				String filename = file.toString();
-														
+        String filename = file.toString();
+                            
         // Check to see if Document is an xconf-tool document
         Element elem = component.getDocumentElement();
 
@@ -269,10 +269,10 @@ public final class XConfToolTask extends MatchingTask {
 
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
-				// Suspend, because the xpath returned not one node
+        // Suspend, because the xpath returned not one node
         if (nodes.getLength() !=1 ) {
-					  log("Suspending: "+filename);
-						return false;
+            log("Suspending: "+filename);
+            return false;
         }
         Node root = nodes.item(0);
 
