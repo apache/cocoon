@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
-import java.util.List;
+import java.util.Map;
 
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspectalizable.java,v 1.2 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizable.java,v 1.3 2003/05/21 13:06:02 cziegeler Exp $
  */
 public abstract class AbstractAspectalizable 
     implements Aspectalizable {
@@ -82,10 +82,14 @@ public abstract class AbstractAspectalizable
         this.aspectDataHandler.setAspectData(this, aspectName, data);
     }
     
-    public List getAspectDatas(){
+    public Map getAspectDatas(){
         return this.aspectDataHandler.getAspectDatas(this);
     }
     
+    public Map getPersistentAspectDatas(){
+        return this.aspectDataHandler.getPersistentAspectDatas(this);
+    }
+
     /**
      * This method is invoked once to set the handler
      */

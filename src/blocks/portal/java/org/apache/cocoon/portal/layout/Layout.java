@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.factory.Producible;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.5 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.6 2003/05/21 13:06:04 cziegeler Exp $
  */
 public interface Layout 
     extends Parameters, Producible {
@@ -77,12 +77,6 @@ public interface Layout
      */
     String getLayoutRendererName();
     
-    /**
-     * Get the unique id of this layout object
-     * @return String Unique id
-     */
-    String getId();
-
     Item getParent();
 
     void setParent(Item item);

@@ -57,15 +57,13 @@ package org.apache.cocoon.portal.layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.6 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.7 2003/05/21 13:06:04 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractParameters 
     implements Layout {
     
     protected String rendererName;
-    
-    protected String id;
     
     protected Item parent;
     
@@ -85,21 +83,6 @@ public abstract class AbstractLayout
 		this.rendererName = value;
 	}
     
-    /**
-     * @return String
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     * @param id The id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Item getParent() {
         return this.parent;
     }
@@ -107,6 +90,7 @@ public abstract class AbstractLayout
     public void setParent(Item item) {
         this.parent = item;
     }
+
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.Layout#isStatic()
 	 */

@@ -48,75 +48,21 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.factory.impl;
-
-import org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable;
-import org.apache.cocoon.portal.factory.Producible;
-import org.apache.cocoon.portal.factory.ProducibleDescription;
-
+package org.apache.cocoon.portal.aspect.impl;
 
 
 /**
- * This interface marks an object that can be created by a factory.
+ * An aspect data store is a component that manages aspect data objects.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProducible.java,v 1.2 2003/05/21 13:06:06 cziegeler Exp $
+ * @version CVS $Id: PersistentAspectDataStore.java,v 1.1 2003/05/21 13:06:02 cziegeler Exp $
  */
-public abstract class AbstractProducible 
-    extends AbstractAspectalizable 
-    implements Producible {
-    
-    protected String name;
+public class PersistentAspectDataStore 
+    extends SessionAspectDataStore {
 
-    protected String id;
-    
-    transient protected ProducibleDescription description;
-    
-    /**
-     * @return
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param string
-     */
-    public void setName(String string) {
-        name = string;
-    }
-
-    /**
-     * Set the layout description
-     */
-    public void setDescription(ProducibleDescription description) {
-        this.description = description;
-    }
-
-    /**
-     * Get the unique id of this object
-     * @return String Unique id
-     */
-    public String getId() {
-        return this.id;
-    }
-
-    /**
-     * Get the unique id of this object
-     * @return String Unique id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * Initialize the object. This should only be called once directly
-     * after the creation
-     */
-    public void initialize(String name, String id) {
-        this.name = name;
-        this.id = id;
+    public boolean isPersistent() {
+        return true;
     }
 
 }

@@ -5,7 +5,7 @@
 	<class name="org.apache.cocoon.portal.profile.impl.CopletDataManager">
 		<map-to xml="coplets" />
 
-		<field name="copletData" type="org.apache.cocoon.portal.coplet.CopletData" collection="map">
+		<field name="copletData" type="org.apache.cocoon.portal.coplet.CopletData" collection="vector" handler="org.apache.cocoon.portal.profile.impl.CopletDataFieldHandler">
 			<bind-xml auto-naming="deriveByClass"/>
 		</field>
 	</class>

@@ -57,11 +57,9 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
 /**
  * This interface marks an object that can be created by a factory.
  * 
- * TODO - perhaps we should add an id here as well
- * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: Producible.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: Producible.java,v 1.2 2003/05/21 13:06:06 cziegeler Exp $
  */
 public interface Producible 
     extends Aspectalizable {
@@ -72,7 +70,19 @@ public interface Producible
     String getName();
 
     /**
+     * Get the unique id of this object
+     * @return String Unique id
+     */
+    String getId();
+
+    /**
      * Set the layout description
      */
     void setDescription(ProducibleDescription description);
+    
+    /**
+     * Initialize the object. This should only be called once directly
+     * after the creation
+     */
+    void initialize(String name, String id);
 }

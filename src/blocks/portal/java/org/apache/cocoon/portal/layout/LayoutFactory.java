@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.layout;
 
+import java.util.List;
+
 import org.apache.cocoon.ProcessingException;
 
 /**
@@ -58,7 +60,7 @@ import org.apache.cocoon.ProcessingException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutFactory.java,v 1.2 2003/05/19 12:50:59 cziegeler Exp $
+ * @version CVS $Id: LayoutFactory.java,v 1.3 2003/05/21 13:06:04 cziegeler Exp $
  */
 public interface LayoutFactory  {
     
@@ -68,4 +70,10 @@ public interface LayoutFactory  {
     
     void prepareLayout(Layout layout)
     throws ProcessingException;
+    
+    Layout newInstance(String name)
+    throws ProcessingException;
+    
+    List getLayoutDescriptions();
+    
 }

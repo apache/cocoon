@@ -65,7 +65,6 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.aspect.AspectStatus;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.status.SizeableStatus;
-import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -85,7 +84,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.4 2003/05/20 14:32:36 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.5 2003/05/21 13:06:04 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -531,9 +530,9 @@ public class SimpleProfileManager
     throws ProcessingException {
         String id = layout.getId();
         if ( id == null ) {
-            id = Integer.toString(layout.hashCode());
-            ((AbstractLayout)layout).setId(id);
+            throw new ProcessingException("Layout has no id " + layout.getName());
         }
+
         if (layout instanceof CompositeLayout) {
 
             final CompositeLayout compositeLayout = (CompositeLayout) layout;

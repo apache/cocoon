@@ -50,7 +50,9 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
@@ -66,14 +68,12 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDataHandler.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDataHandler.java,v 1.2 2003/05/21 13:06:02 cziegeler Exp $
  */
 public class DefaultAspectDataHandler 
     implements AspectDataHandler {
 
     protected AspectalizableDescription description;
-    
-    // TODO - Implement persistence
     
     protected ComponentSelector storeSelector;
     
@@ -91,7 +91,7 @@ public class DefaultAspectDataHandler
      */
     public Object getAspectData(Aspectalizable owner, String aspectName) {
         // is this aspect allowed?
-        AspectDescription aspectDesc = this.description.getAspect( aspectName );
+        AspectDescription aspectDesc = this.description.getAspectDescription( aspectName );
         if ( aspectDesc == null ) return null;
         
         // lookup storage
@@ -118,9 +118,54 @@ public class DefaultAspectDataHandler
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectDatas(org.apache.cocoon.portal.aspect.Aspectalizable)
      */
-    public List getAspectDatas(Aspectalizable owner)  {
-        // TODO Auto-generated method stub
-        return null;
+    public Map getAspectDatas(Aspectalizable owner)  {
+        Map datas = new HashMap();
+        Iterator iter = this.description.getAspectDescriptions().iterator();
+        while ( iter.hasNext() ) {
+            AspectDescription current = (AspectDescription)iter.next();
+            Object data = this.getAspectData(owner, current.getName());
+            if ( data != null ) {
+                datas.put( current.getName(), data );
+            }
+        }
+        return datas;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getPersistentAspectDatas(org.apache.cocoon.portal.aspect.Aspectalizable)
+     */
+    public Map getPersistentAspectDatas(Aspectalizable owner)  {
+        Map datas = new HashMap();
+        Iterator iter = this.description.getAspectDescriptions().iterator();
+        while ( iter.hasNext() ) {
+            AspectDescription current = (AspectDescription)iter.next();
+
+            // lookup storage
+            AspectDataStore store = null;
+            Object data = null;
+            try {
+                store = (AspectDataStore)this.storeSelector.select(current.getStoreName());
+                if ( store.isPersistent() ) {
+                    data = store.getAspectData(owner, current.getName());
+
+                    if ( data == null && current.isAutoCreate() ) {
+                        data = AspectUtil.createNewInstance(current);
+                        store.setAspectData( owner, current.getName(), data );
+                    }
+
+                    if ( data != null ) {
+                        datas.put( current.getName(), data );
+                    }
+                }
+
+            } catch (ComponentException ce) {
+                throw new CascadingRuntimeException("Unable to lookup aspect data store " + current.getStoreName(), ce);
+            } finally {
+                this.storeSelector.release( (Component)store );
+            }        
+
+        }
+        return datas;
     }
 
     /* (non-Javadoc)
@@ -130,7 +175,7 @@ public class DefaultAspectDataHandler
                                String aspectName,
                                Object data) {
         // is this aspect allowed?
-        AspectDescription aspectDesc = this.description.getAspect( aspectName );
+        AspectDescription aspectDesc = this.description.getAspectDescription( aspectName );
         if ( aspectDesc == null ) return;
 
         // lookup storage
@@ -149,6 +194,6 @@ public class DefaultAspectDataHandler
      * Is this supported
      */
     public boolean isAspectSupported(String aspectName) {
-        return (this.description.getAspect(aspectName) != null);
+        return (this.description.getAspectDescription(aspectName) != null);
     }
 }

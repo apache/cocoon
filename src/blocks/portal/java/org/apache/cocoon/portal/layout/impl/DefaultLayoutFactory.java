@@ -50,8 +50,10 @@
 */
 package org.apache.cocoon.portal.layout.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -74,19 +76,22 @@ import org.apache.cocoon.portal.layout.*;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.4 2003/05/20 14:06:42 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.5 2003/05/21 13:06:00 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
     implements ThreadSafe, Component, LayoutFactory, Configurable, Disposable, Composable {
 
     protected Map layouts = new HashMap();
+    
+    protected List descriptions = new ArrayList();
     
     protected ComponentSelector storeSelector;
     
@@ -120,6 +125,7 @@ public class DefaultLayoutFactory
                 }
                 DefaultAspectDataHandler handler = new DefaultAspectDataHandler(desc, this.storeSelector);
                 this.layouts.put(desc.getName(), new Object[] {desc, handler});
+                this.descriptions.add(desc);
             }
         }
     }
@@ -152,6 +158,38 @@ public class DefaultLayoutFactory
             }
         }
     }
+
+    public Layout newInstance(String layoutName) 
+    throws ProcessingException {
+        Object[] o = (Object[]) this.layouts.get( layoutName );
+            
+        if ( o == null ) {
+            throw new ProcessingException("LayoutDescription with name " + layoutName + " not found.");
+        }
+        DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)o[0];
+        
+        Layout layout = null;
+        try {
+            Class clazz = ClassUtils.loadClass( layoutDescription.getClassName() );
+            layout = (Layout)clazz.newInstance();
+            
+        } catch (Exception e) {
+            throw new ProcessingException("Unable to create new instance", e );
+        }
+        
+        // TODO - set unique id
+        String id = layoutName + '-' + System.currentTimeMillis();
+        layout.initialize( layoutName, id ); 
+        layout.setDescription( layoutDescription );
+        layout.setAspectDataHandler((AspectDataHandler)o[1]);
+
+        return layout;
+    }
+    
+    public List getLayoutDescriptions() {
+        return this.descriptions;
+    }
+
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
