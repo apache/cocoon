@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.16 2004/06/08 15:40:08 danielf Exp $
+ * @version CVS $Id: Form.js,v 1.17 2004/06/09 13:50:43 danielf Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -31,6 +31,7 @@ function Form(uri) {
     var formMgr = null;
     var resolver = null;
     var src = null;
+    var xmlAdapter = null;
     try {
         formMgr = cocoon.getComponent(Packages.org.apache.cocoon.forms.FormManager.ROLE);
         resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
@@ -184,7 +185,62 @@ Form.prototype.removeAttribute = function(name) {
 }
 
 Form.prototype.getXML = function() {
-    return new Packages.org.apache.cocoon.forms.util.XMLAdapter(this.form);
+    if (this.xmlAdapter == null)
+        this.xmlAdapter = new Packages.org.apache.cocoon.forms.util.XMLAdapter(this.form);
+    return this.xmlAdapter;
+}
+
+Form.prototype.loadXML = function(uri) {
+    var source = null;
+    var resolver = null;
+    try {
+        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
+        source = resolver.resolveURI(uri);
+        Packages.org.apache.cocoon.components.source.SourceUtil.toSAX(source, this.getXML());
+    } finally {
+        if (source != null)
+            resolver.release(source);
+        cocoon.releaseComponent(resolver);
+    }
+}
+
+Form.prototype.saveXML = function(uri) {
+    var source = null;
+    var resolver = null;
+    var outputStream = null;
+    try {
+        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
+        source = resolver.resolveURI(uri);
+
+        var tf = Packages.javax.xml.transform.TransformerFactory.newInstance();
+
+        if (source instanceof Packages.org.apache.excalibur.source.ModifiableSource
+            && tf.getFeature(Packages.javax.xml.transform.sax.SAXTransformerFactory.FEATURE)) {
+
+            outputStream = source.getOutputStream();
+            var transformerHandler = tf.newTransformerHandler();
+            var transformer = transformerHandler.getTransformer();
+            transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.INDENT, "true");
+            transformer.setOutputProperty(Packages.javax.xml.transform.OutputKeys.METHOD, "xml");
+            transformerHandler.setResult(new Packages.javax.xml.transform.stream.StreamResult(outputStream));
+            this.getXML().toSAX(transformerHandler);
+        } else {
+            throw new Packages.org.apache.cocoon.ProcessingException("Cannot write to source " + uri);
+        }
+
+    } finally {
+        if (source != null)
+            resolver.release(source);
+        cocoon.releaseComponent(resolver);
+        if (outputStream != null) {
+            try {
+                outputStream.flush();
+                outputStream.close();
+            } catch (error) {
+                cocoon.log.error("Could not flush/close outputstream: " + error);
+            }
+        }
+    }
 }
 
 function handleForm() {

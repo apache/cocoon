@@ -51,19 +51,17 @@ function form2simpleXML(form) {
     // location of the file to be edited
     var documentURI = cocoon.parameters["documentURI"];
 
-    // get the XML adapter
-    var xmlAdapter = form.getXML();
-
-    // parse the document to a widget tree
-    var pipeUtil = 
-        cocoon.createObject(Packages.org.apache.cocoon.components.flow.util.PipelineUtil);
-    pipeUtil.processToSAX(documentURI, null, xmlAdapter);
+    // populate the form
+    form.loadXML(documentURI);
 
     // show the form to the user until it is validated successfully
     form.showForm("form2-display-pipeline");
 
+    // save the content of the form to a file
+    form.saveXML(makeTargetURI(documentURI));
+
     // show the xml generated from the form
-    cocoon.sendPage("form2simpleXML-success-pipeline", xmlAdapter);
+    cocoon.sendPage("form2simpleXML-success-pipeline", form.getXML());
 }
 
 // bean variant of the binding sample
