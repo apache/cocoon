@@ -18,7 +18,7 @@
 <!--+
     | Velocity block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.1 2004/04/17 08:27:05 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.2 2004/04/17 09:07:08 antonio Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -55,7 +55,7 @@
 
       <!-- hello world -->
       <map:match pattern="hello.vm">
-        <map:generate src="hello-page.vm"/>
+        <map:generate type="velocity" src="hello-page.vm"/>
         <map:transform src="context://samples/hello-world/style/xsl/page2itext.xsl"/>
         <map:serialize/>
       </map:match>
