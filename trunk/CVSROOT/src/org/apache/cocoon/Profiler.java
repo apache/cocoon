@@ -1,4 +1,4 @@
-/*-- $Id: Profiler.java,v 1.2 2000-12-09 01:11:30 greenrd Exp $ --
+/*-- $Id: Profiler.java,v 1.3 2001-02-20 19:52:16 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import javax.servlet.http.HttpServletRequest;
  * end of each process. Use getProfileTable to get the results as a DOM.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.2 $ $Date: 2000-12-09 01:11:30 $
+ * @version $Revision: 1.3 $ $Date: 2001-02-20 19:52:16 $
  */
 public class Profiler implements Actor, Status {
 
@@ -147,7 +147,7 @@ public class Profiler implements Actor, Status {
         String event = (String) proc.nextElement ();
         ProfProcess pp = (ProfProcess) map.get (event);
         if (pp != null && pp.finished) {
-          domWriter.addQuick (event, "" + pp.getDuration ());
+          domWriter.addQuick (event, pp.getDuration () + "ms");
         }
         else {
           domWriter.addQuick (event, "-");
