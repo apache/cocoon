@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.86 2003/09/28 04:31:11 antonio Exp $
+    | CVS $Id: gump.xml,v 1.87 2003/09/29 08:27:55 bdelacretaz Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1159,7 +1159,7 @@
       definitions from java source files.
     </description>
     <home nested="src/blocks/qdox/lib"/>
-    <jar name="qdox-1.1.jar"/>
+    <jar name="qdox-1.2.jar"/>
   </project>
 
   <project name="joost">
