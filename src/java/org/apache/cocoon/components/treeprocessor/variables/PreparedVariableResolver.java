@@ -35,7 +35,7 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.7 2004/04/04 06:38:16 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.8 2004/04/14 09:39:45 upayavira Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -418,17 +418,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         }
 
         public Token(String value) {
-            this.value = null;
-            if (value.equals("{")) {
-                this.type = OPEN;
-            } else if (value.equals("}")) {
-                this.type = CLOSE;
-            } else if (value.equals(":")) {
-                this.type = COLON;
-            } else {
-                this.type = TEXT;
-                this.value = value;
-            }
+            this.type = TEXT;
+            this.value = value;
         }
       
         public int getType() {
