@@ -51,7 +51,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-19 21:20:48 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-02 20:18:38 $ $Author: giacomo $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
 
@@ -289,12 +289,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         }
 
         public void startDocument() {
-            getLogger().debug("Internal start document received");
+            super.getLogger().debug("Internal start document received");
             /** We don't pass start document on to the "real" handler **/
         }
 
         public void endDocument() {
-            getLogger().debug("Internal end document received");
+            super.getLogger().debug("Internal end document received");
             /** We don't pass end document on to the "real" handler **/
         }
 
@@ -310,7 +310,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
 
         public void startElement(String namespace, String name, String raw,
             Attributes attr) throws SAXException {
-            getLogger().debug("Internal element received: "+name);
+            super.getLogger().debug("Internal element received: "+name);
             content_handler.startElement(namespace,name,raw,attr);
         }
 

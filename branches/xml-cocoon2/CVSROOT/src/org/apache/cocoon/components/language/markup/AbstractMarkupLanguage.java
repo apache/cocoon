@@ -47,7 +47,7 @@ import org.apache.cocoon.util.IOUtils;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-19 21:20:23 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-02 20:18:45 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -449,7 +449,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             try {
                 hasChanged = this.lastModified < this.file.lastModified();
             } catch (SecurityException se) {
-                getLogger().warn("SecurityException", se);
+                super.getLogger().warn("SecurityException", se);
             }
             return hasChanged;
         }
