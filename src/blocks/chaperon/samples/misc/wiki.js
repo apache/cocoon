@@ -46,6 +46,18 @@ function edit() {
     cocoon.sendPage("wiki/view.html", {page:page, text:text});
 }
 
+function source() {
+                                                                                                                                                                               
+    var page = cocoon.request.getParameter("page");
+                                                                                                                                                                               
+    if (page==null)
+        page = "index";
+                                                                                                                                                                               
+    var text = read(page);
+                                                                                                                                                                               
+    cocoon.sendPage("wiki/source.xml", {page:page, text:text});
+}
+
 
 function read(page) {
 

@@ -2,9 +2,6 @@
 <document>
  <header>
   <title>Wiki example</title>
-  <tab title="Edit" href="edit.do?page=${page}"/>
-  <tab title="Source" href="source.do?page=${page}"/>
-  <tab title="back" href="."/>
  </header>
  <body>
   <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="wiki/${page}.txt" line="1" column="1">${text}</text>

@@ -142,6 +142,14 @@
     <map:serialize type="html"/>
    </map:match>
 
+   <map:match pattern="wiki/source.xml">
+    <map:generate  type="jx"      src="misc/source.xml" />
+    <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
+    <map:transform type="parser"  src="cocoon:/wiki.xgrm"         label="ast"/>
+    <map:transform                src="stylesheets/wiki2xdoc.xsl" label="xdoc"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
   </map:pipeline>
 
   <map:pipeline type="caching"> 
