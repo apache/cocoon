@@ -74,6 +74,27 @@
   <sample name="Flowscript" href="form1.flow?locale=de-DE">Germany</sample>
   <sample name="Flowscript" href="form1.flow?locale=nl-BE">Belgium (dutch)</sample>
  </group>
+ 
+ <group name="Dynamic templates and recursive forms">
+   <note>
+     These samples were written for the GT2004 presentation about dynamic templates and recursive forms.
+     They illustrate the use of "jx-macros.xml" to interpret form template elements within the generator,
+     allowing the page layout to depend on the contents of the form, and the use of fd:union and fd:class
+     widgets.
+   </note>
+   <sample name="Dynamic repeater template" href="do-dynaRepeater.flow">
+     Shows a simple repeater, which isn't displayed at all if empty, and whose row action depend on
+     the row number.
+   </sample>
+   <sample name="Datasource chooser" href="do-datasourceChooser.flow">
+     A datasource chooser, illustrating the fd:union widget.
+   </sample>
+   <sample name="Task tree" href="do-taskTree.flow">
+     A project work breakdown into a hierarchy of tasks, showing the use of the fd:class and fd:new
+     widgets.
+   </sample>
+ </group>
+ 
  <group name="Experimental Flowscript API for Cocoon Forms">
   <note>
     The sample below demonstrates a proposal for a new Flowscript API, including a multipage form with a back button.
