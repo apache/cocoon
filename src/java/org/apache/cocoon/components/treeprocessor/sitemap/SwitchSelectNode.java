@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelectNode.java,v 1.5 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: SwitchSelectNode.java,v 1.6 2004/07/14 13:17:45 cziegeler Exp $
  */
 public class SwitchSelectNode extends SimpleSelectorProcessingNode
                               implements ParameterizableProcessingNode, Composable, Disposable {
@@ -69,6 +69,9 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         this.otherwhiseNodes = otherwhiseNodes;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
 
@@ -78,6 +81,9 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         this.threadSafeSelector = (SwitchSelector)this.getThreadSafeComponent();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 	
@@ -85,7 +91,7 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         super.invoke(env, context);
 
         // Prepare data needed by the action
-        Map objectModel = env.getObjectModel();
+        final Map objectModel = env.getObjectModel();
         Parameters resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
 
         // If selector is ThreadSafe, avoid select() and try/catch block (faster !)
@@ -94,7 +100,12 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
             Object ctx = this.threadSafeSelector.getSelectorContext(objectModel, resolvedParams);
 
             for (int i = 0; i < this.whenTests.length; i++) {
-                if (this.threadSafeSelector.select(whenTests[i].resolve(context, objectModel), ctx)) {
+                if (this.executor.invokeSwitchSelector(this, 
+                                                       objectModel, 
+                                                       this.threadSafeSelector, 
+                                                       whenTests[i].resolve(context, objectModel), 
+                                                       resolvedParams, 
+                                                       ctx)) {
                     return invokeNodes(this.whenNodes[i], env, context);
                 }
             }
@@ -112,7 +123,12 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
            
             try {
                 for (int i = 0; i < this.whenTests.length; i++) {
-                    if (selector.select(whenTests[i].resolve(context, objectModel), ctx)) {
+                    if (this.executor.invokeSwitchSelector(this, 
+                            objectModel, 
+                            selector, 
+                            whenTests[i].resolve(context, objectModel), 
+                            resolvedParams, 
+                            ctx)) {
                         return invokeNodes(this.whenNodes[i], env, context);
                     }
                 }

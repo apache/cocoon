@@ -25,11 +25,12 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: GenerateNode.java,v 1.4 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.5 2004/07/14 13:17:45 cziegeler Exp $
  */
 public class GenerateNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
@@ -49,18 +50,29 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
         this.parameters = parameterMap;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
-        Map objectModel = env.getObjectModel();
-
-        context.getProcessingPipeline().setGenerator(
-            this.generatorName,
-            source.resolve(context, objectModel),
-            VariableResolver.buildParameters(this.parameters, context, objectModel),
-            this.pipelineHints == null
+        final Map objectModel = env.getObjectModel();
+        
+        SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
+        desc.type = this.generatorName;
+        desc.source = source.resolve(context, objectModel);
+        desc.parameters = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        desc.hintParameters = this.pipelineHints == null
                 ? Parameters.EMPTY_PARAMETERS
-                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel)
+                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel);
+        
+        desc = this.executor.addGenerator(this, objectModel, desc);
+        
+        context.getProcessingPipeline().setGenerator(
+            desc.type,
+            desc.source,
+            desc.parameters,
+            desc.hintParameters
         );
 
 

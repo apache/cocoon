@@ -21,13 +21,14 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.SitemapExecutor;
 
 import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ReadNode.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: ReadNode.java,v 1.4 2004/07/14 13:17:45 cziegeler Exp $
  */
 
 public class ReadNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
@@ -60,18 +61,29 @@ public class ReadNode extends AbstractProcessingNode implements ParameterizableP
         this.parameters = parameterMap;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env,  InvokeContext context)
-      throws Exception {
+    throws Exception {
 
-        Map objectModel = env.getObjectModel();
+        final Map objectModel = env.getObjectModel();
 
-        ProcessingPipeline pipeline = context.getProcessingPipeline();
+        final ProcessingPipeline pipeline = context.getProcessingPipeline();
+
+        SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
+        desc.type = this.readerName;
+        desc.source = source.resolve(context, objectModel);
+        desc.parameters = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        desc.mimeType = this.mimeType.resolve(context, objectModel);
+        
+        desc = this.executor.addReader(this, objectModel, desc);
 
         pipeline.setReader(
-            this.readerName,
-            source.resolve(context, objectModel),
-            VariableResolver.buildParameters(this.parameters, context, objectModel),
-            this.mimeType.resolve(context, objectModel)
+            desc.type,
+            desc.source,
+            desc.parameters,
+            desc.mimeType
         );
 
         // Set status code if there is one

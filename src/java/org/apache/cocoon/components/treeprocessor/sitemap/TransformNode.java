@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessingNode;
@@ -23,13 +24,14 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapExecutor;
 
 import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TransformNode.java,v 1.2 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: TransformNode.java,v 1.3 2004/07/14 13:17:45 cziegeler Exp $
  */
 
 public class TransformNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
@@ -51,25 +53,39 @@ public class TransformNode extends PipelineEventComponentProcessingNode implemen
     }
 
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 
-        Map objectModel = env.getObjectModel();
+        final Map objectModel = env.getObjectModel();
 
-        context.getProcessingPipeline().addTransformer(
-            this.transformerName,
-            source.resolve(context, objectModel),
-            VariableResolver.buildParameters(this.parameters, context, objectModel),
-            this.pipelineHints == null
+        final ProcessingPipeline pipeline = context.getProcessingPipeline();
+        
+        SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
+        desc.type = this.transformerName;
+        desc.source = source.resolve(context, objectModel);
+        desc.parameters = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        desc.hintParameters = this.pipelineHints == null
                 ? Parameters.EMPTY_PARAMETERS
-                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel)
+                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel);
+
+        // inform executor
+        desc = this.executor.addTransformer(this, objectModel, desc);
+
+        pipeline.addTransformer(
+            desc.type,
+            desc.source,
+            desc.parameters,
+            desc.hintParameters
         );
 
         // Check view
         if (this.views != null) {
 	   
             //inform the pipeline that we have a branch point
-            context.getProcessingPipeline().informBranchPoint();
+            pipeline.informBranchPoint();
 	    
             String cocoonView = env.getView();
             if (cocoonView != null) {

@@ -27,11 +27,12 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapExecutor;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.8 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.9 2004/07/14 13:17:45 cziegeler Exp $
  */
 public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
@@ -64,6 +65,9 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
         this.parameters = parameterMap;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
@@ -88,8 +92,8 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
             }
         }
         
-        Map objectModel = env.getObjectModel();
-        ProcessingPipeline pipeline = context.getProcessingPipeline();
+        final Map objectModel = env.getObjectModel();
+        final ProcessingPipeline pipeline = context.getProcessingPipeline();
 
         // Perform link translation if requested
         if (objectModel.containsKey(Constants.LINK_OBJECT)) {
@@ -100,14 +104,24 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
             pipeline.addTransformer("<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
         }
 
-        pipeline.setSerializer(
-            this.serializerName,
-            source.resolve(context, objectModel),
-            VariableResolver.buildParameters(this.parameters, context, objectModel),
-            this.pipelineHints == null
+        SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
+        desc.type = this.serializerName;
+        desc.source = source.resolve(context, objectModel);
+        desc.parameters = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        desc.hintParameters = this.pipelineHints == null
                 ? Parameters.EMPTY_PARAMETERS
-                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel),
-            this.mimeType.resolve(context, env.getObjectModel())
+                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel);
+        desc.mimeType = this.mimeType.resolve(context, objectModel);
+
+        // inform executor
+        desc = this.executor.addSerializer(this, objectModel, desc);
+        
+        pipeline.setSerializer(
+                desc.type,
+                desc.source,
+                desc.parameters,
+                desc.hintParameters,
+                desc.mimeType
         );
 
         // Set status code if there is one

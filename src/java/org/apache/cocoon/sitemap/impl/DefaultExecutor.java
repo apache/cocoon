@@ -24,6 +24,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.selection.SwitchSelector;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -34,7 +35,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: DefaultExecutor.java,v 1.5 2004/06/24 13:18:01 cziegeler Exp $
+ * @version CVS $Id: DefaultExecutor.java,v 1.6 2004/07/14 13:17:45 cziegeler Exp $
  */
 public class DefaultExecutor 
     implements SitemapExecutor {
@@ -87,6 +88,16 @@ public class DefaultExecutor
     }
     
     /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSwitchSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.selection.SwitchSelector, java.lang.String, org.apache.avalon.framework.parameters.Parameters, Object)
+     */
+    public boolean invokeSwitchSelector(ExecutionContext context,
+            Map objectModel, SwitchSelector selector, String expression,
+            Parameters parameters, Object selectorContext) {
+        // TODO Auto-generated method stub
+        return selector.select(expression, selectorContext);
+    }
+    
+    /* (non-Javadoc)
      * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
      */
     public void popVariables(ExecutionContext context,
@@ -109,5 +120,38 @@ public class DefaultExecutor
     public String enterSitemap(ExecutionContext context, Map objectModel,
             String source) {
         return source;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addGenerator(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addGenerator(ExecutionContext context,
+            Map objectModel, PipelineComponentDescription desc) {
+        return desc;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addReader(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addReader(ExecutionContext context,
+            Map objectModel, PipelineComponentDescription desc) {
+        return desc;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addSerializer(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addSerializer(ExecutionContext context,
+            Map objectModel, PipelineComponentDescription desc) {
+        return desc;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addTransformer(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addTransformer(
+            ExecutionContext context, Map objectModel,
+            PipelineComponentDescription desc) {
+        return desc;
     }
 }
