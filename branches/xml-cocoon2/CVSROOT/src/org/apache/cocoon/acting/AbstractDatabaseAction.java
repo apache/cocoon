@@ -16,6 +16,8 @@ import java.sql.Date;
 import java.sql.Ref;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.net.URL;
 import java.io.File;
 import java.io.InputStream;
@@ -172,7 +174,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-12 15:52:42 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-14 16:28:54 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -233,9 +235,84 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
     }
 
     /**
+     * Get the Statement column so that the results are mapped correctly.
+     */
+    protected Object getColumn(ResultSet set, HttpRequest request, Configuration entry)
+    throws Exception {
+        Integer type = (Integer) AbstractDatabaseAction.typeConstants.get(entry.getAttribute("type"));
+        String attribute = entry.getAttribute("param", "");
+        String dbcol = entry.getAttribute("dbcol", "");
+        Object value = null;
+
+        switch (type.intValue()) {
+            case Types.CLOB:
+                Clob dbClob = set.getClob(dbcol);
+                int length = (int) dbClob.length();
+                InputStream asciiStream = new BufferedInputStream(dbClob.getAsciiStream());
+                byte[] buffer = new byte[length];
+                asciiStream.read(buffer);
+                String str = new String(buffer);
+                asciiStream.close();
+                value = str;
+                break;
+            case Types.BIGINT:
+                value = set.getBigDecimal(dbcol);
+                break;
+            case Types.TINYINT:
+                value = new Byte(set.getByte(dbcol));
+                break;
+            case Types.VARCHAR:
+                value  = set.getString(dbcol);
+                break;
+            case Types.DATE:
+                value = set.getDate(dbcol);
+                break;
+            case Types.DOUBLE:
+                value = new Double(set.getDouble(dbcol));
+                break;
+            case Types.FLOAT:
+                value = new Float(set.getFloat(dbcol));
+                break;
+            case Types.INTEGER:
+                value = new Integer(set.getInt(dbcol));
+                break;
+            case Types.NUMERIC:
+                value = new Long(set.getLong(dbcol));
+                break;
+            case Types.SMALLINT:
+                value = new Short(set.getShort(dbcol));
+                break;
+            case Types.TIME:
+                value = set.getTime(dbcol);
+                break;
+            case Types.TIMESTAMP:
+                value = set.getTimestamp(dbcol);
+                break;
+            case Types.ARRAY:
+                value = new Integer(set.getInt(dbcol));
+                break;
+            case Types.BIT:
+                value = new Integer(set.getInt(dbcol));
+                break;
+            case Types.CHAR:
+                value = new Integer(set.getInt(dbcol));
+                break;
+            default:
+                // The blob types have to be requested separately, via a Reader.
+                value = "";
+                break;
+        }
+
+        request.setAttribute(attribute, value);
+
+        return value;
+    }
+
+    /**
      * Set the Statement column so that the results are mapped correctly.
      */
-    protected void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry) throws Exception {
+    protected void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry)
+    throws Exception {
         Integer typeObject = (Integer) AbstractDatabaseAction.typeConstants.get(entry.getAttribute("type"));
 
         if (typeObject == null) {
@@ -243,9 +320,13 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
         }
 
         String attribute = entry.getAttribute("param", "");
-        String value = request.getParameter(attribute);
+        Object value = request.get(attribute);
 
-        if (value == null || "".equals(value.trim())) {
+        if (value instanceof String) {
+            value = ((String) value).trim();
+        }
+
+        if (value == null || "".equals(value)) {
             switch (typeObject.intValue()) {
                 case Types.DISTINCT:
                     statement.setNull(position, Types.BINARY);
@@ -253,8 +334,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 case Types.ARRAY:
                 case Types.BIT:
                 case Types.CHAR:
-                    File imageFile = (File) request.get(attribute);
-                    if (imageFile == null) {
+                    if (value == null) {
                         statement.setNull(position, Types.INTEGER);
                     }
                     break;
@@ -271,16 +351,15 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
 
         switch (typeObject.intValue()) {
             case Types.CLOB:
-                Object attr = request.get(attribute);
                 int length = -1;
                 InputStream asciiStream = null;
 
-                if (attr instanceof File) {
-                    File asciiFile = (File) attr;
+                if (value instanceof File) {
+                    File asciiFile = (File) value;
                     asciiStream = new BufferedInputStream(new FileInputStream(asciiFile));
                     length = (int) asciiFile.length();
                 } else {
-                    String asciiText = (String) attr;
+                    String asciiText = (String) value;
                     asciiStream = new BufferedInputStream(new ByteArrayInputStream(asciiText.getBytes()));
                     length = asciiText.length();
                 }
@@ -288,42 +367,122 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                 statement.setAsciiStream(position, asciiStream, length);
                 break;
             case Types.BIGINT:
-                statement.setBigDecimal(position, new BigDecimal((String) value));
+                BigDecimal bd = null;
+
+                if (value instanceof BigDecimal) {
+                    bd = (BigDecimal) value;
+                } else {
+                    bd = new BigDecimal((String) value);
+                }
+
+                statement.setBigDecimal(position, bd);
                 break;
             case Types.BLOB:
-                File binaryFile = (File) request.get(attribute);
+                File binaryFile = (File) value;
                 InputStream binaryStream = new BufferedInputStream(new FileInputStream(binaryFile));
                 statement.setBinaryStream(position, binaryStream, (int) binaryFile.length());
                 break;
             case Types.TINYINT:
-                statement.setByte(position, (new Byte(value)).byteValue());
+                Byte b = null;
+
+                if (value instanceof Byte) {
+                    b = (Byte) value;
+                } else {
+                    b = new Byte((String) value);
+                }
+
+                statement.setByte(position, b.byteValue());
                 break;
             case Types.VARCHAR:
-                statement.setString(position, value);
+                statement.setString(position, (String) value);
                 break;
             case Types.DATE:
-                statement.setDate(position, new Date(this.dateValue(value, entry.getAttribute("format", "M/d/yyyy"))));
+                Date d = null;
+
+                if (value instanceof Date) {
+                    d = (Date) value;
+                } else {
+                    d = new Date(this.dateValue((String) value, entry.getAttribute("format", "M/d/yyyy")));
+                }
+
+                statement.setDate(position, d);
                 break;
             case Types.DOUBLE:
-                statement.setDouble(position, (new Double(value)).doubleValue());
+                Double db = null;
+
+                if (value instanceof Double) {
+                    db = (Double) value;
+                } else {
+                    db = new Double((String) value);
+                }
+
+                statement.setDouble(position, db.doubleValue());
                 break;
             case Types.FLOAT:
-                statement.setFloat(position, (new Float(value)).floatValue());
+                Float f = null;
+
+                if (value instanceof Float) {
+                    f = (Float) value;
+                } else {
+                    f = new Float((String) value);
+                }
+
+                statement.setFloat(position, f.floatValue());
                 break;
             case Types.INTEGER:
-                statement.setInt(position, (new Integer(value)).intValue());
+                Integer i = null;
+
+                if (value instanceof Integer) {
+                    i = (Integer) value;
+                } else {
+                    i = new Integer((String) value);
+                }
+
+                statement.setInt(position, i.intValue());
                 break;
             case Types.NUMERIC:
-                statement.setLong(position, (new Long(value)).longValue());
+                Long l = null;
+
+                if (value instanceof Long) {
+                    l = (Long) value;
+                } else {
+                    l = new Long((String) value);
+                }
+
+                statement.setLong(position, l.longValue());
                 break;
             case Types.SMALLINT:
-                statement.setShort(position, (new Short(value)).shortValue());
+                Short s = null;
+
+                if (value instanceof Short) {
+                    s = (Short) value;
+                } else {
+                    s = new Short((String) value);
+                }
+
+                statement.setShort(position, s.shortValue());
                 break;
             case Types.TIME:
-                statement.setTime(position, new Time(this.dateValue(value, entry.getAttribute("format", "h:m:s a"))));
+                Time t = null;
+
+                if (value instanceof Time) {
+                    t = (Time) value;
+                } else {
+                    t = new Time(this.dateValue((String) value, entry.getAttribute("format", "h:m:s a")));
+                }
+
+                statement.setTime(position, t);
                 break;
             case Types.TIMESTAMP:
-                statement.setTimestamp(position, new Timestamp(this.dateValue(value, entry.getAttribute("format", "M/d/yyyy h:m:s a"))));
+                Timestamp ts = null;
+
+                if (value instanceof Time) {
+                    ts = (Timestamp) value;
+                } else {
+                    ts = new Timestamp(this.dateValue((String) value, entry.getAttribute("format", "M/d/yyyy h:m:s a")));
+                }
+
+                statement.setTimestamp(position, ts);
                 break;
             case Types.OTHER:
                 statement.setTimestamp(position, new Timestamp((new java.util.Date()).getTime()));
@@ -331,7 +490,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
             case Types.DISTINCT:
                 // Upload an image (just like binary), but cache attributes
                 Parameters param = new Parameters();
-                File imageFile = (File) request.get(attribute);
+                File imageFile = (File) value;
                 InputStream imageStream = new BufferedInputStream(new FileInputStream(imageFile));
                 statement.setBinaryStream(position, imageStream, (int) imageFile.length());
 
