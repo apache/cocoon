@@ -203,7 +203,7 @@
   <changes>
   <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Updated quartz to 1.4.5.
+     Updated quartz to 1.4.5, jcs to 1.2.5-dev-20050313.
    </action>
    <action dev="SW" type="update">
      Refactored the Deprecation class: the "forbidden-deprecation-level" parameter in web.xml
