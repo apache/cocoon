@@ -104,13 +104,13 @@ function viewCart() {
     var cartItems = [];
     for (var i in cartForm.cart.cartItems) {
         var cartItem = cartForm.cart.cartItems[i];
-	cartItems.push(cartItem);
+        cartItems.push(cartItem);
     }
     sendPage("/view/Cart.html", {
              accountForm: accountForm, 
              cartForm: cartForm, 
              yoshi: yoshi,
-			      cartItems: cartItems
+             cartItems: cartItems
 
     });
 }
@@ -122,12 +122,12 @@ function removeItemFromCart() {
     var cartItems = [];
     for (var i in cartForm.cart.cartItems) {
         var cartItem = cartForm.cart.cartItems[i];
-	cartItems.push(cartItem);
+        cartItems.push(cartItem);
     }
     sendPage("/view/Cart.html", {
              yoshi: yoshi, 
              accountForm: accountForm, 
-			cartForm: cartForm, cartItems: cartItems
+                        cartForm: cartForm, cartItems: cartItems
     });
 }
 
@@ -138,13 +138,13 @@ function updateCartQuantities() {
         var itemId = cartItem.item.itemId;
         var quantity = new java.lang.Double(cocoon.request.get(itemId)).intValue();
         cartItem.updateQuantity(quantity);
-	cartItems.push(cartItem);
+        cartItems.push(cartItem);
     }
     sendPage("/view/Cart.html", {
              yoshi: yoshi, 
              accountForm: accountForm, 
-	     cartForm:cartForm,
-	     cartItems: cartItems
+             cartForm:cartForm,
+             cartItems: cartItems
     });
 }
 
@@ -155,12 +155,13 @@ function addItemToCart() {
     var cartItems = [];
     for (var i in cartForm.cart.cartItems) {
         var cartItem = cartForm.cart.cartItems[i];
-	cartItems.push(cartItem);
+        cartItems.push(cartItem);
     }
     sendPage("/view/Cart.html", {
              yoshi: yoshi, 
              accountForm: accountForm, 
-			cartForm:cartForm, cartItems: cartItems
+             cartForm:cartForm, 
+             cartItems: cartItems
     });
 }
 
@@ -173,21 +174,39 @@ function viewCategory() {
     var skipResults = 0;
     var maxResults = MAX_RESULTS;
     while (true) {
-        var productList = getPetStore().getProductListByCategory(categoryId,
-                                                                 skipResults, 
-                                                                 maxResults);
+        var productList = 
+            getPetStore().getProductListByCategory(categoryId,
+                                                   skipResults, 
+                                                   maxResults);
+        var lastPage = !productList.isLimitedByMaxRows;
+        var rowCount = productList.rowCount;
         sendPageAndWait("/view/Category.html", {
                         accountForm: accountForm, 
                         productList: productList.rows, 
                         category: category, 
                         firstPage: skipResults == 0, 
-                        lastPage: !productList.isLimitedByMaxRows
+                        lastPage: lastPage
         });
+
+        catch (break) {
+            print("zapping productList");
+            productList = null;
+        }
+        
+        catch (continue) {
+            print("returning from continuation");
+            print("productList="+productList);
+        }
+
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            skipResults -= maxResults;
+            if (skipResults != 0) {
+                skipResults -= maxResults;
+            }
         } else if (page == "next") {
-            skipResults += productList.rowCount;
+            if (!lastPage) {
+                skipResults += rowCount;
+            }
         }
     } 
 }
@@ -201,9 +220,10 @@ function viewProduct() {
     var maxResults = MAX_RESULTS;
 
     while (true) {
-        var itemList = getPetStore().getItemListByProduct(productId,
-                                                          skipResults, 
-                                                          maxResults);
+        var itemList = 
+            getPetStore().getItemListByProduct(productId,
+                                               skipResults, 
+                                               maxResults);
         sendPageAndWait("/view/Product.html", {
                         accountForm: accountForm, 
                         yoshi: yoshi,
@@ -214,9 +234,13 @@ function viewProduct() {
         });
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            skipResults -= maxResults;
+            if (skipResults != 0) {
+                skipResults -= maxResults;
+            }
         } else if (page == "next") {
-            skipResults += itemList.rowCount;
+            if (!itemList.isLimitedByMaxRows) {
+                skipResults += itemList.rowCount;
+            }
         } 
     }
 }
@@ -309,8 +333,9 @@ function searchProducts() {
     var skipResults = 0;
     var maxResults = 3;
     while (true) {
-        var result = getPetStore().searchProductList(keyword, skipResults,
-                                                     maxResults);
+        var result = 
+            getPetStore().searchProductList(keyword, skipResults,
+                                            maxResults);
         sendPageAndWait("/view/SearchProducts.html", {
                         searchResultsProductList: result.rows,
                         firstPage: skipResults == 0,
@@ -318,9 +343,13 @@ function searchProducts() {
         });
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            skipResults -= maxResults;
+            if (skipResults != 0) {
+                skipResults -= maxResults;
+            }
         } else if (page == "next") {
-            skipResults += result.rowCount;
+            if (!result.isLimitedByMaxRows) {
+                skipResults += result.rowCount;
+            }
         }
     }
 }
