@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,42 +23,41 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  *
- * @version CVS $Id: InterpreterSelector.java,v 1.3 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: InterpreterSelector.java,v 1.4 2004/06/03 12:37:56 vgritsenko Exp $
  */
 public class InterpreterSelector extends ExcaliburComponentSelector
-  implements Configurable, ThreadSafe
-{
-  private String defaultLanguage;
+        implements Configurable, ThreadSafe {
 
-  public void configure(Configuration config)
-    throws ConfigurationException
-  {
-    super.configure(config);
+    private String defaultLanguage;
 
-    defaultLanguage = config.getAttribute("default", null);
+    public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
 
-    // Finish the initialization of the already created components
-    Configuration[] configurations = config.getChildren("component-instance");
-    if (configurations.length == 0)
-      throw new ConfigurationException("No languages defined!");
+        this.defaultLanguage = config.getAttribute("default", null);
 
-    for (int i = 0; i < configurations.length; i++) {
-      Configuration conf = configurations[i];
-      String hint = conf.getAttribute("name").trim();
+        // Finish the initialization of the already created components
+        Configuration[] configurations = config.getChildren("component-instance");
+        if (configurations.length == 0) {
+            throw new ConfigurationException("No languages defined!");
+        }
 
-      if (!this.getComponentHandlers().containsKey(hint)) {
-        throw new ConfigurationException(
-          "Could not find component for hint: " + hint
-        );
-      }
+        for (int i = 0; i < configurations.length; i++) {
+            Configuration conf = configurations[i];
+            String hint = conf.getAttribute("name").trim();
 
-      if (i == 0 && defaultLanguage == null)
-        defaultLanguage = hint;
+            if (!this.getComponentHandlers().containsKey(hint)) {
+                throw new ConfigurationException(
+                        "Could not find component for hint: " + hint
+                );
+            }
+
+            if (i == 0 && defaultLanguage == null) {
+                defaultLanguage = hint;
+            }
+        }
     }
-  }
 
-  public String getDefaultLanguage()
-  {
-    return defaultLanguage;
-  }
+    public String getDefaultLanguage() {
+        return defaultLanguage;
+    }
 }
