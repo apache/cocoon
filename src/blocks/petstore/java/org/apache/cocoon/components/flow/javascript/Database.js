@@ -1,5 +1,5 @@
 //
-// CVS $Id: Database.js,v 1.1 2003/06/22 18:12:52 coliver Exp $
+// CVS $Id: Database.js,v 1.1 2003/07/12 19:09:39 coliver Exp $
 //
 // Prototype Database API
 //
