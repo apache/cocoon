@@ -207,7 +207,7 @@
   -->
   <xsl:template match="wi:*" mode="group-columns-content">
     <tr>
-      <td valign="top"><span title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></span></td>
+      <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
       <td><xsl:apply-templates select="."/></td>
    </tr>
   </xsl:template>
@@ -215,7 +215,7 @@
   <!-- boolean field : checkbox and label on a single line -->
   <xsl:template match="wi:booleanfield" mode="group-columns-content">
     <tr>
-      <td colspan="2"><xsl:apply-templates select="."/> <xsl:copy-of select="wi:label/node()"/></td>
+      <td colspan="2"><xsl:apply-templates select="."/> <label for="{@id}"><xsl:copy-of select="wi:label/node()"/></label></td>
     </tr>
   </xsl:template>
 
