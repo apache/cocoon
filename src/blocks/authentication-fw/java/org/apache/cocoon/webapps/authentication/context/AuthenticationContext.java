@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.4 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.5 2003/05/08 12:33:56 cziegeler Exp $
 */
 public final class AuthenticationContext
 implements SessionContext {
@@ -188,7 +188,7 @@ implements SessionContext {
             }
 
         } else if (path.startsWith("/authentication") ) {
-            frag = this.authContext.getXML("/" + path);
+            frag = this.authContext.getXML(path);
 
         } else if (path.equals("/application") || path.startsWith("/application/") ) {
             if (applicationName != null) {
@@ -201,7 +201,7 @@ implements SessionContext {
                 frag = this.authContext.getXML("/applications/" + applicationName + appPath);
             }
         } else {
-            frag = this.authContext.getXML("/" + path);
+            frag = this.authContext.getXML(path);
         }
 
         return frag;
@@ -230,7 +230,7 @@ implements SessionContext {
         } else if ( path.startsWith("/authentication") ) {
 
             this.cleanParametersCache();
-            this.authContext.setXML('/' + path, fragment);
+            this.authContext.setXML(path, fragment);
 
         } else if (path.equals("/application") 
                    || path.startsWith("/application/") ) {
@@ -247,7 +247,7 @@ implements SessionContext {
             this.authContext.setXML("/applications/" + applicationName + appPath, fragment);
 
         } else {
-            this.authContext.setXML("/" + path, fragment);
+            this.authContext.setXML(path, fragment);
         }
     }
 
@@ -275,7 +275,7 @@ implements SessionContext {
         } else if ( path.startsWith("/authentication") ) {
 
             this.cleanParametersCache();
-            this.authContext.appendXML('/' + path, fragment);
+            this.authContext.appendXML(path, fragment);
 
         } else if (path.equals("/application")
                    || path.startsWith("/application/") ) {
@@ -292,7 +292,7 @@ implements SessionContext {
             this.authContext.appendXML("/applications/" + applicationName + appPath, fragment);
 
         } else {
-            this.authContext.appendXML("/" + path, fragment);
+            this.authContext.appendXML(path, fragment);
         }
     }
 
@@ -318,7 +318,7 @@ implements SessionContext {
         } else if (path.startsWith("/authentication") ) {
 
             this.cleanParametersCache();
-            this.authContext.removeXML("/" + path);
+            this.authContext.removeXML(path);
 
         } else if (path.equals("/application") 
                    || path.startsWith("/application/") ) {
@@ -333,7 +333,7 @@ implements SessionContext {
             }
             this.authContext.removeXML("/applications/" + applicationName + appPath);
         } else {
-            this.authContext.removeXML("/" + path);
+            this.authContext.removeXML(path);
         }
     }
 
@@ -444,7 +444,7 @@ implements SessionContext {
             return true;
 
         } else if (path.startsWith("/authentication") ) {
-            return this.authContext.streamXML('/' + path, contentHandler, lexicalHandler);
+            return this.authContext.streamXML(path, contentHandler, lexicalHandler);
 
         } else if (path.equals("/application") || path.startsWith("/application/") ) {
             if (applicationName != null) {
@@ -457,7 +457,7 @@ implements SessionContext {
                 return this.authContext.streamXML("/applications/" + applicationName + appPath, contentHandler, lexicalHandler);
             }
         } else {
-            return this.authContext.streamXML('/' + path, contentHandler, lexicalHandler);
+            return this.authContext.streamXML(path, contentHandler, lexicalHandler);
         }
         return false;
     }
