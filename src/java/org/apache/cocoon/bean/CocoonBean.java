@@ -86,7 +86,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.29 2003/09/19 12:48:37 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.30 2003/09/22 22:51:02 joerg Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -686,7 +686,6 @@ public class CocoonBean extends CocoonWrapper {
         if (includeLinkExtensions == null) {
             return true;
         } else {
-            String extension = target.getExtension();
             return includeLinkExtensions.contains(target.getExtension());
         }
     }
