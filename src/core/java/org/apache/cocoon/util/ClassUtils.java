@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.util;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -76,77 +74,6 @@ public class ClassUtils {
      */
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
-    }
-
-    /**
-     * Tests if a class implements a given interface
-     *
-     * @return true if class implements given interface.
-     * @deprecated Will be removed 2 versions after 2.1.5
-     */
-    public static boolean implementsInterface(String className, String iface) throws Exception {
-        Class class1 = ClassUtils.loadClass (className);
-        Class class2 = ClassUtils.loadClass (iface);
-        return ClassUtils.implementsInterface(class1, class2);
-    }
-
-    /**
-     * Tests if a class implements a given interface
-     *
-     * @return true if class implements given interface.
-     * @deprecated Will be removed 2 versions after 2.1.5
-     */
-    public static boolean implementsInterface(Class class1, Class iface) {
-        return iface.isAssignableFrom (class1);
-    }
-
-    /**
-     * Determine the last modification date for this
-     * class file or its enclosing library
-     *
-     * @param aClass A class whose last modification date is queried
-     * @return The time the given class was last modified
-     * @exception IOException IOError
-     * @exception IllegalArgumentException The class was not loaded from a file
-     * or directory
-     * @deprecated Will be removed 2 versions after 2.1.5
-     */
-    public static long lastModified(Class aClass)
-        throws IOException, IllegalArgumentException  {
-        URL url = aClass.getProtectionDomain().getCodeSource().getLocation();
-
-        if (!url.getProtocol().equals("file")) {
-            throw new IllegalArgumentException("Class was not loaded from a file url");
-        }
-
-        File directory = new File(url.getFile());
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException("Class was not loaded from a directory");
-        }
-
-        String className = aClass.getName();
-        String basename = className.substring(className.lastIndexOf(".") + 1);
-
-        File file = new File(directory, basename + ".class");
-
-        return file.lastModified();
-    }
-
-    /**
-     * Gets the absolute pathname of the class file
-     * containing the specified class name, as prescribed
-     * by the current classpath.
-     *
-     * @param aClass Name of the class.
-     * @deprecated Will be removed 2 versions after 2.1.5
-     */
-     public static String which(Class aClass) {
-        String path = null;
-        try {
-            path = aClass.getProtectionDomain().getCodeSource().getLocation().toString();
-        } catch (Throwable t){
-        }
-        return path;
     }
 
 }

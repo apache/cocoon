@@ -59,6 +59,7 @@ import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
@@ -177,8 +178,10 @@ public class CocoonServlet extends HttpServlet {
         
         super.init(conf);
 
+        this.servletContextPath = this.servletContext.getRealPath("/");
+
         // initialize settings
-        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader);
+        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader, this.servletContextPath);
 
         this.settings = Core.createSettings(env);
 
@@ -206,7 +209,6 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
-        this.servletContextPath = this.servletContext.getRealPath("/");
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
@@ -1301,34 +1303,61 @@ public class CocoonServlet extends HttpServlet {
 
         private final ServletConfig config;
         private final ClassLoader   classLoader;
-        
-        public ServletBootstrapEnvironment(ServletConfig config, ClassLoader cl) {
+        private final String        contextPath;
+        public ServletBootstrapEnvironment(ServletConfig config, ClassLoader cl, String path) {
             this.config = config;
             this.classLoader = cl;
+            this.contextPath = path;
         }
 
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#log(java.lang.String)
+         */
         public void log(String message) {
             this.config.getServletContext().log(message);
         }
         
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#log(java.lang.String, java.lang.Throwable)
+         */
         public void log(String message, Throwable error) {
             this.config.getServletContext().log(message, error);            
         }
         
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getInputStream(java.lang.String)
+         */
         public InputStream getInputStream(String path) {
             return this.config.getServletContext().getResourceAsStream(path);
         }
         
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configure(org.apache.cocoon.configuration.Settings)
+         */
         public void configure(Settings settings) {
             // fill from the servlet parameters
             SettingsHelper.fill(settings, this.config);                
         }
 
-        /* (non-Javadoc)
+        /**
          * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getInitClassLoader()
          */
         public ClassLoader getInitClassLoader() {
             return this.classLoader;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getEnvironmentContext()
+         */
+        public Context getEnvironmentContext() {
+            return new HttpContext(this.config.getServletContext());
+        }
+
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getContextPath()
+         */
+        public String getContextPath() {
+            return this.contextPath;
         }
     }
 
