@@ -81,7 +81,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.28 2004/07/06 20:21:51 vgritsenko Exp $
+ * @version CVS $Id: Cocoon.java,v 1.29 2004/07/08 12:42:27 vgritsenko Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -620,20 +620,20 @@ public class Cocoon
         }
 
         environment.startingProcessing();
+        final int environmentDepth = EnvironmentHelper.markEnvironment();
         EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
             if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
-                this.debug(environment, false);
+                debug(environment, false);
             }
 
 
             if (this.requestListener != null) {
                 try {
                     requestListener.onRequestStart(environment);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                 }
             }
@@ -643,8 +643,7 @@ public class Cocoon
                 if (this.requestListener != null) {
                     try {
                         requestListener.onRequestEnd(environment);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                     }
                 }
@@ -655,13 +654,11 @@ public class Cocoon
                     if (this.requestListener != null) {
                         try {
                             requestListener.onRequestEnd(environment);
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                         }
                     }
-                }
-                finally {
+                } finally {
                     this.componentManager.release(processor);
                 }
             }
@@ -673,8 +670,7 @@ public class Cocoon
             if (this.requestListener != null) {
                 try {
                     requestListener.onRequestException(environment, any);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                 }
             }
@@ -688,8 +684,7 @@ public class Cocoon
                 --activeRequestCount;
             }
 
-            // TODO (CZ): This is only for testing - remove it later on
-            EnvironmentHelper.checkEnvironment(getLogger());
+            EnvironmentHelper.checkEnvironment(environmentDepth, getLogger());
         }
     }
 
