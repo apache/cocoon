@@ -62,6 +62,7 @@
         <convertors default="formatting" plain="millis">
           <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDateConvertorBuilder"/>
           <convertor name="millis" src="org.apache.cocoon.forms.datatype.convertor.MillisDateConvertorBuilder"/>
+          <convertor name="icu4j" src="org.apache.cocoon.forms.datatype.convertor.Icu4jDateConvertorBuilder"/>
         </convertors>
       </datatype>
       <datatype name="boolean" src="org.apache.cocoon.forms.datatype.typeimpl.BooleanTypeBuilder">
