@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.6 2004/05/07 22:04:20 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -118,10 +118,15 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         childWidget = parent.lookupWidget(id);
             
         if (childWidget == null) {
+            String containerId = parent.getRequestParameterName();
+            if(containerId == null || "".equals(containerId)) {
+                containerId = "top-level form-widget";
+            } else {
+                containerId = "container \"" + containerId + "\"";
+            }
             throw new RuntimeException(getClass().getName() + ": Widget \"" +
-                    id + "\" does not exist in container \"" +
-                    parent.getRequestParameterName() + "\" (" +
-                    parent.getLocation() + ").");
+                    id + "\" does not exist in the " + containerId +
+                    " (" + parent.getLocation() + ").");
         }
         
         return childWidget;

@@ -20,20 +20,20 @@ import java.io.CharArrayWriter;
 import org.apache.cocoon.components.serializers.encoding.XMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.apache.cocoon.components.serializers.util.Namespaces;
+import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
 /**
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.5 2004/04/30 22:57:22 joerg Exp $
+ * @version CVS $Id$
  */
 public class XMLSerializer extends EncodingSerializer {
 
     private static final XMLEncoder XML_ENCODER = new XMLEncoder();
 
-    private static final char S_EOL[] =
-            System.getProperty("line.separator").toCharArray();
+    private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
 
     private static final char S_DOCUMENT_1[] = "<?xml version=\"1.0".toCharArray();
     private static final char S_DOCUMENT_2[] = "\" encoding=\"".toCharArray();
@@ -341,7 +341,7 @@ public class XMLSerializer extends EncodingSerializer {
     /**
      * Receive notification of character data.
      */
-    public void characters(char data[], int start, int length)
+    public void charactersImpl(char data[], int start, int length)
     throws SAXException {
         if (this.processing_prolog) return;
         this.closeElement(false);
@@ -353,7 +353,7 @@ public class XMLSerializer extends EncodingSerializer {
      */
     public void ignorableWhitespace(char data[], int start, int length)
     throws SAXException {
-        this.characters(data, start, length);
+        this.charactersImpl(data, start, length);
     }
 
     /**
