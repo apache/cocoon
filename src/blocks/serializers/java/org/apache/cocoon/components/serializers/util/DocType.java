@@ -15,14 +15,24 @@
  */
 package org.apache.cocoon.components.serializers.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * The <code>DocType</code> class encapsulates informations regarding
  * the document type public and system IDs and root element name.
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: DocType.java,v 1.2 2004/04/30 19:34:46 pier Exp $
+ * @version CVS $Id$
  */
 public class DocType {
+
+    private static final char S_DOCTYPE_1[] = "<!DOCTYPE ".toCharArray();
+    private static final char S_DOCTYPE_2[] = " PUBLIC \"".toCharArray();
+    private static final char S_DOCTYPE_3[] = "\" \"".toCharArray();
+    private static final char S_DOCTYPE_4[] = " SYSTEM \"".toCharArray();
+    private static final char S_DOCTYPE_5[] = "\">".toCharArray();
+    private static final char S_DOCTYPE_6[] = ">".toCharArray();
+    
     /** The name of the root element. */
     protected String root_name = null;
     /** The configured system identifier. */
@@ -93,6 +103,33 @@ public class DocType {
     }
 
     /**
+     * Return the document type declaration as a string
+     */
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+
+        buf.append(S_DOCTYPE_1); // [<!DOCTYPE ]
+        buf.append(this.root_name);
+        if (this.public_id != null) {
+            buf.append(S_DOCTYPE_2); // [ PUBLIC "]
+            buf.append(this.public_id);
+            /* This is wrong in XML, but not in SGML/HTML */
+            if (this.system_id != null) {
+                buf.append(S_DOCTYPE_3); // [" "]
+                buf.append(this.system_id);
+            }
+            buf.append(S_DOCTYPE_5); // [">]
+        } else if (this.system_id != null) {
+            buf.append(S_DOCTYPE_4); // [ SYSTEM "]
+            buf.append(this.system_id);
+            buf.append(S_DOCTYPE_5); // [">]
+        } else {
+            buf.append(S_DOCTYPE_6); // [>]
+        }
+        return(buf.toString());
+    }
+
+    /**
      * Check if the specified object is equal to this <code>DocType</code>
      * instance.
      */
@@ -103,18 +140,11 @@ public class DocType {
         if (!(object instanceof DocType)) return(false);
         DocType doctype = (DocType)object;
 
-        if (this.public_id == null) {
-            if (doctype.public_id != null) return(false);
-        } else {
-            if (!this.public_id.equals(doctype.public_id)) return(false);
+        if (StringUtils.equals(this.public_id, doctype.public_id)
+            && StringUtils.equals(this.system_id, doctype.system_id)
+            && this.root_name.equals(doctype.root_name)) {
+            return true;
         }
-        
-        if (this.system_id == null) {
-            if (doctype.system_id != null) return(false);
-        } else {
-            if (!this.system_id.equals(doctype.system_id)) return(false);
-        }
-
-        return(this.root_name.equals(doctype.root_name));
+        return false;
     }
 }
