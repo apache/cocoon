@@ -73,7 +73,7 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * TODO: Handle MultiThreading
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.2 2003/07/15 02:02:02 ghoward Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.3 2003/07/20 21:08:06 ghoward Exp $
  */
 public class EventAwareCacheImpl 
         extends CacheImpl 
@@ -160,9 +160,7 @@ public class EventAwareCacheImpl
      * orphaned Event/PipelineKey mappings.
      */
 	public void initialize() throws Exception {
-		if (!m_eventRegistry.init()) {
-            // Is this OK in initialize?  I think it depends 
-            // on the Store(s) being initialized first.
+		if (!m_eventRegistry.wasRecoverySuccessful()) {
             super.clear();
         } else {
             // Not sure if we want this overhead here, but where else?
