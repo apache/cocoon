@@ -265,8 +265,10 @@ public class ContinuationsManagerImpl
      * @return the generated <code>WebContinuation</code> with unique identifier
      */
     private WebContinuation generateContinuation(Object kont,
-            WebContinuation parent, int ttl, String interpreterId,
-            ContinuationsDisposer disposer) {
+                                                 WebContinuation parent,
+                                                 int ttl,
+                                                 String interpreterId,
+                                                 ContinuationsDisposer disposer) {
 
         char[] result = new char[bytes.length * 2];
         WebContinuation wk = null;
