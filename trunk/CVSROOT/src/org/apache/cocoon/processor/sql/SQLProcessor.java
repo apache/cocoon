@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.11 $ $Date: 2000-03-29 06:45:35 $
+ * @version $Revision: 1.12 $ $Date: 2000-05-12 17:27:45 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -150,6 +150,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
      * Process a single query node
      */
     protected void processQuery(Document document, Dictionary parameters, Element query_element, Properties query_props, Connection conn) throws Exception {
+		boolean auto_commit = conn.getAutoCommit();
         HttpServletRequest req = (HttpServletRequest)parameters.get("request");
         String doc_element_name = query_props.getProperty("doc-element");
         String row_element_name = query_props.getProperty("row-element");
@@ -290,12 +291,17 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                 }
                 rs.close();
             }
-            st.close(); conn.commit();
+            st.close(); 
+			if (!auto_commit) {
+				conn.commit();
+			}
             query_element.getParentNode().replaceChild(results_node,query_element);
         } catch (Exception e) {
             Element error_element = Utils.createErrorElement(document,namespace,query_props,e);
             query_element.getParentNode().replaceChild(error_element,query_element);
-            conn.rollback();
+			if (!auto_commit) {
+            	conn.rollback();
+			}
         } finally {
           conn.close();
         }
