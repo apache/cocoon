@@ -48,22 +48,18 @@
 package org.apache.garbage.serializer;
 
 import java.io.CharArrayWriter;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 
 import org.apache.garbage.serializer.encoding.Encoder;
 import org.apache.garbage.serializer.encoding.XMLEncoder;
 import org.apache.garbage.serializer.util.DocType;
 import org.apache.garbage.serializer.util.Namespaces;
-
 import org.xml.sax.SAXException;
 
 /**
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XMLSerializer.java,v 1.1 2003/06/21 21:11:48 pier Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.2 2003/06/24 16:59:19 cziegeler Exp $
  */
 public class XMLSerializer extends EncodingSerializer {
 

@@ -48,7 +48,7 @@
 package org.apache.garbage;
 
 import java.util.Iterator;
-import java.util.List;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.garbage.serializer.Serializer;
 import org.apache.garbage.tree.Event;
@@ -63,7 +63,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: Processor.java,v 1.1 2003/06/21 21:11:48 pier Exp $
+ * @version CVS $Id: Processor.java,v 1.2 2003/06/24 16:59:27 cziegeler Exp $
  */
 public class Processor implements Runtime {
 

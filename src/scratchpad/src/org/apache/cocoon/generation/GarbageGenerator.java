@@ -1,4 +1,4 @@
-/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/*
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -49,50 +49,51 @@
 
 */
 package org.apache.cocoon.generation;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.AbstractTransformer;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Variables;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.garbage.Processor;
 import org.apache.garbage.parser.Parser;
 import org.apache.garbage.tree.Tree;
 import org.apache.garbage.tree.TreeException;
-import org.apache.garbage.Processor;
-import org.apache.garbage.Processor;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.IOException;
-import org.apache.cocoon.ProcessingException;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
 
 public class GarbageGenerator extends ComposerGenerator {
 
-    private XMLConsumer consumer;
-    private JXPathContext jxpathContext;
-    private static Map cache = new HashMap();
-    private Source source;
+    // FIXME - We should not use a static variable here: use a component instead
+    protected static Map cache = new HashMap();
 
+    protected JXPathContext jxpathContext;
+    protected Source source;
+
+    /**
+     * Recyclable
+     */
     public void recycle() {
+        if ( this.source != null ) {
+            this.resolver.release( this.source );
+            this.source = null;
+        }
         super.recycle();
-        consumer = null;
-        jxpathContext = null;
-        source = null;
+        this.jxpathContext = null;
     }
 
-    private static class CacheEntry {
+    protected static class CacheEntry {
         Tree tree;
         long compileTime;
     }
@@ -128,7 +129,7 @@ public class GarbageGenerator extends ComposerGenerator {
                    parameters);
     }
     
-    private void setContext(Object contextObject,
+    protected void setContext(Object contextObject,
                             WebContinuation kont,
                             Object request,
                             Object response,
@@ -146,12 +147,8 @@ public class GarbageGenerator extends ComposerGenerator {
         varScope.declareVariable("parameters", parameters);
     }
 
-    public void setConsumer(XMLConsumer consumer) {
-        this.consumer = consumer;
-    }
-
     public void generate() 
-        throws IOException, SAXException, ProcessingException {
+    throws IOException, SAXException, ProcessingException {
         try {
             CacheEntry t;
             synchronized (cache) {
@@ -168,7 +165,7 @@ public class GarbageGenerator extends ComposerGenerator {
                     cache.put(source.getURI(), t);
                 }
             }
-            new Processor(consumer, consumer).process(t.tree, jxpathContext);
+            new Processor(this.xmlConsumer, this.xmlConsumer).process(t.tree, jxpathContext);
         } catch (TreeException exc) {
             throw new SAXParseException(exc.getMessage(), exc, exc);
         }

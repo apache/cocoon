@@ -1,4 +1,4 @@
-/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/*
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -42,28 +42,32 @@
  (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
+
 */
 package org.apache.cocoon.components.flow.javascript.fom;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.Wrapper;
-import org.mozilla.javascript.continuations.Continuation;
+import java.io.OutputStream;
+import java.util.Map;
+
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.components.flow.ContinuationsManager;
+import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.logger.Logger;
-import java.util.Map;
-import java.io.OutputStream;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
+import org.mozilla.javascript.continuations.Continuation;
 /**
  * Implementation of FOM (Flow Object Model)
  */
