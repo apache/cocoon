@@ -28,6 +28,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.impl.PortletPortalManager;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
@@ -48,7 +50,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletWindowAspect.java,v 1.5 2004/03/15 11:38:23 cziegeler Exp $
+ * @version CVS $Id: PortletWindowAspect.java,v 1.6 2004/03/15 14:29:09 cziegeler Exp $
  */
 public final class PortletWindowAspect 
 extends AbstractAspect 
@@ -117,26 +119,32 @@ implements Contextualizable {
                     ws = WindowState.NORMAL;
                 }
                 
-                if ( !ws.equals(WindowState.MINIMIZED) ) {
+                Event fullScreenEvent = null;
+                if ( ws.equals(WindowState.MAXIMIZED) ) {
+                    fullScreenEvent = new FullScreenCopletEvent( copletInstanceData, null );
+                } 
+                
+                if ( !ws.equals(WindowState.MINIMIZED) && !ws.equals(WindowState.MAXIMIZED)) {
                     PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                     url.clearParameters();
                     url.setWindowState(WindowState.MINIMIZED);
                     
-                    XMLUtils.createElement(contenthandler, "minimize-uri", url.toString());
+                    XMLUtils.createElement(contenthandler, "minimize-uri", url.toString(fullScreenEvent));
                 }
 
                 if ( !ws.equals(WindowState.NORMAL)) {
                     PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                     url.clearParameters();
                     url.setWindowState(WindowState.NORMAL);
-                    XMLUtils.createElement(contenthandler, "maximize-uri", url.toString());
+                    XMLUtils.createElement(contenthandler, "maximize-uri", url.toString(fullScreenEvent));
                 }
 
                 if ( !ws.equals(WindowState.MAXIMIZED)) {
+                    fullScreenEvent = new FullScreenCopletEvent( copletInstanceData, layout );
                     PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                     url.clearParameters();
                     url.setWindowState(WindowState.MAXIMIZED);
-                    XMLUtils.createElement(contenthandler, "fullscreen-uri", url.toString());
+                    XMLUtils.createElement(contenthandler, "fullscreen-uri", url.toString(fullScreenEvent));
                 }
 
                 // portlet modes

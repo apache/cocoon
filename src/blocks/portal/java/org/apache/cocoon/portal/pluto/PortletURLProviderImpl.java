@@ -39,7 +39,7 @@ import org.apache.pluto.services.information.PortletURLProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletURLProviderImpl.java,v 1.2 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id: PortletURLProviderImpl.java,v 1.3 2004/03/15 14:29:09 cziegeler Exp $
  */
 public class PortletURLProviderImpl 
        implements PortletURLProvider, CopletInstanceEvent {
@@ -187,7 +187,9 @@ public class PortletURLProviderImpl
             
             //TODO - secure
             List l = new ArrayList();
-            l.add(additionalEvent);
+            if ( additionalEvent != null ) {
+                l.add(additionalEvent);
+            }
             l.add(this);
             return linkService.getLinkURI(l);
             
