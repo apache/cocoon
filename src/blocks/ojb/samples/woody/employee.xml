@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: employee.xml,v 1.1 2003/09/28 04:31:11 antonio Exp $-->
+<!-- $Id: employee.xml,v 1.2 2003/10/08 16:42:44 antonio Exp $-->
 <!--
 
  ============================================================================
@@ -54,16 +54,16 @@
  * Employee Definition
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/09/28 04:31:11 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/10/08 16:42:44 $
 -->
 <wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
     xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
     <wd:field id="id" required="true">
         <wd:label>ID :</wd:label>
-        <wd:datatype base="long">
-            <wd:validation>
-                <wd:range min="0"/>
+        <wd:datatype base="integer">
+        <wd:validation>
+                <wd:range min="5"/>
             </wd:validation>
         </wd:datatype>
     </wd:field>
@@ -79,10 +79,7 @@
 
     <wd:field id="department_id">
         <wd:label>deparment ID :</wd:label>
-        <wd:datatype base="long">
-            <wd:validation>
-                <wd:range min="0"/>
-            </wd:validation>
+        <wd:datatype base="integer">
         </wd:datatype>
     </wd:field>
 

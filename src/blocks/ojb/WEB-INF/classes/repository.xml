@@ -47,10 +47,10 @@ using the MetadataManager.
         <field-descriptor name="id"   column="ID"   jdbc-type="INTEGER" primarykey="true"/>
         <field-descriptor name="name" column="NAME" jdbc-type="VARCHAR"/>
     </class-descriptor>
-      
+
     <class-descriptor class="org.apache.cocoon.ojb.samples.Employee" table="EMPLOYEE">
         <field-descriptor name="id"             column="ID"             jdbc-type="INTEGER" primarykey="true"/>
-        <field-descriptor name="departamentId" column="DEPARTMENT_ID" jdbc-type="VARCHAR"/>
+        <field-descriptor name="departmentId" column="DEPARTMENT_ID" jdbc-type="VARCHAR"/>
         <field-descriptor name="name"           column="NAME"           jdbc-type="VARCHAR"/>
    </class-descriptor>
 
