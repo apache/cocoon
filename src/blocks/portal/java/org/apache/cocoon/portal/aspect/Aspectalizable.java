@@ -60,7 +60,7 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.5 2003/05/21 13:06:05 cziegeler Exp $
+ * @version CVS $Id: Aspectalizable.java,v 1.6 2003/05/22 06:54:52 cziegeler Exp $
  */
 public interface Aspectalizable {
 
@@ -91,6 +91,8 @@ public interface Aspectalizable {
      */
     Map getPersistentAspectDatas();
 
+    void addPersistenAspectData(String aspectName, Object data);
+    
     /**
      * Is this aspect supported
      */
