@@ -54,7 +54,7 @@ public class JavaSelectionListBuilder extends AbstractLogEnabled implements
 				JavaSelectionList list = (JavaSelectionList) clasz
 						.newInstance();
 				LifecycleHelper.setupComponent(list, getLogger(), null,
-						this.manager, null, null, true);
+						this.manager, null, true);
 				list.setDatatype(datatype);
 				list.setNullable(nullable);
                 // pass the attributes to the SelectionList

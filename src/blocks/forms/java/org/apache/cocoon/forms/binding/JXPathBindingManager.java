@@ -86,7 +86,6 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
                                        getLogger(),
                                        this.avalonContext,
                                        this.manager,
-                                       null, // RoleManager,
                                        configuration.getChild("bindings"));
     }
 
