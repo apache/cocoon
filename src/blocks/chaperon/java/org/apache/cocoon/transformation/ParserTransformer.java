@@ -110,7 +110,7 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.1 2003/03/09 00:02:49 pier Exp $
+ * @version CVS $Id: ParserTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class ParserTransformer extends ParserProcessorAdapter
   implements Transformer, LogEnabled, Composable, Parameterizable,
@@ -275,7 +275,7 @@ public class ParserTransformer extends ParserProcessorAdapter
      *
      * @return The generated key hashes the src
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         return this.grammarSource.getURI();
     }
 
@@ -285,7 +285,7 @@ public class ParserTransformer extends ParserProcessorAdapter
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return this.grammarSource.getValidity();
     }
 

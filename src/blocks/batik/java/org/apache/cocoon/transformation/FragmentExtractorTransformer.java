@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.1 2003/03/09 00:02:39 pier Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Composable, Disposable, Recyclable {
@@ -182,7 +182,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return "1";
     }
 
@@ -192,7 +192,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

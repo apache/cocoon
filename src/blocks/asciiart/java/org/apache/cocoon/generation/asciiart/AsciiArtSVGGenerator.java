@@ -79,7 +79,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * A simple AsciiArt text SVG XML generator.
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
+ * @version CVS $Id: AsciiArtSVGGenerator.java,v 1.3 2003/03/19 15:42:15 cziegeler Exp $
  * @since Cocoon 2.1, 22 December 2002
  */
 public class AsciiArtSVGGenerator extends ComposerGenerator
@@ -165,7 +165,7 @@ public class AsciiArtSVGGenerator extends ComposerGenerator
      *
      *@return    The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return this.inputSource.getURI();
     }
 
@@ -176,7 +176,7 @@ public class AsciiArtSVGGenerator extends ComposerGenerator
      *@return    The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return this.inputSource.getValidity();
     }
 

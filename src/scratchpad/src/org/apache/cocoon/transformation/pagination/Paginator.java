@@ -86,7 +86,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: Paginator.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
+ * @version CVS $Id: Paginator.java,v 1.3 2003/03/19 15:42:16 cziegeler Exp $
  */
 public class Paginator extends AbstractTransformer
     implements Composable, Disposable, CacheableProcessingComponent {
@@ -201,7 +201,7 @@ public class Paginator extends AbstractTransformer
      * @return The generated key or <code>null</code> if the component
      *              is currently not cacheable.
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         if (this.inputSource.getLastModified() != 0) {
             return this.inputSource.getURI() + page;
         } else {
@@ -217,7 +217,7 @@ public class Paginator extends AbstractTransformer
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         if (this.inputSource.getLastModified() != 0) {
             AggregatedValidity validity = new AggregatedValidity();
             validity.add(new TimeStampValidity(page));

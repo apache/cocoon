@@ -69,7 +69,7 @@ import com.lowagie.text.xml.SAXiTextHandler;
 
 /**
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: iTextSerializer.java,v 1.2 2003/03/11 17:44:20 vgritsenko Exp $
+ * @version CVS $Id: iTextSerializer.java,v 1.3 2003/03/19 15:42:15 cziegeler Exp $
  */
 final public class iTextSerializer extends AbstractSerializer implements Configurable, CacheableProcessingComponent {
 
@@ -109,11 +109,11 @@ final public class iTextSerializer extends AbstractSerializer implements Configu
         this.contentHandler = new SAXiTextHandler(document);
     }
 
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return "1";
     }
 
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

@@ -90,7 +90,7 @@ import java.io.OutputStream;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.1 2003/03/09 00:02:38 pier Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -295,7 +295,7 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return "1";
     }
 
@@ -307,7 +307,7 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

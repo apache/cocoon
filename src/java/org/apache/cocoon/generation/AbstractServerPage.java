@@ -72,7 +72,7 @@ import java.io.Serializable;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: AbstractServerPage.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: AbstractServerPage.java,v 1.2 2003/03/19 15:42:13 cziegeler Exp $
  */
 public abstract class AbstractServerPage
   extends ServletGenerator implements CompiledComponent, CacheableProcessingComponent, Recomposable {
@@ -145,7 +145,7 @@ public abstract class AbstractServerPage
      * @return The generated key or <code>null</code> if the component
      *         is currently not cacheable.
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         return null;
     }
 
@@ -158,7 +158,7 @@ public abstract class AbstractServerPage
      *         is the default if hasContentChange() gives false otherwise
      *         <code>null</code> will be returned.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         if (hasContentChanged(request))
             return null;
         else

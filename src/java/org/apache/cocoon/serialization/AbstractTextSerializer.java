@@ -84,7 +84,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.1 2003/03/09 00:09:36 pier Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
  */
 public abstract class AbstractTextSerializer
 extends AbstractSerializer
@@ -280,7 +280,7 @@ implements Configurable, CacheableProcessingComponent {
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return "1";
     }
 
@@ -292,7 +292,7 @@ implements Configurable, CacheableProcessingComponent {
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
 

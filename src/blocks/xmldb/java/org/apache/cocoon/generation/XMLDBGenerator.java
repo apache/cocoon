@@ -91,7 +91,7 @@ import java.util.Map;
  * slash in the base tag is important!
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBGenerator.java,v 1.1 2003/03/09 00:06:49 pier Exp $
+ * @version CVS $Id: XMLDBGenerator.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
  * @deprecated Use the XML:DB pseudo protocol instead.
  */
 public class XMLDBGenerator extends ComposerGenerator
@@ -180,14 +180,7 @@ public class XMLDBGenerator extends ComposerGenerator
     /**
      * The component isn't cached (yet)
      */
-    public SourceValidity generateValidity() {
-        return null;
-    }
-
-    /**
-     * The component isn't cached (yet)
-     */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return null;
     }
 

@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for retrieving SourceProperties, SourcePermission etc.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.1 2003/03/09 00:06:22 pier Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class SourceDescriptionGenerator extends ComposerGenerator
   implements CacheableProcessingComponent, Recyclable {
@@ -209,7 +209,7 @@ public class SourceDescriptionGenerator extends ComposerGenerator
      *
      * @return The generated key hashes the src
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
 
         StringBuffer key = new StringBuffer();
 
@@ -237,7 +237,7 @@ public class SourceDescriptionGenerator extends ComposerGenerator
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
 
         AggregatedValidity validity = new AggregatedValidity();
 

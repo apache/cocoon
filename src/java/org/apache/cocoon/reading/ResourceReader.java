@@ -96,7 +96,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ResourceReader.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.2 2003/03/19 15:42:17 cziegeler Exp $
  */
 public class ResourceReader extends AbstractReader implements CacheableProcessingComponent {
 
@@ -156,7 +156,7 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         return inputSource.getURI();
     }
 
@@ -166,7 +166,7 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return inputSource.getValidity();
     }
 

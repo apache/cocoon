@@ -157,7 +157,7 @@ import java.util.Properties;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.1 2003/03/09 00:06:50 pier Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Configurable, Initializable {
@@ -263,7 +263,7 @@ public class XMLDBTransformer extends AbstractTransformer
      * @return The generated key or <code>null</code> if the component
      *              is currently not cacheable.
      */
-    public Serializable generateKey() {
+    public Serializable getKey() {
         return null;
     }
 
@@ -275,7 +275,7 @@ public class XMLDBTransformer extends AbstractTransformer
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         return null;
     }
 

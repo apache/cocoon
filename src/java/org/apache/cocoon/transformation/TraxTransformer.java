@@ -146,7 +146,7 @@ import java.util.Set;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.1 2003/03/09 00:09:40 pier Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -295,7 +295,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         Map map = this.getLogicSheetParameters();
         if (map == null) {
             return this.inputSource.getURI();
@@ -320,7 +320,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         /*
         * VG: Key is generated using parameter/value pairs,
         * so this information does not need to be verified again

@@ -110,7 +110,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.4 2003/03/19 15:42:14 cziegeler Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -249,7 +249,7 @@ public class EncodeURLTransformer
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable generateKey() {
+    public java.io.Serializable getKey() {
         if (this.isEncodeURLNeeded) {
             return null;
         } else {
@@ -263,7 +263,7 @@ public class EncodeURLTransformer
      * @return The generated validity object or <code>null</code> if the
      *         component is currently not cacheable.
      */
-    public SourceValidity generateValidity() {
+    public SourceValidity getValidity() {
         if (this.isEncodeURLNeeded) {
             return null;
         } else {
@@ -350,7 +350,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.4 2003/03/19 15:42:14 cziegeler Exp $
      */
     public class ElementAttributeMatching {
         /**
