@@ -40,6 +40,8 @@ import java.util.Stack;
 import java.util.TimeZone;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
@@ -48,7 +50,7 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.cocoon.transformation.ServiceableTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -325,7 +327,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.38 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.39 2004/04/01 16:50:32 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -2248,6 +2250,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             return this.startEvent;
         }
 
+
+        void recycle() {
+            startEvent = null;
+            lastEvent = null;
+            stack.clear();
+            locator = null;
+            charLocation = null;
+            charBuf = null;
+        }
+
         private void addEvent(Event ev) throws SAXException {
             if (ev == null) {
                 throw new NullPointerException("null event");
@@ -2680,14 +2692,22 @@ public class JXTemplateGenerator extends ServiceableGenerator {
      * you effectively recompile the template for every instance document)
      */
 
-    public static class TransformerAdapter extends AbstractTransformer {
+    public static class TransformerAdapter extends ServiceableTransformer {
         static class TemplateConsumer extends Parser implements XMLConsumer {
 
-            public TemplateConsumer(SourceResolver resolver, Map objectModel,
-                                    String src, Parameters parameters)
-                throws ProcessingException, SAXException, IOException {
+            public TemplateConsumer() {
                 this.gen = new JXTemplateGenerator();
+            }
+
+            public void setup(SourceResolver resolver, Map objectModel,
+                              String src, Parameters parameters) 
+                throws ProcessingException, SAXException, IOException {
                 this.gen.setup(resolver, objectModel, null, parameters);
+            }
+
+            public void service(ServiceManager manager) 
+                throws ServiceException {
+                this.gen.service(manager);
             }
 
             public void endDocument() throws SAXException {
@@ -2700,21 +2720,32 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 gen.setConsumer(consumer);
             }
 
+            void recycle() {
+                super.recycle();
+                gen.recycle();
+            }
+
             JXTemplateGenerator gen;
         }
 
-        TemplateConsumer templateConsumer;
+        TemplateConsumer templateConsumer = new TemplateConsumer();
 
         public void recycle() {
             super.recycle();
-            templateConsumer = null;
+            templateConsumer.recycle();
         }
 
         public void setup(SourceResolver resolver, Map objectModel,
                           String src, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
-            templateConsumer = new TemplateConsumer(resolver, objectModel,
-                                                    src, parameters);
+            super.setup(resolver, objectModel, src, parameters);
+            templateConsumer.setup(resolver, objectModel, src, parameters);
+        }
+
+        public void service(ServiceManager manager) 
+            throws ServiceException {
+            super.service(manager);
+            templateConsumer.service(manager);
         }
 
         public void setConsumer(XMLConsumer xmlConsumer) {
