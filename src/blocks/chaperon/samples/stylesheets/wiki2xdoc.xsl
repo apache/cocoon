@@ -116,7 +116,12 @@
       </link>
      </xsl:when>
      <xsl:otherwise>
+      <!--
       <link href="http://wiki.cocoondev.org/Wiki.jsp?page={$href}">
+       <xsl:value-of select="$text"/>
+      </link>
+        -->
+      <link href="{$href}.html">
        <xsl:value-of select="$text"/>
       </link>
      </xsl:otherwise>
@@ -138,7 +143,12 @@
       </link>
      </xsl:when>
      <xsl:otherwise>
+      <!--
       <link href="http://wiki.cocoondev.org/Wiki.jsp?page={$href}">
+       <xsl:value-of select="$href"/>
+      </link>
+        -->
+      <link href="{$href}.html">
        <xsl:value-of select="$href"/>
       </link>
      </xsl:otherwise>
