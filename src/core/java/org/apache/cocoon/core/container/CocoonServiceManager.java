@@ -128,8 +128,7 @@ implements ServiceManager, Configurable {
 
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
 
-                        handler = this.getComponentHandler( role,
-                                                       componentClass,
+                        handler = this.getComponentHandler( componentClass,
                                                        configuration,
                                                        this);
 
@@ -459,8 +458,7 @@ implements ServiceManager, Configurable {
                 this.getLogger().debug( "Attempting to get handler for role [" + role.toString() + "]" );
             }
 
-            final AbstractComponentHandler handler = this.getComponentHandler( role.toString(),
-                                                                  component,
+            final AbstractComponentHandler handler = this.getComponentHandler( component,
                                                                   configuration,
                                                                   this);
 

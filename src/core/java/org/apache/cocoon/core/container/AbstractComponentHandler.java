@@ -51,8 +51,6 @@ public abstract class AbstractComponentHandler {
     /**
      * Looks up and returns a component handler for a given component class.
      *
-     * @param role           The role name of the component. This must be
-     *                       a fully-qualified classname
      * @param componentClass Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
@@ -63,8 +61,7 @@ public abstract class AbstractComponentHandler {
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    public static AbstractComponentHandler getComponentHandler( final String role,
-                                                        final Class componentClass,
+    public static AbstractComponentHandler getComponentHandler( final Class componentClass,
                                                         final Configuration configuration,
                                                         final ServiceManager serviceManager,
                                                         final Context context,
@@ -99,7 +96,7 @@ public abstract class AbstractComponentHandler {
         }
         
         // Create the factory to use to create the instances of the Component.
-        ComponentFactory factory = new ComponentFactory( role,
+        ComponentFactory factory = new ComponentFactory( 
                                          componentClass,
                                          configuration,
                                          serviceManager,

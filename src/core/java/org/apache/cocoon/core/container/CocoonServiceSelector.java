@@ -349,8 +349,7 @@ implements ServiceSelector, Serviceable, Configurable {
         }
 
         try {
-            final AbstractComponentHandler handler = getComponentHandler( this.roleName,
-                                                                  component,
+            final AbstractComponentHandler handler = getComponentHandler( component,
                                                                   configuration,
                                                                   this.serviceManager);
 
