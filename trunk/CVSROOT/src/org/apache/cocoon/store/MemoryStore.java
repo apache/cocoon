@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.11 2000-04-08 10:17:36 stefano Exp $ --
+/*-- $Id: MemoryStore.java,v 1.12 2000-05-16 21:11:51 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,7 +67,7 @@ import org.apache.cocoon.framework.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:michel.lehon@outwares.com">Michel Lehon</a>
- * @version $Revision: 1.11 $ $Date: 2000-04-08 10:17:36 $
+ * @version $Revision: 1.12 $ $Date: 2000-05-16 21:11:51 $
  */
 
 public class MemoryStore implements Store, Status, Configurable, Runnable {
@@ -84,7 +84,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
     private int heapsize;
 
     /**
-     * Indicates the time in millis to sleep between memory checks.
+     * Indicates the time in seconds to sleep between memory checks.
      */ 
     private long interval;
  
@@ -119,7 +119,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
      *  <LI>heapsize = The size of the heap before cleanup starts. (Default: 60 Mb)</LI>
      *  <LI>usethread = use a cleanup daemon thread. (Default: true)</LI>
      *  <LI>threadpriority = priority to run cleanup thread (1-10). (Default: 10)</LI>
-     *  <LI>interval = time in millis to sleep between memory checks (Default: 100 millis)</LI> 
+     *  <LI>interval = time in seconds to sleep between memory checks (Default: 10 seconds)</LI> 
      * </UL>
      */
     public void init(Configurations conf) throws InitializationException {
@@ -131,7 +131,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
         try {
             this.freememory = Integer.parseInt((String)conf.get("freememory","1000000"));
             this.heapsize   = Integer.parseInt((String)conf.get("heapsize","60000000"));
-            this.interval   = Integer.parseInt((String)conf.get("interval","100"));
+            this.interval   = Integer.parseInt((String)conf.get("interval","10"));
             String pri = (String)conf.get("threadpriority");
             if (pri != null) { 
                 this.priority = Integer.parseInt(pri);
@@ -171,7 +171,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
             }
             
             try {
-                Thread.currentThread().sleep(this.interval);
+                Thread.currentThread().sleep(this.interval * 1000);
             } catch (InterruptedException ignore) {}
         }
     }
