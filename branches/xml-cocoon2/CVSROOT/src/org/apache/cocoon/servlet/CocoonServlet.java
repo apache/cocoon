@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
@@ -62,7 +63,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.79 $ $Date: 2001-04-05 16:57:10 $
+ * @version CVS $Revision: 1.1.4.80 $ $Date: 2001-04-06 14:18:09 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -159,8 +160,8 @@ public class CocoonServlet extends HttpServlet {
      * does so in a Servlet Engine neutral way.  It uses the
      * <code>ServletContext</code>'s <code>getRealPath</code> method
      * to get the Servlet 2.2 identified classes and lib directories.
-     * It iterates through every file in the lib directory and adds
-     * it to the classpath.
+     * It iterates in alphabetical order through every file in the
+     * lib directory and adds it to the classpath.
      *
      * Also, we add the files to the ClassLoader for the Cocoon system.
      * In order to protect ourselves from skitzofrantic classloaders,
@@ -180,7 +181,7 @@ public class CocoonServlet extends HttpServlet {
 
         if (root.isDirectory()) {
             File[] libraries = root.listFiles();
-
+            Arrays.sort(libraries);
             for (int i = 0; i < libraries.length; i++) {
                 buildClassPath.append(File.pathSeparatorChar)
                               .append(IOUtils.getFullFilename(libraries[i]));
