@@ -931,7 +931,7 @@
     <title>Quartz</title>
     <description>Quartz Scheduler</description>
     <used-by>Cron block</used-by>
-    <lib>optional/quartz-1.4.4.jar</lib>
+    <lib>optional/quartz-1.4.5.jar</lib>
     <homepage>http://sourceforge.net/projects/quartz/</homepage>
    </file>
 
