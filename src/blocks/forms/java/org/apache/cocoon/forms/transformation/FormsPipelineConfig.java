@@ -115,12 +115,6 @@ public class FormsPipelineConfig {
         
         Variables vars = jxpc.getVariables();
         vars.declareVariable("cocoon", cocoonOM);
-        // These four are deprecated!
-        // FIXME - We should add a warning if they are used
-        vars.declareVariable("continuation", wk);
-        vars.declareVariable("request", request);
-        vars.declareVariable("session", session);
-        vars.declareVariable("parameters", parameters);
         
         Locale localeParameter = null;
         String localeStr = parameters.getParameter("locale", null);
