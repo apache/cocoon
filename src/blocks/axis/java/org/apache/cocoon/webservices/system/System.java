@@ -16,7 +16,6 @@
 package org.apache.cocoon.webservices.system;
 
 import java.util.Properties;
-
 import org.apache.commons.lang.SystemUtils;
 
 /**
