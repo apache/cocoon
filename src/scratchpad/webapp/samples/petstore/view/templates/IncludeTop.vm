@@ -12,7 +12,15 @@
 <table background="images/bkg-topbar.gif" border="0" cellspacing="0" cellpadding="5" width="100%">
   <tbody>
   <tr>
-    <td><a href="index.do"><img border="0" src="images/logo-topbar.gif" /></a></td>
+    <td>
+      <form method="post" action="index.do">
+        <input type="image" border="0" src="images/logo-topbar.gif" />
+        <select name="view" width="14" align="left" value="Velocity">
+          <option value="Velocity">Velocity</option>
+          <option value="Xsp">Xsp</option>
+        </select>
+      </form>
+    </td>
     <td align="right"><a href="viewCart.do"><img border="0" name="img_cart" src="images/cart.gif" /></a>
       <img border="0" src="images/separator.gif" />
 
