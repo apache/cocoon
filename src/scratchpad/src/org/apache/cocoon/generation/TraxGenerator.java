@@ -63,6 +63,7 @@ import javax.xml.transform.sax.SAXResult;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.Flow;
 import org.apache.cocoon.components.jxdom.DocumentAdapter;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
@@ -89,10 +90,8 @@ public class TraxGenerator extends TraxTransformer implements Generator {
                       String src, Parameters parameters)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, parameters);
-        // FIX ME: When we decide proper way to pass "bean" and "kont"
-        Object bean = ((Environment)resolver).getAttribute("bean-dict");
-        WebContinuation kont = 
-            (WebContinuation)((Environment)resolver).getAttribute("kont");
+        Object bean = Flow.getContextObject(objectModel);
+        WebContinuation kont = Flow.getWebContinuation(objectModel);
         Map map = new HashMap();
         Request request = ObjectModelHelper.getRequest(objectModel);
         Response response = ObjectModelHelper.getResponse(objectModel);

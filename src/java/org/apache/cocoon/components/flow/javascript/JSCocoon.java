@@ -84,7 +84,7 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.9 2003/04/04 23:08:13 stefano Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.10 2003/05/07 04:36:33 coliver Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -184,9 +184,7 @@ public class JSCocoon extends ScriptableObject
     }
 
     /**
-     * Load the file specified as argument. Registers the file with the
-     * interpreter and then forces its loading by calling {@link
-     * JavaScriptInterpreter#checkForModifiedScripts}.
+     * Load the script file specified as argument.
      *
      * @param filename a <code>String</code> value
      * @return an <code>Object</code> value
@@ -264,7 +262,7 @@ public class JSCocoon extends ScriptableObject
         throws JavaScriptException
     {
         try {
-            environment.redirect(false,uri);
+            environment.redirect(false, uri);
         } catch (Exception e) {
             throw new JavaScriptException(e);
         }

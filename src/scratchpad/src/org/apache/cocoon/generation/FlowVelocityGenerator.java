@@ -61,6 +61,7 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.flow.Flow;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -186,7 +187,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.6 2003/04/22 20:03:42 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.7 2003/05/07 04:36:33 coliver Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -868,11 +869,11 @@ public class FlowVelocityGenerator extends ComposerGenerator
         this.resolverContext.put(CONTEXT_SOURCE_CACHE_KEY, new HashMap());
 
         // FIXME: Initialize the Velocity context. Use objectModel to pass these
-        final Object bean = ((Environment) resolver).getAttribute("bean-dict");
+        final Object bean = Flow.getContextObject(objectModel);
         if (bean != null) {
-            final WebContinuation kont =
-                (WebContinuation) ((Environment) resolver).getAttribute("kont");
-            
+
+            final WebContinuation kont = Flow.getWebContinuation(objectModel);
+
             // Hack? I use JXPath to determine the properties of the bean object
             final JXPathBeanInfo bi = JXPathIntrospector.getBeanInfo(bean.getClass());
             DynamicPropertyHandler h = null;
