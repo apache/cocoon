@@ -52,7 +52,6 @@ package org.apache.cocoon.caching.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
@@ -76,7 +75,7 @@ import org.apache.excalibur.store.Store;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.5 2003/07/31 14:28:18 cziegeler Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.6 2003/08/07 08:52:15 cziegeler Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -107,13 +106,11 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
 
     /**
      * Store a cached response
-     * @param objectModel all information about the request
      * @param key         the key used by the caching algorithm to identify the
      *                    request
      * @param response    the cached response
      */
-    public void store(Map              objectModel,
-                      Serializable     key,
+    public void store(Serializable     key,
                       CachedResponse   response)
     throws ProcessingException {
         try {
