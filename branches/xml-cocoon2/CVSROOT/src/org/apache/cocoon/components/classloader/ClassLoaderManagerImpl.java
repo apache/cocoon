@@ -1,0 +1,62 @@
+/*****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
+package org.apache.cocoon.components.classloader;
+
+import java.io.IOException;
+
+/**
+ * A singleton-like implementation of <code>ClassLoaderManager</code>
+ *
+ * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:09:53 $
+ */
+public class ClassLoaderManagerImpl implements ClassLoaderManager {
+  /**
+   * The single class loader instance
+   */
+  protected static RepositoryClassLoader instance = null;
+
+  /**
+   * A constructor that ensures only a single class loader instance exists
+   *
+   */
+  public ClassLoaderManagerImpl() {
+    if (instance == null) {
+      instance = new RepositoryClassLoader();
+    }
+  }
+
+  /**
+   * Add a directory to the proxied class loader
+   *
+   * @param directoryName The repository name
+   * @exception IOException If the directory is invalid
+   */
+  public void addDirectory(String directoryName) throws IOException {
+    instance.addDirectory(directoryName);
+  }
+
+  /**
+   * Load a class through the proxied class loader
+   *
+   * @param className The name of the class to be loaded
+   * @return The loaded class
+   * @exception ClassNotFoundException If the class is not found
+   */
+  public Class loadClass(String className) throws ClassNotFoundException {
+    return instance.loadClass(className);
+  }
+
+  /**
+   * Reinstantiate the proxied class loader to allow for class reloading
+   *
+   */
+  public synchronized void reinstantiate() {
+    instance = new RepositoryClassLoader();
+  }
+}

@@ -5,6 +5,72 @@
 
   <component  role="parser"    class="org.apache.cocoon.components.parser.XercesParser"/>
 
+  <!-- Start XSP -->
+  <component role="factory"
+    class="org.apache.arch.named.NamedComponentManagerImpl">
+
+      <component-type name="programming-language">
+
+        <component-instance name="java"
+          class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
+            <parameter name="compiler"
+              value="org.apache.cocoon.components.language.programming.java.Javac"/>
+            <parameter name="code-formatter"
+               value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
+            <parameter name="class-loader"
+               value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+        </component-instance>
+
+      </component-type>
+
+      <component-type name="markup-language">
+
+        <component-instance name="xsp"
+          class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
+            <parameter name="prefix" value="xsp"/>
+            <parameter name="uri" value="http://xml.apache.org/xsp"/>
+
+            <target-language name="java">
+              <parameter name="core-logicsheet"
+	        value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
+
+              <builtin-logicsheet>
+                 <parameter name="prefix" value="xsp-request"/>
+                 <parameter name="uri" value="http://xml.apache.org/xsp/request"/>
+                 <parameter name="href"
+		   value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+              </builtin-logicsheet>
+
+              <builtin-logicsheet>
+                 <parameter name="prefix" value="xsp-response"/>
+                 <parameter name="uri"
+		   value="http://xml.apache.org/xsp/response"/>
+                 <parameter name="href"
+		   value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+              </builtin-logicsheet>
+            </target-language>
+        </component-instance>
+      </component-type>
+  </component>
+
+  <component
+    role="serverpages-loader"
+    class="org.apache.cocoon.components.serverpages.ServerPagesLoaderImpl">
+      <parameter name="repository" value="/tmp/repository"/>
+      <parameter name="auto-reload" value="true"/>
+  </component>
+
+  <generator  name="serverpages" class="org.apache.cocoon.generators.ServerPagesProxy"/>
+
+  <!--
+  <component
+    role="class-loader"
+    class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"
+  />
+  -->
+
+  <!-- End XSP -->
+
   <generator  name="file"      class="org.apache.cocoon.generators.FileGenerator"/>
   <generator  name="request"   class="org.apache.cocoon.generators.RequestGenerator"/>
   <generator  name="directory" class="org.apache.cocoon.generators.DirectoryGenerator"/>
@@ -35,6 +101,24 @@
           <parameter name="contentType" value="text/html"/>
         </serializer>
       </process>
+
+      <!-- Start XSP -->
+      <process uri="simple-page.xsp" source="../samples/documents/simple-page.xsp">
+        <generator name="serverpages">
+          <!--
+          <parameter name="markup-language" value="xsp"/>
+          <parameter name="programming-language" value="java"/>
+          -->
+        </generator>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="../samples/documents/simple-page.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
+      <!-- End XSP -->
+
     </partition>
   </sitemap>
 </cocoon>
