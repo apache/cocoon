@@ -53,5 +53,5 @@
     <parameter name="auto-reload" value="true"/>
   </component>
 
-  <sitemap file="/opt/tomcatc2/webapps/cocoon/sitemap.xmap"/> 
+  <sitemap file="sitemap.xmap"/> 
 </cocoon>

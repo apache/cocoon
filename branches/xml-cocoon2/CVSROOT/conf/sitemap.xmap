@@ -59,8 +59,8 @@
   <map:pipeline>
 
    <map:match pattern="^welcome$"> 
-    <map:generate src="/opt/tomcatc2/webapps/cocoon/documents/welcome.xml"/> 
-    <map:transform src="/opt/tomcatc2/webapps/cocoon/stylesheets/simple-welcome2html.xsl"/> 
+    <map:generate src="documents/welcome.xml"/> 
+    <map:transform src="stylesheets/simple-welcome2html.xsl"/> 
     <map:serialize/> 
    </map:match>
 
@@ -89,7 +89,7 @@
    </map:match>
 
    <map:match pattern="^simple_dynamic_page$"> 
-    <map:generate src="documents/simple-dynamic-page.xsp"/> 
+    <map:generate type="serverpages" src="documents/simple-dynamic-page.xsp"/> 
     <map:transform src="stylesheets/dynamic-page2html.xsl"/> 
     <map:serialize> 
      <parameter name="contentType" value="text/html"/> 
