@@ -122,7 +122,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.6 2003/04/13 00:24:45 coliver Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.7 2003/04/13 00:34:44 coliver Exp $
  */
 
 public class JexlTransformer
@@ -1263,5 +1263,6 @@ public class JexlTransformer
         foreachVar = null;
         chooseStack = null;
         ifStack = null;
+        variables = null;
     }
 }
