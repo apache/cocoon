@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:source="http://apache.org/cocoon/description/2.0" xmlns:dav="DAV:" version="1.0">
+<xsl:stylesheet 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  xmlns:collection="http://apache.org/cocoon/collection/1.0" 
+  xmlns:dav="DAV:" 
+  version="1.0">
 
   <xsl:output indent="yes"/>
   <xsl:param name="contextPath" select="'/cocoon'"/>
@@ -8,28 +12,28 @@
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="{$contextPath}/samples/slide/users/"/>
-        <tab title="content" href="{$contextPath}/samples/slide/content/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="properties" href="{$contextPath}/samples/slide/properties/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="permissions" href="{$contextPath}/samples/slide/permissions/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="locks" href="{$contextPath}/samples/slide/locks/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="logout" href="{$contextPath}/samples/slide/logout.html"/>
+        <tab title="users" href="../users/"/>
+        <tab title="content" href="../content/{substring-after(child::node()/@uri,'@')}"/>
+        <tab title="properties" href="../properties/{substring-after(child::node()/@uri,'@')}"/>
+        <tab title="permissions" href="../permissions/{substring-after(child::node()/@uri,'@')}"/>
+        <tab title="locks" href="../locks/{substring-after(child::node()/@uri,'@')}"/>
+        <tab title="logout" href="../logout.html"/>
       </header>
       <body>
         <row>
-          <xsl:apply-templates select="source:source"/>
+          <xsl:apply-templates select="collection:resource|collection:collection"/>
         </row>
       </body>
     </document>
   </xsl:template>
 
-  <xsl:template match="source:source">
+  <xsl:template match="collection:resource|collection:collection">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
         <xsl:if test="@parent">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="{$contextPath}/samples/slide/permissions/{substring-after(@parent,'://')}">Back</a>
+              <a href="../permissions/{substring-after(@parent,'@')}">Back</a>
             </td>
           </tr>
         </xsl:if>
@@ -38,11 +42,11 @@
             <br/>
           </td>
         </tr>
-        <xsl:for-each select="source:children/source:source">
+        <xsl:for-each select="collection:resource|collection:collection">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="{$contextPath}/samples/slide/locks/{substring-after(@uri,'://')}">
+                <a href="../locks/{substring-after(@uri,'@')}">
                   <xsl:value-of select="@name"/>
                 </a>
               </font>
@@ -73,7 +77,7 @@
             </td>
             <td align="right"/>
           </tr>
-          <xsl:for-each select="source:locks/source:lock">
+          <xsl:for-each select="collection:locks/collection:lock">
             <tr bgcolor="#eeeeee">
               <td align="left">
                 <xsl:value-of select="@subject"/>

@@ -2,18 +2,17 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pl="http://apache.org/cocoon/principal/1.0" version="1.0">
 
   <xsl:output indent="yes"/>
-  <xsl:param name="contextPath" select="'/cocoon'"/>
 
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="{$contextPath}/samples/slide/users/"/>
-        <tab title="content" href="{$contextPath}/samples/slide/content/"/>
-        <tab title="properties" href="{$contextPath}/samples/slide/properties/"/>
-        <tab title="permissions" href="{$contextPath}/samples/slide/permissions/"/>
-        <tab title="locks" href="{$contextPath}/samples/slide/locks/"/>
-        <tab title="logout" href="{$contextPath}/samples/slide/logout.html"/>
+        <tab title="users" href="../users/"/>
+        <tab title="content" href="../content/"/>
+        <tab title="properties" href="../properties/"/>
+        <tab title="permissions" href="../permissions/"/>
+        <tab title="locks" href="../locks/"/>
+        <tab title="logout" href="../logout.html"/>
       </header>
       <body>
         <row>
@@ -43,8 +42,8 @@
           </tr>
           <xsl:for-each select="pl:principal">
             <tr>
-              <form action="" method="post">
-                <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
+              <form action="../removeuser.do" method="post">
+                <input type="hidden" name="username" value="{@name}"/>
                 <td align="left">
                   <xsl:value-of select="@name"/>
                 </td>
@@ -55,11 +54,11 @@
               <td align="left">
                 <xsl:value-of select="@role"/>
               </td>
-              <form action="" method="post">
-                <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
+              <form action="../removemember.do" method="post">
+                <input type="hidden" name="username" value="{@name}"/>
                 <td align="left">
                   <xsl:variable name="name" select="@name"/>
-                  <select name="cocoon-principal-group-name" size="{count(../pl:group/pl:principal[@name=$name])}">
+                  <select name="groupname" size="{count(../pl:group/pl:principal[@name=$name])}">
                     <xsl:for-each select="../pl:group/pl:principal[@name=$name]">
                       <option>
                         <xsl:value-of select="../@name"/>
@@ -76,11 +75,11 @@
               <td align="left"/>
               <td align="left"/>
               <td align="left"/>
-              <form action="" method="post">
-                <input type="hidden" name="cocoon-principal-name" value="{@name}"/>
+              <form action="../addmember.do" method="post">
+                <input type="hidden" name="username" value="{@name}"/>
                 <td align="left">
                   <xsl:variable name="name" select="@name"/>
-                  <select name="cocoon-principal-group-name" size="1">
+                  <select name="groupname" size="1">
                     <xsl:for-each select="../pl:group">
                       <option>
                         <xsl:value-of select="@name"/>
@@ -95,17 +94,17 @@
             </tr>
           </xsl:for-each>
           <tr>
-            <form action="" method="post">
+            <form action="../adduser.do" method="post">
               <td align="left">
-                <input name="cocoon-principal-name" type="text" size="10" maxlength="40"/>
+                <input name="username" type="text" size="10" maxlength="40"/>
               </td>
               <td align="left"/>
               <td align="left">
-                <input name="cocoon-principal-role" type="text" size="10" maxlength="40"/>
+                <input name="role" type="text" size="10" maxlength="40"/>
               </td>
               <td align="left">Password:</td>
               <td align="left">
-                <input name="cocoon-principal-password" type="text" size="10" maxlength="40"/>
+                <input name="password" type="text" size="10" maxlength="40"/>
               </td>
               <td align="right">
                 <input type="submit" name="doAddPrincipal" value="Add user"/>
@@ -127,8 +126,8 @@
           </tr>
           <xsl:for-each select="pl:group">
             <tr>
-              <form action="" method="post">
-                <input type="hidden" name="cocoon-principal-group-name" value="{@name}"/>
+              <form action="../removegroup.do" method="post">
+                <input type="hidden" name="groupname" value="{@name}"/>
                 <td align="left">
                   <xsl:value-of select="@name"/>
                 </td>
@@ -139,9 +138,9 @@
             </tr>
           </xsl:for-each>
           <tr>
-            <form action="" method="post">
+            <form action="../addgroup.do" method="post">
               <td align="left">
-                <input name="cocoon-principal-group-name" type="text" size="15" maxlength="40"/>
+                <input name="groupname" type="text" size="15" maxlength="40"/>
               </td>
               <td align="right">
                 <input type="submit" name="doAddPrincipalGroup" value="Add group"/>

@@ -64,35 +64,56 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.slide.SlideRepository;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.source.SourceUtil;
 import org.apache.slide.common.NamespaceAccessToken;
 
 /**
  * A factory for sources from a Jakarta Slide repository.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.6 2003/12/02 19:44:02 joerg Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $Id: SlideSourceFactory.java,v 1.7 2003/12/08 18:06:43 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="SourceFactory"
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=slide
  */
-public class SlideSourceFactory extends AbstractLogEnabled
-  implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
+public class SlideSourceFactory extends AbstractLogEnabled 
+implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
 
-    /** The ServiceManager instance */
-    private ServiceManager manager = null;
-    private Context context;
+    private ServiceManager m_manager;
+    private SlideRepository m_repository;
+    private Context m_context;
 
+
+    public SlideSourceFactory() {
+    }
+    
     /**
-     * Set the current <code>ServiceManager</code> instance used by this
-     * <code>Serviceable</code>.
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      *
+     * @param context The context.
+     */
+    public void contextualize(Context context) throws ContextException {
+        m_context = context;
+    }
+    
+    /**
+     * Lookup the SlideRepository.
+     * 
      * @param manager ServiceManager.
+     * 
+     * @avalon.dependency type=SlideRepository optional=false
      */
     public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+        m_repository = (SlideRepository) manager.lookup(SlideRepository.ROLE);
+        m_manager = manager;
     }
 
     /**
@@ -103,101 +124,89 @@ public class SlideSourceFactory extends AbstractLogEnabled
      *
      * @return A new source object.
      */
-    public Source getSource(String uri,
-                            Map parameters)
-                              throws MalformedURLException, IOException,
-                                     SourceException {
-        this.getLogger().debug("Creating source object for '"+uri+"'");
+    public Source getSource(String location, Map parameters)
+    throws MalformedURLException, IOException, SourceException {
 
-        String scheme = SourceUtil.getScheme(uri);
-
-        String path = SourceUtil.getPathWithoutAuthority(uri);
-
-        if ((path==null) || (path.length()==0)) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("resolve uri: " + location);
+        }
+        
+        final String[] parts = SourceUtil.parseUrl(location);
+        final String scheme = parts[SourceUtil.SCHEME];
+        final String authority = parts[SourceUtil.AUTHORITY];
+        final String query = parts[SourceUtil.QUERY];
+        String path = parts[SourceUtil.PATH];
+        
+        String user;
+        String password;
+        String namespace;
+        
+        // parse the authority string for [usr][:pwd]@ns
+        int index = authority.indexOf('@');
+        if (index == -1) {
+            user = "guest";
+            password = null;
+            namespace = authority;
+        }
+        else {
+            String userinfo = authority.substring(0,index);
+            namespace = authority.substring(index+1);
+            index = userinfo.indexOf(':');
+            if (index != -1) {
+                user = userinfo.substring(0,index);
+                password = userinfo.substring(index+1);
+            }
+            else {
+                user = userinfo;
+                password = null;
+            }
+        }
+        
+        
+        if (path == null || path.length() == 0) {
             path = "/";
-        } else if ( !path.startsWith("/")) {
-            path = "/"+path;
         }
 
-        String query = SourceUtil.getQuery(uri);
         SourceParameters queryParameters = null;
 
-        if ((query==null) || (query.length()==0)) {
+        if (query == null || query.length() == 0) {
             queryParameters = new SourceParameters();
         } else {
             queryParameters = new SourceParameters(query);
         }
+        
+        // TODO: pass in version as parameter?
+        String version = queryParameters.getParameter("version",null);
 
-        this.getLogger().debug("Path is "+path);
-        this.getLogger().debug("Query is "+query);
-        this.getLogger().debug("Source parameters:  "+
-                               queryParameters.toString());
-
-        //String repositoryname = queryParameters.getParameter("cocoon-repository", null);
-
-        String namespace = queryParameters.getParameter("cocoon-repository-namespace",
-                               null);
-        String principal = queryParameters.getParameter("cocoon-source-principal",
-                               "guest");
-        String password = queryParameters.getParameter("cocoon-source-password",
-                              null);
-        String revision = queryParameters.getParameter("cocoon-source-revision",
-                              null);
-        String branch = queryParameters.getParameter("cocoon-source-branch",
-                            null);
-
-        getLogger().debug("Used prinical '"+principal+"' for source");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("scheme: " + scheme);
+            getLogger().debug("user: " + user);
+            getLogger().debug("password: " + password);
+            getLogger().debug("namespace: " + namespace);
+            getLogger().debug("path: " + path);
+            getLogger().debug("version: " + version);
+        }
 
         SourceCredential credential;
 
         if (password!=null) {
-            credential = new SourceCredential(principal, password);
+            credential = new SourceCredential(user,password);
         } else {
-            credential = new SourceCredential(principal);
+            credential = new SourceCredential(user);
         }
 
-        if (path.length()==0) {
-            path = "/";
+        NamespaceAccessToken nat = m_repository.getNamespaceToken(namespace);
+        if (nat == null) {
+            throw new SourceException("No such namespace: "+namespace);
         }
+        SlideSource source = new SlideSource(nat,scheme,path,credential,version);
+        
+        source.enableLogging(getLogger());
+        source.contextualize(m_context);
+        source.service(m_manager);
+        source.initialize();
 
-        SlideRepository repository = null;
-        try {
-            repository = (SlideRepository) this.manager.lookup(SlideRepository.ROLE);
-
-            if ( !(repository instanceof SlideRepository)) {
-                getLogger().error("Can't get Slide repository");
-                return null;
-            }
-
-            SlideRepository sliderepository = (SlideRepository) repository;
-
-            NamespaceAccessToken nat = sliderepository.getNamespaceToken(namespace);
-
-            if (nat==null) {
-                throw new SourceException("Repository with the namespace '"+
-                                          namespace+"' couldn't be found");
-            }
-
-            SlideSource source = new SlideSource(nat, scheme, path,
-                                                 credential, revision,
-                                                 branch);
-
-            source.enableLogging(getLogger());
-            source.contextualize(this.context);
-            source.service(this.manager);
-
-            return source;
-
-        } catch (ServiceException se) {
-            getLogger().error("Could not lookup for service.", se);
-        } finally {
-            if (repository!=null) {
-                this.manager.release(repository);
-            }
-            repository = null;
-        }
-
-        return null;
+        return source;
     }
 
     /**
@@ -207,18 +216,10 @@ public class SlideSourceFactory extends AbstractLogEnabled
      */
     public void release(Source source) {
         if (null!=source) {
-            this.getLogger().debug("Releasing source "+source.getURI());
-            // simply do nothing
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Releasing source "+source.getURI());
+            }
         }
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     *
-     * @param context The context.
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
     }
 
 }

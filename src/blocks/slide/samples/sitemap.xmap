@@ -6,9 +6,9 @@
 
  <map:components>
   <map:generators default="file">
-   <map:generator name="sourcedescription" 
-                  src="org.apache.cocoon.generation.SourceDescriptionGenerator" 
-                  logger="sitemap.generator.sourcedescription"
+   <map:generator name="traverse" 
+                  src="org.apache.cocoon.generation.TraversableSourceDescriptionGenerator" 
+                  logger="sitemap.generator.traverse"
                   label="content"/>
    <map:generator name="principallist"
                   src="org.apache.cocoon.generation.PrincipalListGenerator"
@@ -23,8 +23,6 @@
   <map:selectors default="browser"/>
 
   <map:actions>
-   <map:action logger="sitemap.action.slide" name="source-actions"
-               src="org.apache.cocoon.acting.SourceMultiAction"/>
    <map:action logger="sitemap.action.slide" name="principal-actions"
                src="org.apache.cocoon.acting.PrincipalMultiAction"/>
 
@@ -39,37 +37,24 @@
   </map:actions>
  </map:components>
 
+<!-- ========================== Flowscript ================================= -->
+
+  <map:flow language="javascript">
+    <map:script src="flow.js"/>
+  </map:flow>
+  
 <!-- =========================== Views =================================== -->
 
  <map:views>
   <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
-
   <map:view from-label="content" name="pretty-content">
    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
    <map:serialize type="html"/>
   </map:view>
-
-  <map:view name="xml" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
  </map:views>
 
-<!-- =========================== Resources =================================== -->
-
- <map:resources>
-  <map:resource name="description">
-   <map:generate type="sourcedescription" src="slide://{1}?cocoon-source-principal={../../ID}">
-    <map:parameter name="repository" value="slide"/>
-    <map:parameter name="namespace" value="myrepository"/>
-    <map:parameter name="properties" value="true"/>
-     <map:parameter name="permissions" value="true"/>
-     <map:parameter name="locks" value="true"/>
-     <map:parameter name="depth" value="1"/>
-    </map:generate>
-  </map:resource>
- </map:resources>
 
 <!-- =========================== Pipelines ================================= -->
 
@@ -78,15 +63,18 @@
    <authentication-manager>
     <handlers>
      <handler name="slidehandler" xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-      <redirect-to    uri="cocoon://samples/slide/login.html"/>
+      <redirect-to    uri="cocoon://slide-samples/login.html"/>
       <authentication uri="cocoon:raw:/authenticate"/>
      </handler>
     </handlers>
    </authentication-manager>
+   <global-variables>
+     <namespace>cocoon</namespace>
+   </global-variables>
   </map:component-configurations>
 
 
-  <map:pipeline internal-only="true" type="noncaching">
+  <map:pipeline internal-only="false" type="noncaching">
    <map:match pattern="principallist">
     <map:generate type="principallist">
      <map:parameter name="principalprovider" value="slide"/>
@@ -105,12 +93,11 @@
 
    <!-- =============  Source description ============= -->
    <map:match pattern="description/*/**">
-    <map:generate type="sourcedescription" src="slide://{2}?cocoon-source-principal={1}">
-     <map:parameter name="repository" value="slide"/>
-     <map:parameter name="namespace" value="myrepository"/>
+    <map:generate type="traverse" src="slide://{1}@{global:namespace}/{2}">
      <map:parameter name="properties" value="true"/>
-     <map:parameter name="permissions" value="true"/>
+     <map:parameter name="permissions" value="false"/>
      <map:parameter name="locks" value="true"/>
+     <map:parameter name="version" value="false"/>
      <map:parameter name="depth" value="1"/>
     </map:generate>
     <map:serialize type="xml"/>
@@ -173,17 +160,22 @@
    <map:match pattern="**">
     <map:act type="auth-protect">
      <map:parameter name="handler" value="slidehandler"/>
-
+     
      <!-- ============= Source content ================== -->
-     <map:match pattern="content/**">
-      <map:act type="source-actions">
-       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
-      </map:act>
+     
+     <map:match pattern="*.do">
+       <map:call function="public_{1}">
+         <map:parameter name="caller"    value="{../ID}" />
+         <map:parameter name="namespace" value="{global:namespace}" />
+       </map:call>
+     </map:match>
 
+     <map:match pattern="content/**">
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
       <map:transform src="description2html4content.xsl">
-       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
+       <map:parameter name="path" value="{1}" />
+       <map:parameter name="namespace" value="{global:namespace}" />
+       <map:parameter name="principal" value="{../ID}"/>
       </map:transform>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -194,14 +186,8 @@
 
      <!-- ============= Source properties =============== -->
      <map:match pattern="properties/**">
-      <map:act type="source-actions">
-       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
-      </map:act>
-
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
-      <map:transform src="description2html4properties.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
+      <map:transform src="description2html4properties.xsl"/>
       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>
@@ -210,10 +196,7 @@
 
      <!-- ============= Source permissions ============== -->
      <map:match pattern="permissions/**">
-      <map:act type="source-actions">
-       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
-      </map:act>
-
+     
       <map:aggregate element="document">
        <map:part src="cocoon:/description/{../ID}/{1}"/>
        <map:part src="cocoon:/principallist"/>
@@ -230,10 +213,6 @@
 
      <!-- ============= Source locks ==================== -->
      <map:match pattern="locks/**">
-      <map:act type="source-actions">
-       <map:parameter name="cocoon-source-principal" value="{../ID}"/>
-      </map:act>
-
       <map:generate src="cocoon:/description/{../ID}/{1}"/>
       <map:transform src="description2html4locks.xsl">
        <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -247,15 +226,11 @@
      <!-- ============= Source direct ================== -->
 
      <map:match pattern="view/**">
-      <map:read src="slide://{1}?cocoon-source-principal={../ID}"/>
+      <map:read src="slide://{../ID}@{global:namespace}/{1}"/>
      </map:match>
 
      <!-- ============= Repository users =============== -->
      <map:match pattern="users/**">
-      <map:act type="principal-actions">
-       <map:parameter name="cocoon-caller-principal-name" value="{../ID}"/>
-      </map:act>
-
       <map:generate type="principallist">
        <map:parameter name="principalprovider" value="slide"/>
        <map:parameter name="principalcaller" value="{../ID}"/>

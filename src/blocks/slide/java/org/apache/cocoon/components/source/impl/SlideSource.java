@@ -57,53 +57,69 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.source.*;
+import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.components.source.LockableSource;
+import org.apache.cocoon.components.source.RestrictableSource;
+import org.apache.cocoon.components.source.VersionableSource;
 import org.apache.cocoon.components.source.helpers.GroupSourcePermission;
 import org.apache.cocoon.components.source.helpers.PrincipalSourcePermission;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourceLock;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
-import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.MoveableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.slide.authenticate.CredentialsToken;
 import org.apache.slide.common.NamespaceAccessToken;
 import org.apache.slide.common.NamespaceConfig;
+import org.apache.slide.common.ServiceAccessException;
 import org.apache.slide.common.SlideException;
 import org.apache.slide.common.SlideToken;
 import org.apache.slide.common.SlideTokenImpl;
-import org.apache.slide.content.*;
+import org.apache.slide.content.Content;
+import org.apache.slide.content.NodeProperty;
+import org.apache.slide.content.NodeRevisionContent;
+import org.apache.slide.content.NodeRevisionDescriptor;
+import org.apache.slide.content.NodeRevisionDescriptors;
+import org.apache.slide.content.NodeRevisionNumber;
+import org.apache.slide.content.RevisionDescriptorNotFoundException;
 import org.apache.slide.lock.Lock;
 import org.apache.slide.lock.NodeLock;
+import org.apache.slide.lock.ObjectLockedException;
 import org.apache.slide.macro.Macro;
+import org.apache.slide.security.AccessDeniedException;
 import org.apache.slide.security.NodePermission;
 import org.apache.slide.security.Security;
 import org.apache.slide.structure.GroupNode;
+import org.apache.slide.structure.LinkedObjectNotFoundException;
 import org.apache.slide.structure.ObjectNode;
 import org.apache.slide.structure.ObjectNotFoundException;
 import org.apache.slide.structure.Structure;
 import org.apache.slide.structure.SubjectNode;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -111,69 +127,43 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSource.java,v 1.9 2003/10/25 18:06:20 joerg Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $Id: SlideSource.java,v 1.10 2003/12/08 18:06:43 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
-  implements Contextualizable, Serviceable, Source, ModifiableSource,
-             ModifiableTraversableSource, MoveableSource, RestrictableSource,
-             LockableSource, InspectableSource, VersionableSource {
+implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
+           MoveableSource, RestrictableSource, LockableSource, InspectableSource, 
+           VersionableSource {
 
-    /** Component context */
-    protected Context context;
+    /* framework objects */
+    private Context m_context;
+    private ServiceManager m_manager;
+    
+    /* Slide access */
+    private NamespaceAccessToken m_nat;
+    private NamespaceConfig m_config;
+    private SlideToken m_slideToken;
+    
+    /* Slide helpers */
+    private Structure m_structure;
+    private Content m_content;
+    private Security m_security;
+    private Lock m_lock;
+    private Macro m_macro;
 
-    /** ServiceManager */
-    private ServiceManager manager;
+    /* Source specifics */
+    private String m_scheme = "slide";
+    private String m_path;
 
-    /** Namespace access token. */
-    protected NamespaceAccessToken nat;
+    private ObjectNode m_node;
+    private NodeRevisionNumber m_version;
+    private NodeRevisionDescriptors m_descriptors;
+    private NodeRevisionDescriptor m_descriptor;
 
-    /** Configuration of namespace */
-    protected NamespaceConfig config;
+    private SourceCredential m_credential;
+    private SourceValidity m_validity;
 
-    /** Structure helper. */
-    protected Structure structure;
-
-    /** Content helper. */
-    protected Content content;
-
-    /** Security helper. */
-    private Security security;
-
-    /** Lock helper. */
-    private Lock lock;
-
-    /** Macro helper. */
-    private Macro macro;
-
-    private CredentialsToken credToken;
-
-    /** Slide token. */
-    protected SlideToken slideToken;
-
-    /** Pseudo scheme */
-    private String scheme = "slide";
-
-    /** The path of the source, which means the URI without the scheme */
-    protected String path;
-
-    /** Uniform resource ifdentifier */
-    private String uri;
-
-    /** Revision number */
-    protected NodeRevisionNumber revisionNumber;
-
-    private NodeRevisionDescriptors revisionDescriptors;
-    protected NodeRevisionDescriptor revisionDescriptor;
-
-    // private String branch;
-
-    private SourceCredential sourcecredential = new SourceCredential("guest",
-                                                    "guest");
-    private String sourcerevision = null;
-    private String sourcerevisionbranch = null;
-    private SourceValidity validity = null;
-
-    private SlideSourceOutputStream outputstream;
+    private SlideSourceOutputStream m_outputStream;
 
     /**
      * Create a slide source.
@@ -187,60 +177,22 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If Exception occurs during the initialization.
      */
-    public SlideSource(NamespaceAccessToken nat, String scheme, String path,
-                       SourceCredential sourcecredential,
-                       String sourcerevision,
-                       String sourcerevisionbranch) throws SourceException {
+    public SlideSource(NamespaceAccessToken nat, 
+                       String scheme, 
+                       String path,
+                       SourceCredential sourcecredential, 
+                       String version) {
 
-        this.sourcecredential = sourcecredential;
-
-        this.credToken = new CredentialsToken(this.sourcecredential.getPrincipal());
-        this.nat = nat;
-        this.config = this.nat.getNamespaceConfig();
-        this.scheme = scheme;
-        this.path = path;
-        this.uri = scheme+":/"+path;
-
-        this.sourcerevision = sourcerevision;
-        this.sourcerevisionbranch = sourcerevisionbranch;
-
-        this.structure = nat.getStructureHelper();
-        this.content = nat.getContentHelper();
-        this.security = nat.getSecurityHelper();
-        this.lock = nat.getLockHelper();
-        this.macro = nat.getMacroHelper();
-
-        this.slideToken = new SlideTokenImpl(credToken);
-
-        try {
-            this.revisionDescriptors = content.retrieve(this.slideToken,
-                                                        this.config.getFilesPath()+
-                                                        this.path);
-
-            // Retrieve latest revision descriptor
-            this.revisionDescriptor = content.retrieve(slideToken,
-                                                       revisionDescriptors);
-
-            this.sourcerevision = this.revisionDescriptor.getRevisionNumber().toString();
-            this.sourcerevisionbranch = this.revisionDescriptor.getBranchName();
-
-        } catch (RevisionDescriptorNotFoundException rdnfe) {
-
-            // getLogger().warn("Could not retrieve revision descriptor", rdnfe);
-
-            this.revisionDescriptor = null;
-            this.sourcerevision = null;
-            this.sourcerevisionbranch = null;
-        } catch (ObjectNotFoundException onfe) {
-            // getLogger().debug("Source doesn't exist", onfe);
-            // ignore
-        } catch (SlideException se) {
-            throw new SourceException("Access denied for source '"+this.uri+
-                                      "'", se);
+        m_nat = nat;
+        m_scheme = scheme;
+        m_path = path;
+        m_credential = sourcecredential;
+        if (version != null) {
+            m_version = new NodeRevisionNumber(version);
         }
 
     }
-
+    
     /**
      * Pass the Context to the component.
      * This method is called after the LogEnabled.enableLogging() (if present)
@@ -249,7 +201,7 @@ public class SlideSource extends AbstractLogEnabled
      * @param context The context.
      */
     public void contextualize(Context context) {
-        this.context = context;
+        this.m_context = context;
     }
 
     /**
@@ -257,11 +209,67 @@ public class SlideSource extends AbstractLogEnabled
      * should use the specified ServiceManager to acquire the services it needs for execution
      *
      * @param manager The ServiceManager which this Serviceable uses
-     *
-     * @throws ServiceException
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager manager) {
+        m_manager = manager;
+    }
+
+    public void initialize() throws SourceException {
+        
+        CredentialsToken credentials = new CredentialsToken(m_credential.getPrincipal());
+        m_slideToken = new SlideTokenImpl(credentials);
+        
+        m_config = m_nat.getNamespaceConfig();
+        m_structure = m_nat.getStructureHelper();
+        m_content = m_nat.getContentHelper();
+        m_security = m_nat.getSecurityHelper();
+        m_lock = m_nat.getLockHelper();
+        m_macro = m_nat.getMacroHelper();
+        
+        try {
+            if (m_node == null) {
+                m_node = m_structure.retrieve(m_slideToken,getRepositoryPath());
+            }
+                
+            m_descriptors = m_content.retrieve(m_slideToken,getRepositoryPath());
+            if (m_version != null) {
+                // get a specific version
+                m_descriptor = m_content.retrieve(m_slideToken,m_descriptors,m_version);
+            }
+            else {
+                // get the latest one
+                m_descriptor = m_content.retrieve(m_slideToken,m_descriptors);
+                m_version = m_descriptor.getRevisionNumber();
+            }
+        } 
+        catch (ObjectNotFoundException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Source doesn't exist.",e);
+            }
+            // assert m_node == null;
+        }  
+        catch (RevisionDescriptorNotFoundException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Could not retrieve descriptor.",e);
+            }
+            // assert m_descriptor == null;
+        } 
+        catch (AccessDeniedException e) {
+            throw new SourceException("Access denied.",e);
+        }
+        catch (SlideException e) {
+            throw new SourceException("Failure during source initialization.",e);
+        }
+//        catch (ObjectLockedException e) {
+//            throw new SourceException("Object is locked.",e);
+//        } 
+//        catch (LinkedObjectNotFoundException e) {
+//            throw new SourceException("Linked object not found.",e);
+//        } 
+//        catch (ServiceAccessException e) {
+//            throw new SourceException("Low level service access exception.",e);
+//        }
+
     }
 
     /**
@@ -277,8 +285,7 @@ public class SlideSource extends AbstractLogEnabled
      */
     public InputStream getInputStream() throws IOException, SourceException {
         try {
-            return content.retrieve(slideToken, this.revisionDescriptors,
-                                    this.revisionDescriptor).streamContent();
+            return m_content.retrieve(m_slideToken,m_descriptors,m_descriptor).streamContent();
         } catch (SlideException se) {
             throw new SourceException("Could not get source", se);
         }
@@ -290,7 +297,7 @@ public class SlideSource extends AbstractLogEnabled
      * @return System identifier for the source.
      */
     public String getURI() {
-        return this.uri;
+        return m_scheme + "://" + m_credential.getPrincipal() + "@" + m_nat.getName() + m_path;
     }
 
     /**
@@ -299,7 +306,7 @@ public class SlideSource extends AbstractLogEnabled
      * @return Scheme of the source.
      */
     public String getScheme() {
-        return this.scheme;
+        return m_scheme;
     }
 
     /**
@@ -311,17 +318,16 @@ public class SlideSource extends AbstractLogEnabled
      * @return Validity for the source.
      */
     public SourceValidity getValidity() {
-
         try {
-            if ((this.validity==null) && (this.revisionDescriptor!=null)) {
-                this.validity = new TimeStampValidity(this.revisionDescriptor.getLastModifiedAsDate().getTime());
+            if (m_validity == null && m_descriptor != null) {
+                m_validity = new TimeStampValidity(
+                    m_descriptor.getLastModifiedAsDate().getTime());
             }
         } catch (Exception e) {
             getLogger().debug("Could not create SourceValidity", e);
-
             return null;
         }
-        return this.validity;
+        return m_validity;
     }
 
     /**
@@ -329,8 +335,7 @@ public class SlideSource extends AbstractLogEnabled
      * content has changed.
      */
     public void refresh() {
-
-        this.validity = null;
+        m_validity = null;
     }
 
     /**
@@ -341,8 +346,8 @@ public class SlideSource extends AbstractLogEnabled
      * @return Mime type of the source.
      */
     public String getMimeType() {
-        if (this.revisionDescriptor!=null) {
-            return this.revisionDescriptor.getContentType();
+        if (m_descriptor != null) {
+            return m_descriptor.getContentType();
         }
         return null;
     }
@@ -353,17 +358,39 @@ public class SlideSource extends AbstractLogEnabled
      * @return true if the resource exists.
      */
     public boolean exists() {
-        try {
-            structure.retrieve(this.slideToken,
-                               this.config.getFilesPath()+this.path);
-        } catch (SlideException e) {
-            return false;
-        }
-        return true;
+        return m_node != null;
     }
 
     /**
-     * Get an <code>InputStream</code> where raw bytes can be written to.
+     * Return the content length of the content or -1 if the length is
+     * unknown.
+     *
+     * @return Content length of the source.
+     */
+    public long getContentLength() {
+        if (m_descriptor != null) {
+            return m_descriptor.getContentLength();
+        }
+        return -1;
+    }
+
+    /**
+     * Get the last modification date of the source or 0 if it
+     * is not possible to determine the date.
+     *
+     * @return Last modified date of the source.
+     */
+    public long getLastModified() {
+        if (m_descriptor != null) {
+            return m_descriptor.getLastModifiedAsDate().getTime();
+        }
+        return 0;
+    }
+    
+    // ---------------------------------------------------- ModifiableTraversableSource
+    
+    /**
+     * Get an <code>OutputStream</code> where raw bytes can be written to.
      * The signification of these bytes is implementation-dependent and
      * is not restricted to a serialized XML document.
      *
@@ -374,11 +401,11 @@ public class SlideSource extends AbstractLogEnabled
      */
     public OutputStream getOutputStream()
       throws IOException, SourceException {
-        if (outputstream==null) {
-            outputstream = new SlideSourceOutputStream();
-            outputstream.enableLogging(getLogger());
+        if (m_outputStream == null) {
+            m_outputStream = new SlideSourceOutputStream();
+            m_outputStream.enableLogging(getLogger());
         }
-        return outputstream;
+        return m_outputStream;
     }
 
     /**
@@ -389,7 +416,7 @@ public class SlideSource extends AbstractLogEnabled
      * @return true if the stream can be cancelled
      */
     public boolean canCancel(OutputStream stream) {
-        return outputstream.canCancel();
+        return m_outputStream.canCancel();
     }
 
     /**
@@ -403,21 +430,136 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If the ouput stream can't be cancelled.
      */
     public void cancel(OutputStream stream) throws SourceException {
-        if (outputstream==stream) {
+        if (m_outputStream == stream) {
             try {
-                outputstream.cancel();
+                m_outputStream.cancel();
             } catch (Exception e) {
-                throw new SourceException("Could not cancel output stream",
-                                          e);
+                throw new SourceException("Could not cancel output stream",e);
             }
         }
     }
-
+    
     /**
-     * A helper can the getOutputStream() method
+     * Delete the source.
      */
-    public class SlideSourceOutputStream extends ByteArrayOutputStream
-      implements LogEnabled {
+    public void delete() {
+        try {
+            m_nat.begin();
+            m_macro.delete(m_slideToken,getRepositoryPath());
+            m_nat.commit();
+        } catch (Exception se) {
+            getLogger().error("Could not delete source.",se);
+            try {
+                m_nat.rollback();
+            } catch (Exception rbe) {
+                getLogger().error("Rollback failed for moving source",rbe);
+            }
+        }
+    }
+    
+    public void makeCollection() throws SourceException {
+        SubjectNode collection = new SubjectNode();
+        NodeRevisionDescriptor descriptor = new NodeRevisionDescriptor(0);
+
+        descriptor.setResourceType("<collection/>");
+        descriptor.setCreationDate(new Date());
+        descriptor.setLastModified(new Date());
+        descriptor.setContentLength(0);
+        descriptor.setSource("");
+        descriptor.setOwner(m_slideToken.getCredentialsToken().getPublicCredentials());
+
+        try {
+            m_nat.begin();
+            m_structure.create(m_slideToken,collection,m_config.getFilesPath()+m_path);
+            m_content.create(m_slideToken,m_config.getFilesPath()+m_path,descriptor,null);
+            m_nat.commit();
+        } catch (Exception se) {
+            try {
+                m_nat.rollback();
+            } catch (Exception rbe) {
+                getLogger().error("Rollback failed for creating collection", rbe);
+            }
+            throw new SourceException("Could not create collection.", se);
+        }
+    }
+    
+    public Source getChild(String name) throws SourceException {
+        SlideSource child = new SlideSource(m_nat,m_scheme,m_path+"/"+name,m_credential,null);
+        child.enableLogging(getLogger());
+        child.contextualize(m_context);
+        child.service(m_manager);
+        child.initialize();
+        return child;
+    }
+
+    public Collection getChildren() throws SourceException {
+        if (m_node == null || !m_node.hasChildren()) {
+            return Collections.EMPTY_LIST;
+        }
+        List result = new ArrayList();
+        final Enumeration children = m_node.enumerateChildren();
+        while (children.hasMoreElements()) {
+            String child = (String) children.nextElement();
+            result.add(getChild(child));
+        }
+        return result;
+    }
+    
+    public String getName() {
+        int index = m_path.lastIndexOf('/');
+        if (index > 0) {
+            return m_path.substring(index+1);
+        }
+        return m_path;
+    }
+    
+    public Source getParent() throws SourceException {
+        if (m_path.length() == 1) {
+            // assert m_path.equals("/")
+            return null;
+        }
+        int index = m_path.lastIndexOf('/');
+        if (index == -1) {
+            return null;
+        }
+        String parentPath;
+        if (index == 0) {
+            parentPath = "/";
+        }
+        else if (index == m_path.length()-1) {
+            // assert m_path.endsWith("/")
+            parentPath = m_path.substring(0,m_path.substring(0, m_path.length()-1).lastIndexOf('/'));
+        }
+        else {
+            parentPath = m_path.substring(0,index);
+        }
+        SlideSource parent = new SlideSource(m_nat,m_scheme,parentPath,m_credential,null);
+        parent.enableLogging(getLogger());
+        parent.contextualize(m_context);
+        parent.service(m_manager);
+        parent.initialize();
+        return parent;
+
+    }
+    
+    public boolean isCollection() {
+        if (m_node == null) {
+            return false;
+        }
+        if (m_descriptor == null) {
+            return true;
+        }
+        NodeProperty property = m_descriptor.getProperty("resourcetype");
+        if ((property!=null) && (property.getValue().equals("<collection/>"))) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * A helper for the getOutputStream() method
+     */
+    class SlideSourceOutputStream extends ByteArrayOutputStream implements LogEnabled {
         private boolean isClosed = false;
         private Logger logger = null;
 
@@ -441,40 +583,37 @@ public class SlideSource extends AbstractLogEnabled
             byte[] bytes = new byte[0]; // must be initialized
 
             try {
-                NodeRevisionContent revisionContent = new NodeRevisionContent();
+                NodeRevisionContent content = new NodeRevisionContent();
 
                 bytes = toByteArray();
-                revisionContent.setContent(bytes);
+                content.setContent(bytes);
 
-                if (revisionDescriptor==null) {
-                    revisionDescriptor = new NodeRevisionDescriptor(0);
+                if (m_descriptor==null) {
+                    m_descriptor = new NodeRevisionDescriptor(0);
 
-                    String resourceName = config.getFilesPath()+path;
+                    String resourceName = m_config.getFilesPath()+m_path;
                     int lastSlash = resourceName.lastIndexOf('/');
 
                     if (lastSlash!=-1) {
                         resourceName = resourceName.substring(lastSlash+1);
                     }
-                    revisionDescriptor.setName(resourceName);
+                    m_descriptor.setName(resourceName);
                 }
 
-                revisionDescriptor.setContentLength(bytes.length);
+                m_descriptor.setContentLength(bytes.length);
 
                 // Last modification date
-                revisionDescriptor.setLastModified(new Date());
+                m_descriptor.setLastModified(new Date());
 
-                nat.begin();
-                if (revisionNumber==null) {
-                    content.create(slideToken, config.getFilesPath()+path,
-                                   revisionDescriptor, null);
+                m_nat.begin();
+                if (m_version == null) {
+                    m_content.create(m_slideToken,getRepositoryPath(),m_descriptor,null);
                 }
-                content.store(slideToken, config.getFilesPath()+path,
-                              revisionDescriptor, revisionContent);
+                m_content.store(m_slideToken,getRepositoryPath(),m_descriptor,content);
                 try {
-                    nat.commit();
+                    m_nat.commit();
                 } catch (Exception cme) {
-                    throw new CascadingIOException("Could not commit the transaction",
-                                                   cme);
+                    throw new CascadingIOException("Could not commit the transaction",cme);
                 }
 
             } catch (ObjectNotFoundException e) {
@@ -484,72 +623,48 @@ public class SlideSource extends AbstractLogEnabled
 
                 try {
                     // Creating an object
-                    structure.create(slideToken, subject,
-                                     config.getFilesPath()+path);
+                    m_structure.create(m_slideToken,subject,getRepositoryPath());
                 } catch (SlideException se) {
                     throw new CascadingIOException(se);
                 }
 
-                NodeRevisionDescriptor revisionDescriptor = new NodeRevisionDescriptor(bytes.length);
-
-                // Resource type
-                revisionDescriptor.setResourceType("");
-
-                // Source
-                revisionDescriptor.setSource("");
-
-                // Get content language
-                revisionDescriptor.setContentLanguage("en");
-
-                // Get content length
-                revisionDescriptor.setContentLength(bytes.length);
-
-                // Get content type
+                NodeRevisionDescriptor descriptor = new NodeRevisionDescriptor(bytes.length);
+                descriptor.setResourceType("");
+                descriptor.setSource("");
+                descriptor.setContentLanguage("en");
+                descriptor.setContentLength(bytes.length);
                 String contentType = null;
 
                 try {
-                    contentType = ((org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT)).getMimeType(path);
+                    contentType = ((org.apache.cocoon.environment.Context) 
+                        m_context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT)).getMimeType(m_path);
                 } catch (ContextException ce) {
                     this.logger.warn("Could not get context to determine the mime type.");
                 }
-                if (contentType==null) {
+                if (contentType == null) {
                     contentType = "application/octet-stream";
                 }
-                revisionDescriptor.setContentType(contentType);
-
-                // Last modification date
-                revisionDescriptor.setLastModified(new Date());
-
-                // Owner
-                revisionDescriptor.setOwner(slideToken.getCredentialsToken().getPublicCredentials());
-
-                // Creating revisionDescriptor associated with the object
-                NodeRevisionContent revisionContent = new NodeRevisionContent();
-
-                revisionContent.setContent(bytes);
-
+                descriptor.setContentType(contentType);
+                descriptor.setLastModified(new Date());
+                descriptor.setOwner(m_slideToken.getCredentialsToken().getPublicCredentials());
+                NodeRevisionContent content = new NodeRevisionContent();
+                
+                content.setContent(bytes);
                 try {
-                    content.create(slideToken, config.getFilesPath()+path,
-                                   revisionDescriptor, revisionContent);
-
+                    m_content.create(m_slideToken,getRepositoryPath(),descriptor,content);
                     try {
-                        nat.commit();
+                        m_nat.commit();
                     } catch (Exception cme) {
-                        throw new CascadingIOException("Could not commit the transaction",
-                                                       cme);
+                        throw new CascadingIOException("Could not commit the transaction",cme);
 
                     }
                 } catch (SlideException se) {
-
                     try {
-                        nat.rollback();
+                        m_nat.rollback();
                     } catch (Exception rbe) {
-                        this.logger.warn("Could not rollback the transaction.",
-                                         rbe);
+                        this.logger.warn("Could not rollback the transaction.",rbe);
                     }
-
-                    throw new CascadingIOException("Could not create source",
-                                                   se);
+                    throw new CascadingIOException("Could not create source",se);
                 }
 
             } catch (Exception e) {
@@ -558,7 +673,6 @@ public class SlideSource extends AbstractLogEnabled
                 }
                 throw new CascadingIOException("Could not create source", e);
             } finally {
-
                 this.isClosed = true;
             }
         }
@@ -569,7 +683,7 @@ public class SlideSource extends AbstractLogEnabled
          *
          * @return true if the stream can be cancelled
          */
-        public boolean canCancel() {
+        boolean canCancel() {
             return !this.isClosed;
         }
 
@@ -580,43 +694,41 @@ public class SlideSource extends AbstractLogEnabled
          * After cancel, the stream should no more be used.
          *
          */
-        public void cancel() throws Exception {
+        void cancel() throws Exception {
             if (this.isClosed) {
                 throw new IllegalStateException("Cannot cancel : outputstrem is already closed");
             }
-
             this.isClosed = true;
             super.close();
         }
     }
 
+    // ---------------------------------------------------- MoveableSource
+    
     /**
      * Move the current source to a specified destination.
      *
      * @param source
      *
-     * @throws SourceException If an exception occurs during
-     *                         the move.
+     * @throws SourceException If an exception occurs during the move.
      */
     public void moveTo(Source source) throws SourceException {
         if (source instanceof SlideSource) {
             try {
-                nat.begin();
-                this.macro.move(slideToken,
-                                this.config.getFilesPath()+this.path,
-                                this.config.getFilesPath()+
-                                ((SlideSource) source).path);
-                nat.commit();
+                m_nat.begin();
+                String destination = m_config.getFilesPath()+((SlideSource) source).m_path;
+                m_macro.move(m_slideToken,getRepositoryPath(),destination);
+                m_nat.commit();
             } catch (Exception se) {
                 try {
-                    nat.rollback();
+                    m_nat.rollback();
                 } catch (Exception rbe) {
                     getLogger().error("Rollback failed for moving source", rbe);
                 }
                 throw new SourceException("Could not move source.", se);
             }
         } else {
-            org.apache.excalibur.source.SourceUtil.move(this, source);
+            SourceUtil.move(this,source);
         }
     }
 
@@ -625,232 +737,31 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @param source
      *
-     * @throws SourceException If an exception occurs during
-     *                         the copy.
+     * @throws SourceException If an exception occurs during the copy.
      */
     public void copyTo(Source source) throws SourceException {
         if (source instanceof SlideSource) {
             try {
-                nat.begin();
-                this.macro.copy(slideToken,
-                                this.config.getFilesPath()+this.path,
-                                this.config.getFilesPath()+
-                                ((SlideSource) source).path);
-                nat.commit();
+                m_nat.begin();
+                String destination = m_config.getFilesPath()+((SlideSource) source).m_path;
+                m_macro.copy(m_slideToken,getRepositoryPath(),destination);
+                m_nat.commit();
             } catch (Exception se) {
                 try {
-                    nat.rollback();
+                    m_nat.rollback();
                 } catch (Exception rbe) {
-                    getLogger().error("Rollback failed for moving source", rbe);
+                    
+                    getLogger().error("Rollback failed for moving source",rbe);
                 }
-                throw new SourceException("Could not move source.", se);
+                throw new SourceException("Could not move source.",se);
             }
         } else {
-            org.apache.excalibur.source.SourceUtil.copy(this, source);
+            SourceUtil.copy(this,source);
         }
     }
 
-    /**
-     * Delete the source.
-     *
-     * @return True, if the delete operation was successful.
-     */
-    public void delete() {
-        try {
-            nat.begin();
-            this.macro.delete(slideToken,
-                              this.config.getFilesPath()+this.path);
-            nat.commit();
-        } catch (Exception se) {
-            getLogger().error("Could not delete source.",se);
-            try {
-                nat.rollback();
-            } catch (Exception rbe) {
-                getLogger().error("Rollback failed for moving source", rbe);
-            }
-        }
-    }
-
-    /**
-     * Return the content length of the content or -1 if the length is
-     * unknown.
-     *
-     * @return Content length of the source.
-     */
-    public long getContentLength() {
-        if (revisionDescriptor!=null) {
-            return revisionDescriptor.getContentLength();
-        }
-
-        return -1;
-    }
-
-    /**
-     * Get the last modification date of the source or 0 if it
-     * is not possible to determine the date.
-     *
-     * @return Last modified date of the source.
-     */
-    public long getLastModified() {
-        if (revisionDescriptor!=null) {
-            return revisionDescriptor.getLastModifiedAsDate().getTime();
-        }
-        return 0;
-    }
-
-    /**
-     * Tests whether a resource is a collection resource.
-     *
-     * @return true if the descriptor represents a collection, false otherwise
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public boolean isSourceCollection() throws SourceException {
-
-        boolean result = false;
-
-        if (revisionDescriptor==null) {
-            return true;
-        }
-
-        NodeProperty property = revisionDescriptor.getProperty("resourcetype");
-
-        if ((property!=null) &&
-            (property.getValue().equals("<collection/>"))) {
-            result = true;
-        }
-
-        return result;
-    }
-
-    /**
-     * Returns the count of child sources.
-     *
-     * @return Count of child sources.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public int getChildSourceCount() throws SourceException {
-        try {
-            int i = 0;
-
-            for (Enumeration children = structure.retrieve(this.slideToken,
-                this.config.getFilesPath()+this.path).enumerateChildren();
-                children.hasMoreElements(); )
-                if (((String) children.nextElement()).startsWith(this.config.getFilesPath())) {
-                    i++;
-                }
-            return i;
-        } catch (SlideException se) {
-            throw new SourceException("Could not get children", se);
-        }
-    }
-
-    /**
-     * Return the system id of a child source.
-     *
-     * @param index Index of the child
-     *
-     * @return System identifier of the child source.
-     *
-     * @throws SourceException If an exception occurs.
-     */
-    public String getChildSource(int index) throws SourceException {
-        try {
-            int i = 0;
-            String child;
-
-            for (Enumeration children = structure.retrieve(this.slideToken,
-                this.config.getFilesPath()+this.path).enumerateChildren();
-                children.hasMoreElements(); ) {
-                child = (String) children.nextElement();
-
-                if (child.startsWith(this.config.getFilesPath())) {
-                    if (i==index) {
-                        return scheme+":/"+
-                               child.substring(this.config.getFilesPath().length());
-                    }
-
-                    i++;
-                }
-            }
-            return null;
-        } catch (SlideException se) {
-            throw new SourceException("Could not get children", se);
-        }
-    }
-
-    /**
-     * Return the system if of the parent source. The method should return
-     * null if the source hasn't a parent.
-     *
-     * @return System identifier of the parent source.
-     */
-    public String getParentSource() {
-        if ((this.path==null) || (this.path.length()<=1)) {
-            return null;
-        }
-
-        if (this.path.endsWith("/")) {
-            return scheme+":/"+
-                   this.path.substring(0, this.path.substring(0,
-                       this.path.length()-1).lastIndexOf("/"));
-        }
-
-        return scheme+":/"+this.path.substring(0, this.path.lastIndexOf("/"));
-    }
-
-    /**
-     * Create a collection of sources.
-     *
-     * @param collectionname Name of the collectiom, which
-     *                       should be created.
-     *
-     * @throws SourceException if an exception occurs.
-     */
-    public void createCollection(String collectionname)
-      throws SourceException {
-
-        SubjectNode collection = new SubjectNode();
-        NodeRevisionDescriptor revisionDescriptor = new NodeRevisionDescriptor(0);
-
-        // Resource type
-        revisionDescriptor.setResourceType("<collection/>");
-
-        // Creation date
-        revisionDescriptor.setCreationDate(new Date());
-
-        // Last modification date
-        revisionDescriptor.setLastModified(new Date());
-
-        // Content length name
-        revisionDescriptor.setContentLength(0);
-
-        // Source
-        revisionDescriptor.setSource("");
-
-        // Owner
-        revisionDescriptor.setOwner(slideToken.getCredentialsToken().getPublicCredentials());
-
-        try {
-            nat.begin();
-            structure.create(slideToken, collection,
-                             this.config.getFilesPath()+this.path+"/"+
-                             collectionname);
-            content.create(slideToken,
-                           this.config.getFilesPath()+this.path+"/"+
-                           collectionname, revisionDescriptor, null);
-            nat.commit();
-        } catch (Exception se) {
-            try {
-                nat.rollback();
-            } catch (Exception rbe) {
-                getLogger().error("Rollback failed for creating collection", rbe);
-            }
-            throw new SourceException("Could not create collection.", se);
-        }
-    }
-
+    // ---------------------------------------------------- RestrictableSource
+    
     /**
      * Get the current credential for the source
      *
@@ -859,7 +770,7 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If an exception occurs.
      */
     public SourceCredential getSourceCredential() throws SourceException {
-        return this.sourcecredential;
+        return m_credential;
     }
 
     /**
@@ -869,17 +780,15 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs.
      */
-    public void setSourceCredential(SourceCredential sourcecredential)
-      throws SourceException {
-        if ((sourcecredential==null) ||
-            (sourcecredential.getPrincipal()==null) ||
-            (sourcecredential.getPrincipal().length()<=0)) {
+    public void setSourceCredential(SourceCredential credential) throws SourceException {
+        
+        if (credential == null 
+            || credential.getPrincipal() == null 
+            || credential.getPrincipal().length() <= 0) {
             return;
         }
-
-        this.sourcecredential = sourcecredential;
-        this.credToken = new CredentialsToken(this.sourcecredential.getPrincipal());
-        this.slideToken = new SlideTokenImpl(credToken);
+        m_credential = credential;
+        m_slideToken = new SlideTokenImpl(new CredentialsToken(m_credential.getPrincipal()));
     }
 
     /**
@@ -889,50 +798,44 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs during this operation
      **/
-    public void addSourcePermission(SourcePermission sourcepermission)
-      throws SourceException {
-
-        NamespaceConfig config = this.nat.getNamespaceConfig();
+    public void addSourcePermission(SourcePermission permission) throws SourceException {
 
         String subject = null;
 
-        if (sourcepermission instanceof PrincipalSourcePermission) {
-            subject = config.getUsersPath()+"/"+
-                      ((PrincipalSourcePermission) sourcepermission).getPrincipal();
+        if (permission instanceof PrincipalSourcePermission) {
+            subject = m_config.getUsersPath()+"/"+
+                      ((PrincipalSourcePermission) permission).getPrincipal();
 
             // Test if principal exists
             try {
-                ObjectNode objectnode = structure.retrieve(this.slideToken,
-                                                           subject);
-
-                if ( !(objectnode instanceof SubjectNode)) {
+                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
+                
+                if (!(objectnode instanceof SubjectNode)) {
                     throw new SourceException("Principal '"+
-                                              ((PrincipalSourcePermission) sourcepermission).getPrincipal()+
+                                              ((PrincipalSourcePermission) permission).getPrincipal()+
                                               "' doesn't exists");
                 }
             } catch (SlideException se) {
                 throw new SourceException("Could not retrieve object for principal '"+
-                                          ((PrincipalSourcePermission) sourcepermission).getPrincipal()+
+                                          ((PrincipalSourcePermission) permission).getPrincipal()+
                                           "'", se);
             }
 
-        } else if (sourcepermission instanceof GroupSourcePermission) {
-            subject = config.getUsersPath()+"/"+
-                      ((GroupSourcePermission) sourcepermission).getGroup();
+        } else if (permission instanceof GroupSourcePermission) {
+            subject = m_config.getUsersPath()+"/"+((GroupSourcePermission) permission).getGroup();
 
             // Test if group exists
             try {
-                ObjectNode objectnode = structure.retrieve(this.slideToken,
-                                                           subject);
+                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
 
-                if ( !(objectnode instanceof GroupNode)) {
+                if (!(objectnode instanceof GroupNode)) {
                     throw new SourceException("Group '"+
-                                              ((GroupSourcePermission) sourcepermission).getGroup()+
+                                              ((GroupSourcePermission) permission).getGroup()+
                                               "' doesn't exists");
                 }
             } catch (SlideException se) {
                 throw new SourceException("Could not retrieve object for group '"+
-                                          ((GroupSourcePermission) sourcepermission).getGroup()+
+                                          ((GroupSourcePermission) permission).getGroup()+
                                           "'", se);
             }
 
@@ -941,112 +844,122 @@ public class SlideSource extends AbstractLogEnabled
             throw new SourceException("Does't support category of permission");
         }
 
-        boolean negative = sourcepermission.isNegative();
-        boolean inheritable = sourcepermission.isInheritable();
+        boolean negative = permission.isNegative();
+        boolean inheritable = permission.isInheritable();
 
-        if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_ALL)) {
-            addPermission(subject, "/", negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ)) {
-            addPermission(subject, config.getReadObjectAction().getUri(),
+        if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_ALL)) {
+            addPermission(subject,"/",negative,inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ)) {
+            addPermission(subject, 
+                          m_config.getReadObjectAction().getUri(),
                           negative, inheritable);
-            addPermission(subject, config.getReadLocksAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          config.getReadRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject,
-                          config.getReadRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_SOURCE)) {
-            addPermission(subject, config.getReadObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_LOCKS)) {
-            addPermission(subject, config.getReadLocksAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_PROPERTY)) {
-            addPermission(subject,
-                          config.getReadRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_CONTENT)) {
-            addPermission(subject,
-                          config.getReadRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE)) {
-            addPermission(subject, config.getCreateObjectAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject, config.getRemoveObjectAction().getUri(),
-                          negative, inheritable);
-            addPermission(subject, config.getLockObjectAction().getUri(),
+            addPermission(subject, 
+                          m_config.getReadLocksAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getCreateRevisionMetadataAction().getUri(),
+                          m_config.getReadRevisionMetadataAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getModifyRevisionMetadataAction().getUri(),
+                          m_config.getReadRevisionContentAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_SOURCE)) {
+            addPermission(subject, 
+                          m_config.getReadObjectAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_LOCKS)) {
+            addPermission(subject, 
+                          m_config.getReadLocksAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_PROPERTY)) {
+            addPermission(subject,
+                          m_config.getReadRevisionMetadataAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_CONTENT)) {
+            addPermission(subject,
+                          m_config.getReadRevisionContentAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE)) {
+            addPermission(subject, 
+                          m_config.getCreateObjectAction().getUri(),
+                          negative, inheritable);
+            addPermission(subject, 
+                          m_config.getRemoveObjectAction().getUri(),
+                          negative, inheritable);
+            addPermission(subject, 
+                          m_config.getLockObjectAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getRemoveRevisionMetadataAction().getUri(),
+                          m_config.getCreateRevisionMetadataAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getCreateRevisionContentAction().getUri(),
+                          m_config.getModifyRevisionMetadataAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getModifyRevisionContentAction().getUri(),
+                          m_config.getRemoveRevisionMetadataAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getRemoveRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_SOURCE)) {
-            addPermission(subject, config.getCreateObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_SOURCE)) {
-            addPermission(subject, config.getRemoveObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_LOCK_SOURCE)) {
-            addPermission(subject, config.getLockObjectAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_PROPERTY)) {
-            addPermission(subject,
-                          config.getCreateRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_PROPERTY)) {
-            addPermission(subject,
-                          config.getModifyRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_PROPERTY)) {
-            addPermission(subject,
-                          config.getRemoveRevisionMetadataAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_CONTENT)) {
-            addPermission(subject,
-                          config.getCreateRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_CONTENT)) {
-            addPermission(subject,
-                          config.getModifyRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_CONTENT)) {
-            addPermission(subject,
-                          config.getRemoveRevisionContentAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_ACL)) {
-            addPermission(subject,
-                          config.getReadPermissionsAction().getUri(),
-                          negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE_ACL)) {
-            addPermission(subject,
-                          config.getGrantPermissionAction().getUri(),
+                          m_config.getCreateRevisionContentAction().getUri(),
                           negative, inheritable);
             addPermission(subject,
-                          config.getRevokePermissionAction().getUri(),
+                          m_config.getModifyRevisionContentAction().getUri(),
                           negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_GRANT_PERMISSION)) {
             addPermission(subject,
-                          config.getGrantPermissionAction().getUri(),
+                          m_config.getRemoveRevisionContentAction().getUri(),
                           negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REVOKE_PERMISSION)) {
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_SOURCE)) {
+            addPermission(subject, 
+                          m_config.getCreateObjectAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_SOURCE)) {
+            addPermission(subject, 
+                          m_config.getRemoveObjectAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_LOCK_SOURCE)) {
+            addPermission(subject, 
+                          m_config.getLockObjectAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_PROPERTY)) {
             addPermission(subject,
-                          config.getRevokePermissionAction().getUri(),
+                          m_config.getCreateRevisionMetadataAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_PROPERTY)) {
+            addPermission(subject,
+                          m_config.getModifyRevisionMetadataAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_PROPERTY)) {
+            addPermission(subject,
+                          m_config.getRemoveRevisionMetadataAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_CONTENT)) {
+            addPermission(subject,
+                          m_config.getCreateRevisionContentAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_CONTENT)) {
+            addPermission(subject,
+                          m_config.getModifyRevisionContentAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_CONTENT)) {
+            addPermission(subject,
+                          m_config.getRemoveRevisionContentAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_ACL)) {
+            addPermission(subject,
+                          m_config.getReadPermissionsAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE_ACL)) {
+            addPermission(subject,
+                          m_config.getGrantPermissionAction().getUri(),
+                          negative, inheritable);
+            addPermission(subject,
+                          m_config.getRevokePermissionAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_GRANT_PERMISSION)) {
+            addPermission(subject,
+                          m_config.getGrantPermissionAction().getUri(),
+                          negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REVOKE_PERMISSION)) {
+            addPermission(subject,
+                          m_config.getRevokePermissionAction().getUri(),
                           negative, inheritable);
         }
     }
@@ -1065,22 +978,16 @@ public class SlideSource extends AbstractLogEnabled
                                boolean negative,
                                boolean inheritable) throws SourceException {
         try {
-            NodePermission permission = new NodePermission(this.config.getFilesPath()+
-                                            this.path, subject, action,
-                                                       inheritable, negative);
-
-            nat.begin();
-            this.security.grantPermission(this.slideToken, permission);
-
-            // Last modification date
-            revisionDescriptor.setLastModified(new Date());
-
-            content.store(slideToken, this.config.getFilesPath()+this.path,
-                          revisionDescriptor, null);
-            nat.commit(); 
+            NodePermission permission = new NodePermission(m_config.getFilesPath()+m_path,
+                                                           subject,action,inheritable,negative);
+            m_nat.begin();
+            m_security.grantPermission(m_slideToken, permission);
+            m_descriptor.setLastModified(new Date());
+            m_content.store(m_slideToken, m_config.getFilesPath()+m_path,m_descriptor,null);
+            m_nat.commit(); 
         } catch (Exception se) {
             try {
-                nat.rollback();
+                m_nat.rollback();
             } catch (Exception rbe) {
                 getLogger().error("Rollback failed for granting permission", rbe);
             }   
@@ -1095,50 +1002,45 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs during this operation
      **/
-    public void removeSourcePermission(SourcePermission sourcepermission)
-      throws SourceException {
-
-        NamespaceConfig config = this.nat.getNamespaceConfig();
+    public void removeSourcePermission(SourcePermission permission) throws SourceException {
 
         String subject = null;
 
-        if (sourcepermission instanceof PrincipalSourcePermission) {
-            subject = config.getUsersPath()+"/"+
-                      ((PrincipalSourcePermission) sourcepermission).getPrincipal();
+        if (permission instanceof PrincipalSourcePermission) {
+            subject = m_config.getUsersPath()+"/"+
+                     ((PrincipalSourcePermission) permission).getPrincipal();
 
             // Test if principal exists
             try {
-                ObjectNode objectnode = structure.retrieve(this.slideToken,
-                                                           subject);
+                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
 
-                if ( !(objectnode instanceof SubjectNode)) {
+                if (!(objectnode instanceof SubjectNode)) {
                     throw new SourceException("Principal '"+
-                                              ((PrincipalSourcePermission) sourcepermission).getPrincipal()+
+                                              ((PrincipalSourcePermission) permission).getPrincipal()+
                                               "' doesn't exists");
                 }
             } catch (SlideException se) {
                 throw new SourceException("Could not retrieve object for principal '"+
-                                          ((PrincipalSourcePermission) sourcepermission).getPrincipal()+
+                                          ((PrincipalSourcePermission) permission).getPrincipal()+
                                           "'", se);
             }
 
-        } else if (sourcepermission instanceof GroupSourcePermission) {
-            subject = config.getUsersPath()+"/"+
-                      ((GroupSourcePermission) sourcepermission).getGroup();
+        } else if (permission instanceof GroupSourcePermission) {
+            subject = m_config.getUsersPath()+"/"+
+                      ((GroupSourcePermission) permission).getGroup();
 
             // Test if group exists
             try {
-                ObjectNode objectnode = structure.retrieve(this.slideToken,
-                                                           subject);
+                ObjectNode objectnode = m_structure.retrieve(m_slideToken,subject);
 
                 if ( !(objectnode instanceof GroupNode)) {
                     throw new SourceException("Group '"+
-                                              ((GroupSourcePermission) sourcepermission).getGroup()+
+                                              ((GroupSourcePermission) permission).getGroup()+
                                               "' doesn't exists");
                 }
             } catch (SlideException se) {
                 throw new SourceException("Could not retrieve object for group '"+
-                                          ((GroupSourcePermission) sourcepermission).getGroup()+
+                                          ((GroupSourcePermission) permission).getGroup()+
                                           "'", se);
             }
 
@@ -1147,116 +1049,116 @@ public class SlideSource extends AbstractLogEnabled
             throw new SourceException("Does't support category of permission");
         }
 
-        boolean negative = sourcepermission.isNegative();
-        boolean inheritable = sourcepermission.isInheritable();
+        boolean negative = permission.isNegative();
+        boolean inheritable = permission.isInheritable();
 
-        if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_ALL)) {
+        if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_ALL)) {
             removePermission(subject, "/", negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ)) {
-            removePermission(subject, config.getReadObjectAction().getUri(),
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ)) {
+            removePermission(subject, m_config.getReadObjectAction().getUri(),
                              negative, inheritable);
-            removePermission(subject, config.getReadLocksAction().getUri(),
-                             negative, inheritable);
-            removePermission(subject,
-                             config.getReadRevisionMetadataAction().getUri(),
+            removePermission(subject, m_config.getReadLocksAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getReadRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_SOURCE)) {
-            removePermission(subject, config.getReadObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_LOCKS)) {
-            removePermission(subject, config.getReadLocksAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_PROPERTY)) {
-            removePermission(subject,
-                             config.getReadRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_CONTENT)) {
-            removePermission(subject,
-                             config.getReadRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE)) {
-            removePermission(subject,
-                             config.getCreateObjectAction().getUri(),
+                             m_config.getReadRevisionMetadataAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getRemoveObjectAction().getUri(),
+                             m_config.getReadRevisionContentAction().getUri(),
                              negative, inheritable);
-            removePermission(subject, config.getLockObjectAction().getUri(),
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_SOURCE)) {
+            removePermission(subject, m_config.getReadObjectAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_LOCKS)) {
+            removePermission(subject, m_config.getReadLocksAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_PROPERTY)) {
+            removePermission(subject,
+                             m_config.getReadRevisionMetadataAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_CONTENT)) {
+            removePermission(subject,
+                             m_config.getReadRevisionContentAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE)) {
+            removePermission(subject,
+                             m_config.getCreateObjectAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getCreateRevisionMetadataAction().getUri(),
+                             m_config.getRemoveObjectAction().getUri(),
+                             negative, inheritable);
+            removePermission(subject, m_config.getLockObjectAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getModifyRevisionMetadataAction().getUri(),
+                             m_config.getCreateRevisionMetadataAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getRemoveRevisionMetadataAction().getUri(),
+                             m_config.getModifyRevisionMetadataAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getCreateRevisionContentAction().getUri(),
+                             m_config.getRemoveRevisionMetadataAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getModifyRevisionContentAction().getUri(),
+                             m_config.getCreateRevisionContentAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getRemoveRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_SOURCE)) {
-            removePermission(subject,
-                             config.getCreateObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_SOURCE)) {
-            removePermission(subject,
-                             config.getRemoveObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_LOCK_SOURCE)) {
-            removePermission(subject, config.getLockObjectAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_PROPERTY)) {
-            removePermission(subject,
-                             config.getCreateRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_PROPERTY)) {
-            removePermission(subject,
-                             config.getModifyRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_PROPERTY)) {
-            removePermission(subject,
-                             config.getRemoveRevisionMetadataAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_CONTENT)) {
-            removePermission(subject,
-                             config.getCreateRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_CONTENT)) {
-            removePermission(subject,
-                             config.getModifyRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_CONTENT)) {
-            removePermission(subject,
-                             config.getRemoveRevisionContentAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_ACL)) {
-            removePermission(subject,
-                             config.getReadPermissionsAction().getUri(),
-                             negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE_ACL)) {
-            removePermission(subject,
-                             config.getGrantPermissionAction().getUri(),
+                             m_config.getModifyRevisionContentAction().getUri(),
                              negative, inheritable);
             removePermission(subject,
-                             config.getRevokePermissionAction().getUri(),
+                             m_config.getRemoveRevisionContentAction().getUri(),
                              negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_GRANT_PERMISSION)) {
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_SOURCE)) {
             removePermission(subject,
-                             config.getGrantPermissionAction().getUri(),
+                             m_config.getCreateObjectAction().getUri(),
                              negative, inheritable);
-        } else if (sourcepermission.getPrivilege().equals(SourcePermission.PRIVILEGE_REVOKE_PERMISSION)) {
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_SOURCE)) {
             removePermission(subject,
-                             config.getRevokePermissionAction().getUri(),
+                             m_config.getRemoveObjectAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_LOCK_SOURCE)) {
+            removePermission(subject, m_config.getLockObjectAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_PROPERTY)) {
+            removePermission(subject,
+                             m_config.getCreateRevisionMetadataAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_PROPERTY)) {
+            removePermission(subject,
+                             m_config.getModifyRevisionMetadataAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_PROPERTY)) {
+            removePermission(subject,
+                             m_config.getRemoveRevisionMetadataAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_CREATE_CONTENT)) {
+            removePermission(subject,
+                             m_config.getCreateRevisionContentAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_MODIFY_CONTENT)) {
+            removePermission(subject,
+                             m_config.getModifyRevisionContentAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REMOVE_CONTENT)) {
+            removePermission(subject,
+                             m_config.getRemoveRevisionContentAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_READ_ACL)) {
+            removePermission(subject,
+                             m_config.getReadPermissionsAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_WRITE_ACL)) {
+            removePermission(subject,
+                             m_config.getGrantPermissionAction().getUri(),
+                             negative, inheritable);
+            removePermission(subject,
+                             m_config.getRevokePermissionAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_GRANT_PERMISSION)) {
+            removePermission(subject,
+                             m_config.getGrantPermissionAction().getUri(),
+                             negative, inheritable);
+        } else if (permission.getPrivilege().equals(SourcePermission.PRIVILEGE_REVOKE_PERMISSION)) {
+            removePermission(subject,
+                             m_config.getRevokePermissionAction().getUri(),
                              negative, inheritable);
         }
     }
@@ -1276,22 +1178,22 @@ public class SlideSource extends AbstractLogEnabled
                                   boolean inheritable)
                                     throws SourceException {
         try {
-            NodePermission permission = new NodePermission(this.config.getFilesPath()+
-                                            this.path, subject, action,
+            NodePermission permission = new NodePermission(this.m_config.getFilesPath()+
+                                            this.m_path, subject, action,
                                                        inheritable, negative);
 
-            nat.begin();
-            this.security.revokePermission(this.slideToken, permission);
+            m_nat.begin();
+            this.m_security.revokePermission(this.m_slideToken, permission);
 
             // Last modification date
-            revisionDescriptor.setLastModified(new Date());
+            m_descriptor.setLastModified(new Date());
 
-            content.store(slideToken, this.config.getFilesPath()+this.path,
-                          revisionDescriptor, null);
-            nat.commit();
+            m_content.store(m_slideToken, this.m_config.getFilesPath()+this.m_path,
+                          m_descriptor, null);
+            m_nat.commit();
         } catch (Exception se) {
             try {
-                nat.rollback();
+                m_nat.rollback();
             } catch (Exception rbe) {
                 getLogger().error("Rollback failed for removing permission", rbe);
             }
@@ -1310,52 +1212,45 @@ public class SlideSource extends AbstractLogEnabled
     public SourcePermission[] getSourcePermissions() throws SourceException {
         try {
 
-            NamespaceConfig config = this.nat.getNamespaceConfig();
+            ObjectNode current = m_node;
+            m_security.checkCredentials(m_slideToken, current, m_config.getReadPermissionsAction());
 
-            ObjectNode current = structure.retrieve(this.slideToken,
-                                                    this.config.getFilesPath()+
-                                                    this.path);
-
-            security.checkCredentials(this.slideToken, current,
-                                      config.getReadPermissionsAction());
-
-            String userspath = config.getUsersPath();
+            String userspath = m_config.getUsersPath();
 
             // read
-            String readObjectUri = config.getReadObjectAction().getUri();
-            String readRevisionMetadataUri = config.getReadRevisionMetadataAction().getUri();
-            String readRevisionContentUri = config.getReadRevisionContentAction().getUri();
+            String readObjectUri = m_config.getReadObjectAction().getUri();
+            String readRevisionMetadataUri = m_config.getReadRevisionMetadataAction().getUri();
+            String readRevisionContentUri = m_config.getReadRevisionContentAction().getUri();
 
             // write
-            String createObjectUri = config.getCreateObjectAction().getUri();
-            String removeObjectUri = config.getRemoveObjectAction().getUri();
-            String lockObjectUri = config.getLockObjectAction().getUri();
-            String readLocksUri = config.getReadLocksAction().getUri();
-            String createRevisionMetadataUri = config.getCreateRevisionMetadataAction().getUri();
-            String modifyRevisionMetadataUri = config.getModifyRevisionMetadataAction().getUri();
-            String removeRevisionMetadataUri = config.getRemoveRevisionMetadataAction().getUri();
-            String createRevisionContentUri = config.getCreateRevisionContentAction().getUri();
-            String modifyRevisionContentUri = config.getModifyRevisionContentAction().getUri();
-            String removeRevisionContentUri = config.getRemoveRevisionContentAction().getUri();
+            String createObjectUri = m_config.getCreateObjectAction().getUri();
+            String removeObjectUri = m_config.getRemoveObjectAction().getUri();
+            String lockObjectUri = m_config.getLockObjectAction().getUri();
+            String readLocksUri = m_config.getReadLocksAction().getUri();
+            String createRevisionMetadataUri = m_config.getCreateRevisionMetadataAction().getUri();
+            String modifyRevisionMetadataUri = m_config.getModifyRevisionMetadataAction().getUri();
+            String removeRevisionMetadataUri = m_config.getRemoveRevisionMetadataAction().getUri();
+            String createRevisionContentUri = m_config.getCreateRevisionContentAction().getUri();
+            String modifyRevisionContentUri = m_config.getModifyRevisionContentAction().getUri();
+            String removeRevisionContentUri = m_config.getRemoveRevisionContentAction().getUri();
 
             // read-acl
-            String readPermissionsUri = config.getReadPermissionsAction().getUri();
+            String readPermissionsUri = m_config.getReadPermissionsAction().getUri();
 
             // write-acl
-            String grantPermissionUri = config.getGrantPermissionAction().getUri();
-            String revokePermissionUri = config.getRevokePermissionAction().getUri();
+            String grantPermissionUri = m_config.getGrantPermissionAction().getUri();
+            String revokePermissionUri = m_config.getRevokePermissionAction().getUri();
 
             boolean inheritedPermissions = false;
+            
             Vector permissions = new Vector();
-
             ArrayList sourcepermissions = new ArrayList();
 
             while (current!=null) {
                 try {
                     // put all permissions in a list
                     permissions.clear();
-                    Enumeration aclList = security.enumeratePermissions(this.slideToken,
-                                              current);
+                    Enumeration aclList = m_security.enumeratePermissions(m_slideToken,current);
 
                     while (aclList.hasMoreElements()) {
                         NodePermission permission = (NodePermission) aclList.nextElement();
@@ -1555,29 +1450,27 @@ public class SlideSource extends AbstractLogEnabled
                         sourcepermissions.add(sourcepermission);
                     }
                 } catch (SlideException se) {
-                    throw new SourceException("Exception eccurs while retrieveing source permission",
-                                              se);
+                    throw new SourceException("Exception eccurs while retrieveing source permission",se);
                 }
 
                 inheritedPermissions = true;
 
                 try {
-                    current = structure.getParent(this.slideToken, current);
+                    current = m_structure.getParent(m_slideToken, current);
                 } catch (SlideException e) {
                     break;
                 }
             }
 
-            SourcePermission[] sourcepermissionArray = new SourcePermission[sourcepermissions.size()];
-
-            return (SourcePermission[]) sourcepermissions.toArray(sourcepermissionArray);
+            return (SourcePermission[]) permissions.toArray(new SourcePermission[permissions.size()]);
 
         } catch (SlideException se) {
-            throw new SourceException("Exception eccurs while retrieveing source permission",
-                                      se);
+            throw new SourceException("Exception eccurs while retrieveing source permission",se);
         }
     }
-
+    
+    // ---------------------------------------------------- LockableSource
+    
     /**
      * Add a lock to this source
      *
@@ -1602,8 +1495,8 @@ public class SlideSource extends AbstractLogEnabled
 
             NodeLock lock;
 
-            for (Enumeration locks = this.lock.enumerateLocks(this.slideToken,
-                this.config.getFilesPath()+this.path, false);
+            for (Enumeration locks = this.m_lock.enumerateLocks(this.m_slideToken,
+                this.m_config.getFilesPath()+this.m_path, false);
                 locks.hasMoreElements(); ) {
                 lock = (NodeLock) locks.nextElement();
 
@@ -1620,6 +1513,8 @@ public class SlideSource extends AbstractLogEnabled
         }
     }
 
+    // ---------------------------------------------------- InspectableSource
+    
     /**
      * Sets a property for a source.
      *
@@ -1631,20 +1526,20 @@ public class SlideSource extends AbstractLogEnabled
       throws SourceException {
         getLogger().debug("Set source property");
         try {
-            revisionDescriptor.setProperty(sourceproperty.getName(),
+            m_descriptor.setProperty(sourceproperty.getName(),
                                            sourceproperty.getNamespace(),
                                            sourceproperty.getValueAsString());
 
             // Last modification date
-            revisionDescriptor.setLastModified(new Date());
+            m_descriptor.setLastModified(new Date());
 
-            nat.begin();
-            content.store(slideToken, this.config.getFilesPath()+this.path,
-                          revisionDescriptor, null);
-            nat.commit();
+            m_nat.begin();
+            m_content.store(m_slideToken, this.m_config.getFilesPath()+this.m_path,
+                          m_descriptor, null);
+            m_nat.commit();
         } catch (Exception se) {
             try {
-                nat.rollback();
+                m_nat.rollback();
             } catch (Exception rbe) {
                 getLogger().error("Rollback failed for setting a source property", rbe);
             }
@@ -1666,12 +1561,12 @@ public class SlideSource extends AbstractLogEnabled
                                             String name)
                                               throws SourceException {
 
-        if (revisionDescriptor==null) {
+        if (m_descriptor==null) {
             return null;
         }
 
         final String quote = "\"";
-        NodeProperty property = revisionDescriptor.getProperty(name, namespace);
+        NodeProperty property = m_descriptor.getProperty(name, namespace);
 
         if (property==null) {
             return null;
@@ -1688,12 +1583,12 @@ public class SlideSource extends AbstractLogEnabled
         Document doc = null;
 
         try {
-            parser = (DOMParser) this.manager.lookup(DOMParser.ROLE);
+            parser = (DOMParser) this.m_manager.lookup(DOMParser.ROLE);
             doc = parser.parseDocument(src);
         } catch (Exception e) {
             throw new SourceException("Could not parse property", e);
         } finally {
-            this.manager.release(parser);
+            this.m_manager.release(parser);
         }
 
         return new SourceProperty(doc.getDocumentElement());
@@ -1708,47 +1603,37 @@ public class SlideSource extends AbstractLogEnabled
      */
     public SourceProperty[] getSourceProperties() throws SourceException {
 
-        if (revisionDescriptor==null) {
+        if (m_descriptor == null) {
             return new SourceProperty[0];
         }
 
-        Vector sourceproperties = new Vector();
-
+        List properties = new ArrayList();
         DOMParser parser = null;
         String xml = "";
 
         try {
-            parser = (DOMParser) this.manager.lookup(DOMParser.ROLE);
+            parser = (DOMParser) m_manager.lookup(DOMParser.ROLE);
             final String quote = "\"";
-
-            for (Enumeration e = revisionDescriptor.enumerateProperties();
-                e.hasMoreElements(); ) {
+            Enumeration e = m_descriptor.enumerateProperties();
+            while (e.hasMoreElements()) {
                 NodeProperty property = (NodeProperty) e.nextElement();
                 String name = property.getName();
                 String namespace = property.getNamespace();
                 String pre = "<"+name+" xmlns="+quote+namespace+quote+" >";
                 String post = "</"+name+" >";
-
                 xml = pre+property.getValue().toString()+post;
+                
                 StringReader reader = new StringReader(xml);
-
                 Document doc = parser.parseDocument(new InputSource(reader));
-
-                SourceProperty srcProperty = new SourceProperty(doc.getDocumentElement());
-
-                sourceproperties.addElement(srcProperty);
+                properties.add(new SourceProperty(doc.getDocumentElement()));
             }
         } catch (Exception e) {
             throw new SourceException("Could not parse property "+xml, e);
         } finally {
-            this.manager.release(parser);
+            m_manager.release(parser);
         }
 
-        SourceProperty[] sourcepropertiesArray = new SourceProperty[sourceproperties.size()];
-
-        for (int i = 0; i<sourceproperties.size(); i++)
-            sourcepropertiesArray[i] = (SourceProperty) sourceproperties.elementAt(i);
-        return sourcepropertiesArray;
+        return (SourceProperty[]) properties.toArray(new SourceProperty[properties.size()]);
     }
 
     /**
@@ -1759,24 +1644,26 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs.
      */
-    public void removeSourceProperty(String namespace,
-                                     String name) throws SourceException {
+    public void removeSourceProperty(String namespace, String name) throws SourceException {
         try {
-            if ((revisionDescriptor!=null) && ( !namespace.equals("DAV:"))) {
-                revisionDescriptor.removeProperty(name, namespace);
+            if (m_descriptor != null && !namespace.equals("DAV:")) {
+                m_descriptor.removeProperty(name, namespace);
 
                 // Last modification date
-                revisionDescriptor.setLastModified(new Date());
+                m_descriptor.setLastModified(new Date());
 
-                content.store(slideToken,
-                              this.config.getFilesPath()+this.path,
-                              revisionDescriptor, null);
+                m_content.store(m_slideToken,
+                                m_config.getFilesPath()+m_path,
+                                m_descriptor, 
+                                null);
             }
         } catch (SlideException se) {
             throw new SourceException("Could not remove property", se);
         }
     }
 
+    // ---------------------------------------------------- VersionableSource
+    
     /**
      * If this source versioned
      *
@@ -1785,17 +1672,7 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If an exception occurs.
      */
     public boolean isVersioned() throws SourceException {
-        try {
-            this.revisionDescriptors = content.retrieve(this.slideToken,
-                                                        this.config.getFilesPath()+
-                                                        this.path);
-
-            return this.revisionDescriptors.hasRevisions();
-
-        } catch (SlideException se) {
-            throw new SourceException("Could not retrieve revision descriptor",
-                                      se);
-        }
+        return this.m_descriptors.hasRevisions();
     }
 
     /**
@@ -1805,8 +1682,11 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs.
      */
-    public String getSourceRevision() throws SourceException {
-        return this.sourcerevision;
+    public String getSourceRevision() {
+        if (m_version != null) {
+            return m_version.toString();
+        }
+        return null;
     }
 
     /**
@@ -1816,24 +1696,10 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs.
      */
-    public void setSourceRevision(String sourcerevision)
-      throws SourceException {
-        this.sourcerevision = sourcerevision;
-
-        try {
-            this.revisionDescriptors = content.retrieve(this.slideToken,
-                                                        this.config.getFilesPath()+
-                                                        this.path);
-
-            // Retrieve revision descriptor by the revision
-            this.revisionDescriptor = content.retrieve(slideToken,
-                                                       revisionDescriptors,
-                                                       new NodeRevisionNumber(this.sourcerevision));
-
-        } catch (SlideException se) {
-            throw new SourceException("Could not retrieve revision descriptor",
-                                      se);
-        }
+    public void setSourceRevision(String sourcerevision) throws SourceException {
+        // [UH] this method is wrong. different versions should be obtained
+        // by creating a new source
+        throw new SourceException("method not implemented");
     }
 
     /**
@@ -1844,7 +1710,7 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If an exception occurs.
      */
     public String getSourceRevisionBranch() throws SourceException {
-        return this.sourcerevisionbranch;
+        return m_descriptor.getBranchName();
     }
 
     /**
@@ -1854,11 +1720,10 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @throws SourceException If an exception occurs.
      */
-    public void setSourceRevisionBranch(String sourcerevisionbranch)
-      throws SourceException {
-        this.sourcerevisionbranch = sourcerevisionbranch;
-
-        // FIXME Retrieve the the revsion descriptor with current branch
+    public void setSourceRevisionBranch(String sourcerevisionbranch) throws SourceException {
+        // [UH] this method is wrong. different versions should be obtained
+        // by creating a new source
+        throw new SourceException("method not implemented");
     }
 
     /**
@@ -1869,17 +1734,13 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If an exception occurs.
      */
     public String getLatestSourceRevision() throws SourceException {
-        try {
-            this.revisionDescriptors = content.retrieve(this.slideToken,
-                                                        this.config.getFilesPath()+
-                                                        this.path);
+        return m_descriptors.getLatestRevision().toString();
+    }
 
-            return this.revisionDescriptors.getLatestRevision().toString();
-
-        } catch (SlideException se) {
-            throw new SourceException("Could not retrieve revision descriptor",
-                                      se);
-        }
+    // ---------------------------------------------------- private helper methods
+    
+    private String getRepositoryPath() {
+        return m_config.getFilesPath()+m_path;
     }
 }
 
