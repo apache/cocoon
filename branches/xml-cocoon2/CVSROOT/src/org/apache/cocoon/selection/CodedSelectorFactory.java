@@ -17,7 +17,7 @@ import org.apache.cocoon.CodeFactory;
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-12-04 19:41:49 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-05 17:28:35 $
  */
 public class CodedSelectorFactory implements CodeFactory
 {
@@ -52,9 +52,7 @@ public class CodedSelectorFactory implements CodeFactory
     {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("org.apache.log.Logger log = ")
-        .append("org.apache.log.LogKit.getLoggerFor(\"cocoon\");")
-        .append("try {")
+        sb.append("try {")
         .append("return pattern.evaluate(objectModel);")
         .append("} catch (Exception e) {")
         .append("log.error(\"CodedSelector Exception : \" + e.getMessage() + \", returning false\");")

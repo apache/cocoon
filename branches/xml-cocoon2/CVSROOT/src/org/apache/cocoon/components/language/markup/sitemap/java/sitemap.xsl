@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.65 $ $Date: 2000-12-04 12:06:58 $
+     * @version CVS $Revision: 1.1.2.66 $ $Date: 2000-12-05 17:28:12 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -326,7 +326,7 @@
                 try {
                   return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e);
                 } catch (Exception ex) {
-                  log.error("Sitemap", ex);
+                  log.error("Sitemap Error Process", ex);
                 }
               </xsl:when>
               <xsl:otherwise>
@@ -421,6 +421,7 @@
     <!-- this is the actual code produced -->
     if ((list = <xsl:value-of select="translate($matcher-type, '- ', '__')"/>Match(<xsl:value-of select="$matcher-name"/>_expr,
           objectModel)) != null) {
+      log.debug("Matched <xsl:value-of select="$matcher-name"/>");
       listOfLists.add (list);
       <xsl:apply-templates/>
       listOfLists.remove (list);
@@ -495,6 +496,7 @@
         else
       </xsl:if>
       if (<xsl:value-of select="translate($selector-type, '- ', '__')"/>Select (<xsl:value-of select="$selector-name"/>_expr, objectModel)) {
+       log.debug("Select <xsl:value-of select="$selector-name"/>");
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -502,6 +504,7 @@
     <!-- this is the actual code produced on the otherwise element -->
     <xsl:for-each select="./map:otherwise">
       else {
+        log.debug("Select Otherwise");
       <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -555,6 +558,7 @@
     <xsl:choose>
       <xsl:when test="./*">
         if ((list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
+          log.debug("Action <xsl:value-of select="$action-name"/>");
           listOfLists.add (list);
           <xsl:apply-templates/>
           listOfLists.remove(list);
@@ -804,6 +808,7 @@
       <xsl:if test="$prefix='serializer'">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='last']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
+            log.debug("View <xsl:value-of select="@name"/>");
             return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
           }
         </xsl:for-each>
@@ -850,11 +855,13 @@
     <!-- collect the parameters -->
     <xsl:apply-templates select="parameter"/>
 
+    log.debug("Component <xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>(<xsl:value-of select="$component-param"/>)");
     <!-- determine the right invokation according to "has a src attribute" and "has a mime-type attribute" -->
     <xsl:choose>
       <xsl:when test="$component-source='null'">
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
+            log.debug("Mime-type: <xsl:value-of select="$mime-type"/>");
             pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
               null, <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>"
             );
@@ -867,8 +874,10 @@
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
+        log.debug("Source=<xsl:value-of select="$component-source"/>");
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
+            log.debug("Mime-type: <xsl:value-of select="$mime-type"/>");
             pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
                 substitute(listOfLists,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>");
