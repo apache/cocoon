@@ -1,4 +1,4 @@
-  <!-- Initialization Targets ================================================ -->
+<!-- === Initialization Targets ================================================ -->
 
   <target name="init">
 
@@ -152,12 +152,7 @@
     <taskdef name="xpatch" classname="XConfToolTask" classpath="${tools.tasks.dest}"/>
   </target>
   
-  <target name="init-jing" depends="init">
-    <!-- Jing is used in various targets for XML validation with RELAX NG -->
-    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
-  </target>
-
-<!-- Preparation Targets =================================================== -->
+<!-- === Preparation Targets =================================================== -->
 
   <!-- Prepare the build directory -->
   <target name="prepare" depends="init">
@@ -176,7 +171,7 @@
     <mkdir dir="${build}"/>
   </target>
 
-<!-- Clean Targets ========================================================= -->
+<!-- === Clean Targets ========================================================= -->
 
   <!-- Clean -->
   <target name="clean" depends="clean-cocoon,clean-webapp" description="Cleans the cocoon build and the webapp"/>

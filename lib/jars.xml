@@ -17,27 +17,6 @@
 	<homepage>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</homepage>
  </file>
  <file>
-	<title>Cornerstone Excalibur ThreadContext</title>
-	<description>The version of excalibur-threadcontext-1.0.jar that comes with cornerstone src</description>
-	<used-by>Avalon Cornerstone Scheduler</used-by>
-	<lib>core/cornerstone-excalibur-threadcontext-20021213.jar</lib>
-	<homepage>http://avalon.apache.org/cornerstone/index.html</homepage>
- </file>
- <file>
-	<title>Cornerstone Excalibur Thread</title>
-	<description>The version of excalibur-thread-1.0.jar that comes with cornerstone src</description>
-	<used-by>Avalon Cornerstoner Scheduler</used-by>
-	<lib>core/cornerstone-excalibur-thread-20021213.jar</lib>
-	<homepage>http://avalon.apache.org/cornerstone/index.html</homepage>
- </file>
- <file>
-	<title>Avalon Cornerstone</title>
-	<description>Contains the avalon-cornerstone scheduler, threadManager and other classes (This JAR has been compiled on Java 1.3 to be run on JVM 1.3 or earlier.)</description>
-	<used-by>Cocoon-Flow</used-by>
-	<lib>core/cornerstone-20021213.jar</lib>
-	<homepage>http://avalon.apache.org/cornerstone/index.html</homepage>
- </file>
- <file>
 	<title>Avalon Excalibur DataSource</title>
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development. (This JAR has been compiled on Java 1.3 to be run on JVM 1.3)</description>
@@ -84,6 +63,15 @@
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-concurrent-20020820.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
+ </file>
+ <file>
+  <title>Avalon Excalibur Event</title>
+  <description>This is the Excalibur Event package which includes event queues,
+       asynchronous command processing, and the interfaces to support
+       event based programming.</description>
+  <used-by>Cocoon Flow</used-by>
+  <lib>core/excalibur-event-1.0.2.jar</lib>
+  <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur I18n</title>
@@ -162,7 +150,7 @@
 	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-sourceresolve-20030318.jar</lib>
+	<lib>core/excalibur-sourceresolve-20030319.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
@@ -287,7 +275,7 @@
 	<lib>endorsed/xml-apis.jar</lib>
 	<homepage>http://xml.apache.org/commons/</homepage>
  </file>
- <file>
+<!-- <file>
 	<title>Batik</title>
 	<description>Batik is a Java based toolkit for applications which handle images in
        the Scalable Vector Graphics (SVG) format for various purposes, such as
@@ -295,8 +283,8 @@
 	<used-by>SVG serializer (SVG to JPG, PNG)</used-by>
 	<lib>optional/batik-all-1.5b2.jar</lib>
 	<homepage>http://xml.apache.org/batik/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>BSF scripting framework</title>
 	<description>The Bean Scripting Framework (BSF) is an architecture for
        incorporating scripting into, and enabling scripting against, Java
@@ -307,8 +295,8 @@
 	<used-by>Script generator, script action</used-by>
 	<lib>optional/bsf-2.2.jar</lib>
 	<homepage>http://oss.software.ibm.com/developerworks/projects/bsf</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>Device capabilities</title>
 	<description>Open Source Delivery Context Java Library supporting CC/PP and UAProf.
       Different web-enabled devices have different input, output, hardware,
@@ -319,7 +307,7 @@
 	<used-by>DELI</used-by>
 	<lib>optional/deli-0.9.0.jar</lib>
 	<homepage>http://delicon.sourceforge.net</homepage>
- </file>
+ </file>-->
  <file>
 	<title>Jakart Commons httpClient</title>
 	<description>Although the java.net package provides basic support for accessing
@@ -333,7 +321,7 @@
 	<lib>optional/commons-logging-1.0.2.jar</lib>
 	<homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
  </file>
- <file>
+<!-- <file>
 	<title>iText XML to PDF/HTML/RTF converter (Renderer)</title>
 	<description>iText reads XML documents and turns them into PDFs</description>
 	<used-by>iText serializer</used-by>
@@ -347,9 +335,9 @@
 	<used-by>iText serializer</used-by>
 	<lib>optional/itext-xml-0.93.jar</lib>
 	<homepage>http://www.lowagie.com/iText/</homepage>
- </file>
+ </file>-->
 
- <file>
+<!-- <file>
 	<title>XML FO processor</title>
 	<description>FOP is a Java application that reads a formatting object tree
        conforming to the XSL candidate release and then turns it into a PDF
@@ -367,8 +355,8 @@
 	<used-by>RTF serializer</used-by>
 	<lib>optional/jfor-0.7.1.jar</lib>
 	<homepage>http://www.jfor.org</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>Simple SQL database</title>
 	<description>hsqldb is a relational database engine written in Java, with a JDBC
        driver, supporting a subset of ANSI-92 SQL. It offers a small, fast
@@ -376,8 +364,8 @@
 	<used-by>Cocoon samples webapp</used-by>
 	<lib>optional/hsqldb-1.7.1.jar</lib>
 	<homepage>http://hsqldb.sourceforge.net/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>Create proprietary file formats</title>
 	<description>The POI project consists of APIs for manipulating
 		various file formats based upon Microsoft's OLE 2 Compound Document
@@ -385,27 +373,27 @@
 	<used-by>MS Excel serializer</used-by>
 	<lib>optional/jakarta-poi-1.7.0-dev-20020624.jar</lib>
 	<homepage>http://jakarta.apache.org/poi/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>Jena RDF framework</title>
 	<description>Jena is a java API for manipulating RDF models.</description>
 	<used-by>DELI</used-by>
 	<lib>optional/jena-1.4.0.jar</lib>
 	<homepage>http://www.hpl.hp.com/semweb/jena-top.html</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>Image manipulation</title>
 	<description>Jimi is a class library for managing images. Its primary function is
        image I/O.</description>
 	<used-by>FOP</used-by>
 	<lib>optional/jimi-1.0.jar</lib>
 	<homepage>http://java.sun.com/products/jimi/</homepage>
- </file>
+ </file>-->
  <file>
 	<title>JISP</title>
 	<description></description>
 	<used-by>JISP file storage</used-by>
-	<lib>optional/Jisp2.0.1.jar</lib>
+	<lib>core/jisp-2.0.1.jar</lib>
 	<homepage>http://www.coyotegulch.com/algorithm/jisp/index.html</homepage>
  </file>
  <file>
@@ -416,29 +404,29 @@
 	<lib>optional/jstyle.jar</lib>
 	<homepage>http://www.redrival.com/greenrd/java/jstyle/</homepage>
  </file>
- <file>
+<!-- <file>
 	<title>Transform HTML to XML</title>
 	<description>Tidy is a HTML syntax checker and pretty printer.</description>
 	<used-by>HTML generator</used-by>
 	<lib>optional/jtidy-04aug2000r7-dev.jar</lib>
 	<homepage>http://lempinen.net/sami/jtidy/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>Search engine</title>
 	<description>jakarta-lucene is a search engine toolkit designed for 
        indexing and searching of documents.</description>
 	<used-by>?</used-by>
 	<lib>optional/lucene-1.2.jar</lib>
 	<homepage>http://jakarta.apache.org/lucene/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>File Upload</title>
 	<description>MaybeUpload is a Java language package intended to make it much easier
        to write Servlets to handle RFC1867 file upload.</description>
 	<used-by>?</used-by>
 	<lib>optional/maybeupload_1-0-5pre3.jar</lib>
 	<homepage>http://www.weft.co.uk/library/maybeupload/</homepage>
- </file>
+ </file>-->
  <file>
 	<title>Java compiler</title>
 	<description>Java Compiler</description>
@@ -446,13 +434,13 @@
 	<lib>optional/pizza-1.1.jar</lib>
 	<homepage>http://pizzacompiler.sourceforge.net/</homepage>
  </file>
- <file>
+<!-- <file>
 	<title>XML RDF parser</title>
 	<description></description>
 	<used-by>DELI</used-by>
 	<lib>optional/rdffilter.jar</lib>
 	<homepage>http://sourceforge.net/projects/rdf-filter</homepage>
- </file>
+ </file>-->
  <file>
 	<title>XML Catalog Entity Resolver</title>
 	<description>Maps URIs to other URIs using the mechanisms defined by
@@ -460,7 +448,7 @@
           entity sets.
         </description>
 	<used-by>Cocoon Role entity-resolver</used-by>
-	<lib>optional/resolver-20021114.jar</lib>
+	<lib>core/resolver-20021114.jar</lib>
 	<homepage>http://xml.apache.org/commons/</homepage>
  </file>
  <file name="servlet">
@@ -470,20 +458,20 @@
 	<lib>optional/servlet_2_2.jar</lib>
 	<homepage>http://jakarta.apache.org/tomcat/</homepage>
  </file>
- <file>
+<!-- <file>
 	<title>Velocity engine</title>
 	<description>Velocity is a general purpose template engine written in Java.</description>
 	<used-by>Velocity Generator</used-by>
 	<lib>optional/velocity-1.4-dev-20030301.jar</lib>
 	<homepage>http://jakarta.apache.org/velocity/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
 	<title>XML DB APIs</title>
 	<description>Database tailored for the storage of XML data.</description>
 	<used-by>XML:DB source</used-by>
 	<lib>optional/xmldb-api-20011111.jar</lib>
 	<homepage>http://www.xmldb.org/</homepage>
- </file>
+ </file>-->
  <file name="jxpath">
 	<title>Jakarta Commons JXPath</title>
 	<description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
@@ -502,17 +490,17 @@
 	<title>Continuations-based JavaScript engine</title>
 	<description>Rhino is an implementation of JavaScript in Java.</description>
 	<used-by>Control flow</used-by>
-	<lib>optional/rhino1.5r4-continuations-20030317.jar</lib>
+	<lib>core/rhino1.5r4-continuations-20030317.jar</lib>
 	<homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
  </file>
- <file name="spark">
+<!-- <file name="spark">
 	<title>Spark</title>
 	<description>Spark is XML2SWF and SWF2XML converter</description>
 	<used-by>SWF Serializer</used-by>
 	<lib>optional/spark.jar</lib>
 	<homepage>http://www.tivano.de/software/spark/</homepage>
- </file>
- <file>
+ </file>-->
+<!-- <file>
   <title>Chaperon Text Parser</title>
   <description>chaperon is parser which could parse text files, and convert those
         to XML files.
@@ -520,7 +508,7 @@
   <used-by>Chaperon block</used-by>
   <lib>optional/chaperon-20030208.jar</lib>
   <homepage>http://chaperon.sourceforge.net</homepage>
- </file>
+ </file>-->
 
  <file name="castor">
   <title>Castor</title>
@@ -559,7 +547,7 @@
   <lib>optional/saxpath-1.0-FCS.jar</lib>
   <homepage>http://sourceforge.net/projects/saxpath/</homepage>
  </file>
- <file name="slide-kernel">
+<!-- <file name="slide-kernel">
   <title>Slide kernel</title>
   <description>The Jakarta Slide kernel API.</description>
   <used-by>Slide block</used-by>
@@ -586,7 +574,7 @@
   <used-by>Slide block</used-by>
   <lib>optional/slide-webdavservlet-20030215.jar</lib>
   <homepage>http://jakarta.apache.org/slide/</homepage>
- </file>
+ </file>-->
  <file name="jdom">
   <title>JDOM</title>
   <description>JDOM</description>
