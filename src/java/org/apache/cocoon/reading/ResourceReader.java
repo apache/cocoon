@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,13 @@
  */
 package org.apache.cocoon.reading;
 
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.ByteRange;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Context;
@@ -28,6 +30,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpResponse;
+import org.apache.cocoon.util.ByteRange;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -39,64 +43,91 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
- *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
  * or if it can signal that it hasn't changed.
  *
- * Parameters:
- *   <dl>
- *     <dt>&lt;expires&gt;</dt>
- *       <dd>This parameter is optional. When specified it determines how long
- *           in miliseconds the resources can be cached by any proxy or browser
- *           between Cocoon2 and the requesting visitor.
- *       </dd>
- *     <dt>&lt;quick-modified-test&gt;</dt>
- *       <dd>This parameter is optional. This boolean parameter controlls the
- *           last modified test. If set to true (default is false), only the
- *           last modified of the current source is tested, but not if the
- *           same source is used as last time. (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915&w=2 )
- *       </dd>
- *   </dl>
+ * <p>Configuration:
+ * <dl>
+ *   <dt>&lt;expires&gt;</dt>
+ *   <dd>This parameter is optional. When specified it determines how long
+ *       in miliseconds the resources can be cached by any proxy or browser
+ *       between Cocoon and the requesting visitor. Defaults to -1.
+ *   </dd>
+ *   <dt>&lt;quick-modified-test&gt;</dt>
+ *   <dd>This parameter is optional. This boolean parameter controls the
+ *       last modified test. If set to true (default is false), only the
+ *       last modified of the current source is tested, but not if the
+ *       same source is used as last time
+ *       (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
+ *   </dd>
+ *   <dt>&lt;byte-ranges&gt;</dt>
+ *   <dd>This parameter is optional. This boolean parameter controls whether
+ *       Cocoon should support byterange requests (to allow clients to resume
+ *       broken/interrupted downloads).
+ *       Defaults to true.
+ * </dl>
+ *
+ * <p>Default configuration:
+ * <pre>
+ *   &lt;expires&gt;-1&lt;/expires&gt;
+ *   &lt;quick-modified-test&gt;false&lt;/quick-modified-test&gt;
+ *   &lt;byte-ranges&gt;true&lt;/byte-ranges&gt;
+ * </pre>
+ *
+ * <p>In addition to reader configuration, above parameters can be passed
+ * to the reader at the time when it is used.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ResourceReader.java,v 1.6 2004/03/11 18:46:31 joerg Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.7 2004/06/23 19:14:34 vgritsenko Exp $
  */
-public class ResourceReader 
-extends AbstractReader 
-implements CacheableProcessingComponent, Parameterizable {
+public class ResourceReader extends AbstractReader
+                            implements CacheableProcessingComponent, Configurable {
 
-    /** The list of generated documents */
+    /**
+     * The list of generated documents
+     */
     private static final Map documents = new HashMap();
-
-    protected Source inputSource;
-    protected InputStream inputStream;
-
-    protected boolean quickTest;
-    protected boolean byteRanges;
-
-    protected Response response;
-    protected Request request;
-    protected long expires;
-    protected int bufferSize;
 
     protected long configuredExpires;
     protected boolean configuredQuickTest;
     protected int configuredBufferSize;
     protected boolean configuredByteRanges;
-    
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+
+    protected long expires;
+    protected boolean quickTest;
+    protected int bufferSize;
+    protected boolean byteRanges;
+
+    protected Response response;
+    protected Request request;
+    protected Source inputSource;
+
+    /**
+     * Read reader configuration
      */
-    public void parameterize(Parameters parameters) throws ParameterException {
+    public void configure(Configuration configuration) throws ConfigurationException {
+        // VG Parameters are deprecated as of 2.2.0-Dev/2.1.6-Dev
+        final Parameters parameters = Parameters.fromConfiguration(configuration);
         this.configuredExpires = parameters.getParameterAsLong("expires", -1);
         this.configuredQuickTest = parameters.getParameterAsBoolean("quick-modified-test", false);
         this.configuredBufferSize = parameters.getParameterAsInteger("buffer-size", 8192);
         this.configuredByteRanges = parameters.getParameterAsBoolean("byte-ranges", true);
+
+        // Configuration has precedence over parameters.
+        this.configuredExpires = configuration.getChild("expires").getValueAsLong(configuredExpires);
+        this.configuredQuickTest = configuration.getChild("quick-modified-test").getValueAsBoolean(configuredQuickTest);
+        this.configuredBufferSize = configuration.getChild("buffer-size").getValueAsInteger(configuredBufferSize);
+        this.configuredByteRanges = configuration.getChild("byte-ranges").getValueAsBoolean(configuredByteRanges);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(Parameters)
+     */
+    public void parameterize(Parameters parameters) throws ParameterException {
     }
 
     /**
@@ -104,23 +135,22 @@ implements CacheableProcessingComponent, Parameterizable {
      * The resource is opened to get an <code>InputStream</code>,
      * the length and the last modification date
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
-        request = ObjectModelHelper.getRequest(objectModel);
-        response = ObjectModelHelper.getResponse(objectModel);
+        this.request = ObjectModelHelper.getRequest(objectModel);
+        this.response = ObjectModelHelper.getResponse(objectModel);
 
-        expires = par.getParameterAsLong("expires", this.configuredExpires);
-        bufferSize = par.getParameterAsInteger("buffer-size", this.configuredBufferSize);
-
-        byteRanges = par.getParameterAsBoolean("byte-ranges", this.configuredByteRanges);
-        quickTest = par.getParameterAsBoolean("quick-modified-test", this.configuredQuickTest);
+        this.expires = par.getParameterAsLong("expires", this.configuredExpires);
+        this.quickTest = par.getParameterAsBoolean("quick-modified-test", this.configuredQuickTest);
+        this.bufferSize = par.getParameterAsInteger("buffer-size", this.configuredBufferSize);
+        this.byteRanges = par.getParameterAsBoolean("byte-ranges", this.configuredByteRanges);
 
         try {
-            inputSource = resolver.resolveURI(src);
-        }
-        catch (SourceException se) {
-            throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+            this.inputSource = resolver.resolveURI(src);
+        } catch (SourceException e) {
+            throw SourceUtil.handle("Error during resolving of '" + src + "'.", e);
         }
     }
 
@@ -128,9 +158,11 @@ implements CacheableProcessingComponent, Parameterizable {
      * Recyclable
      */
     public void recycle() {
-        if (inputSource != null) {
-            super.resolver.release(inputSource);
-            inputSource = null;
+        this.request = null;
+        this.response = null;
+        if (this.inputSource != null) {
+            super.resolver.release(this.inputSource);
+            this.inputSource = null;
         }
         super.recycle();
     }
@@ -152,7 +184,12 @@ implements CacheableProcessingComponent, Parameterizable {
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        return inputSource.getValidity();
+        if(request.getHeader("Range") != null) {
+            // This is a byte range request so we can't use the cache, return null.
+            return null;
+        } else {
+            return inputSource.getValidity();
+        }
     }
 
     /**
@@ -160,22 +197,35 @@ implements CacheableProcessingComponent, Parameterizable {
      *         possible to detect
      */
     public long getLastModified() {
+        if(request.getHeader("Range") != null) {
+            // This is a byte range request so we can't use the cache, return null.
+            return 0;
+        }
+
         if (quickTest) {
             return inputSource.getLastModified();
         }
+
         final String systemId = (String) documents.get(request.getRequestURI());
         if (systemId == null || inputSource.getURI().equals(systemId)) {
             return inputSource.getLastModified();
         }
-        else {
-            documents.remove(request.getRequestURI());
-            return 0;
-        }
+
+        documents.remove(request.getRequestURI());
+        return 0;
     }
 
-    protected void processStream() throws IOException, ProcessingException {
+    protected void processStream(InputStream inputStream)
+    throws IOException, ProcessingException {
         byte[] buffer = new byte[bufferSize];
         int length = -1;
+
+        // tell the client whether we support byte range requests or not
+        if(byteRanges) {
+            response.setHeader("Accept-Ranges", "bytes");
+        } else {
+            response.setHeader("Accept-Ranges", "none");
+        }
 
         String ranges = request.getHeader("Ranges");
 
@@ -196,8 +246,7 @@ implements CacheableProcessingComponent, Parameterizable {
                     }
                 }
             }
-        }
-        else {
+        } else {
             byteRange = null;
         }
 
@@ -221,8 +270,6 @@ implements CacheableProcessingComponent, Parameterizable {
                 ((HttpResponse)response).setStatus(206);
             }
 
-            response.setHeader("Accept-Ranges", "bytes");
-
             int pos = 0;
             int posEnd;
             while ((length = inputStream.read(buffer)) > -1) {
@@ -233,14 +280,10 @@ implements CacheableProcessingComponent, Parameterizable {
                 }
                 pos += length;
             }
-        }
-        else {
+        } else {
             if (contentLength != -1) {
                 response.setHeader("Content-Length", Long.toString(contentLength));
             }
-
-            // Bug #9539: This resource reader does not support ranges
-            response.setHeader("Accept-Ranges", "none");
 
             while ((length = inputStream.read(buffer)) > -1) {
                 out.write(buffer, 0, length);
@@ -253,12 +296,13 @@ implements CacheableProcessingComponent, Parameterizable {
     /**
      * Generates the requested resource.
      */
-    public void generate() throws IOException, ProcessingException {
+    public void generate()
+    throws IOException, ProcessingException {
         try {
             if (expires > 0) {
                 response.setDateHeader("Expires", System.currentTimeMillis() + expires);
-            }
-            else {
+            } else {
+                // See Bug #14048
                 response.addHeader("Vary", "Host");
             }
 
@@ -267,18 +311,18 @@ implements CacheableProcessingComponent, Parameterizable {
                 response.setDateHeader("Last-Modified", lastModified);
             }
 
+            InputStream inputStream;
             try {
                 inputStream = inputSource.getInputStream();
-            }
-            catch (SourceException se) {
-                throw SourceUtil.handle("Error during resolving of the input stream", se);
+            } catch (SourceException e) {
+                throw SourceUtil.handle("Error during resolving of the input stream", e);
             }
 
-            // Bugzilla Bug 25069, close inputStream in finally block
-            // this will close inputStream even if processStream throws
+            // Bugzilla Bug #25069, close inputStream in finally block.
+            // This will close inputStream even if processStream throws
             // an exception
             try {
-                processStream();
+                processStream(inputStream);
             } finally {
                 if (inputStream != null) {
                     inputStream.close();
@@ -287,11 +331,10 @@ implements CacheableProcessingComponent, Parameterizable {
 
             if (!quickTest) {
                 // if everything is ok, add this to the list of generated documents
-                // (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915&w=2 )
+                // (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
                 documents.put(request.getRequestURI(), inputSource.getURI());
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             getLogger().debug("Received an IOException, assuming client severed connection on purpose");
         }
     }
@@ -301,18 +344,13 @@ implements CacheableProcessingComponent, Parameterizable {
      */
     public String getMimeType() {
         Context ctx = ObjectModelHelper.getContext(objectModel);
-
         if (ctx != null) {
-            if (ctx.getMimeType(source) != null) {
-                return ctx.getMimeType(source);
-            }
-            else {
-                return inputSource.getMimeType();
+            final String mimeType = ctx.getMimeType(source);
+            if (mimeType != null) {
+                return mimeType;
             }
         }
-        else {
-            return inputSource.getMimeType();
-        }
-    }
 
+        return inputSource.getMimeType();
+    }
 }
