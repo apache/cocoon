@@ -34,7 +34,7 @@ public interface AppleController {
      * passed {@link AppleRequest} and result into setting specific aspects of the
      * {@link AppleResponse}
      */
-    void process(AppleRequest req, AppleResponse res) throws ProcessingException;
+    void process(AppleRequest req, AppleResponse res) throws Exception;
     
 
 }
