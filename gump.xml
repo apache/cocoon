@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.98 2003/11/18 18:05:30 joerg Exp $
+    | CVS $Id: gump.xml,v 1.99 2003/11/26 18:55:11 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1152,7 +1152,7 @@
       iText is a library that allows you to generate PDF files on the fly
     </description>
     <home nested="src/blocks/itext/lib"/>
-    <jar name="itext-1.00.jar"/>
+    <jar name="itext-1.01.jar"/>
   </project>
 
   <project name="itext-xml">
@@ -1161,7 +1161,7 @@
       iText is a library that allows you to generate PDF files on the fly
     </description>
     <home nested="src/blocks/itext/lib"/>
-    <jar name="itext-xml-1.00.jar"/>
+    <jar name="itext-xml-1.01.jar"/>
   </project>
 
   <project name="eclipse-jtd">
