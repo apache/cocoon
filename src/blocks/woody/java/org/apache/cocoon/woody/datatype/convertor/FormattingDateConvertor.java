@@ -90,7 +90,7 @@ public class FormattingDateConvertor implements Convertor {
     public static final int DATE_TIME = 3;
 
     public FormattingDateConvertor() {
-        this.style = 0;
+        this.style = java.text.DateFormat.SHORT;
         this.variant = DATE;
         this.localizedPatterns = new LocaleMap();
     }
