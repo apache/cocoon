@@ -27,7 +27,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.41 2004/03/10 10:05:07 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.42 2004/03/10 18:00:11 unico Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -274,6 +274,9 @@
       +-->
   <map:matchers default="wildcard">
     <map:matcher logger="sitemap.matcher.wildcard" name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
+    <map:matcher name="mount-table" src="org.apache.cocoon.matching.MountTableMatcher">
+      <map:parameter name="ignore-missing-tables" value="true"/>
+    </map:matcher>
     <!--
     <map:matcher logger="sitemap.matcher.regexp" name="regexp" src="org.apache.cocoon.matching.RegexpURIMatcher"/>
     <map:matcher logger="sitemap.matcher.request-parameter" name="request-parameter" src="org.apache.cocoon.matching.RequestParameterMatcher"/>
