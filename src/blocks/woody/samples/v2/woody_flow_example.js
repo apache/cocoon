@@ -163,10 +163,6 @@ function showForm1() {
     //
     form.showForm("form1-display-pipeline");
     print("cowheight = "+wid.cowheight.value);
-    if (wid.cowheight.value == 2) {
-      wid.cowheight.setValidationError("cowheight cannot be 2");
-      form.redisplay();
-    }
 }
 
 function selectCar() {
