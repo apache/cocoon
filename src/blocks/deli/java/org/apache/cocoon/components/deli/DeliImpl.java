@@ -98,14 +98,14 @@ import java.util.*;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: DeliImpl.java,v 1.5 2003/07/30 15:17:43 joerg Exp $
+ * @version CVS $Id: DeliImpl.java,v 1.6 2003/09/25 16:59:19 butlermh Exp $
  */
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable, Deli, Composable, Disposable, Initializable,
                ThreadSafe, Contextualizable {
 
     /** The name of the main DELI configuration file */
-    private String deliConfig = "resources/deli/config/deliConfig.xml";
+    private String deliConfig = "WEB-INF/deli/config/deliConfig.xml";
 
     /** The component manager */
     protected ComponentManager manager = null;
@@ -145,7 +145,7 @@ public final class DeliImpl extends AbstractLogEnabled
      */
     public void initialize() throws Exception {
         try {
-            Workspace.getInstance().configure(this.servletContext, this.deliConfig);
+            // Workspace.getInstance().configure(this.servletContext, this.deliConfig);
         } catch (Exception e) {
             getLogger().error("DELI Exception while creating workspace: ", e);
             throw e;

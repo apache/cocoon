@@ -9,7 +9,6 @@
 	xmlns:rdf="&ns-rdf;"
 	xmlns:rdfs="&ns-rdfs;"
 	xmlns:prf="&ns-prf;">
-
   <rdf:Description rdf:about="&ns-prf;Component">
     <rdf:type rdf:resource="&ns-rdfs;Class"/>
     <rdfs:subClassOf rdf:resource="&ns-rdfs;Resource"/>
@@ -82,7 +81,7 @@
 
   <rdf:Description rdf:about="&ns-prf;MmsCcppAccept">
     <rdf:type rdf:resource="&ns-rdf;Property"/>
-    <rdf:type rdf:resource="&ns-rdfs;Bag"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
     <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
     <rdfs:range rdf:resource="&ns-prf;Literal"/>
     <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
@@ -90,7 +89,7 @@
       Description: Property value is a list of supported content types
       where each item in the list is a content type name
       registered as a MIME type
-      Type: Literal bag
+      Type: Literal (bag)
       Resolution: Locked
       Examples: “image/jpeg”, “audio/wav”, “video/mpeg-4”
     </rdfs:comment>
@@ -98,7 +97,7 @@
 
   <rdf:Description rdf:about="&ns-prf;MmsCcppAcceptCharSet">
     <rdf:type rdf:resource="&ns-rdf;Property"/>
-    <rdf:type rdf:resource="&ns-rdfs;Bag"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
     <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
     <rdfs:range rdf:resource="&ns-prf;Literal"/>
     <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
@@ -107,7 +106,7 @@
       Property value is a list of character sets, where
       each item in the list is a character set name registered
       with IANA
-      Type: Literal bag
+      Type: Literal (bag)
       Resolution: Locked
       Examples: “US-ASCII”, “ISO-8859-1”
     </rdfs:comment>
@@ -115,7 +114,7 @@
 
   <rdf:Description rdf:about="&ns-prf;MmsCcppAcceptLanguage">
     <rdf:type rdf:resource="&ns-rdf;Property"/>
-    <rdf:type rdf:resource="&ns-rdfs;Bag"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
     <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
     <rdfs:range rdf:resource="&ns-prf;Literal"/>
     <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
@@ -125,7 +124,7 @@
       Property value is a list of natural languages, where
       each item in the list is the name of a language as
       defined by RFC 1766.
-      Type: Literal bag
+      Type: Literal (bag)
       Resolution: Locked
       Examples: “en”, “fr”
     </rdfs:comment>
@@ -133,7 +132,7 @@
 
   <rdf:Description rdf:about="&ns-prf;MmsCcppAcceptEncoding">
     <rdf:type rdf:resource="&ns-rdf;Property"/>
-    <rdf:type rdf:resource="&ns-rdfs;Bag"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
     <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
     <rdfs:range rdf:resource="&ns-prf;Literal"/>
     <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
@@ -142,7 +141,7 @@
       Property value is a list of transfer encodings, where
       each item in the list is a transfer encoding name as
       specified by RFC 2045 and registered with IANA.
-      Type: Literal bag
+      Type: Literal (bag)
       Resolution: Locked
       Examples: “base64”, “quoted-printable"
     </rdfs:comment>
@@ -150,14 +149,14 @@
 
   <rdf:Description rdf:about="&ns-prf;MmsVersion">
     <rdf:type rdf:resource="&ns-rdf;Property"/>
-    <rdf:type rdf:resource="&ns-rdfs;Bag"/>
+    <rdfs:range rdf:resource="&ns-rdf;Bag"/>
     <rdfs:domain rdf:resource="&ns-prf;MmsCharacteristics"/>
     <rdfs:range rdf:resource="&ns-prf;Literal"/>
     <prf:resolutionRule rdf:resource="&ns-prf;Locked"/>
     <rdfs:comment xml:lang="en">
       Description: The MMS versions supported by the MMS Client conveyed
       as majorVersionNumber.minorVersionNumber.
-      Type: Literal bag
+      Type: Literal (bag)
       Resolution: Locked
       Examples: "2.0", "1.3"
     </rdfs:comment>

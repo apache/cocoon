@@ -50,17 +50,21 @@
 */
 package org.apache.cocoon.components.deli;
 
+import com.hp.hpl.deli.Profile;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.environment.Request;
 import org.w3c.dom.Document;
+
 import java.io.IOException;
+import javax.servlet.ServletException;
 
 /**
  * A component for providing CC/PP and UAProf support using the DELI
  * library.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: Deli.java,v 1.1 2003/03/09 00:03:44 pier Exp $
+ * @version CVS $Id: Deli.java,v 1.2 2003/09/25 16:59:19 butlermh Exp $
  */
 
 public interface Deli extends Component {
@@ -76,5 +80,8 @@ public interface Deli extends Component {
      */
     Document getUACapabilities(Request theRequest)
     throws IOException, Exception;
+
+    Profile getProfile(Request theRequest)
+    throws IOException, ServletException, Exception;
 }
 

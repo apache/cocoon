@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.104 2003/09/25 10:00:33 antonio Exp $
+    | CVS $Id: jars.xml,v 1.105 2003/09/25 16:59:19 butlermh Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -363,7 +363,7 @@
       delivery context.
     </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/deli-0.9.1.jar</lib>
+    <lib>deli/lib/deli-0.9.7.jar</lib>
     <homepage>http://delicon.sourceforge.net</homepage>
   </file>
 
@@ -505,6 +505,14 @@
     <used-by>DELI (deli block)</used-by>
     <lib>deli/lib/rdffilter.jar</lib>
     <homepage>http://sourceforge.net/projects/rdf-filter</homepage>
+  </file>
+
+  <file>
+    <title>Log4j</title>
+    <description></description>
+    <used-by>DELI (deli block)</used-by>
+    <lib>deli/lib/log4j-1.2.7.jar</lib>
+    <homepage>http://jakarta.apache.org/log4j</homepage>
   </file>
 
   <file>
