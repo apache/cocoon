@@ -201,10 +201,6 @@
 
   <changes>
   <release version="@version@" date="@date@">
-   <action dev="BD" type="fix">
-     Tour block: fix "shapes" sample using if/else in flowscript
-     instead of switch.
-   </action>
    <action dev="AG" type="remove">
      Removed deprecated Pizza compiler support in XSP.
    </action>
@@ -433,12 +429,16 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="BD" type="fix">
+     Tour block: fix "shapes" sample using if/else in flowscript
+     instead of switch.
+   </action>
    <action dev="SW" type="update">
      CForms: separate <code>FormattingDateConvertor</code> that uses
      <code>java.text.SimpleDateFormat</code> and <code>Icu4jDateFormatter</code>
      that uses ICU4J. There was previously an automatic switch to ICU4J if the
      library was present in the classpath, which sometimes caused some strange
-     results are it behaves a bit differently.
+     results as it behaves a bit differently.
    </action>
    <action dev="VG" type="update">
      Build: Added exclude.all.blocks and include.all.blocks properties
