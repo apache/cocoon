@@ -17,7 +17,6 @@ package org.apache.cocoon.components.deli;
 
 import com.hp.hpl.deli.Profile;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.environment.Request;
 import org.w3c.dom.Document;
 
@@ -29,10 +28,10 @@ import javax.servlet.ServletException;
  * library.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: Deli.java,v 1.3 2004/03/05 13:01:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public interface Deli extends Component {
+public interface Deli {
 
     String ROLE = Deli.class.getName();
 

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -52,7 +51,7 @@ import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
-    implements Component, ThreadSafe, CopletFactory, Serviceable, Disposable, Configurable {
+    implements ThreadSafe, CopletFactory, Serviceable, Disposable, Configurable {
     
     protected ServiceManager manager;
     

@@ -19,7 +19,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -44,11 +43,11 @@ import org.w3c.dom.DocumentFragment;
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.8 2004/04/15 08:51:31 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled
-implements Serviceable, Component, FormManager, ThreadSafe, Contextualizable {
+implements Serviceable, FormManager, ThreadSafe, Contextualizable {
 
     /** This session attribute is used to store the information for the inputxml tags */
     private static final String ATTRIBUTE_INPUTXML_STORAGE = "org.apache.cocoon.webapps.session.InputXMLStorage";

@@ -24,7 +24,6 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -128,7 +127,6 @@ import org.apache.cocoon.util.ClassUtils;
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
     implements ThreadSafe, 
-                 Component, 
                  LayoutFactory, 
                  Configurable, 
                  Disposable, 

@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.classloader;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -27,9 +25,9 @@ import java.io.IOException;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ClassLoaderManager.java,v 1.2 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface ClassLoaderManager extends Component {
+public interface ClassLoaderManager {
 
     String ROLE = ClassLoaderManager.class.getName();
 

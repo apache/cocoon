@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -25,9 +24,9 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: Action.java,v 1.2 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Action extends Component {
+public interface Action {
 
     String ROLE = Action.class.getName();
 

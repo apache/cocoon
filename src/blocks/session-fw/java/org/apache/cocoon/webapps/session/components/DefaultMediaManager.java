@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webapps.session.components;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -32,11 +31,11 @@ import org.apache.cocoon.webapps.session.MediaManager;
  * This is the default implementation for the media manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultMediaManager.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public final class DefaultMediaManager
 extends AbstractLogEnabled
-implements MediaManager, Configurable, ThreadSafe, Contextualizable, Component {
+implements MediaManager, Configurable, ThreadSafe, Contextualizable {
 
     /** The media Types */
     protected PreparedMediaType[] allMediaTypes;

@@ -18,7 +18,6 @@ package org.apache.cocoon.forms;
 import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -34,11 +33,11 @@ import org.apache.excalibur.source.SourceValidity;
 /**
  * Component implementing the {@link CacheManager} role.
  * 
- * @version $Id: DefaultCacheManager.java,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+ * @version $Id$
  */
 public class DefaultCacheManager 
   extends AbstractLogEnabled 
-  implements CacheManager, ThreadSafe, Serviceable, Disposable, Configurable, Component {
+  implements CacheManager, ThreadSafe, Serviceable, Disposable, Configurable {
       
     protected ServiceManager manager;
     protected Configuration configuration;

@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.variables;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -35,11 +34,11 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *
- * @version CVS $Id: DefaultVariableResolverFactory.java,v 1.3 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultVariableResolverFactory 
     extends AbstractLogEnabled
-    implements ThreadSafe, VariableResolverFactory, Component, Serviceable, Contextualizable {
+    implements ThreadSafe, VariableResolverFactory, Serviceable, Contextualizable {
     
     protected ServiceManager manager;
     protected Context        context;

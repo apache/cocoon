@@ -17,7 +17,6 @@ package org.apache.cocoon.portal;
 
 import java.util.List;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.portal.event.Event;
 
 /**
@@ -27,7 +26,7 @@ import org.apache.cocoon.portal.event.Event;
  * 
  * @version CVS $Id$
  */
-public interface LinkService extends Component {
+public interface LinkService {
 
     String ROLE = LinkService.class.getName();
     

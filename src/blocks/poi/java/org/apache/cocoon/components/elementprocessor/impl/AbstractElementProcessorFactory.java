@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import org.apache.cocoon.components.elementprocessor.CannotCreateElementProcessorException;
@@ -32,11 +31,10 @@ import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
  * handle specific XML elements and their content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: AbstractElementProcessorFactory.java,v 1.4 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractElementProcessorFactory
-     extends AbstractLogEnabled implements ElementProcessorFactory, Component
-{
+     extends AbstractLogEnabled implements ElementProcessorFactory {
 
     // uses XML element names as keys and ElementProcessor progenitors
     // as values. An ElementProcessor progenitor is an Object that can

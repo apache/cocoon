@@ -19,7 +19,6 @@ package org.apache.cocoon.jxpath;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -60,9 +59,9 @@ import org.apache.commons.jxpath.servlet.KeywordVariables;
  * JXPath does not automatically create sessions.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: JXPathCocoonContexts.java,v 1.5 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public final class JXPathCocoonContexts implements Component, Contextualizable, Recyclable {
+public final class JXPathCocoonContexts implements Contextualizable, Recyclable {
     
     public static final String ROLE = JXPathCocoonContexts.class.getName();
     private static JXPathContextFactory factory;

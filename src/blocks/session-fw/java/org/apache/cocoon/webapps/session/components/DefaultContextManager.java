@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -46,11 +45,11 @@ import org.xml.sax.SAXException;
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.7 2004/03/19 14:16:55 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
-implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable, Disposable {
+implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable {
 
     /** The <code>ServiceManager</code> */
     private ServiceManager manager;
