@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.arch.Component;
@@ -25,6 +26,7 @@ import org.apache.arch.config.SAXConfigurationBuilder;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.serializers.Serializer;
 import org.apache.cocoon.sitemap.Sitemap;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -32,10 +34,11 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.4.2.3 $ $Date: 2000-02-27 01:33:04 $
+ * @version CVS $Revision: 1.4.2.4 $ $Date: 2000-02-27 03:43:24 $
  */
 public class Cocoon
-implements Component, Configurable, ComponentManager, Modifiable, Processor {
+implements Component, Configurable, ComponentManager, Modifiable, Processor,
+           EntityResolver {
 
     /** The table of role-class */
     private Hashtable components=new Hashtable();
@@ -47,6 +50,8 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
     private Configuration configuration=null;
     /** The sitemap */
     private Sitemap sitemap=null;
+    /** The root uri/path */
+    private URL root=null;
 
     /**
      * Create a new <code>Cocoon</code> instance.
@@ -75,8 +80,9 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
         Parser p=(Parser)this.getComponent("parser");
         SAXConfigurationBuilder b=new SAXConfigurationBuilder();
         p.setContentHandler(b);
-        p.parse(new InputSource(this.configurationFile.getName()));
+        p.parse(new InputSource(this.configurationFile.getPath()));
         this.setConfiguration(b.getConfiguration());
+        this.root=this.configurationFile.getParentFile().toURL();
     }
 
     /**
@@ -159,6 +165,30 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
         return(this.sitemap.process(req,res,out));
     }
 
+    /**
+     * Resolve an entity.
+     */
+    public InputSource resolveEntity(String systemId)
+    throws SAXException, IOException {
+        return(this.resolveEntity(null,systemId));
+    }
+
+    /**
+     * Resolve an entity.
+     */
+    public InputSource resolveEntity(String publicId, String systemId)
+    throws SAXException, IOException {
+        if (systemId==null) throw new SAXException("Invalid System ID");
+
+        if (systemId.length()==0)
+            return new InputSource(this.root.toExternalForm());
+        if (systemId.indexOf(":/")>0)
+            return new InputSource(systemId);
+        if (systemId.charAt(0)=='/')
+            return new InputSource(this.root.getProtocol()+":"+systemId);
+        return(new InputSource(new URL(this.root,systemId).toExternalForm()));
+    }
+
     /** Get a new class */
     private Class getClass(String className, Configuration conf)
     throws ConfigurationException {
@@ -170,31 +200,6 @@ implements Component, Configurable, ComponentManager, Modifiable, Processor {
         } catch (ClassNotFoundException e) {
             throw new ConfigurationException("Cannot load class "+className,
                 conf);
-        }
-    }
-
-    public static void main(String argv[]) {
-        try {
-            Cocoon c=new Cocoon(argv[0]);
-            Parser p=(Parser)c.getComponent("parser");
-            Serializer s=(Serializer)c.getComponent("serializer");
-            s.setOutputStream(System.out);
-            p.setConsumer(s);
-            p.parse(new InputSource(argv[0]));
-        } catch (ConfigurationException e) {
-            System.out.print(e.getClass().getName()+":\n  ");
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.print(e.getClass().getName()+":\n  ");
-            e.printStackTrace(System.out);
-        } catch (SAXException e) {
-            System.out.print(e.getClass().getName()+":\n  ");
-            Exception e2=e.getException();
-            if (e2==null) e.printStackTrace(System.out);
-            else {
-                System.out.print(e2.getClass().getName()+":\n  ");
-                e2.printStackTrace(System.out);
-            }
         }
     }
 }
