@@ -29,7 +29,7 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.2 2001-02-12 13:50:23 bloritsch Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.3 2001-02-14 11:39:45 giacomo Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 
@@ -61,6 +61,7 @@ public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Comp
             }
         }
         try {
+            getLogger().debug("Making URL from " + location);
             return new URL(location);
         } catch (MalformedURLException mue) {
             getLogger().debug("Making URL a File relative to context root", mue);

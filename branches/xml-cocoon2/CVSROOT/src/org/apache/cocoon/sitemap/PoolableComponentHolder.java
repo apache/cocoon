@@ -28,7 +28,7 @@ import org.apache.cocoon.Roles;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:49 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-14 11:39:16 $
  */
 public class PoolableComponentHolder extends DefaultComponentHolder implements ObjectFactory {
 
@@ -49,15 +49,10 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public PoolableComponentHolder(Logger log, String className, Configuration configuration, ComponentManager manager, String mime_type)
+    public PoolableComponentHolder(Logger log, Class clazz, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
-        super(log, className, configuration, manager, mime_type);
-        try {
-            this.clazz = ClassUtils.loadClass (super.className);
-        } catch (Exception e) {
-            log.debug("Class is null", e);
-            this.clazz = null;
-        }
+        super(log, clazz, configuration, manager, mime_type);
+        this.clazz = clazz;
         PoolController pc = (PoolController)super.manager.lookup (Roles.POOL_CONTROLLER);
         ComponentPool cp = new ComponentPool (this, pc, amount, DEFAULT_AMOUNT);
         cp.setLogger(this.log);
@@ -86,7 +81,7 @@ public class PoolableComponentHolder extends DefaultComponentHolder implements O
      * @return The name of the class this Holder holds
      */
     public String getName() {
-        return className;
+        return clazz.getName();
     }
 
     /**

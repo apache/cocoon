@@ -24,12 +24,12 @@ import org.apache.log.Logger;
  * a spezial behaviour or treatment.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:48 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-14 11:39:13 $
  */
 public class DefaultComponentHolder implements ComponentHolder {
     protected Logger log;
 
-    protected String className;
+    protected Class clazz;
     protected Configuration configuration;
     protected ComponentManager manager;
     protected String mime_type;
@@ -39,9 +39,9 @@ public class DefaultComponentHolder implements ComponentHolder {
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public DefaultComponentHolder(Logger log, String className, Configuration configuration, ComponentManager manager, String mime_type) {
+    public DefaultComponentHolder(Logger log, Class clazz, Configuration configuration, ComponentManager manager, String mime_type) {
         this.log = log;
-        this.className = className;
+        this.clazz = clazz;
         this.configuration = configuration;
         this.manager = manager;
         this.mime_type = mime_type;
@@ -51,7 +51,7 @@ public class DefaultComponentHolder implements ComponentHolder {
      * @return A <CODE>Component</CODE>
      */
     public Component get() throws Exception {
-        Component comp = (Component) ClassUtils.newInstance (this.className);
+        Component comp = (Component) this.clazz.newInstance();
         if (comp instanceof Loggable) {
             ((Loggable) comp).setLogger(this.log);
         }
@@ -77,7 +77,7 @@ public class DefaultComponentHolder implements ComponentHolder {
      * @return The name of the class this Holder holds
      */
     public String getName() {
-        return className;
+        return clazz.getName();
     }
 
     /**

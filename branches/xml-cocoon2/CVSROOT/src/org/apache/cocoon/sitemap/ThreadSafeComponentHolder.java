@@ -21,7 +21,7 @@ import org.apache.cocoon.util.ClassUtils;
  * This class holds a sitemap component which is specially marked as beeing thread safe
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-22 21:56:49 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-14 11:39:17 $
  */
 public class ThreadSafeComponentHolder extends DefaultComponentHolder {
 
@@ -32,9 +32,9 @@ public class ThreadSafeComponentHolder extends DefaultComponentHolder {
      * @param configuration The </CODE>Configuration</CODE> for the component
      * @param manager A <CODE>ComponentManager</CODE> for the component
      */
-    public ThreadSafeComponentHolder(Logger log, String className, Configuration configuration, ComponentManager manager, String mime_type)
+    public ThreadSafeComponentHolder(Logger log, Class clazz, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
-        super(log, className, configuration, manager, mime_type);
+        super(log, clazz, configuration, manager, mime_type);
         this.comp = super.get();
     }
 
@@ -58,6 +58,6 @@ public class ThreadSafeComponentHolder extends DefaultComponentHolder {
      * @return The name of the class this Holder holds
      */
     public String getName() {
-        return className;
+        return this.comp.getClass().getName();
     }
 }

@@ -34,7 +34,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-09 04:19:26 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-14 11:39:34 $
  */
 public class RepositoryClassLoader extends URLClassLoader implements Loggable {
 
@@ -103,5 +103,12 @@ public class RepositoryClassLoader extends URLClassLoader implements Loggable {
           log.error("The repository had a bad URL", mue);
           throw new IOException("Could not add repository");
       }
+  }
+
+  /**
+   * Create a Class from a byte array
+   */
+  public Class defineClass(byte [] b) throws ClassFormatError {
+      return super.defineClass(null, b, 0, b.length);
   }
 }

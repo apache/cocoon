@@ -22,25 +22,25 @@ import org.apache.cocoon.util.ClassUtils;
  * interfaces the passed component implements.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:48 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-14 11:39:11 $
  */
 public class ComponentHolderFactory {
 
-    public static ComponentHolder getComponentHolder (Logger logger, String componentName, Configuration configuration, ComponentManager manager)
+    public static ComponentHolder getComponentHolder (Logger logger, Class component, Configuration configuration, ComponentManager manager)
     throws Exception {
-        return (getComponentHolder(logger, componentName, configuration, manager, null));
+        return (getComponentHolder(logger, component, configuration, manager, null));
     }
 
-    public static ComponentHolder getComponentHolder (Logger logger, String componentName, Configuration configuration, ComponentManager manager, String mime_type)
+    public static ComponentHolder getComponentHolder (Logger logger, Class component, Configuration configuration, ComponentManager manager, String mime_type)
     throws Exception {
-        if (ClassUtils.implementsInterface (componentName, Poolable.class.getName())) {
-            return new PoolableComponentHolder (logger, componentName, configuration, manager, mime_type);
-        } else if (ClassUtils.implementsInterface (componentName, SingleThreaded.class.getName())) {
-            return new DefaultComponentHolder (logger, componentName, configuration, manager, mime_type);
-        } else if (ClassUtils.implementsInterface (componentName, ThreadSafe.class.getName())) {
-            return new ThreadSafeComponentHolder (logger, componentName, configuration, manager, mime_type);
+        if (Poolable.class.isAssignableFrom(component)) {
+            return new PoolableComponentHolder (logger, component, configuration, manager, mime_type);
+        } else if (SingleThreaded.class.isAssignableFrom(component)) {
+            return new DefaultComponentHolder (logger, component, configuration, manager, mime_type);
+        } else if (ThreadSafe.class.isAssignableFrom(component)) {
+            return new ThreadSafeComponentHolder (logger, component, configuration, manager, mime_type);
         } else  {
-            return new DefaultComponentHolder (logger, componentName, configuration, manager, mime_type);
+            return new DefaultComponentHolder (logger, component, configuration, manager, mime_type);
         }
     }
 }

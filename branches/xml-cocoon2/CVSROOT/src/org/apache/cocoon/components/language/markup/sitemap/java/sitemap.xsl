@@ -18,18 +18,34 @@
 
   <xsl:output method="text"/>
 
-  <xsl:variable name="prefix">map</xsl:variable>
+
+  <!-- FIXME(GP): This global variable is used to match the attributes map:value
+                  and map:param. I'm sure there is a way around it but haven't
+                  investigated yet.
+  -->
+  <xsl:variable name="nsprefix">map</xsl:variable>
+
 
   <!-- this variable holds the factory loader used to get at the code matcher/selector factories
-       are producing -->
+       are producing
+       FIXME(GP): This approach seem Xalan dependant and not (yet) portable
+  -->
   <xsl:variable name="factory-loader" select="java:org.apache.cocoon.sitemap.XSLTFactoryLoader.new()"/>
 
+
+  <!-- this template wraps the hole content within a single <code> element which
+       the xsp core logicsheet uses to build the java source code out of it
+  -->
   <xsl:template match="/">
     <code xml:space="preserve">
       <xsl:apply-templates/>
     </code>
   </xsl:template>
 
+
+  <!-- This is the root element we are looking for here. It defines all the java
+       code necessary to build up a sitemap engine class
+  -->
   <xsl:template match="map:sitemap">
     /*****************************************************************************/
     /* Copyright (C) The Apache Software Foundation. All rights reserved.        */
@@ -77,9 +93,9 @@
     /**
      * This is the automatically generated class from the sitemap definitions
      *
-     * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
+     * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.74 $ $Date: 2001-02-05 16:23:06 $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.75 2001-02-14 11:39:39 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -91,7 +107,12 @@
       /** An empty &lt;code&gt;Parameter&lt;/code&gt; used to pass to the sitemap components */
       private Parameters emptyParam = new Parameters();
 
-      <!-- Generate matchers which implements CodeFactory -->
+
+      <!-- Generate matchers which implements CodeFactory
+           FIXME(GP): We should get rid of the additional factory attribute in the sitemap
+                      schema definition because this stylesheet is able to determine that
+                      based on the fact that a Matcher implements the CodeFactory interface
+      -->
       <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher">
         <xsl:variable name="src">
           <xsl:choose>
@@ -124,7 +145,12 @@
         </xsl:if>
       </xsl:for-each>
 
-      <!-- Generate selectors which implements CodeFactory -->
+
+      <!-- Generate selectors which implements CodeFactory
+           FIXME(GP): We should get rid of the additional factory attribute in the sitemap
+                      schema definition because this stylesheet is able to determine that
+                      based on the fact that a Selector implements the CodeFactory interface
+      -->
       <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector">
         <xsl:variable name="src">
           <xsl:choose>
@@ -165,67 +191,103 @@
        * &lt;code&gt;Configurable&lt;/code&gt; class.
        */
       public void configure(Configuration conf) throws ConfigurationException {
+        super.configure(conf);
         this.sitemapManager = new Manager(super.sitemapComponentManager);
         this.sitemapManager.compose(this.manager);
         this.sitemapManager.configure(conf);
         try {
-          <!-- configure all components -->
+          <!-- configure well known components first -->
           load_component ("!generator:error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", new DefaultConfiguration("", LOCATION), null);
           load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration("", LOCATION), null);
 
-          <!-- Configure generators -->
-      <xsl:call-template name="config-components">
+          Configurer configurer = new Configurer(this, LOCATION);
+          configurer.configGenerators();
+          configurer.configTransformers();
+          configurer.configReaders();
+          configurer.configSerializers();
+          configurer.configMatchers();
+          configurer.configSelectors();
+          configurer.configActions();
+
+        /* catch any exception thrown by a component during configuration */
+        } catch (Exception e) {
+          getLogger().warn(e.getMessage(), e);
+          throw new ConfigurationException ("Sitemap: " + e.getMessage(), e);
+        }
+      }
+
+      <!-- This class handles all component configuration. Because this is done once
+          at instantiation time we can get rid of this code afterwards.
+      -->
+      class Configurer {
+        <xsl:value-of select="@file-name"/> sitemap;
+        String LOCATION;
+        public Configurer (<xsl:value-of select="@file-name"/> sitemap, String location) {
+          this.sitemap = sitemap;
+          this.LOCATION = location;
+        }
+
+        /** Configure generators */
+        public void configGenerators() throws Exception {
+          <xsl:call-template name="config-components">
             <xsl:with-param name="name">generator</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:generators/map:generator"/>
           </xsl:call-template>
+        }
 
-          <!-- Configure transformers -->
+        /** Configure transformers */
+        public void configTransformers() throws Exception {
           <xsl:call-template name="config-components">
             <xsl:with-param name="name">transformer</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:transformers/map:transformer"/>
           </xsl:call-template>
+        }
 
-          <!-- Configure readers -->
+        /** Configure readers */
+        public void configReaders() throws Exception {
           <xsl:call-template name="config-components">
             <xsl:with-param name="name">reader</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:readers/map:reader"/>
           </xsl:call-template>
+        }
 
-          <!-- Configure serializers -->
+        /* Configure serializers */
+        public void configSerializers() throws Exception {
           <xsl:call-template name="config-components">
             <xsl:with-param name="name">serializer</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:serializers/map:serializer"/>
           </xsl:call-template>
+        }
 
-          <!-- Configure matchers -->
+        /** Configure matchers */
+        public void configMatchers() throws Exception {
           <xsl:call-template name="config-components">
             <xsl:with-param name="name">matcher</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:matchers/map:matcher"/>
           </xsl:call-template>
+        }
 
-          <!-- Configure selectors -->
+        /** Configure selectors */
+        public void configSelectors() throws Exception {
           <xsl:call-template name="config-components">
             <xsl:with-param name="name">selector</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:selectors/map:selector"/>
           </xsl:call-template>
+        }
 
-          <!-- Configure actions -->
+        /** Configure actions */
+        public void configActions() throws Exception {
           <xsl:call-template name="config-components">
             <xsl:with-param name="name">action</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:actions/map:action"/>
           </xsl:call-template>
-
-        /* catch any exception thrown by a component during configuration */
-        } catch (Exception e) {
-          log.warn(e.getMessage(), e);
-          throw new ConfigurationException ("Sitemap: " + e.getMessage(), e);
         }
       }
 
@@ -331,20 +393,20 @@
           try {
             <xsl:apply-templates select="./*"/>
           } catch (ResourceNotFoundException rse) {
-            log.warn("404 Resource Not Found", rse);
+            getLogger().warn("404 Resource Not Found", rse);
             throw rse;
           } catch (Exception e) {
-            log.warn("Error, try to process the error page", e);
+            getLogger().warn("Error, try to process the error page", e);
             <xsl:choose>
               <xsl:when test="(./map:handle-errors)">
                 try {
                   return error_process_<xsl:value-of select="$pipeline-position"/> (environment, objectModel, e);
                 } catch (Exception ex) {
-                  log.warn("Sitemap Error Process", ex);
+                  getLogger().warn("Sitemap Error Process", ex);
                 }
               </xsl:when>
               <xsl:otherwise>
-                log.error("Sitemap", e);
+                getLogger().error("Sitemap", e);
               </xsl:otherwise>
             </xsl:choose>
           }
@@ -435,7 +497,7 @@
     <!-- this is the actual code produced -->
     if ((map = <xsl:value-of select="translate($matcher-type, '- ', '__')"/>Match(<xsl:value-of select="$matcher-name"/>_expr,
           objectModel)) != null) {
-      log.debug("Matched <xsl:value-of select="$matcher-name"/>");
+      getLogger().debug("Matched <xsl:value-of select="$matcher-name"/>");
       listOfMaps.add (map);
       <xsl:apply-templates/>
       listOfMaps.remove (listOfMaps.size()-1);
@@ -510,7 +572,7 @@
         else
       </xsl:if>
       if (<xsl:value-of select="translate($selector-type, '- ', '__')"/>Select (<xsl:value-of select="$selector-name"/>_expr, objectModel)) {
-       log.debug("Select <xsl:value-of select="$selector-name"/>");
+       getLogger().debug("Select <xsl:value-of select="$selector-name"/>");
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -518,7 +580,7 @@
     <!-- this is the actual code produced on the otherwise element -->
     <xsl:for-each select="./map:otherwise">
       else {
-        log.debug("Select Otherwise");
+        getLogger().debug("Select Otherwise");
       <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -572,7 +634,7 @@
     <xsl:choose>
       <xsl:when test="./*[namespace-uri()='http://apache.org/cocoon/sitemap/1.0']">
         if ((map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
-         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
+         getLogger().debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
           listOfMaps.add (map);
           <xsl:apply-templates/>
           listOfMaps.remove(listOfMaps.size()-1);
@@ -632,7 +694,7 @@
     <xsl:choose>
       <xsl:when test="./*[namespace-uri()='http://apache.org/cocoon/sitemap/1.0']">
         if ((map = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
-         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
+         getLogger().debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
           listOfMaps.add (map);
           <xsl:apply-templates/>
           listOfMaps.remove(listOfMaps.size()-1);
@@ -692,7 +754,7 @@
     <xsl:choose>
       <xsl:when test="./*[namespace-uri()='http://apache.org/cocoon/sitemap/1.0']">
         if ((map = <xsl:value-of select="$action-name"/> (cocoon_action, listOfMaps, environment, objectModel, substitute(listOfMaps,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
-         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
+         getLogger().debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>");
           listOfMaps.add (map);
           <xsl:apply-templates/>
           listOfMaps.remove(listOfMaps.size()-1);
@@ -805,7 +867,7 @@
 
       <!-- redirect to a external resource definition. Let the environment do the redirect -->
       <xsl:when test="@uri">
-        log.debug("Redirecting to '<xsl:value-of select="@uri"/>'");
+        getLogger().debug("Redirecting to '<xsl:value-of select="@uri"/>'");
         environment.redirect (substitute(listOfMaps, "<xsl:value-of select="@uri"/>"));
         if(true)return true;
       </xsl:when>
@@ -844,7 +906,7 @@
     <xsl:param name="components"/>
 
     <xsl:variable name="qname">
-      <xsl:value-of select="concat($prefix, ':value')"/>
+      <xsl:value-of select="concat($nsprefix, ':value')"/>
     </xsl:variable>
 
     <xsl:variable name="ns" select="namespace-uri(.)"/>
@@ -871,10 +933,10 @@
 
         <xsl:choose>
           <xsl:when test="@mime-type">
-            load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, "<xsl:value-of select="@mime-type"/>");
+            sitemap.load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, "<xsl:value-of select="@mime-type"/>");
           </xsl:when>
           <xsl:otherwise>
-            load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, null);
+            sitemap.load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, null);
           </xsl:otherwise>
         </xsl:choose>
     }
@@ -893,7 +955,7 @@
     <xsl:param name="level"/>
 
     <xsl:variable name="qname">
-      <xsl:value-of select="concat($prefix, ':value')"/>
+      <xsl:value-of select="concat($nsprefix, ':value')"/>
     </xsl:variable>
 
     <!-- process content -->
@@ -942,7 +1004,7 @@
       <xsl:if test="$prefix='serializer'">
         <xsl:for-each select="/map:sitemap/map:views/map:view[@from-position='last']">
           if ("<xsl:value-of select="@name"/>".equals(cocoon_view)) {
-            log.debug("View <xsl:value-of select="@name"/>");
+            getLogger().debug("View <xsl:value-of select="@name"/>");
             return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfMaps, environment);
           }
         </xsl:for-each>
@@ -989,13 +1051,13 @@
     <!-- collect the parameters -->
     <xsl:apply-templates select="parameter"/>
 
-    log.debug("Component <xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>(<xsl:value-of select="$component-param"/>)");
+    getLogger().debug("Component <xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>(<xsl:value-of select="$component-param"/>)");
     <!-- determine the right invokation according to "has a src attribute" and "has a mime-type attribute" -->
     <xsl:choose>
       <xsl:when test="$component-source='null'">
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
-            log.debug("Mime-type: <xsl:value-of select="$mime-type"/>");
+            getLogger().debug("Mime-type: <xsl:value-of select="$mime-type"/>");
             pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
               null, <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>"
             );
@@ -1008,10 +1070,10 @@
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        log.debug("Source=<xsl:value-of select="$component-source"/>");
+        getLogger().debug("Source=<xsl:value-of select="$component-source"/>");
         <xsl:choose>
           <xsl:when test="$mime-type!=''">
-            log.debug("Mime-type: <xsl:value-of select="$mime-type"/>");
+            getLogger().debug("Mime-type: <xsl:value-of select="$mime-type"/>");
             pipeline.<xsl:value-of select="$method"/> ("<xsl:value-of select="$prefix"/>:<xsl:value-of select="$component-type"/>",
                 substitute(listOfMaps,"<xsl:value-of select="$component-source"/>"),
                 <xsl:value-of select="$component-param"/>,"<xsl:value-of select="$mime-type"/>");
@@ -1090,7 +1152,7 @@
     <xsl:param name="required">false</xsl:param>
 
     <xsl:variable name="qname">
-      <xsl:value-of select="concat($prefix, ':param')"/>
+      <xsl:value-of select="concat($nsprefix, ':param')"/>
     </xsl:variable>
 
     <xsl:choose>

@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-30 17:25:41 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-14 11:39:56 $
  */
 public class ClassUtils {
 
@@ -144,10 +144,7 @@ public class ClassUtils {
      * @return true if class implements given interface.
      */
     public static boolean implementsInterface(Class class1, Class iface) {
-        if (iface.isAssignableFrom (class1)) {
-            return true;
-        }
-        return false;
+        return iface.isAssignableFrom (class1);
     }
 
     /**

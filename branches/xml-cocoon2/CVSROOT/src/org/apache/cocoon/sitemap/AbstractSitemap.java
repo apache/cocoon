@@ -9,7 +9,10 @@ package org.apache.cocoon.sitemap;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,16 +21,20 @@ import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
-import org.apache.avalon.DefaultComponentManager;
+import org.apache.avalon.ConfigurationException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ComponentHolderFactory;
+import org.apache.cocoon.sitemap.SitemapComponentManager;
 import org.apache.cocoon.util.ClassUtils;
 
-import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
+//import org.apache.log.Logger;
 
 import org.xml.sax.SAXException;
 
@@ -35,19 +42,23 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-22 21:56:48 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-14 11:39:10 $
  */
-public abstract class AbstractSitemap implements Sitemap, Loggable {
-    protected Logger log;
+public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
+
+    private static final int BYTE_ARRAY_SIZE = 1024;
 
     /** The component manager instance */
     protected ComponentManager manager;
 
     /** The sitemap component manager instance */
-    protected DefaultComponentManager sitemapComponentManager;
+    protected SitemapComponentManager sitemapComponentManager;
 
     /** The sitemap manager instance */
     protected Manager sitemapManager;
+
+    /** The URLFactory instance */
+    protected URLFactory urlFactory;
 
     /** The creation date */
     protected static long dateCreated = -1L;
@@ -57,12 +68,11 @@ public abstract class AbstractSitemap implements Sitemap, Loggable {
      * <code>Composer</code>.
      */
     public void setParentSitemapComponentManager(ComponentManager parentSitemapComponentManager) {
-        this.sitemapComponentManager = new DefaultComponentManager (parentSitemapComponentManager);
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
+        this.sitemapComponentManager = new SitemapComponentManager (parentSitemapComponentManager);
+        try {
+            this.sitemapComponentManager.setURLFactory((URLFactory)manager.lookup(Roles.URL_FACTORY));
+        } catch (Exception e) {
+            getLogger().warn("cannot obtain URLFactory", e);
         }
     }
 
@@ -72,6 +82,18 @@ public abstract class AbstractSitemap implements Sitemap, Loggable {
      */
     public void compose(ComponentManager manager) {
         this.manager = manager;
+    }
+
+    /**
+     * Configure this instance
+     */
+    public void configure(Configuration conf) throws ConfigurationException {
+        try {
+            this.urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
+        } catch (Exception e) {
+            getLogger().error("cannot obtain the URLFactory", e);
+            throw new ConfigurationException ("cannot obtain the URLFactory", e);
+        }
     }
 
     /**
@@ -101,16 +123,47 @@ public abstract class AbstractSitemap implements Sitemap, Loggable {
       * Loads a class specified in a sitemap component definition and
       * initialize it
       */
-    protected void load_component(String type, String classURL, Configuration configuration, String mime_type)
+    public void load_component(String type, String classURL, Configuration configuration, String mime_type)
     throws Exception {
-        if (!(ClassUtils.implementsInterface (classURL, Component.class.getName()))) {
+        Class clazz;
+        //FIXME(GP): Is it true that a class name containing a colon should be an URL?
+        if (classURL.indexOf(':') > 1) {
+            URL url = urlFactory.getURL(classURL);
+            byte [] b = getByteArrayFromStream(url.openStream());
+            clazz = ((RepositoryClassLoader)ClassUtils.getClassLoader()).defineClass(b);
+        } else {
+            clazz = ClassUtils.loadClass(classURL);
+        }
+        if (!Component.class.isAssignableFrom(clazz)) {
             throw new IllegalAccessException ("Object " + classURL + " is not a Component");
         }
         this.sitemapComponentManager.put(
             type, ComponentHolderFactory.getComponentHolder(
-                this.log, classURL, configuration, this.manager, mime_type
+                getLogger(), clazz, configuration, this.manager, mime_type
             )
         );
+    }
+
+    private byte [] getByteArrayFromStream (InputStream stream) {
+        List list = new ArrayList();
+        byte [] b = new byte[BYTE_ARRAY_SIZE];
+        int last = 0;
+        try {
+            while ((last = stream.read(b)) == BYTE_ARRAY_SIZE) {
+                list.add(b);
+                b = new byte[BYTE_ARRAY_SIZE];
+            }
+        } catch (IOException ioe) {
+            getLogger().error ("cannot read class byte stream", ioe);
+        }
+        list.add(b);
+        b = new byte [(list.size()-1) * BYTE_ARRAY_SIZE + last];
+        int i;
+        for (i = 0; i < list.size()-1; i++) {
+            System.arraycopy(list.get(i), 0, b, i * BYTE_ARRAY_SIZE, BYTE_ARRAY_SIZE);
+        }
+        System.arraycopy(list.get(i), 0, b, i * BYTE_ARRAY_SIZE, last);
+        return b;
     }
 
      /**
@@ -148,7 +201,7 @@ public abstract class AbstractSitemap implements Sitemap, Loggable {
                 } else {
                     result.append((String)((Map)list.get(k)).get(s.substring(m+1)));
                 }
-                log.debug("substitute evaluated value for " + (m == -1 ? s : s.substring(m+1))
+                getLogger().debug("substitute evaluated value for " + (m == -1 ? s : s.substring(m+1))
                        + " as " + (String)((Map)list.get(k)).get(m == -1 ? s : s.substring(m+1)));
             }
             if (ii < expr.length()) {
@@ -156,7 +209,7 @@ public abstract class AbstractSitemap implements Sitemap, Loggable {
             }
             return (result.toString());
         } catch (Exception e) {
-            log.error("AbstractSitemap:substitute()", e);
+            getLogger().error("AbstractSitemap:substitute()", e);
             throw new PatternException
                     ("error occurred during evaluation of expression \""
                      +expr+"\" at position "+(i+1)+"\n"

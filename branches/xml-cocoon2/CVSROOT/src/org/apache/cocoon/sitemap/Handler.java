@@ -27,7 +27,7 @@ import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Loggable;
 
 /**
@@ -35,10 +35,9 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-08 14:25:32 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-14 11:39:14 $
  */
-public class Handler implements Runnable, Configurable, Composer, Processor, Loggable {
-    protected Logger log;
+public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Processor {
 
     /** the configuration */
     private Configuration conf;
@@ -74,12 +73,6 @@ public class Handler implements Runnable, Configurable, Composer, Processor, Log
 
     public void configure (Configuration conf) {
         this.conf = conf;
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     protected Handler (ComponentManager sitemapComponentManager, String source, boolean check_reload)
@@ -131,7 +124,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor, Log
 
     protected synchronized void regenerate (Environment environment)
     throws Exception {
-        log.debug("Beginning sitemap regeneration");
+        getLogger().debug("Beginning sitemap regeneration");
         regenerateAsynchronously(environment);
         if (regeneration != null)
             regeneration.join();
@@ -141,7 +134,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor, Log
     throws Exception {
         throwEventualException();
         if (sitemap == null) {
-            log.fatalError("Sitemap is not set for the Handler!!!!");
+            getLogger().fatalError("Sitemap is not set for the Handler!!!!");
             throw new RuntimeException("The Sitemap is null, this should never be!");
         }
         return sitemap.process(environment);
@@ -165,21 +158,21 @@ public class Handler implements Runnable, Configurable, Composer, Processor, Log
         try {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage, environment);
-            smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
-            if (smap instanceof Loggable) ((Loggable) smap).setLogger(this.log);
+            if (smap instanceof Loggable) ((Loggable) smap).setLogger(getLogger());
             if (smap instanceof Composer) smap.compose(this.manager);
+            smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
             if (smap instanceof Configurable) smap.configure(this.conf);
 
             this.sitemap = smap;
-            log.debug("Sitemap regeneration complete");
+            getLogger().debug("Sitemap regeneration complete");
 
             if (this.sitemap != null) {
-                log.debug("The sitemap has been successfully compiled!");
+                getLogger().debug("The sitemap has been successfully compiled!");
             } else {
-                log.debug("No errors, but the sitemap has not been set.");
+                getLogger().debug("No errors, but the sitemap has not been set.");
             }
         } catch (Throwable t) {
-            log.error("Error compiling sitemap", t);
+            getLogger().error("Error compiling sitemap", t);
 
             if (t instanceof Exception) {
               this.exception = (Exception) t;
