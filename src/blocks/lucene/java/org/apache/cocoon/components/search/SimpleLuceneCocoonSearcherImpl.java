@@ -92,7 +92,7 @@ import java.io.IOException;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.4 2004/01/06 13:40:25 joerg Exp $
+ * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.5 2004/02/04 13:00:32 cziegeler Exp $
  */
 public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          implements LuceneCocoonSearcher, Configurable, Serviceable, Disposable, Recyclable
@@ -486,7 +486,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          */
         public boolean indexReaderIsValid(Directory directory) throws IOException {
             return indexReader != null &&
-            IndexReader.lastModified(directory) == lastModified;
+            IndexReader.getCurrentVersion(directory) == lastModified;
         }
 
 
@@ -509,7 +509,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
         private void createIndexReader(Directory directory) throws IOException {
             close();
             indexReader = IndexReader.open(directory);
-            lastModified = IndexReader.lastModified(directory);
+            lastModified = IndexReader.getCurrentVersion(directory);
         }
     }
 }
