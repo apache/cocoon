@@ -18,4 +18,9 @@
 <xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.caching.impl.EventAwareCacheImpl']">
     <component role="org.apache.cocoon.caching.Cache/EventAware"
                class="org.apache.cocoon.caching.impl.EventAwareCacheImpl"/>
+    <!-- The event registry which maps Cache events to Pipeline keys -->
+    <!--component role="org.apache.cocoon.caching.EventRegistry"
+                  class="org.apache.cocoon.caching.impl.DefaultEventRegistryImpl"/-->
+    <component role="org.apache.cocoon.caching.EventRegistry"
+               class="org.apache.cocoon.caching.impl.StoreEventRegistryImpl"/>
 </xconf>
