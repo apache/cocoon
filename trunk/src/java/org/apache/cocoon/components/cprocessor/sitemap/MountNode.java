@@ -54,17 +54,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.TreeProcessor;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.excalibur.source.Source;
@@ -74,26 +79,30 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: MountNode.java,v 1.2 2003/12/30 11:33:16 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=mount-node
  */
-public class MountNode extends AbstractProcessingNode implements ProcessingNode {
+public class MountNode extends AbstractProcessingNode 
+implements ProcessingNode, Contextualizable, Disposable {
 
     /** The 'uri-prefix' attribute */
-    private VariableResolver prefix;
+    private VariableResolver m_prefix;
 
     /** The 'src' attribute */
-    private VariableResolver source;
-
+    private VariableResolver m_source;
+    
+    /** The value of the 'check-reload' attribute */
+    private boolean m_checkReload;
+    
     /** Processors for sources */
-    private Map processors = new HashMap();
+    private Map m_processors = new HashMap();
 
     /** The processor for this node */
-    private TreeProcessor parentProcessor;
+    private TreeProcessor m_parentProcessor;
 
     public MountNode() {
     }
@@ -101,22 +110,19 @@ public class MountNode extends AbstractProcessingNode implements ProcessingNode 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
         try {
-            this.prefix = VariableResolverFactory.getResolver(
+            m_prefix = VariableResolverFactory.getResolver(
                 config.getAttribute("uri-prefix"),super.m_manager);
-            this.source = VariableResolverFactory.getResolver(
+            m_source = VariableResolverFactory.getResolver(
                 config.getAttribute("src"),super.m_manager);
+            m_checkReload = config.getAttributeAsBoolean("check-reload",true);
         }
         catch (PatternException e) {
             throw new ConfigurationException(e.toString());
         }
     }
     
-    /**
-     * @avalon.dependency type=TreeProcessor
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
-        parentProcessor = (TreeProcessor) manager.lookup(TreeProcessor.ROLE);
+    public void contextualize(Context context) throws ContextException {
+        m_parentProcessor = (TreeProcessor) context.get("treeprocessor");
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
@@ -124,10 +130,10 @@ public class MountNode extends AbstractProcessingNode implements ProcessingNode 
 
         Map objectModel = env.getObjectModel();
 
-        String resolvedSource = this.source.resolve(context, objectModel);
-        String resolvedPrefix = this.prefix.resolve(context, objectModel);
+        String resolvedSource = m_source.resolve(context, objectModel);
+        String resolvedPrefix = m_prefix.resolve(context, objectModel);
 
-        TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
+        TreeProcessor processor = getProcessor(resolvedSource);
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
@@ -149,7 +155,7 @@ public class MountNode extends AbstractProcessingNode implements ProcessingNode 
             }
         } finally {
             // Restore context
-			env.setURI(oldPrefix, oldURI);
+            processor.getEnvironmentHelper().setContext(env);
 
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
@@ -162,11 +168,10 @@ public class MountNode extends AbstractProcessingNode implements ProcessingNode 
      * Get the processor for the sub sitemap
      * FIXME Better synchronization strategy
      */
-    private synchronized TreeProcessor getProcessor(String source, String prefix) 
+    private synchronized TreeProcessor getProcessor(String source) 
     throws Exception {
-
-        TreeProcessor processor = (TreeProcessor) processors.get(source);
-
+        
+        TreeProcessor processor = (TreeProcessor) m_processors.get(source);
         if (processor == null) {
             // Handle directory mounts
             String actualSource;
@@ -176,26 +181,19 @@ public class MountNode extends AbstractProcessingNode implements ProcessingNode 
                 actualSource = source;
             }
             
-            SourceResolver resolver = (SourceResolver) super.m_manager.lookup(SourceResolver.ROLE);
-            Source src = resolver.resolveURI(actualSource);
-            try {
-                processor = this.parentProcessor.createChildProcessor(src);
-            } finally {
-                resolver.release(src);
-                super.m_manager.release(resolver);
-            }
+            processor = this.m_parentProcessor.createChildProcessor(actualSource,m_checkReload);
 
             // Associate to the original source
-            processors.put(source, processor);
+            m_processors.put(source, processor);
         }
 
         return processor;
     }
 
     public void dispose() {
-        Iterator iter = this.processors.values().iterator();
+        Iterator iter = this.m_processors.values().iterator();
         while(iter.hasNext()) {
-            ((TreeProcessor)iter.next()).dispose();
+            ContainerUtil.dispose(iter.next());
         }
     }
 
