@@ -2,10 +2,12 @@
 
 <!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<!-- <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> -->
+
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="page">
-   <xsl:pi name="cocoon-format">type="text/html"</xsl:pi>
+   <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
    <html>
     <head>
      <title>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="portfolio.html.xsl" type="text/xsl"?>
-<?xml-stylesheet href="portfolio.wml.xsl" type="text/xsl" media="wap"?>
+<?xml-stylesheet href="portfolio-html.xsl" type="text/xsl"?>
+<?xml-stylesheet href="portfolio-wml.xsl" type="text/xsl" media="wap"?>
 <?cocoon-process type="xslt"?>
 
 <!-- Written by Stefano Mazzocchi "stefano@apache.org" -->

@@ -16,10 +16,10 @@
     session.
 -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="page">
-   <xsl:pi name="cocoon-format">type="text/xml"</xsl:pi>
+   <xsl:processing-instruction name="cocoon-format">type="text/xml"</xsl:processing-instruction>
     <DIALOG>
      <STEP NAME="init">
       <PROMPT><xsl:apply-templates/></PROMPT>

@@ -3,12 +3,12 @@
 <!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
 
 <xsl:stylesheet 
-	xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns="http://www.wapforum.org/DTD/wml_1.1.xml"
 	result-ns="http://www.wapforum.org/DTD/wml_1.1.xml">
 
  <xsl:template match="portfolio">
-  <xsl:pi name="cocoon-format">type="text/wml"</xsl:pi>
+  <xsl:processing-instruction name="cocoon-format">type="text/wml"</xsl:processing-instruction>
 
   <wml>
    <card id="index" title="Your Portfolio">

@@ -1,9 +1,9 @@
 <xsl:stylesheet
-  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
-  xmlns:fo="http://www.w3.org/XSL/Format/1.0">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
   <xsl:template match="novel">
-    <xsl:pi name="cocoon-format">type="text/xslfo"</xsl:pi>
+    <xsl:processing-instruction name="cocoon-format">type="text/xslfo"</xsl:processing-instruction>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
       <fo:layout-master-set>
       <fo:simple-page-master

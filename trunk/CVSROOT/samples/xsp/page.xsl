@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: page.xsl,v 1.1.1.1 1999-11-09 01:51:35 stefano Exp $ -->
+<!-- Version: $Id: page.xsl,v 1.2 1999-12-02 11:55:04 stefano Exp $ -->
 
 <xsl:stylesheet
-  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xsp="http://www.apache.org/DTD/XSP/Layer1">
 
   <!-- This template process the root element -->
@@ -13,7 +13,7 @@
      xmlns:xsp="http://www.apache.org/DTD/XSP/Layer1"
      language="java">
 
-    <xsl:pi name="cocoon-format">type="text/xsp"</xsl:pi>
+    <xsl:processing-instruction name="cocoon-format">type="text/xsp"</xsl:processing-instruction>
    
     <xsp:logic xml:space="preserve"><![CDATA[
      static private int counter = 0;
