@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.25 2003/10/20 08:15:27 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.26 2003/10/24 13:00:16 vgritsenko Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -143,7 +143,7 @@ public class Cocoon
         try {
             this.environmentHelper = new EnvironmentHelper(
                          (String) this.context.get(Constants.CONTEXT_ROOT_URL));
-            ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
+            ContainerUtil.enableLogging(this.environmentHelper, getLogger());
             ContainerUtil.service(this.environmentHelper, this.serviceManager);
         } catch (ContextException e) {
             throw new ServiceException("Unable to get context root url from context.", e);
@@ -262,7 +262,9 @@ public class Cocoon
      * @param environment an <code>Environment</code> value
      */
     protected void debug(Environment environment, boolean internal) {
-        if ( ! getLogger().isDebugEnabled() ) return;
+        if (!getLogger().isDebugEnabled()) {
+            return;
+        }
 
         Map objectModel = environment.getObjectModel();
         Request request = ObjectModelHelper.getRequest(objectModel);
@@ -374,7 +376,7 @@ public class Cocoon
         EnvironmentHelper.enterProcessor(this);
         try {
             boolean result;
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
                 this.debug(environment, false);
             }
@@ -399,12 +401,12 @@ public class Cocoon
             EnvironmentHelper.leaveProcessor();
 //            CocoonComponentManager.leaveEnvironment();
 //            CocoonComponentManager.endProcessing(environment, key);
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
 
             // TODO (CZ): This is only for testing - remove it later on
-//            CocoonComponentManager.checkEnvironment(this.getLogger());
+//            CocoonComponentManager.checkEnvironment(getLogger());
         }
     }
 
@@ -420,7 +422,7 @@ public class Cocoon
         }
 
         try {
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
                 this.debug(environment, true);
             }
@@ -435,7 +437,7 @@ public class Cocoon
             }
 
         } finally {
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
         }
