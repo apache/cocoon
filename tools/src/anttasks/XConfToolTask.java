@@ -89,13 +89,16 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.7 $ $Date: 2003/06/05 21:06:17 $
+ * @version CVS $Revision: 1.8 $ $Date: 2003/06/21 06:53:55 $
  */
 public final class XConfToolTask extends MatchingTask {
 
+    private static final String NL=System.getProperty("line.separator");
+    private static final String FSEP=System.getProperty("file.separator");
     private File file;
     private File directory;
     private File srcdir;
+    private boolean addComments;
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
@@ -125,6 +128,14 @@ public final class XConfToolTask extends MatchingTask {
     public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog)
     {
       this.xmlCatalog.addConfiguredXMLCatalog(xmlCatalog);
+    }
+
+    /**
+     * Whether to add a comment indicating where this block of code comes
+     * from.
+     */
+    public void setAddComments(Boolean addComments) {
+        this.addComments = addComments.booleanValue();
     }
 
     /**
@@ -227,6 +238,7 @@ public final class XConfToolTask extends MatchingTask {
         Element elem = component.getDocumentElement();
 
         String extension = file.lastIndexOf(".")>0?file.substring(file.lastIndexOf(".")+1):"";
+        String basename = basename(file);
 
         if ( !elem.getTagName().equals(extension)) {
             log("Skipping non xconf-tool file: "+file);
@@ -325,6 +337,10 @@ public final class XConfToolTask extends MatchingTask {
             log("Processing: "+file);
             NodeList componentNodes = component.getDocumentElement().getChildNodes();
 
+            if (this.addComments) {
+                root.appendChild(configuration.createComment("..... Start configuration from '"+basename+"' "));
+                root.appendChild(configuration.createTextNode(NL));
+            }
             for (int i = 0; i<componentNodes.getLength(); i++) {
                 Node node = configuration.importNode(componentNodes.item(i),
                                                      true);
@@ -335,7 +351,21 @@ public final class XConfToolTask extends MatchingTask {
                     root.insertBefore(node, before);
                 }
             }
+            if (this.addComments) {
+                root.appendChild(configuration.createComment("..... End configuration from '"+basename+"' "));
+                root.appendChild(configuration.createTextNode(NL));
+            }
             return true;
         }
+    }
+
+    /** Returns the file name (excluding directories and extension). */
+    private String basename(String file) {
+        int start = file.lastIndexOf(FSEP)+1; // last '/'
+        int end = file.lastIndexOf(".");  // last '.'
+
+        if (end == 0) end = file.length();
+
+        return file.substring(start, end);
     }
 }
