@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.6 2003/05/08 06:39:47 bdelacretaz Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.7 2003/06/13 12:05:54 upayavira Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -46,7 +46,7 @@
    <p class="topped">
     If you need help and this information is not enough, you
     are invited to read the
-    <a href="http://cocoon.apache.org/faq/">Cocoon FAQ</a>.<br/>
+    <a href="http://cocoon.apache.org/2.1/faq/">Cocoon FAQ</a>.<br/>
     If you still don't find the answers you need,
     can send a mail to the
     <a>
