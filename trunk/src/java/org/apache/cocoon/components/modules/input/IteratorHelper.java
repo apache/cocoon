@@ -56,7 +56,7 @@ import java.util.Iterator;
 /**
  * Wraps an Enumeration and provides Iterator interface.
  *
- * @version CVS $Id: IteratorHelper.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: IteratorHelper.java,v 1.3 2003/09/24 21:41:11 cziegeler Exp $
  */
 class IteratorHelper implements Iterator {
     Enumeration enum = null;
@@ -64,5 +64,5 @@ class IteratorHelper implements Iterator {
     public boolean hasNext() { return this.enum.hasMoreElements(); }
     public Object next() { return this.enum.nextElement(); }
     /** ignored */
-    public void remove() {};
+    public void remove() {}
 }

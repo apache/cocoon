@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: NamespacesTable.java,v 1.1 2003/03/09 00:09:46 pier Exp $
+ * @version CVS $Id: NamespacesTable.java,v 1.2 2003/09/24 21:41:11 cziegeler Exp $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */
@@ -269,20 +269,20 @@ public class NamespacesTable {
     /** The internal entry structure for this table. */
     private static class Entry implements Declaration {
         /** The URI hashcode. */
-        private int uriHash=0;
+        protected int uriHash=0;
         /** The prefix hashcode. */
-        private int prefixHash=0;
+        protected int prefixHash=0;
         /** The URI string. */
-        private String uri="";
+        protected String uri="";
         /** The prefix string. */
-        private String prefix="";
+        protected String prefix="";
         /** The previous declaration for the same prefix. */
-        private Entry previousDeclaration=null;
+        protected Entry previousDeclaration;
         /** The declaration following this one in the table. */
-        private Entry nextEntry=null;
+        protected Entry nextEntry;
 
         /** Create a new namespace declaration. */
-        private static Entry create(String prefix, String uri) {
+        protected static Entry create(String prefix, String uri) {
             // Create a new entry
             Entry e=new Entry();
             // Set the prefix string and hash code.
@@ -304,13 +304,13 @@ public class NamespacesTable {
     /** The default namespace-aware name declaration implementation */
     private static class NameImpl implements Name {
         /** The namespace URI. */
-        private String uri=null;
+        protected String uri;
         /** The namespace prefix. */
-        private String prefix=null;
+        protected String prefix;
         /** The namespace local name. */
-        private String local=null;
+        protected String local;
         /** The namespace raw name. */
-        private String raw=null;
+        protected String raw;
 
         /** Return the namespace URI. */
         public String getUri() { return(this.uri); }

@@ -80,7 +80,7 @@ import java.util.Map;
  *   dom-root-element is the trigger that will be the root element of the DOM
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: WriteDOMSessionTransformer.java,v 1.1 2003/03/09 00:09:40 pier Exp $
+ * @version CVS $Id: WriteDOMSessionTransformer.java,v 1.2 2003/09/24 21:41:12 cziegeler Exp $
  */
 
 public class WriteDOMSessionTransformer
@@ -93,7 +93,6 @@ public class WriteDOMSessionTransformer
     private boolean sessionAvailable = false;
 
     private Session session;
-    private Parameters parameters;
     private DOMBuilder builder;
 
     private String DOMName;
@@ -106,7 +105,6 @@ public class WriteDOMSessionTransformer
     public void recycle() {
         super.recycle();
         this.session = null;
-        this.parameters = null;
         this.builder = null;
         this.buildDom = false;
         this.sessionAvailable = false;

@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.13 2003/08/20 08:34:16 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.14 2003/09/24 21:41:11 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -373,7 +373,7 @@ public abstract class AbstractCachingProcessingPipeline
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Serializer,
-                                                 (String)this.serializerRole,
+                                                 this.serializerRole,
                                                  key)
                                                 );
                     this.cacheCompleteResponse = true;
@@ -470,7 +470,7 @@ public abstract class AbstractCachingProcessingPipeline
 
                 // See if we have an explicit "expires" setting. If so,
                 // and if it's still fresh, we're done.
-                Long responseExpires = (Long) response.getExpires();
+                Long responseExpires = response.getExpires();
 
                 if (responseExpires != null) {
                     if (this.getLogger().isDebugEnabled()) {
@@ -708,7 +708,7 @@ public abstract class AbstractCachingProcessingPipeline
                             );
 
                 // now we have the key to get the cached object
-                CachedResponse cachedObject = (CachedResponse)this.cache.get( pcKey );
+                CachedResponse cachedObject = this.cache.get( pcKey );
 
                 if (cachedObject != null) {
                     if (this.getLogger().isDebugEnabled()) {

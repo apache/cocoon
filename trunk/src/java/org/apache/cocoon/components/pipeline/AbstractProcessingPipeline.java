@@ -87,7 +87,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.7 2003/08/06 10:07:30 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.8 2003/09/24 21:41:12 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -284,7 +284,7 @@ public abstract class AbstractProcessingPipeline
             throw new ProcessingException("Lookup of transformer selector failed.", ce);
         }
         try {
-            this.transformers.add((Transformer)selector.select(role));
+            this.transformers.add(selector.select(role));
             this.transformerSelectors.add(selector);
         } catch (ComponentException ce) {
             throw new ProcessingException("Lookup of transformer for role '"+role+"' failed.", ce);

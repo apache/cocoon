@@ -87,7 +87,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.5 2003/09/24 21:41:12 cziegeler Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
@@ -99,9 +99,6 @@ public class StreamGenerator extends ServiceableGenerator
     /** The input source */
     private InputSource inputSource;
 
-    /** The system ID of the input source */
-    private String systemID;
-
     /**
      * Recycle this component.
      * All instance variables are set to <code>null</code>.
@@ -109,7 +106,6 @@ public class StreamGenerator extends ServiceableGenerator
     public void recycle() {
         super.recycle();
         this.inputSource = null;
-        this.systemID = null;
     }
 
     /**

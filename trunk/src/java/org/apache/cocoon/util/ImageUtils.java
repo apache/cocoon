@@ -59,7 +59,7 @@ import java.io.FileInputStream;
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: ImageUtils.java,v 1.2 2003/03/16 17:49:16 vgritsenko Exp $
+ * @version CVS $Id: ImageUtils.java,v 1.3 2003/09/24 21:41:11 cziegeler Exp $
  */
 final public class ImageUtils {
 
@@ -170,10 +170,10 @@ final public class ImageUtils {
                 throw new FileFormatException("Not a valid Gif file!");
             }
 
-            int w1 = ((int) buf[6] & 0xff) | (buf[6] & 0x80);
-            int w2 = ((int) buf[7] & 0xff) | (buf[7] & 0x80);
-            int h1 = ((int) buf[8] & 0xff) | (buf[8] & 0x80);
-            int h2 = ((int) buf[9] & 0xff) | (buf[9] & 0x80);
+            int w1 = (buf[6] & 0xff) | (buf[6] & 0x80);
+            int w2 = (buf[7] & 0xff) | (buf[7] & 0x80);
+            int h1 = (buf[8] & 0xff) | (buf[8] & 0x80);
+            int h2 = (buf[9] & 0xff) | (buf[9] & 0x80);
 
             int width = w1 + (w2 << 8);
             int height = h1 + (h2 << 8);

@@ -59,7 +59,7 @@ import java.util.*;
  * for the <code>Request</code> object.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestParameters.java,v 1.2 2003/03/16 17:49:14 vgritsenko Exp $
+ * @version CVS $Id: RequestParameters.java,v 1.3 2003/09/24 21:41:12 cziegeler Exp $
  */
 public final class RequestParameters
 implements Serializable {
@@ -109,7 +109,7 @@ implements Serializable {
         if (queryString != null) {
             StringTokenizer st = new StringTokenizer(queryString, "&");
             while (st.hasMoreTokens()) {
-                String pair = (String)st.nextToken();
+                String pair = st.nextToken();
                 int pos = pair.indexOf('=');
                 if (pos != -1) {
                     this.setParameter(this.parseName(pair.substring(0, pos)),

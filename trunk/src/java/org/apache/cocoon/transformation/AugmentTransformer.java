@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since October 10, 2001
- * @version CVS $Id: AugmentTransformer.java,v 1.3 2003/09/04 14:49:03 cziegeler Exp $
+ * @version CVS $Id: AugmentTransformer.java,v 1.4 2003/09/24 21:41:12 cziegeler Exp $
  */
 public class AugmentTransformer
     extends AbstractTransformer {
@@ -43,7 +43,7 @@ public class AugmentTransformer
         this.objectModel = objectModel;
         this.request = ObjectModelHelper.getRequest( this.objectModel );
     
-        String mountPoint = (String)parameters.getParameter("mount", null);
+        String mountPoint = parameters.getParameter("mount", null);
         
         StringBuffer uribuf = new StringBuffer();
         boolean isSecure = this.request.isSecure();

@@ -151,7 +151,7 @@ import java.util.Stack;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.3 2003/07/18 20:55:01 stephan Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.4 2003/09/24 21:41:12 cziegeler Exp $
  */
 public class SimpleFormTransformer
     extends AbstractTransformer
@@ -473,7 +473,7 @@ public class SimpleFormTransformer
                 attributes.removeAttribute(attributes.getIndex("checked"));
             }
         }
-        super.startElement(uri, name, raw, (Attributes) attributes);
+        super.startElement(uri, name, raw, attributes);
     }
 
     /**
@@ -509,7 +509,7 @@ public class SimpleFormTransformer
                     String.valueOf(this.values[0]));
             }
         }
-        super.startElement(uri, name, raw, (Attributes) attributes);
+        super.startElement(uri, name, raw, attributes);
     }
 
     /**
@@ -617,7 +617,7 @@ public class SimpleFormTransformer
                 attributes.removeAttribute(attributes.getIndex("selected"));
             }
 
-            super.startElement(uri, name, raw, (Attributes) attributes);
+            super.startElement(uri, name, raw, attributes);
         }
     }
 
@@ -680,7 +680,7 @@ public class SimpleFormTransformer
                 String when = attr.getValue("when");
                 String when_ge = attr.getValue("when-ge");
 
-                if ((when != null && when.equals((String) validatorResults.get(validation)))
+                if ((when != null && when.equals(validatorResults.get(validation)))
                     || (when_ge != null
                         && validation.ge(
                             (ValidatorActionResult) validatorResultLabel.get(
@@ -698,12 +698,12 @@ public class SimpleFormTransformer
                         attributes.removeAttribute(attributes.getIndex("when"));
                     if (when_ge != null)
                         attributes.removeAttribute(attributes.getIndex("when-ge"));
-                    super.startElement(uri, name, raw, (Attributes) attributes);
+                    super.startElement(uri, name, raw, attributes);
                 } else {
                     this.ignoreCount++;
                     this.stack.push(name);
                     this.ignoreThis = true;
-                };
+                }
             }
         }
     }
@@ -738,7 +738,7 @@ public class SimpleFormTransformer
                 attributes = new AttributesImpl(attr);
             }
             attributes.removeAttribute(attributes.getIndex(this.fixedName));
-            super.startElement(uri, name, raw, (Attributes) attributes);
+            super.startElement(uri, name, raw, attributes);
         }
     }
 

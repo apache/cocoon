@@ -67,7 +67,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStoreImpl.java,v 1.1 2003/09/01 14:45:07 cziegeler Exp $
+ * @version CVS $Id: RequestDataStoreImpl.java,v 1.2 2003/09/24 21:41:12 cziegeler Exp $
  * @since 2.1.1
  */
 public class RequestDataStoreImpl
@@ -94,7 +94,7 @@ public class RequestDataStoreImpl
      */
     public Object getGlobalRequestData(String key) {
         Object value = null;
-        final Map objectModel = (Map)ContextHelper.getObjectModel(this.context);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Map m = (Map)objectModel.get(this.globalRequestDataKey);
         if ( m != null ) {
             value = m.get( key );
@@ -107,7 +107,7 @@ public class RequestDataStoreImpl
      */
     public Object getRequestData(String key) {
         Object value = null;
-        final Map objectModel = (Map)ContextHelper.getObjectModel(this.context);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Map m = (Map)objectModel.get(this.requestDataKey + ObjectModelHelper.getRequest(objectModel).hashCode());
         if ( m != null ) {
             value = m.get( key );
@@ -119,7 +119,7 @@ public class RequestDataStoreImpl
      * @see org.apache.cocoon.components.persistance.RequestDataStore#removeGlobalRequestData(java.lang.String)
      */
     public void removeGlobalRequestData(String key) {
-        final Map objectModel = (Map)ContextHelper.getObjectModel(this.context);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Map m = (Map)objectModel.get(this.globalRequestDataKey);
         if ( m != null ) {
             objectModel.remove( key );
@@ -130,7 +130,7 @@ public class RequestDataStoreImpl
      * @see org.apache.cocoon.components.persistance.RequestDataStore#removeRequestData(java.lang.String)
      */
     public void removeRequestData(String key) {
-        final Map objectModel = (Map)ContextHelper.getObjectModel(this.context);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Map m = (Map)objectModel.get(this.requestDataKey + ObjectModelHelper.getRequest(objectModel).hashCode());
         if ( m != null ) {
             objectModel.remove( key );
@@ -141,7 +141,7 @@ public class RequestDataStoreImpl
      * @see org.apache.cocoon.components.persistance.RequestDataStore#setGlobalRequestData(java.lang.String, java.lang.Object)
      */
     public void setGlobalRequestData(String key, Object value) {
-        final Map objectModel = (Map)ContextHelper.getObjectModel(this.context);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Map m = (Map)objectModel.get(this.globalRequestDataKey);
         if ( m == null ) {
             m = new HashMap();
@@ -154,7 +154,7 @@ public class RequestDataStoreImpl
      * @see org.apache.cocoon.components.persistance.RequestDataStore#setRequestData(java.lang.String, java.lang.Object)
      */
     public void setRequestData(String key, Object value) {
-        final Map objectModel = (Map)ContextHelper.getObjectModel(this.context);
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Map m = (Map)objectModel.get(this.requestDataKey + ObjectModelHelper.getRequest(objectModel).hashCode());
         if ( m == null ) {
             m = new HashMap();
