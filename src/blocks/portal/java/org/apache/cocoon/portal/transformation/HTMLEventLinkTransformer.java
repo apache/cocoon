@@ -28,8 +28,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * This transformer extends transforms html actions
- * into events.
+ * This transformer transforms html actions into events.
  * The transformer listens for the element a and form. Links
  * that only contain an anchor are ignored.
  * In addition if a link has the attribute "external" with the value
@@ -38,7 +37,7 @@ import org.xml.sax.SAXException;
  * TODO: Support target attribute
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.13 2004/06/07 08:50:37 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {

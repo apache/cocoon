@@ -47,11 +47,10 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
         final CopletInstanceData coplet,
         final String uri,
         final ContentHandler contentHandler)
-        throws SAXException {
+    throws SAXException {
         try {
             super.streamContent(coplet, uri, contentHandler);
-        }
-        catch (SAXException se) {
+        } catch (SAXException se) {
             getLogger().error(
                 "ApplicationCopletAdapter: Exception while getting coplet resource",
                 se);
@@ -77,15 +76,13 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
             if ("createNewCopletInstance".equals(link)) {
                 try {
                     createNewInstance(coplet);
-                }
-                catch (ProcessingException ex) {
+                } catch (ProcessingException ex) {
                     getLogger().error("Could not create new coplet instance", ex);
                 }
-            }
-            else {
+            } else {
                 // this is a normal link event, so save the url in the instance data
                 // for ProxyTransformer
-                coplet.setAttribute(ProxyTransformer.LINK, event.getLink());
+                coplet.setTemporaryAttribute(ProxyTransformer.LINK, event.getLink());
             }
         }
     }
@@ -97,7 +94,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
      * @trows	ProcessingException if something fails in the creation process
      */
     private void createNewInstance(CopletInstanceData coplet)
-        throws ProcessingException {
+    throws ProcessingException {
         ProfileManager profileManager = null;
         try {
             profileManager =
@@ -132,11 +129,9 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
             throw new ProcessingException(
                 "Unable to lookup profile manager.",
                 ce);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ProcessingException(e);
-        }
-        finally {
+        } finally {
             this.manager.release(profileManager);
         }
     }
@@ -165,7 +160,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
     protected boolean renderErrorContent(
         CopletInstanceData coplet,
         ContentHandler handler)
-        throws SAXException {
+    throws SAXException {
         handler.startDocument();
         XMLUtils.startElement(handler, "p");
         XMLUtils.data(
