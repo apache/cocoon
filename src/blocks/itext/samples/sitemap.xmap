@@ -18,7 +18,7 @@
 <!--+
     | iText block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.3 2004/03/06 02:26:20 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.4 2004/04/17 07:18:47 antonio Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -83,7 +83,7 @@
       <!-- reuse the XSP caching example for our caching test -->
       <map:match pattern="cache-test-*.pdf">
         <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
-        <map:generate src="../xsp/xsp/cacheable.xsp" type="serverpages"/>
+        <map:generate src="../xsp/java/cacheable.xsp" type="serverpages"/>
         <map:transform src="cache-test/xsp-sample-to-itext.xsl">
           <map:parameter name="pages" value="{1}"/>
         </map:transform>
