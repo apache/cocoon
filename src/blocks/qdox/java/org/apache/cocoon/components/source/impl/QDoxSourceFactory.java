@@ -32,7 +32,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -75,7 +74,7 @@ import org.apache.regexp.RESyntaxException;
  * </p>
  * 
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.5 $ $Date: 2004/04/03 00:46:33 $
+ * @version CVS $Revision: 1.6 $ $Date: 2004/04/03 01:16:36 $
  */
 public final class QDoxSourceFactory
     extends AbstractLogEnabled
@@ -138,7 +137,7 @@ public final class QDoxSourceFactory
      * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
     public Source getSource(String location, Map parameters) throws MalformedURLException, IOException, SourceException {
-        String className = StringUtils.substringAfter(location, ":");
+        String className = location.substring(location.indexOf(':') + 1);
         Source javaSource = null;
         if (className.length() > 0) {
             try {
