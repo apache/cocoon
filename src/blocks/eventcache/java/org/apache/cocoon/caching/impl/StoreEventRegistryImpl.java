@@ -65,7 +65,7 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: StoreEventRegistryImpl.java,v 1.3 2004/02/07 15:20:09 joerg Exp $
+ * @version CVS $Id: StoreEventRegistryImpl.java,v 1.4 2004/02/27 17:27:04 unico Exp $
  */
 public class StoreEventRegistryImpl 
 		extends DefaultEventRegistryImpl implements Serviceable {
@@ -113,6 +113,7 @@ public class StoreEventRegistryImpl
 			return true;
 		} else {
 			getLogger().warn("Unable to recover Event Registry.");
+            super.createBlankCache();
 			return false;
 		}
 	}
