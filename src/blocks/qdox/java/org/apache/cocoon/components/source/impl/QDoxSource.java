@@ -42,6 +42,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.serialization.XMLSerializer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -59,7 +60,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Id: QDoxSource.java,v 1.7 2004/03/05 13:02:21 bdelacretaz Exp $ $Date: 2004/03/05 13:02:21 $
+ * @version CVS $Id: QDoxSource.java,v 1.8 2004/04/03 00:46:33 antonio Exp $ $Date: 2004/04/03 00:46:33 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -232,13 +233,13 @@ public final class QDoxSource
         String[] imports = parent.getImports();
 
         saxStartElement(handler, IMPORTS_ELEMENT);
-        for (int i=0; i<imports.length; i++) {
+        for (int i = 0; i < imports.length; i++) {
             if (imports[i].endsWith("*")) {
                 // package import:
                 saxStartElement(handler, IMPORT_ELEMENT, new String[][] {{IMPORT_ATTRIBUTE, "package"}});
                 String imp = imports[i];
                 while (imp.endsWith("*") || imp.endsWith(".")) {
-                    imp = imp.substring(0, imp.length() - 1);
+                    imp = StringUtils.chop(imp);
                 }
                 saxCharacters(handler, imp);
             } else {
@@ -410,12 +411,7 @@ public final class QDoxSource
      * @return String
      */
     private String resolveMemberNameFromLink(String ref) {
-        int hashIndex = ref.indexOf('#');
-        if (hashIndex < 0) {
-            return "";
-        } else {
-            return ref.substring(hashIndex + 1);
-        }
+        return StringUtils.substringAfter(ref, "#");
     }
 
     /**
@@ -460,7 +456,7 @@ public final class QDoxSource
             }
 
             boolean found = false;
-            for (int i=0; !found && i<classImports.size(); i++) {
+            for (int i = 0; !found && i < classImports.size(); i++) {
                 String name = (String) classImports.get(i);
                 if (name.endsWith(classPart)) {
                     classPart = name;
@@ -504,7 +500,6 @@ public final class QDoxSource
                 }
             }
         }
-
         return classPart;
     }
 
@@ -559,7 +554,7 @@ public final class QDoxSource
                     outputSuperClassInheritance(handler, jClass, mode);
                 }
                 JavaMethod[] methods = jClass.getMethods();
-                for (int i=0; i<methods.length; i++) {
+                for (int i = 0; i < methods.length; i++) {
                     if ((mode == METHOD_INHERITANCE && methods[i].getReturns() != null) ||
                         (mode == CONSTRUCTOR_INHERITANCE && methods[i].getReturns() == null)) {
                         outputMethodStartElement(handler, methods[i]);
@@ -567,11 +562,9 @@ public final class QDoxSource
                     }
                 }
                 break;
-
             default :
                 break;
         }
-
         saxEndElement(handler, INHERIT_ELEMENT);
     }
 
@@ -695,7 +688,6 @@ public final class QDoxSource
                 }
             }
         }
-
         return null;
     }
 
@@ -855,15 +847,15 @@ public final class QDoxSource
 
         List attrs = new ArrayList();
 
-        if (classPart != null && classPart.length() > 0) {
+        if (StringUtils.isNotEmpty(classPart)) {
             attrs.add(new String[] {LINK_CLASS_ATTRIBUTE, classPart});
         }
 
-        if (memberPart != null && memberPart.length() > 0) {
+        if (StringUtils.isNotEmpty(memberPart)) {
             attrs.add(new String[] {LINK_MEMBER_ATTRIBUTE, memberPart});
         }
 
-        if (display == null || display.length() == 0 && !ref.equals(classPart + "#" + memberPart)) {
+        if (StringUtils.isEmpty(display) && !ref.equals(classPart + "#" + memberPart)) {
             displayPart = ref.replace('#', '.');
         }
 

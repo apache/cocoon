@@ -48,7 +48,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.17 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.18 2004/04/03 00:46:33 antonio Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -383,8 +383,7 @@ public abstract class AbstractCachingProcessingPipeline
     /**
      * Generate validity objects for the new response
      */
-    protected void setupValidities()
-    throws ProcessingException {
+    protected void setupValidities() throws ProcessingException {
 
         if (this.toCacheKey != null) {
             // only update validity objects if we cannot use
@@ -502,17 +501,12 @@ public abstract class AbstractCachingProcessingPipeline
                         // it means that the sitemap was modified, and the old expires value is not valid
                         // anymore.
                         if (expires != 0) {
-                     
                             if (this.getLogger().isDebugEnabled())
                                 this.getLogger().debug("Refreshing expires informations");
-                     
                             response.setExpires(new Long(expires + System.currentTimeMillis()));    
-                     
                         } else {
-                     
                             if (this.getLogger().isDebugEnabled())
                                 this.getLogger().debug("No expires defined anymore for this object, setting it to no expires");
-                     
                             response.setExpires(null);
                         }                                   
                     }
@@ -549,7 +543,7 @@ public abstract class AbstractCachingProcessingPipeline
                     } else {
                         isValid = (valid == 1);
                     }
-                    if ( !isValid ) {
+                    if (!isValid) {
                         responseIsValid = false;
                         // update validity
                         if (validity == null) {
@@ -566,7 +560,7 @@ public abstract class AbstractCachingProcessingPipeline
                         i++;
                     }
                 }
-                if ( responseIsValid ) {
+                if (responseIsValid) {
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("validatePipeline: using valid cached content for '" + environment.getURI() + "'.");
                     }

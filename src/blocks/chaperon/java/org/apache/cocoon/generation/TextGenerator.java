@@ -23,6 +23,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.SystemUtils;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -50,14 +51,13 @@ import java.util.Map;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
  * @author <a href="mailto:rolf.schumacher@hamburg.de">Rolf Schumacher</a>
- * @version CVS $Id: TextGenerator.java,v 1.7 2004/03/05 13:01:47 bdelacretaz Exp $
+ * @version CVS $Id: TextGenerator.java,v 1.8 2004/04/03 00:46:33 antonio Exp $
  */
 public class TextGenerator extends ServiceableGenerator implements Parameterizable,
                                                                    CacheableProcessingComponent
 {
   /** The URI of the text element */
   public static final String URI = "http://chaperon.sourceforge.net/schema/text/1.0";
-  private static final String NL = System.getProperty("line.separator");
   private static final char[] initNonXmlChars =
   {
     ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 
@@ -112,25 +112,21 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
    * @throws SAXException
    */
   public void setup(SourceResolver resolver, Map objectmodel, String src, Parameters parameters)
-    throws ProcessingException, SAXException, IOException
-  {
+    throws ProcessingException, SAXException, IOException {
     super.setup(resolver, objectmodel, src, parameters);
-    try
-    {
+    try {
       this.encoding = parameters.getParameter("encoding", null);
       this.inputSource = resolver.resolveURI(src);
 
       String nXmlCh = parameters.getParameter("nonXmlChars", String.valueOf(initNonXmlChars));
-      if (nXmlCh.length()!=initNonXmlChars.length)
+      if (nXmlCh.length() != initNonXmlChars.length)
         throw new ProcessingException("Error during resolving of '"+src+"'.",
                                       new SourceException("length of attribute string 'nonXmlChars' is "+
                                                           nXmlCh.length()+" where it should be "+
                                                           initNonXmlChars.length+"!"));
 
       this.nonXmlChars = nXmlCh.toCharArray();
-    }
-    catch (SourceException se)
-    {
+    } catch (SourceException se) {
       throw new ProcessingException("Error during resolving of '"+src+"'.", se);
     }
   }
@@ -163,23 +159,21 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
    * @throws ProcessingException
    * @throws SAXException
    */
-  public void generate() throws IOException, SAXException, ProcessingException
-  {
+  public void generate() throws IOException, SAXException, ProcessingException {
     InputStreamReader in = null;
 
-    try
-    {
+    try {
       final InputStream sis = this.inputSource.getInputStream();
-      if (sis==null)
+      if (sis == null) {
         throw new ProcessingException("Source '"+this.inputSource.getURI()+"' not found");
+      }
 
-      if (encoding!=null)
+      if (encoding != null) {
         in = new InputStreamReader(sis, encoding);
-      else
+      } else {
         in = new InputStreamReader(sis);
-    }
-    catch (SourceException se)
-    {
+      }
+    } catch (SourceException se) {
       throw new ProcessingException("Error during resolving of '"+this.source+"'.", se);
     }
 
@@ -194,9 +188,7 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
     contentHandler.startPrefixMapping("", URI);
 
     AttributesImpl atts = new AttributesImpl();
-
-    if (localizable)
-    {
+    if (localizable) {
       atts.addAttribute("", "source", "source", "CDATA", locator.getSystemId());
       atts.addAttribute("", "line", "line", "CDATA", String.valueOf(locator.getLineNumber()));
       atts.addAttribute("", "column", "column", "CDATA", String.valueOf(locator.getColumnNumber()));
@@ -208,54 +200,48 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
     String line;
     String newline = null;
 
-    while (true)
-    {
-      if (newline==null)
+    while (true) {
+      if (newline==null) {
         line = convertNonXmlChars(reader.readLine());
-      else
+      } else {
         line = newline;
-
-      if (line==null)
+      }
+      if (line==null) {
         break;
-
+      }
       newline = convertNonXmlChars(reader.readLine());
-
-      line = (newline!=null) ? (line+NL) : line;
-
+      if (newline != null) {
+          line += SystemUtils.LINE_SEPARATOR;
+      }
       locator.setLineNumber(reader.getLineNumber());
       locator.setColumnNumber(1);
       contentHandler.characters(line.toCharArray(), 0, line.length());
-
-      if (newline==null)
+      if (newline==null) {
         break;
+      }
     }
-
     contentHandler.endElement(URI, "text", "text");
-
     contentHandler.endPrefixMapping("");
     contentHandler.endDocument();
   }
 
-  private String convertNonXmlChars(String s)
-  {
-    if (s==null)
-      return null;
-
-    int nv;
-    char[] sc = s.toCharArray();
-
-    for (int i = 0; i<sc.length; i++)
-    {
-      nv = sc[i];
-
-      if ((nv>=0) && (nv<nonXmlChars.length))
-      {
-        //do not convert white space characters
-        if ((nv!=9) && (nv!=10) && (nv!=13))
-          sc[i] = nonXmlChars[nv];
-      }
+  private String convertNonXmlChars(String s) {
+    if (s != null) {
+        int nv;
+        char[] sc = s.toCharArray();
+    
+        for (int i = 0; i<sc.length; i++) {
+          nv = sc[i];
+    
+          if ((nv>=0) && (nv<nonXmlChars.length)) {
+            //do not convert white space characters
+            if ((nv!=9) && (nv!=10) && (nv!=13))
+              sc[i] = nonXmlChars[nv];
+          }
+        }
+        return String.valueOf(sc);
+    } else {
+        return null;
     }
-
-    return String.valueOf(sc);
   }
 }
