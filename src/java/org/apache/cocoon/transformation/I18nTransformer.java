@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.10 2003/08/06 14:42:46 bruno Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.11 2003/08/06 14:50:11 bruno Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -1128,7 +1128,7 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         if (I18N_OLD_NAMESPACE_URI.equals(uri)) {
-            this.getLogger().warn("The namespace "
+            this.getLogger().error("The namespace "
                                   + I18N_OLD_NAMESPACE_URI
                                   + " for i18n is not supported any more, use: "
                                   + I18N_NAMESPACE_URI);
