@@ -58,46 +58,41 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.profile.impl.CopletInstanceDataManager;
 import org.exolab.castor.mapping.FieldHandler;
 
-
 /**
  * Field handler for CopletInstanceData instances.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataFieldHandler.java,v 1.2 2003/06/13 14:20:09 cziegeler Exp $
  */
-public class CopletInstanceDataFieldHandler 
-implements FieldHandler {
+public class CopletInstanceDataFieldHandler implements FieldHandler {
 
-	public void checkValidity(Object object)
-	{
-	}
+    public void checkValidity(Object object) {
+    }
 
-	public Object getValue(Object object) 
-	{
-		Map map = ((CopletInstanceDataManager)object).getCopletInstanceData();
-		Vector result = new Vector(map.size());
-		
-		Iterator iterator = map.values().iterator();
-		while (iterator.hasNext())
-			result.addElement(iterator.next());
-		
-		return result;
-	}
+    public Object getValue(Object object) {
+        Map map = ((CopletInstanceDataManager) object).getCopletInstanceData();
+        Vector result = new Vector(map.size());
 
-	public Object newInstance(Object parent)
-	{
-		return new CopletInstanceData();
-	}
+        Iterator iterator = map.values().iterator();
+        while (iterator.hasNext())
+            result.addElement(iterator.next());
 
-	public void resetValue(Object object)
-	{
-		((CopletInstanceDataManager)object).getCopletInstanceData().clear();
-	}
+        return result;
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		CopletInstanceData data = (CopletInstanceData)value;
-		((CopletInstanceDataManager)object).getCopletInstanceData().put(data.getId(), data);
-	}
+    public Object newInstance(Object parent) {
+        return new CopletInstanceData();
+    }
+
+    public void resetValue(Object object) {
+        ((CopletInstanceDataManager) object).getCopletInstanceData().clear();
+    }
+
+    public void setValue(Object object, Object value) {
+        CopletInstanceData data = (CopletInstanceData) value;
+        ((CopletInstanceDataManager) object).getCopletInstanceData().put(
+            data.getId(),
+            data);
+    }
 }

@@ -63,42 +63,39 @@ import org.exolab.castor.mapping.MapItem;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: ParameterFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: ParameterFieldHandler.java,v 1.2 2003/06/13 14:20:09 cziegeler Exp $
  */
-public class ParameterFieldHandler
-implements FieldHandler
-{
-	public void checkValidity(Object object)
-	{
-	}
+public class ParameterFieldHandler implements FieldHandler {
+    
+    public void checkValidity(Object object) {
+    }
 
-	public Object getValue(Object object) 
-	{
-		HashMap map = new HashMap();
-		Iterator iterator = ((Parameters)object).getParameters().entrySet().iterator();
-		Map.Entry entry;
-		Object key;
-		while (iterator.hasNext()) {
-			entry = (Map.Entry)iterator.next();
-			key = entry.getKey();
-			map.put(key, new MapItem(key, entry.getValue()));
-		}
-		return map;
-	}
+    public Object getValue(Object object) {
+        HashMap map = new HashMap();
+        Iterator iterator =
+            ((Parameters) object).getParameters().entrySet().iterator();
+        Map.Entry entry;
+        Object key;
+        while (iterator.hasNext()) {
+            entry = (Map.Entry) iterator.next();
+            key = entry.getKey();
+            map.put(key, new MapItem(key, entry.getValue()));
+        }
+        return map;
+    }
 
-	public Object newInstance(Object parent)
-	{
-		return new MapItem();
-	}
+    public Object newInstance(Object parent) {
+        return new MapItem();
+    }
 
-	public void resetValue(Object object)
-	{
-		((Parameters)object).getParameters().clear();
-	}
+    public void resetValue(Object object) {
+        ((Parameters) object).getParameters().clear();
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		MapItem item = (MapItem)value;
-		((Parameters)object).getParameters().put(item.getKey(), item.getValue());
-	}
+    public void setValue(Object object, Object value) {
+        MapItem item = (MapItem) value;
+        ((Parameters) object).getParameters().put(
+            item.getKey(),
+            item.getValue());
+    }
 }

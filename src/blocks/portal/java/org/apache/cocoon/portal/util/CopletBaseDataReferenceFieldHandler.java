@@ -53,46 +53,43 @@ package org.apache.cocoon.portal.util;
 import org.apache.cocoon.portal.coplet.CopletBaseData;
 import org.apache.cocoon.portal.coplet.CopletData;
 
-
 /**
  * Field handler for external CopletBaseData references.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.2 2003/06/13 14:20:09 cziegeler Exp $
  */
-public class CopletBaseDataReferenceFieldHandler 
-extends ReferenceFieldHandler {
+public class CopletBaseDataReferenceFieldHandler
+    extends ReferenceFieldHandler {
 
-	public void checkValidity(Object object)
-	{
-	}
+    public void checkValidity(Object object) {
+    }
 
-	public Object getValue(Object object) 
-	{
-		CopletBaseData copletBaseData = ((CopletData)object).getCopletBaseData();
-		if (copletBaseData != null) {
-			return copletBaseData.getId();
-		} else {
-			return null;
-		}
-	}
+    public Object getValue(Object object) {
+        CopletBaseData copletBaseData =
+            ((CopletData) object).getCopletBaseData();
+        if (copletBaseData != null) {
+            return copletBaseData.getId();
+        } else {
+            return null;
+        }
+    }
 
-	public Object newInstance(Object parent)
-	{
-		return new CopletBaseData();
-	}
+    public Object newInstance(Object parent) {
+        return new CopletBaseData();
+    }
 
-	public void resetValue(Object object)
-	{
-		((CopletData)object).setCopletBaseData(null);
-	}
+    public void resetValue(Object object) {
+        ((CopletData) object).setCopletBaseData(null);
+    }
 
-	public void setValue(Object object, Object value)
-	{
-		CopletBaseData copletBaseData = (CopletBaseData)getObjectMap().get(value);
-		if (copletBaseData == null)
-			throw new IllegalArgumentException("Referenced Coplet Base Data "+value+" does not exist.");
-		((CopletData)object).setCopletBaseData(copletBaseData);
-	}
+    public void setValue(Object object, Object value) {
+        CopletBaseData copletBaseData =
+            (CopletBaseData) getObjectMap().get(value);
+        if (copletBaseData == null)
+            throw new IllegalArgumentException(
+                "Referenced Coplet Base Data " + value + " does not exist.");
+        ((CopletData) object).setCopletBaseData(copletBaseData);
+    }
 }
