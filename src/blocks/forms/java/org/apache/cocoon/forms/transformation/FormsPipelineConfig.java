@@ -17,7 +17,9 @@ package org.apache.cocoon.forms.transformation;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.util.log.DeprecationLogger;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
@@ -113,15 +116,18 @@ public class FormsPipelineConfig {
         }
         cocoonOM.put("parameters", parameters);
         
-        Variables vars = jxpc.getVariables();
+        FormsVariables vars = new FormsVariables();
         vars.declareVariable("cocoon", cocoonOM);
         // These four are deprecated!
-        // FIXME - We should add a warning if they are used
         vars.declareVariable("continuation", wk);
         vars.declareVariable("request", request);
         vars.declareVariable("session", session);
         vars.declareVariable("parameters", parameters);
-        
+        vars.addDeprecatedVariable("continuation");
+        vars.addDeprecatedVariable("request");
+        vars.addDeprecatedVariable("session");
+        vars.addDeprecatedVariable("parameters");
+
         Locale localeParameter = null;
         String localeStr = parameters.getParameter("locale", null);
         if (localeStr != null) {
@@ -322,5 +328,49 @@ public class FormsPipelineConfig {
             formAtts.addCDATAAttribute("method", getFormMethod());
         }
         return formAtts;
+    }
+    
+    public static final class FormsVariables implements Variables {
+        
+        final Map vars = new HashMap();
+        final List deprecatedNames = new ArrayList();
+
+        public void addDeprecatedVariable(String name) {
+            this.deprecatedNames.add(name);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.commons.jxpath.Variables#declareVariable(java.lang.String, java.lang.Object)
+         */
+        public void declareVariable(String name, Object value) {
+            this.vars.put(name, value);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.commons.jxpath.Variables#getVariable(java.lang.String)
+         */
+        public Object getVariable(String name) {
+            Object value = this.vars.get(name);
+            if ( value != null && deprecatedNames.contains(name) ) {
+                DeprecationLogger.log("CForms: usage of the variable '" + name + "' is deprecated."+ 
+                                      "Please use 'cocoon." + name + "' instead. The usage of just '"+
+                                      name+"' will be removed in Cocoon 2.2.");
+            }
+            return value;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.commons.jxpath.Variables#isDeclaredVariable(java.lang.String)
+         */
+        public boolean isDeclaredVariable(String name) {
+            return this.vars.containsKey(name);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.commons.jxpath.Variables#undeclareVariable(java.lang.String)
+         */
+        public void undeclareVariable(String name) {
+            this.vars.remove(name);
+        }
     }
 }
