@@ -1,10 +1,13 @@
 
 importPackage(Packages.org.apache.cocoon.components.slide);
 importPackage(Packages.org.apache.cocoon.components.source.helpers);
+importPackage(Packages.org.apache.excalibur.source);
 
 var repository = cocoon.getComponent("org.apache.cocoon.components.repository.SourceRepository");
 var provider = cocoon.getComponent(PrincipalProvider.ROLE + "Selector").select("slide");
-var resolver = cocoon.getComponent("org.apache.excalibur.source.SourceResolver");
+var resolver = cocoon.getComponent(SourceResolver.ROLE);
+
+// ---------------------------------------------- utility functions
 
 function getBaseURI() {
   var namespace = cocoon.parameters["namespace"];
@@ -13,11 +16,25 @@ function getBaseURI() {
 }
 
 function getParentPath() {
-  var parentPath     = cocoon.request.getParameter("parentPath");
+  var parentPath = cocoon.request.getParameter("parentPath");
   if (!parentPath.lastIndexOf('/') != parentPath.length-1) {
       parentPath = parentPath + "/";
   }
   return parentPath;
+}
+
+function getResourcePath() {
+  return cocoon.request.getParameter("resourcePath");
+  
+}
+
+// ---------------------------------------------- authentication
+
+function authenticate() {
+  var userid = cocoon.request.getParameter("userid");
+  var password = cocoon.request.getParameter("password");
+  // TODO: if (password = correct) ..
+  cocoon.sendPage("authentication",{id:userid,role:"root"});
 }
 
 // ---------------------------------------------- file management
@@ -29,8 +46,6 @@ function public_mkcol() {
   var collectionName = cocoon.request.getParameter("collectionName");
   var location = baseUri + parentPath + collectionName;
   var status = repository.makeCollection(location);
-  
-//  cocoon.log.info("make collection " + location + ": " + status);
 
   cocoon.redirectTo("content" + parentPath);
 }
@@ -62,7 +77,7 @@ function public_delete() {
 
 function public_addproperty() {
   var baseUri      = getBaseURI();
-  var resourcePath = cocoon.request.getParameter("resourcePath");
+  var resourcePath = getResourcePath();
   var location     = baseUri + resourcePath;
   var source = null;
   try {
@@ -84,7 +99,7 @@ function public_addproperty() {
 
 function public_removeproperty() {
   var baseUri = getBaseURI();
-  var resourcePath = cocoon.request.getParameter("resourcePath");
+  var resourcePath = getResourcePath();
   var location = baseUri + resourcePath;
   var source = null;
   try {
@@ -98,6 +113,38 @@ function public_removeproperty() {
       resolver.release(source);
     }
   }
+  cocoon.redirectTo("properties" + resourcePath);
+}
+
+// ---------------------------------------------- lock management
+
+function public_removelock() {
+  var baseUri = getBaseURI();
+  var resourcePath = getResourcePath();
+  var subject = cocoon.request.getParameter("subject");
+  var location = baseUri + resourcePath;
+  
+  cocoon.log.info("removing lock " + subject + " from source " + location);
+  
+  // TODO: remove lock
+  
+  cocoon.redirectTo("locks" + resourcePath);
+}
+
+function public_addlock() {
+  var baseUri = getBaseURI();
+  var resourcePath = getResourcePath();
+  var subject      = cocoon.request.getParameter("subject");
+  var type         = cocoon.request.getParameter("type");
+  var inheritable  = cocoon.request.getParameter("inheritable");
+  var exclusive    = cocoon.request.getParameter("exclusive");
+  var location = baseUri + resourcePath;
+  
+  cocoon.log.info("adding lock " + subject + " to source " + location);
+  
+  // TODO: add lock
+  
+  cocoon.redirectTo("locks" + resourcePath);
 }
 
 // ---------------------------------------------- user management

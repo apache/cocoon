@@ -7,9 +7,7 @@
 
   <xsl:output indent="yes"/>
   <xsl:param name="path" />
-  <xsl:param name="namespace">cocoon</xsl:param>
-  <xsl:param name="principal">guest</xsl:param>
-
+  
   <xsl:template match="/">
     <document>
       <header>
@@ -23,32 +21,25 @@
       </header>
       <body>
         <row>
-          <xsl:apply-templates select="collection:collection|collection:resource"/>
+          <xsl:apply-templates select="collection:resource|collection:collection"/>
         </row>
       </body>
     </document>
   </xsl:template>
 
-  <xsl:template match="collection:collection|collection:resource">
+  <xsl:template match="collection:resource|collection:collection">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
-        <xsl:if test="@parent">
-          <tr>
-            <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="../properties/{$path}">Back</a>
-            </td>
-          </tr>
-        </xsl:if>
         <tr>
           <td width="100%" bgcolor="#ffffff" align="left">
             <br/>
           </td>
         </tr>
-        <xsl:for-each select="collection:collection|collection:resource">
+        <xsl:for-each select="collection:resource|collection:collection">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="../properties/{$path}/{@name}">
+                <a href="../locks/{$path}/{@name}">
                   <xsl:value-of select="@name"/>
                 </a>
               </font>
@@ -58,58 +49,79 @@
       </table>
     </column>
 
-    <column title="Properties">
+    <column title="Locks">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
         <font size="+0" face="arial,helvetica,sanserif" color="#000000">
           <tr>
             <td align="left">
-              <b>Namespace</b>
+              <b>Subject</b>
             </td>
             <td align="left">
-              <b>Name</b>
+              <b>Type</b>
             </td>
             <td align="left">
-              <b>Value</b>
+              <b>Expiration</b>
+            </td>
+            <td align="left">
+              <b>Inheritable</b>
+            </td>
+            <td align="left">
+              <b>Exclusive</b>
             </td>
             <td align="right"/>
           </tr>
-          <xsl:for-each select="collection:properties/child::node()">
-            <tr>
+          <xsl:for-each select="collection:locks/collection:lock">
+            <tr bgcolor="#eeeeee">
               <td align="left">
-                <xsl:value-of select="namespace-uri(.)"/>
+                <xsl:value-of select="@subject"/>
               </td>
               <td align="left">
-                <xsl:value-of select="local-name(.)"/>
+                <xsl:value-of select="@type"/>
               </td>
               <td align="left">
-                <xsl:value-of select="."/>
+                <xsl:value-of select="@expiration"/>
+              </td>
+              <td align="left">
+                <xsl:value-of select="@inheritable"/>
+              </td>
+              <td align="left">
+                <xsl:value-of select="@exclusive"/>
               </td>
               <td align="right">
-                <xsl:if test="namespace-uri()!='DAV:'">
-                  <form action="../removeproperty.do" method="post">
-                    <input type="hidden" name="resourcePath" value="/{$path}"/>
-                    <input type="hidden" name="namespace" value="{namespace-uri()}"/>
-                    <input type="hidden" name="name" value="{local-name()}"/>
-                    <input type="submit" name="doDeleteProperty" value="Delete"/>
-                  </form>
-                </xsl:if>
+                <form action="../removelock.do" method="post">
+                  <input type="hidden" name="resourcePath" value="/{$path}"/>
+                  <input type="hidden" name="subject" value="{@subject}"/>
+                  <input type="submit" name="doRemoveLock" value="Delete"/>
+                </form>
               </td>
             </tr>
           </xsl:for-each>
           <tr>
-            <form action="../addproperty.do" method="post">
+            <form action="../addlock.do" method="post">
               <input type="hidden" name="resourcePath" value="/{$path}"/>
               <td align="left">
-                <input name="namespace" type="text" size="15" maxlength="40"/>
+                <input name="subject" type="text" size="20" maxlength="40"/>
               </td>
               <td align="left">
-                <input name="name" type="text" size="15" maxlength="40"/>
+                <input name="type" type="text" size="15" maxlength="40"/>
               </td>
               <td align="left">
-                <input name="value" type="text" size="15" maxlength="40"/>
+                <input name="expiration" type="text" size="15" maxlength="40"/>
+              </td>
+              <td align="left">
+                <select name="inheritable">
+                  <option>true</option>
+                  <option>false</option>
+                </select>
+              </td>
+              <td align="left">
+                <select name="exclusive">
+                  <option>true</option>
+                  <option>false</option>
+                </select>
               </td>
               <td align="right">
-                <input type="submit" name="doAddProperty" value="Add/Modify"/>
+                <input type="submit" name="doAddLock" value="Add/Modify"/>
               </td>
             </form>
           </tr>

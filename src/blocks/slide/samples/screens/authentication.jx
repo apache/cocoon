@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<authentication>
+  <ID>${id}</ID>
+  <role>${role}</role>
+</authentication>
