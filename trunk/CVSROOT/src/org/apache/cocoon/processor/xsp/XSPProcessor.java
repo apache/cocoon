@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.26 2000-10-24 02:20:48 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.27 2000-11-01 19:25:31 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.26 $ $Date: 2000-10-24 02:20:48 $
+ * @version $Revision: 1.27 $ $Date: 2000-11-01 19:25:31 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -214,12 +214,12 @@ public class XSPProcessor extends AbstractActor
     if (classpath == null) {
       classpath = (String)
         this.servletContext.getAttribute("org.apache.tomcat.jsp_classpath");
-      if (classpath == null) {
+      if (classpath == null || "".equals (classpath)) {
         classpath = System.getProperty("java.class.path");
       }
     }
 
-    // Set repository for each language processor
+    // Set parameters for each language processor
     Enumeration enum = this.languages.elements();
     while (enum.hasMoreElements()) {
       XSPLanguageProcessor languageProcessor =
