@@ -52,28 +52,26 @@ package org.apache.cocoon.woody;
 
 import org.apache.cocoon.woody.formmodel.*;
 import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.woody.util.SimpleServiceSelector;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.store.Store;
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.collections.FastHashMap;
 import org.xml.sax.InputSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.io.IOException;
 
 /**
@@ -81,72 +79,49 @@ import java.io.IOException;
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
-  implements FormManager, ThreadSafe, Composable, Disposable, Configurable, Component {
+  implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
       
-    protected ComponentManager manager;
-    protected Map widgetDefinitionBuilders = new HashMap();
-    protected FormDefinitionBuilder formDefinitionBuilder;
-    protected boolean initialized = false;
-    protected Store store;
+    protected ServiceManager manager;
+    protected Configuration configuration;
+    protected SimpleServiceSelector widgetDefinitionBuilderSelector;
+    protected FastHashMap formDefinitionCache = new FastHashMap();
 
-    /**
-     * Composable
-     */
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.manager = componentManager;
-        this.store = (Store)componentManager.lookup(Store.TRANSIENT_STORE);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
     }
 
     /**
      * Configurable
      */
     public void configure(Configuration configuration) throws ConfigurationException {
-        // get available widgets from configuration
-        Configuration[] widgetConfs = configuration.getChild("widgets").getChildren("widget");
-        if (widgetConfs.length == 0)
-            getLogger().warn("No Woody widgets found in FormManager configuration.");
-
-        for (int i = 0; i < widgetConfs.length; i++) {
-            String name = widgetConfs[i].getAttribute("name");
-            String factoryClassName = widgetConfs[i].getAttribute("src");
-            Class clazz;
-            try {
-                clazz = Class.forName(factoryClassName);
-            } catch (Exception e) {
-                throw new ConfigurationException("Could not load class \"" + factoryClassName + "\" specified at " + widgetConfs[i].getLocation(), e);
-            }
-            WidgetDefinitionBuilder widgetDefinitionBuilder;
-            try {
-                widgetDefinitionBuilder = (WidgetDefinitionBuilder)clazz.newInstance();
-            } catch (Exception e) {
-                throw new ConfigurationException("Could not create WidgetDefinitionBuilder \"" + factoryClassName + "\"", e);
-            }
-            widgetDefinitionBuilders.put(name, widgetDefinitionBuilder);
-        }
+        this.configuration = configuration;
     }
 
-    public void lazyInitialize() throws Exception {
-        // Initialisation is only done after the FormManager has been fully created, because
-        // the WidgetDefinitionBuilders that we create here need themselves access to
-        // the FormManager (which they can only lookup after the FormManager itself has
-        // passed all lifecycle stages).
+    public void initialize() throws Exception {
+        widgetDefinitionBuilderSelector = new SimpleServiceSelector("widget", WidgetDefinitionBuilder.class);
+        widgetDefinitionBuilderSelector.service(new ServiceManager() {
+            final String WIDGET_DEFINITION_BUILDER_SELECTOR_ROLE = WidgetDefinitionBuilder.class.getName() + "Selector";
 
-        if (initialized)
-            return;
+            public Object lookup(String name) throws ServiceException {
+                if (WIDGET_DEFINITION_BUILDER_SELECTOR_ROLE.equals(name))
+                    return widgetDefinitionBuilderSelector;
+                else
+                    return manager.lookup(name);
+            }
 
-        LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, manager, null, null, null);
+            public boolean hasService(String name) {
+                if (WIDGET_DEFINITION_BUILDER_SELECTOR_ROLE.equals(name))
+                    return true;
+                else
+                    return manager.hasService(name);
+            }
 
-        Iterator widgetDefinitionBuilderIt = widgetDefinitionBuilders.values().iterator();
-        while (widgetDefinitionBuilderIt.hasNext()) {
-            WidgetDefinitionBuilder widgetDefinitionBuilder = (WidgetDefinitionBuilder)widgetDefinitionBuilderIt.next();
-            lifecycleHelper.setupComponent(widgetDefinitionBuilder);
-        }
-
-        // special case
-        formDefinitionBuilder = new FormDefinitionBuilder();
-        lifecycleHelper.setupComponent(formDefinitionBuilder);
-
-        initialized = true;
+            public void release(Object service) {
+                if (service != widgetDefinitionBuilderSelector)
+                    manager.release(service);
+            }
+        });
+        widgetDefinitionBuilderSelector.configure(configuration.getChild("widgets"));
     }
 
     public Form createForm(Source source) throws Exception {
@@ -155,8 +130,6 @@ public class DefaultFormManager
     }
 
     public FormDefinition getFormDefinition(Source source) throws Exception {
-        lazyInitialize();
-
         FormDefinition formDefinition = getStoredFormDefinition(source);
         if (formDefinition == null) {
             Document formDocument;
@@ -175,6 +148,7 @@ public class DefaultFormManager
             if (!(formElement.getLocalName().equals("form") || Constants.WD_NS.equals(formElement.getNamespaceURI())))
                 throw new Exception("Expected a Woody form element at " + DomHelper.getLocation(formElement));
 
+            FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
             formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
             storeFormDefinition(formDefinition, source);
         }
@@ -186,11 +160,11 @@ public class DefaultFormManager
         SourceValidity newValidity = source.getValidity();
 
         if (newValidity == null) {
-            store.remove(key);
+            formDefinitionCache.remove(key);
             return null;
         }
 
-        Object[] formDefinitionAndValidity = (Object[])store.get(key);
+        Object[] formDefinitionAndValidity = (Object[])formDefinitionCache.get(key);
         if (formDefinitionAndValidity == null)
             return null;
 
@@ -205,7 +179,7 @@ public class DefaultFormManager
         }
 
         if (!isValid) {
-            store.remove(key);
+            formDefinitionCache.remove(key);
             return null;
         }
 
@@ -217,28 +191,16 @@ public class DefaultFormManager
         SourceValidity validity = source.getValidity();
         if (validity != null) {
             Object[] formDefinitionAndValidity = {formDefinition,  validity};
-            store.store(key, formDefinitionAndValidity);
+            formDefinitionCache.put(key, formDefinitionAndValidity);
         }
-    }
-
-    public WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception {
-        lazyInitialize();
-
-        String widgetName = widgetDefinition.getLocalName();
-        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder)widgetDefinitionBuilders.get(widgetName);
-        if (builder == null)
-            throw new Exception("Unkown kind of widget \"" + widgetName + "\" specified at " + DomHelper.getLocation(widgetDefinition));
-        return builder.buildWidgetDefinition(widgetDefinition);
     }
 
     /**
      * Disposable
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.store);
-            this.manager = null;
-            this.store = null;
-        }
+        widgetDefinitionBuilderSelector.dispose();
+        this.manager = null;
+        this.formDefinitionCache = null;
     }
 }
