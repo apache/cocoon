@@ -601,17 +601,20 @@ public class Counter extends AbstractProducer {
       String k = (String) e.nextElement();
       String val = request.getParameter(k); 
       String vals[] = request.getParameterValues(k);
-      out.println("&lt;element name=\"name\"&gt;");
+      out.println("&lt;element name=\"")
+      out.println(k);
+      out.println("\"&gt;");
    </jsp:scriplet>
-      <jsp:expression>k</jsp:expression>
       <jsp:scriplet>
-       out.println("&lt;/element&gt;");
        for(int i = 0; i &lt; vals.length; i++) {
       </jsp:scriplet>
         <item>
          <jsp:expression>vals[i]</jsp:expression>
         </item>
-      <jsp:scriplet>}</jsp:scriplet>
+      <jsp:scriplet>
+       }
+       out.println("&lt;/element&gt;");
+      </jsp:scriplet>
     <jsp:scriplet>}</jsp:scriplet>
   </list>
 <jsp:scriplet>}</jsp:scriplet>  
