@@ -320,8 +320,14 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="fix">
+     Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
+   </action>
    <action dev="CZ" type="add">
      Portal block: New Group Based Profile Manager.
+   </action>
+   <action dev="VG" type="update">
+     Cron block: Add support for persistent job stores, type "tx" and "cmt".
    </action>
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232,
