@@ -76,8 +76,8 @@ public class MockEnvironment implements Environment {
 
     private String uri;
     private String uriprefix;
-    private URL rootcontext;
-    private URL context;
+    private String rootcontext;
+    private String context;
     private String view;
     private String action;
     private String contenttype;
@@ -99,11 +99,11 @@ public class MockEnvironment implements Environment {
         return uriprefix;
     }
 
-    public URL getRootContext() {
+    public String getRootContext() {
         return rootcontext;
     }
 
-    public URL getContext() {
+    public String getContext() {
         return context;
     }
 
@@ -115,7 +115,7 @@ public class MockEnvironment implements Environment {
         return action;
     }
 
-    public void setContext(String prefix, String uri) {
+    public void setContext(String prefix, String uri, String context) {
         throw new AssertionFailedError("Not implemented");
     }
 

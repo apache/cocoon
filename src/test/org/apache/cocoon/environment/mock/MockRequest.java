@@ -294,7 +294,7 @@ public class MockRequest implements Request {
     }
 
     public void setRequestURI(String uri) {
-        requestURI = uri;;
+        requestURI = uri;
     }
 
     public String getSitemapURI() {
