@@ -50,23 +50,14 @@
 */
 package org.apache.cocoon.xml;
 
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
-import org.apache.cocoon.xml.dom.DOMBuilder;
-
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import java.io.FileOutputStream;
 import java.io.ByteArrayInputStream;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Testcase for SaxBuffer
