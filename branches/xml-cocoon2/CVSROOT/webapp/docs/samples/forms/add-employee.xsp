@@ -13,16 +13,20 @@
         <para>Employee Name: <input name="name" type="text"/></para>
         <para>Department:
           <select name="department">
-      <esql:execute-query inner-method="no">
-        <esql:use-connection>personnel</esql:use-connection>
-        <esql:query>select id, name from department_table order by name</esql:query>
-        <esql:results>
-	  <option>
-            <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
-            <esql:get-string column="name"/>
-          </option>
-        </esql:results>
-      </esql:execute-query>
+	  <esql:connection>
+	    <esql:pool>personnel</esql:pool>
+	    <esql:execute-query>
+	      <esql:query>select id, name from department_table order by name</esql:query>
+	      <esql:results>
+	        <esql:row-results>
+		  <option>
+		    <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
+                    <esql:get-string column="name"/>
+		  </option>
+		</esql:row-results>
+	      </esql:results>
+	    </esql:execute-query>
+	  </esql:connection>
           </select>
         </para>
         <input type="submit" value="Add"/>

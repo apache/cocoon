@@ -18,25 +18,29 @@
     </xsp:logic>
     <title><xsp:expr>process</xsp:expr> Department Processed</title>
     <content>
-      <esql:execute-query inner-method="no">
-        <esql:use-connection>personnel</esql:use-connection>
-        <esql:query>
-	   select max(id) as maxid from department_table
-	</esql:query>
-        <esql:results>
-	  <xsp:logic>
-            currId = <esql:get-int column="maxid"/>;
-	  </xsp:logic>
-          <esql:execute-query inner-method="yes">
-            <esql:statement>
-              insert into department_table (id, name) values (
-                (<esql:parameter><xsp:expr>currId</xsp:expr></esql:parameter> + 1),
-                <esql:parameter><xsp:expr>name</xsp:expr></esql:parameter>
-              )
-            </esql:statement>
-          </esql:execute-query>
-        </esql:results>
-      </esql:execute-query>
+      <esql:connection>
+        <esql:pool>personnel</esql:pool>
+        <esql:execute-query>
+          <esql:query>
+	    select max(id) as maxid from department_table
+	  </esql:query>
+          <esql:results>
+	    <esql:row-results>
+	      <xsp:logic>
+                currId = <esql:get-int column="maxid"/>;
+	      </xsp:logic>
+              <esql:execute-query>
+                <esql:query>
+                  insert into department_table (id, name) values (
+                    (<esql:parameter><xsp:expr>currId</xsp:expr></esql:parameter> + 1),
+                    <esql:parameter><xsp:expr>name</xsp:expr></esql:parameter>
+                  )
+                </esql:query>
+              </esql:execute-query>
+	    </esql:row-results>
+          </esql:results>
+        </esql:execute-query>
+      </esql:connection>
 
       <para><xsp:expr>name</xsp:expr> added</para>
       <a href="../welcome">Back to the welcome page</a>
