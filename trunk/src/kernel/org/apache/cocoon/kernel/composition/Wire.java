@@ -15,9 +15,6 @@
  */
 package org.apache.cocoon.kernel.composition;
 
-import org.apache.cocoon.kernel.resolution.Resolver;
-import org.apache.cocoon.kernel.resolution.Resource;
-
 /**
  * <p>The {@link Wire} interface defines a component as returned by a
  * {@link Wirings} instance.</p>
@@ -59,54 +56,9 @@ import org.apache.cocoon.kernel.resolution.Resource;
  * recreated, users should call the {@link #wired()} method.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
-public interface Wire extends Resolver {
-
-    /**
-     * <p>Resolve a resource visible from a {@link Component} into a
-     * {@link Resource}.</p>
-     *
-     * <p>This method will resolve resources local to the block requesting
-     * this wire.</p>
-     *
-     * <p>If the specified {@link String} assumes a format like
-     * <code>wiring:/resource/path</code> where <code>wiring</code> is the
-     * wiring name as required in the block's deployment descriptor, the
-     * resolution of the {@link Resource} will be performed relative to the
-     * block target of the wiring.</p>
-     *
-     * <p>{@link Component}s using a {@link Wire} for resource resolution
-     * <b>must</b> be aware that resolution will happen in the context of the
-     * requesting block, rather than in the context of the block composing the
-     * {@link Component}.</p>
-     *
-     * <p>This is done because resource management is decoupled entirely from
-     * component management, and because in block-enabled environments, it will
-     * be possible to have components provided by wired blocks to operate on
-     * resources available from other wired blocks.</p>
-     * 
-     * <p>Let's examine a simple example based (for example) on Apache Cocoon:
-     * the <i>ForrestPipeline</i> block (a block providing a <code>Pipeline</code>
-     * component for Apache Forrest) is wired to two other blocks: the first is
-     * the <i>XSLTransformer</i> block (providing <code>Transformer</code>
-     * component instances) and the second one is an instance of the
-     * <i>ForrestSkin</i> block (a block providing XSLT stylesheets to be used
-     * while processing the forrest pipeline).</p>
-     *
-     * <p>Being an implementation of {@link Component}, the <code>Transformer</code>
-     * component instantiated by the <i>ForrestPipeline</i> block will have direct
-     * access (and will be able to resolve) a resource in the form of
-     * <code>skin:/document2xhtml.xsl</code>, which represents a resource provided
-     * by any <i>ForrestSkin</i> implementation, wired to the <i>ForrestPipeline</i>
-     * block, but completely separated from the original<i>XSLTransformer</i> block
-     * which provides the <code>Transformer</code> instance.</p>
-     * 
-     * @param name the local (or wired) resource name.
-     * @return a {@link Resource} instance, or <b>null</b> if the resource was
-     *         not found or was not accessible.
-     */
-    public Resource resolve(String name);
+public interface Wire {
 
     /**
      * <p>Check wether the wire between this {@link Wirings} instance and the

@@ -17,14 +17,16 @@ package org.apache.cocoon.kernel.composition;
 
 import java.net.URL;
 
+import org.apache.cocoon.kernel.resolution.Resolver;
+
 /**
  * <p>The {@link Component} interface identifies a component aware of its
  * deployment in a block-enabled environment.</p>
  *
  * <p>Any component implementing this interface <b>must be aware</b> that
- * the {@link Wire} they will be given will resolve {@link URL}s in the context
- * of the <b>calling</b> block and not in the context of the block they are
- * defined in.</p>
+ * the {@link Resolver} they will be given will resolve {@link URL}s in the
+ * context of the <b>calling</b> block and not in the context of the block they
+ * are defined in.</p>
  *
  * <p>This is done because resource management is decoupled entirely from
  * component management, and because in block-enabled environments, it will
@@ -56,15 +58,19 @@ import java.net.URL;
  * is returned to the original {@link Composer}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Component {
 
     /**
-     * <p>Contextualize this {@link Component} component instance with the
-     * {@link Wire} through which its caller is accessing it.</p>
+     * <p>Contextualize this {@link Component} instance.</p>
      *
-     * @param wire the {@link Wire} instance associated with this instance.
+     * @param wire the {@link Wire} instance through which the block requesting
+     *             this instance is accessing it.
+     * @param wirings the {@link Wirings} instance associated with the block
+     *                instance in which this {@link Component} is defined.
+     * @param resolver the {@link Resolver} instance resolving resources in the
+     *                 calling block instance.
      */
-    public void contextualize(Wire wire);
+    public void contextualize(Wire wire, Wirings wirings, Resolver resolver);
 }
