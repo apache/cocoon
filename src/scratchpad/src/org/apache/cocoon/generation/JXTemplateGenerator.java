@@ -309,7 +309,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  */
-public class JXTemplateGenerator extends AbstractGenerator {
+public class JXTemplateGenerator extends ComposerGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
@@ -2054,7 +2054,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
         if (startEvent == null) {
             long compileTime = inputSource.getLastModified();
             Parser parser = new Parser();
-            this.resolver.toSAX(this.inputSource, parser);
+            SourceUtil.parse(this.manager, this.inputSource, parser);
             startEvent = parser.getStartEvent();
             startEvent.compileTime = compileTime;
             synchronized (cache) {
@@ -2870,7 +2870,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                 if (doc == null) {
                     try {
                         Parser parser = new Parser();
-                        this.resolver.toSAX(input, parser);
+                        SourceUtil.parse(this.manager, input, parser);
                         doc = parser.getStartEvent();
                         doc.compileTime = lastMod;
                     } catch (Exception exc) {

@@ -86,7 +86,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.2 2003/05/04 20:19:42 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.3 2003/05/16 07:12:29 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ComposerGenerator {
@@ -676,7 +676,7 @@ extends ComposerGenerator {
                                           null, 
                                           parameters, 
                                           this.resolver);
-            this.resolver.toSAX(source, new DefaultHandler());
+            SourceUtil.parse(this.manager, source, new DefaultHandler());                                          
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } finally {
