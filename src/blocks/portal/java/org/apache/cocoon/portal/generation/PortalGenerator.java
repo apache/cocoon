@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalGenerator.java,v 1.7 2004/04/14 18:25:11 joerg Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.8 2004/04/28 13:58:16 cziegeler Exp $
  */
 public class PortalGenerator 
 extends ServiceableGenerator {
@@ -49,7 +49,6 @@ extends ServiceableGenerator {
 	 */
 	public void generate()
     throws IOException, SAXException, ProcessingException {
-        
         // start the portal rendering
         // 1. event processing
         // 2. rendering

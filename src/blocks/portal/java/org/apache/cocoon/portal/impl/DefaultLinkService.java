@@ -42,7 +42,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.12 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.13 2004/04/28 13:58:16 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -224,7 +224,7 @@ public class DefaultLinkService
                 Object[] objects = (Object[])iter.next();
                 if ( ((ComparableEvent)objects[0]).equalsEvent((ComparableEvent)event) ) {
                     found = true;
-                    info.comparableEvents.remove(objects[0]);
+                    info.comparableEvents.remove(objects);
                 }
             }
             info.comparableEvents.add( new Object[] {event, parameterName, value} );
