@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.16 2000-07-20 00:17:02 stefano Exp $ --
+/*-- $Id: XSPUtil.java,v 1.17 2000-10-22 13:32:34 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.16 $ $Date: 2000-07-20 00:17:02 $
+ * @version $Revision: 1.17 $ $Date: 2000-10-22 13:32:34 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -268,7 +268,7 @@ public class XSPUtil {
           buffer.append(" ");
           buffer.append(attribute.getName());
           buffer.append("=\"");
-          buffer.append(attribute.getValue());
+          buffer.append(encodeMarkup (attribute.getValue()));
           buffer.append("\"");
         }
 

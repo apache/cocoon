@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.131 2000-10-22 12:28:18 greenrd Exp $ 
+  $Id: changes.xml,v 1.132 2000-10-22 13:32:34 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Maik Schmidt" due-to-email="Maik.Schmidt@PASSO.DE">
+   Fixed XSPUtil.toMarkup to encode attributes correctly
+  </action>
   <action dev="RDG" type="fix" due-to="Jeff Turner" due-to-email="jeff@socialchange.net.au">
    LDAP processor now accepts byte arrays without throwing a ClassCastException
   </action>
