@@ -203,6 +203,11 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="SW" type="add">
+     Add an experimental lazy loading in the service manager that dramatically speeds up Cocoon init time
+     (approx 4 times faster). To use it, set JAVA_OPTIONS="-Dorg.apache.cocoon.core.LazyMode=true" prior
+     to starting "cocoon.sh servlet".
+   </action>
+   <action dev="SW" type="add">
      Add an include feature to xconf files and xmap files, to allow an easier configuration of the system.
      The main cocoon.xconf is now a list of inclusion of the main core components and a
      separate xconf file for each block. Additional role files can also be included.

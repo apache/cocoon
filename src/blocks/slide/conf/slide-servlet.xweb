@@ -160,7 +160,9 @@
                 of interoperability problems.
             </description>
         </init-param>
-        <load-on-startup>2</load-on-startup>
+        <!-- Uncomment this to load slide servlet on startup -->
+        <!--load-on-startup>2</load-on-startup-->
+
         <!-- Uncomment this to get authentication -->
         <!--security-role-ref>
             <role-name>root</role-name>

@@ -54,7 +54,7 @@ public class CocoonServiceManager extends CoreServiceManager {
         this.info = new ProcessorComponentInfo(parentInfo);
     }
     
-    public void addComponent(String role, Class clazz, Configuration config) throws ServiceException {
+    public void addComponent(String role, String clazz, Configuration config) throws ConfigurationException {
         super.addComponent(role, clazz, config);
         // Let's ProcessorComponentInfo do its stuff.
         // Note: if more behaviours of this kind are needed, we may setup an

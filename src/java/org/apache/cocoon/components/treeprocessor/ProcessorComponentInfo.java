@@ -95,7 +95,7 @@ public class ProcessorComponentInfo {
      * @param clazz the component's class
      * @param config the component's configuration
      */
-    public void componentAdded(String role, Class clazz, Configuration config) {
+    public void componentAdded(String role, String clazz, Configuration config) {
         if (role.startsWith(GENERATOR_PREFIX)) {
             setupLabelAndPipelineHint(role, config);
 

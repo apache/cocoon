@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -259,7 +260,7 @@ public class ContainerTestCase extends TestCase {
      * components.
      */
     protected void addComponents( CoreServiceManager manager) 
-    throws ServiceException {
+    throws ServiceException, ConfigurationException {
         // subclasses can add components here
     }
     

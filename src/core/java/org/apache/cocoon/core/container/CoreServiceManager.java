@@ -18,21 +18,30 @@ package org.apache.cocoon.core.container;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ServiceInfo;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.excalibur.source.Source;
@@ -45,14 +54,39 @@ import org.apache.excalibur.source.TraversableSource;
  * @version SVN $Revision: 1.6 $Id$
  */
 public class CoreServiceManager
-extends AbstractServiceManager
-implements ServiceManager, Configurable {
+        extends AbstractLogEnabled
+        implements Contextualizable, ThreadSafe, Disposable, Initializable, ServiceManager, Configurable {
     
     /**
      * An empty configuration object, that can be used when no configuration is known but one
      * is needed.
      */
     public static final Configuration EMPTY_CONFIGURATION = new DefaultConfiguration("-", "unknown location");
+    
+    /** The application context for components */
+    protected Context context;
+
+    /** Static component mapping handlers. */
+    protected final Map componentMapping = Collections.synchronizedMap(new HashMap());
+
+    /** Used to map roles to ComponentHandlers. */
+    protected final Map componentHandlers = Collections.synchronizedMap(new HashMap());
+
+    /** Is the Manager disposed or not? */
+    protected boolean disposed;
+
+    /** Is the Manager initialized? */
+    protected boolean initialized;
+
+    /** RoleInfos. */
+    protected RoleManager roleManager;
+
+    /** LoggerManager. */
+    protected LoggerManager loggerManager;
+    
+    private ComponentEnvironment componentEnv;
+    
+    private boolean lazyMode = Boolean.getBoolean("org.apache.cocoon.core.LazyMode");
     
     /** The location where this manager is defined */
     protected String location;
@@ -89,6 +123,9 @@ implements ServiceManager, Configurable {
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.roleManager.enableLogging(logger);
+        String msg = "Lazy mode: " + this.lazyMode;
+        logger.debug(msg);
+        System.out.println(msg);
     }
 
     /* (non-Javadoc)
@@ -96,6 +133,13 @@ implements ServiceManager, Configurable {
      */
     public void contextualize( final Context context ) {
         this.context = context;
+    }
+    
+    /**
+     * Configure the LoggerManager.
+     */
+    public void setLoggerManager( final LoggerManager manager ) {
+        this.loggerManager = manager;
     }
     
     public void setRoleManager (RoleManager rm) {
@@ -109,6 +153,9 @@ implements ServiceManager, Configurable {
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
+        
+        this.componentEnv = new ComponentEnvironment(null, getLogger(), this.roleManager, this.loggerManager, this.context, this);
+        
         // Setup location
         this.location = configuration.getLocation();
         
@@ -137,7 +184,7 @@ implements ServiceManager, Configurable {
      */
     public void initialize()
     throws Exception {
-        super.initialize();
+        this.initialized = true;
 
         // Initialize component handlers. This is done in no particular order, but initializing a
         // handler may indirectly initialize another handler through a call to lookup().
@@ -207,7 +254,7 @@ implements ServiceManager, Configurable {
                 forceDisposal = true;
             }
         }
-        super.dispose();
+        this.disposed = true;
     }
 
     //=============================================================================================
@@ -284,15 +331,11 @@ implements ServiceManager, Configurable {
                     }
 
                     try {
-                        // FIXME use different class loader
-                        final Class componentClass = this.getClass().getClassLoader().loadClass( info.getServiceClassName() );
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
-                        info.setServiceClass(componentClass);
-                        info.setConfiguration(configuration);
 
                         handler = this.getComponentHandler(role,
-                                                       info,
-                                                       this);
+                                                       info.getServiceClassName(),
+                                                       configuration);
 
                         handler.initialize();
                     } catch (ServiceException se) {
@@ -399,56 +442,58 @@ implements ServiceManager, Configurable {
      * Add a new component to the manager.
      *
      * @param role the role name for the new component.
-     * @param component the class of this component.
+     * @param className the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void addComponent( final String role,
-                              final Class component,
-                              final Configuration configuration )
-    throws ServiceException {
+    public void addComponent( String role,
+                              String className,
+                              Configuration configuration )
+    throws ConfigurationException {
         if( this.initialized ) {
-            throw new ServiceException( role,
-                "Cannot add components to an initialized CoreServiceManager." );
+            throw new IllegalStateException("Cannot add components to an initialized CoreServiceManager." );
+        }
+
+        // check for old excalibur class names - we only test against the selector
+        // implementation
+        if ( "org.apache.cocoon.components.ExtendedComponentSelector".equals(className)) {
+            className = DefaultServiceSelector.class.getName();
+        }
+        
+        if( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug( "Adding component (" + role + " = " + className + ")" );
         }
 
         ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
         if (handler != null) {
-            // Overloaded component: we only allow selectors to be overloaded
-            ServiceInfo info = handler.getInfo();
-            // FIXME - info should not contain the class, we need to get it from somewhere else
-            if (!DefaultServiceSelector.class.isAssignableFrom(component) ||
-                !DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
-                throw new ServiceException(role, "Component declared at " + info.getLocation() + " is redefined at " +
-                        configuration.getLocation());
-            }
+            // Check that override is allowed. If yes, the handler will be redefined below, allowing
+            // the new definition to feed this manager with its components.
+            checkComponentOverride(role, className, configuration, handler);
         }
+        
         try {
-            final ServiceInfo info = new ServiceInfo();
-            info.setConfiguration(configuration);
-            info.setServiceClass(component);
-            handler = this.getComponentHandler(role, info, this);
+            handler = this.getComponentHandler(role, className, configuration);
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Handler type = " + handler.getClass().getName() );
             }
 
             this.componentHandlers.put( role, handler );
-        } catch ( final ServiceException se ) {
-            throw se;
+        } catch ( final ConfigurationException ce ) {
+            throw ce;
         } catch( final Exception e ) {
-            throw new ServiceException( role, "Could not set up component handler.", e );
+            throw new ConfigurationException( "Could not add component defined at " + configuration.getLocation(), e );
         }
         
-        // Initialize shadow selector now, it will feed this service manager
-        if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
-            try {
-                handler.initialize();
-            } catch(ServiceException se) {
-                throw se;
-            } catch(Exception e) {
-                throw new ServiceException(role, "Could not initialize selector", e);
-            }
-        }
+//        // Initialize shadow selector now, it will feed this service manager
+//        if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
+//            try {
+//                handler.initialize();
+//            } catch(ServiceException se) {
+//                throw se;
+//            } catch(Exception e) {
+//                throw new ServiceException(role, "Could not initialize selector", e);
+//            }
+//        }
     }
     
     /**
@@ -517,6 +562,30 @@ implements ServiceManager, Configurable {
     // Private methods
     //=============================================================================================
     
+    /**
+     * Obtain a new ComponentHandler for the specified component. 
+     * 
+     * @param role the component's role.
+     * @param componentClass Class of the component for which the handle is
+     *                       being requested.
+     * @param configuration The configuration for this component.
+     * @param serviceManager The service manager which will be managing the Component.
+     *
+     * @throws Exception If there were any problems obtaining a ComponentHandler
+     */
+    private ComponentHandler getComponentHandler( final String role,
+                                                    final String className,
+                                                    final Configuration configuration)
+    throws Exception {
+        
+        if (!lazyMode || configuration.getAttributeAsBoolean("preload", false) || role.endsWith("Selector")) {
+            return AbstractComponentHandler.getComponentHandler(
+                    role, className, configuration, this.componentEnv);
+        } else {
+            return new LazyHandler(role, className, configuration, this.componentEnv);
+        }
+    }
+
     private void parseConfiguration(final Configuration configuration, String contextURI, Set loadedURIs) 
         throws ConfigurationException {
 
@@ -562,8 +631,8 @@ implements ServiceManager, Configurable {
                 if (name != null) {
                     role = role + "/" + name;
                 }
-    
-                this.addComponent(className, role, componentConfig);
+
+                this.addComponent(role, className, componentConfig);
             }
         }
     }
@@ -690,5 +759,34 @@ implements ServiceManager, Configurable {
             this.parentManager.release(this.cachedSourceResolver);
         }
         this.cachedSourceResolver = null;
+    }
+    
+    /** 
+     * Check if a component can be overriden. Only {@link DefaultSelector} or its subclasses can be
+     * overriden, as they directly feed this manager with their component definitions and are empty
+     * shells delegating to this manager afterwards.
+     */
+    private void checkComponentOverride(String role, String className, Configuration config,
+            ComponentHandler existingHandler) throws ConfigurationException {
+        
+        // We only allow selectors to be overloaded
+        ServiceInfo info = existingHandler.getInfo();
+        if (!className.equals(info.getServiceClassName())) {
+            throw new ConfigurationException("Role " + role + " redefined with a different class name, at " +
+                    config.getLocation());
+        }
+        
+        Class clazz;
+        try {
+            clazz = this.componentEnv.loadClass(className);
+        } catch(ClassNotFoundException cnfe) {
+            throw new ConfigurationException("Cannot load class " + className + " for component at " +
+                    config.getLocation(), cnfe);
+        }
+
+        if (!DefaultServiceSelector.class.isAssignableFrom(clazz)) {
+            throw new ConfigurationException("Component declared at " + info.getLocation() + " is redefined at " +
+                    config.getLocation());
+        }
     }
 }
