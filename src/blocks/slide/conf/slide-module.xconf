@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xconf xpath="/cocoon/input-modules" unless="slide">
+<xconf xpath="/cocoon/input-modules" unless="component-instance[@name='slide']">
 
   <component-instance 
     name="slide" 
