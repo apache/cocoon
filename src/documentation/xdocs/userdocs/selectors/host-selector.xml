@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: host-selector.xml,v 1.1 2003/03/09 00:08:23 pier Exp $ 
+  <![CDATA[ CVS Version: $Id: host-selector.xml,v 1.2 2003/07/14 18:38:16 joerg Exp $ 
   ]]>
 -->
 
@@ -40,7 +40,7 @@
         <tr>
           <td>CLASS</td><td>org.apache.cocoon.selection.HostSelector</td>
         </tr>
-        <!-- uncomment folling tr iff HostSelector is deprecated -->
+        <!-- uncomment folling tr if HostSelector is deprecated -->
         <!--tr>
           <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
         </tr-->
@@ -66,8 +66,8 @@
       <s2 title="Sitemap pipeline examples">
         <p>
           The snippet below uses a <code>HostSelector</code> named <code>host</code>,
-          and testing against symbolic host-sites which are configured in the <code>host</code>
-          selector section.
+          and tests against symbolic host-sites which are configured in the
+          <code>host</code> selector section.
         </p>
         <source><![CDATA[
 <map:select type="host">
@@ -91,18 +91,19 @@
           defining symbolic host-site names for some host domains.
         </p>
         <source><![CDATA[
-<map:selectors...
+<map:selectors>
   <map:selector name="host" 
     src="org.apache.cocoon.selection.HostSelector"
     logger="sitemap.selector.host" 
     
     <host name="uk-site" value="foo.bar.uk"/>
     ...
-    <host name="de-site" useragent="foo.bar.de"/>
-    <host name="us-site" useragent="foo.bar.com"/>
+    <host name="de-site" value="foo.bar.de"/>
+    <host name="us-site" value="foo.bar.com"/>
     
-  </map:selectors>
-...
+  </map:selector>
+  ...
+</map:selectors>
 ]]></source>
       </s2>
       <s2 title="Configuration">
@@ -120,14 +121,14 @@
           It is allowed to specify for a host name more than one entry. This way
           a symbolic host-site name is matched by different host header substrings.
           The snippet belows will yield true for <code>test="central-europe"</code> if 
-          the user-agent header contains <code>foo.bar.cz</code>, <code>foo.bar.at</code>, or 
+          the host header contains <code>foo.bar.cz</code>, <code>foo.bar.at</code>, or 
           <code>foo.bar.hu</code>.
         </p>
         <source><![CDATA[
 ...
-  <host name="central-europe" useragent="foo.bar.cz"/>
-  <host name="central-europe" useragent="foo.bar.at"/>
-  <host name="central-europe" useragent="foo.bar.uk"/>
+  <host name="central-europe" value="foo.bar.cz"/>
+  <host name="central-europe" value="foo.bar.at"/>
+  <host name="central-europe" value="foo.bar.uk"/>
 ...
         ]]></source>
       </s2>
@@ -135,8 +136,8 @@
         <p>
           <!-- Explain the sitemap selector setup, ie options when using host selector -->
           Setting up a <code>HostSelector</code> includes choosing the 
-          <code>&lt;map:when&gt;</code> test expressions, and a 
-         optional <code>&lt;map:otherwise&gt;</code> clause.
+          <code>&lt;map:when&gt;</code> test expressions and a 
+          optional <code>&lt;map:otherwise&gt;</code> clause.
         </p>
         <p>
           The test attribute of the <code>&lt;map:when&gt;</code> clause must match
@@ -147,7 +148,7 @@
       </s2>
       <s2 title="Effect on Object Model and Sitemap Parameters">
         <p>
-          The <code>HostSelector</code> has no side effects on the object model, or 
+          The <code>HostSelector</code> has no side effects on the object model or 
           any sitemap parameters. 
         </p>
       </s2>
@@ -156,8 +157,8 @@
       <p>
         The <code>HostSelector</code> adds the response header attribute
         <code>Vary</code> having value <code>Host</code> indicating
-        that the response differ for different user agents. This information
-        especially meaningfull for an http-proxy server.
+        that the response differ for different hosts. This information
+        is particularly meaningful for a http-proxy server.
       </p>
     </s1>
     <s1 title="History">
