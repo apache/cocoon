@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: properties.xml,v 1.1 2004/03/10 13:36:09 unico Exp $ -->
+<!-- $Id: properties.xml,v 1.2 2004/04/05 12:34:23 antonio Exp $ -->
 <properties xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="name" items="${parameters.names}">
     <property>
