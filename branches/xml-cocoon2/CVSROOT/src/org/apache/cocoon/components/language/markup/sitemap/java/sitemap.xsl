@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.86 2001-02-28 15:29:45 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.87 2001-03-03 16:05:05 prussell Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -375,6 +375,7 @@
            components to produce the requested resource */
         ResourcePipeline pipeline = new ResourcePipeline ();
         pipeline.compose(this.manager);
+        pipeline.setLogger(getLogger());
         /* the &lt;code&gt;List&lt;/code&gt; objects to hold the replacement values
            delivered from matchers and selectors to replace occurences of
            XPath kind expressions in values of src attribute used with
@@ -797,7 +798,11 @@
     </xsl:if>
 
     <!-- the "if(true)" is needed to prevent "statement not reachable" error messages during compile -->
-    if(true)return pipeline.process (environment);
+    {
+      boolean result = pipeline.process(environment);
+      pipeline.dispose();
+      if(true) return result;
+    }
   </xsl:template> <!-- match="map:serialize" -->
 
   <!-- generate the code to invoke a reader -->
