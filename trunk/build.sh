@@ -1,26 +1,34 @@
 #!/bin/sh
 
-echo
-echo "Apache Cocoon Build System"
-echo "--------------------------"
-
-cp ./lib/*/xalan*.jar ./tools/lib
-cp ./lib/*/xerces*.jar ./tools/lib
-cp ./lib/*/xml-api*.jar ./tools/lib
-
 chmod u+x ./tools/bin/antRun
 chmod u+x ./tools/bin/ant
 
-unset ANT_HOME
+# ----- Verify and Set Required Environment Variables -------------------------
 
-CP=$CLASSPATH
-export CP
+if [ "$TERM" = "cygwin" ] ; then
+  S=';'
+else
+  S=':'
+fi
+
+# ----- Ignore system CLASSPATH variable
+OLD_CLASSPATH=$CLASSPATH
 unset CLASSPATH
-
-ANT_OPTS=-Djava.endorsed.dirs=lib/endorsed
-export ANT_OPTS
-
-$PWD/tools/bin/ant -logger org.apache.tools.ant.NoBannerLogger -emacs $@ 
-
-CLASSPATH=$CP
+CLASSPATH="`echo lib/endorsed/*.jar | tr ' ' $S`"
 export CLASSPATH
+
+echo Using classpath: \"$CLASSPATH\"
+
+# ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
+OLD_ANT_HOME="$ANT_HOME"
+export ANT_HOME=tools
+
+"$ANT_HOME/bin/ant" -Djava.endorsed.dirs=lib/endorsed -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
+
+# ----- Restore ANT_HOME
+export ANT_HOME=$OLD_ANT_HOME
+unset OLD_ANT_HOME=
+
+# ----- Restore CLASSPATH
+export CLASSPATH=$OLD_CLASSPATH
+unset OLD_CLASSPATH=
