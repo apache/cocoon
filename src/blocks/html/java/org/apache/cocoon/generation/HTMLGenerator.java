@@ -92,7 +92,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.5 2003/04/02 21:39:09 stefano Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.6 2003/08/09 18:21:49 cziegeler Exp $
  */
 public class HTMLGenerator extends ComposerGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -190,7 +190,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                     throw new ProcessingException(
                         "HtmlGenerator with no \"src\" parameter expects a sitemap parameter called '" +
                         FORM_NAME + "' for handling form data"
-                );
+                    );
                 }
 
                 String sXml = request.getParameter(requested);
@@ -205,7 +205,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 if (len > 0) {
                     requestStream = new PostInputStream(request.getInputStream(), len);
                 } else {
-                throw new IOException("getContentLen() == 0");
+                    throw new IOException("getContentLen() == 0");
                 }
             } else {
                 throw new IOException("Unexpected getContentType(): " + request.getContentType());
@@ -275,8 +275,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        try
-        {
+        try {
             // Setup an instance of Tidy.
             Tidy tidy = new Tidy();
             tidy.setXmlOut(true);
@@ -309,20 +308,18 @@ implements Configurable, CacheableProcessingComponent, Disposable {
 
             errorWriter.flush();
             errorWriter.close();
-            if(getLogger().isWarnEnabled()){
+            if(getLogger().isWarnEnabled()) {
                getLogger().warn(stringWriter.toString());
             }
 
 
-            if(xpath != null)
-            {
+            if(xpath != null) {
                 DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
 
                 contentHandler.startDocument();
                 NodeList nl = processor.selectNodeList(doc, xpath);
                 int length = nl.getLength();
-                for(int i=0;i<length;i++)
-                {
+                for(int i=0;i<length;i++) {
                     domStreamer.stream(nl.item(i));
                 }
                 contentHandler.endDocument();

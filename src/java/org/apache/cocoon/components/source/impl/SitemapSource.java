@@ -54,6 +54,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -89,7 +90,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.8 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.9 2003/08/09 18:21:49 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -201,6 +202,29 @@ implements Source, XMLizable {
             uri = uri.substring(position);
         }
         this.uri = uri;
+        
+        // determine if the queryString specifies a cocoon-view
+        String view = null;
+        if (queryString != null) {
+            int index = queryString.indexOf(Constants.VIEW_PARAM);
+            if (index != -1 
+                && (index == 0 || queryString.charAt(index-1) == '&')
+                && queryString.length() > index + Constants.VIEW_PARAM.length() 
+                && queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
+                
+                String tmp = queryString.substring(index+Constants.VIEW_PARAM.length()+1);
+                index = tmp.indexOf('&');
+                if (index != -1) {
+                    view = tmp.substring(0,index);
+                } else {
+                    view = tmp;
+                }
+            } else {
+                view = env.getView();
+            }
+        } else {
+            view = env.getView();
+        }
 
         // build the request uri which is relative to the context
         String requestURI = (this.prefix == null ? env.getURIPrefix() + uri : uri);
@@ -212,7 +236,7 @@ implements Source, XMLizable {
 
         // create environment...
         this.environment = new EnvironmentWrapper(env, requestURI, 
-                                                   queryString, logger, manager, rawMode);
+                                                   queryString, logger, manager, rawMode, view);
         // ...and put information passed from the parent request to the internal request
         if ( null != parameters ) {
             this.environment.getObjectModel().put(ObjectModelHelper.PARENT_CONTEXT, parameters);
