@@ -79,7 +79,7 @@ import org.apache.cocoon.matching.Matcher;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CachingRegexpMatcher.java,v 1.3 2004/01/05 08:17:31 cziegeler Exp $
+ * @version CVS $Id: CachingRegexpMatcher.java,v 1.4 2004/01/28 17:24:13 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher
@@ -193,9 +193,10 @@ public class CachingRegexpMatcher extends AbstractRegexpMatcher
                     result = this.input.getAttribute(paramName, this.inputConf, objectModel);
                 }
             } catch (Exception e) {
-                if (getLogger().isWarnEnabled()) 
+                if (getLogger().isWarnEnabled()) {
                     getLogger().warn("A problem occurred acquiring Parameter '" + paramName 
                                       + "' from '" + inputName + "': " + e.getMessage());
+                }
             }
         } else {
             // input was not thread safe
