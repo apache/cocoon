@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.36 2001-01-09 18:30:36 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.37 2001-01-10 21:25:12 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.36 $ $Date: 2001-01-09 18:30:36 $
+ * @version $Revision: 1.37 $ $Date: 2001-01-10 21:25:12 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -115,6 +115,14 @@ public class XSPProcessor extends AbstractActor
 
   public void init(Director director) {
     super.init(director);
+
+    // Sanity check #1 - is xerces on the CLASSPATH correctly?
+    try {
+      Node.class.getMethod ("normalize", new Class[] {});
+    }
+    catch (NoSuchMethodException ex) {
+      throw new NoSuchMethodError ("See http://xml.apache.org/cocoon/faqs.html#faq-normalize");
+    }
 
     // Initialize Cocoon factory
     this.factory = (Factory) director.getActor("factory");
@@ -201,14 +209,14 @@ public class XSPProcessor extends AbstractActor
           + ". Make sure it's there or you have writing permissions.<br>"
           + "In case this path is relative we highly suggest you to"
           + " change this to an absolute path so you can control its location directly"
-          + " and provide valid access rights." );
+          + " and provide valid access rights. See also the FAQ." );
       }
     }
 
     if (!(this.repositoryFile.canRead() && this.repositoryFile.canWrite())) {
       throw new RuntimeException("Can't access store repository: "
         + repositoryFile.getAbsolutePath()
-        + ". Make sure you have writing permissions.");
+        + ". Make sure you have writing permissions. See also the FAQ.");
     }
 
     // Languages other than Java may also need to use the classpath to link to Java code

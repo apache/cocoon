@@ -65,7 +65,8 @@
  <group name="Dynamic content Generation">
   <sample name="First XSP Page" url="xsp/page.xml?message=Hello%20World!">
    This page shows the power of XSP technology with Java logic. In this page
-   logic and content are mixed.
+   logic and content are mixed. IMPORTANT NOTE: If you get a message about a NoSuchMethodError,
+   the solution is in the <a href="http://xml.apache.org/cocoon/faqs.html#faq-normalize">FAQ</a>!
   </sample>
 
   <sample name="First XSP Page (pure content version)" url="xsp/clean-page.xml?message=Hello%20World!">
