@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='jfor']">
+
+  <group name="jfor">
+    <sample name="jfor RTF serializer" href="jfor/">
+      Examples of RTF document generation.
+   </sample>
+  </group>
+</xsamples>
