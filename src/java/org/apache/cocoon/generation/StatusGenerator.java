@@ -36,7 +36,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current status of Cocoon.
+ * 
+ * @cocoon.sitemap.component.name   status
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.status
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ * 
  * Potted DTD:
  *
  * <code>
@@ -64,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.8 2004/05/20 10:48:16 cziegeler Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.9 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class StatusGenerator extends ServiceableGenerator {
 

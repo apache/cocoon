@@ -32,6 +32,13 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * Generates a document from a session attribute. 
+ * 
+ * @cocoon.sitemap.component.name   sessionattribute
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.sessionattribute
+ * 
  * Generates a document from a session attribute. The attribute may be a DOM
  * node, an <code>XMLizable</code>, or any other object, and is streamed using
  * the same rules as for &lt;xsp:expr&gt; in XSPs (see {@link
@@ -66,7 +73,7 @@ import java.util.Map;
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer
  * @author <a href="mailto:cedric.damioli@anyware-tech.com">C&eacute;dric Damioli</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionAttributeGenerator.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: SessionAttributeGenerator.java,v 1.5 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class SessionAttributeGenerator extends AbstractGenerator {
 

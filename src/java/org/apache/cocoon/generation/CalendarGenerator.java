@@ -37,44 +37,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML document representing a calendar for a given month and year.
- * <p>
- * Here is a sample output:
- * <pre>
- * &lt;calendar:calendar xmlns:calendar="http://apache.org/cocoon/calendar/1.0"
- *     year="2004" month="January" prevMonth="12" prevYear="2003"
- *     nextMonth="02" nextYear="2004"&gt;
- *   &lt;calendar:week number="1"&gt;
- *     &lt;calendar:day number="1" date="January 1, 2004"/&gt;
- *     &lt;calendar:day number="2" date="January 2, 2004"/&gt;
- *     &lt;calendar:day number="3" date="January 3, 2004"/&gt;
- *     &lt;calendar:day number="4" date="January 4, 2004"/&gt;
- *   &lt;/calendar:week&gt;
- *   ...
- * &lt;/calendar:calendar&gt;
- * </pre>
- * <p>
- * The <i>src</i> parameter is ignored.
- * </p>
- * <p>
- *  <b>Configuration options:</b>
- *  <dl>
- *   <dt> <i>month</i> (optional)
- *   <dd> Sets the month for the calendar (January is 1). Default is the current month.
- *   <dt> <i>year</i> (optional)
- *   <dd> Sets the year for the calendar. Default is the current year.
- *   <dt> <i>dateFormat</i> (optional)
- *   <dd> Sets the format for the date attribute of each node, as
- *        described in java.text.SimpleDateFormat. If unset, the default
- *        format for the current locale will be used.
- *   <dt> <i>lang</i> (optional)
- *   <dd> Sets the ISO language code for determining the locale.
- *   <dt> <i>country</i> (optional)
- *   <dd> Sets the ISO country code for determining the locale.
- *  </dl>
- * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.8 2004/04/19 15:58:58 ugo Exp $
+ * @cocoon.sitemap.component.name   calendar
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.calendar
+ * @cocoon.sitemap.component.documentation.caching TBD
+ *               
+ * @version CVS $Id: CalendarGenerator.java,v 1.9 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     

@@ -37,7 +37,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the incoming request.
+ * 
+ * @cocoon.sitemap.component.name   request
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.request
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ * 
  * <p>
  * <b>Configuration options:</b>
  * <dl>
@@ -55,7 +65,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.9 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.10 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 

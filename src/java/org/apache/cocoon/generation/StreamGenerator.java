@@ -34,9 +34,17 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /**
- *
+ * @cocoon.sitemap.component.documentation
  * The <code>StreamGenerator</code> is a class that reads XML from a
  * request InputStream and generates SAX Events.
+ * 
+ * @cocoon.sitemap.component.name   stream
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.stream
+ * 
+ * @cocoon.sitemap.component.pooling.min   1
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
  *
  * For the POST requests with a mimetype of application/x-www-form-urlencoded,
  * or multipart/form-data the xml data is expected to be associated with the
@@ -55,7 +63,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.9 2004/03/06 14:24:51 joerg Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.10 2004/05/26 14:11:34 cziegeler Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
