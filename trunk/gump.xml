@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.81 2003/09/11 23:53:50 vgritsenko Exp $
+    | CVS $Id: gump.xml,v 1.82 2003/09/13 15:39:08 vgritsenko Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -40,7 +40,6 @@
     <depend project="excalibur-xmlutil"/>
     <depend project="excalibur-store"/>
     <depend project="excalibur-pool"/>
-    <depend project="excalibur-datasource"/>
     <depend project="excalibur-component"/>
     <depend project="excalibur-logger"/>
     <depend project="excalibur-event" inherit="runtime"/>
@@ -311,6 +310,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="excalibur-datasource"/>
     
     <work nested="tools/anttasks"/>
     <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
