@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.5 2003/06/01 19:30:36 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.6 2003/06/17 19:59:31 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -95,10 +95,7 @@ public class DefaultLinkService
     protected ComponentManager manager;
     protected Context context;
     
-    // FIXME - comparable events are not completly implemented yet
-    
     protected Info getInfo() {
-        // TODO - add portal name to allow several portals at the same time
         final Request request = ContextHelper.getRequest( this.context );
         Info info = (Info)request.getAttribute(DefaultLinkService.class.getName());
         if ( info == null ) {
@@ -123,71 +120,71 @@ public class DefaultLinkService
         final Info info = this.getInfo();
         final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
         boolean hasParams = info.hasParameters;
+
+        // add comparable events
         Iterator iter = info.comparableEvents.iterator();
         while (iter.hasNext()) {
-            ComparableEvent ce = (ComparableEvent)iter.next();
-            if (event instanceof ComparableEvent) {
-                if ( !ce.equalsEvent((ComparableEvent)event)) {
-                    if ( hasParams ) {
-                        buffer.append('&');
-                    } else {
-                        buffer.append('?');
-                    }
-                    hasParams = true;
-                    String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-                    if (ce instanceof RequestEvent ) {
-                        final String eventParName = ((RequestEvent)ce).getRequestParameterName();
-                        if ( eventParName != null ) {
-                            parameterName = eventParName;
-                        }
-                    }
-                    final String value = this.converter.encode( ce );
-                    buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
-                }
+            ComparableEvent current = (ComparableEvent)iter.next();
+            if (!(event instanceof ComparableEvent)
+                 || ( !current.equalsEvent((ComparableEvent)event))) {
+
+                hasParams = this.addEvent(buffer, current, hasParams);
             }
         }
         
-        final String value = this.converter.encode( event );
+        // now add event
+        hasParams = this.addEvent(buffer, event, hasParams);
+
+        return buffer.toString();
+    }
+
+    protected boolean addEvent(StringBuffer buffer, Event event, boolean hasParams) {
         if ( hasParams ) {
             buffer.append('&');
         } else {
             buffer.append('?');
         }
         String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-        if (event instanceof RequestEvent) {
+        if (event instanceof RequestEvent ) {
             final String eventParName = ((RequestEvent)event).getRequestParameterName();
             if ( eventParName != null ) {
                 parameterName = eventParName;
             }
         }
+        final String value = this.converter.encode( event );
         buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
-
-        return buffer.toString();
+        return true;
     }
-
+    
     public String getLinkURI(List events) {
         final Info info = this.getInfo();
+        boolean hasParams = info.hasParameters;
         final StringBuffer buffer = new StringBuffer(info.toString());
         
-        Iterator iter = events.iterator();
-        boolean hasPars = info.hasParameters;
-        while ( iter.hasNext()) {
-            final Event current = (Event)iter.next();
-            final String value = this.converter.encode( current );
-            if ( hasPars ) {
-                buffer.append('&');
-            } else {
-                buffer.append('?');
-            }
-            hasPars = true;
-            String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-            if (current instanceof RequestEvent) {
-                final String eventParName = ((RequestEvent)current).getRequestParameterName();
-                if ( eventParName != null ) {
-                    parameterName = eventParName;
+        // add comparable events
+        Iterator iter = info.comparableEvents.iterator();
+        while (iter.hasNext()) {
+            ComparableEvent current = (ComparableEvent)iter.next();
+            
+            Iterator eventIterator = events.iterator();
+            boolean found = false;
+            while (!found && eventIterator.hasNext()) {
+                Event inEvent = (Event)eventIterator.next();
+                if ( inEvent instanceof ComparableEvent
+                     && current.equalsEvent((ComparableEvent)inEvent)) {
+                     found = true;
                 }
             }
-            buffer.append(parameterName).append('=').append(SourceUtil.encode(value));
+            if (!found) {
+                hasParams = this.addEvent(buffer, current, hasParams);
+            }
+        }
+
+        // now add events
+        iter = events.iterator();
+        while ( iter.hasNext()) {
+            final Event current = (Event)iter.next();
+            hasParams = this.addEvent(buffer, current, hasParams);
         }
         return buffer.toString();
     }

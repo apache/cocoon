@@ -57,13 +57,12 @@ import org.apache.cocoon.ProcessingException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletFactory.java,v 1.3 2003/05/26 14:03:49 cziegeler Exp $
+ * @version CVS $Id: CopletFactory.java,v 1.4 2003/06/17 19:59:32 cziegeler Exp $
  */
 public interface CopletFactory  {
     
     String ROLE = CopletFactory.class.getName();
     
-	// TODO - define the interface
     void prepare(CopletData copletData)
     throws ProcessingException;
     
