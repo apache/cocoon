@@ -22,6 +22,7 @@ import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -136,10 +137,10 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                     Node virtualNode = repeaterNode.getOwnerDocument().createElementNS(null, "virtual");
                     Node node = (Node)rowPointer.getNode();
                     Node clone = node.cloneNode(true);
-                    Node docElement = node.getOwnerDocument().getDocumentElement().cloneNode(false);
+                    Node fakeDocElement = node.getOwnerDocument().getDocumentElement().cloneNode(false);
                     virtualNode.appendChild(clone);
-                    docElement.appendChild(virtualNode);
-                    rowContext = JXPathContext.newContext(repeaterContext, docElement);
+                    fakeDocElement.appendChild(virtualNode);
+                    rowContext = JXPathContext.newContext(repeaterContext, fakeDocElement);
                     rowContext = rowContext.getRelativeContext(rowContext.getPointer("virtual"));
                 }
 
@@ -194,8 +195,12 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                         // narrow the context to this initially empty new virtual row.
                         if (virtualRows == true) {
                             rowNode = (Node)rowContext.getContextBean();
-                            virtualNode = rowNode.getOwnerDocument().createElementNS(null, "virtual");
-                            rowContext = JXPathContext.newContext(repeaterContext, virtualNode);
+                            Document document = rowNode.getOwnerDocument();
+                            virtualNode = document.createElementNS(null, "virtual");
+                            Node fakeDocElement = document.getDocumentElement().cloneNode(false);
+                            fakeDocElement.appendChild(virtualNode);
+                            rowContext = JXPathContext.newContext(repeaterContext, fakeDocElement);
+                            rowContext = rowContext.getRelativeContext(rowContext.getPointer("virtual"));
                         }
 
                         // Perform the insert row binding
