@@ -202,8 +202,8 @@
   </todo>
 
   <changes>
-  <release version="@version@" date="@date@">
-  <action dev="AG" type="update">
+ <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
      Update ant to 1.6.2, commons-jxpath to 1.2, commons-beanutils to 1.7,
      POI to 2.5.1-final-20040804, commons-httpclient to 2.0.1, nekohtml to 0.9.3,
      hsqldb to 1.7.2, jcs to 1.1-dev-20040811 and quartz to 1.4.2.
@@ -230,17 +230,17 @@
        <li>void serializeString(File file, String string, String encoding)</li>
      </ul>
    </action>
-  <action dev="AG" type="update">
+   <action dev="AG" type="update">
      Deprecated class org.apache.cocoon.util.JavaArchiveFilter.
      To be removed in cocoon 2.3. Moved to the deprecated dir.
    </action>
    <action dev="AG" type="update">
      Update qdox to 1.5 and jdt-core to 3.0.0.
    </action>
-  <action dev="AG" type="fix" fixes-bug="28209" due-to="Enrico Maccias" due-to-email="enrico.maccias@free.fr">
+   <action dev="AG" type="fix" fixes-bug="28209" due-to="Enrico Maccias" due-to-email="enrico.maccias@free.fr">
      Fixing BetwixtTransformer does not marshal Collections properly (java.lang.OutOfMemoryError).
    </action>
-  <action dev="AG" type="fix" fixes-bug="30038" due-to="Jorg Heymans" due-to-email="jh@domek.be">
+   <action dev="AG" type="fix" fixes-bug="30038" due-to="Jorg Heymans" due-to-email="jh@domek.be">
      Fixing lucene-block samples dependencies.
    </action>
    <action dev="AG" type="update">
@@ -267,7 +267,7 @@
      closing tags.
    </action>
    <action dev="TC" type="add" fixes-bug="29935" due-to="Leszek Gawron" due-to-email="ouzo@wlkp.org">
-    added support for stripping root elements in the CIncludeTransformer
+     Added support for stripping root elements in the CIncludeTransformer.
    </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
