@@ -161,7 +161,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         public void send(ContentHandler contentHandler) throws SAXException;
     }
 
-    final class PI implements SaxBit {
+    final static class PI implements SaxBit {
         private final String target;
         private final String data;
 
@@ -175,7 +175,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class StartElement implements SaxBit {
+    final static class StartElement implements SaxBit {
         private final String namespaceURI;
         private final String localName;
         private final String qName;
@@ -193,7 +193,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class EndPrefixMapping implements SaxBit {
+    final static class EndPrefixMapping implements SaxBit {
         private final String prefix;
 
         public EndPrefixMapping(String prefix) {
@@ -205,7 +205,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class Characters implements SaxBit {
+    final static class Characters implements SaxBit {
         private final char[] ch;
 
         public Characters(char[] ch, int start, int length) {
@@ -219,7 +219,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class EndElement implements SaxBit {
+    final static class EndElement implements SaxBit {
         private final String namespaceURI;
         private final String localName;
         private final String qName;
@@ -235,13 +235,13 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class EndDocument implements SaxBit {
+    final static class EndDocument implements SaxBit {
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.endDocument();
         }
     }
 
-    final class StartPrefixMapping implements SaxBit {
+    final static class StartPrefixMapping implements SaxBit {
         private final String prefix;
         private final String uri;
 
@@ -255,7 +255,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class Comment implements SaxBit {
+    final static class Comment implements SaxBit {
         private final char[] ch;
 
         public Comment(char[] ch, int start, int length) {
@@ -270,21 +270,21 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class StartCDATA implements SaxBit {
+    final static class StartCDATA implements SaxBit {
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).startCDATA();
         }
     }
 
-    final class EndCDATA implements SaxBit {
+    final static class EndCDATA implements SaxBit {
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endCDATA();
         }
     }
 
-    final class SkippedEntity implements SaxBit {
+    final static class SkippedEntity implements SaxBit {
         private final String name;
 
         public SkippedEntity(String name) {
@@ -296,7 +296,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class IgnorableWhitespace implements SaxBit {
+    final static class IgnorableWhitespace implements SaxBit {
         private final char[] ch;
 
         public IgnorableWhitespace(char[] ch, int start, int length) {
@@ -310,13 +310,13 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class StartDocument implements SaxBit {
+    final static class StartDocument implements SaxBit {
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.startDocument();
         }
     }
 
-    final class StartDTD implements SaxBit {
+    final static class StartDTD implements SaxBit {
         private final String name;
         private final String publicId;
         private final String systemId;
@@ -333,14 +333,14 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class EndDTD implements SaxBit {
+    final static class EndDTD implements SaxBit {
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
                 ((LexicalHandler)contentHandler).endDTD();
         }
     }
 
-    final class StartEntity implements SaxBit {
+    final static class StartEntity implements SaxBit {
         private final String name;
 
         public StartEntity(String name) {
@@ -353,7 +353,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
         }
     }
 
-    final class EndEntity implements SaxBit {
+    final static class EndEntity implements SaxBit {
         private final String name;
 
         public EndEntity(String name) {
