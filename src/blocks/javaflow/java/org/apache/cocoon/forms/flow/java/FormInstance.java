@@ -15,9 +15,10 @@
  */
 
 package org.apache.cocoon.forms.flow.java;
-                                                                                                                                                                               
+
 import java.util.Locale;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.java.AbstractContinuable;
 import org.apache.cocoon.components.flow.java.VarMap;
@@ -37,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.4 2004/04/04 06:35:08 antonio Exp $
+ * @version CVS $Id: FormInstance.java,v 1.5 2004/04/04 17:16:17 stephan Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
@@ -66,7 +67,7 @@ public class FormInstance extends AbstractContinuable {
             // TODO : do we keep this ?
             // this.formWidget = new Widget(this.form); could not create instance
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            throw new CascadingRuntimeException("Could not create form instance", e);
         } finally {
             releaseComponent(formMgr);
             if (src != null) resolver.release(src);
@@ -98,7 +99,7 @@ public class FormInstance extends AbstractContinuable {
             // this.formWidget = new Widget(form);  could not create instance
             // this.local = cocoon.createPageLocal(); PageLocal ?
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            throw new CascadingRuntimeException("Could not create form instance", e);
         } finally {
             releaseComponent(formMgr);
             if (src != null) resolver.release(src);
@@ -258,7 +259,7 @@ public class FormInstance extends AbstractContinuable {
             source = resolver.resolveURI(bindingURI);
             this.binding = bindingManager.createBinding(source);
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            throw new CascadingRuntimeException("Could not create bindinh", e);
         } finally {
             if (source != null)
                 resolver.release(source);
@@ -274,7 +275,7 @@ public class FormInstance extends AbstractContinuable {
         try {
             this.binding.loadFormFromModel(this.form, object);
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            throw new CascadingRuntimeException("Could not load form from model", e);
         }
     }
 
@@ -285,7 +286,7 @@ public class FormInstance extends AbstractContinuable {
         try {
             this.binding.saveFormToModel(this.form, object);
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            throw new CascadingRuntimeException("Could not save form into model", e);
         }
     }
 
