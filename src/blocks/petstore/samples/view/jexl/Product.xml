@@ -16,7 +16,7 @@
                     <price>${item.listPrice}</price>
                 </item>
             </c:forEach>
-            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${continuation.id}"/>
+            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${cocoon.continuation.id}"/>
         </product>
     </site>
 

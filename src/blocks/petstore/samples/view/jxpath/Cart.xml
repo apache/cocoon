@@ -14,7 +14,7 @@
             </c:forEach>
             <subTotal label="Sub Total" label1="Total">#{cartForm/cart/subTotal}</subTotal>
             <c:if test="#{label = 'Checkout Summary'}">
-                <nextpointer img="images/button_continue.gif" do="#{$continuation/id}.kont"/>
+                <nextpointer img="images/button_continue.gif" do="#{$cocoon/continuation/id}.kont"/>
             </c:if>
             <c:if test="#{label = 'Shopping Cart'}">
                 <nextpointer do="checkout.do" img="images/button_checkout.gif" />

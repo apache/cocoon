@@ -9,7 +9,7 @@
                     <product-desc>${item.descn}</product-desc>
                 </product>
             </c:forEach>
-            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${continuation.id}"/>
+            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${cocoon.continuation.id}"/>
         </search>
     </site>
 </page>

@@ -2,7 +2,7 @@
 
 <page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
     <site signOn="${accountForm.signOn}" view="jexl">
-        <form method="POST" label="signon" action="${continuation.id}.kont">
+        <form method="POST" label="signon" action="${cocoon.continuation.id}.kont">
             <message type="warning">${message}</message>
             <input type="text" name="username" value="j2ee" label="Username" />
             <input type="password" name="password" value="j2ee" label="Password" />
