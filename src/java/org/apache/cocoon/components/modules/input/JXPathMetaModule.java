@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2004 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -104,7 +104,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: JXPathMetaModule.java,v 1.4 2003/05/21 14:05:15 mlangham Exp $
+ * @version CVS $Id: JXPathMetaModule.java,v 1.5 2004/02/15 19:12:44 haul Exp $
  */
 public class JXPathMetaModule extends AbstractMetaModule implements Configurable, ThreadSafe {
 
@@ -114,12 +114,12 @@ public class JXPathMetaModule extends AbstractMetaModule implements Configurable
      * extensions is done only once.
      *
      */
-    protected FunctionLibrary library = null;
+    protected JXPathHelperConfiguration configuration = null;
 
     /** set lenient mode for jxpath (i.e. throw an exception on
      * unsupported attributes) ? 
      */
-    protected boolean lenient = true;
+    private static final boolean lenient = true;
 
     protected String parameter = "";
 
@@ -143,187 +143,39 @@ public class JXPathMetaModule extends AbstractMetaModule implements Configurable
         this.defaultInput = this.inputConf.getAttribute("name",this.defaultInput);
         this.parameter = config.getChild("parameter").getValue(this.parameter);
 
-        // start verbatim copy of AbstractJXPathModule
-        // please keep both in sync.
-
-        this.lenient = config.getChild("lenient").getValueAsBoolean(this.lenient);
-        this.library = new FunctionLibrary();
-        getFunctions(this.library, config);
-        getPackages(this.library, config);
+        this.configuration = JXPathHelper.setup(config, lenient);
     }
 
 
-
-    /**
-     * Register all extension functions listed in the configuration
-     * through <code>&lt;function name="fully.qualified.Class"
-     * prefix="prefix"/&gt;</code> in the given FunctionLibrary.
-     *
-     * @param lib a <code>FunctionLibrary</code> value
-     * @param conf a <code>Configuration</code> value
-     */
-    protected void getFunctions(FunctionLibrary lib, Configuration conf) {
-
-        Configuration[] children = conf.getChildren("function");
-        int i = children.length;
-        while (i-- >0) {
-            String clazzName = children[i].getAttribute("name",null);
-            String prefix = children[i].getAttribute("prefix",null);
-            if (clazzName != null && prefix != null) {
-                try {
-                    Class clazz = Class.forName(clazzName);
-                    if (getLogger().isDebugEnabled())
-                        getLogger().debug("adding Class "+clazzName+" to functions");
-                    lib.addFunctions(new ClassFunctions(clazz, prefix));
-                } catch (ClassNotFoundException cnf) {
-                    if (getLogger().isWarnEnabled())
-                        getLogger().warn("Class not found: "+clazzName);
-                }
-            } else {
-                if (getLogger().isWarnEnabled())
-                    getLogger().warn("Class name or prefix null: "+clazzName+" / "+prefix);
-            }
-        }
-    }
-
-
-    /**
-     * Register all extension packages listed in the configuration
-     * through <code>&lt;package name="fully.qualified.package"
-     * prefix="prefix"/&gt;</code> in the given FunctionLibrary.
-     *
-     * @param lib a <code>FunctionLibrary</code> value
-     * @param conf a <code>Configuration</code> value
-     */
-    protected void getPackages(FunctionLibrary lib, Configuration conf)  {
-
-        Configuration[] children = conf.getChildren("package");
-        int i = children.length;
-        while (i-- >0) {
-            String packageName = children[i].getAttribute("name",null);
-            String prefix = children[i].getAttribute("prefix",null);
-            if (packageName != null && prefix != null) {
-                if (getLogger().isDebugEnabled())
-                    getLogger().debug("adding Package "+packageName+" to functions");
-                lib.addFunctions(new PackageFunctions(packageName, prefix));
-            } else {
-                if (getLogger().isWarnEnabled())
-                    getLogger().warn("Package name or prefix null: "+packageName+" / "+prefix);
-            }
-        }
-    }
-
-
-    /**
-     * Actually add global functions and packages as well as those
-     * listed in the configuration object.
-     *
-     * @param context a <code>JXPathContext</code> value
-     * @param conf a <code>Configuration</code> value holding local
-     * packages and functions.
-     */
-    protected void setupExtensions(JXPathContext context, Configuration conf) {
-        
-        FunctionLibrary localLib = null;
-
-        if (conf != null) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("adding local Classes and Packages to functions");
-            localLib = new FunctionLibrary();
-            localLib.addFunctions(this.library);
-            getPackages(localLib, conf);
-            getFunctions(localLib, conf);
-        } else {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("no local Classes or Packages");
-            localLib = this.library;
-        }
-        
-        context.setFunctions(localLib);
-    }
-
-
-    public Object getAttribute(String name, Configuration modeConf,
-                               Map objectModel)
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel)
         throws ConfigurationException {
 
         Object contextObj = getContextObject(modeConf, objectModel);
-        if (contextObj == null) return null;
-        if (modeConf != null) {
-            name = modeConf.getChild("parameter").getValue(name);
+        if (modeConf != null) { 
+            name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name); 
         }
-        try {
-            JXPathContext jxContext = JXPathContext.newContext(contextObj);
-            setupExtensions(jxContext, modeConf);
-            if (this.lenient) jxContext.setLenient(true); // return null insted of exception on non existing property
-            Object obj = jxContext.getValue(name);
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("for "+name+" returning an "+(obj == null ? "null" : obj.getClass().getName())+" as "+obj);
-            return obj;
-        } catch (Exception e) {
-            throw new ConfigurationException(
-                "Module does not support <" + name + ">" + "attribute.",
-                e
-            );
-        }
+        return JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
     }
+
 
     public Iterator getAttributeNames(Configuration modeConf, Map objectModel)
         throws ConfigurationException {
 
         Object contextObj = getContextObject(modeConf, objectModel);
-        if (contextObj == null) return null;
-        try {
-            JXPathBeanInfo info = JXPathIntrospector.getBeanInfo(
-                contextObj.getClass());
-            java.beans.PropertyDescriptor[] properties = info.getPropertyDescriptors();
-            java.util.List names = new java.util.LinkedList();
-            for (int i = 0; i < properties.length; i++) {
-                names.add(properties[i].getName());
-            }
-            return names.listIterator();
-        } catch (Exception e) {
-            throw new ConfigurationException(
-                "Error retrieving attribute names for class: "
-                + contextObj.getClass(),
-                e
-            );
-        }
-
+        return JXPathHelper.getAttributeNames(this.configuration, contextObj);
     }
+
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
         throws ConfigurationException {
 
         Object contextObj = getContextObject(modeConf, objectModel);
-        if (contextObj == null) return null;
-        if (modeConf != null) {
-            name = modeConf.getChild("parameter").getValue(name);
+        if (modeConf != null) { 
+            name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name); 
         }
-        try {
-            JXPathContext jxContext = JXPathContext.newContext(contextObj);
-            List values = null;
-            setupExtensions(jxContext, modeConf);
-            if (this.lenient) jxContext.setLenient(true); // return null insted of exception on non existing property
-            Iterator i = jxContext.iterate(name);
-            if (i.hasNext()) { values = new LinkedList(); } 
-            while (i.hasNext()) {
-                values.add(i.next());
-            }
-            Object[] obj = values.toArray();
-            if (obj.length == 0) obj = null;
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("for "+name+" returning an "+(obj == null ? "null" : obj.getClass().getName())+" as "+obj);
-            return obj;
-        } catch (Exception e) {
-            throw new ConfigurationException(
-                "Module does not support <" + name + ">" + "attribute.",
-                e
-            );
-        }
+        return JXPathHelper.getAttributeValues(name, modeConf, this.configuration, contextObj);
     }
 
-    // end verbatim copy of AbstractJXPathModule
 
     /**
      * Looks up object from configured InputModule. 
