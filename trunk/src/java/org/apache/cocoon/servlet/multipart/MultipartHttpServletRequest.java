@@ -72,7 +72,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @author Stefano Mazzocchi
- * @version CVS $Id: MultipartHttpServletRequest.java,v 1.3 2003/05/18 18:34:01 cziegeler Exp $
+ * @version CVS $Id: MultipartHttpServletRequest.java,v 1.4 2003/07/30 02:21:31 joerg Exp $
  */
 public class MultipartHttpServletRequest implements HttpServletRequest {
 
@@ -83,7 +83,7 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
     private Hashtable values = null;
 
     /**
-     * Create this wrapper around the given request and including the given 
+     * Create this wrapper around the given request and including the given
      * parts.
      */
     public MultipartHttpServletRequest(HttpServletRequest request, Hashtable values) {
@@ -93,8 +93,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Cleanup eventually uploaded parts that were saved on disk
-     * 
-     * @return a set containing the part names
      */
     public void cleanup() throws IOException {
         Enumeration e = getParameterNames();
@@ -207,7 +205,7 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
             return request.getParameterValues(name);
         }
     }
-    
+
     /**
      * Method getAttribute
      *
@@ -579,7 +577,7 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method isRequestedSessionIdFromUrl
-     *
+     * @deprecated use {@link #isRequestedSessionIdFromURL()} instead
      */
     public boolean isRequestedSessionIdFromUrl() {
         return request.isRequestedSessionIdFromURL();
