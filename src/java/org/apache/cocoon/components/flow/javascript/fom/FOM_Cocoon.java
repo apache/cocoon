@@ -188,7 +188,7 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     private CallContext currentCall;
-    private PageLocalScopeHolder pageLocal;
+    protected PageLocalScopeHolder pageLocal;
 
     public String getClassName() {
         return "FOM_Cocoon";
