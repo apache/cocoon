@@ -35,7 +35,7 @@
 	<p>Since continuations are objects, you can also store them in
 	a database, for really long-lived session, just like you do
 	with session beans.</p>
-    </s1>
+  </s1>
 
   </body>
 </document>
