@@ -56,6 +56,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.Attributes;
 import org.xml.sax.ext.LexicalHandler;
 import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -74,7 +75,7 @@ import java.util.Iterator;
  * <p>Both ContentHandler and LexicalHandler are supported, the only exception is
  * that the setDocumentLocator event is not recorded.
  */
-public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
+public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Recyclable {
     private ArrayList saxbits = new ArrayList();
 
     public void skippedEntity(String name) throws SAXException {
@@ -155,6 +156,10 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable {
             SaxBit saxbit = (SaxBit)saxbitsIt.next();
             saxbit.send(contentHandler);
         }
+    }
+
+    public void recycle() {
+        saxbits.clear();
     }
 
     interface SaxBit {
