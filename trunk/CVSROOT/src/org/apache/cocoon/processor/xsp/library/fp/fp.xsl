@@ -71,7 +71,7 @@
 	</xsp:page>
 </xsl:template>
 	
-<xsl:template match="xsp:page/*">
+<xsl:template match="xsp:page/*[not(starts-with(name(.), 'xsp:'))]">
 	<xsl:copy>
 		<xsl:apply-templates select="@*"/>
 		<xsp:logic>
@@ -214,6 +214,10 @@
 <xsl:template match="fp:resource-file"></xsl:template>
 <xsl:template match="fp:resource-node"></xsl:template>
 <xsl:template match="fp:write-mode"></xsl:template>
+<xsl:template match="select"></xsl:template>
+<xsl:template match="from"></xsl:template>
+<xsl:template match="to"></xsl:template>
+<xsl:template match="mode"></xsl:template>
 
 <xsl:template match="fp:redirect">
 	<xsl:variable name="value">

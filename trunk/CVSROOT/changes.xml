@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.137 2000-10-24 02:20:34 greenrd Exp $ 
+  $Id: changes.xml,v 1.138 2000-10-30 11:28:52 jeremy Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -14,9 +14,16 @@
     <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
     <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
     <person name="Robin Green" email="greenrd@hotmail.com" id="RDG"/>
+    <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="JQ" type="fix" due-to="Konstantin Piroumian" due-to-email="KPiroumian@flagship.ru">
+   Fixed fp.xsl, to work better when mixed with other taglibs.
+  </action>
+  <action dev="JQ" type="fix">
+   Fixed fp.xsl, to hopefully allow use of config elements properly.
+  </action>
   <action dev="RDG" type="fix" due-to="Paul Lamb" due-to-email="paul@oil-law.com">
    Fixed XSPProcessor to pick up correct classpath and
    compile on Tomcat 3.3 and Catalina (Tomcat 4).
