@@ -144,7 +144,10 @@ of build files, give credits to the original authors. Thank you.
   <property name="year" value="1999-2000"/>
 
   <property name="build.compiler" value="classic"/>
+  <!-- <property name="build.compiler" value="jikes"/> -->
   <property name="debug" value="off"/>
+  <property name="optimize" value="on"/>
+  <property name="deprecation" value="off"/>
 
   <property name="src.dir" value="./src"/>
   <property name="dtd.dir" value="./dtd"/>
