@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "dtd/document-v10.dtd">
+<document> 
+  <header> 
+	 <title>Overview of Cocoon 2</title>
+	 <version>0.1</version> 
+	 <type>Overview document</type> 
+	 <authors><person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
+	 </authors> 
+  </header> 
+  <body> 
+	 <s1 title="What is Cocoon"> 
+		<p>Cocoon is an XML publishing framework. It allows you to define XML
+		  documents and transformations to be applied on it, to eventually generate a
+		  presentation format of your choice (HTML, PDF, SVG, ...).</p> 
+		<p>Cocoon also gives you the possibility to have logic in your XML files
+		  (so that the XML file itself can become dynamically generated).</p> 
+	 </s1> 
+	 <s1 title="General structure"> 
+		<p>This section gives a general overview of how an XML document is
+		  handled by Cocoon.</p> 
+		<s2 title="Pipeline"> 
+		  <p>Cocoon relies on the pipeline model: an XML document is pushed
+			 through a pipeline, that exists in several transformation steps of your
+			 document. Every pipeline begins with a generator, continues with zero or more
+			 transformers, and ends with a serializer. This can be compared to the
+			 "servlet-chaining" concept of a servlet engine. We'll explain the components of
+			 the pipeline now in more detail.</p> 
+		  <s3 title="Generator"> 
+			 <p>The Generator is the starting point for the pipeline. It is
+				responsible for delivering SAX events down the pipeline.</p> 
+			 <p>The simplest Generator is the FileGenerator: it takes a local XML
+				document, parses it, and sends the SAX events down the pipeline. </p> 
+			 <p>The Generator is constructed to be independent of the concept
+				"file". If you are able to generate SAX events from another source, you can use
+				that without having to go via a temporary file.</p> 
+		  </s3> 
+		  <s3 title="Transformer"> 
+			 <p>A Transformer can be compared to an XSL: it gets an XML document
+				(or SAX events), and generates another XML document (or SAX events).</p> 
+			 <p>The simplest Transformer is the XalanTransformer: it applies an
+				XSL to the SAX events it receives.</p> 
+		  </s3> 
+		  <s3 title="Serializer"> 
+			 <p>A Serializer is responsible for transforming SAX events to a
+				presentation format. For actors looking at the back of the pipeline, it looks
+				like a static file is delivered. So a browser can receive HTML, and will not be
+				able to tell the difference with a static file on the filesystem of the server.
+				</p> 
+			 <p>We have Serializers for generating HTML, XML, PDF, VRML, WAP, and
+				of course you can create your own.</p> 
+			 <p>The simplest Serializer is the XMLSerializer: it receives the SAX
+				events from up the pipeline, and returns a "human-readable" XML file.</p> 
+		  </s3> 
+		</s2> 
+	 </s1> 
+  </body>
+</document>

@@ -315,6 +315,7 @@ by the main ones.
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
   <target name="prepare-docs" depends="init">
+    <copydir src="${docs.dir}/images" dest="${build.docs}/images"/>
     <copy file="changes.xml" tofile="${docs.dir}/changes.xml" filtering="on"/>
     <copy file="todo.xml"    tofile="${docs.dir}/todo.xml"/>
 

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "dtd/todo-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: todo.xml,v 1.1.2.1 2000-11-20 11:56:08 dims Exp $
+-->
+
+
+<todo title="Things To Do">
+
+ <devs>
+  <!-- in strict alphabetical order -->
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+ </devs>
+
+ <actions priority="high">
+  <action context="code">
+   Finish writing the command line interface and design the link rewriting
+   behavior that cannot work with views.
+  </action>
+
+  <action context="code">
+   Write URLHandler for the protocols defined in the sitemap, e.g. class://. cvs://
+  </action>
+
+  <action context="code">
+   Write a better error handling code for CocoonServlet to avoid hardcoding
+   HTML inside the servlet which sucks big time.
+  </action>
+
+  <action context="code">
+   Complete ResourceProcessor.java to allow Cocoon to read resources from its
+   URI space without attempting to process them (should use context.getResource()
+   but how do we make that instance available and maintain the engine abstracted
+   enough? we should implement the "loading" abstraction).
+  </action>
+
+  <action context="code">
+   Check and fix xsl:import which doesn't seem to work expected... very strange..
+   it might be an XSLT problem with the XSP example since it uses namespaces
+   heavily... should we use the namespace() axis?
+  </action>
+
+  <action context="code">
+   Remove deprecated methods from org.apache.cocoon.xml.util and make it clean
+   for SAX2 final.
+  </action>
+
+  <action context="code">
+   Finish writing SVGSerializer.
+  </action>
+ </actions>
+ 
+ <actions priority="medium">
+
+  <action context="code">
+   Create a better logging subsystem.
+  </action>
+
+  <action context="code">
+   Implement a internal profiling tool that should indicate the load and history of 
+   such along with the status page. Something both useful and fancy to show the 
+   power of C2.
+  </action>
+  
+ </actions>
+
+</todo>

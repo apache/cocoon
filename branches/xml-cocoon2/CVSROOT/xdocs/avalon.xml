@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "dtd/document-v10.dtd">
+<document>
+  <header>
+	 <title>Avalon</title>
+	 <subtitle>for Cocoon 2</subtitle>
+	 <version>0.1</version>
+	 <type>Technical document</type>
+	 <authors><person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/>
+	 </authors>
+	 <abstract>This document tries to give the basic knowledge of Avalon that is
+		necessary to understand Apache Cocoon 2.</abstract>
+  </header>
+  <body>
+	 <s1 title="Goal">
+		<p>This document tries to give the basic knowledge of Avalon that is
+		  necessary to understand Apache Cocoon 2.</p>
+		<p>People that are trying to understand Avalon in depth, will probably
+		  not be much helped by this document. But if you want to understand Cocoon 2,
+		  you have to have a basic grasp of Avalon. </p>
+		<p>Much of this document is copied and pasted from original Avalon
+		  documentation. However, I hope that the fact that all things relevant for
+		  Cocoon are put together in one place, will help you to understand Cocoon 2
+		  faster.</p>
+		<p>For people wishing to learn Avalon in-depth,
+		  <link href="http://java.apache.org/framework/index.html">this is your starting
+		point</link>.</p>
+	 </s1>
+	 <s1 title="Overview">
+		<p>For a mission statement of Apache Avalon, please read
+		  <link href="http://java.apache.org/framework/index.html">the Avalon
+		homepage</link>.</p>
+		<p>In short, Avalon tries to take design efforts away from server-side
+		  programmers by providing a framework that </p>
+		<ul>
+		  <li>provides basic working classes;</li>
+		  <li>provides interfaces to allow different efforts to be integrated
+			 more easily.</li>
+		</ul>
+	 </s1>
+	 <s1 title="The classes and interfaces"> 
+		<p>These classes and interfaces are extensively used by Cocoon 2:</p>
+		<s2 title="ComponentManager">
+		  <p><code>org.apache.avalon.ComponentManager</code></p>
+		  <p>A <code>ComponentManager</code> selects <code>Component</code>s
+			 based on a role. The contract is that all the <code>Component</code>s implement
+			 the differing roles and there is one <code>Component</code> per role. If you
+			 need to select on of many <code>Component</code>s that implement the same role,
+			 then you need to use a <code>ComponentSelector</code>. Roles are the full
+			 interface name.</p>
+		  <p>A role is better understood by the analogy of a play. There are many
+			 different roles in a script. Any actor or actress can play any given part and
+			 you get the same results (phrases said, movements made, etc.), but the exact
+			 nuances of the performance is different.</p>
+		  <p>The <code>Cocoon</code> class implements e.g. the
+			 <code>ComponentManager</code> interface.</p>
+		</s2>
+		<s2 title="Composer">
+		  <p><code>org.apache.avalon.Composer</code></p>
+		  <p>A <code>Composer</code> is a class that need to connect to software
+			 components using a "role" abstraction, thus not depending on particular
+			 implementations but on behavioral interfaces. </p>
+		</s2>
+		<s2 title="Component">
+		  <p><code>org.apache.avalon.Component</code></p>
+		  <p>This interface identifies classes that can be used as
+			 <code>Components</code> by a <code>Composer</code>. </p>
+		  <p>A <code>Component</code> is the basic building block of Avalon. When
+			 a class implements this interface, it allows itself to be managed by a
+			 <code>ComponentManager</code> and used by an outside element called a
+			 <code>Composer</code>. The <code>Composer</code> must know what type of
+			 <code>Component</code> it is accessing, so it will re-cast the
+			 <code>Component</code> into the type it needs. </p>
+		  <p><code>Component</code>s in Cocoon 2 are e.g. those defined in
+			 <code>cocoon.xconf</code>.</p>
+		</s2>
+		<s2 title="Configuration">
+		  <p><code>org.apache.avalon.Configuration</code></p>
+		  <p><code>Configuration</code> is a interface encapsulating a
+			 configuration node used to retrieve configuration values. This is a "read only"
+			 interface preventing applications from modifying their own configurations. The
+			 contract surrounding the <code>Configuration</code> is that once it is created,
+			 information never changes. The <code>Configuration</code> is built by the
+			 <code>ConfigurationBuilder</code>.</p>
+		</s2>
+		<s2 title="ConfigurationBuilder">
+		  <p><code>org.apache.avalon.ConfigurationBuilder</code></p>
+		  <p>A <code>ConfigurationBuilder</code> builds
+			 <code>Configuration</code>s.</p>
+		</s2>
+	 </s1>
+  </body>
+</document>

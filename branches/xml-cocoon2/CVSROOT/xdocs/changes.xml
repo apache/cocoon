@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE changes SYSTEM "dtd/changes-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: changes.xml,v 1.1.2.1 2000-11-20 11:56:05 dims Exp $
+-->
+
+<changes title="History of Changes">
+
+ <devs>
+  <!-- in strict alphabetical order -->
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+ </devs>
+
+ <release version="2.0a3" date="November 20 2000">
+  <action dev="DB" type="add">
+   added esql logicsheet to c2
+  </action>
+  <action dev="DB" type="fix">
+   patched xsp generator to use proper namespace for automatic text elements
+  </action>
+  <action dev="BL" type="update">
+    Updated Cocoon to be Avalon 3.0a4 compliant.  Introduced ComponentManager and
+    ComponentSelector patterns correctly in code.  Updated sitemap to create
+    Configuration trees directly.
+  </action>
+  <action dev="RB" type="add"> 
+   Added a more complete SVG serializer.
+  </action>
+  <action dev="SM" type="update">
+   Distribution cleanup and creation of a decent live demo, also to test the new sitemap.
+  </action>
+  <action dev="GP" type="update">
+   Major update to implement the new compiled sitemap subsystem.
+  </action>
+  <action dev="DB" type="update">
+   Patched XSLTFilter to pass request parameters into stylesheet like cocoon1
+  </action>
+  <action dev="DB" type="add">
+   Added ImageDirectoryGenerator - this oughta be pluggable though, so other file types can have extra attributes added easily
+  </action>
+  <action dev="SM" type="add"> 
+   Improved the samples and the webapp sitemap.
+  </action>
+  <action dev="SM" type="update"> 
+   Cleaned build system in order to be friendly to ASF-wide build procedures.
+  </action>
+  <action dev="SM" type="update"> 
+   Updated installation section (JServ no longer supported).
+  </action>
+  <action dev="SM" type="update"> 
+   Updated Xerces and FOP to latest versions.
+  </action>
+  <action dev="SM" type="fix"> 
+   Patched for final SAX2 compatibility.
+  </action>
+  <action dev="SM" type="update" due-to="Sven K&uuml;nzler" due-to-email="svenk@tzi.org"> 
+   Improved installation documentation.
+  </action>
+  <action dev="DB" type="add" due-to="Zvi" due-to-email="thezvi@ifrance.com">
+   Patched SQLFilter so VJ++ was happy
+  </action>
+  <action dev="DB" type="add">
+   Officially added XincludeFilter
+  </action>
+  <action dev="DB" type="add">
+   Officially added SQLFilter
+  </action>
+  <action dev="SM" type="add" due-to="Sebastien Sahuc" due-to-email="ssahuc@imediation.com"> 
+   Fixed order of filters that was backwards.
+  </action>
+  <action dev="GP" type="add">
+   Fixed typo in DirectoryGenerator.
+  </action>
+  <action dev="SM" type="add">
+   Distribution cleanup, early documentation.
+  </action>
+  <action dev="PF" type="add">
+   Initial code implementation.
+  </action>
+ </release>
+
+</changes>

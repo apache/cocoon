@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-
 <!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
 
 <document>
@@ -8,7 +7,8 @@
   <authors>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
    <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
-  </authors>
+  <person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
+	 </authors>
  </header>
 
  <body>
@@ -39,5 +39,34 @@
   
  </s1>
  
- </body>
+ <s1 title="Step-by-step installation instructions for Windows"> 
+		<ol> 
+		  <li>Download
+			 <link href="ftp://cvsgui.sourceforge.net/pub/cvsgui/WinCvs11b16.zip">WinCVS
+		(v1.16 beta)</link> (homepage is <link href="http://www.wincvs.org/">http://www.wincvs.org/</link>);</li> 
+		<li> Install it;</li> 
+		<li> Start it;</li> 
+		<li>Click on admin-&gt;preferences;</li> 
+		<li> In "Enter the CVSROOT:" enter
+		  ":pserver:anoncvs@xml.apache.org:/home/cvspublic" (without quotes);</li> 
+		<li>In "Authentication:" choose ""passwd" file on the cvs server";</li> 
+		<li>Click "Ok";</li> 
+		<li>Click admin-&gt;login;</li> 
+		<li> When asked for the password: anwer "anoncvs" (without quotes);</li> 
+		<li> Click "create-&gt;checkout module";</li> 
+		<li>Module name and path on the server is "xml-cocoon" (no quotes);</li> 
+		<li>Choose a dir to put the source code in;</li> 
+		<li>Click tab "checkout options";</li> 
+		<li>Select option "by revision/tag/branch";</li> 
+		<li>In the text-box behind that: "xml-cocoon2" (without quotes) </li> 
+		<li>Click "Ok";</li> 
+		<li>If everything goes well, messages will start to appear in the log
+		  window;</li> 
+		<li>Wait until you see "*****CVS exited normally with code 0*****" in the
+		  log window;</li> 
+		<li>The Cocoon2 source is now on your HD;</li> 
+		<li>Refer to the INSTALL file in the cocoon-dir to create and install the
+		  cocoon.war file.</li> 
+		</ol> 
+	 </s1></body>
 </document>
