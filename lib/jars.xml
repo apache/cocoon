@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.209 2004/04/21 22:03:53 joerg Exp $
+    | CVS $Id: jars.xml,v 1.210 2004/04/30 18:36:37 pier Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -749,6 +749,16 @@
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
   -->
+
+  <file>
+    <title>Cocoon Serializers Block Encodings</title>
+    <description>
+      A large list of character sets used for XML/HTML serialization.
+    </description>
+    <used-by>serializers</used-by>
+    <lib>serializers/lib/cocoon-serializers-charsets-0.1.jar</lib>
+    <homepage>http://cocoon.apache.org/</homepage>
+  </file>
 
   <file>
     <title>Slide kernel</title>
