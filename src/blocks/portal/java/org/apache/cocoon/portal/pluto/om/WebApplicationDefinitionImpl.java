@@ -207,9 +207,8 @@ implements WebApplicationDefinition, Support {
     public String getCastorId() {
         if (id.length() > 0) {
             return getId().toString();
-        } else {
-            return null;
         }
+        return null;
     }
 
     public Collection getCastorInitParams() {

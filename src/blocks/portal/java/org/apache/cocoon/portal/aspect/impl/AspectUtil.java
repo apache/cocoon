@@ -27,7 +27,7 @@ import org.apache.cocoon.util.ClassUtils;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AspectUtil.java,v 1.5 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AspectUtil { 
 
@@ -41,13 +41,12 @@ public class AspectUtil {
                 Constructor constructor = clazz.getConstructor(new Class[] {String.class});
                 String value = (desc.getDefaultValue() == null ? "0" : desc.getDefaultValue());
                 return constructor.newInstance(new String[] {value});
-            } else {
-                if ( desc.getDefaultValue() != null ) {
-                    Constructor constructor = clazz.getConstructor(new Class[] {String.class});
-                    return constructor.newInstance(new String[] {desc.getDefaultValue()});
-                }
-                return clazz.newInstance();
             }
+            if ( desc.getDefaultValue() != null ) {
+                Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+                return constructor.newInstance(new String[] {desc.getDefaultValue()});
+            }
+            return clazz.newInstance();
         } catch (Exception ignore) {
             return null;
         }
@@ -60,16 +59,14 @@ public class AspectUtil {
                 if ( !clazz.equals(value.getClass())) {
                     Constructor constructor = clazz.getConstructor(new Class[] {String.class});
                     return constructor.newInstance(new String[] {value.toString()});
-                } else {
-                    return value;
-                }
-            } else {
-                if ( !value.getClass().equals(clazz) ) {
-                    // FIXME - this is catch by "ignore"
-                    throw new RuntimeException("Class of aspect doesn't match description.");
                 }
                 return value;
             }
+            if ( !value.getClass().equals(clazz) ) {
+                // FIXME - this is catch by "ignore"
+                throw new RuntimeException("Class of aspect doesn't match description.");
+            }
+            return value;
         } catch (Exception ignore) {
             // if we can't convert, well we don't do it :)
             return value;

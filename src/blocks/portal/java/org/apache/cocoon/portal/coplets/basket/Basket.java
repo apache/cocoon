@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: Basket.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class Basket implements Serializable {
     
@@ -38,6 +38,7 @@ public class Basket implements Serializable {
      * The constructor
      */
     public Basket() {
+        // nothing to do 
     }
     
     /**

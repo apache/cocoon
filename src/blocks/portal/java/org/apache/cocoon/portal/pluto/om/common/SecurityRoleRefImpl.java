@@ -27,7 +27,7 @@ import org.apache.pluto.om.common.SecurityRoleRef;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: SecurityRoleRefImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SecurityRoleRefImpl implements SecurityRoleRef, java.io.Serializable
 {
@@ -36,61 +36,51 @@ public class SecurityRoleRefImpl implements SecurityRoleRef, java.io.Serializabl
     private String roleLink;
     private DescriptionSet descriptions;
 
-    public SecurityRoleRefImpl()
-    {
+    public SecurityRoleRefImpl() {
         descriptions = new DescriptionSetImpl();
     }
 
     // SecurityRoleRef implementation.
 
-    public String getRoleName()
-    {
+    public String getRoleName() {
         return roleName;
     }
 
-    public String getRoleLink()
-    {
+    public String getRoleLink() {
         return roleLink;
     }
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.common.SecurityRoleRef#getDescription(Locale)
      */
-    public Description getDescription(Locale locale)
-    {
+    public Description getDescription(Locale locale) {
         return descriptions.get(locale);
     }
 
 
-    public void setRoleName(String roleName)
-    {
+    public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
     // additional methods.
 
-    public void setRoleLink(String roleLink)
-    {
+    public void setRoleLink(String roleLink) {
         this.roleLink = roleLink;
     }
 
-    public DescriptionSet getDescriptionSet()
-    {
+    public DescriptionSet getDescriptionSet() {
         return descriptions;
     }
 
-    public void setDescriptionSet(DescriptionSet descriptions)
-    {
+    public void setDescriptionSet(DescriptionSet descriptions) {
         this.descriptions = descriptions;
     }
 
-    public Collection getCastorDescriptions()
-    {
+    public Collection getCastorDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-    public void setCastorDescriptions(DescriptionSet castorDescriptions)
-    {
+    public void setCastorDescriptions(DescriptionSet castorDescriptions) {
         this.descriptions = castorDescriptions;
     }
 

@@ -23,7 +23,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.7 2004/03/05 13:02:17 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CopletDataReferenceFieldHandler extends ReferenceFieldHandler {
 
@@ -31,9 +31,8 @@ public class CopletDataReferenceFieldHandler extends ReferenceFieldHandler {
         CopletData copletData = ((CopletInstanceData) object).getCopletData();
         if (copletData != null) {
             return copletData.getId();
-        } else {
-            return null;
         }
+        return null;
     }
 
     public Object newInstance(Object parent) {

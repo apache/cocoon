@@ -27,7 +27,7 @@ import org.apache.pluto.factory.Factory;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractFactory.java,v 1.3 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractFactory 
 extends AbstractLogEnabled
@@ -52,5 +52,6 @@ implements Factory {
      * @see org.apache.pluto.factory.Factory#destroy()
      */
     public void destroy() throws Exception {
+        // nothing to do
     }
 }

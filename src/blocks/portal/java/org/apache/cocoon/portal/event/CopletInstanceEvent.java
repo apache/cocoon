@@ -21,9 +21,10 @@ package org.apache.cocoon.portal.event;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletInstanceEvent.java,v 1.3 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface CopletInstanceEvent 
     extends ActionEvent {
         
+    // just a marker interface
 }

@@ -26,14 +26,13 @@ import org.apache.pluto.util.StringUtils;
 public class ParameterSetImpl extends HashSet
 implements ParameterSet, ParameterSetCtrl, java.io.Serializable {
 
-    public ParameterSetImpl()
-    {
+    public ParameterSetImpl() {
+        // nothing to do 
     }
 
     // ParameterSet implementation.
 
-    public Parameter get(String name)
-    {
+    public Parameter get(String name) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             Parameter parameter = (Parameter)iterator.next();
@@ -46,8 +45,7 @@ implements ParameterSet, ParameterSetCtrl, java.io.Serializable {
 
     // ParameterSetCtrl implementation.
 
-    public Parameter add(String name, String value)
-    {
+    public Parameter add(String name, String value) {
         ParameterImpl parameter = new ParameterImpl();
         parameter.setName(name);
         parameter.setValue(value);
@@ -57,8 +55,7 @@ implements ParameterSet, ParameterSetCtrl, java.io.Serializable {
         return parameter;
     }
 
-    public Parameter remove(String name)
-    {
+    public Parameter remove(String name) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
             Parameter parameter = (Parameter)iterator.next();
@@ -70,20 +67,17 @@ implements ParameterSet, ParameterSetCtrl, java.io.Serializable {
         return null;
     }
 
-    public void remove(Parameter parameter)
-    {
+    public void remove(Parameter parameter) {
         super.remove(parameter);
     }
 
     // additional methods.
     
-    public String toString()
-    {
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());

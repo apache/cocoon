@@ -23,48 +23,42 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: SecurityRoleImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SecurityRoleImpl implements SecurityRole,  java.io.Serializable {
 
     private String description;
     private String roleName;
 
-    public SecurityRoleImpl()
-    {
-    }
+    public SecurityRoleImpl() {
+        // nothing to do 
+   }
 
     // SecurityRole implementation.
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public String getRoleName()
-    {
+    public String getRoleName() {
         return roleName;
     }
 
     // additional methods.
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setRoleName(String roleName)
-    {
+    public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return toString(0);
     }
 
-    public String toString(int indent)
-    {
+    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
         StringUtils.newLine(buffer,indent);
         buffer.append(getClass().toString());

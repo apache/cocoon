@@ -25,12 +25,13 @@ import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultChangeAspectDataEventSubscriber.java,v 1.6 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class DefaultChangeAspectDataEventSubscriber 
     implements Subscriber {
 
     public DefaultChangeAspectDataEventSubscriber() {
+        // nothing to do 
     }
 
     /* (non-Javadoc)

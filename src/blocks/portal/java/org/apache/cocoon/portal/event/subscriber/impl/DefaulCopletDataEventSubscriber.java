@@ -38,7 +38,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaulCopletDataEventSubscriber.java,v 1.2 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class DefaulCopletDataEventSubscriber 
 implements Subscriber, Serviceable {
@@ -50,6 +50,7 @@ implements Subscriber, Serviceable {
      * Constructor
      */
     public DefaulCopletDataEventSubscriber() {
+        // nothing to do 
     }
 
     /* (non-Javadoc)
@@ -85,6 +86,7 @@ implements Subscriber, Serviceable {
             ProfileManager profileManager = service.getComponentManager().getProfileManager();
             instances = profileManager.getCopletInstanceData(data);
         } catch (Exception ignore) {
+            // ignore exception
         } finally {
             this.manager.release(service);
         }
@@ -95,6 +97,7 @@ implements Subscriber, Serviceable {
                 eventManager = (EventManager) this.manager.lookup(EventManager.ROLE);
                 publisher = eventManager.getPublisher();
             } catch (Exception ignore) {
+                // ignore exception
             } finally {
                 this.manager.release(eventManager);
             }

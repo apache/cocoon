@@ -26,71 +26,69 @@ import java.io.ObjectOutputStream;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ObjectIDImpl.java,v 1.5 2004/03/19 14:21:06 cziegeler Exp $
+ * @version CVS $Id$
  */
-public class ObjectIDImpl implements org.apache.pluto.om.common.ObjectID, java.io.Serializable
-{
+public class ObjectIDImpl 
+implements org.apache.pluto.om.common.ObjectID, java.io.Serializable {
 
     private String  stringOID;
     private int     intOID;
 
-    private ObjectIDImpl (int oid, String stringOID)
-    {
+    private ObjectIDImpl (int oid, String stringOID)  {
         this.stringOID = stringOID;
         intOID    = oid;
     }   
 
     // internal methods.
     
-    private void readObject (ObjectInputStream stream) throws IOException
-    {
+    private void readObject (ObjectInputStream stream) throws IOException {
         intOID = stream.readInt ();
 
         stringOID = String.valueOf (intOID);
     }
 
-    private void writeObject (ObjectOutputStream stream) throws IOException
-    {
+    private void writeObject (ObjectOutputStream stream) throws IOException {
         stream.write (intOID);
     }
 
     
     // addtional methods.
     
-    public boolean equals (Object object)
-    {
+    public boolean equals (Object object) {
         boolean result = false;
 
-        if (object instanceof ObjectIDImpl)            
+        if (object instanceof ObjectIDImpl) {
             result = (intOID == ((ObjectIDImpl) object).intOID);  
-        else if (object instanceof String)
+        } else if (object instanceof String) {
             result = stringOID.equals (object);
-        else if (object instanceof Integer)
-            result = (intOID == ((Integer)object).intValue());        
+        } else if (object instanceof Integer) {
+            result = (intOID == ((Integer)object).intValue());   
+        }
         return (result);
     }
 
-    public int hashCode ()
-    {
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode () {
+        return intOID;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString () {
+        return stringOID;
+    }
+
+    public int intValue () {
         return (intOID);
     }
 
-    public String toString ()
-    {
-        return (stringOID);
-    }
-
-    public int intValue ()
-    {
-        return (intOID);
-    }
-
-    static public ObjectIDImpl createFromString(String idStr)
-    {
+    static public ObjectIDImpl createFromString(String idStr) {
         char[] id = idStr.toCharArray();
         int _id  = 1;
-        for (int i=0; i<id.length; i++)
-        {
+        for (int i=0; i<id.length; i++) {
             if ((i%2)==0)   _id *= id[i];
             else            _id ^= id[i];
             _id = Math.abs(_id);

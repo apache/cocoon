@@ -43,6 +43,9 @@ public class PortalManagerImpl
 
     protected ServiceManager manager;
         
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalManager#process()
+     */
     public void process()
     throws ProcessingException {
         EventManager eventManager = null;

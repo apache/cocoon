@@ -42,7 +42,7 @@ import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ServletDefinitionImpl.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ServletDefinitionImpl
 implements ServletDefinition, ServletDefinitionCtrl, java.io.Serializable, Support {
@@ -51,38 +51,35 @@ implements ServletDefinition, ServletDefinitionCtrl, java.io.Serializable, Suppo
     private DisplayNameSet displayNames = new DisplayNameSetImpl();
 
     // not used variables - only for castor
-    public String icon = null;
+    public String icon;
     private String id = "";
     private ParameterSet initParams = new ParameterSetImpl();
     private SecurityRoleRefSet initSecurityRoleRefs = new SecurityRoleRefSetImpl();
-    public String jspFile = null;
-    public String loadOnStartup = null;
-    private ObjectID objectId = null;
-    public String securityRoleRef = null;
-    private String servletClass = null;
-    private ServletMapping servletMapping = null;
-    private String servletName = null;
+    public String jspFile;
+    public String loadOnStartup;
+    private ObjectID objectId;
+    public String securityRoleRef;
+    private String servletClass;
+    private ServletMapping servletMapping;
+    private String servletName;
     private long available = 0;
 
-    private WebApplicationDefinition webApplication = null;
+    private WebApplicationDefinition webApplication;
 
     // ServletDefinition implementation.
 
-    public ObjectID getId()
-    {
+    public ObjectID getId() {
         if (objectId==null) {
             objectId = org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl.createFromString(id);
         }
         return objectId;
     }
 
-    public String getServletName()
-    {
+    public String getServletName() {
         return servletName;
     }
 
-    public DisplayName getDisplayName(Locale locale)
-    {
+    public DisplayName getDisplayName(Locale locale) {
         return displayNames.get(locale);
     }
 
@@ -93,23 +90,19 @@ implements ServletDefinition, ServletDefinitionCtrl, java.io.Serializable, Suppo
         return descriptions.get(locale);
     }
 
-    public String getServletClass()
-    {
+    public String getServletClass() {
         return servletClass;
     }
 
-    public ParameterSet getInitParameterSet()
-    {
+    public ParameterSet getInitParameterSet() {
         return initParams;
     }
 
-    public WebApplicationDefinition getWebApplicationDefinition()
-    {
+    public WebApplicationDefinition getWebApplicationDefinition() {
         return webApplication;
     }
 
-    public RequestDispatcher getRequestDispatcher(ServletContext servletContext)
-    {
+    public RequestDispatcher getRequestDispatcher(ServletContext servletContext) {
         ServletContext newContext = webApplication.getServletContext(servletContext);
         if (newContext==null) {
             return null;
@@ -134,98 +127,82 @@ implements ServletDefinition, ServletDefinitionCtrl, java.io.Serializable, Suppo
 
     // Support implementation.
 
-    public void postBuild(Object parameter) throws Exception
-    {
+    public void postBuild(Object parameter) throws Exception {
         setServletMapping((ServletMapping)parameter);
     }
 
 
-    public void postLoad(Object parameter) throws Exception
-    {
+    public void postLoad(Object parameter) throws Exception {
         ((Support)descriptions).postLoad(parameter);
         ((Support)displayNames).postLoad(parameter);
     }
-    public void postStore(Object parameter) throws Exception
-    {
+    
+    public void postStore(Object parameter) throws Exception {
+        // nothing to do 
     }
-    public void preBuild(Object parameter) throws Exception
-    {
+    
+    public void preBuild(Object parameter) throws Exception {
         setWebApplicationDefinition((WebApplicationDefinition)parameter);
     }
-    public void preStore(Object parameter) throws Exception
-    {
+    
+    public void preStore(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     // additional methods.
     
     public String getCastorId() {                
-        if (id.length() > 0)
+        if (id.length() > 0) {
             return getId().toString();
-        else
-            return null;
+        } 
+        return null;
     }
 
-    public Collection getCastorInitParams()
-    {
+    public Collection getCastorInitParams() {
         return(ParameterSetImpl)initParams;
     }
 
-    public SecurityRoleRefSet getCastorInitSecurityRoleRefs()
-    {
+    public SecurityRoleRefSet getCastorInitSecurityRoleRefs() {
         return initSecurityRoleRefs;
     }
 
-    public Collection getCastorDisplayNames()
-    {
+    public Collection getCastorDisplayNames() {
         return(DisplayNameSetImpl)displayNames;
     }
 
-    public Collection getCastorDescriptions()
-    {
+    public Collection getCastorDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-    public Collection getDescriptions()
-    {
+    public Collection getDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-
-
-    public SecurityRoleRefSet getInitSecurityRoleRefSet()
-    {
+    public SecurityRoleRefSet getInitSecurityRoleRefSet() {
         return initSecurityRoleRefs;
     }
 
-
-
-    public String getJspFile()
-    {
+    public String getJspFile() {
         return jspFile;
     }
-
 
     public void setCastorId(String id) {        
         setId(id);
     }
 
-    public void setCastorInitSecurityRoleRefs(SecurityRoleRefSet castorInitSecurityRoleRefs)
-    {
+    public void setCastorInitSecurityRoleRefs(SecurityRoleRefSet castorInitSecurityRoleRefs)  {
         this.initSecurityRoleRefs = castorInitSecurityRoleRefs;
     }
 
-    public void setCastorDisplayNames(DisplayNameSet castorDisplayNames)
-    {
+    public void setCastorDisplayNames(DisplayNameSet castorDisplayNames) {
         this.displayNames = castorDisplayNames;
     }
 
-    public void setCastorDescriptions(DescriptionSet castorDescriptions)
-    {
+    public void setCastorDescriptions(DescriptionSet castorDescriptions) {
         this.descriptions = castorDescriptions;
     }
 
-    public void setDisplayNames(DisplayNameSet displayNames)
-    {
+    public void setDisplayNames(DisplayNameSet displayNames) {
         this.displayNames = displayNames;
     }
 
@@ -233,14 +210,12 @@ implements ServletDefinition, ServletDefinitionCtrl, java.io.Serializable, Suppo
         this.descriptions = descriptions;
     }
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
-        objectId = null;
+        this.objectId = null;
     }
 
-    public void setServletClass(String servletClass)
-    {
+    public void setServletClass(String servletClass) {
         this.servletClass = servletClass;
     }
 
@@ -252,23 +227,19 @@ implements ServletDefinition, ServletDefinitionCtrl, java.io.Serializable, Suppo
         }
     }
 
-    public void setJspFile(String jspFile)
-    {
+    public void setJspFile(String jspFile) {
         this.jspFile = jspFile;
     }
 
-    protected void setServletMapping(ServletMapping servletMapping)
-    {
+    protected void setServletMapping(ServletMapping servletMapping) {
         this.servletMapping = servletMapping;
     }
 
-    public void setServletName(String servletName)
-    {
+    public void setServletName(String servletName) {
         this.servletName = servletName;
     }
 
-    protected void setWebApplicationDefinition(WebApplicationDefinition webApplication)
-    {
+    protected void setWebApplicationDefinition(WebApplicationDefinition webApplication) {
         this.webApplication = webApplication;
     }
 

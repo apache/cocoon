@@ -138,6 +138,7 @@ implements PortletApplicationDefinition {
      * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
      */
     public void postBuild(Object parameter) throws Exception {
+        // nothing to do 
     }
 
     /* (non-Javadoc)
