@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Mark Butler (Hewlett Packard) -->
 <!DOCTYPE rdf:RDF [
-  <!ENTITY ns-rdf  'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
-  <!ENTITY ns-rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
-  <!ENTITY ns-prf 'http://www.wapforum.org/profiles/UAPROF/ccppschema-20010430#'>
+	<!ENTITY ns-rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY ns-rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+	<!ENTITY ns-prf 'http://www.wapforum.org/profiles/UAPROF/ccppschema-20010430#'>
 ]>
 <rdf:RDF xmlns:rdf="&ns-rdf;" xmlns:rdfs="&ns-rdfs;" xmlns:prf="&ns-prf;">
 	<rdf:Description rdf:about="&ns-prf;Component">
