@@ -43,7 +43,7 @@ import org.apache.xpath.XPathAPI;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-19 14:44:35 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-11-01 20:19:05 $ $Author: dims $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composer {
 
@@ -104,7 +104,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 throw new SAXException(e);
             }
         }
-        if (uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
+        if (uri != null && name != null && uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
             String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
             String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
             try {
@@ -123,7 +123,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         if (last_xmlbase_element_uri.equals(uri) && last_xmlbase_element_name.equals(name)) {
             endXMLBaseAttribute();
         }
-        if (uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
+        if (uri != null && name != null && uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
             return;
         }
         super.endElement(uri,name,raw);
