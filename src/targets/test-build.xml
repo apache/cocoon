@@ -4,7 +4,7 @@
   <target name="test" depends="junit-tests, anteater-tests, block-tests" description="Runs all tests"/>
 
   <!-- Runs JUnit tests -->
-  <target name="junit-tests" depends="compile">
+  <target name="junit-tests" depends="compile-core">
     <mkdir dir="${build.test}"/>
 
     <!-- Copy test files to build test dir -->
