@@ -60,6 +60,7 @@ import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Submit;
 import org.apache.cocoon.woody.formmodel.Upload;
 import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.datatype.SelectionList;
 import org.apache.cocoon.woody.event.FormHandler;
@@ -283,46 +284,55 @@ public class ScriptableWidget extends ScriptableObject {
         }
     }
 
-    public int jsGet_length() {
+    public Integer jsGet_length() {
         if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
-            return repeater.getSize();
+            return new Integer(repeater.getSize());
         }
-        //TODO - added for making this compile
-        return 0;
+        return null;
     }
 
     public void jsSet_value(Object value) throws JavaScriptException {
-        if (delegate instanceof Field) {
-            Field field = (Field)delegate;
+        if (delegate instanceof Field || delegate instanceof Output) {
+            // fix me: Unify Field and Output with a "DataTypeWidget" interface
             value = unwrap(value);
-            if (value instanceof Double) {
-                // make woody accept a JS Number
-                Class typeClass = 
-                    field.getFieldDefinition().getDatatype().getTypeClass();
-                if (typeClass == long.class || typeClass == Long.class) {
-                    value = new Long(((Number)value).longValue());
-                } else if (typeClass == int.class || 
-                           typeClass == Integer.class) {
-                    value = new Integer(((Number)value).intValue());
-                } else if (typeClass == float.class || 
-                           typeClass == Float.class) {
-                    value = new Float(((Number)value).floatValue());
-                } else if (typeClass == short.class || 
-                           typeClass == Short.class) {
-                    value = new Short(((Number)value).shortValue());
-                } else if (typeClass == BigDecimal.class) {
-                    value = new BigDecimal(((Number)value).doubleValue());
+            if (value != null) {
+                Datatype datatype;
+                if (delegate instanceof Field) {
+                    datatype = ((Field)delegate).getFieldDefinition().getDatatype();
+                } else {
+                    datatype = ((Output)delegate).getOutputDefinition().getDatatype();
                 }
-            } 
-            field.setValue(value);
+                Class typeClass = datatype.getTypeClass();
+                if (typeClass == String.class) {
+                    value = Context.toString(value);
+                } else if (typeClass == boolean.class || 
+                           typeClass == Boolean.class) {
+                    value = Context.toBoolean(value) ? Boolean.TRUE : Boolean.FALSE;
+                } else {
+                    if (value instanceof Double) {
+                        // make woody accept a JS Number
+                        if (typeClass == long.class || typeClass == Long.class) {
+                            value = new Long(((Number)value).longValue());
+                        } else if (typeClass == int.class || 
+                                   typeClass == Integer.class) {
+                            value = new Integer(((Number)value).intValue());
+                        } else if (typeClass == float.class || 
+                                   typeClass == Float.class) {
+                            value = new Float(((Number)value).floatValue());
+                        } else if (typeClass == short.class || 
+                                   typeClass == Short.class) {
+                            value = new Short(((Number)value).shortValue());
+                        } else if (typeClass == BigDecimal.class) {
+                            value = new BigDecimal(((Number)value).doubleValue());
+                        }
+                    } 
+                }
+            }
+            delegate.setValue(value);
         } else if (delegate instanceof BooleanField) {
             BooleanField field = (BooleanField)delegate;
             field.setValue(new Boolean(Context.toBoolean(value)));
-        } else if (delegate instanceof Output) {
-            Output field = (Output)delegate;
-            value = unwrap(value);
-            field.setValue(Context.toString(value));
         } else if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             if (value instanceof NativeArray) {
@@ -502,6 +512,13 @@ public class ScriptableWidget extends ScriptableObject {
     public ScriptableWidget jsFunction_addRow() {
         if (delegate instanceof Repeater) {
             return wrap(((Repeater)delegate).addRow());
+        }
+        return null;
+    }
+
+    public ScriptableObject jsFunction_getRow(int index) {
+        if (delegate instanceof Repeater) {
+            return wrap(((Repeater)delegate).getRow(index));
         }
         return null;
     }
