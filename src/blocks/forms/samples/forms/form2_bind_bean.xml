@@ -62,9 +62,7 @@
     -->
   <fb:repeater id="contacts"
                parent-path="."
-               row-path="contacts"
-               unique-row-id="id"
-               unique-path="@id">
+               row-path="contacts">
 
     <fb:identity>
       <!-- compare to xml-binding: the convertor is not needed here -->
