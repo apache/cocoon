@@ -30,7 +30,7 @@
      $!item.attr5
      $product.name
    </td>
-  <td>$yoshi.formatNumber($item.listPrice, '$#,##0.00')</td>
+  <td>$fmt.formatNumber($item.listPrice, '$#,##0.00')</td>
   <td><a href="addItemToCart.do?itemId=$item.itemId">
   <img border="0" src="images/button_add_to_cart.gif" /></a></td>
   </tr>

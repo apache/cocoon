@@ -30,6 +30,12 @@
   <map:view name="debug" from-label="debug">
     <map:serialize type="xml"/>
   </map:view>
+  <map:view name="debug1" from-label="debug1">
+    <map:serialize type="xml"/>
+  </map:view>
+  <map:view name="debug2" from-label="debug2">
+    <map:serialize type="xml"/>
+  </map:view>
   <map:view name="xml" from-label="xml">
     <map:serialize type="xml"/>
   </map:view>
@@ -86,17 +92,10 @@
 	      <map:generate src="view/xmlform/{1}.xml"/>
 	      
 	      <!-- populating the document with model instance data -->
-	      <map:transform type="xmlform"  label="xml"/>
-	
 
-	      <map:transform type="xalan" src="stylesheets/form2html.xsl" />
-
-	      <!-- Transforming the XMLForm controls to HTML controls -->
-	      <map:transform src="context://stylesheets/system/xmlform2html.xslt" />
-
-	      
-	      <!-- sending the HTML back to the browser -->
-	      <map:serialize type="html" label="debug"/>
+	      <map:transform type="xmlform"  label="debug"/>
+	      <map:transform type="xalan" src="stylesheets/site2html.xsl"  label="debug1"/>
+	      <map:serialize type="html" />
 	</map:match>	      
     </map:pipeline>
    <map:pipeline>

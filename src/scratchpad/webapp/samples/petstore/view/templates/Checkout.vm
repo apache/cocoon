@@ -34,13 +34,13 @@
   <td align="center">
   $cartItem.quantity.intValue()
   </td>
-  <td align="right">$yoshi.formatNumber($cartItem.item.listPrice, '$#,##0.00')</td>
+  <td align="right">$fmt.formatNumber($cartItem.item.listPrice, '$#,##0.00')</td>
   </tr>
 #end
 <tr bgcolor="#FFFF88">
 <td colspan="5" align="right">
 cart=$cartForm.cart.numberOfItems
-<b>Sub Total: $yoshi.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
+<b>Sub Total: $fmt.formatNumber($cartForm.cart.subTotal, '$#,##0.00')</b><br />
 
 </td>
 </tr>

@@ -15,7 +15,7 @@
 <table width="60%" align="center" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFF88">
 <tr bgcolor="#FFFF88"><td align="center" colspan="2">
   <font size="4"><b>Order #$order.orderId</b></font>
-  <br /><font size="3"><b>$yoshi.formatDate($order.orderDate, 'yyyy/MM/dd hh:mm:ss')</b></font>
+  <br /><font size="3"><b>$fmt.formatDate($order.orderDate, 'yyyy/MM/dd hh:mm:ss')</b></font>
 </td></tr>
 <tr bgcolor="#FFFF88"><td colspan="2">
 <font color="GREEN" size="4"><b>Payment Details</b></font>
