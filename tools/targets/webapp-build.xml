@@ -90,9 +90,9 @@
          target="patch"/>
   </target>
 
-  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="unless.exclude.webapp.samples"/>
+  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="internal.exclude.webapp.samples"/>
 
-  <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
+  <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="internal.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf"
             srcdir="${deprecated.conf}"
@@ -100,7 +100,7 @@
             addComments="true"/>
   </target>
 
-  <target name="prepare-webapp-javadocs" depends="javadocs" unless="unless.exclude.webapp.javadocs">
+  <target name="prepare-webapp-javadocs" depends="javadocs" unless="internal.exclude.webapp.javadocs">
     <mkdir dir="${build.webapp.javadocs}"/>
 
     <copy todir="${build.webapp.javadocs}" filtering="off">
@@ -113,7 +113,7 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="prepare-webapp-docs" depends="validate-xdocs,validate-jars" unless="unless.exclude.webapp.documentation">
+  <target name="prepare-webapp-docs" depends="validate-xdocs,validate-jars" unless="internal.exclude.webapp.documentation">
     <mkdir dir="${build.webapp.docs}"/>
 
     <copy todir="${build.webapp.docs}" filtering="on">

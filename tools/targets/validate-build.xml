@@ -21,7 +21,7 @@
   </description>
 
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
-  <target name="validate-jars" depends="prepare" unless="unless.exclude.validate.jars">
+  <target name="validate-jars" depends="prepare" unless="internal.exclude.validate.jars">
     <path id="all.jars">
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
@@ -79,7 +79,7 @@
     This needs to be done at the end of the build, because the cocoon.xconf
     and cocoon.roles are automatically constructed.
   -->
-  <target name="validate-config" depends="prepare" unless="unless.exclude.validate.config">
+  <target name="validate-config" depends="prepare" unless="internal.exclude.validate.config">
     <echo message="Validating some important configuration files"/>
 
     <echo message="Validating cocoon.xconf using a very basic RELAX NG grammar ..."/>
@@ -89,7 +89,7 @@
   </target>
 
   <!-- Validation of xdocs  -->
-  <target name="validate-xdocs" depends="prepare-docs" unless="unless.exclude.validate.xdocs">
+  <target name="validate-xdocs" depends="prepare-docs" unless="internal.exclude.validate.xdocs">
 <!--
     <echo message="Conducting validation of core XML documentation."/>
 -->

@@ -62,34 +62,34 @@
     <!-- Get the block properties from an external file -->
     <property file="blocks.properties"/>
 
-    <!-- Use unless.exclude.XXX shadow props used in the
+    <!-- Use internal.exclude.XXX shadow props used in the
       unless target attributes -->
-    <condition property="unless.exclude.webapp.documentation">
+    <condition property="internal.exclude.webapp.documentation">
       <istrue value="${exclude.webapp.documentation}"/>
     </condition>
-    <condition property="unless.exclude.webapp.javadocs">
+    <condition property="internal.exclude.webapp.javadocs">
       <or>
         <istrue value="${exclude.javadocs}"/>
         <istrue value="${exclude.webapp.javadocs}"/>
       </or>
     </condition>
-    <condition property="unless.exclude.webapp.samples">
+    <condition property="internal.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
 
-    <condition property="unless.exclude.deprecated">
+    <condition property="internal.exclude.deprecated">
       <istrue value="${exclude.deprecated}"/>
     </condition>
-    <condition property="unless.exclude.javadocs">
+    <condition property="internal.exclude.javadocs">
       <istrue value="${exclude.javadocs}"/>
     </condition>
-    <condition property="unless.exclude.validate.jars">
+    <condition property="internal.exclude.validate.jars">
       <istrue value="${exclude.validate.jars}"/>
     </condition>
-    <condition property="unless.exclude.validate.config">
+    <condition property="internal.exclude.validate.config">
       <istrue value="${exclude.validate.config}"/>
     </condition>
-    <condition property="unless.exclude.validate.xdocs">
+    <condition property="internal.exclude.validate.xdocs">
       <or>
         <istrue value="${exclude.validate.xdocs}"/>
         <istrue value="${exclude.documentation}"/>
