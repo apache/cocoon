@@ -19,13 +19,15 @@
     <map:serializers default="html"/>
     <map:matchers default="wildcard"/>
     <map:selectors default="browser"/>
-  
+    
+    <!--
     <map:pipes default="noncaching">
       <map:pipe name="event-caching" 
                 src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
         <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
       </map:pipe>
     </map:pipes>
+    -->
   </map:components>
 
 <!-- ========================== Flowscript ================================= -->
