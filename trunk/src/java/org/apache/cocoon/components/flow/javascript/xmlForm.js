@@ -273,10 +273,10 @@ function xmlForm(application, id, validator_ns, validator_doc, scope) {
     } 
     // Just start a new instance of the application
     cocoon.session.removeAttribute(id);
-    var args = new Array(arguments.length - 4 + 1);
+    var args = new Array(arguments.length - 5 + 1);
     args[0] = new XForm(id, validator_ns, validator_doc, scope);
-    for (var i = 4; i < arguments.length; i++) {
-	args[i-3] = arguments[i];
+    for (var i = 5; i < arguments.length; i++) {
+	args[i-4] = arguments[i];
     }
     this[application].apply(this, args);
 }
