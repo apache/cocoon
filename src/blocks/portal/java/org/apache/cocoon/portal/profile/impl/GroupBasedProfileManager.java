@@ -403,7 +403,7 @@ public class GroupBasedProfileManager
             
             // first "load" the global data
             profile.setCopletBaseDatas( this.getGlobalBaseDatas(loader, info, service) );
-            profile.setCopletDatas( this.getGlobalDatas(loader, info, service) );
+            profile.setCopletDatas( this.getGlobalDatas(loader, info, service, profile) );
             
             // now load the user/group specific data
             if ( !this.getCopletInstanceDatas(loader, profile, info, service, CATEGORY_USER) ) {
@@ -464,7 +464,8 @@ public class GroupBasedProfileManager
     
     protected Map getGlobalDatas(final ProfileLS     loader,
                                  final UserInfo      info,
-                                 final PortalService service) 
+                                 final PortalService service,
+                                 final UserProfile   profile) 
     throws Exception {
         synchronized ( this ) {
             final Map key = this.buildKey(CATEGORY_GLOBAL, 
@@ -474,6 +475,8 @@ public class GroupBasedProfileManager
             final Map parameters = new HashMap();
             parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
                            ProfileLS.PROFILETYPE_COPLETDATA);
+            parameters.put(ProfileLS.PARAMETER_OBJECTMAP,
+                           profile.getCopletBaseDatas());
             
             if ( this.copletDatas.validity != null
                  && this.copletDatas.validity.isValid() == SourceValidity.VALID) {
@@ -515,7 +518,7 @@ public class GroupBasedProfileManager
         Map parameters = new HashMap();
         parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
                        ProfileLS.PROFILETYPE_COPLETINSTANCEDATA);        
-        parameters.put(ProfileLS.PARAMETER_OBJECTMAP, 
+        parameters.put(ProfileLS.PARAMETER_OBJECTMAP,
                        profile.getCopletDatas());
 
         try {
