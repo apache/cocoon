@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.168 2001-01-10 21:28:03 greenrd Exp $ 
+  $Id: changes.xml,v 1.169 2001-01-10 23:24:01 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add">
+   Added very brief notes on ESQL to documentation
+  </action>
   <action dev="RDG" type="add">
    Checked for NoSuchMethodError at XSPProcessor startup and added link to FAQ.
    If you don't want to use XSP and want to get rid of this error, just comment out XSP

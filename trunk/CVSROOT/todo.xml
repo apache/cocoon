@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.52 2001-01-10 01:08:44 greenrd Exp $
+  $Id: todo.xml,v 1.53 2001-01-10 23:24:01 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,23 +16,22 @@
  </devs>
 
  <actions priority="high">
+  <action context="docs" assigned-to="RDG" bugid="7">
+   Correct install instructions
+  </action>
   <action context="code" assigned-to="RDG" bugid="19">
    Track down cause of multiple PDF problems.
-  </action>
-  <action context="code" bugid="5">
-   Work out how to integrate inline XSP docs (such as inline esql docs)
-   into the build docs procedure. This will fix a dead link which leads
-   on to the next item...
   </action>
   <action context="docs" assigned-to="RDG" bugid="6">
    Fix dead links in docs.
   </action>
-  <action context="docs" assigned-to="RDG" bugid="7">
-   Correct install instructions
-  </action>
  </actions>
 
  <actions priority="medium">
+  <action context="code" bugid="5" assigned-to="RDG">
+   Work out how to integrate inline XSP docs (such as inline esql docs)
+   into the build docs procedure.
+  </action>
   <action context="code" assigned-to="RDG">
    Fix remaining caching bugs. Cleanup caching code, which is messy.
   </action>
@@ -116,6 +115,9 @@
   </action>
   <action context="code" bugid="26">
    Better error reporting for typos in stylesheet URIs.
+  </action>
+  <action context="code" bugid="28">
+   XSP logicsheet dependency tracking.
   </action>
  </actions>
 

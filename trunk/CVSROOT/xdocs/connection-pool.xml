@@ -106,10 +106,20 @@ processor.xsp.pool.database.helpdesk.expiryTime=3600000
    </s2>
 
  </s1>
+
+ <s1 title="Known Limitations">
+   <p>The version of Turbine connection pool used in Cocoon has a bug in which you cannot define
+   separate connection pools within the same Classloader Context - in plain English, that means
+   if you want separate pools, you'll probably have to run separate Java virtual machines!</p>
+ </s1>
+
  <s1 title="Using Turbine Connection Pool">
     <p>This section is to describe how you can use the Turbine connection pool
-    in your own code. (At the time of writing, in Cocoon only the SQL taglibs
-    use connection pooling - another good reason to use the SQL taglibs!)
+    in your own code. <strong>However,</strong> the <connect href="esql.xml">esql taglib</connect>
+    will do it for you, so 
+    most people will want to just use the esql taglib, which is much easier!
+    (At the time of writing, in Cocoon only the SQL/ESQL taglibs
+    use connection pooling - another good reason to use the SQL/ESQL taglibs!)
     To demonstrate this, I'll show an example of how I modified
     Ricardo Rocha's excellent example XSQL. This is some of the code that he
     had before:</p>

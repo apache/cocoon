@@ -24,12 +24,14 @@
 <separator/>
   <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
   <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
-  <page id="sqltaglib" label="SQL XSP Taglib" source="sqltaglib.xml"/>
-  <page id="fp" label="FP XSP Taglib" source="fptaglib.xml"/>
+  <page id="esql" label="ESQL Taglib" source="esql.xml"/>
   <page id="connection-pool" label="SQL Conn Pool" source="connection-pool.xml"/>
-  <page id="sql" label="SQL Processor" source="sqlprocessor.xml"/>
+  <page id="fp" label="FP Taglib" source="fptaglib.xml"/>
   <page id="ldap" label="LDAP Processor" source="ldapprocessor.xml"/>
+<separator/>
   <page id="dcp" label="DCP Processor" source="dcpprocessor.xml"/>
+  <page id="sql" label="SQL Processor" source="sqlprocessor.xml"/>
+  <page id="sqltaglib" label="SQL Taglib" source="sqltaglib.xml"/>
 <separator/>
   <page id="contrib" label="Contributing" source="contrib.xml"/>
   <page id="3rdparty" label="3rd Party" source="3rdparty.xml"/>
