@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2000-08-31 15:53:55 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2000-09-02 19:28:12 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -229,7 +229,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
 
     <xsl:for-each select="/map:sitemap/map:resources/map:resource">
       private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline, 
-          List listOfLists, Environment environment) 
+          List listOfLists, Environment environment, String cocoon_view) 
       throws Exception { 
         List list = null;
         Parameters param = null; 
@@ -258,7 +258,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       List list = null;
       Parameters param = null; 
       Dictionary objectModel = environment.getObjectModel(); 
-      String view = environment.getView();
+      String cocoon_view = environment.getView();
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
         <xsl:variable name="pipeline-position" select="position()"/>
         try {
@@ -521,7 +521,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
   <xsl:template match="map:redirect-to">
     <xsl:choose>
       <xsl:when test="@resource">
-        return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment);
+        return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfLists, environment, cocoon_view);
       </xsl:when>
       <xsl:when test="@uri">
         environment.redirect (substitute(listOfLists, "<xsl:value-of select="@uri"/>"));
@@ -537,7 +537,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
 
   <xsl:template match="map:label">
     <xsl:apply-templates/>
-    if ("<xsl:value-of select="@name"/>".equals(view))
+    if ("<xsl:value-of select="@name"/>".equals(cocoon_view))
       return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
   </xsl:template> <!-- match="map:label" -->
  
@@ -711,7 +711,26 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise> 
-    </xsl:choose> 
+    </xsl:choose>
+    <!-- view/label check -->
+    <xsl:variable name="component-label">
+      <xsl:if test="$prefix='generator'">
+        <xsl:value-of select="/map:sitemap/map:components/map:generators/map:generator[@name=$component-type]/@label"/>
+      </xsl:if>
+      <xsl:if test="$prefix='transformer'">
+        <xsl:value-of select="/map:sitemap/map:components/map:transformers/map:transformer[@name=$component-type]/@label"/>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:if test="$component-label">
+      <xsl:variable name="component-view">
+        <xsl:value-of select="/map:sitemap/map:views/map:view[@generate-from=$component-label]/@name"/>
+      </xsl:variable>
+      <xsl:if test="/map:sitemap/map:views/map:view[@generate-from=$component-label]">
+        if ("<xsl:value-of select="$component-view"/>".equals(cocoon_view)) {
+          return view_<xsl:value-of select="translate($component-view, '- ', '__')"/> (pipeline, listOfLists, environment);
+        }
+      </xsl:if>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="mangle-name">
