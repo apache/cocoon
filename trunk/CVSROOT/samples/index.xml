@@ -130,7 +130,7 @@
    are just a few tags away.
   </sample>
 
-  <sample name="VRML" url="vrml/hello.xml?dummy=test.svg">
+  <sample name="VRML" url="vrml/hello.xml?dummy=test.vrml">
    In this example, we show how Cocoon is able to generate virtual reality
    models by applying the appropriate stylesheet to an XML page.
   </sample>
