@@ -19,7 +19,7 @@
                               xmlns:sql="http://apache.org/cocoon/SQL/2.0">
 
 
-  <xsl:import href="../../common/style/xsl/html/simple-page2html.xsl"/>
+  <xsl:import href="../../../common/style/xsl/html/simple-page2html.xsl"/>
 
   <xsl:template match="sql:rowset">
    <xsl:choose>
