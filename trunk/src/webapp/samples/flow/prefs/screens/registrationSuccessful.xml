@@ -22,7 +22,7 @@
   <content>
     <para>
       Congratulations 
-      <strong>${user/firstName} ${user/lastName}</strong>!
+      <strong>${user.firstName} ${user.lastName}</strong>!
       You've successfully registered as a new user.
     </para>
     <para>| <link href="edit">Edit my preferences</link> | <link href="logout">Logout</link> |</para>

@@ -19,7 +19,7 @@
 
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="javascript">
-    <map:script src="../calc/calc.js"/>
+    <map:script src="calc.js"/>
   </map:flow>
 
   <map:pipelines>
