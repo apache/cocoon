@@ -391,9 +391,9 @@ The following goals were identified as engineering constraints:
    <map:act type="db-modifier" action="Update"/>
    <map:act type="db-deleter"  action="Delete"/>
    <map:act type="form-dispatcher"/>
-  </map:resource>
+  </map:action-set>
 
- </map:resources>
+ </map:action-sets>
 
 <!-- =========================== Pipelines ================================= -->
 
