@@ -79,7 +79,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.1 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.2 2004/01/19 10:47:14 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -453,9 +453,12 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public static EnvironmentContext getCurrentEnvironmentContext() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final EnvironmentInfo info = stack.getCurrentInfo();
-        final Map objectModel = info.environment.getObjectModel();
-        return (EnvironmentContext)objectModel.get(PROCESS_KEY);
+        if ( stack != null && !stack.empty() ) {
+            final EnvironmentInfo info = stack.getCurrentInfo();
+            final Map objectModel = info.environment.getObjectModel();
+            return (EnvironmentContext)objectModel.get(PROCESS_KEY);
+        }
+        return null;
     }
     
     /**
