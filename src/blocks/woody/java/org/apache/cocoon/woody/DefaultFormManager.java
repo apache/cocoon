@@ -108,7 +108,7 @@ public class DefaultFormManager
 
         for (int i = 0; i < widgetConfs.length; i++) {
             String name = widgetConfs[i].getAttribute("name");
-            String factoryClassName = widgetConfs[i].getAttribute("factory");
+            String factoryClassName = widgetConfs[i].getAttribute("src");
             Class clazz;
             try {
                 clazz = Class.forName(factoryClassName);
