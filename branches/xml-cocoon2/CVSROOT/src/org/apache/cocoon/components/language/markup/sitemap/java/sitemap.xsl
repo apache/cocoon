@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2000-08-25 20:27:10 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2000-08-27 09:08:01 $
 -->
 
 <xsl:stylesheet 
@@ -226,6 +226,16 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         <xsl:apply-templates select="./*"/>
       }
     </xsl:for-each>
+
+    <xsl:for-each select="/map:sitemap/map:views/map:view">
+      private boolean view_<xsl:value-of select="translate(@name, '- ', '__')"/> (ResourcePipeline pipeline, 
+          List listOfLists, Environment environment) 
+      throws Exception { 
+        List list = null;
+        Parameters param = null; 
+        <xsl:apply-templates select="./*"/>
+      }
+    </xsl:for-each>
  
     /** 
      * Process to producing the output to the specified &gt;code&lt;OutputStream&gt;/code&lt;. 
@@ -238,6 +248,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       List list = null;
       Parameters param = null; 
       Dictionary objectModel = environment.getObjectModel(); 
+      String view = environment.getView();
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline">
         <xsl:variable name="pipeline-position" select="position()"/>
         try {
@@ -510,6 +521,12 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:redirect-to" -->
+
+  <xsl:template match="map:label">
+    <xsl:apply-templates/>
+    if ("<xsl:value-of select="@name"/>".equals(view))
+      return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
+  </xsl:template> <!-- match="map:label" -->
  
   <xsl:template match="map:pipeline//parameter"> 
     param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@value"/>"); 
