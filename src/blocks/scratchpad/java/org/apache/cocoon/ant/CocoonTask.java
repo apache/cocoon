@@ -45,6 +45,7 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.commons.lang.SystemUtils;
 
 import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
@@ -61,7 +62,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.7 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.8 2004/04/17 11:32:24 antonio Exp $
  */
 public class CocoonTask extends Task {
 
@@ -105,7 +106,6 @@ public class CocoonTask extends Task {
 
     private String acceptHeader;
     private String agentHeader;
-    //private Boolean preCompileOnly;
     private Boolean followLinks;
 
     /**
@@ -123,7 +123,7 @@ public class CocoonTask extends Task {
         this.logkitXconf = null;
 
         this.destDir = null;
-        File workDirParent = new File(System.getProperty("java.io.tmpdir", "."));
+        File workDirParent = new File(SystemUtils.JAVA_IO_TMPDIR != null ? SystemUtils.JAVA_IO_TMPDIR : ".");
         this.workDir = new File(workDirParent, "work");
 
         this.contextDir = null;
@@ -131,7 +131,6 @@ public class CocoonTask extends Task {
         this.logger = "cocoon";
         this.acceptHeader = DEFAULT_ACCEPT;
         this.agentHeader = DEFAULT_USER_AGENT;
-        //this.preCompileOnly = Boolean.FALSE;
         this.followLinks = Boolean.TRUE;
         this.targets = new ArrayList();
     }
@@ -723,7 +722,7 @@ public class CocoonTask extends Task {
             }
 
             buildClassPath.append(File.pathSeparatorChar)
-                    .append(System.getProperty("java.class.path"));
+                    .append(SystemUtils.JAVA_CLASS_PATH);
 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Context classpath: " + buildClassPath.toString());
