@@ -44,7 +44,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.6 $ $Date: 2000-05-23 06:00:11 $ $Author: balld $
+ * @version CVS $Revision: 1.7 $ $Date: 2000-06-04 05:52:20 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -94,6 +94,7 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 		}
 		return false;
 	}
+
 
 class XIncludeProcessorWorker {
 
@@ -266,6 +267,7 @@ class XIncludeProcessorWorker {
 			Document included_document = null;
 			try {
 				included_document = parser.parse(input,false);
+				stripDocumentTypeNodes(included_document.getDocumentElement());
 			} catch (Exception e) {}
 			if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
 				String xpath = suffix.substring(9,suffix.length()-1);
@@ -281,6 +283,19 @@ class XIncludeProcessorWorker {
 			}
 		}
 		return result;
+	}
+
+	void stripDocumentTypeNodes(Node node) {
+		Node child = node.getFirstChild();
+		while (child != null) {
+			Node next = child.getNextSibling();
+			if (child.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
+				node.removeChild(child);
+			} else if (child.getNodeType() == Node.ELEMENT_NODE) {
+				stripDocumentTypeNodes(child);
+			}
+			child = next;
+		}
 	}
 
 }
