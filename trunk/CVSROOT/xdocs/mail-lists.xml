@@ -136,7 +136,7 @@
       list of mailing lists for all the projects on xml.apache.org.</li>
     <li>Some servlet engines have their own mailing lists for servlet-engine
      configuration questions, such as
-     <link href="mailto:tomcat-user-subscribe">tomcat-user</link> (note it is "user"
+     <link href="mailto:tomcat-user-subscribe@jakarta.apache.org">tomcat-user</link> (note it is "user"
      and not "users").</li>
    </ul>
   </s1>
