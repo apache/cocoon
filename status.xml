@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.178 2003/10/31 12:36:01 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.179 2003/11/01 10:18:13 antonio Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated Xalan to 2.5.2
+   </action>
    <action dev="BRD" type="update">
      Woody: did some cleanup of the FormHandler interface: moved it to the event subpackage,
      made it handle all types of WidgetEvents (there's an AbstractFormHandler which splits
