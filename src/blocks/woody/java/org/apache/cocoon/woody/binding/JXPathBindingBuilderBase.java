@@ -65,9 +65,9 @@ import org.w3c.dom.Element;
  * <li>Attribute direction="load|save|both": {@see #getDirectionAttributes(Element)}</li>
  * </ul>
  *
- * @version CVS $Id: JXpathBindingBuilderBase.java,v 1.7 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.1 2004/02/03 12:26:21 joerg Exp $
  */
-public abstract class JXpathBindingBuilderBase implements LogEnabled {
+public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
     private Logger logger;
 
@@ -76,7 +76,7 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
      */
     public void enableLogging(Logger logger) {
         this.logger = logger;
-        logger.debug("JXpathBindingBuilderBase got logger...");
+        logger.debug("JXPathBindingBuilderBase got logger...");
     }
 
     /**

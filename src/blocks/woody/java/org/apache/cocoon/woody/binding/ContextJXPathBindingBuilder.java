@@ -64,9 +64,9 @@ import org.w3c.dom.Element;
  * &lt;/wb:context&gt;
  * </code></pre>
  *
- * @version CVS $Id: ContextJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: ContextJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
-public class ContextJXPathBindingBuilder extends JXpathBindingBuilderBase {
+public class ContextJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of ContextJXPathBinding with the configured
@@ -76,7 +76,7 @@ public class ContextJXPathBindingBuilder extends JXpathBindingBuilderBase {
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);

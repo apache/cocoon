@@ -59,7 +59,7 @@ import org.apache.commons.jxpath.Pointer;
  * that narrows the binding scope to some xpath-context on the target
  * objectModel to load and save from.
  *
- * @version CVS $Id: ContextJXPathBinding.java,v 1.8 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: ContextJXPathBinding.java,v 1.9 2004/02/03 12:26:21 joerg Exp $
  */
 public class ContextJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -71,7 +71,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context
      */
-    public ContextJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String contextPath, JXPathBindingBase[] childBindings) {
+    public ContextJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String contextPath, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.xpath = contextPath;
     }

@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: StructJXPathBinding.java,v 1.5 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: StructJXPathBinding.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -78,7 +78,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public StructJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+    public StructJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;

@@ -61,7 +61,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
  *
- * @version CVS $Id: SetAttributeJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: SetAttributeJXPathBinding.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class SetAttributeJXPathBinding extends JXPathBindingBase {
 
@@ -71,7 +71,7 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs SetAttributeJXPathBinding
      */
-    public SetAttributeJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String attName, String attValue) {
+    public SetAttributeJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String attName, String attValue) {
         super(commonAtts);
         this.name = attName;
         this.value = attValue;

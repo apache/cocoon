@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: AggregateJXPathBinding.java,v 1.7 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: AggregateJXPathBinding.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -77,7 +77,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public AggregateJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+    public AggregateJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;

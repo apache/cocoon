@@ -64,7 +64,7 @@ import java.util.Locale;
  * (pointing to an attribute or text-node) to and from a specific Woody
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.11 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.12 2004/02/03 12:26:21 joerg Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -100,12 +100,12 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      *
      * @param convertor may be null
      */
-    public ValueJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] updateBindings,
+    public ValueJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] updateBindings,
                               Convertor convertor, Locale convertorLocale) {
         super(commonAtts);
         this.fieldId = widgetId;
         this.xpath = xpath;
-        this.updateBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, updateBindings);
+        this.updateBinding = new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, updateBindings);
         this.convertor = convertor;
         this.convertorLocale = convertorLocale;
     }

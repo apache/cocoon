@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: NewJXPathBinding.java,v 1.4 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: NewJXPathBinding.java,v 1.5 2004/02/03 12:26:21 joerg Exp $
  */
 public class NewJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -77,7 +77,7 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
      * @param widgetId
      * @param childBindings
      */
-    public NewJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, JXPathBindingBase[] childBindings) {
+    public NewJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.classBinding = null;

@@ -69,7 +69,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.18 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.19 2004/02/03 12:26:21 joerg Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -89,7 +89,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts,
+    public RepeaterJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
                                  String repeaterId, String repeaterPath,
                                  String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath,
@@ -101,7 +101,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts,
+    public RepeaterJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
                                  String repeaterId, String repeaterPath,
                                  String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath,
@@ -116,16 +116,16 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.uniqueRowId = uniqueRowId;
         this.uniqueRowIdPath = uniqueRowPath;
         this.uniqueFieldBinding =
-            new ValueJXPathBinding(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, uniqueRowId, uniqueRowPath, null, convertor, convertorLocale);
+            new ValueJXPathBinding(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, uniqueRowId, uniqueRowPath, null, convertor, convertorLocale);
         this.uniqueRowIdConvertor = convertor;
         this.uniqueRowIdConvertorLocale = convertorLocale;
-        this.rowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings);
+        this.rowBinding = new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings);
         this.rowBinding.setParent(this);
         this.insertRowBinding = insertBinding;
         if (this.insertRowBinding != null) {
             this.insertRowBinding.setParent(this);
         }
-        this.deleteRowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, deleteBindings);
+        this.deleteRowBinding = new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, deleteBindings);
         if (this.deleteRowBinding != null) {
             this.deleteRowBinding.setParent(this);
         }

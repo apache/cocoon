@@ -70,10 +70,10 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  * &lt;/wb:insert-node&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.7 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
  */
 public class InsertNodeJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link InsertNodeJXPathBinding} configured
@@ -84,7 +84,7 @@ public class InsertNodeJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             DocumentFragment domTemplate = null;
 

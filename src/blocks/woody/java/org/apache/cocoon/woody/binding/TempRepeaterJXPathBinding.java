@@ -69,7 +69,7 @@ import org.w3c.dom.NodeList;
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.5 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -84,7 +84,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     private final boolean virtualRows;
 
     public TempRepeaterJXPathBinding(
-            JXpathBindingBuilderBase.CommonAttributes commonAtts,
+            JXPathBindingBuilderBase.CommonAttributes commonAtts,
             String repeaterId, String repeaterPath,
             String rowPath, String rowPathInsert,
             boolean virtualRows, boolean clearOnLoad, boolean deleteIfEmpty,

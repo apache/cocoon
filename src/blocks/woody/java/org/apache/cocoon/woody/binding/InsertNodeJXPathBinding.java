@@ -66,7 +66,7 @@ import org.w3c.dom.Node;
  * <li>This expects the back-end model to be an XML file.</li>
  * </ol>
  *
- * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.7 2004/01/27 11:43:28 joerg Exp $
+ * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
  */
 public class InsertNodeJXPathBinding extends JXPathBindingBase {
 
@@ -75,7 +75,7 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertNodeJXPathBinding
      */
-    public InsertNodeJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, DocumentFragment domTemplate) {
+    public InsertNodeJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, DocumentFragment domTemplate) {
         super(commonAtts);
         this.template = domTemplate;
     }

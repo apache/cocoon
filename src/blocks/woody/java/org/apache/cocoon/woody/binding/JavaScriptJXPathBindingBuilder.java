@@ -87,13 +87,13 @@ import org.w3c.dom.Element;
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.5 2004/01/21 21:03:16 tim Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
-public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
+public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(element);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(element);
 
             String id = DomHelper.getAttribute(element, "id");
             String path = DomHelper.getAttribute(element, "path");

@@ -72,9 +72,9 @@ import java.util.Locale;
  * &lt;/wb:value&gt;
  * </code></pre>
  *
- * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
-public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
+public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
     /**
      * Creates an instance of {@link ValueJXPathBinding} based on the attributes
@@ -83,7 +83,7 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 

@@ -66,17 +66,17 @@ import org.w3c.dom.Element;
  * </pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.3 2004/01/27 05:50:08 tim Exp $
+ * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.4 2004/02/03 12:26:21 joerg Exp $
  */
 public class TempRepeaterJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+    extends JXPathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(
         Element bindingElem,
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem);
+            CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElem);
 
             String repeaterId = DomHelper.getAttribute(bindingElem, "id");
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
@@ -101,8 +101,8 @@ public class TempRepeaterJXPathBindingBuilder
 
             return new TempRepeaterJXPathBinding(
                 commonAtts, repeaterId, parentPath, rowPath, rowPathInsert, virtualRows, clearOnLoad, deleteIfEmpty,
-                new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings),
-                new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, insertBindings));
+                new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings),
+                new ComposedJXPathBindingBase(JXPathBindingBuilderBase.CommonAttributes.DEFAULT, insertBindings));
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {

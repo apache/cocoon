@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: CaseJXPathBinding.java,v 1.5 2004/02/03 12:22:08 joerg Exp $
+ * @version CVS $Id: CaseJXPathBinding.java,v 1.6 2004/02/03 12:26:21 joerg Exp $
  */
 public class CaseJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -79,7 +79,7 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
      * @param xpath
      * @param childBindings
      */
-    public CaseJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+    public CaseJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.xpath = xpath;
