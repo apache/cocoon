@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.353 2004/06/07 08:18:16 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.354 2004/06/07 08:55:25 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="SW" type="update">
+     A new build property, "build.archive-sources", allows to include java source files
+     in jar archives. Useful when using a non-released version to know what sources
+     are used.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="28686">
      Correct redirect handling for internal redirects.
    </action>
