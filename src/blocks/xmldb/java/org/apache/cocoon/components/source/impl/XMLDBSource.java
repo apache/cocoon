@@ -62,7 +62,9 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
@@ -70,9 +72,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
+import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 
@@ -80,6 +84,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 
 /**
  * This class implements the xmldb:// pseudo-protocol and allows to get XML
@@ -87,10 +93,10 @@ import java.io.InputStream;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.8 2003/12/05 00:29:02 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.9 2004/01/13 08:44:05 upayavira Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
-    implements Source, XMLizable {
+    implements Source, ModifiableSource, XMLizable {
 
     //
     // Static Strings used for XML Collection representation
@@ -161,7 +167,9 @@ public class XMLDBSource extends AbstractLogEnabled
 
     /** ServiceManager */
     protected ServiceManager manager;
-    
+
+    /** XMLDBOutputStream for writing to Modifiable resource */
+    protected XMLDBOutputStream os;
     /**
      * The constructor.
      *
@@ -188,6 +196,7 @@ public class XMLDBSource extends AbstractLogEnabled
         } else {
             this.url = url;
         }
+        this.os = null;
     }
 
     /**
@@ -481,6 +490,159 @@ public class XMLDBSource extends AbstractLogEnabled
             if (serializerSelector != null) {
                 this.manager.release(serializerSelector);
             }
+        }
+    }
+    /**
+     * Return an {@link OutputStream} to write to.
+     */
+    public OutputStream getOutputStream() throws IOException, MalformedURLException {
+        if (query != null) {
+            throw new MalformedURLException("Cannot modify a resource that includes an XPATH expression");
+        }
+        this.os = new XMLDBOutputStream();
+        return this.os;
+    }
+
+    private void writeOutputStream(String content) throws SourceException {
+        String name = null;
+        String base = null;
+
+        try {
+            if (this.url.endsWith("/")) {
+                name = "";
+                base = this.url.substring(0, this.url.length() - 1);
+            } else {
+                base = this.url.substring(0, this.url.lastIndexOf("/"));
+                name = this.url.substring(this.url.lastIndexOf("/")+1);
+            }
+            Collection collection = DatabaseManager.getCollection(base);
+
+            if (name.equals("")) {
+                name = collection.createId();
+            }
+            Resource resource = collection.createResource(name, "XMLResource");
+
+            resource.setContent(content);
+            collection.storeResource(resource);
+
+            getLogger().debug("Written to resource " + name);
+        } catch (XMLDBException e) {
+            String message = "Failed to create resource " + name + ": " + e.errorCode;
+            getLogger().debug(message, e);
+            throw new SourceException(message);
+        }
+    }
+    
+    /**
+     * Delete the source 
+     */
+    public void delete() throws SourceException {
+        String base = null;
+        String name = null;
+        if (this.url.endsWith("/")) {
+            try {
+                // Cut trailing '/'
+                String k = this.url.substring(0, this.url.length() - 1);
+        
+                base = k.substring(0, k.lastIndexOf("/"));
+                name = k.substring(k.lastIndexOf("/")+1);
+                
+                Collection collection = DatabaseManager.getCollection(base);
+        
+                CollectionManagementService service =
+                        (CollectionManagementService) collection.getService("CollectionManagementService", "1.0");
+                service.removeCollection(name);
+            } catch (XMLDBException e) {
+                String message = "Failed to remove collection " + name + ": " + e.errorCode;
+                getLogger().error(message, e);
+                throw new SourceException(message);
+            }
+        } else {
+            try {
+                base = this.url.substring(0, this.url.lastIndexOf("/"));
+                name = this.url.substring(this.url.lastIndexOf("/")+1);
+                
+                Collection collection = DatabaseManager.getCollection(base);
+                
+                Resource resource = collection.getResource(name);
+                if (resource == null) {
+                    String message = "Resource " + name + " does not exist";
+                    getLogger().debug(message);
+                    throw new SourceException(message);
+                } else {
+                    collection.removeResource(resource);
+                    getLogger().debug("Removed resource: "+ name);
+                }
+            } catch (XMLDBException e) {
+                String message = "Failed to delete resource " + name + ": " + e.errorCode;
+                getLogger().debug(message, e);
+                throw new SourceException(message);
+            }
+        }
+    }
+
+    /**
+     * Can the data sent to an <code>OutputStream</code> returned by
+     * {@link #getOutputStream()} be cancelled ?
+     *
+     * @return true if the stream can be cancelled
+     */
+    public boolean canCancel(OutputStream stream) {
+        return !this.os.isClosed();
+    }
+    
+    /**
+     * Cancel the data sent to an <code>OutputStream</code> returned by
+     * {@link #getOutputStream()}.
+     *
+     * <p>After cancelling, the stream should no longer be used.</p>
+     */
+    public void cancel(OutputStream stream) throws IOException {
+        this.os.cancel();
+        this.os = null;
+    }
+
+    public class XMLDBOutputStream extends OutputStream {
+
+        private ByteArrayOutputStream baos;
+        private boolean isClosed;
+        public XMLDBOutputStream() {
+            baos = new ByteArrayOutputStream();
+            isClosed = false;
+        }
+        
+        public void write(int b) throws IOException {
+            baos.write(b);
+        }
+
+        public void write(byte b[]) throws IOException {
+            baos.write(b);
+        }
+
+        public void write(byte b[], int off, int len) throws IOException {
+            baos.write(b, off, len);
+        }
+
+        public void close() throws IOException, SourceException {
+            if (!isClosed) {
+                writeOutputStream(baos.toString()); 
+                baos.close();
+                this.isClosed = true;
+            }
+        }
+
+        public void flush() throws IOException {
+        }
+        
+        public int size() {
+            return baos.size();
+        }
+        
+        public boolean isClosed() {
+            return this.isClosed;
+        }
+        public void cancel() {
+            this.isClosed = true;
         }
     }
 }
