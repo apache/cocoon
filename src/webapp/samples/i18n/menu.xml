@@ -35,6 +35,7 @@
     <menu-item label="汉语(简字体)" href="?locale=zh_CN" icon="images/f-cn.gif"/>
     <menu-item label="漢語(繁字體)" href="?locale=zh_TW" icon="images/f-tw.gif"/>
     <menu-item label="Ελληνικά (Hellenic - Hellas)" href="?locale=el_GR" icon="images/f-gr.gif"/>
+    <menu-item label="Indonesia" href="?locale=in_IN" icon="images/f-in.gif"/>
   </menu>
 
   <menu label="Documentation" i18n:attr="label">
