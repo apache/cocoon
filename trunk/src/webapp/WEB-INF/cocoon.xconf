@@ -118,25 +118,25 @@
       |            enable it on one xslt-processor, enable it on all.
       +-->
   <xslt-processor id="xslt" logger="core.xslt-processor" default="true">
-     <parameter name="use-store" value="false"/>
-     <parameter name="incremental-processing" value="false"/>
+    <parameter name="use-store" value="false"/>
+    <parameter name="incremental-processing" value="false"/>
   </xslt-processor>
 
   <!--+
       | XSLT Processor using xsltc from Xalan
       +-->
   <xslt-processor id="xsltc" logger="core.xslt-processor">
-     <parameter name="use-store" value="false"/>
-     <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
+    <parameter name="use-store" value="false"/>
+    <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
   </xslt-processor>
   
   <!--+
       | Xalan XSLT Processor
       +-->
   <xslt-processor id="xalan" logger="core.xslt-processor">
-     <parameter name="use-store" value="false"/>
-     <parameter name="incremental-processing" value="false"/>
-     <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
+    <parameter name="use-store" value="false"/>
+    <parameter name="incremental-processing" value="false"/>
+    <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
   </xslt-processor>
 
   <!--+
@@ -146,7 +146,7 @@
 
   <!-- The XMLizers converts different mime-types to XML -->
   <xmlizer id="xmlizer" logger="core.xmlizer">
-      <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml" />
+    <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml" />
   </xmlizer>
   
   <!--+
@@ -217,10 +217,37 @@
       |     <parameter name="verbosity" value="2"/>
       +-->
   <entity-resolver id="entity-resolver" logger="core.entity-resolver">
-   <parameter name="catalog" value="WEB-INF/entities/catalog"/>
-   <parameter name="verbosity" value="1"/>
+    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
+    <parameter name="verbosity" value="1"/>
   </entity-resolver>
 
+<!-- =================== Sitemap Input/Output Modules ====================== -->
+
+  <!--+
+      | InputModules are a replacement to reading values directly
+      | e.g. from request parameters. By using this abstraction and
+      | indirection, other components can be more generic and changes
+      | to the application logic are easier.
+      |
+      | A number of components already use InputModules: the sitemap processor, 
+      | flow, some matchers, the linkrewriting transformer, database actions
+      | and more.
+      |
+      | For example the sitemap processor allows to obtain a value
+      | named "foo" from an the InputModule for request parameters by
+      | writing {request-param:foo} wherever a sitemap variable is
+      | allowed. 
+      |
+      | Some InputModules need the help of other InputModules to
+      | obtain values and only apply a function to the obtained value
+      | or change the name of the attribute. These modules usually
+      | carry "Meta" in their name. An example is the ChainMetaModule
+      | which tries several other modules in turn until a non-null
+      | value is obtained or all modules are tied.
+	  |
+      | For details and optional configuration parameters refer to the
+      | accompanying javadocs.
+      +-->
   <request-param-input 
     id="request-param" 
     logger="core.modules.input" 
@@ -241,6 +268,16 @@
   <global-variables id="global-variables"/>
   
   <notifying-builder id="notifying" />
+  
+  <cache id="cache" />
+  
+  <mem-store id="TransientStore" />
+  
+  <persistent-store id="persistent-store" />
+  
+  <xml-serializer id="xml-serializer"/>
+  
+  <xml-deserializer id="xml-deserializer"/>
   
 <!-- TODO: entries below are still 2.1 configuration -->
 

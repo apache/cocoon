@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.38 2004/01/26 16:07:18 unico Exp $
+    | CVS $Id: sitemap.xmap,v 1.39 2004/01/31 16:58:24 unico Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -198,7 +198,6 @@
       mime-type="text/html" 
       pool-grow="4" pool-max="32" pool-min="4" 
     />
-    <!--
     <map:serializer logger="sitemap.serializer.wml" mime-type="text/vnd.wap.wml" name="wml" src="org.apache.cocoon.serialization.XMLSerializer">
      <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
      <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
@@ -206,9 +205,9 @@
      <omit-xml-declaration>yes</omit-xml-declaration>
     </map:serializer>
     <map:serializer logger="sitemap.serializer.chtml" mime-type="text/html" name="chtml" src="org.apache.cocoon.serialization.HTMLSerializer">
-     <!- -+ Compact HTML for Small Information Appliances,
+     <!--+ Compact HTML for Small Information Appliances,
          | based on http://www.w3.org/TR/1998/NOTE-compactHTML-19980209/
-         + - ->
+         + -->
      <doctype-public>-//W3C//DTD Compact HTML 1.0 Draft//EN</doctype-public>
     </map:serializer>
     <map:serializer logger="sitemap.serializer.svgxml" mime-type="image/svg+xml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer">
@@ -219,7 +218,7 @@
       <doctype-public>-//W3C//DTD XHTML 1.1//EN</doctype-public>
       <doctype-system>http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</doctype-system>
       <encoding>UTF-8</encoding>
-    </map:serializer>   
+    </map:serializer>
     <map:serializer logger="sitemap.serializer.text" mime-type="text/plain" name="text" src="org.apache.cocoon.serialization.TextSerializer"/>
     <map:serializer logger="sitemap.serializer.vrml" mime-type="model/vrml" name="vrml" src="org.apache.cocoon.serialization.TextSerializer"/>
     <map:serializer logger="sitemap.serializer.zip"  mime-type="application/zip" name="zip" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
@@ -227,7 +226,6 @@
     <map:serializer logger="sitemap.serializer.sxc"  mime-type="application/vnd.sun.xml.calc" name="sxc" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
     <map:serializer logger="sitemap.serializer.sxd"  mime-type="application/vnd.sun.xml.draw" name="sxd" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
     <map:serializer logger="sitemap.serializer.sxi"  mime-type="application/vnd.sun.xml.impress" name="sxi" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
-    -->
   </map:serializers>
 
   <!--+
@@ -396,9 +394,8 @@
       | cache points.
       +-->
    <map:pipes default="caching">
-     <!--
      <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
-       <!- -+
+       <!--+
            | If not specified, the value of the outputBufferSize parameter is -1.
            | This will cause Cocoon to buffer all output until processing has finished
            | before sending it to the client. This has the advantage that in case
@@ -410,14 +407,13 @@
            | is being generated.
            | For more granularity, you can also supply this parameter to
            | individual map:pipeline elements (using map:parameter syntax).
-           +- ->
-       <!- - parameter name="outputBufferSize" value="8192"/ - ->
+           +-->
+       <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
      <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
        <autoCachingPoint>On</autoCachingPoint>
-       <!- - parameter name="outputBufferSize" value="8192"/ - ->
+       <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
-     -->
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
