@@ -1,5 +1,5 @@
 Jetty License
-$Revision: 1.2 $
+$Revision: 1.1 $
 Preamble:
 
 The intent of this document is to state the conditions under which the Jetty
