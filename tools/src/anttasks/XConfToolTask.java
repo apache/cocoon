@@ -85,7 +85,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.11 $ $Date: 2004/01/21 17:05:09 $
+ * @version CVS $Revision: 1.12 $ $Date: 2004/01/31 15:55:06 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -272,7 +272,9 @@ public final class XConfToolTask extends MatchingTask {
         }
         // Is if-path needed?
         String ifProp = getAttribute(elem, "if-prop", replaceProperties);
-        boolean ifValue = Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
+        boolean ifValue = false;
+        if (ifProp != null && !ifProp.equals(""))
+            Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
 
         if (ifProp != null && (ifProp.length()>0) && !ifValue ) {
             log("Skipping: " + file, Project.MSG_DEBUG);
