@@ -357,8 +357,9 @@
         <map:serialize type="fo2pdf"/>
       </map:match>
 
+      <!-- FIXME This is a hack that makes building the docs work again -->
       <map:match pattern="**changes.rss">
-        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
+        <map:mount uri-prefix="{1}" src="status.xmap" check-reload="yes" />
       </map:match>
 
       <map:match pattern="profiler">
