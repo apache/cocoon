@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.7 2004/04/24 00:00:42 joerg Exp $
+ * @version CVS $Id: FormInstance.java,v 1.8 2004/04/25 12:12:08 sylvain Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
@@ -189,7 +189,7 @@ public class FormInstance extends AbstractContinuable {
 
             // Prematurely add the bizData as a request attribute so that event listeners can use it
             // (the same is done by cocoon.sendPage())
-            getRequest().setAttribute(FlowHelper.CONTEXT_OBJECT, bizData);
+            FlowHelper.setContextObject(this.getObjectModel(), bizData);
 
             finished = this.form.process(formContext);
           

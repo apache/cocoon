@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.32 2004/04/09 19:52:54 vgritsenko Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.33 2004/04/25 12:12:08 sylvain Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -231,10 +231,8 @@ public class FOM_Cocoon extends ScriptableObject {
 
     void popCallContext() {
         // Clear the scope attribute
-        Request request = this.getRequest();
-        if (request != null) {
-            request.removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
-        }
+        FOM_JavaScriptFlowHelper.setFOM_FlowScope(this.getObjectModel(), null);
+
         this.currentCall = this.currentCall.caller;
         // reset current page locals
         if (this.currentCall != null) {

@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.307 2004/04/24 01:57:19 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.308 2004/04/25 12:12:08 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="SW" type="fix">
+     Moved storage of all flow-related data (viewData, continuation, request, etc) from request
+     attributes to object model entries. This allows a view called by sendPage() to also use
+     flowscript (using request attributes caused the two calls to mix up their data).
+   </action>
    <action dev="JH" type="fix">
      Hopefully fixed the source resolving in JSP components finally by using
      standard Cocoon/Avalon Excalibur source resolving. This allows to use all

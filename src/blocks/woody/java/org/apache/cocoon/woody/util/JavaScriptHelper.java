@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.7 2004/03/09 13:54:24 reinhard Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.8 2004/04/25 12:12:08 sylvain Exp $
  */
 public class JavaScriptHelper {
 
@@ -136,11 +136,11 @@ public class JavaScriptHelper {
      * @param request a request where the flowscript scope will be searched (can be <code>null</code>).
      * @return an appropriate parent scope.
      */
-    public static Scriptable getParentScope(Request request) {
+    public static Scriptable getParentScope(Map objectModel) {
         // Try to get the flowscript scope
         Scriptable parentScope = null;
-        if (request != null) {
-            parentScope = (Scriptable)request.getAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
+        if (objectModel != null) {
+            parentScope = FOM_JavaScriptFlowHelper.getFOM_FlowScope(objectModel);
         }
 
         if (parentScope != null) {
@@ -150,10 +150,10 @@ public class JavaScriptHelper {
         }
     }
 
-    public static Object execScript(Script script, Map values, Request request) throws JavaScriptException {
+    public static Object execScript(Script script, Map values, Map objectModel) throws JavaScriptException {
         Context ctx = Context.enter();
         try {
-            Scriptable parentScope = getParentScope(request);
+            Scriptable parentScope = getParentScope(objectModel);
 
             // Create a new local scope
             Scriptable scope;
@@ -174,8 +174,8 @@ public class JavaScriptHelper {
                 scope.put(key, scope, Context.toObject(value, scope));
             }
             
-            if (request != null) {
-                Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
+            if (objectModel != null) {
+                Object viewData = FlowHelper.getContextObject(objectModel);
                 if (viewData != null) {
                     scope.put("viewData", scope, Context.toObject(viewData, scope));
                 }
@@ -188,13 +188,13 @@ public class JavaScriptHelper {
         }
     }
     
-    public static Object callFunction(Function func, Object thisObject, Object[] arguments, Request request) throws JavaScriptException {
+    public static Object callFunction(Function func, Object thisObject, Object[] arguments, Map objectModel) throws JavaScriptException {
         Context ctx = Context.enter();
         try {
-            Scriptable scope = getParentScope(request);
+            Scriptable scope = getParentScope(objectModel);
 
-            if (request != null) {
-                Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
+            if (objectModel != null) {
+                Object viewData = FlowHelper.getContextObject(objectModel);
                 if (viewData != null) {
                     // Create a new local scope to hold the view data
                     Scriptable newScope;

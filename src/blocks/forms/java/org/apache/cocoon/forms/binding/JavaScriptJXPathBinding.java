@@ -31,7 +31,7 @@ import org.mozilla.javascript.Script;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.3 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.4 2004/04/25 12:12:09 sylvain Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
@@ -59,7 +59,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     
             // FIXME: remove this ugly hack and get the request from the
             // Avalon context once binding builder are real components
-            Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+            Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
 
             try {
                 Map values = new HashMap(3);
@@ -69,7 +69,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
                     values.put("jxpathContext", jctx.getRelativeContext(pointer));
                 }
 
-                JavaScriptHelper.execScript(this.loadScript, values, request);
+                JavaScriptHelper.execScript(this.loadScript, values, objectModel);
     
             } catch(RuntimeException re) {
                 // rethrow
@@ -94,14 +94,14 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             try {
                 // FIXME: remove this ugly hack and get the request from the Avalon context once
                 // binding builder are real components
-                Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+                Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
 
                 Map values = new HashMap();
                 values.put("widget", widget);
                 values.put("jxpathContext", widgetCtx);
                 values.put("jxpathPointer", pointer);
 
-                JavaScriptHelper.execScript(this.saveScript, values, request);
+                JavaScriptHelper.execScript(this.saveScript, values, objectModel);
 
             } catch(RuntimeException re) {
                 // rethrow

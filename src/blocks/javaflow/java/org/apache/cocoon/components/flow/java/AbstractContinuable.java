@@ -24,13 +24,14 @@ import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceUtil;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 /**
  * Abstract class to add basic methods for flow handling.
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractContinuable.java,v 1.2 2004/04/16 09:39:57 stephan Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.3 2004/04/25 12:12:08 sylvain Exp $
  */
 public abstract class AbstractContinuable implements Continuable {
 
@@ -104,6 +105,10 @@ public abstract class AbstractContinuable implements Continuable {
 
     public Request getRequest() {
         return ContextHelper.getRequest(getContext().getAvalonContext());
+    }
+    
+    public Map getObjectModel() {
+        return ContextHelper.getObjectModel(getContext().getAvalonContext());
     }
 
     public void processPipelineTo(String uri, Object bizdata, OutputStream out) {
