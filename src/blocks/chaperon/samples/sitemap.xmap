@@ -49,7 +49,7 @@
                     src="org.apache.cocoon.transformation.ParserTransformer" 
                     logger="sitemap.transformer.parser">
     <parameter name="flatten" value="true"/>
-<!--    <parameter name="ignoring" value="true"/>-->
+    <parameter name="ignoring" value="true"/>
    </map:transformer>
 
   </map:transformers>
@@ -121,7 +121,7 @@
 
  <map:pipelines>
 
-  <map:pipeline type="caching">
+  <map:pipeline type="caching" internal-only="true">
    <!-- Hint: During development you could expose this pipeline, to help
      with writing your grammars. Use a text grammar myapp.grm and request
      the myapp.xlex and myapp.xgrm URLs and then view source.
