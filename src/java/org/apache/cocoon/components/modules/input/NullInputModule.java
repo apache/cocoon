@@ -59,14 +59,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * NullInputModule returns a null object.  Use this if you wnat to
- * explicitly forbit a parameter to be filled. E.g. a database column
+ * NullInputModule returns a null object.  Use this if you want to
+ * explicitly forbid a parameter to be filled. E.g. a database column
  * shall be filled with a default value, your forms never contain that
  * parameter but you don't want anyone to provide this parameter
  * manually.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: NullInputModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: NullInputModule.java,v 1.2 2003/05/03 16:02:42 jefft Exp $
  */
 public class NullInputModule extends AbstractInputModule implements ThreadSafe {
 
