@@ -60,6 +60,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -68,135 +69,120 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.3 2003/08/16 20:38:30 sylvain Exp $
  */
-public class CallFunctionNode extends AbstractProcessingNode
-  implements Configurable, Composable
-{
-  protected String functionName;
-  protected String continuationId;
-  protected List parameters;
-  protected VariableResolver functionNameResolver;
-  protected VariableResolver continuationResolver;
-  protected ComponentManager manager;
-  protected Interpreter interpreter;
+public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
+    protected String functionName;
+    protected String continuationId;
+    protected List parameters;
+    protected VariableResolver functionNameResolver;
+    protected VariableResolver continuationResolver;
+    protected ComponentManager manager;
+    protected Interpreter interpreter;
 
-  public static List resolveList(List expressions, ComponentManager manager, InvokeContext context, Map objectModel)
-    throws PatternException
-  {
-    int size;
-    if (expressions == null || (size = expressions.size()) == 0)
-      return Collections.EMPTY_LIST;
+    public static List resolveList(List expressions, ComponentManager manager, InvokeContext context, Map objectModel)
+        throws PatternException {
+        int size;
+        if (expressions == null || (size = expressions.size()) == 0)
+            return Collections.EMPTY_LIST;
 
-    List result = new ArrayList(size);
+        List result = new ArrayList(size);
 
-    for (int i = 0; i < size; i++) {
-      Interpreter.Argument arg = (Interpreter.Argument)expressions.get(i);
-      String value = VariableResolverFactory.getResolver(arg.value, manager).resolve(context, objectModel);
-      result.add (new Interpreter.Argument(arg.name, value));
+        for (int i = 0; i < size; i++) {
+            Interpreter.Argument arg = (Interpreter.Argument)expressions.get(i);
+            String value = VariableResolverFactory.getResolver(arg.value, manager).resolve(context, objectModel);
+            result.add(new Interpreter.Argument(arg.name, value));
+        }
+
+        return result;
     }
 
-    return result;
-  }
-
-  public CallFunctionNode(String funName, String contId)
-  {
-    functionName = funName;
-    continuationId = contId;
-  }
-
-  public void setInterpreter(Interpreter interp)
-    throws Exception
-  {
-    this.interpreter = interp;
-  }
-
-  /**
-   * Obtain the configuration specific to this node type and update
-   * the internal state.
-   *
-   * @param config a <code>Configuration</code> value
-   * @exception ConfigurationException if an error occurs
-   */
-  public void configure(Configuration config)
-    throws ConfigurationException
-  {
-    parameters = new ArrayList();
-
-    Configuration[] params = config.getChildren("parameter");
-    for (int i = 0; i < params.length; i++) {
-      Configuration param = params[i];
-      String name = param.getAttribute("name", null);
-      String value = param.getAttribute("value", null);
-      parameters.add(new Interpreter.Argument(name, value));
+    public CallFunctionNode(String funName, String contId) {
+        functionName = funName;
+        continuationId = contId;
     }
 
-    try {
-      // Check to see if we need to resolve the function name or the
-      // continuation id at runtime
-      if (functionName != null
-          && VariableResolverFactory.needsResolve(functionName))
-        functionNameResolver
-          = VariableResolverFactory.getResolver(functionName, manager);
-
-      if (continuationId != null
-          && VariableResolverFactory.needsResolve(continuationId))
-        continuationResolver
-          = VariableResolverFactory.getResolver(continuationId, manager);
-    }
-    catch (PatternException ex) {
-      throw new ConfigurationException(ex.toString());
-    }
-  }
-
-  public void compose(ComponentManager manager)
-  {
-    this.manager = manager;
-  }
-
-  public boolean invoke(Environment env, InvokeContext context)
-      throws Exception
-  {
-    List params = null;
-
-    // Resolve parameters
-    if (parameters != null)
-      params = resolveList(parameters, manager, context,
-                           env.getObjectModel());
-
-    String continuation;
-    if (continuationResolver != null) {
-      // Need to resolve the function name at runtime
-      continuation = continuationResolver.resolve(context,
-                                                  env.getObjectModel());
-    }
-    else
-      continuation = continuationId;
-
-    // If the continuation id is not null, it takes precedence over
-    // the function call, so we invoke it here.
-    if (continuation != null) {
-      interpreter.handleContinuation(continuation, params, env);
-      return true;
+    public void setInterpreter(Interpreter interp) throws Exception {
+        this.interpreter = interp;
     }
 
-    // We don't have a continuation id passed in <map:call>, so invoke
-    // the specified function
+    /**
+     * Obtain the configuration specific to this node type and update
+     * the internal state.
+     *
+     * @param config a <code>Configuration</code> value
+     * @exception ConfigurationException if an error occurs
+     */
+    public void configure(Configuration config) throws ConfigurationException {
+        parameters = new ArrayList();
 
-    String name;
-    if (functionNameResolver != null) {
-      // Need to resolve the function name at runtime
-      name = functionNameResolver.resolve(context,
-                                          env.getObjectModel());
+        Configuration[] params = config.getChildren("parameter");
+        for (int i = 0; i < params.length; i++) {
+            Configuration param = params[i];
+            String name = param.getAttribute("name", null);
+            String value = param.getAttribute("value", null);
+            parameters.add(new Interpreter.Argument(name, value));
+        }
+
+        try {
+            // Check to see if we need to resolve the function name or the
+            // continuation id at runtime
+            if (functionName != null && VariableResolverFactory.needsResolve(functionName))
+                functionNameResolver = VariableResolverFactory.getResolver(functionName, manager);
+
+            if (continuationId != null && VariableResolverFactory.needsResolve(continuationId))
+                continuationResolver = VariableResolverFactory.getResolver(continuationId, manager);
+        } catch (PatternException ex) {
+            throw new ConfigurationException(ex.toString());
+        }
     }
-    else
-      name = functionName;
 
-    if (name != null) {
-      interpreter.callFunction(name, params, env);
-      return true;
+    public void compose(ComponentManager manager) {
+        this.manager = manager;
     }
 
-    return false;
-  }
+    public boolean invoke(Environment env, InvokeContext context) throws Exception {
+        Redirector redirector = PipelinesNode.getRedirector(env);
+        
+        List params = null;
+
+        // Resolve parameters
+        if (parameters != null)
+            params = resolveList(parameters, manager, context, env.getObjectModel());
+
+        String continuation;
+        if (continuationResolver != null) {
+            // Need to resolve the function name at runtime
+            continuation = continuationResolver.resolve(context, env.getObjectModel());
+        } else {
+            continuation = continuationId;
+        }
+
+        // If the continuation id is not null, it takes precedence over
+        // the function call, so we invoke it here.
+        if (continuation != null) {
+            interpreter.handleContinuation(continuation, params, env);
+            // FIXME (SW) : is a flow allowed not to redirect ?
+            // If not, we should throw a RNFE here.
+            return redirector.hasRedirected();
+        }
+
+        // We don't have a continuation id passed in <map:call>, so invoke
+        // the specified function
+
+        String name;
+        if (functionNameResolver != null) {
+            // Need to resolve the function name at runtime
+            name = functionNameResolver.resolve(context, env.getObjectModel());
+        } else
+            name = functionName;
+
+        if (name != null) {
+            interpreter.callFunction(name, params, env);
+            // FIXME (SW) : is a flow allowed not to redirect ?
+            return redirector.hasRedirected();
+        }
+
+        return false;
+    }
 }
