@@ -17,8 +17,9 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-10-23 19:44:45 $ 
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-10-25 16:02:17 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -38,17 +39,19 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
     protected int[] sourcePattern = null;
 
     /**
+     * Generates the matcher parameter level source code
+     */
+    public String generateParameterSource (DocumentFragment conf)
+    throws ConfigurationException {
+        return "int []";
+    }
+
+    /**
      * Generates the matcher method level source code
      */
-    public String generateMethodSource (String prefix, String pattern, 
-                                        DocumentFragment conf) 
+    public String generateMethodSource (DocumentFragment conf) 
     throws ConfigurationException {
-        StringBuffer result = new StringBuffer();
-        return result.append ("ArrayList list = new ArrayList();")
-                     .append ("if (WildcardURIMatcher.match (list,((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI(), ")
-                     .append(prefix).append("_expr))")
-                     .append ("return list;")
-                     .append ("else return null;").toString();
+        return "          ArrayList list = new ArrayList();\n   if (WildcardURIMatcher.match (list, ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT))\n					.getRequestURI(), pattern)) {\n	      return list;\n	  } else {\n	      return null;\n	  }\n";
     }
 
     /**
@@ -61,7 +64,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
         try {
             this.setPattern (pattern);
    
-            result.append ("// wildcard pattern = \"" + pattern + "\"\n\t")
+            result.append ("\n// wildcard pattern = \"" + pattern + "\"\n\t")
                   .append ("static int[] ").append(prefix).append("_expr = {");
 
             int j = sourcePattern.length - 1;
@@ -71,7 +74,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
                       .append (',');
             }
             return result.append (sourcePattern[j])
-                         .append ("};").toString();
+                         .append ("};\n").toString();
         } catch (NullPointerException pe) {
             throw new ConfigurationException (pe.getMessage());
         }

@@ -72,9 +72,9 @@
 
   </map:selectors>
 
-  <map:matchers default="uri">
-   <map:matcher name="uri"        factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
-   <map:matcher name="uri-regexp" factory="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
+  <map:matchers default="wildcard">
+   <map:matcher name="wildcard"        factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+   <map:matcher name="regexp" factory="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
   </map:matchers>
 
  </map:components>

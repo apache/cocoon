@@ -21,7 +21,8 @@ import org.w3c.dom.DocumentFragment;
  * <code>SelectorFactory</code>s to get the generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-08 21:09:26 $ 
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-25 16:02:19 $ 
  */ 
 
 public class XSLTFactoryLoader {
@@ -41,15 +42,29 @@ public class XSLTFactoryLoader {
         throw new Exception ("Wrong class \"" + factory.getClass().getName()
                             + "\". Should implement the CodeFactory interface");
     }
-                   
-    public String getMethodSource(String className, String prefix, String pattern, DocumentFragment conf) 
+    
+    public String getParameterSource(String className, DocumentFragment conf)
+    throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
+        Object factory = obj.get(className);
+	if (factory == null) factory = ClassUtils.newInstance(className);
+	obj.put (className, factory);
+
+	if (factory instanceof CodeFactory) {
+	    return ((CodeFactory) factory).generateParameterSource(conf);
+	}
+
+	throw new Exception ("Wrong class \"" + factory.getClass().getName()
+	                     + "\". Should implement the CodeFactory interface");
+    }
+    
+    public String getMethodSource(String className, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception { 
         Object factory = obj.get(className);
         if (factory == null) factory = ClassUtils.newInstance(className); 
         obj.put (className, factory); 
 
         if (factory instanceof CodeFactory) {
-            return ((CodeFactory) factory).generateMethodSource(prefix, pattern, conf);
+            return ((CodeFactory) factory).generateMethodSource(conf);
         }
         
         throw new Exception ("Wrong class \"" + factory.getClass().getName()

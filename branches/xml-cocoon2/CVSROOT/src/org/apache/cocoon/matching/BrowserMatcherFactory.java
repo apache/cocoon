@@ -23,14 +23,14 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  * This class generates source code which matches a specific browser pattern
  * for request URIs
  * 
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-27 16:07:20 $ 
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-25 16:02:17 $ 
  */ 
 
 public class BrowserMatcherFactory implements MatcherFactory {
 
-    public String generateMethodSource (String prefix, String test_expression, 
-                                        DocumentFragment conf)
+    public String generateMethodSource (DocumentFragment conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
         TreeWalker tw = new TreeWalkerImpl (conf, NodeFilter.SHOW_ALL, null, false);
@@ -62,6 +62,11 @@ public class BrowserMatcherFactory implements MatcherFactory {
     public String generateClassSource (String prefix, String pattern, 
                                        DocumentFragment conf)
     throws ConfigurationException {
-        return "";
+        return "\n// Dummy values\nstatic String " + prefix + "_expr = \"" + pattern + "\";\n";
+    }
+
+    public String generateParameterSource (DocumentFragment conf)
+    throws ConfigurationException {
+        return "String";
     }
 }

@@ -20,10 +20,16 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-23 21:17:47 $ 
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-25 16:02:17 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
+    public String generateParameterSource (DocumentFragment conf)
+    throws ConfigurationException {
+        return "RE";
+    }
+
     public String generateClassSource (String prefix, String pattern, 
                                        DocumentFragment conf) 
     throws ConfigurationException {
@@ -53,7 +59,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
             sb.append("\n    };")
               .append("\n    static RE ") 
               .append(name)
-              .append("Pattern = new RE(new REProgram(")
+              .append("_expr = new RE(new REProgram(")
               .append(instructions)
               .append("));");
             return sb.toString();
@@ -62,24 +68,20 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         }
     }
 
-    public String generateMethodSource (String prefix, String pattern, 
-                                        DocumentFragment conf) 
+    public String generateMethodSource (DocumentFragment conf) 
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
-        String name         = prefix;
-        String instructions = name + "PatternInstructions";
-        String pat = correctPattern (pattern);
         sb.append("ArrayList list = new ArrayList ();")
-          .append("if(").append(name).append("Pattern.match(((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI())) {");
+          .append("if(pattern.match(((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI())) {");
         // Count number of parens
-        int i = 0;
+/*        int i = 0;
         int j = -1;
         while ((j = pat.indexOf('(', j+1)) != -1) {
             if (j == 0 || pat.charAt(j-1) != '\\') {
-                sb.append("list.add (").append(name).append("Pattern.getParen(")
+                sb.append("list.add (pattern.getParen(")
                   .append(++i).append("));");
             }
-        }
+        }*/
         sb.append("return list; } else { return null; }");
         return sb.toString();
     }

@@ -21,13 +21,17 @@ import org.w3c.dom.DocumentFragment;
  * sitemap code generation.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-06 23:22:21 $ 
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-25 16:02:15 $ 
  */ 
 
 public interface CodeFactory {
+    public String generateParameterSource (DocumentFragment conf)
+    throws ConfigurationException;
+
     public String generateClassSource (String test, String prefix, DocumentFragment conf) 
     throws ConfigurationException;
 
-    public String generateMethodSource (String test, String prefix, DocumentFragment conf) 
+    public String generateMethodSource (DocumentFragment conf) 
     throws ConfigurationException;
 }
