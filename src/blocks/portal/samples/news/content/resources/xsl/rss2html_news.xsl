@@ -2,10 +2,10 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- $Id: rss2html_news.xsl,v 1.2 2003/07/12 17:02:47 cziegeler Exp $ 
+<!-- $Id: rss2html_news.xsl,v 1.3 2003/12/12 16:34:21 cziegeler Exp $ 
 
 -->
-
+<xsl:param name="fullscreen"/>
 
 <xsl:template match="rss">
   <xsl:apply-templates select="channel"/>
@@ -26,7 +26,7 @@
 
 <xsl:template match="item">
   <!-- Display the first 5 entries -->
-  <xsl:if test="position() &lt; 6">
+  <xsl:if test="$fullscreen='true' or position() &lt; 6">
     <tr>
       <td>
         <a target="_blank" href="{link}">

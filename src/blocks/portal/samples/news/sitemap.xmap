@@ -21,12 +21,16 @@
 <!--
         <map:transform type="rss"/>
 -->        
-        <map:transform type="xslt" src="content/resources/xsl/rss2html_news.xsl"/>
+        <map:transform type="xslt" src="content/resources/xsl/rss2html_news.xsl">
+            <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
+        </map:transform>
         <map:serialize type="xml"/>
     </map:match>
     <map:match pattern="*.rss">
         <map:generate type="file" src="content/rss/{1}.xml" label="content" />
-        <map:transform type="xslt" src="content/resources/xsl/rss2html_news.xsl"/>
+        <map:transform type="xslt" src="content/resources/xsl/rss2html_news.xsl">
+            <map:parameter name="fullscreen" value="{coplet:aspectDatas/fullScreen}"/> 
+        </map:transform>
         <map:serialize type="xml"/>
     </map:match>
 
