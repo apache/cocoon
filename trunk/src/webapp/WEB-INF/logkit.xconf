@@ -14,7 +14,13 @@
          below with the following.
     <lf5 id="core"/>
     -->
-
+    <cocoon id="system">
+      <filename>${context-root}/WEB-INF/logs/system.log</filename>
+      <format type="cocoon">
+        %7.7{priority} %{time}   [%{category}] %{thread}/%{class:short}: %{message}\n%{throwable}
+      </format>
+    </cocoon>
+    
     <cocoon id="core">
       <filename>${context-root}/WEB-INF/logs/core.log</filename>
       <format type="cocoon">
@@ -97,65 +103,78 @@
       When defining subcategory manually, it is required to specify log
       targets, because they are not inherited in this case.
     -->
-    <category name="core" log-level="@loglevel@">
-      <!-- Startup component manager logger -->
-      <category name="startup" log-level="@loglevel@">
-        <log-target id-ref="core"/>
+    <category name="" log-level="INFO">
+      
+      <category name="system" log-level="INFO">
+        <log-target id-ref="system"/>
         <log-target id-ref="error"/>
+        <category name="meta" log-level="INFO">
+          <log-target id-ref="system"/>
+          <log-target id-ref="error"/>
+        </category>
+        <category name="roles" log-level="INFO">
+          <log-target id-ref="system"/>
+          <log-target id-ref="error"/>
+          <category name="defaults" log-level="ERROR">
+            <log-target id-ref="system"/>
+            <log-target id-ref="error"/>
+          </category>
+        </category>
+        <category name="instrument" log-level="INFO">
+          <log-target id-ref="system"/>
+          <log-target id-ref="error"/>
+        </category>
+        <category name="extensions" log-level="INFO">
+          <log-target id-ref="system"/>
+          <log-target id-ref="error"/>
+        </category>
+        <category name="factory" log-level="INFO">
+          <log-target id-ref="system"/>
+          <log-target id-ref="error"/>
+        </category>
+        <category name="handler" log-level="INFO">
+          <log-target id-ref="system"/>
+          <log-target id-ref="error"/>
+        </category>
       </category>
-
-      <category name="roles" log-level="@loglevel@">
-        <log-target id-ref="core"/>
-        <log-target id-ref="error"/>
-      </category>
-
-      <category name="instrument" log-level="@loglevel@">
-        <category name="values" log-level="@loglevel@">
+      
+      <category name="core" log-level="INFO">
+        <!-- Cocoon cache and stores logger -->
+        <category name="store" log-level="INFO">
+          <category name="janitor" log-level="INFO">
+            <log-target id-ref="core"/>
+            <log-target id-ref="error"/>
+          </category>
           <log-target id-ref="core"/>
           <log-target id-ref="error"/>
         </category>
+        
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
-      <!-- Cocoon component manager logger -->
-      <category name="manager" log-level="@loglevel@">
-        <log-target id-ref="core"/>
+      <category name="sitemap" log-level="INFO">
+        <log-target id-ref="sitemap"/>
         <log-target id-ref="error"/>
-      </category>
 
-      <!-- Cocoon cache and stores logger -->
-      <category name="store" log-level="@loglevel@">
-        <category name="janitor" log-level="@loglevel@">
-          <log-target id-ref="core"/>
-          <log-target id-ref="error"/>
+        <category name="handled-errors" log-level="INFO">
+          <!-- Exceptions that will be handled by a sitemap errorhandler are
+               logged to this target. -->
+          <log-target id-ref="handled-errors"/>
         </category>
-        <log-target id-ref="core"/>
+      </category>
+
+      <category name="access" log-level="INFO">
+        <log-target id-ref="access"/>
         <log-target id-ref="error"/>
       </category>
 
-      <log-target id-ref="core"/>
-      <log-target id-ref="error"/>
-    </category>
-
-    <category name="sitemap" log-level="@loglevel@">
-      <log-target id-ref="sitemap"/>
-      <log-target id-ref="error"/>
-
-      <category name="handled-errors" log-level="@loglevel@">
-        <!-- Exceptions that will be handled by a sitemap errorhandler are
-             logged to this target. -->
-        <log-target id-ref="handled-errors"/>
+      <category name="flow" log-level="INFO">
+        <log-target id-ref="flow"/>
+        <log-target id-ref="error"/>
       </category>
-    </category>
-
-    <category name="access" log-level="@loglevel@">
-      <log-target id-ref="access"/>
-      <log-target id-ref="error"/>
-    </category>
-
-    <category name="flow" log-level="@loglevel@">
-      <log-target id-ref="flow"/>
+      
+      <log-target id-ref="system"/>
       <log-target id-ref="error"/>
     </category>
   </categories>
