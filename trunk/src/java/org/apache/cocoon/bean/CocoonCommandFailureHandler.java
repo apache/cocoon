@@ -22,9 +22,9 @@
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
-    used to  endorse or promote  products derived from  this software without
-    prior written permission. For written permission, please contact
+ 4. The names "Jakarta", "Avalon", "Excalibur" and "Apache Software Foundation"
+    must not be used to endorse or promote products derived from this  software
+    without  prior written permission. For written permission, please contact
     apache@apache.org.
 
  5. Products  derived from this software may not  be called "Apache", nor may
@@ -43,26 +43,27 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  This software  consists of voluntary contributions made  by many individuals
- on  behalf of the Apache Software  Foundation and was  originally created by
- Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
- Software Foundation, please see <http://www.apache.org/>.
+ on  behalf of the Apache Software  Foundation. For more  information on the
+ Apache Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components;
+package org.apache.cocoon.bean;
 
-import org.apache.avalon.framework.service.ServiceException;
+import org.apache.excalibur.event.command.CommandFailureHandler;
+import org.apache.excalibur.event.command.Command;
 
 /**
- * This object is set to a {@link ParentAware} component and allows
- * access to the parent component.
+ * CocoonCommandFailureHandler does XYZ
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocator.java,v 1.2 2003/10/17 17:49:24 bloritsch Exp $
+ * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
+ * @version CVS $ Revision: 1.1 $
  */
-public interface ComponentLocator {
-
-    Object lookup()
-    throws ServiceException;
-
-    void release(Object parent);
+public class CocoonCommandFailureHandler implements CommandFailureHandler
+{
+    public boolean handleCommandFailure( Command command, Throwable throwable )
+    {
+        // TODO: provide solution for what to do.  Returning "true" shuts down the command manager.
+        // TODO: at least we want to provide for logging.
+        return false;
+    }
 }

@@ -55,7 +55,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.cocoon.bean.CocoonBean;
+import org.apache.cocoon.bean.OldCocoonBean;
 import org.apache.cocoon.bean.helpers.OutputStreamListener;
 
 import org.w3c.dom.Document;
@@ -64,10 +64,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Static class for configuring a CocoonBean from a DOM Document object
+ * Static class for configuring a OldCocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.2 2003/10/11 05:44:07 upayavira Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.3 2003/10/17 17:49:23 bloritsch Exp $
  */
 public class BeanConfigurator {
 
@@ -85,7 +85,7 @@ public class BeanConfigurator {
     private static final String NODE_CONFIG_FILE = "config-file";
     private static final String NODE_URI_FILE = "uri-file";
     private static final String NODE_CHECKSUMS_URI = "checksums-uri";
- 
+
     // context-dir is needed by ant task
     public static final String ATTR_CONTEXT_DIR = "context-dir";
     private static final String ATTR_DEST_DIR = "dest-dir";
@@ -93,7 +93,7 @@ public class BeanConfigurator {
     private static final String ATTR_CONFIG_FILE = "config-file";
     private static final String ATTR_URI_FILE = "uri-file";
     private static final String ATTR_CHECKSUMS_URI = "checksums-uri";
- 
+
     private static final String NODE_BROKEN_LINKS = "broken-links";
     private static final String ATTR_BROKEN_LINK_REPORT_TYPE = "type";
     private static final String ATTR_BROKEN_LINK_REPORT_FILE = "file";
@@ -112,10 +112,10 @@ public class BeanConfigurator {
     private static final String NODE_INCLUDE = "include";
     private static final String NODE_EXCLUDE = "exclude";
     private static final String ATTR_INCLUDE_EXCLUDE_PATTERN = "pattern";
-    
+
     private static final String NODE_INCLUDE_LINKS = "include-links";
     private static final String ATTR_LINK_EXTENSION = "extension";
-    
+
     private static final String NODE_URI = "uri";
     private static final String ATTR_URI_TYPE = "type";
     private static final String ATTR_URI_SOURCEPREFIX = "src-prefix";
@@ -124,8 +124,8 @@ public class BeanConfigurator {
 
     private static final String NODE_URIS = "uris";
     private static final String ATTR_NAME = "name";
-    
-    public static String configure(Document xconf, CocoonBean cocoon, String destDir, String uriGroup, OutputStreamListener listener) 
+
+    public static String configure(Document xconf, OldCocoonBean cocoon, String destDir, String uriGroup, OutputStreamListener listener)
         throws IllegalArgumentException {
 
         Node root = xconf.getDocumentElement();
@@ -163,12 +163,12 @@ public class BeanConfigurator {
         if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
             cocoon.setChecksumURI(getAttributeValue(root, ATTR_CHECKSUMS_URI));
         }
-        
+
 
         if (destDir == null || destDir.length() == 0) {
             destDir = getNodeValue(root, NODE_DEST_DIR);
         }
- 
+
         NodeList nodes = root.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
@@ -210,7 +210,7 @@ public class BeanConfigurator {
                         throw new IllegalArgumentException("Cannot have "+NODE_CHECKSUMS_URI+" as both element and attribute");
                     } else {
                         cocoon.setChecksumURI(getNodeValue(node));
-                    }                
+                    }
                 } else if (nodeName.equals(NODE_AGENT)) {
                     //@TODO@ Move this to be attributes too
                     cocoon.setAgentOptions(getNodeValue(node));
@@ -254,7 +254,7 @@ public class BeanConfigurator {
         return destDir;
     }
 
-    private static void parseLoggingNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
+    private static void parseLoggingNode(OldCocoonBean cocoon, Node node) throws IllegalArgumentException {
         if (hasAttribute(node, ATTR_LOG_KIT)) {
             cocoon.setLogKit(getAttributeValue(node, ATTR_LOG_KIT));
         }
@@ -270,13 +270,13 @@ public class BeanConfigurator {
         }
     }
 
-    private static void parseIncludeLinksNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
+    private static void parseIncludeLinksNode(OldCocoonBean cocoon, Node node) throws IllegalArgumentException {
         if (hasAttribute(node, ATTR_LINK_EXTENSION)) {
             cocoon.addIncludeLinkExtension(getAttributeValue(node, ATTR_LINK_EXTENSION));
         }
     }
 
-    private static void parseBrokenLinkNode(CocoonBean cocoon, Node node, OutputStreamListener listener) throws IllegalArgumentException {
+    private static void parseBrokenLinkNode(OldCocoonBean cocoon, Node node, OutputStreamListener listener) throws IllegalArgumentException {
         if (hasAttribute(node, ATTR_BROKEN_LINK_REPORT_FILE)) {
             listener.setReportFile(getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_FILE));
         }
@@ -295,7 +295,7 @@ public class BeanConfigurator {
         }
     }
 
-    private static String parseIncludeExcludeNode(CocoonBean cocoon, Node node, final String NODE_TYPE) throws IllegalArgumentException {
+    private static String parseIncludeExcludeNode(OldCocoonBean cocoon, Node node, final String NODE_TYPE) throws IllegalArgumentException {
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength() != 0) {
             throw new IllegalArgumentException("Unexpected children of <" + NODE_INCLUDE + "> node");
@@ -308,7 +308,7 @@ public class BeanConfigurator {
         }
     }
 
-    private static void parseURIsNode(CocoonBean cocoon, Node node, String destDir, String uriGroup) throws IllegalArgumentException {
+    private static void parseURIsNode(OldCocoonBean cocoon, Node node, String destDir, String uriGroup) throws IllegalArgumentException {
 
         boolean followLinks = cocoon.followLinks();
         boolean confirmExtensions = cocoon.confirmExtensions();
@@ -317,7 +317,7 @@ public class BeanConfigurator {
         String root = null;
         String type = null;
         String name = null;
-        
+
         if (hasAttribute(node, ATTR_FOLLOW_LINKS)) {
             followLinks = getBooleanAttributeValue(node, ATTR_FOLLOW_LINKS);
         }
@@ -353,10 +353,10 @@ public class BeanConfigurator {
                     String _destURI = destURI;
                     String _root = root;
                     String _type = type;
-                    
+
                     if (child.getAttributes().getLength() == 0) {
                         _sourceURI = getNodeValue(child);
-                        //destURI is inherited 
+                        //destURI is inherited
                     } else {
                         _sourceURI = getAttributeValue(child, ATTR_URI_SOURCEURI);
 
@@ -377,8 +377,8 @@ public class BeanConfigurator {
             }
         }
     }
-        
-    private static void parseURINode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
+
+    private static void parseURINode(OldCocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
         NodeList nodes = node.getChildNodes();
 
         if (node.getAttributes().getLength() == 0 && nodes.getLength() != 0) {
@@ -501,7 +501,7 @@ public class BeanConfigurator {
                 if (null == uri) {
                     break;
                 }
-                
+
                 uri = uri.trim();
                 if (!uri.equals("") && !uri.startsWith("#")){
                     uris.add(uri.trim());

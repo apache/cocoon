@@ -61,17 +61,18 @@ import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 /**
  * An extension of <code>ExcaliburComponentSelector</code> that can have a parent
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.4 2003/08/12 15:48:02 sylvain Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.5 2003/10/17 17:49:24 bloritsch Exp $
  */
 
-public class ExtendedComponentSelector 
-    extends ExcaliburComponentSelector 
+public class ExtendedComponentSelector
+    extends ExcaliburComponentSelector
     implements ParentAware {
 
     /** The role manager */
@@ -337,11 +338,11 @@ public class ExtendedComponentSelector
         }
         return exists;
     }
-    
+
     /**
      * Does this selector declare a given hint? Check is performed on the components declared for this
      * selector only, and <strong>not</strong> those potentially inherited from the parent selector.
-     * 
+     *
      * @param hint the hint to check for
      * @return <code>true</code> if this selector has the specified hint
      */
@@ -350,7 +351,7 @@ public class ExtendedComponentSelector
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.components.ParentAware#setParentInformation(org.apache.avalon.framework.component.ComponentManager, java.lang.String)
+     * @see org.apache.cocoon.components.ParentAware#setParentInformation(org.apache.avalon.framework.service.ServiceManager, java.lang.String)
      */
     public void setParentLocator(ComponentLocator locator)
     throws ComponentException {
@@ -358,7 +359,7 @@ public class ExtendedComponentSelector
             throw new ComponentException(null, "Parent selector is already set");
         }
         this.parentLocator = locator;
-        this.parentSelector = (ComponentSelector) locator.lookup();
+        this.parentSelector = (ServiceSelector) locator.lookup();
         this.parentComponents = new HashSet();
     }
 

@@ -50,34 +50,33 @@
 */
 package org.apache.cocoon.components;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 
 /**
  * This object is set to a {@link ParentAware} component and allows
  * access to the parent component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocatorImpl.java,v 1.1 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: ComponentLocatorImpl.java,v 1.2 2003/10/17 17:49:24 bloritsch Exp $
  */
-public class ComponentLocatorImpl 
+public class ComponentLocatorImpl
     implements ComponentLocator {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     protected String           role;
-    
-    public ComponentLocatorImpl(ComponentManager manager, String role) {
+
+    public ComponentLocatorImpl(ServiceManager manager, String role) {
         this.manager = manager;
         this.role = role;
     }
-    
+
     public Object lookup()
-    throws ComponentException {
+    throws ServiceException {
         return this.manager.lookup( this.role );
     }
-    
+
     public void release(Object parent) {
-        this.manager.release( (Component) parent);
+        this.manager.release( parent);
     }
 }

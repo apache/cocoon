@@ -57,7 +57,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.environment.Redirector;
@@ -78,9 +78,9 @@ import java.util.Map;
  * from the input component to the output component or, if a specific
  * parameter is specified through parameter-name, just one parameter.
  *
- * @version CVS $Id: TestAction.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
+ * @version CVS $Id: TestAction.java,v 1.3 2003/10/17 17:49:24 bloritsch Exp $
  */
-public class TestAction extends ComposerAction 
+public class TestAction extends ServiceableAction
     implements Configurable, ThreadSafe {
 
     String INPUT_MODULE_ROLE = InputModule.ROLE;
@@ -111,7 +111,7 @@ public class TestAction extends ComposerAction
 
 
 
-    public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, 
+    public Map act( Redirector redirector, SourceResolver resolver, Map objectModel,
                     String source, Parameters param ) throws Exception {
 
         // general setup
@@ -125,11 +125,11 @@ public class TestAction extends ComposerAction
         try {
             if (getLogger().isDebugEnabled()) getLogger().debug("start...");
             // obtain input and output components
-            inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+            inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
             if (inputName != null && inputSelector != null && inputSelector.hasComponent(inputName)){
                 input = (InputModule) inputSelector.select(inputName);
             }
-            outputSelector=(ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR); 
+            outputSelector=(ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
             if (outputName != null && outputSelector != null && outputSelector.hasComponent(outputName)){
                 output = (OutputModule) outputSelector.select(outputName);
             }
@@ -148,8 +148,8 @@ public class TestAction extends ComposerAction
                         parameterName = (String) iter.next();
                         Object value = input.getAttribute(parameterName, this.inputConf, objectModel);
                         output.setAttribute(this.outputConf, objectModel, parameterName, value);
-                        
-                        if (getLogger().isDebugEnabled()) 
+
+                        if (getLogger().isDebugEnabled())
                             getLogger().debug("["+parameterName+"] = ["+value+"]");
                     }
                         // ------------------------------------------------------------------------
@@ -159,20 +159,20 @@ public class TestAction extends ComposerAction
                         // get all existing values
                         Object[] value = input.getAttributeValues(parameterName, this.inputConf, objectModel);
                         output.setAttribute(this.outputConf, objectModel, parameterName, value);
-                        
-                        if (getLogger().isDebugEnabled()) 
+
+                        if (getLogger().isDebugEnabled())
                             for (int i=0; i<value.length; i++)
                                 getLogger().debug("["+parameterName+"["+i+"]] = ["+value[i]+"]");
                         // ------------------------------------------------------------------------
 
                     } else {
                         // get just one parameter value
-                        if (getLogger().isDebugEnabled()) 
+                        if (getLogger().isDebugEnabled())
                             getLogger().debug("reading parameter values for "+parameterName);
-                        
+
                         Object value = input.getAttribute(parameterName, this.inputConf, objectModel);
                         output.setAttribute(this.outputConf, objectModel, parameterName, value);
-                        
+
                         if (getLogger().isDebugEnabled()) getLogger().debug("["+parameterName+"] = ["+value+"]");
                         // ------------------------------------------------------------------------
                     }
@@ -189,7 +189,7 @@ public class TestAction extends ComposerAction
             // release components
             if (getLogger().isDebugEnabled()) getLogger().debug("releasing components");
             if (outputSelector != null) {
-                if (output != null) 
+                if (output != null)
                     outputSelector.release(output);
                 this.manager.release(outputSelector);
             }

@@ -56,7 +56,7 @@ import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.cocoon.bean.CocoonBean;
+import org.apache.cocoon.bean.OldCocoonBean;
 import org.apache.cocoon.bean.helpers.OutputStreamListener;
 import org.apache.cocoon.bean.helpers.BeanConfigurator;
 
@@ -76,7 +76,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.22 2003/10/10 14:11:50 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.23 2003/10/17 17:49:24 bloritsch Exp $
  */
 public class Main {
 
@@ -124,7 +124,7 @@ public class Main {
     protected static final String DEFAULT_FILENAME_LONG =   "defaultFilename";
     protected static final String URI_LONG =                "uri";
     protected static final String URI_GROUP_NAME_LONG =     "uris";
-    
+
     private static Options options;
     private static OutputStreamListener listener;
 
@@ -255,7 +255,7 @@ public class Main {
         Main.setOptions();
         CommandLine line = new PosixParser().parse( options, args );
         listener = new OutputStreamListener(System.out);
-        CocoonBean cocoon = new CocoonBean();
+        OldCocoonBean cocoon = new OldCocoonBean();
         cocoon.addListener(listener);
 
         if (line.hasOption(HELP_OPT)) {
@@ -268,7 +268,7 @@ public class Main {
         if (line.hasOption(URI_GROUP_NAME_OPT)) {
             uriGroup = line.getOptionValue(URI_GROUP_NAME_OPT);
         }
-            
+
         String destDir = null;
         if (line.hasOption(XCONF_OPT)) {
             // destDir from command line overrides one in xconf file
@@ -301,7 +301,7 @@ public class Main {
                 listener.messageGenerated(
                     "Careful, you must specify a configuration file when using the -c/--contextDir argument");
                 System.exit(1);
-            } else {  
+            } else {
                 cocoon.setContextDir(contextDir);
             }
         }
@@ -361,7 +361,7 @@ public class Main {
         return "yes".equals(in) || "true".equals(in);
     }
 
-    private static String processXConf(CocoonBean cocoon, String filename, String destDir, String uriGroup) {
+    private static String processXConf(OldCocoonBean cocoon, String filename, String destDir, String uriGroup) {
 
         try {
             final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
