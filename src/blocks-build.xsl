@@ -399,6 +399,7 @@
            available - to the usual java source directory.
            If someone knows a better solution...
       -->
+      <!-- Currently, we have no JVM dependent sources
       <condition property="dependend.vm" value="{string('${target.vm}')}">
         <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
       </condition>
@@ -407,7 +408,7 @@
           <available file="{string('${blocks}')}/{$block-name}/java{string('${target.vm}')}"/>
         </not>
       </condition>
-
+      -->
       <javac destdir="{string('${build.blocks}')}/{$block-name}/dest"
              debug="{string('${compiler.debug}')}"
              optimize="{string('${compiler.optimize}')}"
@@ -416,7 +417,9 @@
              nowarn="{string('${compiler.nowarn}')}"
              compiler="{string('${compiler}')}">
         <src path="{string('${blocks}')}/{$block-name}/java"/>
+        <!-- Currently, we have no JVM dependent sources
         <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
+        -->
         <classpath refid="{$block-name}.classpath"/>
         <exclude name="**/samples/**/*.java"/>
       </javac>
@@ -438,7 +441,9 @@
              nowarn="{string('${compiler.nowarn}')}"
              compiler="{string('${compiler}')}">
         <src path="{string('${blocks}')}/{$block-name}/java"/>
+        <!-- Currently, we have no JVM dependent sources
         <src path="{string('${blocks}')}/{$block-name}/java{string('${dependend.vm}')}"/>
+        -->
         <classpath refid="{$block-name}.classpath"/>
         <include name="**/samples/**/*.java"/>
       </javac>
