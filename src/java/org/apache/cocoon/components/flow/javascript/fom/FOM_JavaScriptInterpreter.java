@@ -92,7 +92,7 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_WebContin
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.1 2003/07/08 05:48:52 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.2 2003/07/14 09:54:13 reinhard Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -337,8 +337,9 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
      *
      * <p>If you want to maintain the state of global variables across
      * multiple invocations of <code>&lt;map:call
-     * function="..."&gt;</code>, you need to invoke from the JavaScript
-     * script <code>cocoon.createSession()</code>. This will place the
+     * function="..."&gt;</code>, you need to instanciate the session
+     * object which is a property of the cocoon object 
+     * <code>var session = cocoon.session</code>. This will place the
      * newly create Scriptable object in the user's session, where it
      * will be retrieved from at the next invocation of {@link #callFunction}.</p>
      *
@@ -423,12 +424,12 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
 
     /**
      * Compile filename as JavaScript code
+     * 
      * @param cx Rhino context
      * @param environment source resolver
      * @param fileName resource uri
      * @return compiled script
      */
-
     public Script compileScript(Context cx,
                                 Environment environment,
                                 String fileName) throws Exception {
