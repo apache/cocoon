@@ -16,7 +16,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.11 2004/03/10 08:43:23 cziegeler Exp $
+# $Id: cocoon.sh,v 1.12 2004/04/21 13:03:57 morrijr Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -84,13 +84,13 @@ if [ "$COCOON_HOME" = "" ] ; then
 fi
 
 if [ "$COCOON_WEBAPP_HOME" = "" ] ; then
-  STANDALONE_WEBAPP=../webapp
-  if [ -d $STANDALONE_WEBAPP ] ; then
+  STANDALONE_WEBAPP="../webapp"
+  if [ -d ${STANDALONE_WEBAPP} ] ; then
     # for standalone-webapp setup
-    COCOON_WEBAPP_HOME=$STANDALONE_WEBAPP
+    COCOON_WEBAPP_HOME=${STANDALONE_WEBAPP}
   else
     # when in the build environment
-    COCOON_WEBAPP_HOME="$COCOON_HOME/build/webapp"
+    COCOON_WEBAPP_HOME="${COCOON_HOME}/build/webapp"
   fi
 fi
 echo "$0: using $COCOON_WEBAPP_HOME as the webapp directory"
@@ -143,7 +143,7 @@ JETTY_WEBAPP="-Dwebapp=$COCOON_WEBAPP_HOME"
 JETTY_HOME="-Dhome=$COCOON_HOME"
 JETTY_PORT_ARGS="-Djetty.port=$JETTY_PORT"
 JETTY_ADMIN_ARGS="-Djetty.admin.port=$JETTY_ADMIN_PORT"
-JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib:$ENDORSED_LIBS"
+JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP}${ENDORSED_LIBS}"
 
 # ----- Do the action ----------------------------------------------------------
 
