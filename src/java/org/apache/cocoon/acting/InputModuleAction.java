@@ -66,7 +66,7 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.6 2004/04/27 22:25:29 haul Exp $
+ * @version CVS $Id$
  */
 public class InputModuleAction extends ConfigurableServiceableAction implements ThreadSafe {
 
@@ -122,10 +122,8 @@ public class InputModuleAction extends ConfigurableServiceableAction implements 
      */
     public void configure(Configuration conf) throws ConfigurationException {
         super.configure(conf);
-        boolean result = false;
         String tmp = (String) this.settings.get("single-value", "false");
-        result = BooleanUtils.toBoolean(tmp);
-        this.settings.put("single-value", new Boolean(result));
+        this.settings.put("single-value", BooleanUtils.toBooleanObject(tmp));
     }
 
 }
