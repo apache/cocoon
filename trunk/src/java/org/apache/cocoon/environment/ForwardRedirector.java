@@ -55,14 +55,13 @@ import java.io.IOException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
 /**
  * A <code>Redirector</code> that handles forward redirects, i.e. internal
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.11 2003/10/30 12:20:45 cziegeler Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.12 2003/10/30 12:31:05 cziegeler Exp $
  */
 public class ForwardRedirector
 extends AbstractLogEnabled 
@@ -125,10 +124,8 @@ implements Redirector, PermanentRedirector {
         // FIXME : how to handle global redirect to cocoon: ?
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
-        } else if (env instanceof EnvironmentWrapper) {
-            ((EnvironmentWrapper)env).globalRedirect(sessionMode,url);
         } else {
-            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().redirect(this.env, sessionMode, url);
+            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().globalRedirect(this.env, sessionMode, url);
         }
         this.hasRedirected = true;
     }

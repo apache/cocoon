@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.8 2003/10/30 12:20:45 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.9 2003/10/30 12:31:05 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -287,15 +287,22 @@ implements SourceResolver, Serviceable, Disposable {
     }
     
     public void redirect(Environment env, 
-                                boolean sessionmode, 
-                                String newURL) 
+                         boolean sessionmode, 
+                         String newURL) 
     throws IOException {
-        this.doRedirect(env, sessionmode, newURL, false);
+        this.doRedirect(env, sessionmode, newURL, false, false);
+    }
+
+    public void globalRedirect(Environment env, 
+                               boolean sessionmode, 
+                               String newURL) 
+    throws IOException {
+        this.doRedirect(env, sessionmode, newURL, false, true);
     }
 
     public void permanentRedirect(Environment env, boolean sessionmode, String newURL) 
     throws IOException {
-        this.doRedirect(env, sessionmode, newURL, true);
+        this.doRedirect(env, sessionmode, newURL, true, false);
     }
 
    /**
@@ -304,7 +311,8 @@ implements SourceResolver, Serviceable, Disposable {
    protected void doRedirect(Environment env, 
                              boolean sessionmode, 
                              String newURL, 
-                             boolean permanent) 
+                             boolean permanent,
+                             boolean global) 
     throws IOException {
         final Request request = ObjectModelHelper.getRequest(env.getObjectModel());
         // check if session mode shall be activated
@@ -337,7 +345,7 @@ implements SourceResolver, Serviceable, Disposable {
         }
         // redirect
         final Response response = ObjectModelHelper.getResponse(env.getObjectModel());
-        env.redirect(newURL, permanent);
+        env.redirect(newURL, global, permanent);
     }
 
     /**

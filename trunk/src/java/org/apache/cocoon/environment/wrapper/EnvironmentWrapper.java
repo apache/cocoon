@@ -74,7 +74,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.13 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.14 2003/10/30 12:31:05 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -277,26 +277,12 @@ public class EnvironmentWrapper
     /**
      * Redirect the client to a new URL is not allowed
      */
-    public void redirect(boolean sessionmode, String newURL)
+    public void redirect(String newURL, boolean global, boolean permanent)
     throws IOException {
-        this.redirectURL = newURL;
-
-        // check if session mode shall be activated
-        if (sessionmode) {
-            // get session from request, or create new session
-            request.getSession(true);
-        }
-    }
-
-    /**
-     * Redirect in the first non-wrapped environment
-     */
-    public void globalRedirect(boolean sessionmode, String newURL)
-    throws IOException {
-        if (environment instanceof EnvironmentWrapper) {
-            ((EnvironmentWrapper)environment).globalRedirect(sessionmode, newURL);
+        if ( !global ) {
+            this.redirectURL = newURL;
         } else {
-            environment.redirect(sessionmode,newURL);
+            this.environment.redirect(newURL, global, permanent);
         }
     }
 

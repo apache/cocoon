@@ -65,7 +65,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.14 2003/10/30 12:20:45 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.15 2003/10/30 12:31:05 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment {
 
@@ -84,9 +84,6 @@ public class HttpEnvironment extends AbstractEnvironment {
 
     /** Cache content type as there is no getContentType() in reponse object */
     private String contentType;
-
-    /** Did we redirect ? */
-    private boolean hasRedirected = false;
 
     /**
      * Constructs a HttpEnvironment object from a HttpServletRequest
@@ -148,16 +145,13 @@ public class HttpEnvironment extends AbstractEnvironment {
       }
     }
 
-    public void redirect(String newURL, boolean permanent) throws IOException {
-        doRedirect(newURL, permanent);
-    }
-
-   /**
-    *  Redirect the client to new URL 
-    */
-    private void doRedirect(String newURL, boolean permanent) throws IOException {
-        this.hasRedirected = true;
-
+    /**
+     *  Redirect the client to new URL 
+     */
+    public void redirect(String newURL, 
+                         boolean global, 
+                         boolean permanent) 
+    throws IOException {
         // redirect
         String redirect = this.response.encodeRedirectURL(newURL);
 
@@ -182,10 +176,6 @@ public class HttpEnvironment extends AbstractEnvironment {
         } else {
             this.response.sendRedirect (redirect);
         }
-    }
-
-    public boolean hasRedirected() {
-        return this.hasRedirected;
     }
 
     /**
