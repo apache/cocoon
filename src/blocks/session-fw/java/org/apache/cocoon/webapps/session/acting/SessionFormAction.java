@@ -52,7 +52,7 @@ import java.util.Map;
  * through the "src" attribute
  * (the format is defined in AbstractValidatorAction).
  * Then the constraint-set to be used has to be identified
- * through the "validate-set" element
+ * through the "constraint-set" element
  *
  * <pre>
  *    &lt;session:form name="info_form&gt;
@@ -61,7 +61,7 @@ import java.util.Map;
  *        &lt;session:inputxml name="name" type="text" context="trackdemo" path="/user/name"/&gt;
  *      &lt;/session:content&gt;
  *      &lt;session:validate src="descriptor.xml"&gt;
- *        &lt;validate-set name="form_a_set"/&gt;
+ *        &lt;constraint-set name="form_a_set"/&gt;
  *      &lt;/session:validate&gt;
  *    &lt;/session:form&gt;
  * </pre>
@@ -93,7 +93,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionFormAction.java,v 1.6 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: SessionFormAction.java,v 1.7 2004/04/03 03:01:35 joerg Exp $
 */
 public class SessionFormAction extends FormValidatorAction implements ThreadSafe {
 

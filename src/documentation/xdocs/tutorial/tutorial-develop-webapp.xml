@@ -460,11 +460,11 @@ ALTER TABLE employee ADD
 <map:action-sets>
   <map:action-set name="process">
    <map:act type="form" action="Create Department">
-     <map:parameter name="validate-set" value="add"/>
+     <map:parameter name="constraint-set" value="add"/>
      <map:act type="dbAdd"/>
    </map:act>
    <map:act type="form" action="Update Department">
-     <map:parameter name="validate-set" value="update"/>
+     <map:parameter name="constraint-set" value="update"/>
      <map:act type="dbUpd"/>
    </map:act>
    <map:act type="dbDel" action="Delete Department"/>

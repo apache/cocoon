@@ -29,7 +29,7 @@
        |
        | The instance data is stored as an attribute with the same name as the 
        | form using an output module. Here we decide to use the RequestAttributeMap
-       |  module. This would allows
+       | module. This allows
        | a) to store instances for several forms and 
        | b) to access a particular instance and value using JXPath syntax.
        |
@@ -37,7 +37,7 @@
        | of the new Document.
        |
        +-->
-   <map:transformer name="sfinstance" 
+   <map:transformer name="simpleform-instance-extraction" 
                     logger="sitemap.transformer.simpleform-request" 
                     src="org.apache.cocoon.transformation.SimpleFormInstanceExtractionTransformer">
      <output name="request-attr-map"/>
@@ -52,13 +52,13 @@
        | this instance has been instructed to ignore validation results because 
        | looking up the instance data requires to augment the element name with
        | the form name and thus differ from the validation result names.
-	   |
+       |
        | The instance extractor places the form instances into a map with the 
        | form name as key. Furthermore, it has been instructed to create a root
-       |  element wrapping the instance data with the same name as the form. 
+       | element wrapping the instance data with the same name as the form. 
        | Hence we need to included the form's name twice in the element name 
        | used for the lookup.
-	   |
+       |
        | In addition, we may want to be able to select from a XSP if the form 
        | data should be replaced with values from the instance or from the 
        | request. Therefore, a different attribute is used to protect element 
@@ -80,7 +80,7 @@
        <from-parameter>org.apache.cocoon.components.modules.output.OutputModule</from-parameter>
        <input-module name="request-attr"/>
      </input-module>
-      </map:transformer>
+   </map:transformer>
    
   </map:transformers>
   
@@ -104,9 +104,7 @@
 
 <!--+
     | These views provide different 'standard' views to the samples.
-    |
     +-->
-
  <map:views>
   <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
@@ -123,56 +121,32 @@
 
  </map:views>
 
-
 <!--+
     | Pipelines
-    |
     +-->
-
-
  <map:pipelines>
-
   <map:pipeline>
-
-
    <!-- some redirections -->
    <map:match pattern="">
      <map:redirect-to uri="index"/>
    </map:match>
-   
-
 
    <map:match pattern="index">
-     <!--+
-         | this branch contains the failed validation.
-         | Since the "success" pipeline ends with a resource, the following is only 
-         | applied if validation has not been successful.
-         |
-         +-->
     <map:generate type="file" src="form.xml"/>    
-    <!--+
-        | extract the instance data
-        +-->
-    <map:transform type="sfinstance"/>
-    <!--+
-        | fill in the instance data 
-        +-->
+    <!-- extract the instance data -->
+    <map:transform type="simpleform-instance-extraction"/>
+    <!-- fill in the instance data -->
     <map:transform type="simpleform-instance"/>
     <map:call resource="static-page">
       <map:parameter name="file" value="form"/>
     </map:call>
    </map:match>
 
-
-
    <!-- some redirections -->
    <map:match pattern="*">
      <map:redirect-to uri="index"/>
    </map:match>
-        
+
   </map:pipeline>
  </map:pipelines>
-
 </map:sitemap>
-
-<!-- end of file -->

@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.295 2004/04/03 01:32:28 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.296 2004/04/03 03:01:35 joerg Exp $:-->
 
 <status>
  <developers>
@@ -212,7 +212,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
-    <action dev="AG" type="update">
+   <action dev="JH" type="fix" due-to="Derek Hohls">
+     Renamed validate-set to constraint-set for consistency (the element name is also constraint-set).
+   </action>
+   <action dev="AG" type="update">
      Updated bsf to 2.3.0
    </action>
    <action dev="JH" type="fix" fixes-bug="15841">

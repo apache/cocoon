@@ -65,7 +65,7 @@
      <map:act type="form-validator">
         <!-- add you favourite database action here -->
         <map:parameter name="descriptor" value="descriptor.xml"/>
-        <map:parameter name="validate-set" value="car-reservation"/>
+        <map:parameter name="constraint-set" value="car-reservation"/>
     <map:generate type="serverpages" src="OK.xsp"/>
     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
     <map:serialize/>
@@ -98,7 +98,7 @@
 
        <map:act type="form-validator">
          <map:parameter name="descriptor" value="descriptor.xml"/>
-         <map:parameter name="validate-set" value="car-reservation"/>
+         <map:parameter name="constraint-set" value="car-reservation"/>
          <!-- add you favourite database action here -->
 
          <map:generate type="file" src="OK.xml"/>
