@@ -210,23 +210,7 @@ public class ProfilingNonCachingProcessingPipeline
             }
             this.data.setSetupTime(index++, System.currentTimeMillis()-time);
 
-            // Set the mime-type
-            // the behaviour has changed from 2.1.x to 2.2 according to bug #10277
-            if (serializerMimeType != null) {
-                // there was a serializer defined in the sitemap
-                environment.setContentType(serializerMimeType);
-            } else {
-                // ask to the component itself
-                String mimeType = this.serializer.getMimeType();
-                if (mimeType != null) {
-                    environment.setContentType (mimeType);
-                } else {
-                    // No mimeType available
-                    String message = "Unable to determine MIME type for " +
-                        environment.getURIPrefix() + "/" + environment.getURI();
-                    throw new ProcessingException(message);
-                }
-            }
+            this.setMimeTypeForSerializer(environment);
         } catch (SAXException e) {
             throw new ProcessingException("Could not setup pipeline.", e);
         } catch (IOException e) {
