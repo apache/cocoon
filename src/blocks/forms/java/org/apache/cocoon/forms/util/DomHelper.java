@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.xml.EntityResolver;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.xerces.dom.NodeImpl;
+import org.apache.xerces.dom3.UserDataHandler;
 import org.apache.xerces.parsers.DOMParser;
 import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.NamespaceContext;
@@ -395,7 +396,7 @@ public class DomHelper {
             if (node != null) {
                 String location = locator.getLiteralSystemId() + ":" +
                     locator.getLineNumber() + ":" + locator.getColumnNumber();
-                node.setUserData("location", location, null);
+                node.setUserData("location", location, (UserDataHandler)null);
             }
         }
     }

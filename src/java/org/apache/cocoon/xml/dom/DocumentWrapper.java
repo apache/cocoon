@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
+import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -35,6 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.w3c.dom.UserDataHandler;
 import org.xml.sax.SAXException;
 
 
@@ -43,12 +45,15 @@ import org.xml.sax.SAXException;
  *  like XMLizable and a toString() method.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DocumentWrapper.java,v 1.7 2004/06/18 14:28:56 vgritsenko Exp $
+ * @version CVS $Id$
 */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
-    Document document = null;
+    protected final static String DOMLEVEL3_ERR_MSG = 
+        "This method was just added for providing future compatibility to JDK 1.5's DOM level 3 Document interface.";
 
+    protected final Document document;
+    
     /** Creates a new instance of DocmentWrapper */
     public DocumentWrapper(Document doc) {
         this.document = doc;
@@ -266,7 +271,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Element createElement(String tagName) throws DOMException {
         return this.document.createElement(tagName);
     }
-
+    
     /** Creates an element of the given qualified name and namespace URI.
      * @param namespaceURI The namespace URI of the element to create.
      * @param qualifiedName The qualified name of the element type to
@@ -814,13 +819,6 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
         return this.document.removeChild(oldChild);
     }
 
-    /**
-     * @since DOM Level 3
-     */
-    public Node renameNode(Node node, String namespaceURI, String qualifiedName) throws DOMException {
-        throw new UnsupportedOperationException("This method was just added for providing future compatibility to JDK 1.5's DOM level 3 Document interface.");
-    }
-
     /** Replaces the child node <code>oldChild</code> with <code>newChild</code>
      *  in the list of children, and returns the <code>oldChild</code> node.
      * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object,
@@ -895,5 +893,193 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public void setPrefix(String prefix) throws DOMException {
         this.document.setPrefix(prefix);
     }
+    
+    /**
+     * @since DOM Level 3
+     */
+    public Node renameNode(Node node, String namespaceURI, String qualifiedName) throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
 
+    /**
+     * @since DOM Level 3
+     */
+    public void normalizeDocument() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public DOMConfiguration getDomConfig() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Node adoptNode(Node source) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setDocumentURI(String uri) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getDocumentURI() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setStrictErrorChecking(boolean value) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean getStrictErrorChecking() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setXmlVersion(String version) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getXmlVersion() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setXmlStandalone(boolean value) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean getXmlStandalone() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+    
+    /**
+     * @since DOM Level 3
+     */
+    public void setXmlEncoding(String version) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getXmlEncoding() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getInputEncoding() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Object getUserData(String key) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public Object setUserData(String key, Object value, UserDataHandler handler) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+    
+    /**
+     * @since DOM Level 3
+     */
+    public Object getFeature(String feature, String version) { 
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public short compareDocumentPosition(Node other) throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getBaseURI() {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String getTextContent() throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean isDefaultNamespace(String namespaceURI) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean isEqualNode(Node arg) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public boolean isSameNode(Node other) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String lookupNamespaceURI(String prefix) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public String lookupPrefix(String namespaceURI) {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
+
+    /**
+     * @since DOM Level 3
+     */
+    public void setTextContent(String textContent) throws DOMException {
+        throw new UnsupportedOperationException(DOMLEVEL3_ERR_MSG);
+    }
 }
