@@ -84,9 +84,6 @@ public class Union extends AbstractContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
-            return;
-
         // Ensure the case widget has read its value
         this.caseWidget.readFromRequest(formContext);
 
@@ -105,7 +102,7 @@ public class Union extends AbstractContainerWidget {
                 widget = getChild(newValue);
             }
 
-            if (widget != null) {
+            if (widget != null && getCombinedState().isAcceptingInputs()) {
                 widget.readFromRequest(formContext);
             }
         }
