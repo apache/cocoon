@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.11 2003/12/03 13:10:20 crossley Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.12 2003/12/08 15:17:02 vgritsenko Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -23,6 +23,7 @@
           p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 130%; border-width: 1px; border-style: dashed; border-color: #336699; }
           p.description { padding: 10px 30px 20px 30px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
           p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
+          pre { font-size: 120%; }
         </style>
         <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
       </head>
@@ -95,7 +96,7 @@
        <span class="description"><xsl:value-of select="@error:description"/></span>
        <span class="switch" id="{@error:description}-switch" onclick="toggle('{@error:description}')">[show]</span>
        <pre id="{@error:description}" style="display: none">
-         <xsl:value-of select="."/>
+         <xsl:value-of select="translate(.,'&#13;',' ')"/>
        </pre>
       </p>
      </xsl:when>
