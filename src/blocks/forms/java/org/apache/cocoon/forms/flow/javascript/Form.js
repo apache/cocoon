@@ -115,10 +115,17 @@ Form.prototype.showForm = function(uri, bizData, fun, ttl) {
 
     var comingBack = false;
     var bookmark = cocoon.createWebContinuation(ttl);
-    
+
     if (comingBack) {
         // We come back to the bookmark: process the form
         var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
+
+        // Prematurely add the bizData as in the object model so that event listeners can use it 	 
+        // (the same is done by cocoon.sendPage()) 	 
+        // FIXME : hack needed because FOM doesn't provide access to the object model 	 
+        var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext); 	 
+        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData); 	 
+
         finished = this.form.process(formContext);
         if (finished) {
             this.isValid = this.form.isValid();
