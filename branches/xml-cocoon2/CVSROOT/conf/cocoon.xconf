@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <cocoon version="2.0">
 
-<!-- ===================== Cocoon Configurations ========================= -->
+<!-- ===================== Cocoon Configurations =========================== -->
 
   <component  role="parser"    class="org.apache.cocoon.components.parser.XercesParser"/>
+  <component  role="store"     class="org.apache.cocoon.components.store.MemoryStore/>
 
   <!-- Start XSP -->
   <component role="factory"
@@ -74,12 +75,20 @@
   <generator  name="file"      class="org.apache.cocoon.generators.FileGenerator"/>
   <generator  name="request"   class="org.apache.cocoon.generators.RequestGenerator"/>
   <generator  name="directory" class="org.apache.cocoon.generators.DirectoryGenerator"/>
+  
   <filter     name="xslt"      class="org.apache.cocoon.filters.XalanFilter"/>
+  <filter     name="log"       class="org.apache.cocoon.filters.LogFilter"/>
+  <filter     name="sql"       class="org.apache.cocoon.filters.SQLFilter"/>
+  <filter     name="xinclude"  class="org.apache.cocoon.filters.XIncludeFilter"/>
+  
   <serializer name="xml"       class="org.apache.cocoon.serializers.XMLSerializer"/>
   <serializer name="html"      class="org.apache.cocoon.serializers.HTMLSerializer"/>
+  <serializer name="fo2pdf"    class="org.apache.cocoon.serializers.FO2PDFSerializer"/>
+  <serializer name="svg2jpg"   class="org.apache.cocoon.serializers.SVGSerializer"/>
+  <serializer name="image"     class="org.apache.cocoon.serializers.ImageSerializer"/>
   
-<!-- ============================== Sitemap ============================ -->
-    
+<!-- ============================== Sitemap ================================ -->
+  
   <sitemap>
     <partition>
       <process uri="hello" source="samples/documents/hello-page.xml">
@@ -121,4 +130,5 @@
 
     </partition>
   </sitemap>
+  
 </cocoon>
