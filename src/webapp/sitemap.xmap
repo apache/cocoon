@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.11 2003/04/19 20:38:22 cziegeler Exp $
+    | CVS $Id: sitemap.xmap,v 1.12 2003/05/01 18:40:35 stephan Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -116,9 +116,9 @@
      <encoding>ASCII</encoding>
      <omit-xml-declaration>yes</omit-xml-declaration>
     </map:serializer>
-    <map:serializer logger="sitemap.serializer.svgxml" mime-type="image/svg-xml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer">
-     <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
-     <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
+    <map:serializer logger="sitemap.serializer.svgxml" mime-type="image/svg+xml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer">
+     <doctype-public>-//W3C//DTD SVG 1.0//EN</doctype-public>
+     <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
     </map:serializer>
     <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-grow="2" pool-max="64" pool-min="2" src="org.apache.cocoon.serialization.XMLSerializer">
       <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
