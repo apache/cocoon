@@ -57,9 +57,7 @@ import java.util.Locale;
  * formatting. It simply uses String.valueOf() and Long.parseLong().
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PlainIntegerConvertor.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $ 
- *
- * @version CVS $Id: PlainIntegerConvertor.java,v 1.2 2003/12/31 17:15:46 vgritsenko Exp $
+ * @version CVS $Id: PlainIntegerConvertor.java,v 1.3 2004/01/30 00:31:48 joerg Exp $ 
  */
 public class PlainIntegerConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
