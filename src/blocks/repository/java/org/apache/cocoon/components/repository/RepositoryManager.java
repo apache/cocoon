@@ -111,7 +111,6 @@ implements Serviceable, Disposable, Configurable, Component, ThreadSafe {
                                            this.getLogger(),
                                            null,
                                            this.manager,
-                                           null,
                                            repoConfiguration,
                                            true);
         

@@ -108,7 +108,6 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
         LifecycleHelper lh = new LifecycleHelper(this.getLogger(),
                                                  null,
                                                  this.manager,
-                                                 null,
                                                  null);
         lh.setupComponent(this.propertyHelper, true);
         lh.setupComponent(this.transactionHelper, true);

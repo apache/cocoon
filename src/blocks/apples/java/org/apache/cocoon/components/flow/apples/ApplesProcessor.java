@@ -18,7 +18,6 @@ package org.apache.cocoon.components.flow.apples;
 import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -64,8 +63,9 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         }
 
         LifecycleHelper.setupComponent( app, getLogger(), appleContext,
-                                        this.serviceManager, new WrapperComponentManager(this.serviceManager),  
-                                        null, null, true);
+                                        this.serviceManager,  
+                                        null,
+                                        true);
         
         processApple(params, redirector, app, wk);
     }

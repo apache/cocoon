@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -371,8 +370,6 @@ public class FOM_Cocoon extends ScriptableObject {
              this.getLogger(),
              this.getAvalonContext(),
              this.getServiceManager(),
-             new WrapperComponentManager(this.getServiceManager()),
-             null,// roleManager
              null,// configuration
              true);
          return obj;

@@ -45,7 +45,7 @@ import java.util.Locale;
  *  <li><strong>attribute-name</strong>: name of the request attribute in which the form instance should be stored
  * </ul>
  * 
- * @version $Id: HandleFormSubmitAction.java,v 1.16 2004/03/09 13:54:22 reinhard Exp $
+ * @version $Id$
  */
 public class HandleFormSubmitAction extends AbstractWoodyAction implements Action, ThreadSafe {
 
@@ -71,7 +71,7 @@ public class HandleFormSubmitAction extends AbstractWoodyAction implements Actio
                 // TODO cache these classes
                 Class clazz = Class.forName(formHandlerClassName);
                 formHandler = (FormHandler)clazz.newInstance();
-                LifecycleHelper.setupComponent(formHandler, null, null, manager, null, null);
+                LifecycleHelper.setupComponent(formHandler, null, null, manager, null);
                 form.setFormHandler(formHandler);
             }
 

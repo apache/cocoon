@@ -27,7 +27,6 @@ import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
@@ -52,7 +51,7 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.15 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
 public class DefaultTreeBuilder
         extends AbstractLogEnabled
@@ -174,8 +173,6 @@ public class DefaultTreeBuilder
             getLogger(),
             this.context,
             this.ownManager,
-            new WrapperComponentManager(this.ownManager),
-            this.ownRoleManager,
             config.getChild("nodes", false),
             true
         );
@@ -336,7 +333,6 @@ public class DefaultTreeBuilder
         this.lifecycle = new LifecycleHelper(getLogger(),
             this.context,
             this.processorManager,
-            this.ownRoleManager,
             null // configuration
         );
 

@@ -34,7 +34,7 @@ import org.apache.cocoon.components.LifecycleHelper;
 /**
  * A very simple ServiceSelector for ThreadSafe services.
  * 
- * @version $Id: SimpleServiceSelector.java,v 1.9 2004/03/09 13:54:24 reinhard Exp $
+ * @version $Id$
  */
 public class SimpleServiceSelector extends AbstractLogEnabled implements ServiceSelector, Configurable, LogEnabled,
         Serviceable, Disposable {
@@ -71,7 +71,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
             Object component = null;
             try {
                 component = clazz.newInstance();
-                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, null, componentConfs[i]);
+                LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, componentConfs[i]);
                 lifecycleHelper.setupComponent(component);
             } catch (Exception e) {
                 throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i].getLocation(), e);
