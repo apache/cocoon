@@ -150,18 +150,6 @@
       	<name>uri</name>
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/news/portal-bottom.html</value>
       </attribute>
-      <attribute>
-      	<name>image-dir</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">../../petstore/images</value>
-      </attribute>
-      <attribute>
-      	<name>image-include</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">.jpg</value>
-      </attribute>
-      <attribute>
-      	<name>image-uri-prefix</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">../petstore/images</value>
-      </attribute>
    </coplet-data>
 
    <coplet-data id="Gallery" name="standard">
@@ -170,6 +158,18 @@
       <attribute>
       	<name>uri</name>
       	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/gallery</value>
+      </attribute>
+      <attribute>
+      	<name>image-dir</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">gallery/samplepics</value>
+      </attribute>
+      <attribute>
+      	<name>image-include</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">.jpg</value>
+      </attribute>
+      <attribute>
+      	<name>image-uri-prefix</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">coplets/gallery/images</value>
       </attribute>
    </coplet-data>
    <coplet-data id="GalleryViewer" name="standard">
