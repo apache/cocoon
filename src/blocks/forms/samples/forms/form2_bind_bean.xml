@@ -50,7 +50,7 @@
     <fb:value id="cntr"   path="phoneCountry"/>
   </fb:aggregate>
 
-  <fb:multi-value id="drinks" parent-path="." row-path="drinks" direction="load"/>
+  <fb:multi-value id="drinks" parent-path="." row-path="drinks" direction="both"/>
 
   <!--
     - Repeater requires unique identification mechanism of the row-nodes.
