@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.template.jxtg.script;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
@@ -40,24 +43,45 @@ public class Parser implements ContentHandler, LexicalHandler {
     Locator charLocation;
     StringBuffer charBuf;
 
-    final static String TEMPLATE = "template";
-    final static String FOR_EACH = "forEach";
-    final static String IF = "if";
-    final static String CHOOSE = "choose";
-    final static String WHEN = "when";
-    final static String OTHERWISE = "otherwise";
-    final static String OUT = "out";
-    final static String IMPORT = "import";
-    final static String SET = "set";
-    final static String MACRO = "macro";
-    final static String EVALBODY = "evalBody";
-    final static String EVAL = "eval";
-    final static String PARAMETER = "parameter";
-    final static String FORMAT_NUMBER = "formatNumber";
-    final static String FORMAT_DATE = "formatDate";
-    final static String COMMENT = "comment";
+    final static Map instructions = new HashMap();
+    final static Class[] parametersClasses = new Class[] { StartElement.class,
+            Attributes.class, Stack.class };
 
     public static final Locator NULL_LOCATOR = new LocatorImpl();
+
+    static {
+        try {
+            registerInstruction("template", StartTemplate.class.getName());
+            registerInstruction("forEach", StartForEach.class.getName());
+            registerInstruction("if", StartIf.class.getName());
+            registerInstruction("choose", StartChoose.class.getName());
+            registerInstruction("when", StartWhen.class.getName());
+            registerInstruction("otherwise", StartOtherwise.class.getName());
+            registerInstruction("out", StartOut.class.getName());
+            registerInstruction("import", StartImport.class.getName());
+            registerInstruction("set", StartSet.class.getName());
+            registerInstruction("macro", StartDefine.class.getName());
+            registerInstruction("evalBody", StartEvalBody.class.getName());
+            registerInstruction("eval", StartEval.class.getName());
+            registerInstruction("parameter", StartParameter.class.getName());
+            registerInstruction("formatNumber", StartFormatNumber.class
+                    .getName());
+            registerInstruction("formatDate", StartFormatDate.class.getName());
+            registerInstruction("comment", StartComment.class.getName());
+        } catch (Exception e) {
+            // we'll do something more professional with that when the configuration moves
+            // to the sitemap
+            e.printStackTrace();
+        }
+    }
+
+    public static void registerInstruction(String instructionName,
+            String className) throws ClassNotFoundException, SecurityException,
+            NoSuchMethodException {
+        Class clazz = Class.forName(className);
+        Constructor constructor = clazz.getConstructor(parametersClasses);
+        instructions.put(instructionName, constructor);
+    }
 
     public Parser() {
         // EMPTY
@@ -106,7 +130,8 @@ public class Parser implements ContentHandler, LexicalHandler {
             throws SAXException {
         if (charBuf == null) {
             charBuf = new StringBuffer(length);
-            charLocation = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
+            charLocation = locator != null ? new LocatorImpl(locator)
+                    : NULL_LOCATOR;
         }
         charBuf.append(ch, start, length);
     }
@@ -179,48 +204,26 @@ public class Parser implements ContentHandler, LexicalHandler {
             if (StringUtils.equals(attributeURI, JXTemplateGenerator.NS)) {
                 getStartEvent().getTemplateProperties().put(
                         elementAttributes.getLocalName(i),
-                        JXTExpression.compileExpr(elementAttributes.getValue(i), null,
-                                                  locator));
+                        JXTExpression.compileExpr(
+                                elementAttributes.getValue(i), null, locator));
                 elementAttributes.removeAttribute(i--);
             }
         }
         StartElement startElement = new StartElement(locator, namespaceURI,
                 localName, qname, elementAttributes);
         if (JXTemplateGenerator.NS.equals(namespaceURI)) {
-            if (localName.equals(FOR_EACH)) {
-                newEvent = new StartForEach(startElement, attrs, stack);
-            } else if (localName.equals(FORMAT_NUMBER)) {
-                newEvent = new StartFormatNumber(startElement, attrs, stack);
-            } else if (localName.equals(FORMAT_DATE)) {
-                newEvent = new StartFormatDate(startElement, attrs, stack);
-            } else if (localName.equals(CHOOSE)) {
-                newEvent = new StartChoose(startElement, attrs, stack);
-            } else if (localName.equals(WHEN)) {
-                newEvent = new StartWhen(startElement, attrs, stack);
-            } else if (localName.equals(OUT)) {
-                newEvent = new StartOut(startElement, attrs, stack);
-            } else if (localName.equals(OTHERWISE)) {
-                newEvent = new StartOtherwise(startElement, attrs, stack);
-            } else if (localName.equals(IF)) {
-                newEvent = new StartIf(startElement, attrs, stack);
-            } else if (localName.equals(MACRO)) {
-                newEvent = new StartDefine(startElement, attrs, stack);
-            } else if (localName.equals(PARAMETER)) {
-                newEvent = new StartParameter(startElement, attrs, stack);
-            } else if (localName.equals(EVALBODY)) {
-                newEvent = new StartEvalBody(startElement, attrs, stack);
-            } else if (localName.equals(EVAL)) {
-                newEvent = new StartEval(startElement, attrs, stack);
-            } else if (localName.equals(SET)) {
-                newEvent = new StartSet(startElement, attrs, stack);
-            } else if (localName.equals(IMPORT)) {
-                newEvent = new StartImport(startElement, attrs, stack);
-            } else if (localName.equals(TEMPLATE)) {
-                newEvent = new StartTemplate(startElement, attrs, stack);
-            } else if (localName.equals(COMMENT)) {
-                newEvent = new StartComment(startElement, attrs, stack);
-            } else {
-                throw new SAXParseException("unrecognized tag: " + localName, locator, null);
+            Constructor constructor = (Constructor) instructions.get(localName);
+            if (constructor == null) {
+                throw new SAXParseException("unrecognized tag: " + localName,
+                        locator, null);
+            }
+
+            Object[] arguments = new Object[] { startElement, attrs, stack };
+            try {
+                newEvent = (Event) constructor.newInstance(arguments);
+            } catch (Exception e) {
+                throw new SAXParseException("error creating instruction: "
+                        + localName, locator, e);
             }
         } else {
             newEvent = startElement;
@@ -235,7 +238,7 @@ public class Parser implements ContentHandler, LexicalHandler {
     }
 
     public void comment(char ch[], int start, int length) throws SAXException {
-        //DO NOTHING
+        // DO NOTHING
     }
 
     public void endCDATA() throws SAXException {
@@ -263,8 +266,3 @@ public class Parser implements ContentHandler, LexicalHandler {
         addEvent(new StartEntity(locator, name));
     }
 }
-
-
-
-
-
