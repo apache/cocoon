@@ -40,7 +40,7 @@
    browser plugin for smoother integration)
   </sample>
   
-  <sample name="Nover FO formatting" url="fo/darkness-novel.xml">
+  <sample name="Novel FO formatting" url="fo/darkness-novel.xml">
    In this example, part of Joseph Conrad's "The Heart of Darkness" novel
    is taken from its orginal style-free XML format and rendered into PDF
    using an XML->FO stylesheet.

@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 
-<!-- Written by James Tauber, Edited by Stefano Mazzocchi for Cocoon -->
-
 <?cocoon-format type="text/xslfo"?>
 
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -16,18 +14,18 @@
    <fo:sequence-specifier-repeating page-master-first="one" page-master-repeating="one"/>
   </fo:sequence-specification>
   
-  <fo:flow font-size="14pt" line-height="14pt">
+  <fo:flow font-size="12pt" line-height="12pt">
  
    <fo:block text-align="centered" font-size="24pt" line-height="28pt">Welcome 
    to Cocoon</fo:block>
 
-   <fo:block space-before.optimum="12pt" text-align="justified">This is an 
-   example of James Tauber's <fo:inline-sequence font-weight="bold">FOP</fo:inline-sequence>
-   formatter that formats XSL formatting objects in PDF. It is early days, but 
-   FOP is increasingly supporting more and more formatting objects.</fo:block>
+   <fo:block space-before.optimum="30pt" text-align="justified">This is an 
+   example of the use of XSL formatting objects rendered in PDF. Cocoon uses
+   the Apache FOP project to do this. It is early days, but FOP is increasingly 
+   supporting more and more formatting objects.</fo:block>
   
-   <fo:block text-align="justified" space-before.optimum="12pt">What follows 
-   is a list.</fo:block>
+   <fo:block text-align="justified" space-before.optimum="30pt">What follows 
+   is a list:</fo:block>
   
    <fo:list-block space-before.optimum="6pt">
     <fo:list-item space-before.optimum="12pt">
@@ -48,7 +46,7 @@
      <fo:list-item-body>
       <fo:block text-align="justified">This is item two. It has two blocks in 
       the body. This is the first.</fo:block>
-      <fo:block text-align="justified">This is the second.</fo:block>
+      <fo:block text-align="justified" space-before.optimum="6pt">This is the second.</fo:block>
      </fo:list-item-body>
     </fo:list-item>
  
@@ -61,13 +59,48 @@
      </fo:list-item-body>
     </fo:list-item>
    </fo:list-block>
-   
-   <fo:block text-align="justified" space-before.optimum="12pt">This is an 
-   example of FOP. This paragraph has to be long enough that it wraps so I 
+
+   <fo:block text-align="justified" space-before.optimum="30pt">Now a table:</fo:block>
+      
+   <fo:table space-before.optimum="6pt" text-align="centered">
+    <fo:table-column column-width="150pt"/>
+    <fo:table-column column-width="150pt"/>   
+    <fo:table-body>
+     <fo:table-row space-before.optimum="6pt">
+      <fo:table-cell>
+       <fo:block>Cell (1,1)</fo:block>
+      </fo:table-cell>
+      <fo:table-cell>
+       <fo:block>Cell (1,2)</fo:block>
+      </fo:table-cell>
+     </fo:table-row>
+     <fo:table-row space-before.optimum="6pt">
+      <fo:table-cell>
+       <fo:block>Cell (2,1)</fo:block>
+      </fo:table-cell>
+      <fo:table-cell>
+       <fo:block>Cell (2,2)</fo:block>
+      </fo:table-cell>
+     </fo:table-row>
+     <fo:table-row space-before.optimum="6pt">
+      <fo:table-cell>
+       <fo:block>Cell (3,1)</fo:block>
+      </fo:table-cell>
+      <fo:table-cell>
+       <fo:block>Cell (3,2)</fo:block>
+      </fo:table-cell>
+     </fo:table-row>
+    </fo:table-body>
+   </fo:table>
+
+   <fo:block text-align="justified" space-before.optimum="30pt">This is a
+   text paragraph. This paragraph has to be long enough that it wraps so I 
    can test out text-align. That means I have to keep going and going until 
    I get at least a few lines to play with. I wonder if that's enough. Let 
    me go and check. Yep.</fo:block>
    
+   <!-- <fo:display-graphic href="c:\cocoon.jpg"/> -->
+      
   </fo:flow>
   
  </fo:page-sequence>
