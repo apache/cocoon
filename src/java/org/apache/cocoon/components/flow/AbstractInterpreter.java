@@ -84,7 +84,7 @@ import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.15 2004/01/19 12:46:47 unico Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.16 2004/01/19 13:05:11 antonio Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Serviceable, Contextualizable, Interpreter,
@@ -262,16 +262,14 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
                           Environment environment)
         throws Exception
     {
-        if (SourceUtil.indexOfSchemeColon(uri) != -1) {
+        if (SourceUtil.indexOfSchemeColon(uri) == -1) {
+            uri = "cocoon:/" + uri;
+            Map objectModel = environment.getObjectModel();
+            FlowHelper.setWebContinuation(objectModel, continuation);
+            FlowHelper.setContextObject(objectModel, bizData);
+            PipelinesNode.getRedirector(environment).redirect(false, uri);
+        } else {
             throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
-        
-        uri = "cocoon:/" + uri;
-        
-        Map objectModel = environment.getObjectModel();
-        FlowHelper.setWebContinuation(objectModel, continuation);
-        FlowHelper.setContextObject(objectModel, bizData);
-        PipelinesNode.getRedirector(environment).redirect(false, uri);
-        //process(uri, bizData, null, environment);
     }
 }
