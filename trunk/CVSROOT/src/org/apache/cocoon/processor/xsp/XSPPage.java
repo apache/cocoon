@@ -1,4 +1,4 @@
-/*-- $Id: XSPPage.java,v 1.3 2000-01-03 01:42:50 stefano Exp $ -- 
+/*-- $Id: XSPPage.java,v 1.4 2000-01-05 13:49:17 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:42:50 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-05 13:49:17 $
  */
 public abstract class XSPPage extends AbstractProducer {
   protected Parser xspParser;
@@ -152,6 +152,15 @@ public abstract class XSPPage extends AbstractProducer {
       for (int i = 0; i < elements.length; i++) {
         fragment.appendChild(xspExpr(elements[i], factory));
       }
+
+      return fragment;
+    }
+
+    // Convertible to DOM
+    if (v instanceof XObject){
+      DocumentFragment fragment = factory.createDocumentFragment();
+      ((XObject) v).toDOM(fragment);
+      return fragment;
     }
 
     // Give up: hope it's a string or has a meaningful string representation
