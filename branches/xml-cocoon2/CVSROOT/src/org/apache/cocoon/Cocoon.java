@@ -32,25 +32,24 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapManager;
+import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Cocoon Main Class
- *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.20 $ $Date: 2000-08-31 07:14:18 $
+ * @version CVS $Revision: 1.4.2.21 $ $Date: 2000-08-31 15:58:54 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor {
 
     /* Cocoon Default Strings */
-    
     public static final String NAME               = "@name@";
     public static final String VERSION            = "@version@";
+    public static final String CONF_VERSION       = "2.0";
     public static final String YEAR               = "@year@";
     public static final String RELOAD_PARAM       = "cocoon-reload";
     public static final String SHOWTIME_PARAM     = "cocoon-showtime";
@@ -58,37 +57,46 @@ public class Cocoon
     public static final String TEMPDIR_PROPERTY   = "org.apache.cocoon.properties.tempdir";
     public static final String DEFAULT_CONF_FILE  = "cocoon.xconf";
     public static final String DEFAULT_DEST_DIR   = "./site";
+    public static final String DEFAULT_TEMP_DIR   = "./work";
     public static final String LINK_CONTENT_TYPE  = "x-application/x-cocoon-links";
     public static final String LINK_VIEW          = "links";
     public static final String LINK_CRAWLING_ROLE = "static";
+    public static final String PARSER_PROPERTY    = "org.apache.cocoon.components.parser.Parser";
+    public static final String DEFAULT_PARSER     = "org.apache.cocoon.components.parser.XercesParser";
     
     /** The table of role-class */
     private Hashtable components = new Hashtable();
+    
     /** The table of role-configuration */
     private Hashtable configurations = new Hashtable();
+    
     /** The configuration file */ 
     private File configurationFile = null; 
+    
     /** The sitemap file */ 
     private String sitemapFileName = null; 
+    
     /** The configuration tree */
     private Configuration configuration = null;
+    
     /** The sitemap manager */
     private SitemapManager sitemapManager = null;
+    
     /** The root uri/path */
     private URL root = null;
         
     /**
      * Create a new <code>Cocoon</code> instance.
      */
-    protected Cocoon()
-    throws ConfigurationException {
-        super();
-        
+    protected Cocoon() throws ConfigurationException {
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
-        String parser = System.getProperty("org.apache.cocoon.components.parser.Parser",
-                            "org.apache.cocoon.components.parser.XercesParser");
-        this.components.put("parser", this.getClass(parser,null));
+        String parser = System.getProperty(PARSER_PROPERTY, DEFAULT_PARSER);
+        try {
+            this.components.put("parser", ClassUtils.getClass(parser));
+        } catch (Exception e) {
+            throw new ConfigurationException("Error creating parser (" + parser + ")", null);
+        }
     }
     
     /**
@@ -107,9 +115,11 @@ public class Cocoon
     public Cocoon(File configurationFile)
     throws SAXException, IOException, ConfigurationException {
         this();
+        
         this.configurationFile = configurationFile;
-        if (!configurationFile.isFile())
+        if (!configurationFile.isFile()) {
             throw new FileNotFoundException(configurationFile.toString());
+        }
             
         Parser p = (Parser) this.getComponent("parser");
         SAXConfigurationBuilder b = new SAXConfigurationBuilder();
@@ -131,62 +141,79 @@ public class Cocoon
     }
 
     /**
+     * Configure this <code>Cocoon</code> instance.
+     */
+    public void setConfiguration(Configuration conf)
+    throws ConfigurationException {
+    
+        this.configuration = conf;
+        
+        if (!"cocoon".equals(conf.getName())) {
+            throw new ConfigurationException("Invalid configuration file", conf);
+        }
+        if (!CONF_VERSION.equals(conf.getAttribute("version"))) {
+            throw new ConfigurationException("Invalid configuration schema version. Must be '" 
+                + CONF_VERSION + "'.", conf);
+        }
+            
+        // Set components
+        Enumeration e = conf.getConfigurations("component");
+        while (e.hasMoreElements()) {
+            Configuration co = (Configuration) e.nextElement();
+            String role = co.getAttribute("role");
+            String className = co.getAttribute("class");
+            try {
+                this.components.put(role, ClassUtils.getClass(className));
+                this.configurations.put(role, co);
+            } catch (Exception ex) {
+                throw new ConfigurationException("Cannot load class " + className + ": " + ex.getMessage(), co);
+            }
+        }
+
+        // Create the sitemap
+        Configuration sconf = conf.getConfiguration("sitemap");
+        if (sconf == null) {
+            throw new ConfigurationException("No sitemap configuration", conf);
+        }
+        this.sitemapManager = new SitemapManager();
+        this.sitemapManager.setComponentManager(this);
+        this.sitemapManager.setConfiguration(conf);
+        this.sitemapFileName = sconf.getAttribute("file");
+        if (this.sitemapFileName == null) {
+            throw new ConfigurationException("No sitemap file name", conf);
+        }
+    }
+
+    /**
      * Get the <code>Component</code> associated with the given role.
      */
     public Component getComponent(String role)
     throws ComponentNotFoundException, ComponentNotAccessibleException {
-        if (role == null) throw new ComponentNotFoundException("Null role");
-        if (role.equals("cocoon")) return (this);
+
+        if (role == null) throw new ComponentNotFoundException("Role cannot be null");
+        if (role.equals("cocoon")) return this;
+        
         Class c = (Class) this.components.get(role);
-        if (c == null)
+        if (c == null) {
             throw new ComponentNotFoundException("Can't find component " + role);
+        }
+        
         try {
             Component comp = (Component) c.newInstance();
             if (comp instanceof Composer)
                 ((Composer)comp).setComponentManager(this);
             if (comp instanceof Configurable) {
                 Configuration conf = (Configuration) this.configurations.get(role);
-                if (conf!=null) ((Configurable)comp).setConfiguration(conf);
+                if (conf != null) ((Configurable) comp).setConfiguration(conf);
             }
-            return(comp);
+            return comp;
         } catch (Exception e) {
             throw new ComponentNotAccessibleException("Can't access class '" +
                         c.getName() + "' with role '" + role + "' due to a " +
                         e.getClass().getName() + "[" + e.getMessage() + "]", e);
         }
     }
-
-    /**
-     * Configure this <code>Cocoon</code> instance.
-     */
-    public void setConfiguration(Configuration conf)
-     throws ConfigurationException {
-        this.configuration = conf;
-        if (!conf.getName().equals("cocoon"))
-            throw new ConfigurationException("Invalid configuration file", conf);
-        if (!conf.getAttribute("version").equals("2.0"))
-            throw new ConfigurationException("Invalid version", conf);
-            
-        // Set components
-        Enumeration e = conf.getConfigurations("component");
-        while (e.hasMoreElements()) {
-            Configuration co = (Configuration) e.nextElement();
-            String ro = co.getAttribute("role");
-            String cl = co.getAttribute("class");
-            this.components.put(ro, this.getClass(cl,co));
-            this.configurations.put(ro,co);
-        }
-
-        // Create the sitemap
-        Configuration sconf = conf.getConfiguration("sitemap");
-        if (sconf==null)
-            throw new ConfigurationException("No sitemap configuration",conf);
-        this.sitemapManager = new SitemapManager();
-        this.sitemapManager.setComponentManager(this);
-        this.sitemapManager.setConfiguration(conf);
-        this.sitemapFileName = sconf.getAttribute("file");
-    }
-
+    
     /**
      * Queries the class to estimate its ergodic period termination.
      */
@@ -195,26 +222,11 @@ public class Cocoon
     }
 
     /**
-     * Process the given <code>Environment</code> producing the output
+     * Process the given <code>Environment</code> to produce the output.
      */
     public boolean process(Environment environment) 
-    throws Exception  {
-        String s = environment.resolveEntity(null,this.sitemapFileName).getSystemId();
-        URL url = new URL (s);
-        s = url.getFile();
-        return this.sitemapManager.invoke (environment, "", s, true);
-    }
-
-    /** Get a new class */
-    private Class getClass(String className, Configuration conf)
-    throws ConfigurationException {
-        // This is better than Class.forName() because components should be
-        // loaded by the same classloader that loaded Cocoon (they should
-        // be in the same jar file, or directory.
-        try {
-            return(this.getClass().getClassLoader().loadClass(className));
-        } catch (ClassNotFoundException e) {
-            throw new ConfigurationException("Cannot load class " + className, conf);
-        }
+    throws Exception {
+        String file = new URL(environment.resolveEntity(null, this.sitemapFileName).getSystemId()).getFile();
+        return this.sitemapManager.invoke(environment, "", file, true);
     }
 }
