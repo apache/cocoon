@@ -82,7 +82,7 @@
       // Cause com.xyz.MyClass to be compiled and loaded:
       importClass(Packages.com.xyz.MyClass); 
 
-      var obj = MyClass("foo", 123); // call a constructor
+      var obj = new MyClass("foo", 123); // call a constructor
 
       obj.someMethod();              // call a method
 
