@@ -52,14 +52,12 @@ package org.apache.cocoon.generation;
 
 import java.io.StringReader;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 import org.apache.excalibur.xml.sax.SAXParser;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -72,7 +70,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: RequestAttributeGenerator.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ * @version CVS $Id: RequestAttributeGenerator.java,v 1.3 2003/09/03 13:35:20 cziegeler Exp $
  *
  * @cocoon:name                      req-attr
  * @cocoon:status                    scratchpad
@@ -141,9 +139,9 @@ public class RequestAttributeGenerator extends ComposerGenerator {
         String contentType = null;
         InputSource inputSource;
 
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
-        HttpServletResponse response = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-
+        final Request request = ObjectModelHelper.getRequest(this.objectModel);
+        final Response response = ObjectModelHelper.getResponse(this.objectModel);
+        
         byte[] xml_data = (byte[]) request.getAttribute(parameter);
         if (xml_data == null) {
             throw new ProcessingException("request-attribute " +
@@ -192,7 +190,7 @@ public class RequestAttributeGenerator extends ComposerGenerator {
      * @return              The characterEncoding value
      * @since 1.0
      */
-    protected String getCharacterEncoding(HttpServletResponse res, String contentType) {
+    protected String getCharacterEncoding(Response res, String contentType) {
         String charencoding = null;
         String charset = "charset=";
         if (contentType == null) {
