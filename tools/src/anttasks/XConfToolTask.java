@@ -85,7 +85,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.10 $ $Date: 2003/11/23 10:13:11 $
+ * @version CVS $Revision: 1.11 $ $Date: 2004/01/21 17:05:09 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -318,24 +318,21 @@ public final class XConfToolTask extends MatchingTask {
 
             if ((xpath!=null) && (xpath.length()>0)) {
                 nodes = XPathAPI.selectNodeList(root, xpath);
-                if (nodes.getLength()!=1) {
+                if (nodes.getLength()==0) {
                     log("Error in: "+file);
-                    throw new IOException("XPath ("+xpath+
-                                          ") returned not one node, but "+
-                                          nodes.getLength()+" nodes");
+                    throw new IOException("XPath ("+xpath+") returned zero nodes");
                 }
                 before = nodes.item(0);
             } else {
                 xpath = getAttribute(elem, "insert-after", replaceProperties);
                 if ((xpath!=null) && (xpath.length()>0)) {
                     nodes = XPathAPI.selectNodeList(root, xpath);
-                    if (nodes.getLength()!=1) {
+                    if (nodes.getLength()==0) {
                         log("Error in: "+file);
-                        throw new IOException("XPath ("+xpath+
-                                              ") returned not one node, but "+
-                                              nodes.getLength()+" nodes");
+                        throw new IOException("XPath ("+xpath+") zero nodes.");
                     }
-                    before = nodes.item(0).getNextSibling();
+                    
+                    before = nodes.item(nodes.getLength()-1).getNextSibling();
                 }
             }
 
