@@ -54,14 +54,14 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * A CacheStorageProxy is an interface object between the {@link CacheManager}
+ * A CacheStorageProxy is an interface object between the {@link IncludeCacheManager}
  * and the real store caching the content.
- * Currently you can use the {@link DefaultCacheStorageProxy} that uses the
- * usual store or the {@link ModifiableSourceCacheStorageProxy} that
+ * Currently you can use the {@link StoreIncludeCacheStorageProxy} that uses the
+ * usual store or the {@link ModifiableSourceIncludeCacheStorageProxy} that
  * uses a configured source.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: IncludeCacheStorageProxy.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ *  @version CVS $Id: IncludeCacheStorageProxy.java,v 1.2 2003/03/11 17:07:44 vgritsenko Exp $
  *  @since   2.1
  */
 public interface IncludeCacheStorageProxy {
@@ -87,5 +87,4 @@ public interface IncludeCacheStorageProxy {
      * @param uri Absolute URI specifying the content
      */
     void remove(String uri);
-    
 }
