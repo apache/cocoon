@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="programming-languages">
+  <!--+
+      | Programming Languages for the XSP pages
+      +-->
+  <programming-languages>
+    <java-language name="java" logger="core.language.java">
+
+      <!-- Specifies which formatter to use to format source code.
+           This parameter is optional.
+           It is commented out because of bug #5689: Java "code-formatter"
+           incorrectly formats double values -->
+      <!--parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/-->
+
+      <!-- A singleton-like implementation of a ClassLoader -->
+      <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+
+      <!--+
+          | Specifies which Java compiler to use. Possible variants are:
+          |
+          |  - EclipseJavaCompiler: the Eclipse JTD java compiler
+          |  - Javac: the java compiler that comes with JDK
+          |  - Jikes: the Jikes java compiler
+          |  - Pizza: the Pizza java compiler
+          |
+          | NOTE: the Eclipse JTD is the only java compiler that is capable
+          |       of imports classes thru the context classloader. All other
+          |       compilers import classes from the JVM classpath and might
+          |       normally result in ClassNotFound problems at compilation
+          |       time. It is *HIGHLY* suggested that you use this compiler
+          |       or you might experience problems in some servlet containers.
+          +-->
+      <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.EclipseJavaCompiler"/>
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/-->
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Jikes"/-->
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Pizza"/-->
+
+    </java-language>
+
+    <!-- Interpreted JavaScript language -->
+    <js-language name="js" logger="core.language.js"/>
+  </programming-languages>
+</xconf>

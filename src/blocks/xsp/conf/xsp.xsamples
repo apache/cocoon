@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='XSP']">
+  <group name="XSP">
+    <sample href="xsp/" name="Extensible Server Pages">
+      Extensible Server Pages, or XSP.
+    </sample>
+  </group>
+</xsamples>

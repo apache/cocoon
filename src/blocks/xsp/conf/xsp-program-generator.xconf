@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="program-generator">
+  <!--+
+      | Program Generator
+      |
+      | The ProgamGenerator builds programs from a XML document written in a
+      | MarkupLanguage.
+      |
+      |    auto-reload: whether the system should check if the source was
+      |                 modified and reload of consequence.
+      |    root-package: the java package to use for the generated classes
+      |    preload: whether the system should preload the necessary components
+      +-->
+  <program-generator logger="core.program-generator">
+    <parameter name="auto-reload" value="true"/>
+    <parameter name="root-package" value="org.apache.cocoon.www"/>
+    <parameter name="preload" value="true"/>
+  </program-generator>
+</xconf>

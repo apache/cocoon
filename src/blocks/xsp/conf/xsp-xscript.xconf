@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="xscript">
+  <!-- Xscript -->
+  <xscript logger="core.xscript">
+    <parameter name="xscript:copy-of" value="resource://org/apache/cocoon/components/xscript/xslt/copy-of.xsl"/>
+    <parameter name="xscript:value-of" value="resource://org/apache/cocoon/components/xscript/xslt/value-of.xsl"/>
+  </xscript>
+</xconf>

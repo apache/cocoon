@@ -25,7 +25,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
-import org.apache.cocoon.components.language.markup.xsp.XSPFormValidatorHelper;
+import org.apache.cocoon.components.transformation.helpers.FormValidatorHelper;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashMap;
@@ -139,7 +139,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.11 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.12 2004/03/10 12:58:13 stephan Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -407,7 +407,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         if (this.ignoreValidation) {
             this.validationResults = null;
         } else {
-            this.validationResults = XSPFormValidatorHelper.getResults(this.objectModel);
+            this.validationResults = FormValidatorHelper.getResults(this.objectModel);
         }
 
         if (this.inputName == null) {
@@ -723,7 +723,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
                 this.relayStartElement(uri, name, raw, attr);
             } else {
                 ValidatorActionResult validation =
-                    XSPFormValidatorHelper.getParamResult(this.objectModel, aName);
+                    FormValidatorHelper.getParamResult(this.objectModel, aName);
                 String when = attr.getValue("when");
                 String when_ge = attr.getValue("when-ge");
 

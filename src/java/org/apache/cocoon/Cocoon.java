@@ -50,8 +50,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ComponentContext;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -81,7 +79,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.22 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id: Cocoon.java,v 1.23 2004/03/10 12:58:09 stephan Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -698,45 +696,6 @@ public class Cocoon
      */
     public Processor getRootProcessor() {
         return this;
-    }
-
-    /**
-     * Process the given <code>Environment</code> to generate Java code for specified XSP files.
-     *
-     * @param fileName a <code>String</code> value
-     * @param environment an <code>Environment</code> value
-     * @exception Exception if an error occurs
-     */
-    public void precompile(String fileName,
-                           Environment environment,
-                           String markupLanguage,
-                           String programmingLanguage)
-    throws Exception {
-        ProgramGenerator programGenerator = null;
-        Source source = null;
-        Object key = CocoonComponentManager.startProcessing(environment);
-        CocoonComponentManager.enterEnvironment(environment,
-                                                this.componentManager,
-                                                this);
-        try {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("XSP generation begin:" + fileName);
-            }
-
-            programGenerator = (ProgramGenerator) this.componentManager.lookup(ProgramGenerator.ROLE);
-            source = this.sourceResolver.resolveURI(fileName);
-            CompiledComponent xsp = programGenerator.load(this.componentManager,
-                    source,
-                    markupLanguage, programmingLanguage, environment);
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("XSP generation complete:" + xsp);
-            }
-        } finally {
-            this.sourceResolver.release(source);
-            this.componentManager.release(programGenerator);
-            CocoonComponentManager.leaveEnvironment();
-            CocoonComponentManager.endProcessing(environment, key);
-        }
     }
 
     /**

@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.17 2004/03/06 02:25:40 antonio Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.18 2004/03/10 12:58:13 stephan Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -174,17 +174,18 @@
 
   </map:pipeline>
 
-  <map:pipeline internal-only="true">
-   <map:match pattern="view-source">
-    <!-- colourize files that are known to be XML -->
+<!-- FIXME don't use XSP
+	<map:pipeline internal-only="true">
+		 <map:match pattern="view-source">
+    --><!-- colourize files that are known to be XML --><!--
     <map:match type="filename" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
        <map:generate src="common/view-source.xsp" type="serverpages"/>
        <map:serialize/>
     </map:match>
-    <!-- all other files are just send as text -->
+    --><!-- all other files are just send as text --><!--
     <map:read mime-type="text/plain" src="../{request-param:filename}"/>
    </map:match>
-  </map:pipeline>
+  </map:pipeline>-->
 
  </map:pipelines>
 </map:sitemap>
