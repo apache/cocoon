@@ -63,7 +63,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.81 $ $Date: 2001-04-11 12:41:26 $
+ * @version CVS $Revision: 1.1.4.82 $ $Date: 2001-04-19 19:05:23 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -383,7 +383,7 @@ public class CocoonServlet extends HttpServlet {
         if (this.cocoon == null) {
             res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
 
-            Notification n = new Notification(this);
+            Notification n = new Notification(this, this.exception);
             n.setType("internal-servlet-error");
             n.setTitle("Internal servlet error");
             n.setSource("Cocoon servlet");

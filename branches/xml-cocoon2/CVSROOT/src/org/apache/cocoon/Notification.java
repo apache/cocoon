@@ -15,6 +15,9 @@ import java.io.PrintWriter;
 
 import org.xml.sax.SAXException;
 
+import org.apache.avalon.CascadingException;
+
+
 /**
  *  Generates an XML representation of the current notification.
  *
@@ -88,13 +91,27 @@ public class Notification implements Notificable {
         this(sender);
         setType("error");
         setTitle("Cocoon error");
-        setSource(t.getClass().getName());
-        setMessage(t.getMessage());
-        setDescription(t.toString());
+        if(t != null)
+        {
+            setSource(t.getClass().getName());
+            setMessage(t.getMessage());
+            setDescription(t.toString());
 
-        StringWriter stackTrace = new StringWriter();
-        t.printStackTrace(new PrintWriter(stackTrace));
-        extraDescriptions.put("stacktrace", stackTrace.toString());
+            extraDescriptions.put("exception", t.toString());
+            StringWriter stackTrace = new StringWriter();
+            t.printStackTrace(new PrintWriter(stackTrace));
+            extraDescriptions.put("stacktrace", stackTrace.toString());
+
+            if(t instanceof CascadingException) {
+                Throwable cause = ((CascadingException)t).getCause();
+                if(cause != null) {
+                    extraDescriptions.put("embedded exception", cause.toString());
+                    stackTrace = new StringWriter();
+                    cause.printStackTrace(new PrintWriter(stackTrace));
+                    extraDescriptions.put("embedded exception stacktrace", stackTrace.toString());
+                }
+            }
+        }
     }
 
     /**
