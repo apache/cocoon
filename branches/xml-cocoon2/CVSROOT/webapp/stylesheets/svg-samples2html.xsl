@@ -27,32 +27,117 @@
   </html>
  </xsl:template>
  
+ <xsl:template name="generate-group-heading">
+ 	<xsl:param name="position"/>
+	<svg:svg width="200" height="15">
+		<xsl:choose>
+			<xsl:when test="$position = 'left'">
+				<svg:g style="stroke: black; stroke-width: 2px;">
+					<svg:line x1="5" y1="5" x2="8" y2="5"/>
+					<svg:line x1="5" y1="5" x2="5" y2="15"/>
+				</svg:g>
+				<svg:text x="10px" y="10px" style="font-family:sans; font-size:15px; fill: #0086b2; text-anchor:start;">
+					<xsl:value-of select="@name"/>
+				</svg:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<svg:g style="stroke: black; stroke-width: 2px;">
+					<svg:line x1="195" y1="5" x2="192" y2="5"/>
+					<svg:line x1="195" y1="5" x2="195" y2="15"/>
+				</svg:g>
+				<svg:text x="190px" y="10px" style="font-family:sans; font-size:15px; fill: #0086b2; text-anchor:end;">
+					<xsl:value-of select="@name"/>
+				</svg:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</svg:svg>
+ </xsl:template>
+ 
+ <xsl:template name="generate-item">
+ 	<xsl:param name="position"/>
+	<svg:svg width="200" height="15">
+		<xsl:choose>
+			<xsl:when test="$position = 'left'">
+				<svg:g style="stroke: black; stroke-width: 2px;">
+					<xsl:choose>
+						<xsl:when test="position() = last()">
+							<svg:line x1="5" y1="-1" x2="5" y2="5"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<svg:line x1="5" y1="-1" x2="5" y2="15"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<svg:line x1="5" y1="5" x2="18" y2="5"/>
+				</svg:g>
+				<svg:text x="20px" y="10px" style="font-family:sans; font-size:15px; fill: black; text-anchor:start;"> 
+					<xsl:value-of select="@name"/>
+				</svg:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<svg:g style="stroke: black; stroke-width: 2px;">
+					<xsl:choose>
+						<xsl:when test="position() = last()">
+							<svg:line x1="195" y1="-1" x2="195" y2="5"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<svg:line x1="195" y1="-1" x2="195" y2="15"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<svg:line x1="195" y1="5" x2="182" y2="5"/>
+				</svg:g>
+				<svg:text x="180px" y="10px" style="font-family:sans; font-size:15px; fill: black; text-anchor:end;"> 
+					<xsl:value-of select="@name"/>
+				</svg:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</svg:svg>
+ </xsl:template>
+ 
+ <xsl:template name="generate-group">
+ 	<xsl:param name="position"/>
+	<tr>
+		<td>
+			<xsl:call-template name="generate-group-heading">
+				<xsl:with-param name="position" select="$position"/>
+			</xsl:call-template>
+		</td>
+	</tr>
+	<xsl:for-each select="sample">
+		<tr>
+			<td>
+				<a href="{@href}">
+					<xsl:call-template name="generate-item">
+						<xsl:with-param name="position" select="$position"/>
+					</xsl:call-template>
+				</a>
+			</td>
+		</tr>
+	</xsl:for-each>
+ </xsl:template>
+ 
  <xsl:template match="samples">
- 	<table>
-		<xsl:for-each select="group">
-			<tr>
-				<td>
-					<svg:svg width="200" height="15">
-						<svg:text x="10px" y="10px" style="font-family:sans; font-size:15px; fill: #0086b2; text-anchor:start">
-							<xsl:value-of select="@name"/>
-						</svg:text>
-					</svg:svg>
-				</td>
-			</tr>
-			<xsl:for-each select="sample">
-				<tr>
-					<td>
-						<a href="{@href}">
-							<svg:svg width="200" height="15">
-								<svg:text x="20px" y="10px" style="font-family:sans; font-size:15px; fill: black; text-anchor:start"> 
-									<xsl:value-of select="@name"/>
-								</svg:text>
-							</svg:svg>
-						</a>
-					</td>
-				</tr>
-			</xsl:for-each>
-		</xsl:for-each>
+ 	<xsl:variable name="half" select="round(count(group) div 2)"/>
+ 	<table cellspacing="0" cellpadding="0" border="0" align="center">
+		<tr>
+			<td valign="top">
+				<table cellspacing="0" cellpadding="0" border="0">
+					<xsl:for-each select="group[position() &lt;= $half]">
+						<xsl:call-template name="generate-group">
+							<xsl:with-param name="position">left</xsl:with-param>
+						</xsl:call-template>
+					</xsl:for-each>
+				</table>
+			</td>
+			<td valign="top">
+				<table cellspacing="0" cellpadding="0" border="0">
+					<xsl:for-each select="group[position() &gt; $half]">
+						<xsl:call-template name="generate-group">
+							<xsl:with-param name="position">right</xsl:with-param>
+						</xsl:call-template>
+					</xsl:for-each>
+				</table>
+			</td>
+		</tr>
 	</table>
  </xsl:template>
  
