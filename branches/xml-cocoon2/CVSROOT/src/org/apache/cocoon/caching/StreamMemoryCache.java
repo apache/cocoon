@@ -7,17 +7,17 @@
  *****************************************************************************/
 package org.apache.cocoon.caching;
 
-import org.apache.cocoon.components.store.MemoryStore;
+import org.apache.cocoon.components.store.MRUMemoryStore;
 
 /**
  * An implementation for the StreamCache which simply stores the
  * cached objects in the memory.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:33:02 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-18 15:14:17 $
  */
 public final class StreamMemoryCache
-extends MemoryStore
+extends MRUMemoryStore
 implements StreamCache {
 
 }

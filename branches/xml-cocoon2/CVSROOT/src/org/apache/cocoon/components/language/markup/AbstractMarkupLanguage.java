@@ -35,6 +35,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -43,7 +44,7 @@ import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-import org.apache.cocoon.components.store.MemoryStore;
+import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.util.IOUtils;
 
@@ -52,14 +53,14 @@ import org.apache.cocoon.util.IOUtils;
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-13 12:09:35 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-18 15:14:22 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
     protected Hashtable languages;
 
     /** The in-memory code-generation logicsheet cache */
-    protected MemoryStore logicsheetCache;
+    protected Store logicsheetCache;
 
     /** The markup language's namespace uri */
     protected String uri;
@@ -74,16 +75,17 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
      * Set the global component manager.
      * @param manager The sitemap-specified component manager
      */
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager) throws ComponentManagerException {
         this.manager = manager;
+
+        // Initialize logicsheet cache
+        this.logicsheetCache = (Store) manager.lookup(Roles.STORE);
     }
 
     /** The default constructor. */
     public AbstractMarkupLanguage() throws SAXException, IOException {
         // Initialize language table
         this.languages = new Hashtable();
-        // Initialize logicsheet cache
-        this.logicsheetCache = new MemoryStore();
     }
 
     /**

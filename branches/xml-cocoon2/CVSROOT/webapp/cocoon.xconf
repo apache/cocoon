@@ -3,7 +3,7 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <store class="org.apache.cocoon.components.store.MemoryStore"/>
+  <store class="org.apache.cocoon.components.store.MRUMemoryStore"/>
 
   <url-factory>
     <protocol name="resource" class="org.apache.cocoon.components.url.ResourceURLFactory"/>
@@ -101,9 +101,9 @@
 
   <sax-connector class="org.apache.cocoon.components.saxconnector.NullSAXConnector"/>
 
-  <stream-pipeline class="org.apache.cocoon.components.pipeline.NonCachingStreamPipeline"/>
+  <stream-pipeline class="org.apache.cocoon.components.pipeline.CachingStreamPipeline"/>
 
-  <event-pipeline class="org.apache.cocoon.components.pipeline.NonCachingEventPipeline"/>
+  <event-pipeline class="org.apache.cocoon.components.pipeline.CachingEventPipeline"/>
 
 <!-- ======================== The sitemap  ============================== -->
 

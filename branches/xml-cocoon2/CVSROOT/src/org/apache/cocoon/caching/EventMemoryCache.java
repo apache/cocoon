@@ -7,17 +7,17 @@
  *****************************************************************************/
 package org.apache.cocoon.caching;
 
-import org.apache.cocoon.components.store.MemoryStore;
+import org.apache.cocoon.components.store.MRUMemoryStore;
 
 /**
  * An implementation for the EventCache which simply stores the
  * cached objects in the memory.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:54 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 15:14:15 $
  */
 public final class EventMemoryCache
-extends MemoryStore
+extends MRUMemoryStore
 implements EventCache {
 
 }
