@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.7 2003/03/20 15:37:25 stephan Exp $
+  CVS $Id: todo.xml,v 1.8 2003/03/21 08:59:06 tcurdt Exp $
 -->
 
 <todo title="Things To Do">
@@ -27,6 +27,7 @@
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
   <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
+  <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
   <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
  </devs>
 
@@ -129,6 +130,12 @@
 
  <actions priority="medium">
  
+  <action context="code">
+   XMLize exception handling so error pages can become semantically more meaningful.
+   Currently all XSP compilation errors are stored in a single string. With XMLized
+   exceptions we could display especially XSP errors much nicer.
+  </action>
+
   <action context="code">
    Remove all useless blank strings in XSP-generated code that hinder performances.
    This should be configurable (through an attribute?) to be able to keep them when
