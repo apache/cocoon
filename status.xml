@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.235 2004/02/04 12:18:54 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.236 2004/02/04 22:19:25 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,15 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="SW" type="add">
+   	 Woody block: every widget can now have a validator. This allows for example repeaters to perform
+   	 inter-row validation or overall form-level validation.
+   </action>
+   <action dev="SW" type="update">
+     Batik block: a &lt;svg:image xlink:href="..."/> can now use any of the protocols handled
+     by Cocoon. This also indirectly benefits the FOP block  as XSL-FO documents can use images from
+     any source by embedding them in an SVG drawing.
+   </action>
    <action dev="CZ" type="update">
      ResourceReader: Is now configurable as well. All parameters can be defined during configuration
      of the reader. Fixed also a minor bug in the last-modified detection.
