@@ -72,29 +72,44 @@ public interface SourceRepository {
     public static final String ROLE = SourceRepository.class.getName();
     
     /**
-     * Status OK (<code>200</code>).
+     * Status OK (<b>200</b>).
      */
     public static final int STATUS_OK = 200;
     
     /**
-     * Status CREATED (<code>201</code>).
+     * Status CREATED (<b>201</b>).
      */
     public static final int STATUS_CREATED = 201;
-
+    
     /**
-     * Status NOT_FOUND (<code>404</code>).
+     * Status NO_CONTENT (<b>204</b>).
+     */
+    public static final int STATUS_NO_CONTENT = 204;
+    
+    /**
+     * Status FORBIDDEN (<b>403</b>).
+     */
+    public static final int STATUS_FORBIDDEN = 403;
+    
+    /**
+     * Status NOT_FOUND (<b>404</b>).
      */
     public static final int STATUS_NOT_FOUND = 404;
 
     /**
-     * Status NOT_ALLOWED (<code>405</code>).
+     * Status NOT_ALLOWED (<b>405</b>).
      */
     public static final int STATUS_NOT_ALLOWED = 405;
     
     /**
-     * Status CONFLICT (<code>409</code>).
+     * Status CONFLICT (<b>409</b>).
      */
     public static final int STATUS_CONFLICT = 409;
+    
+    /**
+     * Status PRECONDITION_FAILED (<b>412</b>)
+     */
+    public static final int STATUS_PRECONDITION_FAILED = 412;
     
     
     /**
@@ -104,8 +119,9 @@ public interface SourceRepository {
      * @param out  the Source location to write to.
      * @return  a status code describing the exit status.
      * @throws IOException
+     * @throws SourceException
      */
-    public abstract int save(String in, String out) throws IOException;
+    public abstract int save(String in, String out) throws IOException, SourceException;
     
     /**
      * Create a Source collection.
@@ -113,8 +129,9 @@ public interface SourceRepository {
      * @param location  the location of the source collection to create.
      * @return  a status code describing the exit status.
      * @throws IOException
+     * @throws SourceException
      */
-    public abstract int makeCollection(String location) throws IOException;
+    public abstract int makeCollection(String location) throws IOException, SourceException;
     
     /**
      * Deletes a Source and all of its descendants.
@@ -122,27 +139,36 @@ public interface SourceRepository {
      * @param location  the location of the source to delete.
      * @return  a status code describing the exit status.
      * @throws IOException
+     * @throws SourceException
      */
-    public abstract int remove(String location) throws SourceException, IOException;
+    public abstract int remove(String location) throws IOException, SourceException;
     
     /**
      * Move a Source from one location to the other.
      * 
-     * @param from  the source location.
-     * @param to    the destination location.
+     * @param from       the source location.
+     * @param to         the destination location.
+     * @param recurse    whether to move all the source descendents also.
+     * @param overwrite  whether to overwrite the destination source if it exists.
      * @return  a status code describing the exit status.
      * @throws IOException
+     * @throws SourceException
      */
-    public abstract int move(String from, String to) throws IOException;
+    public abstract int move(String from, String to, boolean recurse, boolean overwrite) 
+        throws IOException, SourceException;
     
     /**
      * Copy a Souce from one location to the other.
      * 
-     * @param from  the source location.
-     * @param to    the destination location.
+     * @param from       the source location.
+     * @param to         the destination location.
+     * @param recurse    whether to move all the source descendents also.
+     * @param overwrite  whether to overwrite the destination source if it exists.
      * @return  a status code describing the exit status.
      * @throws IOException
+     * @throws SourceException
      */
-    public abstract int copy(String from, String to) throws IOException;
+    public abstract int copy(String from, String to, boolean recurse, boolean overwrite) 
+        throws IOException, SourceException;
     
 }
