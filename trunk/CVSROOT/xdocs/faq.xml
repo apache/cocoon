@@ -66,6 +66,20 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 </faq>
 
 <faq>
+ <question>I get the exception telling me that the method 
+ <em>org.apache.xerces.dom.ElementImpl.normalize(ElementImpl.java:290)</em>
+ could not be found. What's wrong?</question>
+ <answer>
+  <p>This happens because Cocoon needs a DOM-leve2 implementation and you
+  probably have a DOM-level1 included in your classpath _before_ <code>xerces.jar</code>.</p>
+  <p>So, either remove the instances of your DOM-level1 packages (normally included
+  in <code>xml.jar</code> or <code>jtidy.jar</code>) or place the <code>xerces.jar</code>
+  archive that comes with Cocoon <em>before</em> all the other jar packages
+  in your classpath. This should fix your problem.</p>
+ </answer>
+</faq>
+
+<faq>
  <question>what are the other jar files shipped with Cocoon for? do I need to include them into my classpath?</question>
  <answer>
   <p>They are for building Cocoon and creating its docs from XML but they are not used by Cocoon at runtime so, if you
