@@ -43,7 +43,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -496,8 +495,8 @@ public class IncludeTransformer extends AbstractTransformer
                      * are passed through flawlessly.
                      */
                     if (this.x_parameters == null) this.x_parameters = new HashMap(5);
-                    this.x_parameters.put(URLEncoder.encode(this.x_parameter, ENCODING),
-                                          URLEncoder.encode(value, ENCODING));
+                    this.x_parameters.put(NetUtils.encode(this.x_parameter, ENCODING),
+                                          NetUtils.encode(value, ENCODING));
                 } catch (UnsupportedEncodingException e) {
                     throw new SAXException("Your platform does not support the " +
                                            ENCODING + " encoding", e);
