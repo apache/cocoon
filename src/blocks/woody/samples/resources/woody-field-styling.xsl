@@ -213,6 +213,7 @@
   <xsl:template match="wi:action">
     <input type="submit" name="{@id}" title="{wi:hint}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
+      <xsl:copy-of select="wi:styling/@*"/>
     </input>
   </xsl:template>
 
