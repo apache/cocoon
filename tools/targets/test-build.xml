@@ -32,16 +32,19 @@
 
   <target name="junit-tests-prepare">
     <delete dir="${build.test.output}"/>
+    <delete dir="${build.test.report}"/>
     <mkdir dir="${build.test.output}"/>
   </target>
 
   <!-- Runs JUnit tests -->
   <target name="core-junit-tests" depends="compile-tests, junit-tests-prepare">
     <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
+      <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
+      <jvmarg value="-Djunit.test.loglevel=${junit.test.loglevel}"/>
       <classpath>
         <path refid="test.classpath"/>
       </classpath>
-      <formatter type="plain"/>
+      <formatter type="plain" usefile="no"/>
       <formatter type="xml"/>
       <batchtest todir="${build.test.output}">
         <fileset dir="${build.test}">
@@ -68,6 +71,7 @@
     <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
       <jvmarg value="-Xdebug"/>
       <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=${junit.test.debugport}"/>
+      <jvmarg value="-Djunit.test.loglevel=${junit.test.loglevel}"/>
       <classpath refid="test.classpath"/>
       <formatter type="plain"/>
       <formatter type="xml"/>
@@ -83,14 +87,15 @@
          target="tests"/>
   </target>      
   
-  <target name="junit-tests-report">
+  <target name="junit-tests-report" depends="init">
+    <mkdir dir="${build.test.report}"/>
     <junitreport todir="${build.test.output}">
       <fileset dir="${build.test.output}">
        <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${build.test.output}"/>
+      <report format="frames" todir="${build.test.report}"/>
     </junitreport>
-    <echo message="Unit report is at ${build.test.output}/index.html"/>
+    <echo message="Unit report is at ${build.test.report}/index.html"/>
     <fail if="junit.test.failed"
           message="One or more JUnit tests failed or caused errors. Please have a look into the report for details."/>
   </target>

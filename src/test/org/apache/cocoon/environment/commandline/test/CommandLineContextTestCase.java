@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,72 +14,48 @@
  * limitations under the License.
  */
 package org.apache.cocoon.environment.commandline.test;
-import java.io.File;
-import java.net.URL;
+
+import org.apache.avalon.framework.logger.ConsoleLogger;
+import org.apache.avalon.framework.logger.Logger;
+
+import org.apache.cocoon.environment.commandline.CommandLineContext;
 
 import junit.framework.TestCase;
 import junit.swingui.TestRunner;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.cocoon.environment.commandline.CommandLineContext;
-import org.apache.log.Priority;
+import java.io.File;
+import java.net.URL;
 
 /**
  * A simple test case for CommandLineContext.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CommandLineContextTestCase.java,v 1.6 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public final class CommandLineContextTestCase
-         extends TestCase
-{
-    ///Format of default formatter
-    /**
-     *Description of the Field
-     *
-     * @since
-     */
-    protected final static String FORMAT =
-            "%7.7{priority} %{time}   [%8.8{category}] (%{context}): %{message}\\n%{throwable}";
-    /**
-     *Description of the Field
-     *
-     * @since
-     */
-    protected Priority m_logPriority = Priority.INFO;
+public final class CommandLineContextTestCase extends TestCase {
 
     private String commandLineContextDir;
     private CommandLineContext commandLineContext;
 
 
     /**
-     *Constructor for the CommandLineContextTestCase object
-     *
-     * @since
+     * Constructor for the CommandLineContextTestCase object
      */
     public CommandLineContextTestCase() {
         this("CommandLineContextTestCase");
     }
 
-
     /**
-     *Constructor for the CommandLineContextTestCase object
-     *
-     * @param  name  Description of Parameter
-     * @since
+     * Constructor for the CommandLineContextTestCase object
      */
     public CommandLineContextTestCase(String name) {
         super(name);
-
     }
 
-
     /**
-     *The main program for the CommandLineContextTestCase class
+     * The main program for the CommandLineContextTestCase class
      *
      * @param  args           The command line arguments
-     * @exception  Exception  Description of Exception
-     * @since
      */
     public static void main(final String[] args) throws Exception {
         final String[] testCaseName = {CommandLineContextTestCase.class.getName()};
@@ -88,39 +64,31 @@ public final class CommandLineContextTestCase
 
 
     /**
-     *The JUnit setup method
-     *
-     * @exception  Exception  Description of Exception
-     * @since
+     * The JUnit setup method
      */
     public void setUp() throws Exception {
         commandLineContextDir = System.getProperty("java.io.tmpdir", "/tmp");
-        new File(commandLineContextDir, "foo"+File.separator+"bar").mkdirs();
+        new File(commandLineContextDir, "foo" + File.separator + "bar").mkdirs();
+
+        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
+        Logger logger = new ConsoleLogger(Integer.parseInt(level));
+
         commandLineContext = new CommandLineContext(commandLineContextDir);
-        commandLineContext.enableLogging( new ConsoleLogger() );
+        commandLineContext.enableLogging(logger);
     }
 
-
     /**
-     *The teardown method for JUnit
-     *
-     * @exception  Exception  Description of Exception
-     * @since
+     * The teardown method for JUnit
      */
     public void tearDown() throws Exception {
-        new File(commandLineContextDir, "foo"+File.separator+"bar").delete();
+        new File(commandLineContextDir, "foo" + File.separator + "bar").delete();
         new File(commandLineContextDir, "foo").delete();
     }
 
-
     /**
      * A unit test for <code>getResource()</code>
-     *
-     * @exception  Exception  Description of Exception
-     * @since
      */
     public void testGetResource() throws Exception {
-
         Object[] test_values = {
                 new String[]{"", commandLineContextDir},
                 new String[]{"/", commandLineContextDir},
@@ -136,21 +104,15 @@ public final class CommandLineContextTestCase
             if (result != null) {
                 expected = new File(tests[1]).toURL();
             }
-            String message = "Test " +
-                    "'" + test + "'";
+            String message = "Test " + "'" + test + "'";
             assertEquals(message, expected, result);
         }
     }
 
-
     /**
      * A unit test for <code>getRealPath()</code>
-     *
-     * @exception  Exception  Description of Exception
-     * @since
      */
     public void testGetRealPath() throws Exception {
-
         Object[] test_values = {
                 new String[]{"", ""},
                 new String[]{"/", "/"},
@@ -170,13 +132,9 @@ public final class CommandLineContextTestCase
         }
     }
 
-
     /**
      * A unit test for <code>getAttribute</code>,
      * <code>setAttribute</code>, and <code>removeAttribute()</code>
-     *
-     * @exception  Exception  Description of Exception
-     * @since
      */
     public void testAttributes() throws Exception {
         Object[] test_values = {
@@ -189,11 +147,6 @@ public final class CommandLineContextTestCase
             String name = tests[0];
             String expected = tests[1];
 
-            /* NEVER USED!
-            String message = "Test " +
-                    "'" + name + "'" + ", " + "'" + expected + "'";
-            */
-
             commandLineContext.setAttribute(name, expected);
 
             String result = (String) commandLineContext.getAttribute(name);
@@ -204,29 +157,4 @@ public final class CommandLineContextTestCase
             assertEquals("Test " + "'" + "<null>" + "'", null, result);
         }
     }
-
-
-    /**
-     * Setup a <code>Logger</code>.
-     * <p>
-     *   Setup a logger needed by AbstractLogEnabled objects.
-     * </p>
-     *
-     * @return    Logger for logging
-     * @since
-    private final Logger setupLogger() {
-        //FIXME(GP): This method should setup a LogConfigurator and LogManager
-        //           according to the configuration spec. not yet completed/implemented
-        //           It will return a default logger for now.
-        final org.apache.log.Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor("Test");
-        logger.setPriority(m_logPriority);
-
-        final PatternFormatter formatter = new PatternFormatter(FORMAT);
-        final StreamTarget target = new StreamTarget(System.out, formatter);
-        logger.setLogTargets(new LogTarget[]{target});
-
-        return logger;
-    }
-     */
 }
-
