@@ -118,7 +118,8 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
     //---------------------------------------------------------------------------------------------
 
     /**
-     * The definition of a repeater action that insert rows before the selected rows in a sibling repeater.
+     * The definition of a repeater action that insert rows before the selected rows in a sibling repeater,
+     * or at the end of the repeater if no row is selected.
      */
     public static class InsertRowsActionDefinition extends RepeaterActionDefinition {
         
@@ -131,14 +132,20 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+                    boolean foundSelection = false;
                     for (int i = repeater.getSize() - 1; i >= 0; i--) {
                         Repeater.RepeaterRow row = repeater.getRow(i);
                         Widget selectWidget = row.getChild(selectName);
                         if (Boolean.TRUE.equals(selectWidget.getValue())) {
-                            // Clear selection and add a row
-                            selectWidget.setValue(Boolean.FALSE);
+                            // Add a row
                             repeater.addRow(i);
+                            foundSelection = true;
                         }
+                    }
+                    
+                    if (!foundSelection) {
+                        // Add a row at the end
+                        repeater.addRow();
                     }
                 }
             });
