@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.portlet.PreferencesValidator;
 
@@ -32,19 +33,20 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PreferenceSetImpl.java,v 1.3 2004/06/07 13:10:41 cziegeler Exp $
+ * @version CVS $Id$
  */
-public class PreferenceSetImpl extends HashSet
+public class PreferenceSetImpl
 implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
 
     private String castorPreferencesValidator; 
     private ClassLoader classLoader;
+    private Set preferences = new HashSet();
 
     // PreferenceSet implementation.
 
     public Preference get(String name)
     {
-        Iterator iterator = this.iterator();
+        Iterator iterator = this.preferences.iterator();
         while (iterator.hasNext()) {
             Preference preference = (Preference)iterator.next();
             if (preference.getName().equals(name)) {
@@ -52,6 +54,10 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
             }
         }
         return null;
+    }
+
+    public Iterator iterator() {
+        return this.preferences.iterator();
     }
 
     public PreferencesValidator getPreferencesValidator()
@@ -80,10 +86,15 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         preference.setName(name);
         preference.setValues(values);
 
-        super.add(preference);
+        this.preferences.add(preference);
 
         return preference;
     }
+
+    public boolean add(Preference preference) {
+        return this.preferences.add(preference);
+    }
+
 
     public Preference remove(String name)
     {
@@ -91,7 +102,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         while (iterator.hasNext()) {
             Preference preference = (Preference)iterator.next();
             if (preference.getName().equals(name)) {
-                super.remove(preference);
+                this.preferences.remove(preference);
                 return preference;
             }
         }
@@ -100,7 +111,7 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
 
     public void remove(Preference preference)
     {
-        super.remove(preference);
+        this.preferences.remove(preference);
     }
 
     // additional methods.
@@ -136,9 +147,9 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         this.castorPreferencesValidator = castorPreferencesValidator;
     }
 
-    public Collection getCastorPreferences()
+    public Set getPreferences()
     {
-        return this;
+        return this.preferences;
     }
 
     public void setClassLoader(ClassLoader loader)

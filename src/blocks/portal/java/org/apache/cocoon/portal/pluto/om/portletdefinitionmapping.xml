@@ -104,7 +104,7 @@
 
   <class name="org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl">
       
-    <field name="castorPreferences" type="org.apache.cocoon.portal.pluto.om.common.PreferenceImpl" collection="collection">
+    <field name="preferences" type="org.apache.cocoon.portal.pluto.om.common.PreferenceImpl" collection="set">
       <bind-xml name="portlet:preference" node="element"/>
     </field>
     <field name="castorPreferencesValidator" type="java.lang.String">
@@ -172,8 +172,7 @@
       <bind-xml name="portlet:portlet-info" node="element"/>
     </field>
 
-   <field name="castorPreferences"
-           type="org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl">
+   <field name="castorPreferences" type="org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl">
       <bind-xml name="portlet:portlet-preferences" node="element"/>
     </field>
     <field name="castorInitSecurityRoleRefs"
