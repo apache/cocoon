@@ -84,7 +84,8 @@ import org.xml.sax.SAXException;
  * <p>Definition:</p>
  * <pre>
  * &lt;map:transformer     name="tofile"     src="org.apache.cocoon.transformation.SourceWritingTransformer"&gt;
- *   &lt;map:parameter name="serializer" value="xml"/&gt;  &lt;!-- this is the default Serializer (if your Source needs one, like for instance FileSource) --&gt;
+ *   &lt;!-- 'xml' is the default Serializer (if your Source needs one, like for instance FileSource) --&gt;
+ *   &lt;map:parameter name="serializer" value="xml"/&gt;
  * &lt;/map:transformer/&gt;
  * </pre>
  *
@@ -255,7 +256,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.6 2003/09/04 14:51:27 cziegeler Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.7 2003/09/23 12:26:58 vgritsenko Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer {
@@ -263,7 +264,7 @@ public class SourceWritingTransformer
     public static final String SWT_URI = "http://apache.org/cocoon/source/1.0";
     public static final String DEFAULT_SERIALIZER = "xml";
 
-        /** incoming elements */
+    /** incoming elements */
     public static final String WRITE_ELEMENT = "write";
     public static final String INSERT_ELEMENT = "insert";
     public static final String PATH_ELEMENT = "path";
@@ -279,11 +280,11 @@ public class SourceWritingTransformer
     public static final String ACTION_ELEMENT = "action";
     public static final String MESSAGE_ELEMENT = "message";
     public static final String SERIALIZER_ELEMENT = "serializer";
-        /** main (write or insert) tag attributes */
+    /** main (write or insert) tag attributes */
     public static final String SERIALIZER_ATTRIBUTE = "serializer";
     public static final String CREATE_ATTRIBUTE = "create";
     public static final String OVERWRITE_ATTRIBUTE = "overwrite";
-        /** results */
+    /** results */
     public static final String RESULT_FAILED = "failed";
     public static final String RESULT_SUCCESS = "success";
     public static final String ACTION_NONE = "none";
@@ -308,8 +309,8 @@ public class SourceWritingTransformer
 
 
     /**
-     * Constructor
-     * Set the namespace
+     * Constructor.
+     * Sets the namespace.
      */
     public SourceWritingTransformer() {
         this.namespaceURI = SWT_URI;
@@ -351,8 +352,8 @@ public class SourceWritingTransformer
      */
     public void startTransformingElement(String uri, String name, String raw, Attributes attr)
     throws SAXException, IOException, ProcessingException {
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN startTransformingElement uri=" + uri +
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("BEGIN startTransformingElement uri=" + uri +
                               ", name=" + name + ", raw=" + raw + ", attr=" + attr);
         }
         // Element: insert
@@ -415,8 +416,8 @@ public class SourceWritingTransformer
             super.startTransformingElement(uri, name, raw, attr);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END startTransformingElement");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("END startTransformingElement");
         }
     }
 
@@ -434,8 +435,8 @@ public class SourceWritingTransformer
      */
     public void endTransformingElement(String uri, String name, String raw)
     throws SAXException, IOException, ProcessingException {
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN endTransformingElement uri=" + uri +
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("BEGIN endTransformingElement uri=" + uri +
                               ", name=" + name +
                               ", raw=" + raw);
         }
@@ -452,15 +453,15 @@ public class SourceWritingTransformer
             String reinsert    = null;
             do {
                 tag = (String)this.stack.pop();
-                if (tag.equals("PATH") == true) {
+                if (tag.equals("PATH")) {
                     path = (String)this.stack.pop();
-                } else if (tag.equals("FILE") == true) {
+                } else if (tag.equals("FILE")) {
                     sourceName = (String)this.stack.pop();
-                } else if (tag.equals("FRAGMENT") == true) {
+                } else if (tag.equals("FRAGMENT")) {
                     fragment = (DocumentFragment)this.stack.pop();
-                } else if (tag.equals("REPLACE") == true) {
+                } else if (tag.equals("REPLACE")) {
                     replacePath = (String)this.stack.pop();
-                } else if (tag.equals("REINSERT") == true) {
+                } else if (tag.equals("REINSERT")) {
                     reinsert = (String)this.stack.pop();
                 }
             } while ( !tag.equals("END") );
@@ -498,31 +499,31 @@ public class SourceWritingTransformer
             this.deleteSource(sourceName);
             this.state = STATE_OUTSIDE;                       
         // Element: file
-        } else if (name.equals(SOURCE_ELEMENT) == true && this.state == STATE_FILE) {
+        } else if (name.equals(SOURCE_ELEMENT) && this.state == STATE_FILE) {
             this.state = this.parent_state;
             this.stack.push(this.endTextRecording());
             this.stack.push("FILE");
 
         // Element: path
-        } else if (name.equals(PATH_ELEMENT) == true && this.state == STATE_PATH) {
+        } else if (name.equals(PATH_ELEMENT) && this.state == STATE_PATH) {
             this.state = this.parent_state;
             this.stack.push(this.endTextRecording());
             this.stack.push("PATH");
 
         // Element: replace
-        } else if (name.equals(REPLACE_ELEMENT) == true && this.state == STATE_REPLACE) {
+        } else if (name.equals(REPLACE_ELEMENT) && this.state == STATE_REPLACE) {
             this.state = this.parent_state;
             this.stack.push(this.endTextRecording());
             this.stack.push("REPLACE");
 
         // Element: fragment
-        } else if (name.equals(FRAGMENT_ELEMENT) == true && this.state == STATE_FRAGMENT) {
+        } else if (name.equals(FRAGMENT_ELEMENT) && this.state == STATE_FRAGMENT) {
             this.state = this.parent_state;
             this.stack.push(this.endRecording());
             this.stack.push("FRAGMENT");
 
         // Element: reinsert
-        } else if (name.equals(REINSERT_ELEMENT) == true && this.state == STATE_REINSERT) {
+        } else if (name.equals(REINSERT_ELEMENT) && this.state == STATE_REINSERT) {
             this.state = this.parent_state;
             this.stack.push(this.endTextRecording());
             this.stack.push("REINSERT");
@@ -532,37 +533,43 @@ public class SourceWritingTransformer
             super.endTransformingElement(uri, name, raw);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END endTransformingElement");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("END endTransformingElement");
         }
     }
 
     /**
      * Deletes a source
-     * @param sourceName
+     * @param systemID
      */
     private void deleteSource(String systemID) throws ProcessingException, IOException, SAXException {
+        Source source = null;
         try {
-            Source source = resolver.resolveURI(systemID);            
-            if ( ! (source instanceof ModifiableSource)) {
-                throw new ProcessingException("Source '"+systemID+"' is not writeable.");
+            source = resolver.resolveURI(systemID);
+            if (!(source instanceof ModifiableSource)) {
+                throw new ProcessingException("Source '" + systemID + "' is not writeable.");
             }
-            ModifiableSource ms = (ModifiableSource)source;
-            ms.delete();
+
+            ((ModifiableSource)source).delete();
+            reportResult("none",
+                         "delete",
+                         "source deleted successfully",
+                         systemID,
+                         RESULT_SUCCESS,
+                         ACTION_DELETE);
         } catch (SourceException se) {
-            reportResult("none", 
-                "delete", 
-                "unable to delete Source:" + se.getMessage(), 
-                systemID, 
-                RESULT_FAILED,
-                ACTION_DELETE);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("FAIL exception: " + se, se);
+            }
+            reportResult("none",
+                         "delete",
+                         "unable to delete source: " + se.getMessage(),
+                         systemID,
+                         RESULT_FAILED,
+                         ACTION_DELETE);
+        } finally {
+            resolver.release(source);
         }
-        reportResult("none", 
-            "delete", 
-            "source deleted successfully", 
-            systemID, 
-            RESULT_SUCCESS,
-            ACTION_DELETE);
     }
 
     /**
@@ -598,14 +605,14 @@ public class SourceWritingTransformer
                                   String  tagname)
     throws SAXException, IOException, ProcessingException {
         // no sync req
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN insertFragment systemID="+systemID+
-                ", path="+path+
-                ", replace="+replacePath+
-                ", create="+create+
-                ", overwrite="+overwrite+
-                ", reinsert="+reinsertPath+
-                ", fragment="+(fragment == null ? "null" : XMLUtils.serializeNodeToXML(fragment)));
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("BEGIN insertFragment systemID="+systemID+
+                              ", path="+path+
+                              ", replace="+replacePath+
+                              ", create="+create+
+                              ", overwrite="+overwrite+
+                              ", reinsert="+reinsertPath+
+                              ", fragment="+(fragment == null ? "null" : XMLUtils.serializeNodeToXML(fragment)));
         }
         // test parameter
         if (systemID == null) {
@@ -614,7 +621,9 @@ public class SourceWritingTransformer
         if (path == null) {
             throw new ProcessingException("insertFragment: path is required.");
         }
-        if (path.startsWith("/") == true) path = path.substring(1);
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
         if (fragment == null) {
             throw new ProcessingException("insertFragment: fragment is required.");
         }
@@ -634,7 +643,7 @@ public class SourceWritingTransformer
             ModifiableSource ws = (ModifiableSource)source;
             exists = ws.exists();
             target = source.getURI();
-            if ( exists == true && this.state == STATE_INSERT ) {
+            if ( exists && this.state == STATE_INSERT ) {
                                 message = "content inserted at: " + path;
                 resource = SourceUtil.toDOM( source );
                 // import the fragment
@@ -651,7 +660,7 @@ public class SourceWritingTransformer
                            replaceNode = replaceNode.getParentNode();
                         }
                         if (replaceNode != null) {
-                            if (overwrite == true) {
+                            if (overwrite) {
                                 if (parent.getNodeType() == Node.DOCUMENT_NODE) {
                                     // replacing of the document element is not allowed
                                     DOMParser parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
@@ -671,7 +680,7 @@ public class SourceWritingTransformer
                                 if (reinsertPath != null) {
                                     Node insertAt = DOMUtil.getSingleNode(parent, reinsertPath);
                                     if (insertAt != null) {
-                                        while (replaceNode.hasChildNodes() == true) {
+                                        while (replaceNode.hasChildNodes()) {
                                             insertAt.appendChild(replaceNode.getFirstChild());
                                         }
                                     } else { // reinsert point null
@@ -692,7 +701,7 @@ public class SourceWritingTransformer
                 } else { // no replace path, just do an insert at end
                     parent.appendChild(importNode);
                 }
-            } else if (create == true) {
+            } else if (create) {
                 DOMParser parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
                 try {
                     resource = parser.createDocument();
@@ -713,7 +722,7 @@ public class SourceWritingTransformer
                     message = "content appended to: " + path;
                 }
             } else {
-                            message = "create not allowed";
+                message = "create not allowed";
                 resource = null;/**/
             }
 
@@ -741,8 +750,8 @@ public class SourceWritingTransformer
                                 oStream.close();
                                 failed = false;
                             } catch (Throwable t) {
-                                if (this.getLogger().isDebugEnabled() == true) {
-                                    this.getLogger().debug("FAIL (oStream.close) exception"+t, t);
+                                if (getLogger().isDebugEnabled()) {
+                                    getLogger().debug("FAIL (oStream.close) exception"+t, t);
                                 }
                                 throw new ProcessingException("Could not process your document.", t);
                             } finally {
@@ -754,26 +763,26 @@ public class SourceWritingTransformer
                         }
                     }
                 } else {
-                    if (this.getLogger().isDebugEnabled() == true) {
-                        this.getLogger().debug("ERROR no serializer");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("ERROR no serializer");
                     }
                     //throw new ProcessingException("No serializer specified for writing to source " + systemID);
                     message = "That source requires a serializer, please add the appropirate tag to your code.";
                 }
             }
         } catch (DOMException de) {
-            if (this.getLogger().isDebugEnabled() == true) {
-                this.getLogger().debug("FAIL exception: "+de, de);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("FAIL exception: "+de, de);
             }
             message = "There was a problem manipulating your document: " + de;
         } catch (ComponentException ce) {
-            if (this.getLogger().isDebugEnabled() == true) {
-                this.getLogger().debug("FAIL exception: "+ce, ce);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("FAIL exception: "+ce, ce);
             }
             message = "There was a problem looking up a component: " + ce;
         } catch (SourceException se) {
-            if (this.getLogger().isDebugEnabled() == true) {
-                this.getLogger().debug("FAIL exception: "+se, se);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("FAIL exception: "+se, se);
             }
             message = "There was a problem resolving that source: [" + systemID + "] : " + se;
         } finally {
@@ -787,8 +796,8 @@ public class SourceWritingTransformer
 
         this.reportResult(localSerializer, tagname, message, target, result, action);
 
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END insertFragment");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("END insertFragment");
         }
     }
 
@@ -821,7 +830,4 @@ public class SourceWritingTransformer
             }
         sendEndElementEvent(RESULT_ELEMENT);
     }
-
-
-
 }
