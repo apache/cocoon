@@ -82,7 +82,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.7 2003/07/11 08:59:03 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.8 2003/07/14 16:06:20 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends AbstractProcessingPipeline
@@ -518,7 +518,7 @@ public abstract class AbstractCachingProcessingPipeline
                                 new Date(responseExpires.longValue()));
                         }
                         this.cachedResponse = response.getResponse();
-                        this.cachedLastModified = response.lastModified;
+                        this.cachedLastModified = response.getLastModified();
                         return;
                     } else {
                         if (this.getLogger().isDebugEnabled()) {
@@ -602,7 +602,7 @@ public abstract class AbstractCachingProcessingPipeline
                     }
                     // we are valid, ok that's it
                     this.cachedResponse = response.getResponse();
-                    this.cachedLastModified = response.lastModified;
+                    this.cachedLastModified = response.getLastModified();
                 } else {
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("validatePipeline: cached content is invalid for '" + environment.getURI() + "'.");
