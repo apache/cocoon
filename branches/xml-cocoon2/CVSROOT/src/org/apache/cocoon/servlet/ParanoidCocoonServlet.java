@@ -60,7 +60,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-15 20:50:14 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-20 21:30:30 $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -136,8 +136,22 @@ public class ParanoidCocoonServlet extends HttpServlet {
      private String getClassPath(final ServletContext context, RepositoryClassLoader classloader)
      throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
-        String classDir = context.getRealPath("/WEB-INF/classes");
-        File root = new File(context.getRealPath("/WEB-INF/lib"));
+        String classDirPath = context.getInitParameter("class-dir");
+        String libDirPath = context.getInitParameter("lib-dir");
+        String classDir;
+        File root;
+
+        if (classDirPath != null && classDirPath.equals("")) {
+            classDir = classDirPath;
+        } else {
+            classDir = context.getRealPath("/WEB-INF/classes");
+        }
+
+        if (libDirPath != null && classDirPath.equals("")) {
+            root = new File(libDirPath);
+        } else {
+            root = new File(context.getRealPath("/WEB-INF/lib"));
+        }
 
         try {
             classloader.addDirectory(new File(classDir));
