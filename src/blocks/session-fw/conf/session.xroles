@@ -24,7 +24,7 @@
 
   <role name="org.apache.cocoon.webapps.session.context.SessionContextProviderSelector"
         shorthand="session-context-providers"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
   </role>
 
 </xroles>

@@ -7,7 +7,7 @@
 
     <role name="org.apache.cocoon.components.web3.Web3StreamerSelector"
               shorthand="web3-streamer"
-              default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+              default-class="org.apache.cocoon.components.ExtendedComponentSelector">
         <hint shorthand="default" 
               class="org.apache.cocoon.components.web3.impl.DefaultWeb3StreamerImpl"/>
         <!-- your streamer here -->

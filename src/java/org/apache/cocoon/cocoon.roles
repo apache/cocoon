@@ -16,7 +16,7 @@
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
   </role>
 
   <role name="org.apache.excalibur.source.SourceResolver"
@@ -86,14 +86,14 @@
 
   <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
         shorthand="markup-languages"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
     <hint shorthand="sitemap-language" class="org.apache.cocoon.components.language.markup.CocoonMarkupLanguage"/>
     <hint shorthand="xsp-language" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage"/>
   </role>
 
   <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
         shorthand="programming-languages"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
     <hint shorthand="java-language" class="org.apache.cocoon.components.language.programming.java.JavaLanguage"/>
     <hint shorthand="js-language" class="org.apache.cocoon.components.language.programming.javascript.JavascriptLanguage"/>
     <hint shorthand="python-language" class="org.apache.cocoon.components.language.programming.python.PythonLanguage"/>
@@ -112,7 +112,7 @@
 
   <role name="org.apache.avalon.excalibur.datasource.DataSourceComponentSelector"
         shorthand="datasources"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
 	<hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.ResourceLimitingJdbcDataSource"/>
     <!-- hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.JdbcDataSource"/ -->
     <hint shorthand="j2ee" class="org.apache.avalon.excalibur.datasource.J2eeDataSource"/>
@@ -165,11 +165,11 @@
   <!-- input/output modules -->
   <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
         shorthand="input-modules"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
 
   <role name="org.apache.cocoon.components.modules.output.OutputModuleSelector"
         shorthand="output-modules"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
 
   <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
         shorthand="global-variables"
