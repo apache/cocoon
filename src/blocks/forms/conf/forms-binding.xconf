@@ -19,6 +19,7 @@
        
   <forms-binding logger="forms.binding">
     <bindings>
+      <binding name="group" src="org.apache.cocoon.forms.binding.GroupJXPathBindingBuilder"/>
       <binding name="value" src="org.apache.cocoon.forms.binding.ValueJXPathBindingBuilder"/>
       <binding name="multi-value" src="org.apache.cocoon.forms.binding.MultiValueJXPathBindingBuilder"/>
       <binding name="context" src="org.apache.cocoon.forms.binding.ContextJXPathBindingBuilder"/>
