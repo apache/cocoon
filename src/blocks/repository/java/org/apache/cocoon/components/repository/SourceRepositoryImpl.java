@@ -34,12 +34,7 @@ import org.apache.excalibur.source.TraversableSource;
 /**
  * SourceRepository implementation.
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * 
- * @avalon.component
- * @avalon.service type="SourceRepository"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="source-repository"
+ * @version $Id: SourceRepositoryImpl.java,v 1.6 2004/03/27 22:01:22 unico Exp $
  */
 public class SourceRepositoryImpl extends AbstractLogEnabled 
 implements Serviceable, ThreadSafe, SourceRepository {
@@ -53,10 +48,6 @@ implements Serviceable, ThreadSafe, SourceRepository {
     public SourceRepositoryImpl() {
     }
     
-    /**
-     * @avalon.dependency type="SourceResolver"
-     * @avalon.dependency type="RepositoryInterceptor" optional="true"
-     */
     public void service(ServiceManager manager) throws ServiceException {
         m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
         if (manager.hasService(RepositoryInterceptor.ROLE)) {

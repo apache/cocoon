@@ -25,12 +25,9 @@ import org.apache.excalibur.source.SourceException;
  * 
  * <p>
  * Each operation returns a status code that is based on RFC 2518 (WebDAV).
- * This does not mean to it cannot be used outside of a WebDAV context.
- * It is reusing a standard to enable rich communication between
- * the flow layer and the service layer.
  * </p>
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
+ * @version $Id: SourceRepository.java,v 1.6 2004/03/27 22:01:22 unico Exp $
  */
 public interface SourceRepository {
     
