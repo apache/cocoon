@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.199 2001-01-26 21:07:41 balld Exp $ 
+  $Id: changes.xml,v 1.200 2001-01-26 23:26:18 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -21,6 +21,9 @@
   <action dev="DB" type="add" due-to="Steffen Stundzig" due-to-email="steffen@smb-tec.com">
    Added SAXONTransformer
   </action>
+ </release>
+
+ <release version="1.8.2" date="January 26 2001">
   <action dev="RDG" type="fix">
    Built with all options enabled, correcting the missing classes problem in the previous two releases.
   </action>
