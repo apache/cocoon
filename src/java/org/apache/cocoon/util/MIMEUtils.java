@@ -54,7 +54,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
@@ -62,81 +69,33 @@ import java.io.FileInputStream;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: MIMEUtils.java,v 1.3 2003/05/30 15:30:19 crossley Exp $
+ * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
+ * @version CVS $Id: MIMEUtils.java,v 1.4 2003/06/01 09:17:00 jefft Exp $
  */
 public class MIMEUtils {
 
-    final private static HashMap extMap = new HashMap() {
-        {
-            put(null, "application/octet-stream");
-            put(".text", "text/plain");
-            put(".txt", "text/plain");
-            put(".html", "text/html");
-            put(".htm", "text/html");
-            put(".xml", "text/xml");
-            put(".css", "text/css");
-            put(".rtf", "text/rtf");
-            put(".wml", "text/vnd.wap.wml");
-            put(".jpg", "image/jpeg");
-            put(".jpeg", "image/jpeg");
-            put(".jpe", "image/jpeg");
-            put(".png", "image/png");
-            put(".gif", "image/gif");
-            put(".tif", "image/tiff");
-            put(".tiff", "image/tiff");
-            put(".svg", "image/svg-xml");
-            put(".pdf", "application/pdf");
-            put(".wrl", "model/vrml");
-            put(".smil", "application/smil");
-            put(".js", "application/x-javascript");
-            put(".zip", "application/zip");
-            put(".mpeg", "video/mpeg");
-            put(".mpg", "video/mpeg");
-            put(".mpe", "video/mpeg");
-            put(".mov", "video/quicktime");
-            put(".mid", "audio/midi");
-            put(".mp3", "audio/mpeg");
-            put(".vcf", "text/x-vcard");
-            put(".rdf", "text/rdf");
-        }
-    };
+    /** Our properties are now here: */
+    private static final String PROPS_FILE = "org/apache/cocoon/util/mime.types";
 
-    final private static HashMap mimeMap = new HashMap() {
-        {
-            put(null, null);
-            put("text/plain", ".text");
-            put("text/html", ".html");
-            put("text/xml", ".xml");
-            put("text/css", ".css");
-            put("text/rtf", ".rtf");
-            put("application/rtf", ".rtf");
-            put("text/vnd.wap.wml", ".wml");
-            put("image/jpeg", ".jpeg");
-            put("image/jpg", ".jpeg");
-            put("image/jpe", ".jpeg");
-            put("image/png", ".png");
-            put("image/gif", ".gif");
-            put("image/tiff", ".tiff");
-            put("image/tif", ".tiff");
-            put("image/svg-xml", ".svg");
-            put("image/svg+xml", ".svg");
-            put("application/pdf", ".pdf");
-            put("model/vrml", ".wrl");
-            put("application/smil", ".smil");
-            put("application/x-javascript", ".js");
-            put("application/zip", ".zip");
-            put("video/mpeg", ".mpeg");
-            put("video/mpeg", ".mpe");
-            put("video/mpeg", ".mpg");
-            put("video/quicktime", ".mov");
-            put("audio/midi", ".mid");
-            put("audio/mpeg", ".mp3");
-            put("text/javascript", ".js");
-            put("text/vbscript", ".vbs");
-            put("text/x-vcard", ".vcf");
-            put("text/rdf", ".rdf");
+    /** Default extensions for MIME types. */
+    final private static Map extMap = new HashMap();
+    /** MIME types for extensions. */
+    final private static Map mimeMap = new HashMap();
+
+    /**
+     * Load the MIME type mapping
+     */
+    static {
+        try {
+            final InputStream is = MIMEUtils.class.getClassLoader().getResourceAsStream(PROPS_FILE);
+            if ( null == is ) {
+                throw new RuntimeException("Cocoon cannot load MIME type mappings from " + PROPS_FILE);
+            }
+            loadMimeTypes(new InputStreamReader(is), extMap, mimeMap);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Cocoon cannot load MIME type mappings from " + PROPS_FILE);
         }
-    };
+    }
 
     /**
      * Return the MIME type for a given file.
@@ -148,6 +107,7 @@ public class MIMEUtils {
     public static String getMIMEType(final File file)
       throws FileNotFoundException, IOException {
         BufferedInputStream in = null;
+        System.out.println("****** "+file);
 
         try {
             in = new BufferedInputStream(new FileInputStream(file));
@@ -187,7 +147,7 @@ public class MIMEUtils {
      * @return MIME type.
      */
     public static String getMIMEType(final String ext) {
-        return (String) extMap.get(ext);
+        return (String) mimeMap.get(ext);
     }
 
     /**
@@ -198,6 +158,49 @@ public class MIMEUtils {
      * @return Filename extension.
      */
     public static String getDefaultExtension(final String type) {
-        return (String) mimeMap.get(type);
+        return (String) extMap.get(type);
+    }
+
+
+    /**
+     * Parses a <code>mime.types</code> file, and generates mappings between
+     * MIME types and extensions.
+     * For example, if a line contains:
+     * <pre>text/html   html htm</pre>
+     * Then 'html' will be the default extension for text/html, and both 'html'
+     * and 'htm' will have MIME type 'text/html'.
+     * Lines starting with '#' are treated as comments and ignored.  If an
+     * extension is listed for two MIME types, the first will be chosen.
+     *
+     * @param in Reader of bytes from <code>mime.types</code> file content
+     * @param extMap Empty map of default extensions, keyed by MIME type. Will
+     * be filled in by this method.
+     * @param mimeMap Empty map of MIME types, keyed by extension.  Will be
+     * filled in by this method.
+     */
+    public static void loadMimeTypes(Reader in, Map extMap, Map mimeMap) throws IOException {
+        BufferedReader br = new BufferedReader(in);
+        String line;
+        while ( (line = br.readLine()) != null) {
+            if (line.startsWith("#")) continue;
+            if (line.trim().equals("")) continue;
+            StringTokenizer tok = new StringTokenizer(line, " \t");
+            String mimeType = tok.nextToken();
+            if (tok.hasMoreTokens()) {
+                String defaultExt = tok.nextToken();
+                if (!extMap.containsKey(mimeType)) {
+                    extMap.put(mimeType, "."+defaultExt);
+                }
+                if (!mimeMap.containsKey("."+defaultExt)) {
+                    mimeMap.put("."+defaultExt, mimeType);
+                }
+                while (tok.hasMoreTokens()) {
+                    String ext = tok.nextToken();
+                    if (!mimeMap.containsKey("."+ext)) {
+                        mimeMap.put("."+ext, mimeType);
+                    }
+                }
+            }
+        }
     }
 }
