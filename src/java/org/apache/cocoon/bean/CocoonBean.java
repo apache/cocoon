@@ -106,35 +106,15 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.7 2003/06/04 13:48:50 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.8 2003/06/04 14:19:09 upayavira Exp $
  */
 public class CocoonBean {
 
     protected static final String DEFAULT_USER_AGENT = Constants.COMPLETE_NAME;
     protected static final String DEFAULT_ACCEPT = "text/html, */*";
 
-    /**
-     * The directory to use as context root.
-     */
-    public static final String DEFAULT_CONTEXT_DIR = "./webapp";
-
-    /**
-     * The diretory to use to use for the generated output.
-     */
-    public static final String DEFAULT_DEST_DIR = "./site";
-
-    /**
-     * The diretory to use for generated files.
-     */
-    public static final String DEFAULT_WORK_DIR = "./work";
-
-    /**
-     * How a default configuration file is named.
-     */
-    public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
-
     // User Supplied Parameters
-    private String contextDir = CocoonBean.DEFAULT_CONTEXT_DIR;
+    private String contextDir = Constants.DEFAULT_CONTEXT_DIR;
     private String configFile = null;
 
     private String brokenLinkReportFile = null;
@@ -142,7 +122,7 @@ public class CocoonBean {
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";
 
-    private String workDir = CocoonBean.DEFAULT_WORK_DIR;
+    private String workDir = Constants.DEFAULT_WORK_DIR;
     private String logKit = null;
     private String logger = null;
     private String userAgent = DEFAULT_USER_AGENT;
@@ -282,15 +262,15 @@ public class CocoonBean {
     private static File getConfigurationFile(File dir, String configFile) throws IOException {
         File conf;
         if (configFile == null) {
-            conf = tryConfigurationFile(dir + File.separator + CocoonBean.DEFAULT_CONF_FILE);
+            conf = tryConfigurationFile(dir + File.separator + Constants.DEFAULT_CONF_FILE);
             if (conf == null) {
-                conf = tryConfigurationFile(dir + File.separator + "WEB-INF" + File.separator + CocoonBean.DEFAULT_CONF_FILE);
+                conf = tryConfigurationFile(dir + File.separator + "WEB-INF" + File.separator + Constants.DEFAULT_CONF_FILE);
             }
             if (conf == null) {
-                conf = tryConfigurationFile(System.getProperty("user.dir") + File.separator + CocoonBean.DEFAULT_CONF_FILE);
+                conf = tryConfigurationFile(System.getProperty("user.dir") + File.separator + Constants.DEFAULT_CONF_FILE);
             }
             if (conf == null) {
-                conf = tryConfigurationFile("/usr/local/etc/" + CocoonBean.DEFAULT_CONF_FILE);
+                conf = tryConfigurationFile("/usr/local/etc/" + Constants.DEFAULT_CONF_FILE);
             }
         } else {
             conf = new File(configFile);
