@@ -21,4 +21,4 @@ echo
 echo Starting Ant...
 echo
 
-$JAVA_HOME/bin/java -classpath $CLASSPATH:$LOCALCLASSPATH org.apache.tools.ant.Main $*
+$JAVA_HOME/bin/java -classpath $LOCALCLASSPATH:$CLASSPATH org.apache.tools.ant.Main $*
