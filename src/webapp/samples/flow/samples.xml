@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.6 2004/03/06 02:25:34 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.7 2004/03/10 13:01:50 unico Exp $ -->
 
 <samples>
 
@@ -26,13 +26,10 @@
   </group>
 
   <group name="Cocoon Control Flow">
-    <sample name="Calculator" href="calc/">
+    <sample name="Calculator" href="jxcalc/">
     A simple web-based calculator that uses javascript on the server side
     to describe the web application flow between screens in a coherent 
     unique location and continuations to maintain state between requests.
-   </sample>
-    <sample name="Calculator 2" href="jxcalc/">
-     Same sample as the calculator but using the JXGenerator instead of XSP.
     </sample>
    <sample name="User Preferences" href="prefs/">
     A common portion of an application which requires users to be

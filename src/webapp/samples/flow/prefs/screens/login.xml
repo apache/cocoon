@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <resources>
+    <resource type="file" href="prefs.js">Flowscript</resource>
+  </resources>
+  <title>Login</title>
+  <content>
+    <jx:if test="errorMsg">
+      <strong>${errorMsg}</strong>
+    </jx:if>
+    <form action="continue.${continuation.id}">
+      <para>
+        Login name:
+        <input type="text" name="login" value="${login}"/>
+      </para>
+      <para>Password: <input type="password" name="password"/></para>
+      <input type="submit" name="submit" value="Login"/>
+      <para>Not yet registered? <link href="register">Register now!</link></para>
+    </form>
+  </content>
+</page>

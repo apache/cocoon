@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <resources>
+    <resource type="file" href="prefs.js">Flowscript</resource>
+  </resources>
+  <title>${title}></title>
+  <content>
+    <jx:choose>
+      <jx:when test="errorMsg">
+        <para><strong>${errorMsg}</strong></para>
+      </jx:when>
+      <jx:otherwise>
+        <para>Please enter the following data</para>
+      </jx:otherwise>
+    </jx:choose>
+     <form method="post" action="continue.${continuation.id}">
+      <para>
+        <jx:choose>
+          <jx:when test="check and firstName = ''">
+            <strong>First name cannot be empty</strong>
+          </jx:when>
+          <jx:otherwise>
+            First name:
+          </jx:otherwise>
+        </jx:choose>
+        <input type="text" name="firstName" value="${firstName}"/>
+      </para>
+      <para>
+        <jx:choose>
+          <jx:when test="check and lastName = ''">
+            <strong>Last name cannot be empty</strong>
+          </jx:when>
+          <jx:otherwise>
+            Last name:
+          </jx:otherwise>
+        </jx:choose>
+        <input type="text" name="lastName" value="${lastName}"/>
+      </para>
+      <para>
+        <jx:choose>
+          <jx:when test="check and email = ''">
+            <strong>Email address cannot be empty</strong>
+          </jx:when>
+          <jx:otherwise>
+            Email address:
+          </jx:otherwise>
+        </jx:choose>
+        <input type="text" name="email" value="${email}"/>
+      </para>
+      <para>
+        <jx:choose>
+          <jx:when test="check and login = ''">
+            <strong>Login name cannot be empty</strong>
+          </jx:when>
+          <jx:otherwise>
+            Login name:
+          </jx:otherwise>
+        </jx:choose>
+        <input type="text" name="login" value="${login}"/>
+      </para>
+      <para>
+        <jx:choose>
+          <jx:when test="check and password = ''">
+            <strong>Password cannot be empty</strong>
+          </jx:when>
+          <jx:otherwise>
+            Password:
+          </jx:otherwise>
+        </jx:choose>
+        <input type="password" name="password" value="${password}"/>
+      </para>
+      <input type="submit" name="submit" value="${button}"/>
+       <jx:if test="cancel">
+        <input type="submit" name="cancel" value="Cancel"/>
+      </jx:if>
+    </form>
+  </content>
+</page>
