@@ -1,5 +1,5 @@
 /*
-    prefs.js
+    CVS: $Id: prefs.js,v 1.3 2003/05/20 00:54:12 vgritsenko Exp $
 
     This file is the central controller piece in the preferences
     application. It receives the requests from the client browser (the
@@ -8,7 +8,6 @@
 
     Author: Ovidiu Predescu <ovidiu@apache.org>
     Date: August 30, 2002
-
  */
 
 // The global user registry, through which we add new users or access
@@ -46,7 +45,7 @@ function registerUser()
     // and print an indicator close to where the errors
     // are. `errorMsg' if not null is printed at the top of the page
     // as an error message.
-    sendPageAndWait("userInfo",
+    sendPageAndWait("page/userInfo",
                     { "check" : check, "errorMsg" : errorMsg,
                     "title": "New User Registration",
                     "button" : "Register",
@@ -64,8 +63,7 @@ function registerUser()
     email = cocoon.request.get("email");
 
     if (login == "" || password == ""
-        || firstName == "" || lastName == ""
-        || email == "") {
+        || firstName == "" || lastName == "" || email == "") {
       check = true;
       errorMsg = "Please correct the marked errors before continuing";
       continue;
@@ -106,7 +104,7 @@ function registerUser()
   //
   // In the case of this particular function, this is the only exit
   // point.
-  sendPage("registrationSuccessful", {"user" : user});
+  sendPage("page/registrationSuccessful", {"user" : user});
 }
 
 
@@ -117,7 +115,7 @@ function login(errorMsg)
   var password = "";
 
   while (true) {
-    sendPageAndWait("login",
+    sendPageAndWait("page/login",
                     {"errorMsg" : errorMsg, "login" : login, "password" : password});
 
     errorMsg = null;
@@ -144,7 +142,7 @@ function login(errorMsg)
   // We send to the user a welcome page which contains links back to
   // what (s)he can do. These links essentially point to other top
   // level functions in this script.
-  sendPage("welcome", {"user" : user});
+  sendPage("page/welcome", {"user" : user});
 }
 
 // This function is called to edit the preferences of an already
@@ -170,7 +168,7 @@ function edit()
     // and print an indicator close to where the errors
     // are. `errorMsg' if not null is printed at the top of the page
     // as an error message.
-    sendPageAndWait("userInfo",
+    sendPageAndWait("page/userInfo",
                     { "check" : check, "errorMsg" : errorMsg,
                     "title": "Edit account",
                     "button" : "Change", "cancel" : true,
@@ -191,8 +189,7 @@ function edit()
     email = cocoon.request.get("email");
 
     if (login == "" || password == ""
-        || firstName == "" || lastName == ""
-        || email == "") {
+        || firstName == "" || lastName == "" || email == "") {
       check = true;
       errorMsg = "Please correct the marked errors before continuing";
       continue;
@@ -207,7 +204,7 @@ function edit()
     }
   }
 
-  sendPage("welcome", {"user" : user});
+  sendPage("page/welcome", {"user" : user});
 }
 
 function logout()
