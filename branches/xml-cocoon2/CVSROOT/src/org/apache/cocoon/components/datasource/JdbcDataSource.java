@@ -22,7 +22,7 @@ import java.sql.SQLException;
  * <code>java.sql.DriverManager</code>.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-10 22:07:04 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-12 15:26:00 $
  */
 public class JdbcDataSource implements DataSourceComponent {
     Logger log = LogKit.getLoggerFor("cocoon");
@@ -42,12 +42,22 @@ public class JdbcDataSource implements DataSourceComponent {
     throws ConfigurationException {
         if (this.pool == null) {
             String dburl = conf.getChild("dburl").getValue();
-            String user = conf.getChild("user").getValue();
-            String passwd = conf.getChild("password").getValue();
+            Configuration userConf = conf.getChild("user");
+            Configuration passwdConf = conf.getChild("password");
+            String user = null;
+            String passwd = null;
+
+            if (! userConf.getLocation().equals("-")) {
+                user = userConf.getValue();
+            }
+
+            if (! passwdConf.getLocation().equals("-")) {
+                passwd = passwdConf.getValue();
+            }
 
             Configuration controler = conf.getChild("pool-controller");
             int min = controler.getAttributeAsInt("min", 0);
-            int max = controler.getAttributeAsInt("max", 1);
+            int max = controler.getAttributeAsInt("max", 3);
 
             this.pool = new JdbcConnectionPool(dburl, user, passwd, min, max);
         }

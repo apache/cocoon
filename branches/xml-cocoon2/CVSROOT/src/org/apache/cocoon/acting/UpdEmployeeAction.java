@@ -33,7 +33,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-11 21:04:14 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-12 15:25:59 $
  */
 public class UpdEmployeeAction extends ComposerAction {
 
@@ -81,10 +81,10 @@ public class UpdEmployeeAction extends ComposerAction {
             conn = datasource.getConnection();
             conn.setAutoCommit(false);
 
-            ps = conn.prepareStatement("UPDATE employee_table SET id = ?, name = ?, department_id = ?");
-            ps.setString(1, id);
-            ps.setString(2, name);
-            ps.setString(3, department);
+            ps = conn.prepareStatement("UPDATE employee_table SET name = ?, department_id = ? WHERE id = ?");
+            ps.setString(1, name);
+            ps.setString(2, department);
+            ps.setString(3, id);
 
             ps.executeUpdate();
             returnValue = true;
