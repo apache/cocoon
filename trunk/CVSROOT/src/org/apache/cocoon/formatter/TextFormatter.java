@@ -1,4 +1,4 @@
-/*-- $Id: TextFormatter.java,v 1.2 2000-01-03 01:46:51 stefano Exp $ -- 
+/*-- $Id: TextFormatter.java,v 1.3 2000-01-06 17:57:50 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,18 +58,24 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 2000-01-03 01:46:51 $
+ * @version $Revision: 1.3 $ $Date: 2000-01-06 17:57:50 $
  */
 
 public class TextFormatter extends AbstractFormatter implements Status {
 
+    private SerializerFactory factory;
+        
+    public TextFormatter () {
+        this.factory = SerializerFactory.getSerializerFactory(Method.TEXT);
+    }
+
     public void format(Document document, Writer writer, Dictionary p) throws Exception {
         OutputFormat format = super.getFormat(p);
-        format.setMethod(OutputFormat.METHOD_TEXT);
+        format.setMethod(Method.TEXT);
         format.setOmitXMLDeclaration(true);
         format.setPreserveSpace(true);
-        Serializer serializer = Serializer.makeSerializer(writer, format);
-        serializer.serialize(document);
+        Serializer serializer = this.factory.makeSerializer(writer, format);
+        serializer.asDOMSerializer().serialize(document);
     }
 
     public String getMIMEType() {

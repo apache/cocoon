@@ -1,4 +1,4 @@
-/*-- $Id: WMLFormatter.java,v 1.3 2000-01-03 01:46:51 stefano Exp $ -- 
+/*-- $Id: WMLFormatter.java,v 1.4 2000-01-06 17:57:50 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,19 +59,25 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:46:51 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-06 17:57:50 $
  */
 
 public class WMLFormatter extends AbstractFormatter implements Status {
 
+    private SerializerFactory factory;
+        
+    public WMLFormatter () {
+        this.factory = SerializerFactory.getSerializerFactory(Method.XML);
+    }
+
     public void format(Document document, Writer writer, Dictionary p) throws Exception {
         OutputFormat format = super.getFormat(p);
-        format.setMethod(OutputFormat.METHOD_XML);
+        format.setMethod(Method.XML);
         format.setOmitXMLDeclaration(false);
         format.setPreserveSpace(false);
         format.setDoctype("-//WAPFORUM//DTD WML 1.1//EN", "http://www.wapforum.org/DTD/wml_1.1.xml");
-        Serializer serializer = Serializer.makeSerializer(writer, format);
-        serializer.serialize(document);
+        Serializer serializer = this.factory.makeSerializer(writer, format);
+        serializer.asDOMSerializer().serialize(document);
     }
     
     public String getMIMEType() {

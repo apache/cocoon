@@ -1,4 +1,4 @@
-/*-- $Id: VRMLFormatter.java,v 1.3 2000-01-03 01:46:51 stefano Exp $ --
+/*-- $Id: VRMLFormatter.java,v 1.4 2000-01-06 17:57:50 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,12 +54,11 @@ package org.apache.cocoon.formatter;
 import java.io.*;
 import java.util.*;
 import org.w3c.dom.*;
-import org.apache.xml.serialize.*;
 import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:jmbirchfield@proteus-technologies.com">James Birchfield</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:46:51 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-06 17:57:50 $
  */
 
 public class VRMLFormatter extends AbstractFormatter implements Status {
