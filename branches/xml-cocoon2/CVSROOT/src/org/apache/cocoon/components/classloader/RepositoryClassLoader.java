@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-13 14:46:24 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-13 16:44:06 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -118,7 +118,7 @@ class RepositoryClassLoader extends ClassLoader {
       try {
         c = findSystemClass(name);
       } catch (ClassNotFoundException e) {
-        log.debug("Could not load class " + name + "trying to load from the repository");
+        log.debug("Could not load class " + name + " trying to load from the repository");
         byte[] bits = this.loadClassData (name);
 
         if (bits == null) {

@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:40:31 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-13 16:44:08 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -56,7 +56,8 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
     private Exception exception;
 
     /** the managed sitemap */
-    private Sitemap sitemap;
+
+    private Sitemap sitemap = null;
     private boolean check_reload = true;
 
     /** the regenerating thread */
@@ -86,12 +87,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         } else {
             this.sourceFile = new File (source);
             if (!this.sourceFile.isFile()) {
-                s = source + File.separatorChar + "sitemap.xmap";
-                this.sourceFile = new File (s);
+                this.sourceFile = new File (this.sourceFile, "sitemap.xmap");
             }
         }
         if (!this.sourceFile.canRead()) {
-            throw new FileNotFoundException ("file " + s + " not found or cannot be opened for reading");
+            throw new FileNotFoundException ("file " + this.sourceFile.toString() + " not found or cannot be opened for reading");
         }
     }
 
@@ -133,8 +133,10 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
     public boolean process (Environment environment)
     throws Exception {
         throwEventualException();
-        if (sitemap == null)
+        if (sitemap == null) {
             log.fatalError("Sitemap is not set for the Handler!!!!");
+            throw new RuntimeException("The Sitemap is null, this should never be!");
+        }
         return sitemap.process(environment);
     }
 
@@ -160,6 +162,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
             if (smap instanceof Composer) smap.compose(this.manager);
             if (smap instanceof Configurable) smap.configure(this.conf);
             this.sitemap = smap;
+            if (this.sitemap != null) {
+                log.debug("The sitemap has been successfully compiled!");
+            } else {
+                log.debug("No errors, but the sitemap has not been set.");
+            }
         } catch (Exception e) {
             log.error("Error compiling sitemap", e);
             this.exception = e;
