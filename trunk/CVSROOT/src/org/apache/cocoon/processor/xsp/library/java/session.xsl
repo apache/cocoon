@@ -339,6 +339,25 @@
     </xsp:logic>
   </xsl:template>
 
+  <xsl:template match="session:put-value">
+    <xsl:variable name="name">
+      <xsl:call-template name="value-for-name"/>
+    </xsl:variable>
+
+    <xsl:variable name="content">
+      <xsl:call-template name="get-nested-content">
+        <xsl:with-param name="content" select="."/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsp:logic>
+      session.putValue(
+        String.valueOf(<xsl:copy-of select="$name"/>),
+        <xsl:copy-of select="$content"/>
+      );
+    </xsp:logic>
+  </xsl:template>
+
   <xsl:template match="session:set-max-inactive-interval">
     <xsl:variable name="interval">
       <xsl:choose>
