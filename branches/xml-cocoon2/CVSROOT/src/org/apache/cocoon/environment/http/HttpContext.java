@@ -40,6 +40,11 @@ public class HttpContext implements Context {
 		return servletContext.getResource(path);
 	}
 
+	public String getRealPath(String path)
+                         throws MalformedURLException {
+		return servletContext.getRealPath(path);
+	}
+
 	public java.lang.String getMimeType(String file) {
 		return servletContext.getMimeType(file);
 	}

@@ -82,6 +82,9 @@
    <sample name="File Uploads" href="xsp/upload" xlink:role="dynamic">
     Sample to illustrate File uploads.
    </sample>
+   <sample name="Velocity Generator" href="templates/hello-page.vm">
+    An example of the VelocityGenerator producing XML out of a Velocity Template.
+   </sample>
   </group>
 
   <group name="Sample Forms">

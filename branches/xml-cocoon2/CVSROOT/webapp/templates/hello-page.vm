@@ -1,0 +1,7 @@
+<page>
+ <title>Hello</title>
+ <content>
+  <para>This is my first Cocoon2 page!</para>
+  <para>Hi!  This page is generated using $name from the $project project.</para>
+ </content>
+</page>
