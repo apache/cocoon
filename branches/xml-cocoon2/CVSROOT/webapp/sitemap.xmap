@@ -223,10 +223,10 @@
    <map:match pattern="sql/*">
     <map:generate src="docs/samples/sql/{1}.xml"/>
     <map:transform type="sql">
-      <parameter name="driver"   value="oracle.jdbc.driver.OracleDriver"/>
-      <parameter name="dburl"    value="jdbc:oracle:thin:@borg:1521:BORG"/>
-      <parameter name="username" value="bloritsch"/>
-      <parameter name="password" value="samantha"/>
+      <parameter name="driver"   value="org.gjt.mm.mysql.Driver"/>
+      <parameter name="dburl"    value="jdbc:mysql://localhost/test"/>
+      <parameter name="username" value="test"/>
+      <parameter name="password" value="test"/>
     </map:transform>
     <map:transform src="stylesheets/simple-sql2html.xsl"/>
     <map:serialize/>
