@@ -144,7 +144,9 @@
      <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
              <aspect type="history"/>
-             <aspect type="coplet"/>
+             <aspect type="coplet-cinclude">
+                <parameter name="root-tag" value="false"/>
+             </aspect>
          </aspects>
      </renderer>
      <renderer name="portlet-window"
