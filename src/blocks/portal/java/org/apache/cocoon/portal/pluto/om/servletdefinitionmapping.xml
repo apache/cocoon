@@ -13,18 +13,6 @@
     </field>
   </class>
     
-  <class name="org.apache.cocoon.portal.pluto.om.TagDefinition">
-
-    <field name="uri" type="java.lang.String" required="true">
-      <bind-xml name="taglib-uri" node="element"/>
-    </field>
-
-    <field name="location" type="java.lang.String" required="true">
-      <bind-xml name="taglib-location" node="element"/>
-    </field>
-
-  </class>
-  
   <class name="org.apache.cocoon.portal.pluto.om.common.DescriptionImpl">
 
     <field name="description" type="java.lang.String">
