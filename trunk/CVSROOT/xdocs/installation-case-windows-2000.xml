@@ -254,9 +254,13 @@
 	distribution all end up being copied into the working Jakarta-Tomcat directories, so the unzipped
 	Cocoon can be either deleted or left where it is after the files have been copied.)</em></li>
         
-    <li>Copy the <code>xerces_1_0_3.jar</code>, <code>xalan_1_0_1.jar</code>, <code>fop_0_12_1.jar</code> and <code>servlet_2_2.jar</code>
+    <li>Copy the <code>xerces_1_0_3.jar</code>, <code>xalan_1_0_1.jar</code>, 
+        <code>fop_0_12_1.jar</code> and <code>servlet_2_2.jar</code>
         files, found in the <code>C:\Program_Files\cocoon-1.7.4\lib</code> to the 
-        <code>C:\Program_Files\jakarta-tomcat\lib</code> directory.</li>
+        <code>C:\Program_Files\jakarta-tomcat\lib</code> directory.
+
+    <strong>NOTE:</strong> For Cocoon 1.8 and above, some of the version numbers have changed, 
+     <strong>and turbine-pool.jar is now also required.</strong></li>
         
     <li>Copy the <code>C:\Program_Files\cocoon-1.7.4\bin\cocoon.jar</code> file to the
         <code>C:\Program_Files\jakarta-tomcat\lib</code> directory.</li>

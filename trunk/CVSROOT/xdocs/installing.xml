@@ -692,6 +692,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>Sun JDK 1.3.0rc1</td>
   </tr>
   <tr>
+   <td>SuSE 6.2 Linux</td>
+   <td>Apache 1.3.14 mod_ssl</td>
+   <td>JServ 1.1.2</td>
+   <td>Sun JDK 1.1.7 / IBM JDK 1.3</td>
+  </tr>
+  <tr>
    <td>SuSE 6.3 Linux</td>
    <td>Apache 1.3.9</td>
    <td>Apache JServ 1.1</td>
@@ -808,6 +814,11 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>Apache 1.3.12</td>
    <td>Tomcat 3.1</td>
    <td>Sun JDK 1.3</td>
+  </tr>
+  <tr>
+   <td>Windows 2000 Professional</td>
+   <td colspan="2">Resin 1.1</td>
+   <td>Sun JRE 1.2.2</td>
   </tr>
   <tr>
    <td>Windows 2000 Advanced Server</td>

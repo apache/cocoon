@@ -16,9 +16,20 @@
    <p><strong>IMPORTANT: Before posting a question or problem to any mailing list,
     </strong>please first look at the <connect href="faq.xml">FAQs</connect>
     and the <link href="http://mail-archives.apache.org/">mailing list
-    archives</link> to avoid asking a question which has already been
+    archives</link> (or the
+    <link href="http://mailman.real-time.com/pipermail/cocoon-users/">backup
+    mailing list archives</link>) to avoid asking a question which has already been
     asked and answered dozens of times before!
    </p>
+
+   <p>There is no official system for searching the mail archives yet, but you can
+    try this:</p>
+
+   <ol>
+    <li>Go to <link href="http://www.google.com/">http://www.google.com/</link></li>
+    <li>Enter <code>site:mailman.real-time.com cocoon-users</code> and then your
+     search terms in the search box.</li>
+   </ol>
   </s1>
 
   <s1 title="Cocoon Users">
@@ -36,8 +47,15 @@
     but also your operating system, JDK version, and servlet engine), and full details
     of any errors encountered (including full error messages and stack traces).</p>
 
+   <p>Please also have some consideration for the other users on the list - this is a
+    busy list and we do not appreciate getting the exact same message posted impatiently
+    several times a day! Doing so is only likely to make your question answered more
+    slowly, or not at all, not faster.</p>
+
    <p>If you would like to make commercial solicitations, please ask permission from
-     the list moderator first.</p>
+    one of the list moderators (currently <link href="mailto:greenrd@hotmail.com">
+    Robin Green</link> and <link href="pati_giacomo@yahoo.com">Giacomo Pati</link>)
+    <strong>prior</strong> to doing so.</p>
 
    <note>This list is moderated, so the first time you post, there will be a
     delay before your post is reviewed and accepted. This is to prevent spam.</note>
@@ -71,6 +89,9 @@
     any change made to the CVS repository where all the source code and libraries
     are stored for development purposes. The average user probably doesn't need to
     subscribe to this list.</p>
+
+   <note>You should never post to this list at all. Only the
+    CVS server should post to it.</note>
 
   </s1>
 
