@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="JQ" type="add">
+    Added querybean block, functionality moved from the lucene block as we hope to add a dependency on OJB so querybeans can be persisted.
+   </action>
    <action dev="JH" type="fix" fixes-bug="32342">
      Batik block: Fixed handling for empty extract URIs when matching on null
      namespace URIs.
