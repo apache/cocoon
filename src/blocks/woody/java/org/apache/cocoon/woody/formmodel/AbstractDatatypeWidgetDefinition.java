@@ -51,33 +51,30 @@
 package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.w3c.dom.Element;
+import org.apache.cocoon.woody.datatype.SelectionList;
 
 /**
- * Builds {FieldDefinition}s.
+ * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  */
-public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
+public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition {
+    private Datatype datatype;
+    private SelectionList selectionList;
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        FieldDefinition fieldDefinition = new FieldDefinition();
-        setId(widgetElement, fieldDefinition);
+    public Datatype getDatatype() {
+        return datatype;
+    }
 
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
+    public void setDatatype(Datatype datatype) {
+        this.datatype = datatype;
+    }
 
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
-        fieldDefinition.setDatatype(datatype);
+    public void setSelectionList(SelectionList selectionList) {
+        if (selectionList.getDatatype() != getDatatype())
+            throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
+        this.selectionList = selectionList;
+    }
 
-        buildSelectionList(widgetElement, fieldDefinition);
-
-        setLabel(widgetElement, fieldDefinition);
-
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        fieldDefinition.setRequired(required);
-
-        return fieldDefinition;
+    public SelectionList getSelectionList() {
+        return selectionList;
     }
 }

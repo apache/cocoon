@@ -163,7 +163,7 @@ public class MultiValueField extends AbstractWidget {
         contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
 
         // the selection list (a MultiValueField has per definition always a SelectionList)
-        definition.getDatatype().getSelectionList().generateSaxFragment(contentHandler, locale);
+        definition.getSelectionList().generateSaxFragment(contentHandler, locale);
 
         // validation message element
         if (validationError != null) {

@@ -58,7 +58,7 @@ import org.apache.cocoon.woody.datatype.Datatype;
 /**
  * Builds {@link MultiValueFieldDefinition}s.
  */
-public class MultiValueFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
 
@@ -70,9 +70,11 @@ public class MultiValueFieldDefinitionBuilder extends AbstractWidgetDefinitionBu
             throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
 
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
-        if (datatype.getSelectionList() == null)
-            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(datatypeElement));
         definition.setDatatype(datatype);
+
+        boolean hasSelectionList = buildSelectionList(widgetElement, definition);
+        if (!hasSelectionList)
+            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
 
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         definition.setRequired(required);

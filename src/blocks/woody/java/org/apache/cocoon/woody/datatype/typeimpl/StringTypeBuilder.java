@@ -67,7 +67,6 @@ public class StringTypeBuilder extends AbstractDatatypeBuilder {
 
         buildValidationRules(datatypeElement, type, datatypeManager);
         buildConvertor(datatypeElement, type);
-        buildSelectionList(datatypeElement, type);
 
         return type;
     }

@@ -65,7 +65,6 @@ public class DateTypeBuilder extends AbstractDatatypeBuilder {
 
         buildValidationRules(datatypeElement, type, datatypeManager);
         buildConvertor(datatypeElement, type);
-        buildSelectionList(datatypeElement, type);
 
         return type;
     }
