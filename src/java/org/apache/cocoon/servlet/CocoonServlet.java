@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 
@@ -95,7 +96,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.26 2004/04/23 15:50:34 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.27 2004/05/04 14:11:16 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -761,9 +762,9 @@ public class CocoonServlet extends HttpServlet {
      * file.
      */
     protected void initLogger() {
-        String logLevel = getInitParameter("log-level", "INFO");
+        final String logLevel = getInitParameter("log-level", "INFO");
 
-        final String accesslogger = getInitParameter("servlet-logger");
+        final String accesslogger = getInitParameter("servlet-logger", "cocoon");
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
@@ -778,8 +779,14 @@ public class CocoonServlet extends HttpServlet {
         defaultHierarchy.setDefaultLogTarget(servTarget);
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
-        final LogKitLoggerManager logKitLoggerManager = new LogKitLoggerManager(defaultHierarchy);
-        logKitLoggerManager.enableLogging(logger);
+                
+        // the log4j support requires currently that the log4j system is already configured elsewhere
+        final boolean isLog4JLogger = "log4j".equals(this.getInitParameter("logger-type", "logkit"));
+        
+        final LoggerManager logKitLoggerManager = (isLog4JLogger ? (LoggerManager)new Log4JLoggerManager()
+                                                                 : new LogKitLoggerManager(defaultHierarchy));
+        ContainerUtil.enableLogging(logKitLoggerManager, logger);
+        
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
         if (this.servletContextPath == null) {
@@ -794,33 +801,31 @@ public class CocoonServlet extends HttpServlet {
         }
 
         try {
-            logKitLoggerManager.contextualize(subcontext);
+            ContainerUtil.contextualize(logKitLoggerManager, subcontext);
             this.loggerManager = logKitLoggerManager;
 
-            //Configure the logkit management
-            String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
-
-            // test if this is a qualified url
-            InputStream is = null;
-            if ( logkitConfig.indexOf(':') == -1) {
-                is = this.servletContext.getResourceAsStream(logkitConfig);
-                if (is == null) is = new FileInputStream(logkitConfig);
-            } else {
-                URL logkitURL = new URL(logkitConfig);
-                is = logkitURL.openStream();
+            if ( !isLog4JLogger ) {
+                //Configure the logkit management
+                String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
+    
+                // test if this is a qualified url
+                InputStream is = null;
+                if ( logkitConfig.indexOf(':') == -1) {
+                    is = this.servletContext.getResourceAsStream(logkitConfig);
+                    if (is == null) is = new FileInputStream(logkitConfig);
+                } else {
+                    URL logkitURL = new URL(logkitConfig);
+                    is = logkitURL.openStream();
+                }
+                final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+                final Configuration conf = builder.build(is);
+                ContainerUtil.configure(logKitLoggerManager, conf);
             }
-            final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            final Configuration conf = builder.build(is);
-            logKitLoggerManager.configure(conf);
         } catch (Exception e) {
             errorHandler.error("Could not set up Cocoon Logger, will use screen instead", e, null);
         }
 
-        if (accesslogger != null) {
-            this.log = logKitLoggerManager.getLoggerForCategory(accesslogger);
-        } else {
-            this.log = logKitLoggerManager.getLoggerForCategory("cocoon");
-        }
+        this.log = this.loggerManager.getLoggerForCategory(accesslogger);
     }
 
     /**
