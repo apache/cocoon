@@ -343,11 +343,9 @@ implements ServiceSelector, Serviceable, Configurable {
         }
 
         try {
-            final ServiceInfo info = new ServiceInfo();
-            info.setConfiguration(configuration);
-            info.setServiceClass(component);
             final ComponentHandler handler = getComponentHandler( null,
-                                                                  info,
+                                                                  component,
+                                                                  configuration,
                                                                   this.serviceManager);
 
             handler.initialize();
@@ -460,13 +458,11 @@ implements ServiceSelector, Serviceable, Configurable {
      */
     public static class Factory extends ComponentFactory {
         
-        private final RoleManager roleManager;
         private final String role;
         
-        public Factory(ComponentEnvironment env, RoleManager roleManager, ServiceInfo info, String role) 
+        public Factory(ComponentEnvironment env, ServiceInfo info, String role) 
         throws Exception {
             super(env, info);
-            this.roleManager = roleManager;
             this.role = role;
         }
         
@@ -479,7 +475,7 @@ implements ServiceSelector, Serviceable, Configurable {
             ContainerUtil.service(component, this.environment.serviceManager);
             
             component.setLoggerManager(this.environment.loggerManager);
-            component.setRoleManager(this.roleManager);
+            component.setRoleManager(this.environment.roleManager);
 
             ServiceManager manager = this.environment.serviceManager;
             if (manager instanceof CoreServiceManager) {

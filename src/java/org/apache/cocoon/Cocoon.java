@@ -184,6 +184,8 @@ public class Cocoon
      * @exception Exception if an error occurs
      */
     public void initialize() throws Exception {
+//long start = System.currentTimeMillis();
+
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
         ContainerUtil.enableLogging(this.serviceManager, getLogger().getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
@@ -227,6 +229,8 @@ public class Cocoon
         if (this.serviceManager.hasService(RequestListener.ROLE)){
             this.requestListener = (RequestListener) this.serviceManager.lookup(RequestListener.ROLE);
         }
+//long delay = System.currentTimeMillis() - start;
+//System.err.println("########## Cocoon.initialize() : " + delay);
     }
 
     /** Dump System Properties */
@@ -470,6 +474,8 @@ public class Cocoon
      */
     public boolean process(Environment environment)
     throws Exception {
+//long start = System.currentTimeMillis();
+
         if (this.disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
@@ -519,6 +525,9 @@ public class Cocoon
             }
             // commit response on success
             environment.commitResponse();
+
+//long delay = System.currentTimeMillis() - start;
+//System.err.println("########## Cocoon.process() : " + delay);
 
             return result;
         } catch (Exception any) {

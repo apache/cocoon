@@ -31,7 +31,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Base class for all service managers: ServiceManager and ServiceSelector
@@ -62,6 +61,8 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
 
     /** LoggerManager. */
     protected LoggerManager loggerManager;
+    
+    protected ComponentEnvironment componentEnv;
 
     
     /* (non-Javadoc)
@@ -94,18 +95,19 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
     protected ComponentHandler getComponentHandler( final String role,
-                                                    final ServiceInfo info,
+                                                    final Class componentClass,
+                                                    final Configuration configuration,
                                                     final ServiceManager serviceManager)
     throws Exception {
-        final ComponentEnvironment env = new ComponentEnvironment();
-        env.serviceManager = serviceManager;
-        env.context = context;
-        env.logger = this.getLogger();
-        env.loggerManager = this.loggerManager;
+        if (this.componentEnv == null) {
+            this.componentEnv = new ComponentEnvironment(null, getLogger(), this.roleManager,
+                    this.loggerManager, this.context, serviceManager);
+        }
+        
         return AbstractComponentHandler.getComponentHandler(role,
-                                                     info,
-                                                     env,
-                                                     this.roleManager);
+                                                     componentClass.getName(),
+                                                     configuration,
+                                                     this.componentEnv);
     }
 
     protected void addComponent(String className,

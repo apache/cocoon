@@ -29,10 +29,33 @@ import org.apache.avalon.framework.service.ServiceManager;
  */
 public class ComponentEnvironment {
 
-    public ServiceManager serviceManager;
-    public Context context;
-    public Logger logger;
-    public LoggerManager loggerManager;
-    public ClassLoader classloader;
+    public final ServiceManager serviceManager;
+    public final Context context;
+    public final Logger logger;
+    public final RoleManager roleManager;
+    public final LoggerManager loggerManager;
+    private final ClassLoader classLoader;
     
+    public ComponentEnvironment(ClassLoader classLoader, Logger logger, RoleManager roleManager, LoggerManager loggerManager,
+            Context context, ServiceManager serviceManager) {
+
+        // Find a class loader
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+            if (classLoader == null) {
+                classLoader = this.getClass().getClassLoader();
+            }            
+        }
+
+        this.classLoader = classLoader;
+        this.logger = logger;
+        this.roleManager = roleManager;
+        this.loggerManager = loggerManager;
+        this.context = context;
+        this.serviceManager = serviceManager;
+    }
+
+    public Class loadClass(String name) throws ClassNotFoundException {
+        return this.classLoader.loadClass(name);
+    }
 }

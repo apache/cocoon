@@ -18,7 +18,7 @@
 <components>
     <component role="org.apache.cocoon.components.cron.JobScheduler"
                class="org.apache.cocoon.components.cron.CocoonQuartzJobScheduler"
-               logger="cron">
+               logger="cron" preload="true">
       <!--+
           | Definitions for a thread pool used to schedule jobs
           +-->

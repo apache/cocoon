@@ -36,6 +36,7 @@
       <param-value>WEB-INF/xindice.xml</param-value>
     </init-param>
 
-    <load-on-startup>1</load-on-startup>
+    <!-- Uncomment to load the xindice servlet on startup-->
+    <!--load-on-startup>1</load-on-startup-->
   </servlet>
 </xweb>

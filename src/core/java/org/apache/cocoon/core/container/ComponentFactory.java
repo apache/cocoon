@@ -36,6 +36,11 @@ public class ComponentFactory {
     
     protected final ComponentEnvironment environment;
     
+    /**
+     * The component's logger, which may be different from the environment's logger
+     */
+    protected final Logger componentLogger;
+    
     /** The parameters for this component
      */
     protected Parameters parameters;
@@ -69,17 +74,9 @@ public class ComponentFactory {
                 actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
             }
         }
-        this.environment.logger = actualLogger;
+        this.componentLogger = actualLogger;
         
-        // now get the meta data for the component
-        // FIXME - this is a workaround
-        if ( this.environment.classloader == null ) {
-            this.environment.classloader = Thread.currentThread().getContextClassLoader();
-            if ( this.environment.classloader == null ) {
-                this.environment.classloader = this.getClass().getClassLoader();
-            }            
-        }
-        this.serviceClass = this.environment.classloader.loadClass(this.serviceInfo.getServiceClassName());
+        this.serviceClass = this.environment.loadClass(this.serviceInfo.getServiceClassName());
         if ( this.serviceInfo.getDestroyMethodName() != null ) {
             this.destroyMethod = this.serviceClass.getMethod(this.serviceInfo.getDestroyMethodName(), null);
         } else {
@@ -124,7 +121,7 @@ public class ComponentFactory {
                     this.serviceClass.getName() + "." );
         }
 
-        ContainerUtil.enableLogging(component, this.environment.logger);
+        ContainerUtil.enableLogging(component, this.componentLogger);
         ContainerUtil.contextualize( component, this.environment.context );
         ContainerUtil.service( component, this.environment.serviceManager );
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );

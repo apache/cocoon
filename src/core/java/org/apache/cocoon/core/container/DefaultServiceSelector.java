@@ -118,7 +118,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             }
             
             // Add this component in the manager
-            this.manager.addComponent(className, this.rolePrefix + key, instance);
+            this.manager.addComponent(this.rolePrefix + key, className, instance);
         }
         
         // Register default key, if any
@@ -191,13 +191,11 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
      */
     public static class Factory extends ComponentFactory {
         private final String role;
-        private final RoleManager roleManager;
         
-        public Factory(ComponentEnvironment env, RoleManager manager, ServiceInfo info, String role) 
+        public Factory(ComponentEnvironment env, ServiceInfo info, String role) 
         throws Exception {
             super(env, info);
             this.role = role;
-            this.roleManager = manager;
         }
         
         protected void setupInstance(Object object)
@@ -208,7 +206,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             ContainerUtil.contextualize(component, this.environment.context);
             ContainerUtil.service(component, this.environment.serviceManager);
             
-            component.setRoleManager(this.roleManager);
+            component.setRoleManager(this.environment.roleManager);
             component.setRole(this.role);
             
             ContainerUtil.configure(component, this.serviceInfo.getConfiguration());

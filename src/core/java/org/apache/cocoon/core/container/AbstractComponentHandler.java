@@ -16,9 +16,16 @@
  */
 package org.apache.cocoon.core.container;
 
+import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ServiceInfo;
@@ -44,87 +51,95 @@ implements ComponentHandler {
     private boolean initialized = false;
     
     private ServiceInfo info;
-
+    
     /**
      * Looks up and returns a component handler for a given component class.
      *
      * @param role the component's role. Can be <code>null</code> if the role isn't known.
-     * @param componentClass Class of the component for which the handle is
+     * @param className Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
-     * @param serviceManager The service manager which will be managing the service.
-     * @param context The current context object.
-     * @param logger  The current logger
-     * @param loggerManager The current LoggerManager.
+     * @param componentEnv The component's creation environment.
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    public static ComponentHandler getComponentHandler( final String role,
-                                                        final ServiceInfo info,
-                                                        final ComponentEnvironment env,
-                                                        final RoleManager roleManager)
-    throws Exception {
-        int numInterfaces = 0;
-
-        // FIXME we don't need the class but a classloader
-        info.setServiceClassName(info.getServiceClass().getName());
+    public static ComponentHandler getComponentHandler(
+            String role, String className, Configuration configuration, ComponentEnvironment componentEnv) throws Exception {
         
-        // Early check for Composable
-        if ( Composable.class.isAssignableFrom( info.getServiceClass() ) ) {
-            throw new Exception("Interface Composable is not supported anymore. Please change class "
-                                + info.getServiceClassName() + " to use Serviceable instead.");
+        // Load the class
+        Class componentClass;
+        
+        try {
+            componentClass = componentEnv.loadClass(className);
+        } catch(ClassNotFoundException cnfe) {
+            throw new ConfigurationException("Cannot find class " + className + " for component at " +
+                    configuration.getLocation(), cnfe);
         }
 
-        if( SingleThreaded.class.isAssignableFrom( info.getServiceClass() ) ) {
+        int numInterfaces = 0;
+
+        final ServiceInfo info = new ServiceInfo();
+        info.setServiceClassName(className);
+        info.setConfiguration(configuration);
+        
+        // Early check for Composable
+        if ( Composable.class.isAssignableFrom( componentClass ) ) {
+            throw new Exception("Interface Composable is not supported anymore. Please change class "
+                                + componentClass.getName() + " to use Serviceable instead.");
+        }
+
+        if( SingleThreaded.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
             info.setModel(ServiceInfo.MODEL_PRIMITIVE);
         }
 
-        if( ThreadSafe.class.isAssignableFrom( info.getServiceClass() ) ) {
+        if( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
             info.setModel(ServiceInfo.MODEL_SINGLETON);
         }
 
-        if( Poolable.class.isAssignableFrom( info.getServiceClass() ) ) {
+        if( Poolable.class.isAssignableFrom( componentClass ) ) {
             numInterfaces++;
             info.setModel(ServiceInfo.MODEL_POOLED);
         }
 
         if( numInterfaces > 1 ) {
             throw new Exception( "[CONFLICT] More than one lifecycle interface in "
-                                 + info.getServiceClassName() + "  May implement no more than one of "
+                                 + componentClass.getName() + "  May implement no more than one of "
                                  + "SingleThreaded, ThreadSafe, or Poolable" );
         }
 
         if ( numInterfaces == 0 ) {
             // this component does not use avalon interfaces, so get the info from the configuration
-            info.fill(info.getConfiguration());
+            info.fill(configuration);
         }
         
         // Create the factory to use to create the instances of the Component.
         ComponentFactory factory;
-        
-        if (DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
+        ComponentHandler handler;
+                
+        if (DefaultServiceSelector.class.isAssignableFrom(componentClass)) {
             // Special factory for DefaultServiceSelector
-            factory = new DefaultServiceSelector.Factory(env, roleManager, info, role);
+            factory = new DefaultServiceSelector.Factory(componentEnv, info, role);
+            handler = new ThreadSafeComponentHandler(info, componentEnv.logger, factory);
+            handler.initialize();
+            return handler;
             
-        } else if (StandaloneServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
+        } else if (StandaloneServiceSelector.class.isAssignableFrom(componentClass)) {
             // Special factory for StandaloneServiceSelector
-            factory = new StandaloneServiceSelector.Factory(env, roleManager, info, role);
+            factory = new StandaloneServiceSelector.Factory(componentEnv, info, role);
                 
         } else {
-            factory = new ComponentFactory(env, info);
+            factory = new ComponentFactory(componentEnv, info);
         }
 
-        ComponentHandler handler;
-        
         if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
-            handler = new PoolableComponentHandler( info, env.logger, factory, info.getConfiguration() );
+            handler = new PoolableComponentHandler( info, componentEnv.logger, factory, configuration );
         } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
-            handler = new ThreadSafeComponentHandler( info, env.logger, factory );
+            handler = new ThreadSafeComponentHandler( info, componentEnv.logger, factory );
         } else {
             // This is a SingleThreaded component
-            handler = new SingleThreadedComponentHandler( info, env.logger, factory );
+            handler = new SingleThreadedComponentHandler( info, componentEnv.logger, factory );
         }
 
         return handler;
@@ -256,4 +271,13 @@ implements ComponentHandler {
     }
     
     protected abstract void doInitialize() throws Exception;
+
+    /**
+     * Create a component handler (version used by XSP)
+     */
+    public static ComponentHandler getComponentHandler(Class clazz, Logger logger, Context context, ServiceManager manager, Configuration config) throws Exception {
+        ComponentEnvironment env = new ComponentEnvironment(clazz.getClassLoader(), logger, null, null, context, manager);
+        return getComponentHandler(null, clazz.getName(), config, env);
+
+    }
 }

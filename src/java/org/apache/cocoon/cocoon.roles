@@ -204,7 +204,7 @@
         default-class="org.apache.cocoon.i18n.XMLResourceBundleFactory"/>
 
   <!-- Control flow layer: the interpreters selector and continuations  manager -->
-  <role name="org.apache.cocoon.components.flow.Interpreter" 
+  <role name="org.apache.cocoon.components.flow.InterpreterSelector" 
         shorthand="flow-interpreters"
         default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 

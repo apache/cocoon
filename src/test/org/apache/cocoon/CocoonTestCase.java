@@ -16,6 +16,7 @@
 
 package org.apache.cocoon;
 
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.core.container.CoreServiceManager;
@@ -37,7 +38,7 @@ public abstract class CocoonTestCase extends ContainerTestCase {
      * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
      */
     protected void addComponents(CoreServiceManager manager) 
-    throws ServiceException {
+    throws ServiceException, ConfigurationException {
         super.addComponents(manager);
         if ( this.addSourceFactories() ) {
             // Create configuration for source-factories
@@ -51,12 +52,12 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             factory.setAttribute("name", "*");
             df.addChild(factory);
             manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
-                                 CocoonServiceSelector.class, 
+                                 CocoonServiceSelector.class.getName(), 
                                  df);
         }
         if ( this.addSourceResolver() ) {
             manager.addComponent(SourceResolver.ROLE, 
-                    SourceResolverImpl.class, 
+                    SourceResolverImpl.class.getName(), 
                     new DefaultConfiguration("", "-"));
         }
     }

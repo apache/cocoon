@@ -57,7 +57,7 @@ public class FlowNode extends AbstractProcessingNode
         this.manager = manager;
 
         try {
-            this.interpreterSelector = (ServiceSelector) manager.lookup(Interpreter.ROLE);
+            this.interpreterSelector = (ServiceSelector) manager.lookup(Interpreter.ROLE + "Selector");
             // Obtain the Interpreter instance for this language
             this.interpreter = (Interpreter) this.interpreterSelector.select(language);
             // Set interpreter ID as location of the flow node (which includes full sitemap file path)

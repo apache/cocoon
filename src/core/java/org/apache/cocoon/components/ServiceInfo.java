@@ -33,7 +33,6 @@ public class ServiceInfo {
     private String destroyMethodName;
     private String poolInMethodName;
     private String poolOutMethodName;
-    private Class serviceClass;
     private String serviceClassName;
     private Configuration configuration;
     
@@ -110,13 +109,6 @@ public class ServiceInfo {
     public void setPoolOutMethodName(String poolMethod) {
         this.poolOutMethodName = poolMethod;
     }
-
-    /**
-     * @return Returns the serviceClass.
-     */
-    public Class getServiceClass() {
-        return serviceClass;
-    }
     
     /**
      * @return Returns the serviceClassName.
@@ -132,13 +124,6 @@ public class ServiceInfo {
         this.serviceClassName = serviceClassName;
     }
     
-    /**
-     * @param serviceClass The serviceClass to set.
-     */
-    public void setServiceClass(Class serviceClass) {
-        this.serviceClass = serviceClass;
-    }
-        
     /**
      * @return Returns the configuration.
      */

@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -130,7 +131,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
      * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
      */
     protected void addComponents(CoreServiceManager manager) 
-    throws ServiceException {
+    throws ServiceException, ConfigurationException {
         super.addComponents(manager);
         final String[] o = this.getSitemapComponentInfo();
         if ( o != null ) {
@@ -145,7 +146,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             factory.setAttribute("name", key);
             df.addChild(factory);
             manager.addComponent(typeClassName + "Selector", 
-                                 CocoonServiceSelector.class, 
+                                 CocoonServiceSelector.class.getName(), 
                                  df);
         }
     }
@@ -505,7 +506,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         SourceResolver resolver = null;
 
         try {
-            selector = (ServiceSelector) this.lookup(Interpreter.ROLE);
+            selector = (ServiceSelector) this.lookup(Interpreter.ROLE + "Selector");
             assertNotNull("Test lookup of interpreter selector", selector);
 
             resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
@@ -548,7 +549,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         SourceResolver resolver = null;
 
         try {
-            selector = (ServiceSelector) this.lookup(Interpreter.ROLE);
+            selector = (ServiceSelector) this.lookup(Interpreter.ROLE + "Selector");
             assertNotNull("Test lookup of interpreter selector", selector);
 
             resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
