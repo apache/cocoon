@@ -58,7 +58,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.FormHandler;
+import org.apache.cocoon.woody.event.FormHandler;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.components.LifecycleHelper;
