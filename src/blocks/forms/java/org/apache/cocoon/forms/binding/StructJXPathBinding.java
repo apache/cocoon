@@ -18,7 +18,6 @@ package org.apache.cocoon.forms.binding;
 import org.apache.cocoon.forms.formmodel.Struct;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Pointer;
 
 /**
  * StructJXPathBinding provides an implementation of a {@link Binding}

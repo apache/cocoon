@@ -24,14 +24,13 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class UnionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public final class UnionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         UnionDefinition definition = new UnionDefinition();
-        setCommonProperties(element, definition);
+        super.setupDefinition(element, definition);
         definition.setCaseWidgetId(DomHelper.getAttribute(element, "case", ""));
         setDisplayData(element, definition);
-        setValidators(element, definition);
 
         Element widgetsElement = DomHelper.getChildElement(element, Constants.DEFINITION_NS, "widgets", true);
         // All child elements of the widgets element are widgets
@@ -42,6 +41,7 @@ public class UnionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
             definition.addWidgetDefinition(widgetDefinition);
         }
 
+        definition.makeImmutable();
         return definition;
     }
     // TODO: Need to add code somewhere to build a selection list for the case widget.

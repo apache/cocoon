@@ -52,6 +52,8 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
         while(it.hasNext()) {
           ((Widget)it.next()).initialize();
         }
+        
+        super.initialize();
     }
 
     public void addChild(Widget widget) {

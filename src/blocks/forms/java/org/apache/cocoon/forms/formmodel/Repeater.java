@@ -50,12 +50,22 @@ public class Repeater extends AbstractWidget
     public Repeater(RepeaterDefinition repeaterDefinition) {
         super(repeaterDefinition);
         this.definition = repeaterDefinition;
-        // setup initial size
-        removeRows();
+        // Setup initial size. Do not call addRow() as it will call initialize()
+        // on the newly created rows, which is not what we want here.
+        for (int i = 0; i < this.definition.getInitialSize(); i++) {
+            rows.add(new RepeaterRow(definition));
+        }
     }
 
     public WidgetDefinition getDefinition() {
         return definition;
+    }
+    
+    public void initialize() {
+        for (int i = 0; i < this.rows.size(); i++) {
+            ((RepeaterRow)rows.get(i)).initialize();
+        }
+        super.initialize();
     }
 
     public int getSize() {
@@ -157,11 +167,19 @@ public class Repeater extends AbstractWidget
             this.rows.set(index, temp);
         }
     }
-
+    
+    /**
+     * @deprecated {@see #clear()}
+     *
+     */
+    public void removeRows() {
+        clear();
+    }
+    
     /**
      * Clears all rows from the repeater and go back to the initial size
      */
-    public void removeRows() {
+    public void clear() {
         rows.clear();
         
         // and reset to initial size
@@ -321,7 +339,7 @@ public class Repeater extends AbstractWidget
 //            return Repeater.this.getLocation();
 //        }
 //        
-        protected WidgetDefinition getDefinition() {
+        public WidgetDefinition getDefinition() {
             return Repeater.this.definition;
         }
 
@@ -333,14 +351,16 @@ public class Repeater extends AbstractWidget
         public Form getForm() {
             return Repeater.this.getForm();
         }
-
-//        public String getNamespace() {
-//            return getParent().getNamespace() + "." + getId();
-//        }
-//
-//        public String getFullyQualifiedId() {
-//            return getParent().getNamespace() + "." + getId();
-//        }
+        
+        public void initialize() {
+            // Initialize children but don't call super.initialize() that would call the repeater's
+            // on-create handlers for each row.
+            // FIXME(SW): add an 'on-create-row' handler?
+            Iterator it = this.getChildren();
+            while(it.hasNext()) {
+              ((Widget)it.next()).initialize();
+            }
+        }
 
         public boolean validate() {
             // Validate only child widtgets, as the definition's validators are those of the parent repeater
@@ -365,19 +385,6 @@ public class Repeater extends AbstractWidget
                 throws SAXException {
             // this widget has its display-data generated in the context of the repeater
         }
-                
-//        //TODO: reuse available implementation on superclass       
-//        public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-//            AttributesImpl rowAttrs = new AttributesImpl();
-//            rowAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-//            contentHandler.startElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL, rowAttrs);
-//            Iterator widgetIt = widgets.iterator();
-//            while (widgetIt.hasNext()) {
-//                Widget widget = (Widget)widgetIt.next();
-//                widget.generateSaxFragment(contentHandler, locale);
-//            }
-//            contentHandler.endElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL);
-//        }
         
         public void broadcastEvent(WidgetEvent event) {
             throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");

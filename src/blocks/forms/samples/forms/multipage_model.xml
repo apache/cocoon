@@ -24,7 +24,7 @@
 
   <fd:widgets>
 
-    <fd:struct id="page1">
+    <fd:group id="page1">
       <fd:widgets>
         <fd:field id="email" required="true">
           <fd:datatype base="string"/>
@@ -77,7 +77,7 @@
 	      </fd:validation>
 	    </fd:field>
 	  
-      	<fd:action id="next" action-command="foo">
+      	<fd:action id="next">
       	  <fd:label>Next</fd:label>
       	  <fd:on-action>
       	  	<fd:javascript>
@@ -90,9 +90,9 @@
       	  </fd:on-action>
       	</fd:action>
       </fd:widgets>
-    </fd:struct>
+    </fd:group>
   	
-  	<fd:struct id="page2" state="invisible">
+  	<fd:group id="page2" state="invisible">
   	  <fd:widgets>
 	    <fd:field id="number1" required="true">
 	      <fd:label>Please enter a number<br/>
@@ -150,7 +150,7 @@
 	      </fd:selection-list>
 	    </fd:field>
   	  	
-      	<fd:action id="prev" action-command="foo">
+      	<fd:action id="prev">
       	  <fd:label>Previous</fd:label>
       	  <fd:on-action>
       	  	<fd:javascript>
@@ -161,7 +161,7 @@
       	  	</fd:javascript>
       	  </fd:on-action>
       	</fd:action>
-      	<fd:action id="next" action-command="foo">
+      	<fd:action id="next">
       	  <fd:label>Next</fd:label>
       	  <fd:on-action>
       	  	<fd:javascript>
@@ -174,9 +174,9 @@
       	  </fd:on-action>
       	</fd:action>
   	  </fd:widgets>
-  	</fd:struct>
+  	</fd:group>
     
-  	<fd:struct id="page3" state="invisible">
+  	<fd:group id="page3" state="invisible">
   	  <fd:widgets>
 	    <fd:booleanfield id="somebool">
 	      <fd:label>Put me <em>on</em> or <em>off</em>.</fd:label>
@@ -198,7 +198,7 @@
 	      </fd:selection-list>
 	    </fd:multivaluefield>
 
-      	<fd:action id="prev" action-command="foo">
+      	<fd:action id="prev">
       	  <fd:label>Previous</fd:label>
       	  <fd:on-action>
       	  	<fd:javascript>
@@ -210,11 +210,11 @@
       	  </fd:on-action>
       	</fd:action>
   	  	
-      	<fd:submit id="ok" action-command="foo">
+      	<fd:submit id="ok">
       	  <fd:label>Finish</fd:label>
       	</fd:submit>
   	  </fd:widgets>
-  	</fd:struct>
+  	</fd:group>
 
   </fd:widgets>
 

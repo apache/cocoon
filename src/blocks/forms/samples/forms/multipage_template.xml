@@ -29,7 +29,7 @@
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
       <div style="width: 70%; margin: 10px 50px 50px 50px;">
       	
-        <ft:struct id="page1">
+        <ft:group id="page1">
             <!-- group with automatic two-column layout -->
             <fi:group>
               <fi:label>String fields</fi:label>
@@ -47,9 +47,9 @@
         	   <br/>
             <ft:widget id="next"/>
             
-         </ft:struct>
+         </ft:group>
 
-         <ft:struct id="page2">
+         <ft:group id="page2">
             <fi:group>
               <fi:label>Number fields</fi:label>
               <fi:styling type="fieldset" layout="columns"/>
@@ -68,9 +68,9 @@
         	   <br/>
             <ft:widget id="prev"/>
             <ft:widget id="next"/>
-         </ft:struct>
+         </ft:group>
          
-         <ft:struct id="page3">
+         <ft:group id="page3">
             <fi:group>
               <fi:styling type="fieldset" layout="columns"/>
               <fi:label>Boolean fields</fi:label>
@@ -85,7 +85,7 @@
         	   <br/>
             <ft:widget id="prev"/>
             <ft:widget id="ok"/>
-        </ft:struct>
+        </ft:group>
 
       </div>
     </ft:form-template>

@@ -32,7 +32,7 @@ import java.util.Map;
 public class WidgetDefinitionList {
     private List widgetDefinitions = new ArrayList();
     private Map widgetDefinitionsById = new HashMap();
-    private WidgetDefinition definition;
+    private WidgetDefinition containerDefinition;
     private boolean resolving;
     private ListIterator definitionsIt = widgetDefinitions.listIterator();
 
@@ -40,7 +40,7 @@ public class WidgetDefinitionList {
      * @param definition the widget definition to which this container delegate belongs
      */
     public WidgetDefinitionList(WidgetDefinition definition) {
-        this.definition = definition;
+        this.containerDefinition = definition;
         resolving = false;
     }
 
@@ -50,11 +50,11 @@ public class WidgetDefinitionList {
         if (!(widgetDefinition instanceof NewDefinition)) {
             if (widgetDefinitionsById.containsKey(id)) {
                 String duplicateLocation = widgetDefinition.getLocation();
-                String containerLocation = definition.getLocation();
+                String containerLocation = containerDefinition.getLocation();
                 String firstLocation = getWidgetDefinition(id).getLocation();
                 throw new DuplicateIdException(
                     "Duplicate widget id \"" + id + "\" detected at " + duplicateLocation + ".\n" +
-                    "Container widget \"" + definition.getId() + "\" at " + containerLocation + "\n" +
+                    "Container widget \"" + containerDefinition.getId() + "\" at " + containerLocation + "\n" +
                     "already contains a widget with id \"" + id + "\" at " + firstLocation + ".");
             }
             widgetDefinitionsById.put(widgetDefinition.getId(), widgetDefinition);
@@ -82,7 +82,7 @@ public class WidgetDefinitionList {
         if (!resolving) {
             resolving = true;
             this.definitionsIt = widgetDefinitions.listIterator();
-            parents.add(definition);
+            parents.add(containerDefinition);
             while (this.definitionsIt.hasNext()) {
                 WidgetDefinition widgetDefinition = (WidgetDefinition)this.definitionsIt.next();
                 // ClassDefinition's get resolved by NewDefinition rather than here.
@@ -90,10 +90,10 @@ public class WidgetDefinitionList {
                     if (widgetDefinition instanceof NewDefinition) {
                         // Remove NewDefinition in preparation for its referenced class of widget definitions to be added.
                         this.definitionsIt.remove();
-                        ((NewDefinition)widgetDefinition).resolve(parents, definition);
+                        ((NewDefinition)widgetDefinition).resolve(parents, containerDefinition);
                     } else {
                         if (widgetDefinition instanceof ContainerDefinition)
-                            ((ContainerDefinition)widgetDefinition).resolve(parents, definition);
+                            ((ContainerDefinition)widgetDefinition).resolve(parents, containerDefinition);
                     }
                 }
             }
@@ -108,8 +108,8 @@ public class WidgetDefinitionList {
                     WidgetDefinition widgetDefinition = (WidgetDefinition)parentsIt.previous();
                     if (widgetDefinition instanceof UnionDefinition) break;
                     if (widgetDefinition instanceof RepeaterDefinition) break;
-                    if (widgetDefinition == definition) {
-                        String location = definition.getLocation();
+                    if (widgetDefinition == containerDefinition) {
+                        String location = containerDefinition.getLocation();
                         if (parent instanceof FormDefinition) {
                             throw new Exception("Container: Non-terminating recursion detected in form definition (" + location + ")");
                         } else {
@@ -125,8 +125,8 @@ public class WidgetDefinitionList {
     public void createWidget(Widget parent, String id) {
         WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionsById.get(id);
         if (widgetDefinition == null) {
-            throw new RuntimeException(definition.getId() + ": WidgetDefinition \"" + id +
-                    "\" does not exist (" + definition.getLocation() + ")");
+            throw new RuntimeException(containerDefinition.getId() + ": WidgetDefinition \"" + id +
+                    "\" does not exist (" + containerDefinition.getLocation() + ")");
         }
         Widget widget = widgetDefinition.createInstance();
         if (widget != null)

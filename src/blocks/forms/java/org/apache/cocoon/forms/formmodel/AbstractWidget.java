@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -74,7 +75,7 @@ public abstract class AbstractWidget implements Widget {
      * looking up case widgets for union widgets.
      */
     public void initialize() {
-        // Do nothing.
+        ((AbstractWidgetDefinition)getDefinition()).widgetCreated(this);
     }
 
     /**
@@ -96,7 +97,7 @@ public abstract class AbstractWidget implements Widget {
      * @return the widgetDefinition from which this widget was instantiated. 
      *        (@link WidgetDefinition#createInstance()}
      */
-    protected abstract WidgetDefinition getDefinition();
+    public abstract WidgetDefinition getDefinition();
 
     /**
      * @return the location-information (file, line and column) where this widget was 
@@ -226,11 +227,11 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public Object getValue() {
-        return null;
+        throw new UnsupportedOperationException("Widget " + toString() + " has no value, at " + getLocation());
     }
 
     public void setValue(Object object) {
-        throw new RuntimeException("Cannot set the value of widget " + getRequestParameterName());
+        throw new UnsupportedOperationException("Widget " + toString() + " has no value, at " + getLocation());
     }
 
     public boolean isRequired() {
@@ -244,7 +245,11 @@ public abstract class AbstractWidget implements Widget {
      * Concrete subclass widgets need to override when supporting event broadcasting.
      */
     public void broadcastEvent(WidgetEvent event) {
-        throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
+        if (event instanceof CreateEvent) {
+            ((AbstractWidgetDefinition)getDefinition()).fireCreateEvent((CreateEvent)event);
+        } else {
+            throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
+        }
     }
 
     /**
@@ -459,6 +464,6 @@ public abstract class AbstractWidget implements Widget {
         if (last != -1) {
             className = className.substring(last+1);
         }
-        return className + "@" + getRequestParameterName();
+        return className + "-" + getRequestParameterName();
     }
 }

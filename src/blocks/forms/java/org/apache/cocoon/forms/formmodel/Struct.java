@@ -18,23 +18,17 @@ package org.apache.cocoon.forms.formmodel;
 
 /**
  * A container {@link Widget} which can hold zero or more child widgets.
- *
+ * 
+ * @deprecated replaced by {@link Group}
  * @version $Id$
  */
-public class Struct extends AbstractContainerWidget {
+public class Struct extends Group {
     private static final String STRUCT_EL = "struct";
     
-    private final StructDefinition definition; 
-
-    public Struct(StructDefinition definition) {
+    public Struct(GroupDefinition definition) {
         super(definition);
-        this.definition = definition;
     }
-    
-    protected WidgetDefinition getDefinition() {
-        return this.definition;
-    }
-    
+
     /**
      * @return "struct"
      */

@@ -17,7 +17,9 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.Iterator;
 
+import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.ValueChangedListener;
+import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
@@ -25,18 +27,24 @@ import org.w3c.dom.Element;
  * 
  * @version $Id$
  */
-public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public final class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         BooleanFieldDefinition definition = new BooleanFieldDefinition();
-        setCommonProperties(widgetElement, definition);
+        
+        super.setupDefinition(widgetElement, definition);
         setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
         Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
         while (iter.hasNext()) {
             definition.addValueChangedListener((ValueChangedListener)iter.next());
         }
 
-        // TODO default value
+        // Initial value
+        Element initialValueElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "initial-value", false);
+        if (initialValueElement != null) {
+            Boolean initialValue = Boolean.valueOf(DomHelper.getElementText(initialValueElement));
+        }        
+
+        definition.makeImmutable();
         return definition;
     }
 }

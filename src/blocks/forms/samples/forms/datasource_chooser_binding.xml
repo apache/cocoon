@@ -30,16 +30,16 @@
   
   <fb:union id="datasource" path=".">
     <fb:case id="SQL" path=".">
-      <fb:struct id="SQL" path=".">
+      <fb:group id="SQL" path=".">
       <fb:value id="jdbc-url" path="URL"/>
       <fb:value id="login" path="login"/>
       <fb:value id="password" path="password"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
     <fb:case id="file" path=".">
-      <fb:struct id="file" path=".">
+      <fb:group id="file" path=".">
         <fb:value id="filename" path="file/@path"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:union>
 </fb:context>

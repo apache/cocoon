@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
+public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget, DataWidget {
 
     private static final String MULTIVALUEFIELD_EL = "multivaluefield";
     private static final String VALUES_EL = "values";
@@ -68,7 +68,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         this.definition = definition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return definition;
     }
 
@@ -147,11 +147,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         contentHandler.endElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL);
 
         // the selection list (a MultiValueField has per definition always a SelectionList)
-        if (this.selectionList != null) {
-            this.selectionList.generateSaxFragment(contentHandler, locale);
-        } else {
-            definition.getSelectionList().generateSaxFragment(contentHandler, locale);
-        }
+        this.selectionList.generateSaxFragment(contentHandler, locale);
 
         // validation message element
         if (validationError != null) {
@@ -190,8 +186,11 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
      * @param selectionList The new selection list.
      */
     public void setSelectionList(SelectionList selectionList) {
-        if (selectionList != null &&
-            selectionList.getDatatype() != null &&
+        if (selectionList == null) {
+            throw new IllegalArgumentException("An MultiValueField's selection list cannot be null.");
+        }
+        
+        if (selectionList.getDatatype() != null &&
             selectionList.getDatatype() != definition.getDatatype()) {
 
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
@@ -233,7 +232,12 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void broadcastEvent(WidgetEvent event) {
-        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+        if (event instanceof ValueChangedEvent) {
+            this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+        } else {
+            // Other kinds of events
+            super.broadcastEvent(event);
+        }
     }
 
     public ValidationError getValidationError() {

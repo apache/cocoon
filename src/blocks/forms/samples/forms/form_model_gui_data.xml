@@ -54,13 +54,13 @@
 
     <fd:row-action id="samp-row-action"><fd:label>Sample RowAction</fd:label></fd:row-action>
 
-    <fd:struct id="samp-struct">
-      <fd:label>Sample Struct</fd:label>
+    <fd:group id="samp-group">
+      <fd:label>Sample Group</fd:label>
       <fd:widgets>
-        <fd:booleanfield id="samp-struct-booleanfield"><fd:label>Sample Struct BooleanField</fd:label></fd:booleanfield>
-        <fd:field id="samp-struct-field" required="true"><fd:label>Sample Struct Field</fd:label></fd:field>
+        <fd:booleanfield id="samp-group-booleanfield"><fd:label>Sample Group BooleanField</fd:label></fd:booleanfield>
+        <fd:field id="samp-group-field" required="true"><fd:label>Sample Group Field</fd:label></fd:field>
       </fd:widgets>
-    </fd:struct>
+    </fd:group>
 
     <fd:submit id="samp-submit"><fd:label>Sample Submit</fd:label></fd:submit>
 

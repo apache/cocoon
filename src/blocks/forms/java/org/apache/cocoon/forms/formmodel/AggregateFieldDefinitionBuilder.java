@@ -34,15 +34,23 @@ import org.w3c.dom.Element;
 public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        AggregateFieldDefinition aggregateDefinition = new AggregateFieldDefinition();
-        buildWidgetDefinition(aggregateDefinition, widgetElement);
+        AggregateFieldDefinition definition = new AggregateFieldDefinition();
+        setupDefinition(widgetElement, definition);
+        definition.makeImmutable();
+        return definition;
+    }
+    
+    protected void setupDefinition(Element widgetElement, AggregateFieldDefinition definition) throws Exception {
+        
+        // parse the field definition
+        super.setupDefinition(widgetElement, definition);
 
         // make children fields
         Element widgetsElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "widgets", true);
         Element[] fieldElements = DomHelper.getChildElements(widgetsElement, Constants.DEFINITION_NS, "field");
         for (int i = 0; i < fieldElements.length; i++) {
             FieldDefinition fieldDefinition = (FieldDefinition)buildAnotherWidgetDefinition(fieldElements[i]);
-            aggregateDefinition.addWidgetDefinition(fieldDefinition);
+            definition.addWidgetDefinition(fieldDefinition);
         }
 
         // compile splitpattern
@@ -55,7 +63,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         } catch (MalformedPatternException e) {
             throw new Exception("Invalid regular expression at " + DomHelper.getLocation(splitElement) + ": " + e.getMessage());
         }
-        aggregateDefinition.setSplitPattern(pattern, patternString);
+        definition.setSplitPattern(pattern, patternString);
 
         // read split mappings
         Element[] mapElements = DomHelper.getChildElements(splitElement, Constants.DEFINITION_NS, "map");
@@ -64,7 +72,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
             int group = DomHelper.getAttributeAsInteger(mapElements[i], "group");
             String field = DomHelper.getAttribute(mapElements[i], "field");
             // check that this field exists
-            if (!aggregateDefinition.hasWidget(field)) {
+            if (!definition.hasWidget(field)) {
                 throw new Exception("Unkwon widget id \"" + field + "\", at " +
                                     DomHelper.getLocation(mapElements[i]));
             }
@@ -73,14 +81,14 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
                                     DomHelper.getLocation(mapElements[i]));
             }
             encounteredFieldMappings.add(field);
-            aggregateDefinition.addSplitMapping(group, field);
+            definition.addSplitMapping(group, field);
         }
 
         // read split fail message (if any)
         Element failMessageElement = DomHelper.getChildElement(splitElement, Constants.DEFINITION_NS, "failmessage");
         if (failMessageElement != null) {
             XMLizable failMessage = DomHelper.compileElementContent(failMessageElement);
-            aggregateDefinition.setSplitFailMessage(failMessage);
+            definition.setSplitFailMessage(failMessage);
         }
 
         // compile combine expression
@@ -93,13 +101,11 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
             throw new Exception("Problem with combine expression defined at " +
                                 DomHelper.getLocation(combineElement) + ": " + e.getMessage());
         }
-        Class clazz = aggregateDefinition.getDatatype().getTypeClass();
+        Class clazz = definition.getDatatype().getTypeClass();
         if (combineExpr.getResultType() != null && !clazz.isAssignableFrom(combineExpr.getResultType())) {
             throw new Exception("The result of the combine expression should be " + clazz.getName() + ", at " +
                                 DomHelper.getLocation(combineElement));
         }
-        aggregateDefinition.setCombineExpression(combineExpr);
-
-        return aggregateDefinition;
+        definition.setCombineExpression(combineExpr);
     }
 }

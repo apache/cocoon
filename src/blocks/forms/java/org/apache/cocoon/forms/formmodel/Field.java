@@ -125,8 +125,16 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         return this.fieldDefinition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return this.fieldDefinition;
+    }
+    
+    public void initialize() {
+        Object value = this.fieldDefinition.getInitialValue();
+        if (value != null) {
+            setValue(value);
+        }
+        super.initialize();
     }
 
     public Object getValue() {
@@ -197,8 +205,11 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             return;
 
         String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
-        // FIXME: Should we consider only non-null values, which allows to
-        // split a form across several screens?
+        // FIXME: Should we consider only non-null values?
+        // Although distinguishing an empty value (input present but blank) from a null value
+        // (input not present in the form) is possible, this distinction is not possible for
+        // several other kinds of widgets such as BooleanField or MultiValueField. So we keep
+        // it consistent with other widgets.
         //if (newEnteredValue != null) {
         readFromRequest(newEnteredValue);
         //}
@@ -398,8 +409,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         // generate selection list, if any
         if (selectionList != null) {
             selectionList.generateSaxFragment(contentHandler, locale);
-        } else if (getFieldDefinition().getSelectionList() != null) {
-            getFieldDefinition().getSelectionList().generateSaxFragment(contentHandler, locale);
         }
 
         // include some info about the datatype
@@ -481,7 +490,12 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void broadcastEvent(WidgetEvent event) {
-        getFieldDefinition().fireValueChangedEvent((ValueChangedEvent)event);
-        fireValueChangedEvent((ValueChangedEvent)event);
+        if (event instanceof ValueChangedEvent) {
+            getFieldDefinition().fireValueChangedEvent((ValueChangedEvent)event);
+            fireValueChangedEvent((ValueChangedEvent)event);
+        } else {
+            // Other kinds of events
+            super.broadcastEvent(event);
+        }
     }
 }

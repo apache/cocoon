@@ -27,6 +27,7 @@ public class SubmitDefinition extends ActionDefinition {
     private boolean validateForm;
     
     public void setValidateForm(boolean validateForm) {
+        checkMutable();
         this.validateForm = validateForm;
     }
     

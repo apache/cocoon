@@ -18,9 +18,10 @@ package org.apache.cocoon.forms.formmodel;
 /**
  * The {@link WidgetDefinition} corresponding to a {@link Struct} widget.
  *
+ * @deprecated replaced by {@link GroupDefinition}
  * @version $Id$
  */
-public class StructDefinition extends AbstractContainerDefinition {
+public class StructDefinition extends GroupDefinition {
 
     public Widget createInstance() {
         Struct structWidget = new Struct(this);

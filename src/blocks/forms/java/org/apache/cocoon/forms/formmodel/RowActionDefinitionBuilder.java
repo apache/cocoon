@@ -20,6 +20,7 @@ import java.util.Iterator;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.log.DeprecationLogger;
 import org.w3c.dom.Element;
 
 /**
@@ -31,9 +32,23 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
     
     
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
+        // Get the "command" attribute
+        String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
+        
+        // If unspecified, check the deprecated "action-command" deprecated attribute
+        if (actionCommand == null) {
+            actionCommand = DomHelper.getAttribute(widgetElement, "action-command", null);
+            if (actionCommand != null) {
+                DeprecationLogger.log("The 'action-command' attribute is deprecated and replaced by 'command', at " +
+                    DomHelper.getLocation(widgetElement));
+            }
+        }
+        if (actionCommand == null) {
+            throw new Exception("Missing attribute 'command' at " + DomHelper.getLocation(widgetElement));
+        }
+
         RowActionDefinition definition = createDefinition(widgetElement, actionCommand);
-        setCommonProperties(widgetElement, definition);
+        super.setupDefinition(widgetElement, definition);
         setDisplayData(widgetElement, definition);
 
         definition.setActionCommand(actionCommand);
@@ -50,6 +65,7 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
             definition.addActionListener((ActionListener)iter.next());
         }
 
+        definition.makeImmutable();
         return definition;
     }
     
