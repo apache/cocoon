@@ -53,6 +53,7 @@
       <!-- deprecated source dir -->
       <pathelement path="${src}/deprecated/java"/>
       <!-- test source dir -->
+      <pathelement path="${src.core.test}"/>
       <pathelement path="${src}/test"/>
       <!-- blocks source dirs -->
       <dirset dir="${blocks}">
