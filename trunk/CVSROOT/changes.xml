@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.57 2000-04-18 12:52:57 stefano Exp $
+  $Id: changes.xml,v 1.58 2000-04-20 22:10:46 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,15 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add">
+   Added XHTML formatter.
+  </action>
+  <action dev="SM" type="fix" due-to="Pawel Pesz" due-to-email="webmaster@insert.net.pl">
+   Fixed other encoding problems (hopefully last ones).
+  </action>
+  <action dev="SM" type="update">
+   Updated build scripts (mostly esthetics for easier administration).
+  </action>
   <action dev="SM" type="fix" due-to="Mike Rossellini" due-to-email="m@icopyright.com">
    Fixed some typos and mistakes in documentation.
   </action>
