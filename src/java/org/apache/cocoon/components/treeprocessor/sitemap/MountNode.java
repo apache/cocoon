@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,12 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-public class MountNode extends AbstractProcessingNode implements Composable, Disposable {
+public class MountNode extends AbstractProcessingNode
+                       implements Composable, Disposable {
+
+    /** The  key to get the pass_through value fron the Environment */
+    protected final static String COCOON_PASS_THROUGH = "COCOON_PASS_THROUGH";
+
 
     /** The 'uri-prefix' attribute */
     private final VariableResolver prefix;
@@ -53,18 +58,15 @@ public class MountNode extends AbstractProcessingNode implements Composable, Dis
 
     /** The value of the 'check-reload' attribute */
     private final boolean checkReload;
-   
+
     /** The component manager to be used by the mounted processor */
     private ComponentManager manager;
 
     /** The value of the 'pass-through' attribute */
     private final boolean passThrough;
-        
-    /** The  key to get the pass_through value fron the Environment*/
-    protected final static String COCOON_PASS_THROUGH = new String("COCOON_PASS_THROUGH");    
-        
-    public MountNode(VariableResolver prefix, 
-                     VariableResolver source, 
+
+    public MountNode(VariableResolver prefix,
+                     VariableResolver source,
                      TreeProcessor parentProcessor,
                      boolean checkReload,
                      boolean passThrough) {
@@ -81,31 +83,30 @@ public class MountNode extends AbstractProcessingNode implements Composable, Dis
 
     public final boolean invoke(Environment env, InvokeContext context)
       throws Exception {
-
-        Object previousPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
-        env.setAttribute(COCOON_PASS_THROUGH,new Boolean(passThrough));
-        
         final Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
 
-        if (resolvedSource.length()==0) {
-            throw new ProcessingException("Source of mount statement is empty"); 
+        if (resolvedSource.length() == 0) {
+            throw new ProcessingException("Source of mount statement is empty");
         }
         TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
 
+        // Save context
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
         String oldContext   = env.getContext();
-				
+        Object oldPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
+        env.setAttribute(COCOON_PASS_THROUGH, new Boolean(passThrough));
+
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
 
             if (context.isBuildingPipelineOnly()) {
                 // Propagate pipelines
                 ProcessingPipeline pp = processor.buildPipeline(env);
-                if ( pp != null ) {
+                if (pp != null) {
                     context.setProcessingPipeline( pp );
                     return true;
                 } else {
@@ -118,11 +119,12 @@ public class MountNode extends AbstractProcessingNode implements Composable, Dis
         } finally {
             // Restore context
             env.setContext(oldPrefix, oldURI, oldContext);
-            if(previousPassThrough != null){
-               env.setAttribute(COCOON_PASS_THROUGH,previousPassThrough);
-            }else{
-               env.removeAttribute(COCOON_PASS_THROUGH);
-            }    
+            if (oldPassThrough != null) {
+                env.setAttribute(COCOON_PASS_THROUGH, oldPassThrough);
+            } else {
+                env.removeAttribute(COCOON_PASS_THROUGH);
+            }
+
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
             // Recompose pipelines which may have been recomposed by subsitemap
@@ -142,7 +144,7 @@ public class MountNode extends AbstractProcessingNode implements Composable, Dis
             } else {
                 actualSource = source;
             }
-            
+
             processor = this.parentProcessor.createChildProcessor(this.manager, actualSource);
 
             // Associate to the original source
@@ -153,7 +155,7 @@ public class MountNode extends AbstractProcessingNode implements Composable, Dis
     }
 
     /**
-     * 
+     *
      */
     public void dispose() {
         Iterator iter = this.processors.values().iterator();
