@@ -40,16 +40,19 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.18 $ $Date: 2000-08-31 16:00:53 $
+ * @version CVS $Revision: 1.1.4.19 $ $Date: 2000-09-19 00:28:49 $
  */
  
 public class CocoonServlet extends HttpServlet {
 
-    private Cocoon         cocoon            = null;
+    public static final String SERVLET_CLASSPATH = "org.apache.catalina.jsp_classpath";
+    
     private long           creationTime      = 0;
+    private Cocoon         cocoon            = null;
     private String         configurationFile = null;
     private Exception      exception         = null;
     private ServletContext context           = null;
+    private String         classpath         = null;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.
@@ -59,6 +62,20 @@ public class CocoonServlet extends HttpServlet {
         super.init(conf);
 
         this.context = conf.getServletContext();
+
+        // WARNING (SM): the line below BREAKS the Servlet API compatibility
+        // This is a hack to go around java compiler design problems that 
+        // do not allow applications to force their own classloader to the
+        // compiler during compilation.
+        // We look for a specific Tomcat attribute so we are bound to Tomcat
+        // this means Cocoon won't be able to compile things if the necessary
+        // classes are not already present in the *SYSTEM* classpath, any other
+        // container classloading will break it on other servlet containers.
+        // To fix this, Javac must be redesigned and rewritten or we have to
+        // write our own compiler.
+        // For now we tie ourselves to Tomcat but at least we can work without
+        // placing everything in the system classpath.
+        this.classpath = (String) context.getAttribute(SERVLET_CLASSPATH);
 
         String configFile = conf.getInitParameter("configurations");
 
@@ -278,7 +295,7 @@ public class CocoonServlet extends HttpServlet {
         try {
             this.context.log("Reloading from: " + this.configurationFile);
 
-            Cocoon c = new Cocoon(this.configurationFile);
+            Cocoon c = new Cocoon(this.configurationFile, this.classpath);
 
             this.creationTime = System.currentTimeMillis();
 
