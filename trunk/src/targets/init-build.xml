@@ -113,7 +113,7 @@
   </target>
 
   <target name="init-tasks" depends="init">
-
+    
     <!-- Set classpath for building ant tasks -->
     <path id="tasks.classpath">
       <path refid="classpath"/>
@@ -141,6 +141,12 @@
     <!-- Jing is used in various targets for XML validation with RELAX NG -->
     <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="tasks.classpath"/>
 
+    <!-- Fortress meta info task -->
+    <taskdef 
+      name="fortress-meta" 
+      classname="org.apache.avalon.fortress.tools.ComponentMetaInfoCollector"
+      classpathref="tasks.classpath"/>
+    
     <!-- compile the loader, used to change classpath especially for the CLI and Jetty -->
     <mkdir dir="${tools.loader.dest}"/>
     <javac srcdir="${tools.loader.src}"

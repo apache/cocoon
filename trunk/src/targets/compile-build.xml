@@ -14,6 +14,13 @@
         <exclude name="**/*.xconf"/>
       </fileset>
     </copy>
+	
+	<!-- generate fortress meta descriptors -->
+    <fortress-meta destdir="${build.dest}">
+      <fileset dir="${java}">
+        <include name="**/*.java"/>
+      </fileset>
+    </fortress-meta>
 
     <!-- compile mock classes -->
     <mkdir dir="${build.mocks}"/>
@@ -37,6 +44,7 @@
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
+    
   </target>
 
   <!-- compiles deprecated code -->
