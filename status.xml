@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.357 2004/06/08 13:09:24 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.358 2004/06/08 20:21:38 joerg Exp $:-->
 
 <status>
  <developers>
@@ -218,7 +218,7 @@
      Portal: Fix problem with bookmarks and CachingURICoplet
    </action>
    <action dev="SW" type="update">
-     A new build property, "build.archive-sources", allows to include java source files
+     A new build property, "include.sources-in-jars", allows to include java source files
      in jar archives. Useful when using a non-released version to know what sources
      are used.
    </action>
