@@ -907,6 +907,7 @@
     <depend project="cocoon-block-jms"/>
     <depend project="jms"/>
     <depend project="cocoon-block-xsp" type="samples"/>
+    <depend project="jms"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/test"/>
@@ -1075,6 +1076,7 @@
 
     <depend project="cocoon-block-databases" />
     <depend project="cocoon-block-eventcache" />
+    <depend project="excalibur-datasource"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
