@@ -15,6 +15,7 @@
  */
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -212,6 +213,7 @@ public final class SitemapTask extends AbstractQdoxTask {
     private List collectInfo() {
         log("Collecting sitemap components info");
         final List components = new ArrayList();
+        final List allComponentNames = new ArrayList();
         
         final Iterator it = super.allClasses.iterator();
         
@@ -220,6 +222,17 @@ public final class SitemapTask extends AbstractQdoxTask {
 
             final DocletTag tag = javaClass.getTagByName( NAME_TAG );
 
+            if ( javaClass.isA(ACTION)
+                || javaClass.isA(GENERATOR)
+                || javaClass.isA(MATCHER)
+                || javaClass.isA(PIPELINE)
+                || javaClass.isA(READER)
+                || javaClass.isA(SELECTOR)
+                || javaClass.isA(SERIALIZER)
+                || javaClass.isA(TRANSFORMER)) {
+                allComponentNames.add(javaClass.getFullyQualifiedName());
+            }
+
             if ( null != tag ) {
                 final SitemapComponent comp = new SitemapComponent( javaClass );
 
@@ -227,6 +240,28 @@ public final class SitemapTask extends AbstractQdoxTask {
                 components.add(comp);
             }
         }
+
+        // Generate a list of all sitemap components
+        final String fileSeparator = System.getProperty("file.separator", "/");
+        final String matchString = "blocks" + fileSeparator;
+        final String outputFname = "build" + fileSeparator + "all-sitemap-components" +
+            (directory.endsWith(matchString) ? "-blocks" : "") + ".txt";
+        log("Listing all sitemap components to " + outputFname);
+        try {
+            File outputFile = new File(outputFname);
+            FileWriter out = new FileWriter(outputFile);
+            final String lineSeparator = System.getProperty("line.separator", "\n");
+            final Iterator iter = allComponentNames.iterator();
+            while ( iter.hasNext() ) {
+                out.write((String)iter.next());
+                out.write(lineSeparator);
+            }
+            out.close();
+        }
+        catch (IOException ioe) {
+            log("IOException: " + ioe);
+        }
+
         return components;
     }
 
@@ -416,7 +451,6 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
             Document doc = parent.getOwnerDocument();
             Node node;
-            
             
             // first check: deprecated?
             if ( SitemapTask.this.deprecated || this.getTagValue("deprecated", null) != null ) {
@@ -746,7 +780,6 @@ public final class SitemapTask extends AbstractQdoxTask {
                 throw new BuildException(e);
             }
         }
-
     }
     
     // Class Constants
