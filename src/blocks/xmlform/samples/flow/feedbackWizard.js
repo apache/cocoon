@@ -1,3 +1,12 @@
+/*
+ +-----------------------------------------------------------------------------+
+ |                                                                             |
+ |   This flowscript is based upon a unsupported object model. Please checkout |
+ |   the JXForms blocks.                                                       |
+ |                                                                             | 
+ +-----------------------------------------------------------------------------+
+*/
+
 // XML Form Feedback Wizard Application
 
 cocoon.load("resource://org/apache/cocoon/components/flow/javascript/xmlForm.js");
