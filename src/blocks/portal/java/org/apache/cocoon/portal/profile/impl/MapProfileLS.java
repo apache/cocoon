@@ -63,7 +63,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.persistance.CastorSourceConverter;
+import org.apache.cocoon.components.persistence.CastorSourceConverter;
 import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.ModifiableSource;
@@ -77,7 +77,7 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MapProfileLS.java,v 1.2 2003/07/29 06:30:07 cziegeler Exp $
+ * @version CVS $Id: MapProfileLS.java,v 1.3 2003/08/21 06:41:19 cziegeler Exp $
  */
 public class MapProfileLS
     extends AbstractLogEnabled

@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.persistance;
+package org.apache.cocoon.components.persistence;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -92,7 +92,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.6 2003/08/04 03:06:31 joerg Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.1 2003/08/21 06:41:19 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
