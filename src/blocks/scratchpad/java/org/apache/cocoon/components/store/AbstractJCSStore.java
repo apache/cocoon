@@ -24,9 +24,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.store.Store;
@@ -34,7 +31,6 @@ import org.apache.excalibur.store.impl.AbstractReadWriteStore;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheConfigurator;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
@@ -45,7 +41,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  */
 public abstract class AbstractJCSStore extends AbstractReadWriteStore
-    implements Store, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
+    implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
     
     /** The JCS configuration properties */
     protected Properties m_properties;
@@ -59,20 +55,15 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
     /** The Java Cache System object */
     private JCSCacheAccess m_JCS;
     
-    /** Access to the SourceResolver */
-    private ServiceManager m_manager;
-    
     
     // ---------------------------------------------------- Lifecycle
     
     public AbstractJCSStore() {
     }
     
-    public void service(ServiceManager manager) throws ServiceException {
-        m_manager = manager;
-    }
-    
     public void parameterize(Parameters parameters) throws ParameterException {
+        
+        m_region = parameters.getParameter("region-name","main");
         
         Properties defaults = new Properties();
         try {
@@ -93,8 +84,7 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
                 m_properties.put(names[i], parameters.getParameter(names[i]));
             }
         }
-        
-        m_region = parameters.getParameter("region-name","main");
+
     }
     
     protected String getDefaultPropertiesFile() {
@@ -108,8 +98,11 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
     }
     
     public void dispose() {
-        m_JCS.save();
         m_JCS.dispose();
+        m_cacheManager.release();
+        m_JCS = null;
+        m_cacheManager = null;
+        m_properties = null;
     }
     
     // ---------------------------------------------------- Store implementation
@@ -241,7 +234,7 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
         return m_JCS.getSize();
     }
     
-    
+
     private static class JCSCacheAccess extends GroupCacheAccess {
         private JCSCacheAccess(CompositeCache cacheControl) {
             super(cacheControl);
