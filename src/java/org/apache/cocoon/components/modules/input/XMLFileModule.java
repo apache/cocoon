@@ -86,11 +86,13 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.5 2003/05/03 11:17:44 jefft Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.6 2003/05/11 11:09:46 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
 
+    /** Static (cocoon.xconf) configuration location, for error reporting */
+    String staticConfLocation;
     /** Cached documents */
     Map documents = null;
     /** Default value for reloadability of sources */
@@ -217,6 +219,7 @@ public class XMLFileModule extends AbstractJXPathModule
      */
     public void configure(Configuration config) throws ConfigurationException {
 
+        this.staticConfLocation = config.getLocation();
         super.configure(config);
         this.reloadAll = config.getChild("reloadable").getValueAsBoolean(this.reloadAll);
         if (config.getChild("cachable", false) != null) {
@@ -238,9 +241,6 @@ public class XMLFileModule extends AbstractJXPathModule
             // if multiple file tags are used.
             this.documents.put(files[i], new DocumentHelper(reload, cache, this.src));
         }
-
-        if (this.src == null)
-            throw new ConfigurationException("No source given!");
     }
 
 
@@ -284,6 +284,13 @@ public class XMLFileModule extends AbstractJXPathModule
 
         if (this.documents == null) 
             this.documents = Collections.synchronizedMap(new HashMap());
+
+        if (src==null) {
+            throw new ConfigurationException("No source specified"+
+                    (modeConf!=null?", either dynamically in "+modeConf.getLocation()+", or ":"")+
+                    " statically in "+staticConfLocation
+                    );
+        }
 
         if (!this.documents.containsKey(src)) {
             if (hasDynamicConf) {
