@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
@@ -27,7 +26,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.6 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class ProcessorWrapper
 implements Processor, Component, Disposable, ThreadSafe {
@@ -64,7 +63,7 @@ implements Processor, Component, Disposable, ThreadSafe {
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Map getComponentConfigurations() {
+    public Configuration[] getComponentConfigurations() {
         return this.processor.getComponentConfigurations();
     }
     

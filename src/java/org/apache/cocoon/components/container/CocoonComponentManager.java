@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
+import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -54,6 +55,9 @@ public final class CocoonComponentManager extends ExcaliburComponentManager {
      * our lifecycle. */
     private ArrayList parentAwareComponents = new ArrayList();
 
+    /** The role manager */
+    private RoleManager roleManager;
+    
     /** Create the ComponentManager */
     public CocoonComponentManager() {
         super( null, Thread.currentThread().getContextClassLoader() );
@@ -100,7 +104,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager {
             holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
             if ( null == holder ) {
                 // create new holder
-                holder = new DefaultSitemapConfigurationHolder( role );
+                holder = new DefaultSitemapConfigurationHolder( role, this.roleManager );
                 this.sitemapConfigurationHolders.put( role, holder );
             }
 
@@ -153,5 +157,14 @@ public final class CocoonComponentManager extends ExcaliburComponentManager {
             }
         }
         parentAwareComponents = null;  // null to save memory, and catch logic bugs.
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
+     */
+    public void setRoleManager(RoleManager roleManager) {
+        this.roleManager = roleManager;
+        super.setRoleManager(roleManager);
     }
 }

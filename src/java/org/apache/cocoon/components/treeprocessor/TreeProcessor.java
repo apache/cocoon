@@ -15,10 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.util.Map;
-
-import org.apache.avalon.excalibur.component.RoleManageable;
-import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -49,7 +45,7 @@ import org.apache.regexp.RE;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.40 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public class TreeProcessor
@@ -58,7 +54,6 @@ public class TreeProcessor
                Processor,
                Serviceable,
                Configurable,
-               RoleManageable,
                Contextualizable,
                Disposable,
                Initializable {
@@ -74,9 +69,6 @@ public class TreeProcessor
 
     /** The component manager given by the upper level (root manager or parent concrete processor) */
     protected ServiceManager parentServiceManager;
-
-    /** The root role manager */
-    protected RoleManager rootRoleManager;
 
     /** Last modification time */
     protected long lastModified = 0;
@@ -126,7 +118,6 @@ public class TreeProcessor
         // Copy all that can be copied from the parent
         this.enableLogging(parent.getLogger());
         this.context = parent.context;
-        this.rootRoleManager = parent.rootRoleManager;
         this.source = sitemapSource;
         this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
         this.checkReload = checkReload;
@@ -163,10 +154,6 @@ public class TreeProcessor
     public void service(ServiceManager manager) throws ServiceException {
         this.parentServiceManager = manager;
         this.resolver = (SourceResolver)this.parentServiceManager.lookup(SourceResolver.ROLE);
-    }
-
-    public void setRoleManager(RoleManager rm) {
-        this.rootRoleManager = rm;
     }
 
     public void initialize() throws Exception {
@@ -274,7 +261,7 @@ public class TreeProcessor
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Map getComponentConfigurations() {
+    public Configuration[] getComponentConfigurations() {
         return this.concreteProcessor.getComponentConfigurations();
     }
 

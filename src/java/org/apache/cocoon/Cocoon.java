@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -725,12 +724,11 @@ public class Cocoon
         }
     }
 
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Map getComponentConfigurations() {
-        return Collections.EMPTY_MAP;
+    public Configuration[] getComponentConfigurations() {
+        return null;
     }
 
     /**

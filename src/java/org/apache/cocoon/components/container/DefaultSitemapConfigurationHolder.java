@@ -15,9 +15,12 @@
  */
 package org.apache.cocoon.components.container;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.excalibur.component.RoleManager;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -25,26 +28,64 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.1 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class DefaultSitemapConfigurationHolder 
     implements SitemapConfigurationHolder {
 
     /** The role of the sitemap component */
-    private String role;
+    private final String role;
     
+    /** The role manager */
+    private final RoleManager roleManager;
+
     /** The prepared configurations indexed by the ChainedConfiguration */
     private Map preparedConfigurations;
     
-    public DefaultSitemapConfigurationHolder(String role) {
+    public DefaultSitemapConfigurationHolder(String role, RoleManager manager) {
         this.role = role;
+        this.roleManager = manager;
+    }
+    
+    protected Map convert(Configuration[] configs, int index) {
+        Map sitemapComponentConfigurations;
+        
+        // do we have configurations?
+        final Configuration[] childs = configs[index].getChildren();
+
+        if ( null != childs && childs.length > 0 ) {
+
+            if ( index == configs.length - 1 ) {
+                sitemapComponentConfigurations = new HashMap(12);
+            } else {
+                // copy all configurations from parent
+                sitemapComponentConfigurations = new HashMap(this.convert(configs, index+1));
+            }
+
+            // and now check for new configurations
+            for(int m = 0; m < childs.length; m++) {
+
+                final String r = this.roleManager.getRoleForName(childs[m].getName());
+                sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
+                                                                 (ChainedConfiguration)sitemapComponentConfigurations.get(r)));
+            }
+        } else {
+            // we don't have configurations
+            if ( index == configs.length - 1 ) {
+                sitemapComponentConfigurations = Collections.EMPTY_MAP;
+            } else {
+                // use configuration from parent
+                sitemapComponentConfigurations = this.convert(configs, index+1);
+            }
+        }
+        return sitemapComponentConfigurations;        
     }
     
     /**
      * @see SitemapConfigurationHolder#getConfiguration()
      */
     public ChainedConfiguration getConfiguration() {
-        Map confs = EnvironmentHelper.getCurrentProcessor().getComponentConfigurations();
+        Map confs = this.convert(EnvironmentHelper.getCurrentProcessor().getComponentConfigurations(), 0);
         return (ChainedConfiguration) (confs == null ? null : confs.get(this.role));
     }
 
