@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.127 2004/03/20 01:50:59 antonio Exp $
+    | CVS $Id: gump.xml,v 1.128 2004/03/23 13:22:16 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -38,7 +38,7 @@
     <ant target="gump-core">
       <property name="version" value="@@DATE@@"/>
       <depend property="logkit.jar" project="dist-avalon-logkit"/>
-      <depend property="avalonapi.jar" project="avalon"/>
+      <depend property="avalonapi.jar" project="avalon-framework" id="api"/>
     </ant>
 
     <depend project="ant" inherit="runtime"/>
@@ -47,6 +47,7 @@
     <depend project="xml-xalan2"/>
     <depend project="xml-commons-resolver"/>
 
+    <depend project="avalon-framework" ids="impl"/>
     <depend project="excalibur-compatibility"/>
     <depend project="excalibur-instrument"/>
     <depend project="excalibur-instrument-manager"/>
