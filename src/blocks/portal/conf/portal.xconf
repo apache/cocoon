@@ -67,6 +67,11 @@
          use the coplet aspect below to directly stream the content -->
     <aspect name="coplet-cinclude" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
 
+    <!-- This aspect creates a history of all layout aspect datas,
+         coplet aspect datas and coplet attributes. It can be used by
+         the bookmark action to browse the history -->
+    <aspect name="history" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.HistoryAspect"/>
+    
     <!-- This aspect can be used to render the content of the coplet -->
     <aspect name="coplet" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
     <aspect name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>

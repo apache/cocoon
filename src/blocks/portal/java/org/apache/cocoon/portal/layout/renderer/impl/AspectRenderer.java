@@ -56,17 +56,20 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultRendererContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain;
 import org.xml.sax.ContentHandler;
@@ -77,17 +80,19 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectRenderer.java,v 1.3 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: AspectRenderer.java,v 1.4 2003/12/12 10:13:34 cziegeler Exp $
  */
 public class AspectRenderer
     extends AbstractLogEnabled
-    implements Renderer, Serviceable, Configurable, Disposable, ThreadSafe {
+    implements Renderer, Serviceable, Configurable, Disposable, ThreadSafe, Contextualizable {
 
     protected ServiceManager manager;
 
     protected RendererAspectChain chain;
     
     protected ServiceSelector aspectSelector;
+    
+    protected Context context;
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -101,8 +106,9 @@ public class AspectRenderer
      * Stream out raw layout 
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
-         RendererAspectContext context = new DefaultRendererContext(this.chain);
-         context.invokeNext(layout, service, handler);
+        DefaultRendererContext renderContext = new DefaultRendererContext(this.chain);
+        renderContext.setObjectModel(ContextHelper.getObjectModel(this.context));
+        renderContext.invokeNext(layout, service, handler);
     }
 
 	/* (non-Javadoc)
@@ -132,6 +138,13 @@ public class AspectRenderer
      */
     public Iterator getAspectDescriptions() {
         return this.chain.getAspectDescriptionIterator();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
 
 }

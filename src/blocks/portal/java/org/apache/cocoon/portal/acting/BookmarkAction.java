@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -71,14 +72,13 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
-import org.apache.cocoon.portal.event.impl.JXPathEvent;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.acting.helpers.CopletMapping;
+import org.apache.cocoon.portal.acting.helpers.LayoutMapping;
+import org.apache.cocoon.portal.acting.helpers.Mapping;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
@@ -86,6 +86,7 @@ import org.xml.sax.SAXException;
  * This action helps you in creating bookmarks
  * 
  * The definition file is:
+ * <bookmarks>
  * <events>
  *   <event type="jxpath" id="ID">
  *     <targetid>tagetId</targetid>
@@ -93,9 +94,10 @@ import org.xml.sax.SAXException;
  *     <path/>
  *   </event>
  * </events>
+ * </bookmarks>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BookmarkAction.java,v 1.1 2003/12/11 13:31:55 cziegeler Exp $
+ * @version CVS $Id: BookmarkAction.java,v 1.2 2003/12/12 10:13:34 cziegeler Exp $
 */
 public class BookmarkAction
 extends ServiceableAction
@@ -103,70 +105,73 @@ implements ThreadSafe, Parameterizable {
 
     protected Map eventMap = new HashMap();
     
+    protected String historyParameterName;
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-       final String configurationFile = parameters.getParameter("src", null);
-       if ( configurationFile == null ) return;
+        this.historyParameterName = parameters.getParameter("history-parameter-name", "history");
+        final String configurationFile = parameters.getParameter("src", null);
+        if ( configurationFile == null ) return;
        
-       Configuration config;
-       org.apache.excalibur.source.SourceResolver resolver = null;
-       try {
-           resolver = (org.apache.excalibur.source.SourceResolver) this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-           Source source = null;
-           try {
-               source = resolver.resolveURI(configurationFile);
-               SAXConfigurationHandler handler = new SAXConfigurationHandler();
-               SourceUtil.toSAX(source, handler);
-               config = handler.getConfiguration();
-           } catch (ProcessingException se) {
-               throw new ParameterException("Unable to read configuration from " + configurationFile, se);
-           } catch (SAXException se) {
-               throw new ParameterException("Unable to read configuration from " + configurationFile, se);
-           } catch (IOException ioe) {
-               throw new ParameterException("Unable to read configuration from " + configurationFile, ioe);
-           } finally {
-               resolver.release(source);
-           }
-       } catch (ServiceException se) {
-           throw new ParameterException("Unable to lookup source resolver.", se);
-       } finally {
-           this.manager.release(resolver);
-       }
-       Configuration[] events = config.getChildren("event");
-       if ( events != null ) {
-           for(int i=0; i<events.length;i++) {
-               try {
-                   final String type = events[i].getAttribute("type");
-                   final String id = events[i].getAttribute("id");
-                   if ( !"jxpath".equals(type) ) {
-                       throw new ParameterException("Unknown event type for event " + id + ": " + type);
-                   }
-                   if ( this.eventMap.containsKey(id)) {
-                       throw new ParameterException("The id for the event " + id + " is not unique.");
-                   }
-                   final String targetType = events[i].getChild("targettype").getValue();
-                   final String targetId = events[i].getChild("targetid").getValue();
-                   final String path = events[i].getChild("path").getValue();
-                   if ( "layout".equals(targetType) ) {
-                       LayoutMapping mapping = new LayoutMapping();
-                       mapping.layoutId = targetId;
-                       mapping.path = path;
-                       this.eventMap.put(id, mapping);
-                   } else if ( "coplet".equals(targetType) ) {
-                       CopletMapping mapping = new CopletMapping();
-                       mapping.copletId = targetId;
-                       mapping.path = path;  
-                       this.eventMap.put(id, mapping);
-                   } else {
+        Configuration config;
+        org.apache.excalibur.source.SourceResolver resolver = null;
+        try {
+            resolver = (org.apache.excalibur.source.SourceResolver) this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
+            Source source = null;
+            try {
+                source = resolver.resolveURI(configurationFile);
+                SAXConfigurationHandler handler = new SAXConfigurationHandler();
+                SourceUtil.toSAX(source, handler);
+                config = handler.getConfiguration();
+            } catch (ProcessingException se) {
+                throw new ParameterException("Unable to read configuration from " + configurationFile, se);
+            } catch (SAXException se) {
+                throw new ParameterException("Unable to read configuration from " + configurationFile, se);
+            } catch (IOException ioe) {
+                throw new ParameterException("Unable to read configuration from " + configurationFile, ioe);
+            } finally {
+                resolver.release(source);
+            }
+        } catch (ServiceException se) {
+            throw new ParameterException("Unable to lookup source resolver.", se);
+        } finally {
+            this.manager.release(resolver);
+        }
+        Configuration[] events = config.getChild("bookmarks").getChildren("event");
+        if ( events != null ) {
+            for(int i=0; i<events.length;i++) {
+                try {
+                    final String type = events[i].getAttribute("type");
+                    final String id = events[i].getAttribute("id");
+                    if ( !"jxpath".equals(type) ) {
+                        throw new ParameterException("Unknown event type for event " + id + ": " + type);
+                    }
+                    if ( this.eventMap.containsKey(id)) {
+                        throw new ParameterException("The id for the event " + id + " is not unique.");
+                    }
+                    final String targetType = events[i].getChild("targettype").getValue();
+                    final String targetId = events[i].getChild("targetid").getValue();
+                    final String path = events[i].getChild("path").getValue();
+                    if ( "layout".equals(targetType) ) {
+                        LayoutMapping mapping = new LayoutMapping();
+                        mapping.layoutId = targetId;
+                        mapping.path = path;
+                        this.eventMap.put(id, mapping);
+                    } else if ( "coplet".equals(targetType) ) {
+                        CopletMapping mapping = new CopletMapping();
+                        mapping.copletId = targetId;
+                        mapping.path = path;  
+                        this.eventMap.put(id, mapping);
+                    } else {
                        throw new ParameterException("Unknown target type " + targetType);
-                   }
-               } catch (ConfigurationException ce) {
-                   throw new ParameterException("Configuration exception" ,ce);
-               }
-           }
-       }
+                    }
+                } catch (ConfigurationException ce) {
+                    throw new ParameterException("Configuration exception" ,ce);
+                }
+            }
+        }
     }
 
     public Map act(Redirector redirector,
@@ -196,9 +201,27 @@ implements ThreadSafe, Parameterizable {
                 this.manager.release(portalManager);
             }
             
-            Request request = ObjectModelHelper.getRequest(objectModel);
+            final Request request = ObjectModelHelper.getRequest(objectModel);
+            final Session session = request.getSession(false);
+            final List events = new ArrayList();
+            
+            // is the history invoked?
+            final String historyValue = request.getParameter(this.historyParameterName);
+            if ( historyValue != null && session != null) {
+                // get the history
+                final List history = (List)session.getAttribute("portal-history");
+                if ( history != null ) {
+                    final List state = (List)history.get(Integer.parseInt(historyValue));
+                    if ( state != null ) {
+                        final Iterator iter = state.iterator();
+                        while ( iter.hasNext() ) {
+                            Mapping m = (Mapping)iter.next();
+                            events.add(m.getEvent(service, null));
+                        }
+                    }
+                }
+            }
             Enumeration enum = request.getParameterNames();
-            List events = new ArrayList();
             while (enum.hasMoreElements()) {
                 String name = (String)enum.nextElement();
                 String value = request.getParameter(name);
@@ -227,29 +250,4 @@ implements ThreadSafe, Parameterizable {
         return result;
     }
 
-    static abstract class Mapping {
-        public abstract Event getEvent(PortalService service, Object data);
-    }
-    static class CopletMapping extends Mapping {
-        public String copletId;
-        public String path;
-
-        public Event getEvent(PortalService service, Object data) {
-            CopletInstanceData cid = service.getComponentManager().getProfileManager().getCopletInstanceData(this.copletId);
-            Event e = new CopletJXPathEvent(cid, this.path, data);
-            return e;
-        }
-
-    }
-
-    static class LayoutMapping extends Mapping {
-        public String layoutId;
-        public String path;
-
-        public Event getEvent(PortalService service, Object data) {
-          Layout layout = service.getComponentManager().getProfileManager().getPortalLayout(null, this.layoutId);
-          Event e = new JXPathEvent(layout, this.path, data);
-        return e;
-    }
-}
 }

@@ -50,103 +50,89 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.acting.helpers.LayoutEventDescription;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
+import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * Save the current state of the layout into the session
  * 
- * @version CVS $Id: DefaultRendererContext.java,v 1.4 2003/12/12 10:13:34 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: HistoryAspect.java,v 1.1 2003/12/12 10:13:34 cziegeler Exp $
  */
-public final class DefaultRendererContext implements RendererAspectContext {
-
-    private Iterator iterator;
-    private Iterator configIterator;
-    private Object config;
-    private Map attributes;
-    private Map objectModel;
-    
-    public DefaultRendererContext(RendererAspectChain chain) {
-        this.iterator = chain.getIterator();
-        this.configIterator = chain.getConfigIterator();
-    }
-    
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#invokeNext(org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
-	 */
-	public void invokeNext(Layout layout,
-                    		PortalService service,
-                    		ContentHandler handler)
-	throws SAXException {
-		if (iterator.hasNext()) {
-            this.config = this.configIterator.next();
-            final RendererAspect aspect = (RendererAspect) iterator.next();
-            aspect.toSAX(this, layout, service, handler);
-		}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#getConfiguration()
-	 */
-	public Object getAspectConfiguration() {
-		return this.config;
-	}
+public class HistoryAspect 
+    extends AbstractAspect {
 
     /**
-     * Set an attribute
+     * Add the values to the state
+     * @param id
+     * @param state
+     * @param values
      */
-    public void setAttribute(String key, Object attribute) {
-        if ( key != null ) {
-            if ( this.attributes == null ) {
-                this.attributes = new HashMap(10); 
-            }
-            this.attributes.put( key, attribute );
-        }
-    }
-
-    /**
-     * Get an attribute
-     */
-    public Object getAttribute(String key) {
-        if ( key != null && this.attributes != null) {
-            return this.attributes.get( key );
-        }
-        return null;
-    }
-
-    /**
-     * Remove an attribute
-     */
-    public void removeAttribute(String key) {
-        if ( this.attributes != null && key != null) {
-            this.attributes.remove( key );
+    protected void addValues(String id, List state, Map values, String prefix) {
+        final Iterator iter = values.entrySet().iterator();
+        while ( iter.hasNext() ) {
+            final Map.Entry entry = (Map.Entry)iter.next();
+            final String path = prefix + entry.getKey();
+            LayoutEventDescription led = new LayoutEventDescription();
+            led.path = path;
+            led.layoutId = id;
+            led.data = entry.getValue();
+            state.add(led);
         }
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#getObjectModel()
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public Map getObjectModel() {
-        return this.objectModel;
-    }
-
-    /**
-     * Set the object model
-     * @param map The object model
-     */
-    public void setObjectModel(Map map) {
-        this.objectModel = map;
+    public void toSAX(RendererAspectContext context,
+                    Layout layout,
+                    PortalService service,
+                    ContentHandler handler)
+    throws SAXException {
+        if ( layout.getId() != null ) {
+            final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
+            final Session session = request.getSession(false);
+            if ( session != null ) {
+                List history = (List)session.getAttribute("portal-history");
+                if ( history == null ) {
+       
+                    history = new ArrayList();
+                }
+                List state = (List)request.getAttribute("portal-history");
+                if ( state == null ) {
+                    state = new ArrayList();
+                    request.setAttribute("portal-history", state);
+                    history.add(state);
+                }
+                
+                this.addValues(layout.getId(), state, layout.getAspectDatas(), "aspectDatas/");
+                
+                // are we a coplet layout
+                if ( layout instanceof CopletLayout ) {
+                    CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+                    this.addValues(cid.getId(), state, cid.getAspectDatas(), "aspectDatas/");
+                    this.addValues(cid.getId(), state, cid.getAttributes(), "attributes/");
+                }
+                session.setAttribute("portal-history", history);
+            }
+        }
+        context.invokeNext(layout, service, handler);
     }
 
 }
