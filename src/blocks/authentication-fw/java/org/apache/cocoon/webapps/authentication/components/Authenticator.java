@@ -52,6 +52,7 @@ package org.apache.cocoon.webapps.authentication.components;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceParameters;
 import org.w3c.dom.Document;
 
@@ -62,7 +63,7 @@ import org.w3c.dom.Document;
  * An authenticator must be implemented in a thread safe manner!
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.9 2003/10/24 08:26:35 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.10 2003/10/24 08:41:46 cziegeler Exp $
 */
 public interface Authenticator {
 
@@ -105,7 +106,15 @@ public interface Authenticator {
      *         successful) or invalid (authentication failed.
      * @throws ProcessingException Only if an error occurs
      */
-    public AuthenticationResult authenticate(HandlerConfiguration configuration,
-                                             SourceParameters parameters)
+    AuthenticationResult authenticate(HandlerConfiguration configuration,
+                                      SourceParameters parameters)
     throws ProcessingException;
+    
+    /**
+     * This notifies the authenticator that a user logs out of the given
+     * handler.
+     * After the authenticator is notified, the AuthenticationManager
+     * removes the authentication context, eventually the session etc.
+     */
+    void logout(UserHandler handler);
 }
