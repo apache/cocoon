@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.13 2000-04-04 11:10:10 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.14 2000-05-01 23:53:16 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.13 $ $Date: 2000-04-04 11:10:10 $
+ * @version $Revision: 1.14 $ $Date: 2000-05-01 23:53:16 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -78,6 +78,8 @@ public class Cocoon extends HttpServlet implements Defaults {
     String statusURL = null;
     boolean errorsInternally = false;
     boolean showStatus = false;
+    int containerMajorVersion;
+    int containerMinorVersion;    
 
     /**
      * Returns the version signature of Cocoon
@@ -97,18 +99,37 @@ public class Cocoon extends HttpServlet implements Defaults {
 
         // Get the initialization argument
         confsName = config.getInitParameter(INIT_ARG);
+        containerMajorVersion = this.getContainerMajorVersion();
+        containerMinorVersion = this.getContainerMinorVersion();
 
         if (confsName == null) {
             exception = null;
-            message = "<p>The servlet initialization argument <i>\"" + INIT_ARG + "\"</i> was not found. " +
-                "Please, make sure Cocoon is able to find its configurations or it won't be able to execute correctly.</p>" +
-                "<p>A template for such configurations may be found in the file \"/conf/cocoon.properties\" in the distribution.</p>";
+            message = "<p>The servlet initialization argument <i>\"" 
+            + INIT_ARG
+            + "\"</i> was not found. Please, make sure Cocoon is able to "
+            + "find its configurations or it won't be able to execute correctly.</p>" 
+            + "<p>A template for such configurations may be found in the "
+            + "file \"/conf/cocoon.properties\" in the distribution.</p>";
             return;
         }
 
         try {
             // Create the configuration object
-            confs = new Configurations(confsName);
+            // if we are using a servlet container that is 2.1 or higher then we
+            // can use container based resources instead of files
+            if ((containerMajorVersion >= 2) && (containerMinorVersion > 0)) {
+               try {
+                   URL resource = config.getServletContext().getResource(confsName);
+                   InputStream confsStream = resource.openConnection().getInputStream();
+                   confs = new Configurations(confsStream);
+                   confsStream.close();
+               } catch (Exception ex) {
+                   exception = ex;
+                   message = "Unable to open resource: " + confsName;
+               }
+            } else {
+               confs = new Configurations(confsName);
+            }
             
             // Save servlet configurations
             showStatus = ((String) confs.get(SHOW_STATUS, "false")).toLowerCase().equals("true");
@@ -179,7 +200,33 @@ public class Cocoon extends HttpServlet implements Defaults {
     public String getServletInfo() {
         return version();
     }
+
+    /**
+     * This method tries to guess the container major version.
+     */
+    private int getContainerMajorVersion() {
+        int v;
+        try {
+            v = getServletConfig().getServletContext().getMajorVersion();
+        } catch (NoSuchMethodError e) {
+            v = 2;   // using pre 2.1 servlet container
+        }
+        return v;
+    }
     
+    /**
+     * This method tries to guess the container minor version.
+     */
+    private int getContainerMinorVersion() {
+        int v;
+        try {
+            v = getServletConfig().getServletContext().getMinorVersion();
+        } catch (NoSuchMethodError e) {
+            v = 0; // using pre 2.1 servlet container
+        }
+        return v;
+    }
+
     /**
      * The entry point for standalone usage of Cocoon.
      *

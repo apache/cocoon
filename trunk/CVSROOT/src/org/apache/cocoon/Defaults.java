@@ -1,4 +1,4 @@
-/*-- $Id: Defaults.java,v 1.11 2000-03-17 16:46:58 stefano Exp $ --
+/*-- $Id: Defaults.java,v 1.12 2000-05-01 23:53:16 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -54,7 +54,7 @@ package org.apache.cocoon;
  * The Cocoon strings.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.11 $ $Date: 2000-03-17 16:46:58 $
+ * @version $Revision: 1.12 $ $Date: 2000-05-01 23:53:16 $
  */
 
 public interface Defaults {
@@ -64,6 +64,7 @@ public interface Defaults {
     public static final String YEAR = "@year@";
 
     public static final String INIT_ARG = "properties";
+
     public static final String PROPERTIES = "cocoon.properties";
     public static final String INTERNAL_PROPERTIES = "org/apache/cocoon/" + PROPERTIES;
 
