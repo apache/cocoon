@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.177 2003/10/31 11:21:44 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.178 2003/10/31 12:36:01 bruno Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BRD" type="update">
+     Woody: did some cleanup of the FormHandler interface: moved it to the event subpackage,
+     made it handle all types of WidgetEvents (there's an AbstractFormHandler which splits
+     ActionEvents from ValueChangedEvents). Removed the deprecated RepeaterHandler class,
+     and the unused CarSelectorHandler class.
+   </action>
    <action dev="SW" type="update">
      Serializers now can optionnaly implement the SitemapModelComponent interface, meaning then can
      be given a "src" attribute and parameters using &lt;map:parameter&gt;.
