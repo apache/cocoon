@@ -112,7 +112,7 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSource.java,v 1.5 2003/04/04 17:14:33 sylvain Exp $
+ * @version CVS $Id: SlideSource.java,v 1.6 2003/04/24 09:41:59 stephan Exp $
  */
 public class SlideSource extends AbstractLogEnabled
   implements Contextualizable, Composable, Source, ModifiableSource,
@@ -662,13 +662,12 @@ public class SlideSource extends AbstractLogEnabled
      *
      * @return True, if the delete operation was successful.
      */
-    public boolean delete() {
+    public void delete() {
         try {
             nat.begin();
             this.macro.delete(slideToken,
                               this.config.getFilesPath()+this.path);
             nat.commit();
-            return true;
         } catch (Exception se) {
             getLogger().error("Could not delete source.",se);
             try {
@@ -676,7 +675,6 @@ public class SlideSource extends AbstractLogEnabled
             } catch (Exception rbe) {
                 getLogger().error("Rollback failed for moving source", rbe);
             }
-            return false;
         }
     }
 
