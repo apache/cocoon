@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.21 2004/06/23 17:13:00 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.22 2004/06/25 15:36:39 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -128,9 +128,7 @@ implements Source, XMLizable {
         }
 
         // create environment...
-        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info.requestURI, 
-                                                   info.queryString, logger, info.rawMode, info.view);
-        wrapper.setURI(info.prefix, info.uri);
+        final EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info, logger);
         
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);

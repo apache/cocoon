@@ -32,7 +32,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.23 2004/05/29 17:39:38 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.24 2004/06/25 15:36:38 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -51,7 +51,7 @@ public abstract class AbstractEnvironment
     protected String action;
 
     /** The object model */
-    protected HashMap objectModel;
+    protected Map objectModel = new HashMap();
 
     /** The attributes */
     private Map attributes = new HashMap();
@@ -76,7 +76,6 @@ public abstract class AbstractEnvironment
         this.uri = uri;
         this.view = view;
         this.action = action;
-        this.objectModel = new HashMap();
     }
 
     /**
