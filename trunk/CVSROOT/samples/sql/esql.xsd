@@ -20,7 +20,11 @@
     <element name="esql:execute-query" minOccurs="0" maxOccurs="unbounded">
       <complexType>
         <sequence>
-          <element name="esql:query" type="string"/>
+          <element name="esql:query">
+            <complexType mixed="true">
+              <element name="esql:parameter" minOccurs="0" maxOccurs="unbounded"/>
+            </complexType>
+          </element>
           <element name="esql:results" minOccurs="0" maxOccurs="1">
             <complexType mixed="true">
               <element name="esql:row-results" minOccurs="0" maxOccurs="1">
