@@ -53,12 +53,12 @@ package org.apache.cocoon.selection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 
@@ -86,7 +86,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @since 2.1
- * @version CVS $Id: XPathExceptionSelector.java,v 1.5 2003/07/10 13:16:55 cziegeler Exp $
+ * @version CVS $Id: XPathExceptionSelector.java,v 1.6 2003/08/12 06:01:40 cziegeler Exp $
  */
 public class XPathExceptionSelector extends ExceptionSelector
   implements Configurable {
@@ -100,20 +100,20 @@ public class XPathExceptionSelector extends ExceptionSelector
         Configuration[] children = conf.getChildren("exception");
         Configuration[] xPathChildren;
 
-        for (int i = 0; i<children.length; i++) {
+        for (int i = 0; i < children.length; i++) {
             // Check if there are XPath-Expressions configured
             xPathChildren = children[i].getChildren("xpath");
-            Map xPathMap = new HashMap();
+            Map xPathMap = new SequencedHashMap(11);
 
-            for (int j = 0; j<xPathChildren.length; j++) {
+            for (int j = 0; j < xPathChildren.length; j++) {
                 Configuration xPathChild = xPathChildren[j];
 
                 String xPathName = xPathChild.getAttribute("name");
                 CompiledExpression xPath = JXPathContext.compile(xPathChild.getAttribute("test"));
 
-                xPathMap.put(xPath, xPathName);
+                xPathMap.put(xPathName, xPath);
             }
-            if (xPathMap.size()>0) {
+            if (xPathMap.size() > 0) {
                 // store xpath - config if there is some
                 exception2XPath.put(children[i].getAttribute("name", null),
                                     xPathMap);
@@ -130,23 +130,22 @@ public class XPathExceptionSelector extends ExceptionSelector
         FindResult selectorContext = (FindResult) super.getSelectorContext(objectModel,
                                          parameters);
 
-        if (selectorContext!=null) {
+        if (selectorContext != null) {
             String exceptionName = selectorContext.getName();
             Throwable t = selectorContext.getThrowable();
 
             Map xPathMap = (Map) exception2XPath.get(exceptionName);
 
-            if (xPathMap!=null) {
+            if (xPathMap != null) {
                 // create a context for the thrown exception
                 JXPathContext context = JXPathContext.newContext(t);
 
-                for (Iterator iterator = xPathMap.entrySet().iterator();
-                    iterator.hasNext(); ) {
-                    Entry entry = (Entry) iterator.next();
+                for (Iterator iterator = xPathMap.entrySet().iterator(); iterator.hasNext(); ) {
+                    Map.Entry entry = (Map.Entry) iterator.next();
 
-                    if (((CompiledExpression) entry.getKey()).getValue(context).equals(Boolean.TRUE)) {
+                    if (((CompiledExpression) entry.getValue()).getValue(context).equals(Boolean.TRUE)) {
                         // set the configured name if the expression is succesfull
-                        selectorContext.setName((String) entry.getValue());
+                        selectorContext.setName((String) entry.getKey());
                         return selectorContext;
                     }
                 }
