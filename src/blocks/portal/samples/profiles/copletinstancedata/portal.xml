@@ -47,4 +47,17 @@
    <coplet-instance-data id="Overview-1" name="standard">
       <coplet-data>Overview</coplet-data>
    </coplet-instance-data>
+
+   <coplet-instance-data id="Portal-Intro-1" name="standard">
+      <coplet-data>Portal-Intro</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Right-1" name="standard">
+      <coplet-data>Portal-Right</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Left-1" name="standard">
+      <coplet-data>Portal-Left</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Bottom-1" name="standard">
+      <coplet-data>Portal-Bottom</coplet-data>
+   </coplet-instance-data>
 </coplets>
