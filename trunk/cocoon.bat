@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.12 2003/07/21 05:08:57 upayavira Exp $
+:: $Id: cocoon.bat,v 1.13 2003/07/31 03:19:10 vgritsenko Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -143,5 +143,5 @@ goto end
 
 :end
 set CP=
-
+set EXEC=
 
