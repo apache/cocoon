@@ -2,7 +2,6 @@
 <coplets>
    <coplet-data id="Newsweek" name="standard">
       <title>Newsweek</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -12,7 +11,6 @@
 
    <coplet-data id="NYTBusiness" name="standard">
       <title>NYT Business</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -22,7 +20,6 @@
 
    <coplet-data id="BBCNews" name="standard">
       <title>BBC News</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -32,7 +29,6 @@
 
    <coplet-data id="CNET News" name="standard">
       <title>CNET News</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -42,7 +38,6 @@
 
    <coplet-data id="CNET Business" name="standard">
       <title>CNET Business News</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -52,7 +47,6 @@
 
    <coplet-data id="CSTNews" name="standard">
       <title>Chicago Sunday Times</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -62,7 +56,6 @@
 
    <coplet-data id="CNNEurope" name="standard">
       <title>CNN Europe</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -72,7 +65,6 @@
 
    <coplet-data id="ML Weblog" name="standard">
       <title>ML's Weblog</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -82,7 +74,6 @@
 
    <coplet-data id="CZ Weblog" name="standard">
       <title>CZ's Weblog</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -100,7 +91,6 @@
 
    <coplet-data id="Weblog" name="standard">
       <title>Another Weblog</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -110,7 +100,6 @@
 
    <coplet-data id="Introduction" name="standard">
       <title>Cocoon Introduction</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -120,7 +109,6 @@
 
    <coplet-data id="Overview" name="standard">
       <title>Cocoon Overview</title>
-      <maxpageable>true</maxpageable>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
       	<name>uri</name>
@@ -128,4 +116,3 @@
       </attribute>
    </coplet-data>
 </coplets>
-

@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCompositeAspect.java,v 1.3 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeAspect.java,v 1.4 2003/09/02 08:34:17 cziegeler Exp $
  */
 public abstract class AbstractCompositeAspect
     extends AbstractAspect {
@@ -102,8 +102,7 @@ public abstract class AbstractCompositeAspect
      */
     protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
         final String rendererName = layout.getRendererName();
-        Renderer renderer = null;
-        renderer = service.getComponentManager().getRenderer(rendererName);
+        final Renderer renderer = service.getComponentManager().getRenderer(rendererName);
         renderer.toSAX(layout, service, handler);
     }
 

@@ -63,7 +63,7 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.8 2003/07/10 13:17:02 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.9 2003/09/02 08:34:18 cziegeler Exp $
  */
 public class CopletData 
 extends AbstractProducible
@@ -71,8 +71,6 @@ implements DeltaApplicable {
 
     protected String title;
 
-    protected Boolean maxpageable;
-    
     protected CopletBaseData copletBaseData;
 
     protected Map attributes = new HashMap();
@@ -86,34 +84,6 @@ implements DeltaApplicable {
      * Constructor
      */
     public CopletData() {
-    }
-
-    /**
-      * Returns the maxpageable as boolean. If it has not been set "true" is returned.
-      * @return boolean
-      */
-    public boolean isMaxpageable() {
-    	if (this.maxpageable == null) {
-			return true;
-    	} else {
-			return this.maxpageable.booleanValue();
-    	}
-    }
-
-	/**
-	  * Returns the maxpageable as Boolean.
-	  * @return boolean
-	  */
-	public Boolean getMaxpageable() {
-		return this.maxpageable;
-	}
-
-    /**
-     * Sets the maxpageable.
-     * @param maxpageable The maxpageable to set
-     */
-    public void setMaxpageable(boolean maxpageable) {
-        this.maxpageable = new Boolean(maxpageable);
     }
 
     /**
@@ -173,13 +143,10 @@ implements DeltaApplicable {
 		
 		this.deltaApplied = true;
 		
-		Boolean maxpageable = data.maxpageable;
-		if (maxpageable != null)
-			this.maxpageable = maxpageable;
-		
 		String title = data.getTitle();
-		if (title != null)
-			this.setTitle(title);
+		if (title != null) {
+            this.setTitle(title);
+		}
 			
 		CopletBaseData copletBaseData = data.getCopletBaseData();
 		if (copletBaseData != null)	{

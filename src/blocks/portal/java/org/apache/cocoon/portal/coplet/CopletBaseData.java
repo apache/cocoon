@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletBaseData.java,v 1.6 2003/07/10 13:17:02 cziegeler Exp $
+ * @version CVS $Id: CopletBaseData.java,v 1.7 2003/09/02 08:34:18 cziegeler Exp $
  */
 public final class CopletBaseData { 
 
@@ -67,7 +67,7 @@ public final class CopletBaseData {
 
 	private String id;
 
-	private String copletAdapterName = null;
+	private String copletAdapterName;
 
 	public CopletBaseData() {
 	}
