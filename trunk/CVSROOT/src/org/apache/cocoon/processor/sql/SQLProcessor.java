@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:28 $
+ * @version $Revision: 1.6 $ $Date: 1999-12-07 09:20:59 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -258,7 +258,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                         if (count == skip_rows) break;
                     }
                 }
-
+				ColumnFormatter formatter = new ColumnFormatter(query_element);
                 while (rs.next()) {
                     if (create_row_elements) {
                         row_element = Utils.createElement(document,namespace,row_element_name);
@@ -269,6 +269,8 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                     }
 
                     for (int i=0; i<columns.length; i++) {
+						value = formatter.formatColumn(columns[i],rs,i+1);
+						/*
 						switch(columns[i].type) {
 							case Types.TIMESTAMP:
 								if (timestamp_format != null)
@@ -279,6 +281,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
 							default:
 								value = rs.getString(i+1);
 						}
+						*/
                         if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
                             row_element.setAttribute(id_attribute,value);
                             continue;
@@ -325,15 +328,15 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
         Column columns[] = new Column[md.getColumnCount()];
         if (tag_case.equals("preserve")) {
             for (int i=0; i<columns.length; i++) {
-                columns[i] = new Column(md.getColumnName(i+1),md.getColumnType(i+1));
+                columns[i] = new Column(md.getColumnName(i+1),md.getColumnTypeName(i+1));
             }
         } else if (tag_case.equals("lower")) {
             for (int i=0; i<columns.length; i++) {
-                columns[i] = new Column(md.getColumnName(i+1).toLowerCase(),md.getColumnType(i+1));
+                columns[i] = new Column(md.getColumnName(i+1).toLowerCase(),md.getColumnTypeName(i+1));
             }
         } else if (tag_case.equals("upper")) {
             for (int i=0; i<columns.length; i++) {
-                columns[i] = new Column(md.getColumnName(i+1).toUpperCase(),md.getColumnType(i+1));
+                columns[i] = new Column(md.getColumnName(i+1).toUpperCase(),md.getColumnTypeName(i+1));
             }
         }
         return columns;
@@ -346,20 +349,6 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             return def;
-        }
-    }
-
-    /**
-     * A class to hold SQL column information
-     */
-    protected class Column {
-
-        protected String name;
-        protected int type;
-
-        protected Column(String name, int type) {
-            this.name = name;
-            this.type = type;
         }
     }
 
