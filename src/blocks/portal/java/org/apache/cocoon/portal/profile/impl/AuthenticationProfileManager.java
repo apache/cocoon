@@ -185,6 +185,9 @@ public class AuthenticationProfileManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserLayout(java.lang.String)
+     */
     public void saveUserLayout(String layoutKey) {
         ProfileLS adapter = null;
         PortalService service = null;
@@ -200,24 +203,26 @@ public class AuthenticationProfileManager
 
             HashMap parameters = new HashMap();
             parameters.put("type", "user");
-            parameters.put("config",
-                state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
+            parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles"));
             parameters.put("handler", handler);
+            parameters.put("profiletype", "copletinstancedata");
 
             Map key = this.buildKey(service, parameters, layoutKey, false);
+    
+            // save coplet instance data
+            CopletInstanceDataManager profileManager = ((CopletInstanceDataManager)service.getAttribute("CopletInstanceData:" + layoutKey));
+            adapter.saveProfile(key, parameters, profileManager);
 
             // save layout data
             parameters.put("profiletype", "layout");
             key = this.buildKey(service, parameters, layoutKey, false);
-            Layout layout = (Layout) service.getAttribute("Layout:" + layoutKey);
+            Layout layout = (Layout)service.getAttribute("Layout:" + layoutKey);
             adapter.saveProfile(key, parameters, layout);
-
-        }
-        catch (Exception e) {
+            
+        } catch (Exception e) {
             // TODO
             throw new CascadingRuntimeException("Exception during save profile", e);
-        }
-        finally {
+        } finally {
             this.manager.release(adapter);
             this.manager.release(service);
         }
