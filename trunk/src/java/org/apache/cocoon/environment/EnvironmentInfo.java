@@ -55,9 +55,12 @@ import org.apache.cocoon.Processor;
 
 /**
  * Experimental code for cleaning up the environment handling
+ * This is an internal class, and it might change in an incompatible way over time.
+ * For developing your own components/applications based on Cocoon, you shouldn't 
+ * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentInfo.java,v 1.2 2003/10/30 12:38:26 cziegeler Exp $
+ * @version CVS $Id: EnvironmentInfo.java,v 1.3 2004/01/05 13:28:01 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentInfo {

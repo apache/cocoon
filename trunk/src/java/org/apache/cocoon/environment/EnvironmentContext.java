@@ -59,6 +59,10 @@ import org.apache.avalon.framework.container.ContainerUtil;
 
 /**
  * Experimental code for cleaning up the environment handling
+ * This is an internal class, and it might change in an incompatible way over time.
+ * For developing your own components/applications based on Cocoon, you shouldn't 
+ * really need it.
+ * 
  * The environment context can store any additional objects for an environment.
  * This is an alternative to using the attributes of an environment and
  * can be used to store internal objects/information wihtout exposing
@@ -68,7 +72,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
  * dispose an object, use a key that starts with "global:"!
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentContext.java,v 1.2 2004/01/05 12:41:48 cziegeler Exp $
+ * @version CVS $Id: EnvironmentContext.java,v 1.3 2004/01/05 13:28:01 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentContext 

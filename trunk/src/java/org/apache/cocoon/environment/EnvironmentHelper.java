@@ -68,9 +68,12 @@ import org.apache.excalibur.source.Source;
 
 /**
  * Experimental code for cleaning up the environment handling
+ * This is an internal class, and it might change in an incompatible way over time.
+ * For developing your own components/applications based on Cocoon, you shouldn't 
+ * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.16 2004/01/05 12:51:41 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.17 2004/01/05 13:28:01 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -202,9 +205,9 @@ implements SourceResolver, Serviceable, Disposable {
     public void changeContext(Environment env) 
     throws ProcessingException {
         if ( this.lastPrefix != null ) {
-            String uris = env.getURI();
+            final String uris = env.getURI();
             if (!uris.startsWith(this.lastPrefix)) {
-                String message = "The current URI (" + uris +
+                final String message = "The current URI (" + uris +
                                  ") doesn't start with given prefix (" + this.lastPrefix + ")";
                 throw new ProcessingException(message);
             }      
@@ -224,9 +227,9 @@ implements SourceResolver, Serviceable, Disposable {
     throws ProcessingException {
         if ( this.prefix != null ) {
             // FIXME - This is not correct!
-            String uris = env.getURIPrefix() + env.getURI();
+            final String uris = env.getURIPrefix() + env.getURI();
             if (!uris.startsWith(this.prefix)) {
-                String message = "The current URI (" + uris +
+                final String message = "The current URI (" + uris +
                                  ") doesn't start with given prefix (" + this.prefix + ")";
                 throw new ProcessingException(message);
             }      
@@ -242,7 +245,7 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public void changeContext(Source newSource, String newPrefix)
     throws IOException {
-        String newContext = newSource.getURI();
+        final String newContext = newSource.getURI();
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Changing Cocoon context");
             getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");

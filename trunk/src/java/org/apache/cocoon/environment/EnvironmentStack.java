@@ -58,11 +58,14 @@ import org.xml.sax.SAXException;
 
 /**
  * The stack for the processing environment.
+ * This is an internal class, and it might change in an incompatible way over time.
+ * For developing your own components/applications based on Cocoon, you shouldn't 
+ * really need it.
  * This is a special implementation of a stack for the handling of the
  * cocoon protocol and the sitemap source resolving.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.3 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: EnvironmentStack.java,v 1.4 2004/01/05 13:28:01 cziegeler Exp $
  */
 final class EnvironmentStack 
     extends ArrayStack 
