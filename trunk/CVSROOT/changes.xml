@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.35 2000-02-28 23:23:46 stefano Exp $
+  $Id: changes.xml,v 1.36 2000-03-01 16:04:50 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,13 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Fixed bug in XSP processor that wasn't using URL to find out for user-defined
+   taglib logicsheets.
+  </action>
+  <action dev="SM" type="update">
+   Added version information to stylesheets since Xalan was complaining.
+  </action>
   <action dev="SM" type="fix">
    Fixed namespace problem in some of the XSP examples that caused troubles
    with the newest Xalan.
