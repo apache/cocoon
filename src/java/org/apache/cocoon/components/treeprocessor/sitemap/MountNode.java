@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.5 2003/07/10 13:17:00 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.6 2003/09/29 21:06:39 sylvain Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -106,10 +106,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
-        TreeProcessor processor = (TreeProcessor)processors.get(resolvedSource);
-        if (processor == null) {
-            processor = getProcessor(env, resolvedSource);
-        }
+        TreeProcessor processor = getProcessor(env, resolvedSource);
 
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
 
