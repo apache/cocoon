@@ -112,7 +112,7 @@ import org.xml.sax.InputSource;
  * A sources from jakarta slide repositories.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSource.java,v 1.4 2003/03/24 14:33:54 stefano Exp $
+ * @version CVS $Id: SlideSource.java,v 1.5 2003/04/04 17:14:33 sylvain Exp $
  */
 public class SlideSource extends AbstractLogEnabled
   implements Contextualizable, Composable, Source, ModifiableSource,
@@ -605,7 +605,7 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If an exception occurs during
      *                         the move.
      */
-    public void move(Source source) throws SourceException {
+    public void moveTo(Source source) throws SourceException {
         if (source instanceof SlideSource) {
             try {
                 nat.begin();
@@ -635,7 +635,7 @@ public class SlideSource extends AbstractLogEnabled
      * @throws SourceException If an exception occurs during
      *                         the copy.
      */
-    public void copy(Source source) throws SourceException {
+    public void copyTo(Source source) throws SourceException {
         if (source instanceof SlideSource) {
             try {
                 nat.begin();
