@@ -182,8 +182,11 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
       <sendmail:from>from address</sendmail:from>
       <sendmail:to>some maillinglist address</sendmail:to>
       <sendmail:subject><xsp-request:get-parameter name="subject"/></sendmail:subject>
-      <!-- Modify the next line to point to your mail server -->
+      <!-- Uncomment to override defaults from cocoon.xconf
       <sendmail:smtphost>localhost</sendmail:smtphost>
+      <sendmail:smtpuser>localhost</sendmail:smtpuser>
+      <sendmail:smtppassword>localhost</sendmail:smtppassword>
+      -->
       <sendmail:body><xsp:expr>body.toString()</xsp:expr></sendmail:body>
       <sendmail:attachment>
         <sendmail:param name="object"><xsp:expr>request.get("attachment")</xsp:expr></sendmail:param>
@@ -319,7 +322,7 @@ to be attached, it must be set this way. Use the following
           </td>
 
           <td>The IP-address or the name of the host, which should
-	    deliver the email message. Better know as the mail
+	    deliver the email message. Better known as the mail
 	    transfer agent or short MTA.</td>
         </tr>
 
