@@ -62,11 +62,11 @@ import javax.servlet.ServletOutputStream;
  *  This is a mock object of the class, not the actual class.
  *  It's used to compile the code in absence of the actual class.
  *
- *  This clsss is created by hand, not automatically.
+ *  This class is created by hand, not automatically.
  *
  * **********************************************************************
  * 
- * @version CVS $Id: ServletOutputStreamImpl.java,v 1.1 2003/03/09 00:04:16 pier Exp $
+ * @version CVS $Id: ServletOutputStreamImpl.java,v 1.2 2003/07/11 17:03:27 joerg Exp $
  */
  
 public class ServletOutputStreamImpl extends ServletOutputStream {
