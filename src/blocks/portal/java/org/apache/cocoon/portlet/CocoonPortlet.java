@@ -349,7 +349,7 @@ public class CocoonPortlet extends GenericPortlet {
             try {
                 this.portletContextURL = new File(path).toURL().toExternalForm();
             } catch (MalformedURLException ignored) {
-                throw new PortletException("Unable to determine servlet context URL.", me);
+                throw new PortletException("Unable to determine portlet context URL.", me);
             }
         }
         if (getLogger().isDebugEnabled()) {
@@ -477,8 +477,8 @@ public class CocoonPortlet extends GenericPortlet {
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
-        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
 
+        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
         this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
         this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
@@ -797,7 +797,7 @@ public class CocoonPortlet extends GenericPortlet {
     protected void initLogger() {
         final String logLevel = getInitParameter("log-level", "INFO");
 
-        final String accesslogger = getInitParameter("servlet-logger", "cocoon");
+        final String accesslogger = getInitParameter("portlet-logger", "cocoon");
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
