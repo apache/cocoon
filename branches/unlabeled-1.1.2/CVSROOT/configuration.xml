@@ -8,12 +8,12 @@
       <parameter name="className" value="org.apache.cocoon.producers.FileProducer"/>
     </producerFactory>
 
-    <serializerFactory name="xml" class="org.apache.cocoon.serializers.XercesSerializerFactory">
-      <parameter name="outputMethod" value="xml"/>
+    <serializerFactory name="xml" class="org.apache.cocoon.serializers.DefaultSerializerFactory">
+      <parameter name="className" value="org.apache.cocoon.serializers.XMLSerializer"/>
     </serializerFactory>
 
-    <serializerFactory name="html" class="org.apache.cocoon.serializers.XercesSerializerFactory">
-      <parameter name="outputMethod" value="html"/>
+    <serializerFactory name="html" class="org.apache.cocoon.serializers.DefaultSerializerFactory">
+      <parameter name="className" value="org.apache.cocoon.serializers.HTMLSerializer"/>
     </serializerFactory>
 
   </configuration>
@@ -22,8 +22,25 @@
     <partition>
       <process match="**.html" source="c:\\java\\servlets\\cocoon\\data\\**.xml">
         <producer name="file"/>
-        <serializer name="html"/>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
       </process>
+
+      <process match="**.txt" source="c:\\java\\servlets\\cocoon\\data\\**.xml">
+        <producer name="file"/>
+        <serializer name="html">
+          <parameter name="contentType" value="text/plain"/>
+        </serializer>
+      </process>
+
+      <process match="**.xml" source="c:\\java\\servlets\\cocoon\\data\\**.xml">
+        <producer name="file"/>
+        <serializer name="html">
+          <parameter name="contentType" value="text/xml"/>
+        </serializer>
+      </process>
+
     </partition>
   </sitemap>
 </cocoon>
