@@ -54,7 +54,7 @@ package org.apache.cocoon.components.jxforms.xmlform;
  * Defines events fired by a Form object.
  *
  * @author Ivelin Ivanov, ivelin@apache.org
- * @version CVS $Id: FormListener.java,v 1.1 2003/07/12 19:22:30 coliver Exp $
+ * @version CVS $Id: FormListener.java,v 1.2 2003/07/14 21:05:48 joerg Exp $
  */
 public interface FormListener {
 
@@ -72,18 +72,17 @@ public interface FormListener {
      * This method does nothing by default
      * Subclasses should override it to implement custom logic
      *
-     * @param form       
+     * @param form
      */
     void reset(Form form);
 
     /**
-     * Filters custom request parameter
-     * not refering to the model.
+     * Filters custom request parameter not refering to the model.
      *
-     * @param form       
+     * @param form
      * @param parameterName
      *
-     * @return
+     * @return boolean
      */
     boolean filterRequestParameter(Form form, String parameterName);
 }

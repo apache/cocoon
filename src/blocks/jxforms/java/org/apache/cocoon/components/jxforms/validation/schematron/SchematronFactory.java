@@ -70,7 +70,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
- * @version CVS $Id: SchematronFactory.java,v 1.1 2003/07/12 19:22:30 coliver Exp $
+ * @version CVS $Id: SchematronFactory.java,v 1.2 2003/07/14 21:05:48 joerg Exp $
  */
 public class SchematronFactory extends SchemaFactory {
 
@@ -425,7 +425,7 @@ public class SchematronFactory extends SchemaFactory {
      *
      * @param path       
      *
-     * @return
+     * @return java.lang.String
      */
     protected String fixns(String path) {
         // Ironicly, at the time I am writing this

@@ -76,7 +76,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.1 2003/07/12 19:22:30 coliver Exp $
+ * @version CVS $Id: Form.java,v 1.2 2003/07/14 21:05:48 joerg Exp $
  */
 public class Form {
 
@@ -309,10 +309,9 @@ public class Form {
     }
 
     /**
-     * Performs complete validation
-     * of the form model.
+     * Performs complete validation of the form model.
      *
-     * @return
+     * @return boolean
      */
     public boolean validate() {
         return validate(null);
@@ -535,13 +534,12 @@ public class Form {
     /**
      * Filters custom request parameter not refering to the model.
      *
-     * TODO: implement default filtering
-     * for standard Cocoon parameters
-     * like cocoon-action[-suffix]
+     * TODO: implement default filtering for standard Cocoon parameters like
+     *       cocoon-action[-suffix]
      *
      * @param name       
      *
-     * @return
+     * @return boolean
      */
     protected boolean filterRequestParameter(String name) {
         // filter standard cocoon-* parameters
@@ -577,7 +575,7 @@ public class Form {
      *
      * @param paramName  
      *
-     * @return
+     * @return boolean
      */
     protected boolean filterDefaultRequestParameter(String paramName) {
         if (paramName.startsWith(Constants.ACTION_PARAM_PREFIX) ||
@@ -592,12 +590,11 @@ public class Form {
     }
 
     /**
-     * Try to extract from the request
-     * and return the current form view
+     * Try to extract from the request and return the current form view.
      *
      * @param sitemapObjectModel
      *
-     * @return
+     * @return String
      */
     public String getFormView(Map sitemapObjectModel) {
         return getRequest(sitemapObjectModel).getParameter(Form.FORM_VIEW_PARAM);
@@ -632,12 +629,12 @@ public class Form {
     }
 
     /**
-     * Loads a form from the request or session
+     * Loads a form from the request or session.
      *
      * @param sitemapObjectModel
      * @param id the form id
      *
-     * @return
+     * @return the form if found in request or session or null.
      */
     public static Form lookup(Map sitemapObjectModel, String id) {
         Request request = getRequest(sitemapObjectModel);
@@ -782,7 +779,7 @@ public class Form {
      *
      * @param viewName   
      *
-     * @return
+     * @return FormViewState
      */
     protected FormViewState getFormViewState(String viewName) {
         FormViewState formViewState = (FormViewState) viewStateMap_.get(viewName);
