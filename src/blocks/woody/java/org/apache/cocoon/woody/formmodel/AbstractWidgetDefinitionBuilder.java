@@ -54,6 +54,7 @@ import org.w3c.dom.Element;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormManager;
+import org.apache.cocoon.woody.expression.ExpressionManager;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -66,10 +67,12 @@ import org.apache.avalon.framework.component.ComponentException;
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Composable {
     protected FormManager formManager;
     protected DatatypeManager datatypeManager;
+    protected ExpressionManager expressionManager;
 
     public void compose(ComponentManager componentManager) throws ComponentException {
         formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
         datatypeManager = (DatatypeManager)componentManager.lookup(DatatypeManager.ROLE);
+        expressionManager = (ExpressionManager)componentManager.lookup(ExpressionManager.ROLE);
     }
 
     protected void setId(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
