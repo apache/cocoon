@@ -72,7 +72,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
  * dispose an object, use a key that starts with "global:"!
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentContext.java,v 1.3 2004/01/05 13:28:01 cziegeler Exp $
+ * @version CVS $Id: EnvironmentContext.java,v 1.4 2004/01/09 08:36:37 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentContext 
@@ -123,6 +123,14 @@ implements Disposable {
         return this.attributes.get(key);
     }
     
+    /**
+     * Remove the object associated with the key
+     * @param key The unique key
+     */
+    public void removeAttribute(String key) {
+        this.attributes.remove(key);
+    }
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */

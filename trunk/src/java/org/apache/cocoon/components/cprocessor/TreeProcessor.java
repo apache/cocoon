@@ -77,15 +77,14 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentContext;
 import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
@@ -118,6 +117,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     
     /** The sitemap namespace */
     public static final String SITEMAP_NS = "http://apache.org/cocoon/sitemap/1.0";
+    
+    /** The key for the pipeline component */
+    public static final String PIPELINE_KEY = ProcessingPipeline.class.getName();
     
     /* The xsl transformation location for turning a 
      * sitemap into a Fortress container configuration 
@@ -543,13 +545,12 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
      */
-    public void releasePipeline(ProcessingPipeline pipeline) {
-        // TODO
-        try {
-            CocoonComponentManager.removeFromAutomaticRelease(pipeline);
-        } catch (ProcessingException pe) {
-            // ignore this
-            getLogger().error("Unabled to release processing component.", pe);
+    public void releasePipeline(Environment environment, ProcessingPipeline pipeline) {
+        EnvironmentContext context = EnvironmentHelper.getEnvironmentContext(environment);
+        ServiceManager manager = (ServiceManager)context.getAttribute(PIPELINE_KEY);
+        if ( manager != null ) {
+            manager.release(pipeline);
+            context.removeAttribute(PIPELINE_KEY);
         }
     }
 

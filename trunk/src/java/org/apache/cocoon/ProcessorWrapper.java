@@ -63,7 +63,7 @@ import org.apache.cocoon.environment.EnvironmentHelper;
  * It is necessary to avoid infinite dispose loops
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.8 2004/01/08 11:13:07 cziegeler Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.9 2004/01/09 08:36:37 cziegeler Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Disposable, ThreadSafe {
@@ -100,8 +100,8 @@ implements Processor, Disposable, ThreadSafe {
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
      */
-    public void releasePipeline(ProcessingPipeline pipeline) {
-        this.processor.releasePipeline(pipeline);
+    public void releasePipeline(Environment environment, ProcessingPipeline pipeline) {
+        this.processor.releasePipeline(environment, pipeline);
     }
 
     /* (non-Javadoc)

@@ -61,7 +61,7 @@ import org.apache.cocoon.environment.EnvironmentHelper;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.12 2004/01/08 11:13:07 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.13 2004/01/09 08:36:37 cziegeler Exp $
  */
 public interface Processor {
 
@@ -84,7 +84,7 @@ public interface Processor {
      * Process the given <code>Environment</code> to assemble
      * a <code>ProcessingPipeline</code>.
      * Don't forget to release the pipeline using
-     * {@link releasePipeline(ProcessingPipeline)}.
+     * {@link releasePipeline(Environment, ProcessingPipeline)}.
      * @since 2.1
      */
     ProcessingPipeline buildPipeline(Environment environment)
@@ -92,8 +92,9 @@ public interface Processor {
 
     /**
      * Release the pipeline delivered by {@link buildPipeline(Environment)}
+     * @since 2.2
      */
-    void releasePipeline(ProcessingPipeline pipeline);
+    void releasePipeline(Environment environment, ProcessingPipeline pipeline);
     
     /**
      * Get the sitemap component configurations

@@ -62,8 +62,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
+import org.apache.cocoon.environment.EnvironmentContext;
+import org.apache.cocoon.environment.EnvironmentHelper;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -78,7 +79,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.3 2004/01/08 11:13:07 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.4 2004/01/09 08:36:37 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 
@@ -166,16 +167,15 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
             // Keep current manager for proper release
             this.pipelinesManager = this.currentManager;
 
-            this.processingPipeline = (ProcessingPipeline) 
-                this.pipelinesManager.lookup(ProcessingPipeline.ROLE);
+            this.processingPipeline = (ProcessingPipeline)this.pipelinesManager.lookup(ProcessingPipeline.ROLE);
             this.processingPipeline.reservice( this.pipelinesManager );
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)
             );
             if (this.isBuildingPipelineOnly) {
-                CocoonComponentManager.addComponentForAutomaticRelease(this.pipelinesManager,
-                                                                       this.processingPipeline);
+                EnvironmentContext context = EnvironmentHelper.getCurrentEnvironmentContext();
+                context.addAttribute(TreeProcessor.PIPELINE_KEY, this.pipelinesManager);
             }
         }
         return this.processingPipeline;
@@ -235,8 +235,7 @@ public class InvokeContext extends AbstractLogEnabled implements Serviceable, Di
     /**
      * Dumps all sitemap parameters to log
      */
-    protected void dumpParameters()
-    {
+    protected void dumpParameters() {
         if (!mapStack.isEmpty()) {
             StringBuffer sb = new StringBuffer();
 

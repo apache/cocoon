@@ -50,17 +50,12 @@
 */
 package org.apache.cocoon.components.container;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.fortress.impl.handler.ComponentHandler;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.GlobalRequestLifecycleComponent;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentContext;
@@ -89,48 +84,12 @@ class RequestLifecycleHelper {
         return desc;
     }
 
-    /**
-	 * Add an automatically released component
-	 */
-    static void addComponentForAutomaticRelease(final ServiceManager manager,
-                                               final Object component)
-    throws ProcessingException {
-        EnvironmentDescription desc = getEnvironmentDescription();
-        if (null != desc) {
-            desc.addToAutoRelease(manager, component);
-        }
-    }
-
-    /**
-     * Add an automatically released component
-     */
-    static void addComponentForAutomaticRelease(final ServiceSelector selector,
-                                               final Object component,
-                                                final ServiceManager manager)
-    throws ProcessingException {
-        EnvironmentDescription desc = getEnvironmentDescription();
-        if (null != desc) {
-            desc.addToAutoRelease(manager, component);
-        }
-    }
-
-    /**
-	 * Remove from automatically released components
-	 */
-    public static void removeFromAutomaticRelease(final Object component)
-        throws ProcessingException {
-        EnvironmentDescription desc = getEnvironmentDescription();
-        if (null != desc) {
-            desc.removeFromAutoRelease(component);
-        }
-    }
 }
 
 final class EnvironmentDescription implements Disposable {
     Environment environment;
     Map objectModel;
     Map requestLifecycleComponents;
-    List autoreleaseComponents = new ArrayList(4);
 
     /**
 	 * Constructor
@@ -169,13 +128,6 @@ final class EnvironmentDescription implements Disposable {
             this.requestLifecycleComponents.clear();
         }
 
-        for (int i = 0; i < autoreleaseComponents.size(); i++) {
-            final Object[] o = (Object[]) autoreleaseComponents.get(i);
-            final Object component = o[0];
-            final ComponentHandler handler = (ComponentHandler) o[1];
-            handler.put(component);
-        }
-        this.autoreleaseComponents.clear();
         this.environment = null;
         this.objectModel = null;
     }
@@ -248,49 +200,4 @@ final class EnvironmentDescription implements Disposable {
         return null;
     }
 
-    /**
-     * Add an automatically released component
-     */
-    void addToAutoRelease(final ServiceSelector selector,
-                          final Object          component,
-                          final ServiceManager  manager) {
-        this.autoreleaseComponents.add(new Object[] {component, selector, manager});
-    }
-
-    /**
-	 * Add an automatically released component
-	 */
-    void addToAutoRelease(final ServiceManager manager,
-                          final Object component) {
-        this.autoreleaseComponents.add(new Object[] { component, manager });
-    }
-
-    /**
-	 * Remove from automatically released components
-	 */
-    void removeFromAutoRelease(final Object component)
-    throws ProcessingException {
-        int i = 0;
-        boolean found = false;
-        while (i < this.autoreleaseComponents.size() && !found) {
-            final Object[] o = (Object[]) this.autoreleaseComponents.get(i);
-            if (o[0] == component) {
-                found = true;
-                if (o[1] instanceof ServiceManager) {
-                    ((ServiceManager)o[1]).release( component );
-                } else {
-                    ((ServiceSelector)o[1]).release( component );
-                    if (o[2] != null) {
-                        ((ServiceManager)o[2]).release( o[1] );
-                    }
-                }
-                this.autoreleaseComponents.remove(i);
-            } else {
-                i++;
-            }
-        }
-        if (!found) {
-            throw new ProcessingException("Unable to remove component from automatic release: component not found.");
-        }
-    }
 }

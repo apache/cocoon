@@ -73,7 +73,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.17 2004/01/05 13:28:01 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.18 2004/01/09 08:36:37 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -452,6 +452,14 @@ implements SourceResolver, Serviceable, Disposable {
         return (EnvironmentContext)objectModel.get(PROCESS_KEY);
     }
     
+    /**
+     * Return the environment context
+     */
+    public static EnvironmentContext getEnvironmentContext(Environment environment) {
+        final Map objectModel = environment.getObjectModel();
+        return (EnvironmentContext)objectModel.get(PROCESS_KEY);
+    }
+
     /**
      * This hook has to be called before a request is processed.
      * The hook is called by the Cocoon component and by the

@@ -68,7 +68,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -87,7 +86,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.33 2004/01/08 11:13:07 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.34 2004/01/09 08:36:37 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=CompilingProcessor
@@ -527,13 +526,16 @@ public class Cocoon
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#releasePipeline(org.apache.cocoon.components.pipeline.ProcessingPipeline)
      */
-    public void releasePipeline(ProcessingPipeline pipeline) {
-        // TODO
+    public void releasePipeline(Environment environment, ProcessingPipeline pipeline) {
+        Processor processor = null;
         try {
-            CocoonComponentManager.removeFromAutomaticRelease(pipeline);
-        } catch (ProcessingException pe) {
-            // ignore this
-            getLogger().error("Unabled to release processing component.", pe);
+            processor = (Processor) this.serviceManager.lookup( Processor.ROLE );
+            processor.releasePipeline(environment, pipeline);
+        } catch (ServiceException ignore) {
+            // In fact this can never happen, therefore we ignore it
+            this.getLogger().error("Unable to lookup processor.", ignore);
+        } finally {
+            this.serviceManager.release(processor);
         }
     }
     
