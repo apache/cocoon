@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="webdav-test" default="webdav-davmap">
+
+  <group id="default">
+    <property name="usetidy" value="true"/>
+  </group>
+
+  <target name="webdav-davmap">
+    <property name="davmap.samples" value="${anteater.env.cocoon}samples/webdav"/>
+    <property name="davmap.title" value="repo"/>
+    <echo>samples=${davmap.samples}</echo>
+
+    <!-- checking the davmap sample -->
+    <httpRequest href="${davmap.samples}/davmap/repo/"
+                 description="Test the 'davmap' sample">
+      <match>
+        <xpath select="/html/head/title" pattern="${davmap.title}"/>
+      </match>
+    </httpRequest>
+
+    <httpRequest href="${davmap.samples}/davmap/repo/contentB.xml"
+                 method="PUT"
+                 description="Test the 'davmap' sample">
+      <contentEquals><![CDATA[
+        <page>
+         <title>Page 2</title>
+         <content>
+           <para>Paragraph 1</para>
+           <para>Paragraph 2</para>
+         </content>
+        </page>
+      ]]></contentEquals>
+      <match>
+        <responseCode value="201"/>
+      </match>
+    </httpRequest>
+
+    <httpRequest href="${davmap.samples}/davmap/repo/contentB.xml"
+                 useTidy="false"
+                 description="Test the 'davmap' sample">
+      <match>
+        <xpath select="/page/title" pattern="Page 2"/>
+      </match>
+    </httpRequest>
+
+    <httpRequest href="${davmap.samples}/davmap/repo/contentB.xml"
+                 method="DELETE"
+                 description="Test the 'davmap' sample">
+      <match>
+        <responseCode value="200"/>
+      </match>
+    </httpRequest>
+
+  </target>
+</project>
