@@ -28,6 +28,7 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Attributes;
@@ -56,8 +57,8 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
     private static final String INCLUDE_ELEMENT = "include";
     private static final String SRC_ATTRIBUTE = "src";
 
-    private SourceResolver m_resolver;
     private ServiceManager m_manager;
+    private SourceResolver m_resolver;
     private MultiSourceValidity m_validity;
 
     public IncludeTransformer() {
@@ -74,6 +75,12 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
         m_validity = null;
     }
 
+    public void recycle() {
+        super.recycle();
+        m_resolver = null;
+        m_validity = null;
+    }
+
     public void startElement(String uri, String localName, String qName, Attributes atts) 
     throws SAXException {
         if (NS_URI.equals(uri)) {
@@ -85,7 +92,8 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
                     if (m_validity != null) {
                         m_validity.addSource(source);
                     }
-                    SourceUtil.toSAX(m_manager, source, "text/xml", super.contentHandler);
+                    SourceUtil.toSAX(m_manager, source, "text/xml", 
+                            new IncludeXMLConsumer(super.contentHandler));
                 }
                 catch (IOException e) {
                     throw new SAXException(e);
@@ -103,12 +111,6 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
         else {
             super.startElement(uri, localName, qName, atts);
         }
-    }
-
-    public void recycle() {
-        super.recycle();
-        m_resolver = null;
-        m_validity = null;
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
