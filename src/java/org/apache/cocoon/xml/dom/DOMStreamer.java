@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.1 2003/03/09 00:09:48 pier Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.2 2003/03/09 20:38:30 sylvain Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -545,6 +545,9 @@ public class DOMStreamer implements XMLProducer {
              * an existing one.
              */
             public void put(String prefix, String namespaceURI) {
+            	// FIXME (SW): it appears that prefix can be null (reported by Michael Wechner)
+            	if (prefix == null) return;
+            	
                 if (namespaceDeclarations == null)
                     namespaceDeclarations = new HashMap();
                 namespaceDeclarations.put(prefix, namespaceURI);
