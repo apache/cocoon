@@ -22,38 +22,36 @@
       <wd:validation>
         <wd:length exact='2*2'/>
       </wd:validation>
-      <wd:selection-list src="forms/a-choices.xml"/>
     </wd:datatype>
+    <wd:selection-list src="forms/a-choices.xml"/>
   </wd:field>
 
   <wd:field id="account">
     <wd:label>Indicate the size of your bank account (in m<sup>3</sup>):</wd:label>
-    <wd:datatype base="long">
-      <wd:selection-list>
-        <wd:item value="1"/>
-        <wd:item value="2"/>
-        <wd:item value="3">
-          <wd:label>three</wd:label>
-        </wd:item>
-        <wd:item value="4"/>
-        <wd:item value="5"/>
-      </wd:selection-list>
-    </wd:datatype>
+    <wd:datatype base="long"/>
+    <wd:selection-list>
+      <wd:item value="1"/>
+      <wd:item value="2"/>
+      <wd:item value="3">
+        <wd:label>three</wd:label>
+      </wd:item>
+      <wd:item value="4"/>
+      <wd:item value="5"/>
+    </wd:selection-list>
   </wd:field>
 
   <wd:field id="cowheight">
     <wd:label>Indicate your height (in cows):</wd:label>
-    <wd:datatype base="long">
-      <wd:selection-list>
-        <wd:item value="1"/>
-        <wd:item value="2"/>
-        <wd:item value="3">
-          <wd:label>three</wd:label>
-        </wd:item>
-        <wd:item value="4"/>
-        <wd:item value="5"/>
-      </wd:selection-list>
-    </wd:datatype>
+    <wd:datatype base="long"/>
+    <wd:selection-list>
+      <wd:item value="1"/>
+      <wd:item value="2"/>
+      <wd:item value="3">
+        <wd:label>three</wd:label>
+      </wd:item>
+      <wd:item value="4"/>
+      <wd:item value="5"/>
+    </wd:selection-list>
   </wd:field>
 
   <wd:field id="number1" required="true">
@@ -75,17 +73,17 @@
   <wd:multivaluefield id="drinks">
     <wd:label>Indicate which 2 of the following drinks you'd like to receive:</wd:label>
     <wd:datatype base="string">
-      <wd:selection-list>
-        <wd:item value="Maes"/>
-        <wd:item value="Jupiler"/>
-        <wd:item value="Leffe"/>
-        <wd:item value="Hoegaarden"/>
-        <wd:item value="Coca Cola"/>
-      </wd:selection-list>
       <wd:validation>
         <wd:value-count exact="2"/>
       </wd:validation>
     </wd:datatype>
+    <wd:selection-list>
+      <wd:item value="Maes"/>
+      <wd:item value="Jupiler"/>
+      <wd:item value="Leffe"/>
+      <wd:item value="Hoegaarden"/>
+      <wd:item value="Coca Cola"/>
+    </wd:selection-list>
   </wd:multivaluefield>
 
   <wd:aggregatefield id="visa" required="true">
@@ -150,24 +148,23 @@
     <wd:label>Select a date on which you'd rather had been born:</wd:label>
     <wd:datatype base="date">
       <wd:convertor variant="date" style="full"/>
-
-      <wd:selection-list>
-        <!-- The convertor element here is used to specify how the values
-             in the value attributes of the wd:item elements should be
-             interpreted. -->
-        <wd:convertor type="formatting">
-          <wd:patterns>
-            <wd:pattern>yyyyMMdd</wd:pattern>
-          </wd:patterns>
-        </wd:convertor>
-        <wd:item value="13020711"/>
-        <wd:item value="19120623"/>
-        <wd:item value="19690721"/>
-        <wd:item value="19700506"/>
-        <wd:item value="19781014"/>
-        <wd:item value="20010911"/>
-      </wd:selection-list>
     </wd:datatype>
+    <wd:selection-list>
+      <!-- The convertor element here is used to specify how the values
+           in the value attributes of the wd:item elements should be
+           interpreted. -->
+      <wd:convertor type="formatting">
+        <wd:patterns>
+          <wd:pattern>yyyyMMdd</wd:pattern>
+        </wd:patterns>
+      </wd:convertor>
+      <wd:item value="13020711"/>
+      <wd:item value="19120623"/>
+      <wd:item value="19690721"/>
+      <wd:item value="19700506"/>
+      <wd:item value="19781014"/>
+      <wd:item value="20010911"/>
+    </wd:selection-list>
   </wd:field>
 
   <wd:field id="dieselprice" required="true">
