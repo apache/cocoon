@@ -54,22 +54,23 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.5 2004/04/21 13:33:37 mpo Exp $
+ * @version CVS $Id: Widget.java,v 1.6 2004/04/22 06:57:07 mpo Exp $
  */
 public interface Widget {
 
     /**
-     * Gets the source location of this widget.
+     * @return  the source location of this widget.
      */
     public String getLocation();
 
     /**
-     * Returns the id of this widget.
+     * @return the id of this widget.  This should never be <code>null</code>
+     * Top-level container widgets (like 'form') should return <code>""</code>
      */
     public String getId();
 
     /**
-     * Gets the parent of this widget. If this widget is the root widget,
+     * @return the parent of this widget. If this widget is the root widget,
      * this method returns null.
      */
     public Widget getParent();
@@ -82,7 +83,7 @@ public interface Widget {
     public void setParent(Widget widget);
     
     /**
-     * Get the {@link Form} to which this widget belongs. The form is the top-most ancestor
+     * @return the {@link Form} to which this widget belongs. The form is the top-most ancestor
      * of the widget.
      */
     public Form getForm();
@@ -96,7 +97,7 @@ public interface Widget {
 //    public String getNamespace();
 
     /**
-     * Returns the id prefixed with the namespace, this name should be unique
+     * @return the id prefixed with the namespace, this name should be unique
      * accross all widgets on the form.
      */
     public String getFullyQualifiedId();
@@ -112,6 +113,9 @@ public interface Widget {
      * Validates this widget and returns the outcome. Possible error messages are
      * remembered by the widget itself and will be part of the XML produced by
      * this widget in its {@link #generateSaxFragment(ContentHandler, Locale)} method.
+     * 
+     * @return <code>true</code> to indicate all validations were ok, 
+     *         <code>false</code> otherwise
      */
     public boolean validate(FormContext formContext);
 
@@ -129,7 +133,7 @@ public interface Widget {
     public void generateLabel(ContentHandler contentHandler) throws SAXException;
 
     /**
-     * Returns the value of the widget. For some widgets (notably ContainerWidgets)
+     * @return the value of the widget. For some widgets (notably ContainerWidgets)
      * this may not make sense, those should then simply return null here.
      */
     public Object getValue();
@@ -141,8 +145,8 @@ public interface Widget {
     public void setValue(Object object);
 
     /**
-     * Returns wether this widget is required to be filled in. As with {@link #getValue()}, for some
-     * widgets this may not make sense, those should return false here.
+     * @return whether this widget is required to be filled in. As with {@link #getValue()}, 
+     * for some widgets this may not make sense, those should return false here.
      */
     public boolean isRequired();
 
