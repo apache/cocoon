@@ -273,7 +273,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.23 2004/01/15 15:24:31 kpiroumian Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.24 2004/02/04 15:16:01 sylvain Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -975,6 +975,10 @@ public class I18nTransformer extends AbstractTransformer
     public void configure(Configuration conf) throws ConfigurationException {
         // read in the config options from the transformer definition
         Configuration cataloguesConf = conf.getChild("catalogues", false);
+        
+        if (cataloguesConf == null) {
+            throw new ConfigurationException("I18NTransformer needs a 'catalogues' configuration at " + conf.getLocation());
+        }
 
         // new configuration style
         Configuration[] catalogueConfs = cataloguesConf.getChildren("catalogue");
