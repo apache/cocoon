@@ -4,13 +4,14 @@
   (see "eclipse-project" target in build.xml)
   
   @author Sylvain Wallez
-  @version CVS $Id: make-classpath.xsl,v 1.1 2003/11/18 18:56:13 joerg Exp $
+  @version CVS $Id: make-classpath.xsl,v 1.2 2003/12/08 11:41:18 cziegeler Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:output indent="yes" method="xml"/>
-
+  <xsl:param name="exportlib"/>
+  
   <xsl:strip-space elements="*"/>
 
   <xsl:template match="/data">
@@ -34,7 +35,7 @@
         <xsl:sort select="concat(substring-after(substring-after(substring-after(substring-after(., '/'), '/'), '/'), '/'),
                                                  substring-after(substring-after(substring-after(., '/'), '/'), '/'),
                                                                  substring-after(substring-after(., '/'), '/'))"/>
-        <classpathentry kind="lib" path="{.}"/>
+        <classpathentry exported="{$exportlib}" kind="lib" path="{.}"/>
       </xsl:for-each>
 
       <!-- 3. JRE runtime -->
