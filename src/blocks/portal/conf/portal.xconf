@@ -90,6 +90,7 @@
              </aspect>
              <aspect type="tab-content">
                  <parameter name="tag-name" value="tab-layout"/>
+                 <parameter name="store"    value="session"/>
              </aspect>
          </aspects>
      </renderer>
@@ -152,9 +153,6 @@
             <renderers default="tab">
                 <renderer name="tab"/>
             </renderers>
-            <aspects>
-                <aspect name="tab" class="java.lang.Integer" store="session" auto-create="true"/>
-            </aspects>
         </layout>
         <layout name="frame" 
                 class="org.apache.cocoon.portal.layout.impl.FrameLayout"

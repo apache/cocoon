@@ -60,19 +60,23 @@ import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 
 /**
- *
+ * This chain holds all configured renderer aspects for one renderer.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectChain.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: RendererAspectChain.java,v 1.2 2003/06/14 17:55:43 cziegeler Exp $
  */
 public final class RendererAspectChain {
     
-    private List aspects = new ArrayList();
+    protected List aspects = new ArrayList(3);
     
-    private List configs = new ArrayList();
+    protected List configs = new ArrayList(3);
+    
+    protected List aspectDescriptions = new ArrayList(2);
     
     public void configure(ComponentSelector selector, Configuration conf) 
     throws ConfigurationException {
@@ -83,8 +87,17 @@ public final class RendererAspectChain {
                     final Configuration current = aspects[i];
                     final String role = current.getAttribute("type");
                     try {
-                        this.aspects.add(selector.select(role));
-                        this.configs.add(Parameters.fromConfiguration(current));
+                        RendererAspect rAspect = (RendererAspect) selector.select(role);
+                        Parameters aspectConfiguration = Parameters.fromConfiguration(current);
+                        this.aspects.add(rAspect);               
+                        this.configs.add(aspectConfiguration);
+                        
+                        Iterator descriptionIterator = rAspect.getAspectDescriptions(aspectConfiguration);
+                        if ( descriptionIterator != null ) {
+                            while ( descriptionIterator.hasNext() ) {
+                                this.aspectDescriptions.add( descriptionIterator.next() );
+                            }
+                        }
                     } catch (ComponentException se) {
                         throw new ConfigurationException("Unable to lookup aspect " + role, se);
                     }
@@ -101,6 +114,10 @@ public final class RendererAspectChain {
     
     public Iterator getConfigIterator() {
         return this.configs.iterator();
+    }
+    
+    public Iterator getAspectDescriptionIterator() {
+        return this.aspectDescriptions.iterator();
     }
     
     public void dispose(ComponentSelector selector) {

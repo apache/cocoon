@@ -72,6 +72,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
+import org.apache.cocoon.portal.aspect.AspectDescription;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDataHandler;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.coplet.CopletFactory;
@@ -85,6 +86,7 @@ import org.apache.cocoon.portal.layout.*;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -93,7 +95,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.11 2003/06/14 16:58:02 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.12 2003/06/14 17:55:43 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -114,6 +116,86 @@ public class DefaultLayoutFactory
     
     protected ComponentManager manager;
     
+    /** 
+     * Configure a layout
+     */
+    protected void configureLayout(Configuration layoutConf) 
+    throws ConfigurationException {
+        DefaultLayoutDescription desc = new DefaultLayoutDescription();
+        final String name = layoutConf.getAttribute("name");
+                
+        // unique test
+        if ( this.layouts.get(name) != null) {
+            throw new ConfigurationException("Layout name must be unique. Double definition for " + name);
+        }
+        desc.setName(name);
+        desc.setClassName(layoutConf.getAttribute("class"));        
+        desc.setCreateId(layoutConf.getAttributeAsBoolean("create-id", false));
+                
+        // the renderers
+        final String defaultRenderer = layoutConf.getChild("renderers").getAttribute("default");
+        desc.setDefaultRendererName(defaultRenderer); 
+                                
+        final Configuration[] rendererConfs = layoutConf.getChild("renderers").getChildren("renderer");
+        if ( rendererConfs != null ) {
+            boolean found = false;
+            for(int m=0; m < rendererConfs.length; m++) {
+                final String rName = rendererConfs[m].getAttribute("name");
+                desc.addRendererName(rName);
+                if ( defaultRenderer.equals(rName) ) {
+                    found = true;
+                }
+            }
+            if ( !found ) {
+                throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
+            }
+        } else {
+            throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
+        }
+        
+        // and now the aspects
+        final Configuration[] aspectsConf = layoutConf.getChild("aspects").getChildren("aspect");
+        if (aspectsConf != null) {
+            for(int m=0; m < aspectsConf.length; m++) {
+                AspectDescription adesc = DefaultAspectDescription.newInstance(aspectsConf[m]);
+                desc.addAspectDescription( adesc );
+            }
+        }
+        // now query all configured renderers for their aspects
+        ComponentSelector rendererSelector = null;
+        try {
+            rendererSelector = (ComponentSelector)this.manager.lookup(Renderer.ROLE+"Selector");
+            
+            Iterator rendererIterator = desc.getRendererNames();
+            while (rendererIterator.hasNext()) {
+                final String rendererName = (String)rendererIterator.next();
+                Renderer renderer = null;
+                try { 
+                    renderer = (Renderer) rendererSelector.select( rendererName );
+                    
+                    Iterator aspectIterator = renderer.getAspectDescriptions();
+                    while (aspectIterator.hasNext()) {
+                        final AspectDescription adesc = (AspectDescription) aspectIterator.next();
+                        desc.addAspectDescription( adesc );
+                    }
+                } catch (ComponentException ce ) {
+                    throw new ConfigurationException("Unable to lookup renderer '" + rendererName + "'", ce);
+                } finally {
+                    rendererSelector.release( renderer );
+                }
+            }
+        } catch (ComponentException ce ) {
+            throw new ConfigurationException("Unable to lookup renderer selector.", ce);
+        } finally {
+            this.manager.release( rendererSelector );
+        }
+        
+        // set the aspect data handler
+        DefaultAspectDataHandler handler = new DefaultAspectDataHandler(desc, this.storeSelector);
+        this.layouts.put(desc.getName(), new Object[] {desc, handler});
+        this.descriptions.add(desc);
+    }
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -122,53 +204,7 @@ public class DefaultLayoutFactory
         final Configuration[] layoutsConf = configuration.getChild("layouts").getChildren("layout");
         if ( layoutsConf != null ) {
             for(int i=0; i < layoutsConf.length; i++ ) {
-                DefaultLayoutDescription desc = new DefaultLayoutDescription();
-                final String name = layoutsConf[i].getAttribute("name");
-                
-                // unique test
-                if ( this.layouts.get(name) != null) {
-                    throw new ConfigurationException("Layout name must be unique. Double definition for " + name);
-                }
-                desc.setName(name);
-                desc.setClassName(layoutsConf[i].getAttribute("class"));        
-                desc.setCreateId(layoutsConf[i].getAttributeAsBoolean("create-id", false));
-                
-                // the renderers
-                final String defaultRenderer = layoutsConf[i].getChild("renderers").getAttribute("default");
-                desc.setDefaultRendererName(defaultRenderer); 
-                                
-                final Configuration[] rendererConfs = layoutsConf[i].getChild("renderers").getChildren("renderer");
-                if ( rendererConfs != null ) {
-                    boolean found = false;
-                    for(int m=0; m < rendererConfs.length; m++) {
-                        final String rName = rendererConfs[m].getAttribute("name");
-                        desc.addRendererName(rName);
-                        if ( defaultRenderer.equals(rName) ) {
-                            found = true;
-                        }
-                    }
-                    if ( !found ) {
-                        throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
-                    }
-                } else {
-                    throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
-                }
-                // and now the aspects
-                final Configuration[] aspectsConf = layoutsConf[i].getChild("aspects").getChildren("aspect");
-                if (aspectsConf != null) {
-                    for(int m=0; m < aspectsConf.length; m++) {
-                        DefaultAspectDescription adesc = new DefaultAspectDescription();
-                        adesc.setClassName(aspectsConf[m].getAttribute("class"));
-                        adesc.setName(aspectsConf[m].getAttribute("name"));
-                        adesc.setPersistence(aspectsConf[m].getAttribute("store"));
-                        adesc.setAutoCreate(aspectsConf[m].getAttributeAsBoolean("auto-create", false));
-                        adesc.setDefaultValue(aspectsConf[m].getAttribute("value", null));
-                        desc.addAspectDescription( adesc );
-                    }
-                }
-                DefaultAspectDataHandler handler = new DefaultAspectDataHandler(desc, this.storeSelector);
-                this.layouts.put(desc.getName(), new Object[] {desc, handler});
-                this.descriptions.add(desc);
+                this.configureLayout( layoutsConf[i] );
             }
         }
     }

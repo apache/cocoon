@@ -69,6 +69,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
+import org.apache.cocoon.portal.aspect.AspectDescription;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDataHandler;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.coplet.CopletData;
@@ -82,7 +83,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.5 2003/06/06 11:33:38 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.6 2003/06/14 17:55:43 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -236,12 +237,7 @@ public class DefaultCopletFactory
                 Configuration[] aspectsConf = copletsConf[i].getChild("coplet-data-aspects").getChildren("aspect");
                 if (aspectsConf != null) {
                     for(int m=0; m < aspectsConf.length; m++) {
-                        DefaultAspectDescription adesc = new DefaultAspectDescription();
-                        adesc.setClassName(aspectsConf[m].getAttribute("class"));
-                        adesc.setName(aspectsConf[m].getAttribute("name"));
-                        adesc.setPersistence(aspectsConf[m].getAttribute("store"));
-                        adesc.setAutoCreate(aspectsConf[m].getAttributeAsBoolean("auto-create", false));
-                        adesc.setDefaultValue(aspectsConf[m].getAttribute("value", null));
+                        AspectDescription adesc = DefaultAspectDescription.newInstance(aspectsConf[m]);
                         desc.addAspectDescription( adesc );
                     }
                 }
@@ -250,13 +246,7 @@ public class DefaultCopletFactory
                 aspectsConf = copletsConf[i].getChild("coplet-instance-data-aspects").getChildren("aspect");
                 if (aspectsConf != null) {
                     for(int m=0; m < aspectsConf.length; m++) {
-                        DefaultAspectDescription adesc = new DefaultAspectDescription();
-                        adesc.setClassName(aspectsConf[m].getAttribute("class"));
-                        adesc.setName(aspectsConf[m].getAttribute("name"));
-                        adesc.setPersistence(aspectsConf[m].getAttribute("store"));
-                        adesc.setAutoCreate(aspectsConf[m].getAttributeAsBoolean("auto-create", false));
-                        adesc.setDefaultValue(aspectsConf[m].getAttribute("value", null));
-                        desc.addInstanceAspectDescription( adesc );
+                        AspectDescription adesc = DefaultAspectDescription.newInstance(aspectsConf[m]);
                         instanceDesc.addAspectDescription( adesc );
                     }
                 }

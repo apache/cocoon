@@ -50,10 +50,13 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
+import java.util.Iterator;
+
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 
@@ -62,7 +65,7 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspect.java,v 1.2 2003/05/22 12:32:46 cziegeler Exp $
+ * @version CVS $Id: AbstractAspect.java,v 1.3 2003/06/14 17:55:43 cziegeler Exp $
  */
 public abstract class AbstractAspect
     extends AbstractLogEnabled
@@ -75,6 +78,14 @@ public abstract class AbstractAspect
      */
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.manager = componentManager;
+    }
+
+    /**
+     * Return the aspects required for this renderer
+     * @return An iterator for the aspect descriptions or null.
+     */
+    public Iterator getAspectDescriptions(Parameters configuration) {
+        return null;
     }
 
 }

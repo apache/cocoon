@@ -50,6 +50,8 @@
  */
 package org.apache.cocoon.portal.aspect.impl;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.aspect.AspectDescription;
 
 
@@ -59,7 +61,7 @@ import org.apache.cocoon.portal.aspect.AspectDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDescription.java,v 1.2 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDescription.java,v 1.3 2003/06/14 17:55:43 cziegeler Exp $
  */
 public class DefaultAspectDescription 
     implements AspectDescription {
@@ -73,6 +75,22 @@ public class DefaultAspectDescription
     protected boolean autoCreate;
     
     protected String defaultValue;
+    
+    /**
+     * Create a new description from a {@link Configuration} object.
+     * All values must be stored as attributes
+     */
+    public static AspectDescription newInstance(Configuration conf)
+    throws ConfigurationException {
+        DefaultAspectDescription adesc = new DefaultAspectDescription();
+        adesc.setClassName(conf.getAttribute("class"));
+        adesc.setName(conf.getAttribute("name"));
+        adesc.setPersistence(conf.getAttribute("store"));
+        adesc.setAutoCreate(conf.getAttributeAsBoolean("auto-create", false));
+        adesc.setDefaultValue(conf.getAttribute("value", null));
+        
+        return adesc;
+    }
     
     /**
      * @return
@@ -139,5 +157,13 @@ public class DefaultAspectDescription
 
     public void setDefaultValue(String value) {
         this.defaultValue = value;
+    }
+    
+    public String toString() {
+        return ("AspectDescription name=" + this.name + 
+                 ", class=" + this.className +
+                 ", persistence=" + this.persistence +
+                 ", autoCreate=" + this.autoCreate +
+                 ", defaultValue=" + this.defaultValue);
     }
 }

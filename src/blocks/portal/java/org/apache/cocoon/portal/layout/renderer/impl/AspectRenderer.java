@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.layout.renderer.impl;
 
+import java.util.Iterator;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -65,7 +67,8 @@ import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.portal.layout.renderer.aspect.impl.*;
+import org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultRendererContext;
+import org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -74,7 +77,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectRenderer.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: AspectRenderer.java,v 1.2 2003/06/14 17:55:43 cziegeler Exp $
  */
 public class AspectRenderer
     extends AbstractLogEnabled
@@ -123,5 +126,12 @@ public class AspectRenderer
             this.manager = null;
 		}
 	}
+
+    /**
+     * Return the aspects required for this renderer
+     */
+    public Iterator getAspectDescriptions() {
+        return this.chain.getAspectDescriptionIterator();
+    }
 
 }
