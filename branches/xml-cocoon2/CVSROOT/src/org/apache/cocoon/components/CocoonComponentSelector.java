@@ -36,7 +36,7 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-16 20:13:29 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-16 21:19:26 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
 
@@ -53,6 +53,8 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
     /** Static component handlers.
      */
     private Map componentMapping;
+
+    private Configuration conf = null;
 
     /** Static component handlers.
      */
@@ -93,35 +95,38 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
         Component component = null;
 
         if ( hint == null ) {
-            log.error("CocoonComponentManager Attempted to retrieve component with null hint.");
+            log.error(this.conf.getName() + ": CocoonComponentSelector Attempted to retrieve component with null hint.");
             throw new ComponentManagerException("Attempted to retrieve component with null hint.");
         }
 
         handler = (CocoonComponentHandler) this.componentHandlers.get(hint);
         // Retrieve the instance of the requested component
-        if ( handler != null ) {
-            try {
-                component = handler.get();
-            } catch (Exception e) {
-                throw new ComponentManagerException("Could not access the Component for you", e);
-            }
+        if ( handler == null ) {
+            throw new ComponentManagerException(this.conf.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
         }
 
-        if (component != null) {
-            this.componentMapping.put(component, handler);
-            return component;
+        try {
+            component = handler.get();
+        } catch (Exception e) {
+            throw new ComponentManagerException(this.conf.getName() + ": CocoonComponentSelector could not access the Component for you", e);
         }
 
-        throw new ComponentManagerException("Could not find the component for hint: " + hint);
+        if (component == null) {
+            throw new ComponentManagerException(this.conf.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
+        }
+
+        this.componentMapping.put(component, handler);
+        return component;
     }
 
     public void configure(Configuration conf) throws ConfigurationException {
+        this.conf = conf;
         log.debug("CocoonComponentSelector setting up with root element: " + conf.getName());
         Configuration[] instances = conf.getChildren("component-instance");
 
         for (int i = 0; i < instances.length; i++) {
-            Object hint = instances[i].getAttribute("name");
-            String className = (String) instances[i].getAttribute("class");
+            Object hint = instances[i].getAttribute("name").trim();
+            String className = (String) instances[i].getAttribute("class").trim();
 
             try {
                 this.addComponent(hint, ClassUtils.loadClass(className), instances[i]);
@@ -152,7 +157,9 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
             handler.setLogger(this.log);
             handler.init();
             this.componentHandlers.put(hint, handler);
+            this.log.debug("Adding " + component.getName() + " for " + hint.toString());
         } catch (Exception e) {
+            this.log.error("Could not set up Component for hint: " + hint, e);
             throw new ComponentManagerException ("Could not set up Component for hint: " + hint, e);
         }
     }
@@ -167,8 +174,9 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
             handler.setLogger(this.log);
             handler.init();
             this.componentHandlers.put(hint, handler);
+            this.log.debug("Adding " + instance.getClass().getName() + " for " + hint.toString());
         } catch (Exception e) {
-            this.log.warn("Could not set up Component for hint: " + hint, e);
+            this.log.error("Could not set up Component for hint: " + hint, e);
         }
     }
 }
