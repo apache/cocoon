@@ -80,7 +80,7 @@
 
   <wd:repeater id="contacts">
     <wd:output id="id">
-      <wd:datatype base="string"/>
+      <wd:datatype base="long"/>
     </wd:output>
     <wd:field id="firstname">
       <wd:label>Firstname</wd:label>

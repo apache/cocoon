@@ -54,17 +54,17 @@ package org.apache.cocoon.woody.samples;
  * Contact belongs to the {@link Form2Bean} demo.
  */
 public class Contact {
-    private String id;
+    private long id;
     private String firstName;
     private String lastName;
     private String phone;
     private String email;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
