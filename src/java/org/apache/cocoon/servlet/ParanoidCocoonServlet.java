@@ -79,7 +79,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.8 2003/08/07 06:26:24 cziegeler Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.9 2003/09/16 16:54:28 sylvain Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -183,13 +183,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
             
             // List all .jar and .zip
 			File libDir = new File(contextDir + "/WEB-INF/lib");
-			File[] libraries = libDir.listFiles(
-				new FilenameFilter() {
-	                public boolean accept(File dir, String name) {
-	                    return name.endsWith(".zip") || name.endsWith(".jar");
-	                }
-				}
-			);
+			File[] libraries = libDir.listFiles(new JarFileFilter());
 
 			for (int i = 0; i < libraries.length; i++) {
 				URL lib = libraries[i].toURL();
@@ -222,15 +216,33 @@ public class ParanoidCocoonServlet extends HttpServlet {
             do {
                 line = lineReader.readLine();
                 if ( line != null ) {
-                    final URL lib;
-                    if ( line.indexOf(':') == -1) {
-                        File entry = new File(line);        
-                        lib = entry.toURL();
+                    if (line.startsWith("class-dir:")) {
+                        line = line.substring("class-dir:".length()).trim();
+                        URL url = new File(line).toURL();
+                        log("Adding class directory " + url);
+                        urlList.add(url);
+                        
+                    } else if (line.startsWith("lib-dir:")) {
+                        line = line.substring("lib-dir:".length()).trim();
+                        File dir = new File(line);
+                        File[] libraries = dir.listFiles(new JarFileFilter());
+                        log("Adding " + libraries.length + " libraries from " + dir.toURL());
+                        for (int i = 0; i < libraries.length; i++) {
+                            URL url = libraries[i].toURL();
+                            urlList.add(url);
+                        }
                     } else {
-                        lib = new URL(line);
+                        // Consider it as a URL
+                        final URL lib;
+                        if ( line.indexOf(':') == -1) {
+                            File entry = new File(line);        
+                            lib = entry.toURL();
+                        } else {
+                            lib = new URL(line);
+                        }
+                        log("Adding class URL " + lib);
+                        urlList.add(lib);
                     }
-                    log("Adding class library " + lib);
-                    urlList.add(lib);
                 }
             } while ( line != null );
             lineReader.close();
@@ -275,5 +287,11 @@ public class ParanoidCocoonServlet extends HttpServlet {
 
 		super.destroy();
 	}
+    
+    private class JarFileFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            return name.endsWith(".zip") || name.endsWith(".jar");
+        }
+    }
 }
 
