@@ -44,7 +44,7 @@ function setClass(obj,value) {
 	}
 }
 
-function getClass(obj) {
+function getClazz(obj) {
 	return (IE) ? obj.className : obj.getAttribute("class");
 }
 

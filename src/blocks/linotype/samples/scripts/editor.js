@@ -86,7 +86,7 @@ function start(e) {
 	// Then we instrument the toolbar <div> and turn them into buttons
     divs = document.getElementsByTagName('div');
     for (var i = 0; i < divs.length; i++) {
-		var nameclass = getClass(divs[i]);
+		var nameclass = getClazz(divs[i]);
 		if (nameclass == "imagebutton") {
             divs[i].onmousedown = buttonDown;
             divs[i].onmouseup = buttonUp;
