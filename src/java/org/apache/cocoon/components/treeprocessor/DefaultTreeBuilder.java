@@ -54,8 +54,6 @@ import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.logger.LogKitManageable;
-import org.apache.avalon.excalibur.logger.LogKitManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -88,11 +86,11 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.3 2003/08/07 08:42:20 sylvain Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.4 2003/09/10 17:43:02 proyal Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
-  Recomposable, Configurable, Contextualizable, LogKitManageable, RoleManageable, Recyclable, Disposable {
+  Recomposable, Configurable, Contextualizable, RoleManageable, Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
 
@@ -103,8 +101,6 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
 
     //----- lifecycle-related objects ------
     protected Context context;
-
-    protected LogKitManager logKit;
 
     /**
      * The parent component manager, set using <code>compose()</code> and <code>recompose()</code>
@@ -164,10 +160,6 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         this.context = context;
     }
 
-    public void setLogKitManager(LogKitManager logKit) {
-        this.logKit = logKit;
-    }
-
     public void compose(ComponentManager manager) throws ComponentException {
         this.parentManager = manager;
     }
@@ -225,7 +217,6 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             this.context,
             this.manager,
             this.parentRoleManager,
-            this.logKit,
             this.configuration.getChild("roles")
         );
 
@@ -274,7 +265,6 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             this.context,
             this.manager,
             this.roleManager,
-            this.logKit,
             this.configuration.getChild("nodes")
         );
 
@@ -425,7 +415,6 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             this.context,
             this.manager,
             this.roleManager,
-            this.logKit,
             null // configuration
         );
 
