@@ -66,14 +66,22 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     </dd>
  *     <dt>&lt;grayscale&gt;</dt>
  *     <dd>This parameter is optional. When specified and set to true it
- *         will cause each image pixel to be normalized. 
+ *         will cause each image pixel to be normalized. Default is "false".
+ *     </dd>
+ *     <dt>&lt;allow-enlarging&gt;</dt>
+ *     <dd>This parameter is optional. By default, if the image is smaller
+ *         than the specified width and height, the image will be enlarged.
+ *         In some circumstances this behaviour is undesirable, and can be
+ *         switched off by setting this parameter to "no" so that images will
+ *         be reduced in size, but not enlarged. The default is "yes".
+
  *     </dd>
  *   </dl>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.8 2004/03/11 18:46:31 joerg Exp $
+ * @version CVS $Id: ImageReader.java,v 1.9 2004/03/21 03:49:48 crossley Exp $
  */
 final public class ImageReader extends ResourceReader {
 
