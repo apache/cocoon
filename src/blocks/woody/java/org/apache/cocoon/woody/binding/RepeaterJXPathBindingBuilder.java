@@ -106,6 +106,7 @@ public class RepeaterJXPathBindingBuilder
             String parentPath =
                 DomHelper.getAttribute(bindingElm, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElm, "row-path");
+            String rowPathForInsert = DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
             String uniqueRowId =
                 DomHelper.getAttribute(bindingElm, "unique-row-id");
             String uniqueRowIdPath =
@@ -156,7 +157,7 @@ public class RepeaterJXPathBindingBuilder
 
             RepeaterJXPathBinding repeaterBinding =
                 new RepeaterJXPathBinding(
-                    repeaterId, parentPath, rowPath,
+                    repeaterId, parentPath, rowPath, rowPathForInsert,
                     uniqueRowId, uniqueRowIdPath,
                     convertor, convertorLocale, 
                     childBindings, insertBinding, deleteBindings);

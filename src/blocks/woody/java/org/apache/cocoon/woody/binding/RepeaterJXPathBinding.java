@@ -74,6 +74,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
+    private final String rowPathForInsert;
     private final String uniqueRowId;
     private final String uniqueRowIdPath;
     private final Convertor uniqueRowIdConvertor;
@@ -86,17 +87,19 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, String rowPath, 
+    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, 
+                                 String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath, 
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
-        this(repeaterId, repeaterPath, rowPath, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
+        this(repeaterId, repeaterPath, rowPath, rowPathForInsert, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
     }
 
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, String rowPath, 
+    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, 
+                                 String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath, 
                                  Convertor convertor, Locale convertorLocale, 
                                  JXPathBindingBase[] childBindings,
@@ -104,6 +107,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
+        this.rowPathForInsert = rowPathForInsert;
         this.uniqueRowId = uniqueRowId;
         this.uniqueRowIdPath = uniqueRowPath;
         this.uniqueFieldBinding =
@@ -251,7 +255,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
         // count how many we have now
         int indexCount = 1;
-        rowPointers = repeaterContext.iteratePointers(this.rowPath);
+        rowPointers = repeaterContext.iteratePointers(this.rowPathForInsert);
         while (rowPointers.hasNext()) {
             rowPointers.next();
             indexCount++;
@@ -266,7 +270,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 while (rowIterator.hasNext()) {
                     Repeater.RepeaterRow thisRow = (Repeater.RepeaterRow) rowIterator.next();
                     // -->  create the path to let the context be created
-                    Pointer newRowContextPointer = repeaterContext.createPath(this.rowPath + "[" + indexCount + "]");
+                    Pointer newRowContextPointer = repeaterContext.createPath(this.rowPathForInsert + "[" + indexCount + "]");
                     JXPathContext newRowContext = repeaterContext.getRelativeContext(newRowContextPointer);
                     if (getLogger().isDebugEnabled())
                         getLogger().debug("inserted row at " + newRowContextPointer.asPath());
