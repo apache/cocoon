@@ -38,9 +38,6 @@
     <depend project="excalibur-datasource" version="supplied"/>
     <depend project="excalibur-component" version="supplied"/>
     <depend project="excalibur-logger" version="supplied"/>
-    <!--    <depend project="excalibur-collections" version="supplied"/> -->
-
-    <depend project="avalon-cornerstone" version="supplied"/>
 
     <depend project="jakarta-regexp" version="supplied"/>
     <depend project="jakarta-servletapi-4" version="supplied"/>
