@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.21 2001-02-07 19:43:16 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.22 2001-02-08 17:56:20 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -23,15 +23,16 @@
 
  <release version="@version@" date="@date@">
   <action dev="BL" type="update">
+    Made Cocoon load classpath independent of Servlet Engine Classpath
+    Attribute.
+  </action>
+  <action dev="BL" type="update">
     Changed the Xerces Specific code in the parser to JAXP 1.1 code.
     The JAXP 1.1 code will work with any compliant parser.  Unfortunately
     we still need Xerces for the serializers.
   </action>
   <action dev="BL" type="update">
     Put meat on the Action Framework for the ManageEmployees form.
-  </action>
-  <action dev="BL" type="add">
-    Added DataSourceComponent framework to Cocoon and esql logicsheet.
   </action>
   <action dev="RB" type="add"> 
    SVG serializer now uses Batik.

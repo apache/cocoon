@@ -24,24 +24,6 @@
    <param-value>/cocoon.xconf</param-value>
   </init-param>
   <init-param>
-   <param-name>classpath-attribute</param-name>
-
-   <!-- Remove the ones you don't need. -->
-   <param-value>
-     <!-- This is for Tomcat 3.x -->
-     org.apache.tomcat.jsp_classpath
-
-     <!-- This is for Tomcat 4.x -->
-     org.apache.catalina.jsp_classpath
-
-     <!-- This is for Coucho Resin -->
-     caucho.class.path
-
-     <!-- This is for IBM WebSphere -->
-     com.ibm.websphere.servlet.application.classpath
-   </param-value>
-  </init-param>
-  <init-param>
    <param-name>log-level</param-name>
    <param-value>DEBUG</param-value>
   </init-param>

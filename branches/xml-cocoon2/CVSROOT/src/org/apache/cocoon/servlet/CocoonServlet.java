@@ -39,6 +39,7 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
+import org.apache.cocoon.util.IOUtils;
 
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
@@ -55,7 +56,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.49 $ $Date: 2001-02-05 16:23:15 $
+ * @version CVS $Revision: 1.1.4.50 $ $Date: 2001-02-08 17:51:09 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -96,7 +97,7 @@ public class CocoonServlet extends HttpServlet {
 
         this.initLogger(conf.getInitParameter("log-level"), this.context);
 
-        this.setClassPath(conf.getInitParameter("classpath-attribute"), this.context);
+        this.setClassPath(this.context);
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
@@ -114,79 +115,36 @@ public class CocoonServlet extends HttpServlet {
     }
 
     /**
-     * WARNING (SM): the lines below BREAKS the Servlet API portability of
-     * web applications.
+     * This builds the important ClassPath used by this Servlet.  It
+     * does so in a Servlet Engine neutral way.  It uses the
+     * <code>ServletContext</code>'s <code>getRealPath</code> method
+     * to get the Servlet 2.2 identified classes and lib directories.
+     * It iterates through every file in the lib directory and adds
+     * it to the classpath.
      *
-     * This is a hack to go around java compiler design problems that
-     * do not allow applications to force their own classloader to the
-     * compiler during compilation.
-     *
-     * We look for a specific Tomcat attribute so we are bound to Tomcat
-     * this means Cocoon won't be able to compile things if the necessary
-     * classes are not already present in the *SYSTEM* classpath, any other
-     * container classloading will break it on other servlet containers.
-     * To fix this, Javac must be redesigned and rewritten or we have to
-     * write our own compiler.
-     *
-     * So, for now, the cocoon.war file with included libraries can work
-     * only in Tomcat or in containers that simulate this context attribute
-     * (I don't know if any do) or, for other servlet containers, you have
-     * to extract all the libraries and place them in the system classpath
-     * or the compilation of sitemaps and XSP will fail.
-     * I know this sucks, but I don't have the energy to write a java
-     * compiler to fix this :(
-     *
-     * This solution is to allow you to specify the servlet ClassPath
-     * attribute so that Cocoon can use it.  If your files are in the
-     * system classpath, then we are still ok.  For these popular
-     * servlet containers, we will provide you with the attribute name:
-     *
-     * Catalina (Tomcat 4.x) = "org.apache.catalina.jsp_classpath"
-     * Tomcat (3.x)          = "org.apache.tomcat.jsp_classpath"
-     * Resin                 = "caucho.class.path"
-     * WebSphere (3.5 sp2)   = "com.ibm.websphere.servlet.application.classpath"
-     *
-     * For other servlet containers, please consult your manuals or
-     * put Cocoon in the System Classpath.
-     *
-     * If you need to do this for more than one classpath attribute, then
-     * separate each entry with whitespace, a comma, or a semi-colon.
-     * Cocoon will strip any whitespace from the entry.
-     *
-     * @param classpathAttribute The classpath attribute to lookup.
-     * @param context            The ServletContext to perform the lookup.
+     * @param context  The ServletContext to perform the lookup.
      *
      * @throws ServletException
      */
-     private void setClassPath(final String classpathAttribute, final ServletContext context)
+     private void setClassPath(final ServletContext context)
      throws ServletException {
         StringBuffer buildClassPath = new StringBuffer();
+        String classDir = context.getRealPath("/WEB-INF/classes");
+        File root = new File(context.getRealPath("/WEB-INF/lib"));
 
-        if (classpathAttribute != null) {
-            StringTokenizer classpathTokenizer = new StringTokenizer(classpathAttribute, " \t\r\n\f;,", false);
+        buildClassPath.append(classDir);
 
-            while (classpathTokenizer.hasMoreTokens()) {
-                final String attributeName = classpathTokenizer.nextToken().trim();
-                final String localClasspath = (String) context.getAttribute(attributeName);
+        if (root.isDirectory()) {
+            File[] libraries = root.listFiles();
 
-                if (localClasspath != null) {
-                    if (buildClassPath.length() > 0) {
-                        buildClassPath.append(";");
-                    }
-
-                    log.debug("Using attribute: " + attributeName);
-                    buildClassPath.append(localClasspath.trim());
-                } else {
-                    log.debug("Attribute was empty: " + attributeName);
-                }
+            for (int i = 0; i < libraries.length; i++) {
+                buildClassPath.append(File.pathSeparatorChar)
+                              .append(IOUtils.getFullFilename(libraries[i]));
             }
         }
 
-        if (buildClassPath.length() > 0) {
-            buildClassPath.append(";");
-        }
-
-        buildClassPath.append(System.getProperty("java.class.path"));
+        buildClassPath.append(File.pathSeparatorChar)
+                      .append(System.getProperty("java.class.path"));
 
         this.classpath = buildClassPath.toString();
      }
