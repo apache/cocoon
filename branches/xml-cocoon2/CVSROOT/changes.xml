@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.22 2001-02-08 17:56:20 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.23 2001-02-24 21:16:42 dims Exp $
 -->
 
 <changes title="History of Changes">
@@ -22,6 +22,16 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DM" type="update">
+    Added command line code generation and compilation of XSP's and the Sitemap.
+  </action>
+  <action dev="DM" type="update">
+    Eliminated dependency on Xalan. Updated sitemap.xsl and the Extension functions to
+    work both on Xalan and SAXON. SAXON should work from version 6.2.2 onwards.
+  </action>
+  <action dev="DM" type="update">
+    Eliminated dependency on Xerces for the serializers by using TRaX Serializers.
+  </action>
   <action dev="BL" type="update">
     Made Cocoon load classpath independent of Servlet Engine Classpath
     Attribute.

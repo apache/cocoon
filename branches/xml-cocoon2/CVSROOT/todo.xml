@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.16 2001-02-07 19:43:18 bloritsch Exp $
+  $Id: todo.xml,v 1.6.2.17 2001-02-24 21:16:42 dims Exp $
 -->
 
 
@@ -19,15 +19,10 @@
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
  </devs>
 
  <actions priority="high">
-  <action context="code">
-    Remove complete dependancy on Xerces/Xalan.  There is something
-    in the Sitemap which causes SAXON not to work.  Also, there should
-    be the ability to choose the Parser/Transformer to use without
-    additional bulk.
-  </action>
 
   <action context="code">
    Finish writing the command line interface and design the link rewriting
