@@ -29,7 +29,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.language.markup.xsp.XSPModuleHelper;
+import org.apache.cocoon.components.modules.input.InputModuleHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.VariableConfiguration;
 import org.apache.regexp.RE;
@@ -171,6 +171,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *   <dt>bad-link-str</dt>
  *   <dd>String to use for links with a correct InputModule prefix, but no value
  *   therein.  Defaults to the original URI.</dd>
+ *   
+ *   <dt>namespace-uri</dt>
+ *   <dd>The namespace uri of elements whose attributes are considered for 
+ *   transformation. Defaults to the empty namespace ("").</dd>
  * </dl>
  *
  * <p>
@@ -211,13 +215,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * both 'link-attrs' and 'link-attr' configuration.
  *
  * <p>
- * <b>NOTE:</b> Currently, only links in the default ("") namespace are converted.
  *
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.12 2004/04/22 12:15:48 vgritsenko Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.13 2004/05/26 11:23:47 unico Exp $
  */
-public class LinkRewriterTransformer
-    extends AbstractSAXTransformer
-    implements Initializable, Disposable {
+public class LinkRewriterTransformer extends AbstractSAXTransformer
+implements Initializable, Disposable {
 
     private final static String NAMESPACE = "";
 
@@ -237,6 +239,7 @@ public class LinkRewriterTransformer
     private String origBadLinkStr;
     private String origInSchemes;
     private String origOutSchemes;
+    private String origNamespaceURI;
 
     /**
      * A map where keys are those attributes which are considered 'links'.
@@ -278,7 +281,7 @@ public class LinkRewriterTransformer
      */
     private Map linkAttrs;
 
-    private XSPModuleHelper modHelper;
+    private InputModuleHelper modHelper;
 
 
     /**
@@ -292,6 +295,8 @@ public class LinkRewriterTransformer
         this.origBadLinkStr = conf.getChild("bad-link-str").getValue(null);
         this.origInSchemes = conf.getChild("schemes").getValue("");
         this.origOutSchemes = conf.getChild("exclude-schemes").getValue("http https ftp news mailto");
+
+        this.origNamespaceURI = conf.getChild("namespace-uri").getValue(NAMESPACE);
 
         /*
          * Setup origLinkAttrs map from the original Configuration:
@@ -337,8 +342,7 @@ public class LinkRewriterTransformer
      * Initiate resources prior to this component becoming active.
      */
     public void initialize() throws Exception {
-        this.namespaceURI = NAMESPACE;
-        this.modHelper = new XSPModuleHelper();
+        this.modHelper = new InputModuleHelper();
         this.modHelper.setup(this.manager);
     }
 
@@ -355,9 +359,11 @@ public class LinkRewriterTransformer
         this.badLinkStr = parameters.getParameter("bad-link-str",       // per-request config
                                                   this.origBadLinkStr); // else fall back to per-instance config
 
+        this.namespaceURI = parameters.getParameter("namespace-uri", this.origNamespaceURI);
+        
         this.inSchemes = split(parameters.getParameter("schemes", this.origInSchemes), " ");
         this.outSchemes = split(parameters.getParameter("exclude-schemes", this.origOutSchemes), " ");
-
+        
         this.linkAttrs = this.origLinkAttrs;
         if (parameters.isParameter("link-attrs")) {
             try {
@@ -372,6 +378,7 @@ public class LinkRewriterTransformer
             getLogger().debug("link-attrs = " + linkAttrs);
             getLogger().debug("schemes = " + inSchemes);
             getLogger().debug("exclude-schemes = " + outSchemes);
+            getLogger().debug("namespace-uri = " + namespaceURI);
         }
 
         // Generate conf
