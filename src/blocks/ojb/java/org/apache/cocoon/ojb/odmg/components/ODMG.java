@@ -15,26 +15,28 @@
  */
 package org.apache.cocoon.ojb.odmg.components;
 
+import org.apache.avalon.framework.component.Component;
 
 import org.odmg.Implementation;
 import org.odmg.ODMGException;
 
 /**
- * Interface of the ODMG Implementation. It is used to get the Implementation Object to interact with ODMG using OJB
+ * Interface component to the ODMG Implementation. It is used to get
+ * the ODMG Implementation object to interact with object database
+ * through ODMG API.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @version CVS $Id$
  */
-public interface OdmgImplementation {
+public interface ODMG extends Component {
 
     /** The ROLE */
-    String ROLE = OdmgImplementation.class.getName();
+    String ROLE = ODMG.class.getName();
 
     /**
      * Get a ODMG Instance with default settings.
      *
      * @return a ODMG Implementation Object
-     *
      * @throws ODMGException DOCUMENT ME!
      */
     Implementation getInstance()
@@ -44,9 +46,7 @@ public interface OdmgImplementation {
      * Get a ODMG Instance with a specific connection definition.
      *
      * @param connection The connection name to be used (OJB specific connection name)
-     *
      * @return a ODMG Implementation Object
-     *
      * @throws ODMGException DOCUMENT ME!
      */
     Implementation getInstance(String connection)
@@ -57,9 +57,7 @@ public interface OdmgImplementation {
      *
      * @param connection The connection name to be used (OJB specific connection name)
      * @param mode The Database operation mode
-     *
      * @return a ODMG Implementation Object
-     *
      * @throws ODMGException DOCUMENT ME!
      */
     Implementation getInstance(String connection, int mode)
@@ -69,9 +67,7 @@ public interface OdmgImplementation {
      * Get a ODMG Instance with a default connection definition and a Database operation mode.
      *
      * @param mode The Database operation mode
-     *
      * @return a ODMG Implementation Object
-     *
      * @throws ODMGException DOCUMENT ME!
      */
     Implementation getInstance(int mode)

@@ -33,12 +33,11 @@
              class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"
              logger="core.ojb"/>
 
-  <!-- OJB PersistenceBroker Interface -->
-  <ojb-pb logger="core.ojb.pb"/>
   <!-- OJB Persistent Manager Factory for JDO.
        Requires javax.jdo package.
-  <ojb-jdo class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl" logger="core.ojb.jdo"/>
+  <ojb-jdo logger="core.ojb.jdo"/>
   -->
+
   <!-- OJB ODMG Implementation Interface -->
   <ojb-odmg logger="core.ojb.odmg"/>
 
