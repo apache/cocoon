@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.6 2004/03/06 02:25:54 antonio Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.7 2004/03/10 13:01:50 unico Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -43,9 +43,9 @@
     <map:pipeline>
       <!--+
           | Produces the views called by the flowscript
-          +-->      
+          +-->
       <map:match pattern="page/*">
-        <map:generate type="serverpages" src="screens/{1}.xsp"/>
+        <map:generate type="jx" src="screens/{1}.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
