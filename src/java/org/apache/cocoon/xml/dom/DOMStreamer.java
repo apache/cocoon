@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.10 2003/03/19 09:40:42 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.11 2003/08/01 17:48:44 vgritsenko Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -741,7 +741,7 @@ public class DOMStreamer implements XMLProducer {
             }
 
             SAXResult result = new SAXResult(handler);
-        result.setLexicalHandler(lexicalHandler);
+            result.setLexicalHandler(lexicalHandler);
 
             try {
                 transformer.transform(source, result);
