@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.8 2004/04/21 13:33:37 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.9 2004/04/21 21:10:05 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -99,11 +99,13 @@ public abstract class AbstractWidget implements Widget {
 
     /** 
      * Sets the parent-widget of this widget.
-     * @param widget
+     * This is a write-once property.
+     * 
+     * @param widget the parent-widget of this one.
+     * @throws IllegalStateException when the parent had already been set.
      */    
     public void setParent(Widget widget) {
-        //TODO: check if we should not make this writable only once 
-        // (i.e. allow set only if this.parent == null)
+        if (this.parent != null) throw new IllegalStateException("The parent of widget " + getFullyQualifiedId() + " should only be set once.");
         this.parent = widget;
     }
 
