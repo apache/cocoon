@@ -122,7 +122,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.7 2003/04/13 00:34:44 coliver Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.8 2003/04/13 05:22:05 coliver Exp $
  */
 
 public class JexlTransformer
@@ -951,6 +951,7 @@ public class JexlTransformer
         jexlContext.setVars(map);
         map = jexlContext.getVars();
         map.put("flowContext", contextObject);
+        map.put("continuation", kont);
         map.put("request", request);
         map.put("response", response);
         map.put("context", app);
