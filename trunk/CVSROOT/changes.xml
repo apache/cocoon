@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.43 2000-03-19 00:57:26 stefano Exp $
+  $Id: changes.xml,v 1.44 2000-03-23 12:00:43 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+   Updated to Xalan 1.0 (finally!).
+  </action>
   <action dev="SM" type="add" due-to="Gopinath M.R." due-to-email="gopi@aztecsoft.com">
    Added XML doclet (consider it alpha).
   </action>
