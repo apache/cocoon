@@ -126,26 +126,12 @@
   <component role="org.apache.cocoon.components.store.Store"  
              class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <component
-      role="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
-      class="org.apache.cocoon.CocoonComponentSelector">
-    <component-instance name="java" 
-      class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
-      <parameter name="compiler" 
-      value="org.apache.cocoon.components.language.programming.java.Javac"/>
-      <parameter name="code-formatter" 
-      value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
-      <parameter name="class-loader" 
-      value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
-    </component-instance>
-  </component>
-
   <component role="org.apache.cocoon.components.classloader.ClassLoaderManager" 
       class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
 
   <component
       role="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
-      class="org.apache.cocoon.CocoonComponentSelector">
+      class="org.apache.cocoon.core.container.CocoonServiceSelector">
     <component-instance name="xsp" 
         class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>

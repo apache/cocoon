@@ -68,7 +68,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
     protected boolean watchSource = false;
 
     /**
-     * The ComponentSelector for programs. Caches Program by program
+     * The service selector for programs. Caches Program by program
      * source file.
      */
     protected GeneratorSelector cache;
@@ -128,7 +128,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
 
     /**
      * Set the global component manager. This method also sets the
-     * <code>ComponentSelector</code> used as language factory for both markup
+     * <code>ServiceSelector</code> used as language factory for both markup
      * and programming languages.
      * @param manager The global component manager
      */
