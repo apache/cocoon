@@ -21,18 +21,16 @@ import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: AbstractProcessingNodeBuilder.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
  */
 
 
@@ -75,12 +73,11 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
 
         if (children.length == 0) {
             // Parameters are only the component's location
-            return Collections.singletonMap(Constants.SITEMAP_PARAMETERS_LOCATION, config.getLocation());
+            // TODO Optimize this
+            return new SitemapParameters.ExtendedHashMap(config);
         }
 
-        Map params = new HashMap(children.length+1);
-        // Add the location information as a parameter
-        params.put(Constants.SITEMAP_PARAMETERS_LOCATION, config.getLocation());
+        Map params = new SitemapParameters.ExtendedHashMap(config, children.length+1);
         for (int i = 0; i < children.length; i++) {
             Configuration child = children[i];
             if (true) { // FIXME : check namespace

@@ -15,13 +15,16 @@
  */
 package org.apache.cocoon.sitemap;
 
+import java.util.HashMap;
+
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 
 /**
  * Extension to the Avalon Parameters
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapParameters.java,v 1.1 2004/03/07 18:56:17 cziegeler Exp $
+ * @version CVS $Id: SitemapParameters.java,v 1.2 2004/03/08 12:07:39 cziegeler Exp $
  */
 public class SitemapParameters extends Parameters {
     
@@ -32,11 +35,51 @@ public class SitemapParameters extends Parameters {
         return null;   
     }
     */
-    public String getStatementLocation(String name) {
+    public String getStatementLocation() {
         return this.statementLocation;   
     }
     
     public void setStatementLocation(String value) {
         this.statementLocation = value;   
+    }
+    
+    /**
+     * Return the location  - if available
+     */
+    public static String getStatementLocation(Parameters param) {
+        String value = null;
+        if ( param instanceof SitemapParameters ) {
+            value = ((SitemapParameters)param).getStatementLocation();
+        }
+        if ( value == null ) {
+            value = "[unknown location]";
+        }
+        return value;
+    }
+    
+    public static class ExtendedHashMap extends HashMap {
+        
+        protected Configuration configuration;
+        
+        public ExtendedHashMap(Configuration conf) {
+            super();
+            this.configuration = conf;
+        }
+        
+        public ExtendedHashMap(Configuration conf, int capacity) {
+            super(capacity);
+            this.configuration = conf;
+        }
+
+        public String getLocation() {
+            if ( this.configuration != null ) {
+                return this.configuration.getLocation();
+            } 
+            return null;
+        }
+        
+        public Configuration getConfiguration() {
+            return this.configuration;
+        }
     }
 }

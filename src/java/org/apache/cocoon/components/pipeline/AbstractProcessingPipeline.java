@@ -25,7 +25,6 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.Environment;
@@ -35,6 +34,7 @@ import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
+import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -54,7 +54,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.19 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.20 2004/03/08 12:07:39 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -774,6 +774,13 @@ public abstract class AbstractProcessingPipeline
     }
     
     protected String getLocation(Parameters param) {
-        return param.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "[unknown location]");
+        String value = null;
+        if ( param instanceof SitemapParameters ) {
+            value = ((SitemapParameters)param).getStatementLocation();
+        }
+        if ( value == null ) {
+            value = "[unknown location]";
+        }
+        return value;
     }
 }
