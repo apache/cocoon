@@ -32,7 +32,10 @@
       </map:match>
 
       <map:match pattern="application">
-        <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
+        <map:act type="portal-urlhelper" src="{coplet:temporaryAttributes/application-uri}">
+          <map:parameter name="copletid" value="{coplet:#}"/>
+          <map:generate src="{url}"/>
+        </map:act>
         <map:transform type="htmlroot">
           <map:parameter name="add-mode" value="false"/>
         </map:transform>
