@@ -37,7 +37,7 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:43 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-01 20:04:58 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -285,7 +285,7 @@ public class ServerPagesGenerator
   public void startPrefixMapping(String prefix, String uri) throws SAXException
   {
     this.contentHandler.startPrefixMapping(prefix, uri);
-    this.eventStack.push(new EventData(PREFIX_MAPPING, prefix));
+    this.eventStack.push(new EventData(PREFIX_MAPPING, prefix, uri));
   }
 
   public void comment(char[] ch, int start, int length) throws SAXException {
@@ -364,15 +364,25 @@ public class ServerPagesGenerator
       }
     }
 
-    protected EventData(int eventType, String data) {
+    protected EventData(
+      int eventType, String data1, String data2
+    )
+    {
       this.eventType = eventType;
       switch (this.eventType) {
         case PREFIX_MAPPING:
-      this.prefix = data;
-      break;
-    case ENTITY:
-      this.name = data;
-      break;
+          this.prefix = data1;
+          this.namespaceURI = data2;
+          break;
+      }
+    }
+
+    protected EventData(int eventType, String data) {
+      this.eventType = eventType;
+      switch (this.eventType) {
+        case ENTITY:
+          this.name = data;
+          break;
       }
     }
 
