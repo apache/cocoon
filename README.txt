@@ -47,9 +47,12 @@
 
   Read the INSTALL.txt file in this directory for the installation instructions.
 
-  The documentation available as of the date of this release is included in the
-  "docs/" directory.
+  The documentation available as of the date of this release is included in this
+  directory. Read the INSTALL.txt for more information.
 
+  If you are updating from a previous release of Cocoon, make sure
+  that you read the installation instructions on updating first.
+  
   Look for the most updated documentation on the Apache Cocoon web site
   (http://cocoon.apache.org/).
 
