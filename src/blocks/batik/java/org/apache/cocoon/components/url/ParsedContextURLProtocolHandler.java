@@ -65,7 +65,7 @@ import java.net.MalformedURLException;
  * an uncontrolled manner (as far as Cocoon is concerned).
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: ParsedContextURLProtocolHandler.java,v 1.2 2003/03/11 17:44:18 vgritsenko Exp $
+ * @version CVS $Id: ParsedContextURLProtocolHandler.java,v 1.3 2003/10/07 16:08:33 vgritsenko Exp $
  */
 public class ParsedContextURLProtocolHandler extends AbstractParsedURLProtocolHandler {
     private static Context context = null;
@@ -101,7 +101,7 @@ public class ParsedContextURLProtocolHandler extends AbstractParsedURLProtocolHa
             StringBuffer baseFile = new StringBuffer(ParsedContextURLProtocolHandler
                                                      .context.getRealPath("/"));
 
-            if ( !baseFile.toString().endsWith("/")) {
+            if (!baseFile.toString().endsWith("/")) {
                 baseFile.append("/");
             }
 
@@ -132,7 +132,7 @@ public class ParsedContextURLProtocolHandler extends AbstractParsedURLProtocolHa
         StringBuffer newURI = new StringBuffer("context://");
         newURI.append(base.getPath());
 
-        if ( !newURI.toString().endsWith("/") ) {
+        if (!newURI.toString().endsWith("/")) {
             newURI.append("/");
         }
 
