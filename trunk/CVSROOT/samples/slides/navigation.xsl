@@ -16,10 +16,10 @@
         <xsl:value-of select="title"/>
        </title>
        <navigation>
-        <next href="?section=1"/>
+        <next href="slides.xml?section=1"/>
        </navigation>
        <layout>
-        <title><a href="?section=1"><xsl:value-of select="title"/></a></title>
+        <title><a href="slides.xml?section=1"><xsl:value-of select="title"/></a></title>
         <subtitle>
          <xsl:for-each select="authors/person">
           <xsl:value-of select="name"/>
@@ -61,15 +61,15 @@
      <home href=""/>
 
      <xsl:if test="$section!=1">
-      <previous-section href="?section={$section - 1}"/>
-      <previous href="?section={$section - 1}&amp;slide={$previous-last}"/>
+      <previous-section href="slides.xml?section={$section - 1}"/>
+      <previous href="slides.xml?section={$section - 1}&amp;slide={$previous-last}"/>
      </xsl:if>
 
      <xsl:if test="$section!=$last">
-      <next-section href="?section={$section + 1}"/>
+      <next-section href="slides.xml?section={$section + 1}"/>
      </xsl:if>
 
-     <next href="?section={$section}&amp;slide=1"/>
+     <next href="slides.xml?section={$section}&amp;slide=1"/>
     </navigation>
 
     <layout>
@@ -96,27 +96,27 @@
       <xsl:value-of select="count(//section[position() = ($section - 1)]/slide)"/>
      </xsl:variable>
 
-     <home href="?section={$section}"/>
+     <home href="slides.xml?section={$section}"/>
 
      <xsl:if test="$slide!=1">
-      <previous href="?section={$section}&amp;slide={$slide - 1}"/>
+      <previous href="slides.xml?section={$section}&amp;slide={$slide - 1}"/>
      </xsl:if>
      <xsl:if test="($slide=1)">
-      <previous href="?section={$section}"/>
+      <previous href="slides.xml?section={$section}"/>
      </xsl:if>
 
      <xsl:if test="$slide!=$last">
-      <next href="?section={$section}&amp;slide={$slide + 1}"/>
+      <next href="slides.xml?section={$section}&amp;slide={$slide + 1}"/>
      </xsl:if>
      <xsl:if test="($slide=$last) and ($section!=$last-section)">
-      <next href="?section={$section + 1}"/>
+      <next href="slides.xml?section={$section + 1}"/>
      </xsl:if>
 
      <xsl:if test="$section!=1">
-      <previous-section href="?section={$section - 1}"/>
+      <previous-section href="slides.xml?section={$section - 1}"/>
      </xsl:if>
      <xsl:if test="$section!=$last-section">
-      <next-section href="?section={$section + 1}"/>
+      <next-section href="slides.xml?section={$section + 1}"/>
      </xsl:if>
     </navigation>
 
