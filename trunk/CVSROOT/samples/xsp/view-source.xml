@@ -7,19 +7,23 @@
 
 <xsp:page language="java" xmlns:xsp="http://apache.org/DTD/XSP/Layer1">
 
+  <xsp:structure>
+   <xsp:include>java.net.*</xsp:include>
+  </xsp:structure>
+  
   <xsp:logic><![CDATA[
-    private static final String ATTR_NAME_COLOR = "brown";
-    private static final String ATTR_VALUE_COLOR = "magenta";
+    private static final String ATTR_NAME_COLOR = "navy";
+    private static final String ATTR_VALUE_COLOR = "navy";
     private static final String COMMENT_COLOR = "gray";
-    private static final String DELIMITER_COLOR = "green";
-    private static final String ELEMENT_COLOR = "darkBrown";
+    private static final String DELIMITER_COLOR = "navy";
+    private static final String ELEMENT_COLOR = "navy";
     private static final String ENTITY_REF_COLOR = "navy";
-    private static final String PI_DATA_COLOR = "lightBlue";
+    private static final String PI_DATA_COLOR = "navy";
     private static final String TEXT_COLOR = "black";
-    private static final String CUSTOM_ELEMENT_COLOR = "purple";
+    private static final String CUSTOM_ELEMENT_COLOR = "green";
     private static final String XSL_ELEMENT_COLOR = "navy";
-    private static final String XSP_ELEMENT_COLOR = "red";
-    private static final String XSP_TEXT_COLOR = "blue";
+    private static final String XSP_ELEMENT_COLOR = "green";
+    private static final String XSP_TEXT_COLOR = "red";
 
     protected Element colorize(Node node, Document factory) {
       Element element = factory.createElement("pre");
@@ -170,7 +174,7 @@
 
           result.appendChild(
             factory.createTextNode(
-              "<!-- " + node.getNodeValue() + " -->;"
+              "<!-- " + node.getNodeValue() + " -->\n"
             )
           );
 
@@ -229,18 +233,46 @@
     <body>
       <xsp:logic>
         String filename = request.getParameter("filename");
-        String filepath = XSPUtil.relativeFilename(filename, request);
+        String resourcename = request.getParameter("url");
+        
+        if (filename != null) {
+          String filepath = XSPUtil.relativeFilename(filename, request);
+
+          <h3 style="color:navy; text-align: center">
+            <xsp:expr>filename</xsp:expr>
+          </h3>
+      
+          <xsp:expr>
+            this.colorize(
+              this.xspParser.parse(
+                new InputSource(
+                  new FileReader(filepath)
+                )
+              ), document
+            )
+          </xsp:expr>
+        } else if (resourcename != null) {
+          URL resource = new URL(resourcename);
+          
+          <h3 style="color:navy; text-align: center">
+            <xsp:expr>resourcename</xsp:expr>
+          </h3>
+      
+          <xsp:expr>
+            this.colorize(
+              this.xspParser.parse(
+                new InputSource(
+                  resource.openStream()
+                )
+              ), document
+            )
+          </xsp:expr>
+        } else {
+          <h3 style="color:navy; text-align: center">
+            Need <em>filename</em> or <em>url</em> parameters to work
+          </h3>
+        }
       </xsp:logic>
-  
-      <h3 style="color:navy; text-align: center">
-        <xsp:expr>filename</xsp:expr>
-      </h3>
-  
-      <xsp:expr>
-        this.colorize(
-         this.xspParser.parse(new FileReader(filepath, filename), document
-        )
-      </xsp:expr>
     </body>
   </html>
 </xsp:page>

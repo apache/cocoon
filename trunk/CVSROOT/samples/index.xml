@@ -22,6 +22,29 @@
  </group>
 
  <group name="Dynamic content Generation">
+  <sample name="First XSP Page" url="xsp/page.xml?message=Hello%20World!">
+   This page shows the power of XSP technology with Java logic. In this page
+   logic and content are mixed.
+  </sample>
+  
+  <sample name="First XSP Page (pure content version)" url="xsp/clean-page.xml?message=Hello%20World!">
+   This page generates the exact same output, but it's created by XSL-transforming
+   a pure-content page into an XSP page, thus providing a complete separation
+   between content and logic. Note that the transformation needed to generate
+   the XSP page is compiled in, and for this reason it's not executed at request
+   time. This is due to the fact that unlike other server pages technologies,
+   XSP are written to be fully integrated with the XML model and languages.
+  </sample>
+
+  <sample name="First XSP Page (namespace library version)" url="xsp/lib-page.xml?message=Hello%20World!">
+   This page generates the exact same output, but it's created by applying
+   namespace-driven element libraries instead of applying directly an XSLT
+   logicsheet. This allows easier reuse of what is usually called a "tag library"
+   to create equivalent functionalities of other logic-free tag-driven
+   dynamic content generation technologies (such as, for example, 
+   Allaire's ColdFusion or Ricoh's PIA).
+  </sample>
+
   <sample name="DCP using Java" url="dcp/java/sample-page.xml">
    This page shows how you can use Cocoon to generate dynamic content using
    XML processing instructions to trigger Java logic execution.
@@ -53,6 +76,11 @@
  </group>
  
  <group name="New media for your web site">
+  <sample name="VRML" url="vrml/hello.xml">
+   In this example, we show how Cocoon is able to generate virtual reality
+   models by applying the appropriate stylesheet to an XML page.
+  </sample>
+
   <sample name="Web and WAP" url="wap/example-portfolio.xml">
    In this example, we show how Cocoon is able to understand which browser
    is requesting the page and applies a different stylesheet to the same
