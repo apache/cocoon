@@ -23,8 +23,8 @@
       +-->
 
   <!-- Runs all tests -->
-      <target name="test" depends="junit-tests, block-tests" 
-              description="Runs all JUnit tests (but no anteater tests)"/>
+  <target name="test" depends="junit-tests, block-tests" 
+          description="Runs all JUnit tests (but no anteater tests)"/>
 
   <target name="junit-prepare">
     <delete dir="${build.test.output}"/>
