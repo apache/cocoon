@@ -50,7 +50,7 @@ import org.apache.cocoon.components.ServiceInfo;
  *  but not pooled.</li>
  * </ul>
  *
- * @version CVS $Id: PoolableComponentHandler.java 55144 2004-10-20 12:26:09Z ugo $
+ * @version CVS $Id$
  */
 public class PoolableComponentHandler
 extends AbstractComponentHandler {

@@ -114,7 +114,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  *
  * </dl>
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class ContainerTestCase extends TestCase {
     

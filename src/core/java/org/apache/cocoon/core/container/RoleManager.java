@@ -34,7 +34,7 @@ import org.apache.cocoon.components.ServiceInfo;
  * Default RoleManager implementation.  It populates the RoleManager
  * from a configuration file.
  *
- * @version CVS $Id: RoleManager.java 55144 2004-10-20 12:26:09Z ugo $
+ * @version CVS $Id$
  */
 public class RoleManager
 extends AbstractLogEnabled

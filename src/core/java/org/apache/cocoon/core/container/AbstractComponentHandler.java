@@ -31,7 +31,7 @@ import org.apache.cocoon.components.ServiceInfo;
  * This class acts like a Factory to instantiate the correct version
  * of the component handler that you need.
  *
- * @version CVS $Id: AbstractComponentHandler.java 55144 2004-10-20 12:26:09Z ugo $
+ * @version CVS $Id$
  */
 public abstract class AbstractComponentHandler 
 implements ComponentHandler {
