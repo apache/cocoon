@@ -18,11 +18,13 @@ package org.apache.cocoon.kernel;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import org.apache.cocoon.kernel.composition.Composer;
+import java.net.URL;
+
 import org.apache.cocoon.kernel.composition.Component;
+import org.apache.cocoon.kernel.composition.Composer;
 import org.apache.cocoon.kernel.composition.Wire;
-import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.composition.WiringException;
+import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.resolution.Resolver;
 
 /**
@@ -48,33 +50,10 @@ import org.apache.cocoon.kernel.resolution.Resolver;
  * this planned new feature.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public final class ProxyWire implements InvocationHandler {
     
-    /**
-     * <p>A static initializer for the {@link Wire} class, locating
-     * those methods it must intercept for components.</p>
-     */
-    static {
-        try {
-            /* Attempt to locate our own methods */
-            Class parameters[] = new Class[0];
-            wired = Wire.class.getMethod("wired", parameters);
-            release = Wire.class.getMethod("release", parameters);
-            dispose = Wire.class.getMethod("dispose", parameters);
-            finalize = Object.class.getMethod("finalize", parameters);
-            parameters = new Class[] { String.class };
-            resolve = Wire.class.getMethod("resolve", parameters);
-        } catch (NoSuchMethodException exception) {
-            /* If the methods were not found, then we're in BIG troubles */
-            String message = "Unable to locate interceptable methods in the \""
-                             + Wire.class.getName() + "\" interface";
-            NoSuchMethodError error = new NoSuchMethodError(message);
-            throw((NoSuchMethodError)error.initCause(exception));
-        }
-    }
-
     /** <p>The {@link Object#finalize()} method used for interception.</p> */
     private static Method finalize = null;
     
@@ -89,6 +68,9 @@ public final class ProxyWire implements InvocationHandler {
     
     /** <p>The {@link Wire#resolve(URL)} method used for interception.</p> */
     private static Method resolve = null;
+    
+    /** <p>A static flag indicating whether this class was initialized.</p> */
+    private static boolean initialized = false;
     
     /* ====================================================================== */
 
@@ -127,6 +109,8 @@ public final class ProxyWire implements InvocationHandler {
      */
     public ProxyWire(Composer composer, Class role, Resolver resolver)
     throws WiringException {
+        ProxyWire.initialize();
+
         ClassLoader loader = composer.getClass().getClassLoader();
 
         /* Check that the requested role is actually an interface */
@@ -136,14 +120,15 @@ public final class ProxyWire implements InvocationHandler {
         }
 
         /* Noone can request the "Wiring" role */
-        if (!Wire.class.equals(role)) {
+        if (Wire.class.equals(role)) {
             throw new WiringException("Invalid role \"" + role.getName()
                                            + "\" requested");
         }
 
         /* Acquire and check that the instance implements the given role */
+        Object instance = null;
         try {
-            Object instance = composer.acquire();
+            instance = composer.acquire();
         } catch (Throwable t) {
             throw new WiringException("Unable to acquire component", t);
         }
@@ -173,7 +158,6 @@ public final class ProxyWire implements InvocationHandler {
 
             /* Record the original composer, resolver, and instance */
             this.composer = composer;
-            // FIXME ??? This assignment has no effect, is it correct?
             this.instance = instance;
             this.resolver = resolver;
         } catch (Throwable t) {
@@ -227,18 +211,18 @@ public final class ProxyWire implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object arguments[])
     throws Throwable {
         /* Intercept finalize, release and dispose on the proxied Wire */
-        if (method.equals(finalize)) this.cut(false);
-        if (method.equals(release)) this.cut(false);
-        if (method.equals(dispose)) this.cut(true);
+        if (this.check(method, finalize)) { this.cut(false); return(null); }
+        if (this.check(method, release))  { this.cut(false); return(null); }
+        if (this.check(method, dispose))  { this.cut(true);  return(null); }
 
         /* If it's simply the wiring status they require, that they will get */
-        if (method.equals(wired)) return(new Boolean(this.isConnected()));
-        
+        if (this.check(method, wired)) return(new Boolean(this.isConnected()));
+
         /* Intercept lookup on the proxied Wire */
-        if (method.equals(resolve)) {
+        if (this.check(method, resolve)) {
             return(method.invoke(this.resolver, arguments));
         }
-        
+
         /* Invoke the method on the remote instance */
         if (this.instance != null) {
             return(method.invoke(this.instance, arguments));
@@ -285,4 +269,55 @@ public final class ProxyWire implements InvocationHandler {
     public void finalize() {
         this.cut(false);
     }
+    
+    /**
+     * <p>Compare two methods for equality ignoring their declaring classes
+     * possible differences.</p>
+     * 
+     * @param ma the first method to check for equality.
+     * @param mb the second method to check for equality.
+     * @return <b>true</b> if the methods have the same name and signature,
+     *         <b>false</b> in all other cases.
+     */
+    public boolean check(Method ma, Method mb) {
+        if (!ma.getName().equals(mb.getName())) return(false);
+        if (!ma.getReturnType().equals(mb.getReturnType())) return(false);
+
+        Class pa[] = ma.getParameterTypes();
+        Class pb[] = mb.getParameterTypes();
+        if (pa.length != pb.length) return(false);
+        for (int x = 0; x < pa.length; x++) {
+            if (!pa[x].equals(pb[x])) return(false);
+        }
+
+        return(true);
+    }
+
+    /**
+     * <p>A static initializer for the {@link ProxyWire} class, locating
+     * those methods it must intercept for components.</p>
+     */
+    private static void initialize() {
+        if (ProxyWire.initialized) return;
+        synchronized (ProxyWire.class) {
+            if (ProxyWire.initialized) return;
+            try {
+                /* Attempt to locate our own methods */
+                Class parameters[] = new Class[0];
+                ProxyWire.wired = Wire.class.getDeclaredMethod("wired", parameters);
+                ProxyWire.release = Wire.class.getDeclaredMethod("release", parameters);
+                ProxyWire.dispose = Wire.class.getDeclaredMethod("dispose", parameters);
+                ProxyWire.finalize = Object.class.getDeclaredMethod("finalize", parameters);
+                parameters = new Class[] { String.class };
+                ProxyWire.resolve = Wire.class.getDeclaredMethod("resolve", parameters);
+            } catch (NoSuchMethodException exception) {
+                /* If the methods were not found, then we're in BIG troubles */
+                String message = "Unable to locate interceptable methods in the \""
+                                 + Wire.class.getName() + "\" interface";
+                NoSuchMethodError error = new NoSuchMethodError(message);
+                throw((NoSuchMethodError)error.initCause(exception));
+            }
+        }
+    }
+
 }
