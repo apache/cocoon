@@ -77,7 +77,7 @@
             the file system. So this option influences the caching of the directory listing.</li>
         <li>sort: Sets the sort order in which the <code>file</code> and <code>directory</code>
             nodes are returned. Possible values are <code>name</code>, <code>size</code>,
-            <code>time</code> and <code>directory</code> (where <code>directory</code> is the same
+            <code>lastmodified</code> and <code>directory</code> (where <code>directory</code> is the same
             as <code>name</code>, except that directory entries are listed first). The default sort
             order is <code>name</code>.</li>
         <li>reverse: Reverses the sort order, defaults to <code>false</code>.</li>

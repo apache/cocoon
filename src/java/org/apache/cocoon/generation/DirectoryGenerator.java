@@ -60,7 +60,7 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.11 2004/05/26 11:37:05 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class DirectoryGenerator 
     extends ServiceableGenerator 
@@ -110,7 +110,7 @@ public class DirectoryGenerator
     protected long refreshDelay;
     /**
      * The sort parameter determines by which attribute the content of one
-     * directory should be sorted. Possible values are "name", "size", "time"
+     * directory should be sorted. Possible values are "name", "size", "lastmodified"
      * and "directory", where "directory" is the same as "name", except that
      * directory entries are listed first.
      */
