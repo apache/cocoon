@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.17 2004/03/16 10:33:02 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.18 2004/03/16 10:35:33 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -172,6 +172,9 @@ public class SQLTransformer
     /** Encoding we use for CLOB field */
 	protected String clobEncoding;
 	
+    /** The default encoding for xml */
+    protected String xmlDefaultEncoding;
+    
     /**
      * Constructor
      */
@@ -246,6 +249,8 @@ public class SQLTransformer
 
         this.connectAttempts = conf.getChild("connect-attempts").getValueAsInteger(5);
         this.connectWaittime = conf.getChild("connect-waittime").getValueAsInteger(5000);
+
+        this.xmlDefaultEncoding = conf.getChild("xml-encoding").getValue("ISO-8859-1");
     }
 
     /**
@@ -256,7 +261,7 @@ public class SQLTransformer
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, source, parameters);
         // set encoding
-        this.format.put(OutputKeys.ENCODING, parameters.getParameter("xml-encoding", "ISO-8859-1"));
+        this.format.put(OutputKeys.ENCODING, parameters.getParameter("xml-encoding", this.xmlDefaultEncoding));
 
         // setup instance variables
         this.current_query_index = -1;
