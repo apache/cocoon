@@ -17,8 +17,9 @@
                   src="org.apache.cocoon.samples.xmlform.CalculatorAction"/>
     </map:actions>
 
+    <!--
     <map:flow-interpreters default="JavaScript"/>
-
+    -->
     <map:serializers default="html"/>
 
     <map:matchers default="wildcard"/>
@@ -50,10 +51,11 @@
   </map:resources>
 
   <!-- =========================== Pipelines ================================= -->
+  <!--
   <map:flow language="JavaScript">
     <map:script src="flow/feedbackWizard.js"/>
   </map:flow>
-
+  -->
   <map:pipelines> 
   
     <map:pipeline>
@@ -140,11 +142,9 @@
       </map:match>  
     </map:pipeline>
     
-  
+    <!--  
     <map:pipeline>
-
-      <!-- The same application, using the Cocoon Flow Layer -->
-
+      - The same application, using the Cocoon Flow Layer
       <map:match pattern="flow">
         <map:call function="xmlForm">
           <map:parameter name="xmlform-function" value="feedbackWizard"/>
@@ -156,25 +156,26 @@
       </map:match>
 
       <map:match pattern="flow/*.xml">
-	      <!-- original XMLForm document -->
+	      - original XMLForm document 
 	      <map:generate src="flow/{1}.xml"/>
 	      
-	      <!-- populating the document with model instance data -->
+	      - populating the document with model instance data
 	      <map:transform type="xmlform"  label="xml"/>
 	
-	      <!-- personalizing the look and feel of the form controls  -->
+	      - personalizing the look and feel of the form controls
 	      <map:transform type="xalan" src="stylesheets/wizard2page.xsl"/>
         <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
 	
-	      <!-- Transforming the XMLForm controls to HTML controls -->
+	      - Transforming the XMLForm controls to HTML controls
 	      <map:transform src="context://stylesheets/system/xmlform2html.xslt"/>
 	      
-	      <!-- sending the HTML back to the browser -->
+	      - sending the HTML back to the browser
 	      <map:serialize type="html" label="debug"/>
       </map:match>	      
     </map:pipeline>
+    -->
 
 
     <map:pipeline>
