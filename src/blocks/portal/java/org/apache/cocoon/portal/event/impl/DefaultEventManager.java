@@ -85,7 +85,7 @@ import org.apache.cocoon.portal.event.subscriber.impl.DefaultLayoutEventSubscrib
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.2 2003/05/07 09:06:51 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -94,12 +94,11 @@ public class DefaultEventManager
                 Initializable, 
                 ThreadSafe,
                 Configurable,
-                Disposable {
+                Disposable,
+                Publisher, Register {
                     
     private final String rootEventType = Event.class.getName();
     private Class eventClass;
-    private Publisher publisher = new DefaultPublisher();
-    private Register register = new DefaultRegister();
     private List subscribers = new ArrayList();
     private ComponentManager manager;
     private Configuration configuration;
@@ -109,11 +108,11 @@ public class DefaultEventManager
     protected ComponentSelector aspectSelector;
 
     public Publisher getPublisher() {
-        return this.publisher;
+        return this;
     }
     
     public Register getRegister() {
-        return this.register;
+        return this;
     }
 
     /* (non-Javadoc)
@@ -146,68 +145,61 @@ public class DefaultEventManager
         }
 
         // FIXME (CZ,HIGH) : Make this configurable
-        this.register.subscribe(new DefaultLayoutEventSubscriber(this.manager));
-        this.register.subscribe(new SizingEventSubscriber(this.manager));
+        this.subscribe(new DefaultLayoutEventSubscriber(this.manager));
+        this.subscribe(new SizingEventSubscriber(this.manager));
     }
 
-    class DefaultPublisher implements Publisher {
+    public void publish( final Event event ) {
         
-        public void publish( final Event event ) {
-            
-            if ( getLogger().isDebugEnabled() ) {
-                getLogger().debug("Publishing event " + event.getClass());
-            } 
-            for ( Iterator e = subscribers.iterator(); e.hasNext(); ){
-                Subscriber subscriber = (Subscriber)e.next();
-                if (subscriber.getEventType().isAssignableFrom(event.getClass())
-                && (subscriber.getFilter() == null || subscriber.getFilter().filter(event))) {
-                    if ( getLogger().isDebugEnabled() ) {
-                        getLogger().info("Informing subscriber "+subscriber+" of event "+event.getClass());
-                    }
-                    subscriber.inform(event);
+        if ( getLogger().isDebugEnabled() ) {
+            getLogger().debug("Publishing event " + event.getClass());
+        } 
+        for ( Iterator e = subscribers.iterator(); e.hasNext(); ){
+            Subscriber subscriber = (Subscriber)e.next();
+            if (subscriber.getEventType().isAssignableFrom(event.getClass())
+            && (subscriber.getFilter() == null || subscriber.getFilter().filter(event))) {
+                if ( getLogger().isDebugEnabled() ) {
+                    getLogger().info("Informing subscriber "+subscriber+" of event "+event.getClass());
                 }
+                subscriber.inform(event);
             }
         }
-        
     }
+    
+    public void subscribe( final Subscriber subscriber )
+    throws InvalidEventTypeException {
+        if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
+            throw new InvalidEventTypeException();
+        }
 
-    class DefaultRegister implements Register {
-        
-        public void subscribe( final Subscriber subscriber )
-        throws InvalidEventTypeException {
-            if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
-                throw new InvalidEventTypeException();
-            }
-
-            if ( getLogger().isDebugEnabled() ) {
-                getLogger().debug( "Subscribing event " + subscriber.getEventType().getName() );
-            }
-            
-            // Add to list but prevent duplicate subscriptions
-            if ( !subscribers.contains( subscriber ) ) {
-                subscribers.add( subscriber );
-                if ( getLogger().isDebugEnabled() ) {
-                    getLogger().debug( "Subscribed Event " + subscriber.getEventType().getName() );
-                    getLogger().debug( "Subscribers now active: " + subscribers.size() );
-                }
-            }
+        if ( getLogger().isDebugEnabled() ) {
+            getLogger().debug( "Subscribing event " + subscriber.getEventType().getName() );
         }
         
-        public void unsubscribe( Subscriber subscriber )
-        throws InvalidEventTypeException {
-            
-            if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
-                throw new InvalidEventTypeException();
+        // Add to list but prevent duplicate subscriptions
+        if ( !subscribers.contains( subscriber ) ) {
+            subscribers.add( subscriber );
+            if ( getLogger().isDebugEnabled() ) {
+                getLogger().debug( "Subscribed Event " + subscriber.getEventType().getName() );
+                getLogger().debug( "Subscribers now active: " + subscribers.size() );
             }
-            if ( subscribers.contains( subscriber ) ) {
-                subscribers.remove( subscriber );
-                if ( getLogger().isDebugEnabled() ) {
-                    getLogger().debug( "Unsubscribed Event " + subscriber.getEventType().getName() );
-                    getLogger().debug( "Subscribers now active: " + subscribers.size() );
-                }
-            } else {
-                getLogger().warn( "Subscriber " + subscriber + " not found" );
+        }
+    }
+    
+    public void unsubscribe( Subscriber subscriber )
+    throws InvalidEventTypeException {
+        
+        if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
+            throw new InvalidEventTypeException();
+        }
+        if ( subscribers.contains( subscriber ) ) {
+            subscribers.remove( subscriber );
+            if ( getLogger().isDebugEnabled() ) {
+                getLogger().debug( "Unsubscribed Event " + subscriber.getEventType().getName() );
+                getLogger().debug( "Subscribers now active: " + subscribers.size() );
             }
+        } else {
+            getLogger().warn( "Subscriber " + subscriber + " not found" );
         }
     }
 
