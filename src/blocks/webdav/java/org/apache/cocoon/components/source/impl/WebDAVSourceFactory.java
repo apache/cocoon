@@ -54,9 +54,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.httpclient.HttpURL;
@@ -71,22 +68,11 @@ import org.apache.excalibur.source.SourceParameters;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSourceFactory.java,v 1.4 2003/08/22 12:23:41 gcasper Exp $
+ *  @version $Id: WebDAVSourceFactory.java,v 1.5 2003/09/24 22:34:52 cziegeler Exp $
 */
 public class WebDAVSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Composable {
-
-    /** The component manager instance */
-    private ComponentManager manager = null;
-
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }
+    implements SourceFactory, ThreadSafe {
 
     /**
      * Get a <code>Source</code> object.
@@ -117,12 +103,6 @@ public class WebDAVSourceFactory
         WebDAVSource source =
             WebDAVSource.newWebDAVSource(location, principal, password, protocol);
             
-        try {
-            source.compose(this.manager);
-        } catch (ComponentException ce) {
-            getLogger().error("Could not lookup for component.", ce);
-        }
-
         return source;
     }
 

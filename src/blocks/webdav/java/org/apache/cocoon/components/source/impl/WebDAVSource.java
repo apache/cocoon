@@ -75,9 +75,6 @@ import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -105,9 +102,9 @@ import org.w3c.dom.NodeList;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.7 2003/08/27 17:36:07 gcasper Exp $
+ *  @version $Id: WebDAVSource.java,v 1.8 2003/09/24 22:34:52 cziegeler Exp $
 */
-public class WebDAVSource implements Composable, Source,
+public class WebDAVSource implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
 
 
@@ -118,8 +115,6 @@ public class WebDAVSource implements Composable, Source,
     private final String RESOURCE_NAME = "resource";
 
     private final String COLLECTION_NAME = "collection";
-
-    private ComponentManager manager = null;
 
     private String systemId;
     
@@ -209,18 +204,6 @@ public class WebDAVSource implements Composable, Source,
     private WebDAVSource (WebdavResource source) {
     	this.resource = source;
     	this.systemId = source.getHttpURL().getURI();
-    }
-
-    /**
-     * Pass the ComponentManager to the composer. The Composable implementation
-     * should use the specified ComponentManager to acquire the components it needs for execution
-     *
-     * @param manager The ComponentManager which this Composable uses
-     *
-     * @throws ComponentException
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
     /**
@@ -470,7 +453,7 @@ public class WebDAVSource implements Composable, Source,
 
         private WebdavResource resource = null;
 
-        private WebDAVSourceOutputStream(WebdavResource resource) {
+        protected WebDAVSourceOutputStream(WebdavResource resource) {
             this.resource = resource;
             WebdavResource.setGetUseDisk(false);
         }
@@ -807,7 +790,7 @@ public class WebDAVSource implements Composable, Source,
             NodeList list = sourceproperty.getValue().getChildNodes();
             for (int i=0; i<list.getLength(); i++) {
                 if (list.item(i) instanceof Element)
-                frag.appendChild((Element)list.item(i));
+                    frag.appendChild(list.item(i));
             }
 
             Properties format = new Properties();

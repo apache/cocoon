@@ -98,7 +98,7 @@ import org.xml.sax.SAXException;
  * @see javax.servlet.jsp.jstl.core.LoopTagSupport
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: LoopTagSupport.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
+ * @version CVS $Id: LoopTagSupport.java,v 1.3 2003/09/24 22:34:52 cziegeler Exp $
  */
 public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, IterationTag //, TryCatchFinally
 {
@@ -163,9 +163,9 @@ public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, I
      */
     private LoopTagStatus status; // our LoopTagStatus
     private Object item; // the current item
-    private int index; // the current internal index
-    private int count; // the iteration count
-    private boolean last; // current round == last one?
+    protected int index; // the current internal index
+    protected int count; // the iteration count
+    protected boolean last; // current round == last one?
 
     //*********************************************************************
     // Constructor
@@ -376,10 +376,10 @@ public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, I
                 return (LoopTagSupport.this.getCurrent());
             }
             public int getIndex() {
-                return (index + begin); // our 'index' isn't getIndex()
+                return index + begin; // our 'index' isn't getIndex()
             }
             public int getCount() {
-                return (count);
+                return count;
             }
             public boolean isFirst() {
                 return (index == 0); // our 'index' isn't getIndex()

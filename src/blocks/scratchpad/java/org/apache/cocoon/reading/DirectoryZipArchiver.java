@@ -54,9 +54,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 
 import org.apache.excalibur.source.Source;
@@ -82,21 +79,17 @@ import java.util.zip.ZipOutputStream;
  * can't estimate it before actually performing the compression.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: DirectoryZipArchiver.java,v 1.1 2003/09/04 12:42:44 cziegeler Exp $
+ * @version CVS $Id: DirectoryZipArchiver.java,v 1.2 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class DirectoryZipArchiver extends AbstractReader {
 
     private Source inputSource;
-    private Response response;
-    private Request request;
 
     private File directory;
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        this.request = ObjectModelHelper.getRequest(objectModel);
-        this.response = ObjectModelHelper.getResponse(objectModel);
 
         try {
             this.inputSource = this.resolver.resolveURI(super.source);

@@ -66,7 +66,7 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: GIFSourceInspector.java,v 1.4 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: GIFSourceInspector.java,v 1.5 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class GIFSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {
@@ -143,10 +143,10 @@ public class GIFSourceInspector extends AbstractLogEnabled implements
             || (buf[2]) != (byte)'F' )
             throw new SourceException("Not a valid GIF file!");
 
-            int w1 = ((int)buf[6] & 0xff) | (buf[6] & 0x80);
-            int w2 = ((int)buf[7] & 0xff) | (buf[7] & 0x80);
-            int h1 = ((int)buf[8] & 0xff) | (buf[8] & 0x80);
-            int h2 = ((int)buf[9] & 0xff) | (buf[9] & 0x80);
+            int w1 = (buf[6] & 0xff) | (buf[6] & 0x80);
+            int w2 = (buf[7] & 0xff) | (buf[7] & 0x80);
+            int h1 = (buf[8] & 0xff) | (buf[8] & 0x80);
+            int h2 = (buf[9] & 0xff) | (buf[9] & 0x80);
 
             int width = w1 + (w2 << 8);
             int height = h1 + (h2 << 8);

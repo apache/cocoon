@@ -56,7 +56,6 @@ import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -141,7 +140,7 @@ public class JellyGenerator extends ServiceableGenerator
             throw new ProcessingException("Exception in JellyGenerator.generate()", e);
         } finally {
             this.resolver.release( scriptSource );
-            this.manager.release((Component)parser);
+            this.manager.release(parser);
         }
     }
 
@@ -153,7 +152,7 @@ public class JellyGenerator extends ServiceableGenerator
             String pArray[] = params.getNames();
             for(int i=0; i<pArray.length; i++) {
                 String var = pArray[i];
-                String val = (String) params.getParameter(var);
+                String val = params.getParameter(var);
                 this.jellyContext.setVariable( var, val );
             }
         } catch (Exception e) {
@@ -171,7 +170,7 @@ public class JellyGenerator extends ServiceableGenerator
             Enumeration enum = request.getParameterNames();
             while (enum.hasMoreElements()) {
                 String var = (String) enum.nextElement();
-                String val = (String) request.getParameter(var);
+                String val = request.getParameter(var);
                 this.jellyContext.setVariable( var, val );
             }
         } catch (Exception e) {

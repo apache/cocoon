@@ -50,10 +50,6 @@
 */
 package org.apache.cocoon.taglib.core;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.taglib.XMLProducerTagSupport;
@@ -65,22 +61,11 @@ import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: SourceTag.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
+ * @version CVS $Id: SourceTag.java,v 1.3 2003/09/24 22:34:52 cziegeler Exp $
  */
-public class SourceTag extends XMLProducerTagSupport implements Composable {
+public class SourceTag extends XMLProducerTagSupport {
     private String src;
     private EmbeddedXMLPipe embeddedXMLPipe = new EmbeddedXMLPipe(null);
-
-    /** The component manager instance */
-    private ComponentManager manager = null;
-
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-    }
 
     public void setSrc(String src) {
         this.src = src;

@@ -82,9 +82,9 @@ import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
 import org.apache.velocity.util.introspection.Info;
@@ -174,7 +174,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: VelocityGenerator.java,v 1.9 2003/09/05 07:40:21 cziegeler Exp $
+ * @version CVS $Id: VelocityGenerator.java,v 1.10 2003/09/24 22:34:53 cziegeler Exp $
  */
 public class VelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
@@ -399,7 +399,7 @@ public class VelocityGenerator extends ServiceableGenerator
                     result = ScriptRuntime.call(cx, result, thisObj, 
                                                 newArgs, scope);
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -447,7 +447,7 @@ public class VelocityGenerator extends ServiceableGenerator
                     }
                     Object result = ScriptableObject.getProperty(thisObj, name);
                     if (result == Undefined.instance || 
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -530,7 +530,7 @@ public class VelocityGenerator extends ServiceableGenerator
                 try {
                     Object result = arr.get(index++, arr);
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -569,7 +569,7 @@ public class VelocityGenerator extends ServiceableGenerator
                         ScriptableObject.getProperty(scope, 
                                                      ids[index++].toString());
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else while (result instanceof Wrapper) {
                         result = ((Wrapper)result).unwrap();
@@ -770,7 +770,7 @@ public class VelocityGenerator extends ServiceableGenerator
         // Set up a JavaScript introspector for the Cocoon flow layer
         this.tmplEngine.setProperty(org.apache.velocity.runtime.RuntimeConstants.UBERSPECT_CLASSNAME,
                                     JSIntrospector.class.getName());
-        this.tmplEngine.setProperty(Velocity.RUNTIME_LOG_LOGSYSTEM, this);
+        this.tmplEngine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, this);
 
         // First set up our default 'cocoon' resource loader
         this.tmplEngine.setProperty("cocoon.resource.loader.class",
@@ -830,7 +830,7 @@ public class VelocityGenerator extends ServiceableGenerator
             buffer.append(',');
             buffer.append((String) it.next());
         }
-        tmplEngine.setProperty(Velocity.RESOURCE_LOADER, buffer.toString());
+        tmplEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, buffer.toString());
     }
 
     /**
