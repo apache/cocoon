@@ -31,187 +31,82 @@ import org.xml.sax.ContentHandler;
  * Generates an XML representation of the current notification.
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @created 24 August 2000
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-22 20:19:03 $
  */
  
 public class Notifier {
 
-    private static int printStreamNotifications = 0;
-
     /**
-     * The URI of the namespace of this generator.
+     * Generate notification information as servlet response
      */
-    protected final static String URI = "http://apache.org/cocoon/2.0/error";
-
-    /**
-     * The namespace prefix for this namespace URI.
-     */
-    protected final static String PREFIX = "ntf";
-
-    /**
-     * Gets the CocoonAsciArt attribute of the Notification object
-     *
-     * @return The CocoonAsciArt value
-     */
-    public static String getCocoonAsciArt() {
-
-        return " ษอออออ ษออออป ษอออออ ษออออป ษออออป ษออออป  \n"
-               + " บ      บ   .บ บ      บ   .บ บ.   บ บ    บ  \n"
-               + " ศอออออ ศออออผ ศอออออ ศออออผ ศออออผ บ    บ";
-    }
-
-    /**
-     * Generate notification information on PrintStream Out in text.
-     *
-     * @param  Out               The PrintStream to use.
-     */
-    public static void notify(Notificable n, PrintStream Out) {
-
-        printStreamNotifications++;
-
-        Out.println("");
-        Out.println(
-            "**********************************************************");
-        Out.println("");
-        Out.println(getCocoonAsciArt() + " "
-                    + org.apache.cocoon.Cocoon.VERSION);
-        Out.println("");
-        Out.println("--- " + n.getTitle() + " ---");
-        Out.println("");
-        Out.println(" " + n.getType() + " - " + n.getMessage());
-        Out.println("");
-        Out.println(" description - " + n.getDescription());
-        Out.println("");
-        Out.println(" from - " + n.getSender());
-        Out.println("");
-        Out.println(" source - " + n.getSource());
-        Out.println("");
-
-        HashMap  extraDescriptions = n.getExtraDescriptions();
-        Iterator keyIter           = extraDescriptions.keySet().iterator();
-
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-
-            Out.println(" " + key + " - " + extraDescriptions.get(key));
-            Out.println("");
-        }
-
-        Out.println("**************** printStream notifications: "
-                    + String.valueOf(printStreamNotifications)
-                    + " ***************");
-        Out.println("");
-    }
-
-    public static void notify(Notificable n, HttpServletRequest req,
-                              HttpServletResponse res) {
+    public static void notify(Notificable n, HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         StringBuffer sb = new StringBuffer();
 
-        try {
+        String contentType = req.getContentType();
 
-            // get the request user agent
-            String agent = req.getParameter("user-Agent");
+        if ("text/html".equals(contentType)) {
+            res.setContentType("text/html");
+            sb.append("<html><head><title>" + n.getTitle() + "</title>");
+            sb.append("<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
+            sb.append("BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
+            sb.append("B{color : white;background-color : #0086b2;} ");
+            sb.append("HR{color : #0086b2;} ");
+            sb.append("--></STYLE> ");
+            sb.append("</head><body>");
+            sb.append("<h1>Cocoon 2 - " + n.getTitle() + "</h1>");
+            sb.append("<HR size=\"1\" noshade>");
+            sb.append("<p><b>type</b> " + n.getType() + "</p>");
+            sb.append("<p><b>message</b> <u>" + n.getMessage() + "</u></p>");
+            sb.append("<p><b>description</b> <u>" + n.getDescription() + "</u></p>");
+            sb.append("<p><b>sender</b> " + n.getSender() + "</p>");
+            sb.append("<p><b>source</b> " + n.getSource() + "</p>");
 
-            if (agent == null) {
-                agent = req.getHeader("user-Agent");
+            HashMap extraDescriptions = n.getExtraDescriptions();
+            Iterator keyIter = extraDescriptions.keySet().iterator();
+
+            while (keyIter.hasNext()) {
+                String key = (String) keyIter.next();
+
+                sb.append("<p><b>" + key + "</b><pre>" + extraDescriptions.get(key) + "</pre></p>");
             }
 
-            if (agent == null) {
-                agent = "";
+            sb.append("<HR size=\"1\" noshade>");
+            sb.append("</body></html>");
+        } else {
+            res.setContentType("text/xml");
+            sb.append("<notify type=\"" + n.getType() + "\" sender=\"" + n.getSender() + "\">");
+            sb.append("<title>" + n.getTitle() + "</title>");
+            sb.append("<source>" + n.getSource() + "</source>");
+            sb.append("<message>" + n.getMessage() + "</message>");
+            sb.append("<description>" + n.getDescription() + "</description>");
+
+            HashMap extraDescriptions = n.getExtraDescriptions();
+            Iterator keyIter = extraDescriptions.keySet().iterator();
+
+            while (keyIter.hasNext()) {
+                String key = (String) keyIter.next();
+
+                sb.append("<extra description=\"" + key + "\">" + extraDescriptions.get(key) + "</extra>");
             }
 
-            String ContentType = req.getContentType();
-
-            if (ContentType == null) {
-                ContentType = "";
-            }
-
-            if (agent.startsWith("Mozilla")
-                    || ContentType.equals("txt/html")) {
-                res.setContentType("text/html");
-                sb.append("<html><head><title>" + n.getTitle() + "</title>");
-                sb.append(
-                    "<STYLE><!--H1{font-family : sans-serif,Arial,Tahoma;color : white;background-color : #0086b2;} ");
-                sb.append(
-                    "BODY{font-family : sans-serif,Arial,Tahoma;color : black;background-color : white;} ");
-                sb.append("B{color : white;background-color : #0086b2;} ");
-                sb.append("HR{color : #0086b2;} ");
-                sb.append("--></STYLE> ");
-                sb.append("</head><body>");
-                sb.append("<h1>Cocoon 2 - " + n.getTitle() + "</h1>");
-                sb.append("<HR size=\"1\" noshade>");
-                sb.append("<p><b>type</b> " + n.getType() + "</p>");
-                sb.append("<p><b>message</b> <u>" + n.getMessage()
-                          + "</u></p>");
-                sb.append("<p><b>description</b> <u>" + n.getDescription()
-                          + "</u></p>");
-                sb.append("<p><b>sender</b> " + n.getSender() + "</p>");
-                sb.append("<p><b>source</b> " + n.getSource() + "</p>");
-
-                HashMap  extraDescriptions = n.getExtraDescriptions();
-                Iterator keyIter           =
-                    extraDescriptions.keySet().iterator();
-
-                while (keyIter.hasNext()) {
-                    String key = (String) keyIter.next();
-
-                    sb.append("<p><b>" + key + "</b> <pre> "
-                              + extraDescriptions.get(key) + "</pre></p>");
-                }
-
-                sb.append("<HR size=\"1\" noshade>");
-                sb.append("</body></html>");
-            } else {
-                res.setContentType("text/xml");
-                sb.append("<notify type=\"" + n.getType() + "\" sender=\""
-                          + n.getSender() + "\">");
-                sb.append("<title>" + n.getTitle() + "</title>");
-                sb.append("<source>" + n.getSource() + "</source>");
-                sb.append("<message>" + n.getMessage() + "</message>");
-                sb.append("<description>" + n.getDescription()
-                          + "</description>");
-
-                HashMap  extraDescriptions = n.getExtraDescriptions();
-                Iterator keyIter           =
-                    extraDescriptions.keySet().iterator();
-
-                while (keyIter.hasNext()) {
-                    String key = (String) keyIter.next();
-
-                    sb.append("<extra description=\"" + key + "\">"
-                              + extraDescriptions.get(key) + "</extra>");
-                }
-
-                sb.append("</notify>");
-            }
-
-            ServletOutputStream Out = res.getOutputStream();
-
-            Out.print(new String(sb));
-
-            //Out.flush();
-        } catch (IOException ioe) {}
-        finally {
-            notify(n, System.out);
+            sb.append("</notify>");
         }
+
+        res.getOutputStream().print(sb.toString());
     }
 
     /**
      * Generate notification information in XML format.
-     *
-     * @param  ch                The ContentHandler to use.
-     * @exception  SAXException  Description of problem there is creating the output
-     *      SAX events.
      */
-    public static void notify(Notificable n, ContentHandler ch)
-            throws SAXException {
+    public static void notify(Notificable n, ContentHandler ch) throws SAXException {
 
-        //only for test.
-        notify(n, System.out);
+        final String URI = Cocoon.ERROR_NAMESPACE_PREFIX;
+        final String PREFIX = Cocoon.ERROR_NAMESPACE_PREFIX;
 
         String buf;
-
+        
         // Start the document
         ch.startDocument();
         ch.startPrefixMapping(PREFIX, URI);
@@ -263,42 +158,7 @@ public class Notifier {
         ch.endElement(URI, "notify", "notify");
 
         // End the document.
-        ch.endPrefixMapping(PREFIX);
+        ch.endPrefixMapping(Cocoon.ERROR_NAMESPACE_PREFIX);
         ch.endDocument();
-    }
-
-    /**
-     *  A thread that prints the stackTrace of a <code>Throwable</code> object to a
-     *  PrintWriter.
-     *
-     *@author     <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a>
-     *      Aisa
-     *@created    31 July 2000
-     */
-    class ReadThread extends Thread {
-
-        PrintWriter CurrentWriter;
-        Throwable   t;
-
-        /**
-         *  Constructor for the ReadThread object
-         *
-         *@param  CurrentWriter  The <code>PrintWriter</code> to print the stacktrace
-         *      to.
-         *@param  t              The <code>Throwable</code> object containing the
-         *      stackTrace.
-         */
-        ReadThread(PrintWriter CurrentWriter, Throwable t) {
-            this.CurrentWriter = CurrentWriter;
-            this.t             = t;
-        }
-
-        /**
-         *  Main processing method for the ReadThread object. A thread that prints the
-         *  stackTrace of a <code>t</code> to <code>CurrentWriter</code> .
-         */
-        public void run() {
-            t.printStackTrace(CurrentWriter);
-        }
     }
 }

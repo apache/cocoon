@@ -9,19 +9,11 @@
 package org.apache.cocoon;
 
 import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PipedReader;
-import java.io.PipedWriter;
+import java.io.StringWriter;
 import java.io.PrintWriter;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
-
-import org.apache.avalon.ComponentNotAccessibleException;
 
 /**
  *  Generates an XML representation of the current notification.
@@ -29,6 +21,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @created 24 August 2000
  */
+ 
 public class Notification implements Notificable {
 
     /**
@@ -74,12 +67,34 @@ public class Notification implements Notificable {
     }
 
     /**
-     *  Constructor for the Notification object
+     * Constructor for the Notification object
      *
-     *@param  t  Description of Parameter
+     * @param  o  Description of Parameter
+     */
+    public Notification(Object sender, Object o) {
+        this(sender);
+        setType("object");
+        setTitle("Object notification");
+        setSource(o.getClass().getName());
+        setMessage(o.toString());
+    }
+    
+    /**
+     * Constructor for the Notification object
+     *
+     * @param  t  Description of Parameter
      */
     public Notification(Object sender, Throwable t) {
-        this.setThrowable(sender, t);
+        this(sender);
+        setType("error");
+        setTitle("Cocoon error");
+        setSource(t.getClass().getName());
+        setMessage(t.getMessage());
+        setDescription(t.toString());
+
+        StringWriter stackTrace = new StringWriter();
+        t.printStackTrace(new PrintWriter(stackTrace));
+        extraDescriptions.put("stacktrace", stackTrace.toString());
     }
 
     /**
@@ -88,80 +103,8 @@ public class Notification implements Notificable {
      *@param  t  Description of Parameter
      */
     public Notification(Object sender, SAXException t) {
-
-        this.setThrowable(sender, t);
-        addExtraDescription("SAX-processing-exception",
-                            ((SAXException) t).getException().toString());
-    }
-
-    /**
-     *  Constructor for the Notification object
-     *
-     *@param  t  Description of Parameter
-     */
-    public Notification(Object sender, ComponentNotAccessibleException t) {
-
-        this.setThrowable(sender, t);
-        addExtraDescription("SAX-processing-exception",
-                            ((ComponentNotAccessibleException) t)
-                                .getException().toString());
-    }
-
-    private void setThrowable(Object sender, Throwable t) {
-
-        setType("error");
-        setTitle("Cocoon error");
-        setSource(t.getClass().getName());
-        setSender(sender);
-        setMessage(t.getMessage());
-        setDescription(t.toString());
-
-        StringBuffer stacktrace = new StringBuffer();
-        String       CurrentString;
-
-        try {
-            PipedWriter    CurrentPipedWriter = new PipedWriter();
-            PrintWriter    CurrentWriter      =
-                new PrintWriter(CurrentPipedWriter);
-            PipedReader    CurrentPipedReader =
-                new PipedReader(CurrentPipedWriter);
-            BufferedReader CurrentReader      =
-                new BufferedReader(CurrentPipedReader);
-            Thread         CurrentReadThread  = new ReadThread(CurrentWriter,
-                                                    t);
-
-            CurrentReadThread.start();
-
-            do {
-                try {
-                    CurrentString = CurrentReader.readLine();
-
-                    stacktrace.append(CurrentString + "\n");
-                } catch (Throwable x) {
-                    CurrentString = null;
-                }
-            } while (CurrentString != null);
-        } catch (IOException ioe) {
-            stacktrace.append("C2: Error in getting StackTrace");
-            System.err.println(
-                "\n\nC2:Error in printing error: cannot get stacktrace correctly..");
-        }
-
-        extraDescriptions.put("stacktrace", stacktrace);
-    }
-
-    /**
-     *  Constructor for the Notification object
-     *
-     *@param  o  Description of Parameter
-     */
-    public Notification(Object sender, Object o) {
-
-        setType("object");
-        setTitle("Object notification");
-        setSource(o.getClass().getName());
-        setSender(sender);
-        setMessage(o.toString());
+        this(sender, (Throwable) t);
+        addExtraDescription("SAX-processing-exception", ((SAXException) t).getException().toString());
     }
 
     /**
@@ -285,40 +228,6 @@ public class Notification implements Notificable {
      */
     public HashMap getExtraDescriptions() {
         return extraDescriptions;
-    }
-
-    /**
-     *  A thread that prints the stackTrace of a <code>Throwable</code> object to a
-     *  PrintWriter.
-     *
-     * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
-     * @created 31 July 2000
-     */
-    class ReadThread extends Thread {
-
-        PrintWriter CurrentWriter;
-        Throwable   t;
-
-        /**
-         *  Constructor for the ReadThread object
-         *
-         *@param  CurrentWriter  The <code>PrintWriter</code> to print the stacktrace
-         *      to.
-         *@param  t              The <code>Throwable</code> object containing the
-         *      stackTrace.
-         */
-        ReadThread(PrintWriter CurrentWriter, Throwable t) {
-            this.CurrentWriter = CurrentWriter;
-            this.t             = t;
-        }
-
-        /**
-         *  Main processing method for the ReadThread object. A thread that prints the
-         *  stackTrace of a <code>t</code> to <code>CurrentWriter</code> .
-         */
-        public void run() {
-            t.printStackTrace(CurrentWriter);
-        }
     }
 }
 
