@@ -72,7 +72,12 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.8 2003/12/06 21:22:08 cziegeler Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.9 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=file-generator
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {

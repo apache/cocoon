@@ -57,6 +57,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.generation.AbstractGenerator;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
@@ -69,9 +70,14 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: NotifyingGenerator.java,v 1.4 2003/12/06 21:22:08 cziegeler Exp $
+ * @version CVS $Id: NotifyingGenerator.java,v 1.5 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=notifying-generator
  */
-public class NotifyingGenerator extends AbstractGenerator {
+public class NotifyingGenerator extends AbstractGenerator implements Generator {
 
     /**
      * The <code>Notification</code> to report.

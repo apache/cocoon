@@ -63,7 +63,12 @@ import java.io.OutputStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: XMLSerializer.java,v 1.1 2003/03/09 00:09:37 pier Exp $
+ * @version CVS $Id: XMLSerializer.java,v 1.2 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Serializer
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=xml-serializer
  */
 
 public class XMLSerializer extends AbstractTextSerializer {

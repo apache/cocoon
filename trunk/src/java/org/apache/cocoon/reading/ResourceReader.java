@@ -96,7 +96,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ResourceReader.java,v 1.4 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.5 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Reader
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=resource-reader
  */
 public class ResourceReader extends AbstractReader implements CacheableProcessingComponent {
 

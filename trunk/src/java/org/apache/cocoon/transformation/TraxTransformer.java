@@ -163,7 +163,12 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.11 2003/12/06 21:22:07 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.12 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Transformer
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=trax-transformer
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {

@@ -68,7 +68,12 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.5 2003/12/08 10:23:46 cziegeler Exp $
+ * @version CVS $Id: LinkTranslator.java,v 1.6 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Transformer
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=link-translator
  */
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     

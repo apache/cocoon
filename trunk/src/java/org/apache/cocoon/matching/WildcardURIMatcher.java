@@ -59,7 +59,12 @@ import java.util.Map;
  * Match the request URI against a wildcard expression.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: WildcardURIMatcher.java,v 1.1 2003/03/09 00:09:34 pier Exp $
+ * @version CVS $Id: WildcardURIMatcher.java,v 1.2 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=wildcard-uri-matcher
  */
 public class WildcardURIMatcher extends AbstractWildcardMatcher
 {

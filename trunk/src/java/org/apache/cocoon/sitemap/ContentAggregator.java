@@ -80,7 +80,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.7 2003/12/06 21:22:08 cziegeler Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.8 2003/12/27 15:11:57 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=content-aggregator
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
