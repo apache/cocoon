@@ -26,8 +26,9 @@ import org.apache.avalon.framework.CascadingException;
 /**
  * JMSConnection properties container plus utilities.
  * 
- * @version CVS $Id: JMSConnection.java,v 1.8 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id: JMSConnection.java,v 1.9 2004/07/06 07:57:00 unico Exp $
  * @author <a href="mailto:haul@apache.org">haul</a>
+ * @deprecated  use {@link org.apache.cocoon.components.jms.JMSConnectionManager} instead
  */
 public interface JMSConnection {
     
