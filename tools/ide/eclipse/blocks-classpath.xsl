@@ -87,9 +87,9 @@
                     filtering="yes"
                     overwrite="yes">
                 <filterset>
-                    <filter token="SRC_DIRS" value="${{srcs}}:@eclipse-src@"/>
-                    <filter token="LIBS" value="${{libs}}:@eclipse-libs@"/>
-                    <filter token="MOCKS_DIRS" value="${{mockss}}:@eclipse-mocks@"/>
+                    <filter token="SRC_DIRS" value="${{srcs}}${{path.separator}}@eclipse-src@"/>
+                    <filter token="LIBS" value="${{libs}}${{path.separator}}@eclipse-libs@"/>
+                    <filter token="MOCKS_DIRS" value="${{mockss}}${{path.separator}}@eclipse-mocks@"/>
                     <filter token="OUTPUT_DIR" value="${{ide.eclipse.outputdir}}"/>
                 </filterset>
             </copy>
@@ -106,15 +106,14 @@
 
             <!-- clean up src, libs and mocks  -->
             <replace file="${{build.temp}}/classpath-temp.xml"
-                    token=":@eclipse-src@" value=""/>
+                    token="${{path.separator}}@eclipse-src@" value=""/>
 
             <replace file="${{build.temp}}/classpath-temp.xml"
-                    token=":@eclipse-libs@" value=""/>
+                    token="${{path.separator}}@eclipse-libs@" value=""/>
             <replace file="${{build.temp}}/classpath-temp.xml"
                     token="@eclipse-libs@" value=""/>
-
             <replace file="${{build.temp}}/classpath-temp.xml"
-                    token=":@eclipse-mocks@" value=""/>
+                    token="${{path.separator}}@eclipse-mocks@" value=""/>
 
             <!-- split the path in 'item' XML elements -->
             <replace file="${{build.temp}}/classpath-temp.xml"
@@ -132,7 +131,7 @@
 
             <!-- now build the .classpath file -->
             <echo>Generate classpath</echo>
-            <xslt in="${{build.temp}}/classpath-temp.xml" out="${{basedir}}/.classpath"
+            <xslt   in="${{build.temp}}/classpath-temp.xml" out="${{basedir}}/.classpath"
                     style="${{tools}}/ide/eclipse/make-classpath.xsl">
                 <param name="exportlib" expression="${{ide.eclipse.export.libs}}"/>
             </xslt>
@@ -168,7 +167,7 @@
                     </path>
                     <property name="src-{$block-name}" refid="src-{$block-name}"/>
                     <replace file="${{build.temp}}/classpath-temp.xml"
-                            token="@eclipse-src@" value="${{src-{$block-name}}}:@eclipse-src@"/>
+                            token="@eclipse-src@" value="${{src-{$block-name}}}${{path.separator}}@eclipse-src@"/>
                 </then>
             </if>
             <!-- block mocks directory -->
@@ -182,7 +181,7 @@
                     </path>
                     <property name="mocks-{$block-name}" refid="mocks-{$block-name}"/>
                     <replace file="${{build.temp}}/classpath-temp.xml"
-                            token="@eclipse-mocks@" value="${{mocks-{$block-name}}}:@eclipse-mocks@"/>
+                            token="@eclipse-mocks@" value="${{mocks-{$block-name}}}${{path.separator}}@eclipse-mocks@"/>
                 </then>
             </if>
 
@@ -197,7 +196,7 @@
                     </path>
                     <property name="lib-{$block-name}" refid="lib-{$block-name}"/>
                     <replace file="${{build.temp}}/classpath-temp.xml"
-                            token="@eclipse-libs@" value="${{lib-{$block-name}}}:@eclipse-libs@"/>
+                            token="@eclipse-libs@" value="${{lib-{$block-name}}}${{path.separator}}@eclipse-libs@"/>
                 </then>
             </if>
             <!-- Add optional libraries used by this block -->
@@ -222,7 +221,7 @@
                                 </not>
                                 <then>
                                     <replace file="${{build.temp}}/classpath-temp.xml"
-                                            token="@eclipse-libs@" value="${{eclipse-optional-lib-{$block-name}-{@name}}}:@eclipse-libs@"/>
+                                            token="@eclipse-libs@" value="${{eclipse-optional-lib-{$block-name}-{@name}}}${{path.separator}}@eclipse-libs@"/>
                                 </then>
                             </if>
                         </then>
