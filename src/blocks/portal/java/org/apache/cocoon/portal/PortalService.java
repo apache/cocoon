@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal;
 
 import java.util.Iterator;
-
+import java.util.List;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
@@ -110,4 +110,8 @@ public interface PortalService {
      */
     String getDefaultLayoutKey();
     
+    /**
+     * Return all skins
+     */
+    List getSkinDescriptions();
 }

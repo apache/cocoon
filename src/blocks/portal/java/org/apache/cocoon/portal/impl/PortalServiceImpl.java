@@ -15,8 +15,10 @@
  */
 package org.apache.cocoon.portal.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -37,6 +39,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.SkinDescription;
 
 /**
  * Default implementation of a portal service using a session to store
@@ -63,6 +66,8 @@ public class PortalServiceImpl
     protected Map portalComponentManagers = new HashMap();
     
     protected Map portalConfigurations = new HashMap();
+    
+    protected Map skins = new HashMap();
     
     final protected static String KEY = PortalServiceImpl.class.getName();
     
@@ -198,6 +203,22 @@ public class PortalServiceImpl
                 ContainerUtil.initialize( c );
                 
                 this.portalConfigurations.put( name, current );
+                
+                // scan for skins
+                final List skinList = new ArrayList();
+                this.skins.put(name, skinList);
+                final Configuration[] skinConfs = current.getChild("skin").getChildren("skins");
+                if ( skinConfs != null ) {
+                    for(int s=0;s<skinConfs.length;s++) {
+                        final Configuration currentSkin = skinConfs[s];
+                        final String skinName = currentSkin.getAttribute("name");
+                        final SkinDescription desc = new SkinDescription();
+                        desc.setName(skinName);
+                        desc.setBasePath(currentSkin.getAttribute("base-path"));
+                        desc.setThumbnailPath(currentSkin.getChild("thumbnail-path").getValue(null));
+                        skinList.add(desc);
+                    }
+                }
             } catch (Exception e) {
                 throw new ConfigurationException("Unable to setup new portal component manager for portal " + name, e);
             }
@@ -255,4 +276,10 @@ public class PortalServiceImpl
         return key;
     }
    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getSkinDescriptions()
+     */
+    public List getSkinDescriptions() {
+        return (List)this.skins.get(this.getPortalName());
+    }
 }
