@@ -24,29 +24,29 @@ import org.apache.excalibur.store.Store;
 
 /**
  * This implementation of <code>EventRegistry</code> stores its <code>EventRegistryDataWrapper</code>
- * in the <code>PersistentStore</code> defined in cocoon.xconf.
+ * in the default <code>Store</code> defined in cocoon.xconf.
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: StoreEventRegistryImpl.java,v 1.8 2004/05/19 08:44:26 cziegeler Exp $
+ * @version CVS $Id$
  */
-public class StoreEventRegistryImpl
-    extends AbstractDoubleMapEventRegistry
+public class StoreEventRegistryImpl extends AbstractDoubleMapEventRegistry 
     implements Serviceable {
+
     private static final String EVENTREGISTRYKEY = "EVENTREGWRAPPER";
     private ServiceManager m_manager;
-    private Store m_persistentStore;
+    private Store m_store;
 
     protected void persist(EventRegistryDataWrapper wrapper) {
         EventRegistryDataWrapper ecdw = wrapRegistry();
         try {
-            m_persistentStore.store(EVENTREGISTRYKEY, ecdw);
+            m_store.store(EVENTREGISTRYKEY, ecdw);
         } catch (IOException e) {
             getLogger().warn("Unable to persist Event Registry");
         }
-        this.m_manager.release(this.m_persistentStore);
+        this.m_manager.release(this.m_store);
         m_manager = null;
-        m_persistentStore = null;
+        m_store = null;
     }
 
     /**
@@ -54,19 +54,18 @@ public class StoreEventRegistryImpl
 	 */
     public void service(ServiceManager manager) throws ServiceException {
         this.m_manager = manager;
-        this.m_persistentStore = (Store) manager.lookup(Store.ROLE);
+        this.m_store = (Store) manager.lookup(Store.ROLE);
     }
 
     /**
 	 * Recover the datawrapper from the Store.
 	 */
     protected boolean recover() {
-        Object o = m_persistentStore.get(EVENTREGISTRYKEY);
-        m_persistentStore.remove(EVENTREGISTRYKEY);
+        Object o = m_store.get(EVENTREGISTRYKEY);
+        m_store.remove(EVENTREGISTRYKEY);
         if (o != null && o instanceof EventRegistryDataWrapper) {
             if (getLogger().isInfoEnabled()) {
-                getLogger().info(
-                    "Retrieving EventRegistry from PersistentStore.");
+                getLogger().info("Retrieving EventRegistry from Store.");
             }
             unwrapRegistry((EventRegistryDataWrapper) o);
             return true;
