@@ -938,7 +938,7 @@
        specification.
     </description>
     <used-by>BetwixtTransformer</used-by>
-    <lib>optional/commons-betwixt-0.5.jar</lib>
+    <lib>optional/commons-betwixt-0.6.jar</lib>
     <homepage>http://jakarta.apache.org/commons/betwixt/</homepage>
   </file>
 
