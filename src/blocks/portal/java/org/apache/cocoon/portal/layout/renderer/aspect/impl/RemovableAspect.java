@@ -67,9 +67,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RemoveableAspect.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
+ * @version CVS $Id: RemovableAspect.java,v 1.1 2003/05/21 13:06:04 cziegeler Exp $
  */
-public class RemoveableAspect extends AbstractAspect {
+public class RemovableAspect extends AbstractAspect {
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)

@@ -57,7 +57,7 @@ package org.apache.cocoon.portal.aspect;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AspectDataStore.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AspectDataStore.java,v 1.2 2003/05/21 13:06:05 cziegeler Exp $
  */
 public interface AspectDataStore {
     
@@ -66,5 +66,10 @@ public interface AspectDataStore {
     Object getAspectData(Aspectalizable owner, String aspectName);
     
     void setAspectData(Aspectalizable owner, String aspectName, Object data);
+
+    /**
+     * Is the data persistent
+     */
+    boolean isPersistent();
 
 }

@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.portal.aspect;
 
-import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -60,7 +60,7 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: Aspectalizable.java,v 1.5 2003/05/21 13:06:05 cziegeler Exp $
  */
 public interface Aspectalizable {
 
@@ -80,11 +80,17 @@ public interface Aspectalizable {
     void setAspectData(String aspectName, Object data);
     
     /**
-     * Return all aspect datas
-     * @return A list of objects
+     * Return all aspect datas 
+     * @return A map of data objects, the keys are built by the aspect names
      */
-    List getAspectDatas();
+    Map getAspectDatas();
     
+    /**
+     * Return all persistent aspect datas 
+     * @return A map of data objects, the keys are built by the aspect names
+     */
+    Map getPersistentAspectDatas();
+
     /**
      * Is this aspect supported
      */

@@ -67,7 +67,7 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestAspectDataStore.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: RequestAspectDataStore.java,v 1.2 2003/05/21 13:06:02 cziegeler Exp $
  */
 public class RequestAspectDataStore 
     extends AbstractLogEnabled
@@ -97,4 +97,7 @@ public class RequestAspectDataStore
         this.getMap(owner).put(aspectName, data);
     }
 
+    public boolean isPersistent() {
+        return false;
+    }
 }

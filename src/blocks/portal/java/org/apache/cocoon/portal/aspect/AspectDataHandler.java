@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.portal.aspect;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * This interface is able to get a stored aspect
@@ -58,7 +58,7 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AspectDataHandler.java,v 1.5 2003/05/21 13:06:05 cziegeler Exp $
  */
 public interface AspectDataHandler {
 
@@ -66,8 +66,10 @@ public interface AspectDataHandler {
     
     void setAspectData(Aspectalizable owner, String aspectName, Object data);
 
-    List getAspectDatas(Aspectalizable owner);
+    Map getAspectDatas(Aspectalizable owner);
     
+    Map getPersistentAspectDatas(Aspectalizable owner);
+
     boolean isAspectSupported(String aspectName);
     
 }

@@ -11,6 +11,9 @@
         <field name="name" type="java.lang.String">
             <bind-xml name="name" node="attribute" />
         </field>
+        <field name="id" type="java.lang.String" >
+            <bind-xml name="id" node="attribute" />
+        </field>
     </class>
 
 	<class name="org.apache.cocoon.portal.layout.AbstractParameters"
@@ -28,7 +31,6 @@
         <field name="static" type="boolean">
             <bind-xml name="static" node="attribute" />
         </field>
-        <field name="id" type="java.lang.String" />
     </class>
     
     <class name="org.apache.cocoon.portal.layout.impl.LinkLayout"

@@ -46,7 +46,7 @@
     <aspect name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
 
     <!-- This aspect can be used to render the remove button -->
-    <aspect name="coplet-removing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemoveableAspect"/>
+    <aspect name="coplet-removing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"/>
 
     <!-- This aspect can be used to render a full-screen button -->
     <aspect name="coplet-full-screen" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FullScreenCopletAspect"/>

@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.portal.coplet;
 
-import org.exolab.castor.mapping.MapItem;
 
 /**
  *
@@ -58,11 +57,9 @@ import org.exolab.castor.mapping.MapItem;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.3 2003/05/20 14:32:36 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceData.java,v 1.4 2003/05/21 13:06:01 cziegeler Exp $
  */
-public final class CopletInstanceData
-//	extending MapItem used for Castor map workaround 
-extends MapItem {
+public final class CopletInstanceData {
 
 	public final static int STATUS_MINIMIZED = 0;
 	public final static int STATUS_MAXIMIZED = 1;
@@ -77,8 +74,6 @@ extends MapItem {
 	 * Constructor
 	 */
 	public CopletInstanceData() {
-		// used for Castor map workaround
-		this.setValue(this);
 	}
 
 	/**
@@ -95,9 +90,6 @@ extends MapItem {
 	 */
 	public void setId(String copletId) {
 		this.copletId = copletId;
-
-		// used for Castor map workaround
-		this.setKey(copletId);
 	}
 
 	/**
