@@ -55,8 +55,8 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.xml.sax.SAXException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -67,15 +67,15 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * Allows WLS JSP to be used as a generator.  Builds upon the JSP servlet
- * functionality - overrides the output method and returns the byte(s).
+ * Allows WLS JSP to be used as a generator. 
+ * 
  * This implementation includes via ServletContext.getNamedDispatcher() the
  * jsp-response. This a WLS-specific implementation.
  * This code contain WLS 5.1 specific classes, and uses WLS internal classes.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplWLS.java,v 1.3 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: JSPEngineImplWLS.java,v 1.4 2004/01/16 13:49:32 unico Exp $
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -93,6 +93,7 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
     public static final String DEFAULT_SERVLET_NAME = "*.jsp";
     /** the configured name of the jsp servlet
     */
+    
     String servletName = DEFAULT_SERVLET_NAME;
 
     /**
@@ -113,28 +114,34 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
      * @exception SAXException
      * @exception Exception
      */
-    public byte[] executeJSP(String url, HttpServletRequest httpRequest, HttpServletResponse httpResponse, ServletContext context)
-        throws IOException, ServletException, SAXException, Exception {
+    public byte[] executeJSP(String url,
+                             HttpServletRequest servletRequest,
+                             HttpServletResponse servletResponse,
+                             ServletContext servletContext)
+        throws IOException, ServletException, Exception {
 
         byte[] bytes = null;
 
-        HttpServletRequest request = httpRequest;
-        String inc_servlet_path_was = (String)httpRequest.getAttribute( INC_SERVLET_PATH );
-        request.setAttribute( INC_SERVLET_PATH, url );
-        MyWLSResponse response = new MyWLSResponse( httpResponse,
-          (weblogic.servlet.internal.ServletContextImpl)context );
+        HttpServletRequest request = servletRequest;
+        String inc_servlet_path_was = (String) servletRequest.getAttribute(INC_SERVLET_PATH);
+        request.setAttribute(INC_SERVLET_PATH, url);
+        MyWLSResponse response = new MyWLSResponse( servletResponse,
+          (weblogic.servlet.internal.ServletContextImpl) servletContext);
 
-        // start JSPServlet.
-        javax.servlet.RequestDispatcher rd = context.getNamedDispatcher( servletName );
+        // dispatch to the named servlet
+        RequestDispatcher rd = servletContext.getNamedDispatcher(servletName);
         if (rd != null) {
-          rd.include( request, response );
+          rd.include(request,response);
           response.flushBuffer();
-
-          getLogger().debug( "JSP response: " + response.getResponseContentAsString() );
+          
+          if (getLogger().isDebugEnabled()) {
+              getLogger().debug("JSP response: " + response.getResponseContentAsString());
+          }
+          
           bytes = response.getResponseContentAsByteArray();
 
           if (inc_servlet_path_was != null) {
-            httpRequest.setAttribute( INC_SERVLET_PATH, inc_servlet_path_was );
+            servletRequest.setAttribute( INC_SERVLET_PATH, inc_servlet_path_was );
           }
         } else {
           getLogger().error( "Specify a correct " + CONFIG_SERVLET_NAME + " " + servletName );
