@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.176 2003/10/21 09:25:58 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.177 2003/10/31 11:21:44 sylvain Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,14 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="SW" type="update">
+     Serializers now can optionnaly implement the SitemapModelComponent interface, meaning then can
+     be given a "src" attribute and parameters using &lt;map:parameter&gt;.
+   </action>
+   <action dev="SW" type="update">
+     Sitemap components (matchers, actions, generators, etc) can know the location of their use in the
+     sitemap unsing a special parameter named Constants.SITEMAP_PARAMETERS_LOCATION.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="23625">
      Closing some memory leaks in the source and component handling.
    </action>
