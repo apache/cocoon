@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.147 2004/01/13 21:12:53 ugo Exp $
+    | CVS $Id: jars.xml,v 1.148 2004/01/16 16:50:53 unico Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -722,6 +722,17 @@
     <used-by>Slide block</used-by>
     <lib>slide/lib/jdom-b10-dev-20030322.jar</lib>
     <homepage>http://www.jdom.org/</homepage>
+  </file>
+
+  <file>
+    <title>JTA spec</title>
+    <description>
+      J2EE Java Transaction API.
+      Implementation taken from the Apache Geronimo project for license compatibility.
+    </description>
+    <used-by>Slide block</used-by>
+    <lib>slide/lib/geronimo-spec-jta-DEV-20040116.jar</lib>
+    <homepage>http://java.sun.com/products/jta/</homepage>
   </file>
 
   <file>
