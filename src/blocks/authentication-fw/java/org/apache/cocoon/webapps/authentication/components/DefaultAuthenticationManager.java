@@ -80,22 +80,26 @@ import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
+import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.authentication.user.UserState;
 import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.webapps.session.SessionManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.18 2003/10/23 11:29:36 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.19 2003/10/24 08:26:35 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -236,7 +240,44 @@ implements AuthenticationManager,
         
         Authenticator authenticator = this.lookupAuthenticator( config );
         try {
-            handler = authenticator.authenticate( config, parameters );
+            Authenticator.AuthenticationResult result = authenticator.authenticate( config, parameters );
+            if ( result != null && result.valid ) {
+                AuthenticationContext authContext = new AuthenticationContext(this.context);
+                handler = new UserHandler(config, authContext);
+                // store the authentication data in the context
+                authContext.init(result.result);
+            } else if ( result != null ) {
+                // now set the failure information in the temporary context
+                ContextManager contextManager = null;
+                try {
+                    contextManager = (ContextManager) this.manager.lookup( ContextManager.ROLE );
+                    SessionContext temp = contextManager.getContext( SessionConstants.TEMPORARY_CONTEXT );
+                    
+                    final DocumentFragment fragment = result.result.createDocumentFragment();
+                    final Node root = result.result.getDocumentElement();
+                    root.normalize();
+                    Node child;
+                    boolean appendedNode = false;
+                    while (root.hasChildNodes() ) {
+                        child = root.getFirstChild();
+                        root.removeChild(child);
+                        // Leave out empty text nodes before any other node
+                        if (appendedNode
+                            || child.getNodeType() != Node.TEXT_NODE
+                            || child.getNodeValue().trim().length() > 0) {
+                            fragment.appendChild(child);
+                            appendedNode = true;
+                        }
+                    }
+                    temp.appendXML("/", fragment);
+                } catch ( ServiceException se ) {
+                    throw new ProcessingException("Unable to lookup session manager.", se);
+                } finally {
+                    this.manager.release( contextManager );
+                }
+                
+            }
+            
         } finally {
             this.releaseAuthenticator( authenticator, config );
         }
