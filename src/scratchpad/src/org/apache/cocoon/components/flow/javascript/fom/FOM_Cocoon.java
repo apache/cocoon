@@ -85,7 +85,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.11 2003/07/07 06:24:06 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.12 2003/07/07 06:27:25 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -225,8 +225,8 @@ public class FOM_Cocoon extends ScriptableObject {
      * TODO: Do we want to raise an error or return null? (RP)
      */  
     public Object jsFunction_getComponent(String id) 
-	throws Exception { 
-	return componentManager.lookup(id);
+        throws Exception { 
+        return componentManager.lookup(id);
     }
     
     /**
