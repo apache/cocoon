@@ -15,12 +15,12 @@ import org.xml.sax.ext.LexicalHandler;
  * events to the configured <code>XMLConsumer</code> (or SAX 
  * <code>ContentHandler</code> and <code>LexicalHandler</code>).
  * <br>
- * It's beyond the scope of this interface to specify a way in wich the XML
+ * It's beyond the scope of this interface to specify a way in which the XML
  * data production is started.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:43 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-17 17:09:38 $
  */
 public interface XMLProducer {
 
