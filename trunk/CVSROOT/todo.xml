@@ -2,49 +2,29 @@
 
 <!DOCTYPE todo SYSTEM "./docs/dtd/todo-v10.dtd">
 
-<!-- 
+<!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.17 2000-02-13 18:29:12 stefano Exp $
+  $Id: todo.xml,v 1.18 2000-02-14 14:20:08 stefano Exp $
 -->
 
 <todo title="Things To Do">
  <devs>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Donald Ball" email="balld@apache.org" id="DB"/>
-  <person name="Ricardo Rocha" email="ricard@apache.org" id="RR"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
 
  <actions priority="high">
   <action context="code">
-   Implement the sitemap.
-  </action>
-  <action context="code">
-   Move everything under SAX and build SAX2DOM and DOM2SAX adaptors (hopefully
-   using some Xerces code for this).
-  </action>
-  <action context="code">
-   Pass request/session parameters to the XSLT processors for dynamic
-   stylesheet operation. (follows sitemap)
-  </action>
-  <action context="code">
    Add logging.
   </action>
  </actions>
- 
- <actions priority="medium">
-  <action context="code">
-   Implement the error handler subsystem
-  </action>
-  <action assigned-to="PF" context="design">
-   Merge stylebook technology with Cocoon
-  </action>
- </actions>
- 
+
  <actions priority="low">
   <action context="docs">
-   Make the section title an element to allow entities to be included
+   Make the section title an element to allow entities to be included.
   </action>
  </actions>
- 
+
 </todo>
