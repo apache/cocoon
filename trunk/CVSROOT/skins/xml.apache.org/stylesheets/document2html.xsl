@@ -16,7 +16,7 @@
     <html>
       <head>
         <script language="JavaScript" type="text/javascript" src="resources/script.js"/>
-        <title><xsl:value-of select="title"/></title>
+        <title><xsl:value-of select="document/header/title"/></title>
       </head>
       <body text="#000000" link="#039acc" vlink="#0086b2" alink="#cc0000"
             topmargin="4" leftmargin="4" marginwidth="4" marginheight="4"
