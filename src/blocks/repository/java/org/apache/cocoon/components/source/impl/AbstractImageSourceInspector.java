@@ -124,7 +124,7 @@ public abstract class AbstractImageSourceInspector
     /**
      * Check whether this inspector handles properties of the given kind.
      */
-    private final boolean handlesProperty(String namespace, String name) {
+    public final boolean handlesProperty(String namespace, String name) {
         return namespace.equals(PROPERTY_NS) && 
                    (name.equals(IMAGE_WIDTH_PROPERTY_NAME) || 
                    name.equals(IMAGE_HEIGHT_PROPERTY_NAME));

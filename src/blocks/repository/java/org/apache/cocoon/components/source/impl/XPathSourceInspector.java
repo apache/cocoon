@@ -70,11 +70,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This source inspector inspects XML files with a xpath expression
+ * This source inspector inspects XML files with a xpath expression.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.4 2003/10/31 12:49:06 joerg Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.5 2003/11/21 11:37:48 unico Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, Serviceable, Parameterizable, ThreadSafe {
@@ -170,6 +170,9 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
         return null;
     }
     
+    public boolean handlesProperty(String namespace, String name) {
+        return this.propertynamespace.equals(namespace) && this.propertyname.equals(name);
+    }
 
 }
 

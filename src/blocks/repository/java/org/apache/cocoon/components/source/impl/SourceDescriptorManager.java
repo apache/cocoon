@@ -77,11 +77,11 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 
 /**
- * This source descriptor acts as container for a set of source inspectors.
+ * This source descriptor acts as container for a set of source inspectors/descriptors.
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceDescriptorManager.java,v 1.5 2003/10/31 12:49:06 joerg Exp $
+ * @version CVS $Id: SourceDescriptorManager.java,v 1.6 2003/11/21 11:37:48 unico Exp $
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 
 implements SourceDescriptor, Contextualizable, Serviceable, 
@@ -193,6 +193,22 @@ Configurable, Initializable, Disposable, ThreadSafe {
             }
         }
         return (SourceProperty[]) result.toArray(new SourceProperty[result.size()]);
+    }
+    
+    /**
+     * Check if there is an inspector that handles properties of 
+     * the given type.
+     */
+    public boolean handlesProperty(String namespace, String name) {
+        SourceInspector inspector;
+        final Iterator inspectors = m_inspectors.iterator();
+        while(inspectors.hasNext()) {
+            inspector = (SourceInspector) inspectors.next();
+            if (inspector.handlesProperty(namespace,name)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

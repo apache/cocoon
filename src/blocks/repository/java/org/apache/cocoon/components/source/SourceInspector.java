@@ -59,7 +59,7 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceInspector.java,v 1.3 2003/10/27 09:30:07 unico Exp $
+ * @version CVS $Id: SourceInspector.java,v 1.4 2003/11/21 11:37:48 unico Exp $
  */
 public interface SourceInspector extends Component {
 
@@ -70,7 +70,7 @@ public interface SourceInspector extends Component {
      * by the requested namespace and name.
      * 
      * @param source  the source for which to compute the property
-     * @param namespace  the namespace uri of the property
+     * @param namespace  the namespace of the property
      * @param name  the name of the property
      * @return  the SourceProperty associated with the Source, <code>null</code>
      * if the inspector does not provide this property.
@@ -89,5 +89,14 @@ public interface SourceInspector extends Component {
      */
     public SourceProperty[] getSourceProperties(Source source) throws SourceException;
     
+    /**
+     * Check if this inspector handles the property of the given type.
+     * 
+     * @param namespace  the namespace of the property
+     * @param name  the name of the property
+     * @return  <code>true</code> if this inspector handles properties of the given type
+     * else <code>false</code>.
+     */
+    public boolean handlesProperty(String namespace, String name);
 }
 
