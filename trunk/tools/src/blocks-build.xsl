@@ -35,6 +35,18 @@
             </fileset>
          </path>
 
+         <!-- Files, which should no compiled or otherwise processed -->
+         <patternset id="unprocessed.sources">
+            <exclude name="**/*.java"/>
+            <exclude name="**/*.xconf"/>
+            <exclude name="**/*.xroles"/>
+            <exclude name="**/*.xmap"/>
+            <exclude name="**/*.xpipe"/>
+            <exclude name="**/*.xlog"/>
+            <exclude name="**/*.xweb"/>
+            <exclude name="**/package.html"/>
+         </patternset>
+
          <target name="init">
            <xsl:for-each select="module/project[contains(@name,'cocoon-block-')]">
              <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')" />
@@ -294,8 +306,7 @@
 
          <copy filtering="on" todir="{string('${build.blocks}')}/{$block-name}/dest">
             <fileset dir="{string('${blocks}')}/{$block-name}/java">
-               <include name="**/*.xsl"/>
-               <include name="**/*.js"/>
+               <patternset refid="unprocessed.sources"/>
             </fileset>
          </copy>
 
