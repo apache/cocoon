@@ -23,7 +23,6 @@
   <xsl:variable name="source.vm">${source.vm}</xsl:variable>
   <xsl:variable name="compiler.nowarn">${compiler.nowarn}</xsl:variable>
   <xsl:variable name="compiler">${compiler}</xsl:variable>    
-   
 
   <!-- conditions -->
   <xsl:variable name="cond.toplevelcall">${cond.toplevelcall}</xsl:variable>
@@ -46,14 +45,12 @@
     	  <xsl:variable name="toplevelcall">${toplevelcall}</xsl:variable>
         <condition property="cond.toplevelcall">
           <not><isset property="toplevelcall"/></not>
-        </condition>     
-
+        </condition>
     	</target>  
       
     	<target depends="init" name="compile" 
     	  description="Compile this block and all blocks it depends on"  
-    	  >		
-    	  
+    	  >
     	  <!-- check whether parameters are set, unless stop script execution -->
         <condition property="cond.root.core">
         	<isset property="root.core"/>
@@ -128,35 +125,21 @@
           </jar>		
       </target>    	 
     	
-     	<target depends="init" name="clean" description="Clean the build directory of this block and all blocks it depends on">  
+     	<target depends="init" name="clean-all" description="Clean the build directory of this block and all blocks it depends on">  
      	  <!-- clean all dependand blocks -->
     		<antcall target="clean-required-blocks">
     		  <param name="toplevelcall" value="{$cond.toplevelcall}"/>
     		</antcall>
-    		
-    		<antcall target="clean-block"/>
-    		
+    		<antcall target="clean"/>
       </target>
 
-     	<target depends="init" name="clean-block" description="Clean the build directory of this block only"> 		
+     	<target depends="init" name="clean" description="Clean the build directory of this block only"> 		
      		<xsl:variable name="build.root">${build.root}</xsl:variable>   
      		<xsl:call-template name="info">
     		  <xsl:with-param name="msg">Cleaning block <xsl:value-of select="block:name"/></xsl:with-param>
     		</xsl:call-template>
     		<delete dir="{$build.root}"/>
       </target>      
-    	
-    	<xsl:call-template name="multi-block-operation">
-    	  <xsl:with-param name="action">compile</xsl:with-param>
-    	</xsl:call-template>
-
-    	<xsl:call-template name="multi-block-operation">
-    	  <xsl:with-param name="action">package</xsl:with-param>
-    	</xsl:call-template>
-
-    	<xsl:call-template name="multi-block-operation">
-    	  <xsl:with-param name="action">clean</xsl:with-param>
-    	</xsl:call-template>
     	
     	<target name="compile-eclipse-task" depends="package">
     		<mkdir dir="{$build.temp.tasks}"/>
@@ -173,7 +156,9 @@
     	</target>
     	
     	<target depends="compile-eclipse-task" name="eclipse-project" description="Create Eclipse project files">
-    	  
+      		<xsl:call-template name="info">
+      		  <xsl:with-param name="msg">Building Eclipse project files for block <xsl:value-of select="block:name"/></xsl:with-param>
+      		</xsl:call-template>      	  
     	  <!-- include custom build task that generates the .classpath
     	       That is necessary as the library paths are decoupled from block descriptor.
     	       Using XSLT would require writing an XSLT that creates an XSLT that generates an Ant script *grrr* -->
@@ -194,7 +179,7 @@
         	container="org.eclipse.jdt.launching.JRE_CONTAINER"
         	>
         	
-          <!-- all external libraries - simply copied from descriptor -->
+          <!-- all external libraries -->
         	<xsl:for-each select="block:libraries/block:lib">
         	  <lib>
         	    <xsl:for-each select="@*">
@@ -224,8 +209,35 @@
         <xslt in="block.xml" out=".project" 
          style="{$blockbuilder.root}/targets/block-descriptor2eclipse-project.xsl"/>
 	    </target>
+    
+      <target name="eclipse-project-all" description="Create Eclipse project files for this block and all dependencies">
+     	  <!-- clean all dependant blocks -->
+    		<antcall target="eclipse-project-required-blocks">
+    		  <param name="toplevelcall" value="{$cond.toplevelcall}"/>
+    		</antcall>
+    		<antcall target="eclipse-project"/>        
+      </target>
+
+    	<xsl:call-template name="multi-block-operation">
+    	  <xsl:with-param name="action">compile</xsl:with-param>
+    	</xsl:call-template>
+
+    	<xsl:call-template name="multi-block-operation">
+    	  <xsl:with-param name="action">package</xsl:with-param>
+    	</xsl:call-template>
+
+    	<xsl:call-template name="multi-block-operation">
+    	  <xsl:with-param name="action">clean</xsl:with-param>
+    	  <xsl:with-param name="nocore">true</xsl:with-param>    	  
+    	</xsl:call-template>
+    	
+    	<xsl:call-template name="multi-block-operation">
+    	  <xsl:with-param name="action">eclipse-project</xsl:with-param>
+    	  <xsl:with-param name="nocore">true</xsl:with-param>
+    	</xsl:call-template>
+    
     </project>
-  
+    
   </xsl:template>
   
   <xsl:template name="info">
@@ -238,18 +250,31 @@
   <!-- create a target for multi-block operations - necessary for recursions -->
   <xsl:template name="multi-block-operation">
     <xsl:param name="action"/>
-    	<target name="{$action}-required-blocks" depends="init, {$action}-core">
-    		<xsl:for-each select="block:requirements/block:requires">
-    		   <xsl:variable name="root.block">${root.block.<xsl:value-of select="@name"/>}</xsl:variable>
-    		   <ant antfile="{$root.block}/build.xml" target="{$action}" inheritall="false">
-    		     <property name="toplevelcall" value="false"/>
-    		   </ant>
-    		</xsl:for-each>		    
-	    </target>  	
-    	<target name="{$action}-core" depends="init" if="cond.toplevelcall">
-    	  <xsl:variable name="root.core">${root.core}</xsl:variable>
-		    <ant antfile="{$root.core}/build.xml" target="{$action}" inheritall="false"/>	    
-	    </target>	        
+    <xsl:param name="nocore"/>
+    <target name="{$action}-required-blocks" depends="init, {$action}-core">
+    	<xsl:for-each select="block:requirements/block:requires">
+    	   <xsl:variable name="root.block">${root.block.<xsl:value-of select="@name"/>}</xsl:variable>
+    	   <ant antfile="{$root.block}/build.xml" target="{$action}" inheritall="false">
+    	     <property name="toplevelcall" value="false"/>
+    	   </ant>
+    	</xsl:for-each>		    
+    </target>  
+
+    <target name="{$action}-core" depends="init" if="cond.toplevelcall">
+      <xsl:call-template name="info">
+        <xsl:with-param name="msg">Calling Ant target '<xsl:value-of select="$action"/>' on Cocoon core</xsl:with-param>
+      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$nocore = 'true'">
+          <!-- to nothing -->
+          <echo message="core is not called for this task!"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:variable name="root.core">${root.core}</xsl:variable>
+          <ant antfile="{$root.core}/build.xml" target="{$action}" inheritall="false"/>	          
+        </xsl:otherwise>
+      </xsl:choose>  
+    </target>
   </xsl:template>
   
 </xsl:stylesheet>

@@ -101,7 +101,7 @@ public class EclipseClasspathBuilderTask extends Task {
     		Iterator blockIterator = this.blocks.iterator();
             while(blockIterator.hasNext()) {
                 Block block = (Block)blockIterator.next();
-                if(block.isDynamicEclipseReference()) {
+                if(!block.isDynamicEclipseReference()) {
                 	File[] f = block.getJarFile(this.getProject().getBaseDir());
                     if(f!=null) for(int i = 0; i < f.length; i++) {
                         Element entry = doc.createElement(EL_CLASSPATHENTRY);
@@ -124,7 +124,8 @@ public class EclipseClasspathBuilderTask extends Task {
                 if(CORE_LIB.equals(lib.getLocation())) {
                     String libFromRepository = (String) this.coreJarMap.get(lib.getId());
                     if(libFromRepository == null) {
-                        throw new BuildException("Library '" + lib.getId() + "' can't be found! Make sure it is available in " + corejarsFile.getCanonicalPath() + ".");
+                        throw new BuildException("Library '" + lib.getId() + "' can't be found! " + 
+                                "Make sure it is available in " + corejarsFile.getCanonicalPath() + ".");
                     }
                     String jar = (new File(this.coreJarDir, libFromRepository)).getCanonicalPath();
                     Element entry = doc.createElement(EL_CLASSPATHENTRY);
