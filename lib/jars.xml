@@ -574,7 +574,7 @@
     <title>Transform HTML to XML</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>NekoHTML generator (html block)</used-by>
-    <lib>html/lib/nekohtml-0.9.2.jar</lib>
+    <lib>html/lib/nekohtml-0.9.3.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
 
