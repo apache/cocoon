@@ -100,7 +100,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.11 2004/03/22 13:49:04 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.12 2004/03/25 13:21:14 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -316,10 +316,14 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             throw new ResourceNotFoundException("Could not read collection "
                                                 + this.source, ioe);
         } finally {
-            this.resolver.release(src);
-            Enumeration enum = ancestors.elements();
-            while (enum.hasMoreElements()) {
-                resolver.release((Source) enum.nextElement());
+            if (src != null) {
+                this.resolver.release(src);
+            }
+            if (ancestors != null) {
+                Enumeration enum = ancestors.elements();
+                while (enum.hasMoreElements()) {
+                    resolver.release((Source) enum.nextElement());
+                }
             }
         }
     }
