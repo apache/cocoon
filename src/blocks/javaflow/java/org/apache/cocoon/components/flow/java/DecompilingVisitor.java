@@ -20,7 +20,6 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 
 import org.apache.bcel.Constants;
-import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Deprecated;
@@ -80,10 +79,10 @@ public final class DecompilingVisitor extends org.apache.bcel.classfile.EmptyVis
 	}
 
 	public void visitField(Field field) {
-		out.print("  " + Utility.accessToString(field.getAccessFlags()) + " "
-				+ field.getName() + " " + field.getSignature());
-		if (field.getAttributes().length == 0)
-			out.print("\n");
+		out.println("  " + Utility.accessToString(field.getAccessFlags()) + " "	
+				+ field.getType() + " " + field.getName() + ";");
+		/*if (field.getAttributes().length == 0)
+			out.print("\n");*/
 	}
 
 	public void visitConstantValue(ConstantValue cv) {
@@ -92,30 +91,17 @@ public final class DecompilingVisitor extends org.apache.bcel.classfile.EmptyVis
 
 	private Method _method;
 
-	/**
-	 * Unfortunately Jasmin expects ".end method" after each method. Thus we've
-	 * to check for every of the method's attributes if it's the last one and
-	 * print ".end method" then.
-	 */
-	private final void printEndMethod(Attribute attr) {
-		Attribute[] attributes = _method.getAttributes();
-
-	}
-
 	public void visitDeprecated(Deprecated attribute) {
-		printEndMethod(attribute);
 	}
 
 	public void visitSynthetic(Synthetic attribute) {
-		if (_method != null)
-			printEndMethod(attribute);
 	}
 
 	public void visitMethod(Method method) {
 		this._method = method; // Remember for use in subsequent visitXXX calls
 
 		out.println("\n  " + Utility.accessToString(_method.getAccessFlags())
-				+ " " + _method.getName() + _method.getSignature());
+				+ " " + _method.getReturnType() + " " + _method.getName());
 
 	}
 
@@ -123,15 +109,11 @@ public final class DecompilingVisitor extends org.apache.bcel.classfile.EmptyVis
 		String[] names = e.getExceptionNames();
 		for (int i = 0; i < names.length; i++)
 			out.println("    throws " + names[i].replace('.', '/'));
-
-		printEndMethod(e);
 	}
 
 	private Hashtable map;
 
 	public void visitCode(Code code) {
-		int label_counter = 0;
-
 		MethodGen mg = new MethodGen(_method, clazzname, cp);
 		InstructionList il = mg.getInstructionList();
 		InstructionHandle[] ihs = il.getInstructionHandles();
@@ -142,8 +124,8 @@ public final class DecompilingVisitor extends org.apache.bcel.classfile.EmptyVis
 
 		for (int i = 0; i < lvs.length; i++) {
 			LocalVariableGen l = lvs[i];
-			out.println("    // var " + l.getIndex() + " is \"" + l.getName()
-					+ "\" " + l.getType().getSignature() + " from "
+			out.println("    // local variable " + l.getIndex() + " is \"" + l.getName()
+					+ "\" " + l.getType() + " from "
 					+ l.getStart().getPosition() + " to "
 					+ l.getEnd().getPosition());
 		}
@@ -206,8 +188,6 @@ public final class DecompilingVisitor extends org.apache.bcel.classfile.EmptyVis
 					+ c.getEndPC().getPosition() + " using "
 					+ c.getHandlerPC().getPosition());
 		}
-
-		printEndMethod(code);
 	}
 }
 

@@ -23,7 +23,7 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: Continuation.java,v 1.2 2004/04/23 23:07:07 joerg Exp $
+ * @version CVS $Id: Continuation.java,v 1.3 2004/06/26 18:29:30 stephan Exp $
  */
 public class Continuation {
     private ContinuationStack stack;
@@ -72,6 +72,8 @@ public class Continuation {
      * Stop the running continuation.
      */
     public static void suspend() {
+    	
+    	System.out.println("suspend()");
 
         Continuation continuation = Continuation.currentContinuation();
 
