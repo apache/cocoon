@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.40 $ $Date: 2000-09-28 19:50:42 $
+ * @version CVS $Revision: 1.1.2.41 $ $Date: 2000-10-01 00:19:53 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -48,6 +48,7 @@
     import org.apache.avalon.SAXConfigurationBuilder;
     import org.apache.avalon.utils.Parameters;
 
+    import org.apache.cocoon.Cocoon;
     import org.apache.cocoon.ProcessingException;
     import org.apache.cocoon.environment.Environment;
     import org.apache.cocoon.generation.Generator;
@@ -74,6 +75,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     private Parameters emptyParam = new Parameters();
     private Generator generator_error_handler = null;
     private Configuration generator_config_error_handler = null;
+    private Transformer transformer_link_translator = null;
+    private Configuration transformer_config_link_translator = null;
 
     <!-- generate variables for all components -->
     /** The generators */
@@ -184,8 +187,11 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       confBuilder.endDocument ();
       Configuration cconf2 = confBuilder.getConfiguration();
       generator_config_error_handler = cconf2;
-      generator_error_handler =
+      generator_error_handler = 
         (Generator) load_component ("org.apache.cocoon.sitemap.ErrorNotifier", cconf2);
+      transformer_config_link_translator = cconf2;
+      transformer_link_translator = 
+        (Transformer) load_component ("org.apache.cocoon.sitemap.LinkTranslator", cconf2);
 
       /* Configure generators */
       <xsl:call-template name="config-components">
@@ -745,6 +751,10 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
             return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, listOfLists, environment);
           }
         </xsl:for-each>
+        // performing link translation
+        if (environment.getObjectModel().containsKey(Cocoon.LINK_OBJECT)) {
+            pipeline.addTransformer (transformer_link_translator, null, transformer_config_link_translator, emptyParam);
+        }
       </xsl:if>
     </xsl:if>
     <xsl:variable name="component-type">
