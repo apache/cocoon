@@ -51,26 +51,32 @@
 package org.apache.cocoon.components.cron;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
 
 
 /**
  * A simple test CronJob.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: TestCronJob.java,v 1.1 2003/09/03 16:04:02 giacomo Exp $
+ * @version CVS $Id: TestCronJob.java,v 1.2 2003/09/05 10:22:39 giacomo Exp $
  *
  * @since 2.1.1
  */
 public class TestCronJob
-    extends AbstractLogEnabled
-    implements CronJob, Configurable, Component {
-    //~ Instance fields ------------------------------------------------------------------------------------------------
+extends AbstractLogEnabled
+implements CronJob, Configurable, Component, ConfigurableCronJob {
+    /** Parameter key for the message */
+    public static final String PARAMETER_MESSAGE = "TestCronJob.Parameter.Message";
+
+    /** Parameter key for the sleep value */
+    public static final String PARAMETER_SLEEP = "TestCronJob.Parameter.Sleep";
 
     /** The configured message */
     private String m_msg;
@@ -78,13 +84,11 @@ public class TestCronJob
     /** The configured sleep time */
     private int m_sleep;
 
-    //~ Methods --------------------------------------------------------------------------------------------------------
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(final Configuration config)
-        throws ConfigurationException {
+    throws ConfigurationException {
         m_msg = config.getChild("msg").getValue("I was not configured");
         m_sleep = config.getChild("sleep").getValueAsInteger(11000);
     }
@@ -93,7 +97,8 @@ public class TestCronJob
      * @see org.apache.cocoon.components.cron.CronJob#execute(java.lang.String)
      */
     public void execute(String name) {
-        getLogger().info("CronJob " + name + " launched at " + new Date() + " with message: " + m_msg);
+        getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + m_msg +
+                         "' and sleep timeout of " + m_sleep + "ms");
 
         try {
             Thread.sleep(m_sleep);
@@ -101,6 +106,17 @@ public class TestCronJob
             //getLogger().error("CronJob " + name + " interrupted", ie);
         }
 
-        getLogger().info("CronJob " + name + " finished at " + new Date() + " with message: " + m_msg);
+        getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
+                         "' and sleep timeout of " + m_sleep + "ms");
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.cron.ConfigurableCronJob#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
+     */
+    public void setup(Parameters params, Map objects) {
+        if (null != params) {
+            m_msg = params.getParameter(PARAMETER_MESSAGE, m_msg);
+            m_sleep = params.getParameterAsInteger(PARAMETER_SLEEP, m_sleep);
+        }
     }
 }
