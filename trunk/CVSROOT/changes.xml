@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.77 2000-05-23 06:02:18 balld Exp $
+  $Id: changes.xml,v 1.78 2000-05-30 21:13:10 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,10 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="DB" type="fix" due-to="Antonio Cabezuelo Vivo" due-to-email="antonio.cabezuelo@eresmas.com">
-   fixed null pointer exception in XIncludeProcessor
+  <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
+   Added new installation case that should provide insights for newbies.
   </action>
-
+  <action dev="DB" type="fix" due-to="Antonio Cabezuelo Vivo" due-to-email="antonio.cabezuelo@eresmas.com">
+   fixed null pointer exception in XIncludeProcessor.
+  </action>
   <action dev="SM" type="add">
    Added printer friendly skin so tha documentation can now be generated to
    be printer friendly when needed.
