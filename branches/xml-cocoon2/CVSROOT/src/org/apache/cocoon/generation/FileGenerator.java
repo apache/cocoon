@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-30 14:17:21 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-05-03 12:16:36 $
  */
 public class FileGenerator extends ComposerGenerator
 implements Cacheable {
@@ -46,6 +46,8 @@ implements Cacheable {
     private InputSource inputSource;
     /** The system ID of the input source */
     private String      systemID;
+    /** Last modification date of the source */
+    private long        lastModificationDate;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -67,12 +69,26 @@ implements Cacheable {
 
     /**
      * Setup the file generator.
+     * Try to get the last modification date of the source for caching.
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.inputSource = super.resolver.resolveEntity(null, super.source);
         this.systemID = this.inputSource.getSystemId();
+        if (this.systemID.startsWith("file:") == true) {
+            File xmlFile = new File(this.systemID.substring("file:".length()));
+            this.lastModificationDate = xmlFile.lastModified();
+        } else {
+            try {
+                java.net.URL u= new java.net.URL(this.systemID);
+                java.net.URLConnection conn = u.openConnection();
+                this.lastModificationDate = u.openConnection().getLastModified();
+            } catch (java.net.MalformedURLException local) {
+                // we ignore this at this stage
+                this.lastModificationDate = 0; // no caching!
+            }
+        }
     }
 
     /**
@@ -82,8 +98,8 @@ implements Cacheable {
      * @return The generated key hashes the src
      */
     public long generateKey() {
-        if (this.systemID.startsWith("file:") == true) {
-            return HashUtil.hash(super.source);
+        if (this.lastModificationDate != 0) {
+            return HashUtil.hash(this.systemID);
         }
         return 0;
     }
@@ -95,9 +111,8 @@ implements Cacheable {
      *         component is currently not cacheable.
      */
     public CacheValidity generateValidity() {
-        if (this.systemID.startsWith("file:") == true) {
-            File xmlFile = new File(this.systemID.substring("file:".length()));
-            return new TimeStampCacheValidity(xmlFile.lastModified());
+        if (this.lastModificationDate != 0) {
+            return new TimeStampCacheValidity(this.lastModificationDate);
         }
         return null;
     }
