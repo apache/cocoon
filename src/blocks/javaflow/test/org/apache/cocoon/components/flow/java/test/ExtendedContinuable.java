@@ -18,7 +18,7 @@ package org.apache.cocoon.components.flow.java.test;
 
 public class ExtendedContinuable extends SimpleContinuable {
 
-    public void test() {
-        super.suspend();
+    public void doExtendedTest() {
+        super.doSuspendTest();
     }
 }

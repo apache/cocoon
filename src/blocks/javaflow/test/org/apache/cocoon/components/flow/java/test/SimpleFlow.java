@@ -26,12 +26,12 @@ import org.apache.lucene.search.*;*/
 public class SimpleFlow extends AbstractSimpleFlow {
 
     public SimpleFlow() {
-        if (Continuation.currentContinuation() != null)
-            throw new RuntimeException("Conitnuation should not exist");
+        /*if (Continuation.currentContinuation() != null)
+            throw new RuntimeException("Conitnuation should not exist");*/
         //sendPageAndWait("should not stop");
     }
 
-    /*public boolean run() {
+    public boolean doSimpleTest() {
         System.out.println("start of flow");
         float a = 1;
         sendPageAndWait("getNumberA");
@@ -40,13 +40,14 @@ public class SimpleFlow extends AbstractSimpleFlow {
         sendPage("result", new VarMap().add("result", a + 1));
         System.out.println("end of flow");
         return true;
-    }*/
+    }
 				
-    public void testNew(Locale locale) {
+    public void doNewTest() {
+        Locale locale = null;
         FormContext formContext = new FormContext(getRequest(), locale);
     }
 
-    public void testCatch() {
+    public void doCatchTest() {
         try {
             sendPageAndWait("getNumberA");
             float a = Float.parseFloat(getRequest().getParameter("a"));
@@ -69,11 +70,11 @@ public class SimpleFlow extends AbstractSimpleFlow {
         //nothing
     }
 
-    public void testAbstract() {
+    public void doAbstractTest() {
         super.parent();
     }
 
-    public void testDelegate() {
+    public void doDelegateTest() {
         CalculatorFlow flow = new CalculatorFlow();
         flow.run();
     }
@@ -113,6 +114,15 @@ public class SimpleFlow extends AbstractSimpleFlow {
             hits = searcher.search(query);
         }
     }*/
+    
+    public void doExceptionTest() throws Exception {
+        
+         while(true) {
+            
+             this.sendPageAndWait("test.jxt");
+             throw new FooException("test", 123);
+         }
+     }
 }
 
 class FooInner {

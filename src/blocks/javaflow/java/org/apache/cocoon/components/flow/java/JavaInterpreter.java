@@ -41,7 +41,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaInterpreter.java,v 1.7 2004/06/04 14:02:38 stephan Exp $
+ * @version CVS $Id: JavaInterpreter.java,v 1.8 2004/06/14 14:53:56 stephan Exp $
  */
 public class JavaInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -68,7 +68,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-
+        
         javascriptclassloader = new JavaScriptCompilingClassLoader(Thread.currentThread().getContextClassLoader());
         try {
             javascriptclassloader.service(this.manager);
@@ -86,9 +86,9 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         int prefixLen = ACTION_METHOD_PREFIX.length();
         return name.substring(prefixLen, prefixLen + 1).toLowerCase() + name.substring(prefixLen + 1);
     }
-
+    
     public void initialize() throws Exception {
-
+        
         if (getLogger().isDebugEnabled())
             getLogger().debug("initialize java flow interpreter");
 
