@@ -547,7 +547,7 @@ PetStore.prototype.getProductListByCategory = function(key, skipResults, maxResu
 PetStore.prototype.getProductRowCountByCategory = function(key) {
     var conn = this.getConnection(this.poolId);
     var rs = conn.query("select count(*) as ROWCOUNT from PRODUCT where CATEGORY = ?",
-			[key]);
+                        [key]);
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
     return Number(result);
@@ -556,7 +556,7 @@ PetStore.prototype.getProductRowCountByCategory = function(key) {
 PetStore.prototype.getItemRowCountByProduct = function(key) {
     var conn = this.getConnection(this.poolId);
     var rs = conn.query("select count(*) as ROWCOUNT from ITEM where PRODUCTID = ?",
-			[key]);
+                        [key]);
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
     return Number(result);

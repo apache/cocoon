@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -74,6 +75,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
+import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.continuations.Continuation;
 import org.apache.avalon.framework.logger.Logger;
 
@@ -83,7 +85,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.9 2003/07/06 07:09:18 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.10 2003/07/06 23:27:24 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -115,6 +117,7 @@ public class FOM_Cocoon extends ScriptableObject {
         defineClass(scope, FOM_Session.class);
         defineClass(scope, FOM_Context.class);
         defineClass(scope, FOM_Log.class);
+        defineClass(scope, FOM_WebContinuation.class);
     }
 
     public void setup(FOM_JavaScriptInterpreter interp,
@@ -140,8 +143,8 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
 
-    private void forwardTo(String uri, Object bizData,
-                           Continuation continuation) 
+    private FOM_WebContinuation forwardTo(String uri, Object bizData,
+                                          Continuation continuation) 
         throws Exception {
         WebContinuation wk = null;
         if (continuation != null) {
@@ -161,13 +164,22 @@ public class FOM_Cocoon extends ScriptableObject {
         
         interpreter.forwardTo(getParentScope(), this, redUri,
                               bizData, wk, environment);
+
+        FOM_WebContinuation result = null;
+        if (wk != null) {
+            result = new FOM_WebContinuation(wk);
+            result.setParentScope(getParentScope());
+            result.setPrototype(getClassPrototype(getParentScope(),
+                                                  result.getClassName()));
+        }
+        return result;
     }
 
-    public void jsFunction_sendPage(String uri, 
-                                    Object obj, 
-                                    Object continuation) 
+    public FOM_WebContinuation jsFunction_sendPage(String uri, 
+                                                   Object obj, 
+                                                   Object continuation) 
         throws Exception {
-        forwardTo(uri, obj, (Continuation)unwrap(continuation)); 
+        return forwardTo(uri, obj, (Continuation)unwrap(continuation)); 
     }
                                     
 
@@ -669,6 +681,70 @@ public class FOM_Cocoon extends ScriptableObject {
         }
     }
 
+    public static class FOM_WebContinuation extends ScriptableObject {
+        
+        WebContinuation wk;
+
+        public FOM_WebContinuation() {
+        }
+
+        public FOM_WebContinuation(Object wk) {
+            this.wk = (WebContinuation)unwrap(wk);
+        }
+
+        public String getClassName() {
+            return "FOM_WebContinuation";
+        }
+
+        public String jsGet_id() {
+            return wk.getId();
+        }
+
+        public FOM_WebContinuation jsFunction_getParent() {
+            WebContinuation parent = wk.getParentContinuation();
+            if (parent == null) return null;
+            FOM_WebContinuation pwk = new FOM_WebContinuation(parent);
+            pwk.setParentScope(getParentScope());
+            pwk.setPrototype(getClassPrototype(getParentScope(), 
+                                               pwk.getClassName()));
+            return pwk;
+        }
+
+        public NativeArray jsFunction_getChildren() throws Exception {
+            List list = wk.getChildren();
+            NativeArray arr = 
+                (NativeArray)org.mozilla.javascript.Context.getCurrentContext().newObject(getParentScope(), 
+                                               "Array",
+                                               new Object[]{new Integer(list.size())});
+            Iterator iter = list.iterator();
+            for (int i = 0; iter.hasNext(); i++) {
+                WebContinuation child = (WebContinuation)iter.next();
+                FOM_WebContinuation cwk = new FOM_WebContinuation(child);
+                cwk.setParentScope(getParentScope());
+                cwk.setPrototype(getClassPrototype(getParentScope(), 
+                                                   cwk.getClassName()));
+                arr.put(i, arr, cwk);
+            }
+            return arr;
+        }
+
+        public void jsFunction_invalidate() throws Exception {
+            ContinuationsManager contMgr = null;
+            FOM_Cocoon cocoon = 
+                (FOM_Cocoon)getProperty(getTopLevelScope(this),
+                                        "cocoon");
+            ComponentManager componentManager = 
+                cocoon.getComponentManager();
+            contMgr = (ContinuationsManager)
+                componentManager.lookup(ContinuationsManager.ROLE);
+            contMgr.invalidateWebContinuation(wk);
+        }
+
+        public WebContinuation getWebContinuation() {
+            return wk;
+        }
+    }
+
     public FOM_Request jsGet_request() {
         if (request != null) {
             return request;
@@ -748,4 +824,42 @@ public class FOM_Cocoon extends ScriptableObject {
         return obj;
     }
 
+    // Make everything available to JavaScript objects implemented in Java:
+
+    public Request getRequest() {
+        return jsGet_request().request;
+    }
+
+    public Session getSession() {
+        return jsGet_session().session;
+    }
+
+    public Response getResponse() {
+        return jsGet_response().response;
+    }
+
+    public org.apache.cocoon.environment.Context getContext() {
+        return jsGet_context().context;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public ComponentManager getComponentManager() {
+        return componentManager;
+    }
+
+    public FOM_JavaScriptInterpreter getInterpreter() {
+        return interpreter;
+    }
+
+    public FOM_WebContinuation makeWebContinuation(WebContinuation wk) {
+        if (wk == null) return null;
+        FOM_WebContinuation result = new FOM_WebContinuation(wk);
+        result.setParentScope(getParentScope());
+        result.setPrototype(getClassPrototype(getParentScope(), 
+                                              result.getClassName()));
+        return result;
+    }
 }

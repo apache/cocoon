@@ -24,7 +24,7 @@
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="/samples/flow/calc/screens/{1}.gt"/>
+          <map:parameter name="file" value="/samples/garbage/calc/screens/{1}.gt"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>

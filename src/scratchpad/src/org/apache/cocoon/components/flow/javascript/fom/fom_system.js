@@ -5,6 +5,6 @@ FOM_Cocoon.prototype.sendPageAndWait = function(uri, bizData) {
     FOM_Cocoon.suicide();
 }
 
-FOM_Cocoon.prototype.handleContinuation = function(k) {
-    k(k);
+FOM_Cocoon.prototype.handleContinuation = function(k, wk) {
+    k(wk);
 }

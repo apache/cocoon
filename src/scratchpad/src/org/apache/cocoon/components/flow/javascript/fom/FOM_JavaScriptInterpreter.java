@@ -85,13 +85,14 @@ import org.mozilla.javascript.*;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_WebContinuation;
 /**
  * Interface with the JavaScript interpreter.
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.6 2003/07/06 07:09:19 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.7 2003/07/06 23:27:24 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -581,9 +582,12 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             //}
             //}
             //cocoon.setParameters(parameters);
-            Object[] args = new Object[] {k};
+            Object[] args = new Object[] {k, 
+                                          cocoon.makeWebContinuation(wk)};
             try {
-                ScriptableObject.callMethod(cocoon, "handleContinuation", args);
+                ScriptableObject.callMethod(cocoon, 
+                                            "handleContinuation", 
+                                            args);
             } catch (JavaScriptException ex) {
                 EvaluatorException ee =
                     Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
@@ -624,13 +628,13 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         return e;
     }
 
-    // package access as this is called by FOM_Cocoon
-    void forwardTo(Scriptable scope, FOM_Cocoon cocoon,
-                           String uri, Object bizData,
-                           WebContinuation continuation,
-                           Environment environment)
+    public void forwardTo(Scriptable scope, FOM_Cocoon cocoon,
+                          String uri, Object bizData,
+                          WebContinuation continuation,
+                          Environment environment)
         throws Exception {
-        setupView(scope, cocoon ,environment);
+        setupView(scope, cocoon , environment, 
+                  cocoon.makeWebContinuation(continuation));
         super.forwardTo(uri, bizData, continuation, environment);
     }
 
@@ -639,13 +643,14 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                     String uri, Object bizData, 
                     OutputStream out, Environment environment)
         throws Exception {
-        setupView(scope, cocoon, environment);
+        setupView(scope, cocoon, environment, null);
         return super.process(uri, bizData, out, environment);
     }
     
     private void setupView(Scriptable scope,
                            FOM_Cocoon cocoon,
-                           Environment environment) {
+                           Environment environment,
+                           FOM_WebContinuation kont) {
         Map objectModel = environment.getObjectModel();
         // Make the JS live-connect objects available to the view layer
         FOM_JavaScriptFlowHelper.setPackages(objectModel,
@@ -655,13 +660,17 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                                                 (Scriptable)ScriptableObject.getProperty(scope,
                                                                                          "java"));
         // Make the FOM objects available to the view layer
-        FOM_JavaScriptFlowHelper.setRequest(objectModel,
+        FOM_JavaScriptFlowHelper.setFOM_Request(objectModel,
                                             cocoon.jsGet_request());
-        FOM_JavaScriptFlowHelper.setResponse(objectModel,
+        FOM_JavaScriptFlowHelper.setFOM_Response(objectModel,
                                              cocoon.jsGet_response());
-        FOM_JavaScriptFlowHelper.setSession(objectModel,
+        FOM_JavaScriptFlowHelper.setFOM_Session(objectModel,
                                             cocoon.jsGet_session());
-        FOM_JavaScriptFlowHelper.setContext(objectModel,
-                                            cocoon.jsGet_context());
+        FOM_JavaScriptFlowHelper.setFOM_Context(objectModel,
+                                                cocoon.jsGet_context());
+        if (kont != null) {
+            FOM_JavaScriptFlowHelper.setFOM_WebContinuation(objectModel, 
+                                                            kont);
+        }
     }
 }

@@ -2432,20 +2432,23 @@ public class JXTemplateGenerator extends ComposerGenerator {
                 }
                 for (; i <= end && iter.hasNext(); i++) {
                     Object value;
-                    if (xpath) {
-                        Pointer ptr = (Pointer)iter.next();
+                    JXPathContext localJXPathContext = null;
+                    value = iter.next();
+                    if (value instanceof Pointer) {
+                        Pointer ptr = (Pointer)value;
+                        localJXPathContext = 
+                            jxpathContext.getRelativeContext(ptr);
                         try {
                             value = ptr.getNode();
                         } catch (Exception exc) {
                             throw new SAXParseException(exc.getMessage(),
                                                         ev.location,
-                                                        exc);
+                                                        null);
                         }
                     } else {
-                        value = iter.next();
+                        localJXPathContext =
+                            jxpathContextFactory.newContext(null, value);
                     }
-                    JXPathContext localJXPathContext = 
-                        jxpathContextFactory.newContext(null, value);
                     localJXPathContext.setVariables(variables);
                     if (startForEach.var != null) {
                         localJexlContext.put(startForEach.var, value);

@@ -120,22 +120,22 @@ public class GarbageGenerator extends ComposerGenerator {
             }
         }
         Object bean = FlowHelper.getContextObject(objectModel);
-        WebContinuation kont = FlowHelper.getWebContinuation(objectModel);
+        Object kont = FOM_JavaScriptFlowHelper.getFOM_WebContinuation(objectModel);
         setContext(bean, kont,
-                   FOM_JavaScriptFlowHelper.getRequest(objectModel),
-                   FOM_JavaScriptFlowHelper.getResponse(objectModel),
-                   FOM_JavaScriptFlowHelper.getSession(objectModel),
-                   FOM_JavaScriptFlowHelper.getContext(objectModel),
+                   FOM_JavaScriptFlowHelper.getFOM_Request(objectModel),
+                   FOM_JavaScriptFlowHelper.getFOM_Response(objectModel),
+                   FOM_JavaScriptFlowHelper.getFOM_Session(objectModel),
+                   FOM_JavaScriptFlowHelper.getFOM_Context(objectModel),
                    parameters);
     }
     
     protected void setContext(Object contextObject,
-                            WebContinuation kont,
-                            Object request,
-                            Object response,
-                            Object session,
-                            Object context,
-                            Parameters parameters) {
+			      Object kont,
+			      Object request,
+			      Object response,
+			      Object session,
+			      Object context,
+			      Parameters parameters) {
         jxpathContext = JXPathContext.newContext(contextObject);
         Variables varScope = jxpathContext.getVariables();
         varScope.declareVariable("flowContext", contextObject);
