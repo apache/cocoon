@@ -61,7 +61,7 @@ public class PageLabelLinkService extends DefaultLinkService {
             return this.getRefreshLinkURI();
         }
         if (this.labelManager == null) {
-            super.getLinkURI(event);
+            return super.getLinkURI(event);
         }
 
         String requestParameterName = this.labelManager.getRequestParameterName();
