@@ -14,12 +14,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!--+
     | Cocoon GUMP Descriptor
     |
     | CVS $Id$
     +-->
-
 <module name="cocoon-2.1">
 
   <url href="http://cocoon.apache.org/"/>
@@ -52,7 +52,7 @@
     <depend project="avalon-framework-api"/>
     <depend project="avalon-framework-legacy"/>
     <depend project="avalon-framework-impl"/>
-    <depend project="excalibur-compatibility"/>
+    <depend project="excalibur-legacy" id="compatibility"/>
     <depend project="excalibur-instrument"/>
     <depend project="excalibur-instrument-manager"/>
     <depend project="excalibur-sourceresolve"/>
@@ -62,7 +62,7 @@
     <depend project="excalibur-component"/>
     <depend project="excalibur-logger"/>
     <depend project="excalibur-event" inherit="runtime"/>
-    <depend project="excalibur-i18n"/>
+    <depend project="excalibur-legacy" id="i18n"/>
     <depend project="excalibur-testcase"/>
 
     <depend project="jakarta-regexp"/>
