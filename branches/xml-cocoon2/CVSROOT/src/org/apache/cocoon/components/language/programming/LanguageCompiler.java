@@ -17,7 +17,7 @@ import java.io.IOException;
  * This interface defines a compiler's functionality for all
  * (Java-based) compiled languages
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:39 $
+ * @version $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:30 $
  * @since 2.0
  */
 public interface LanguageCompiler extends Component {

@@ -27,7 +27,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-25 18:48:50 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-29 18:30:45 $
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer {
 

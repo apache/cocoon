@@ -19,7 +19,7 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-22 20:42:00 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-07-29 18:30:39 $
  */
 public class PatternTranslator extends PatternMatcher {
 

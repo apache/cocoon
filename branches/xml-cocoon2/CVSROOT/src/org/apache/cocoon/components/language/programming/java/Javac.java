@@ -15,7 +15,7 @@ import org.apache.cocoon.components.language.programming.*;
 /**
  * This class wraps the Sun's built-in Java compiler.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:40 $
+ * @version $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:31 $
  * @since 2.0
  */
 

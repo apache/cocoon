@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-22 20:41:57 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-29 18:30:39 $
  */
 public interface SitemapComponent extends Component {
 

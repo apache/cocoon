@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.14 $ $Date: 2000-07-25 18:48:36 $
+ * @version CVS $Revision: 1.1.4.15 $ $Date: 2000-07-29 18:30:38 $
  */
 public class CocoonServlet extends HttpServlet {
     private Cocoon cocoon=null;

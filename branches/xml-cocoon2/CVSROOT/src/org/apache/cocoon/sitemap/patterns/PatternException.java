@@ -14,7 +14,7 @@ package org.apache.cocoon.sitemap.patterns;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:59 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:39 $
  */
 public class PatternException extends Exception {
 

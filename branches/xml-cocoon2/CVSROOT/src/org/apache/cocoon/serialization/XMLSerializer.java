@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:53 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:37 $
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */

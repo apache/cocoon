@@ -11,7 +11,7 @@ package org.apache.cocoon.components.language.markup.xsp;
  * Constants used by XSP classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:36 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:29 $
  */
 public interface Constants {
   public static final String XSP_PREFIX = "xsp";

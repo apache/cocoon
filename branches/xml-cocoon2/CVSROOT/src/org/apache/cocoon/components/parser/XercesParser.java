@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-22 20:41:42 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:33 $
  */
 public class XercesParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, DOMFactory {

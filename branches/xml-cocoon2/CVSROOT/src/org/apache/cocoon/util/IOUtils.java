@@ -25,7 +25,7 @@ import java.net.MalformedURLException;
  * utility methods
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:02 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:42 $
  */
 public class IOUtils {
   /**

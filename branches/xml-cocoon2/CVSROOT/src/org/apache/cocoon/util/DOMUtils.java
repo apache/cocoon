@@ -42,7 +42,7 @@ import org.apache.xalan.xpath.xml.XMLParserLiaisonDefault;
  * add (needed!) DOM support.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:02 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:42 $
  */
 public class DOMUtils {
   // *** Start Xalan/Xerces kludge ***

@@ -52,7 +52,7 @@ import org.w3c.dom.Text;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:37 $
  */
 public class ImageSerializer extends DOMBuilder implements Serializer, Composer {
    

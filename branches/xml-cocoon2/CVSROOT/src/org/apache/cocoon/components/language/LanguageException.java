@@ -11,7 +11,7 @@ package org.apache.cocoon.components.language;
  * The language exception.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:31 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:27 $
  */
 public class LanguageException extends Exception {
   /**

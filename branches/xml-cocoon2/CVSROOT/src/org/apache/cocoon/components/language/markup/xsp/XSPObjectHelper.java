@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  * Base class for XSP's object model manipulation logicsheets
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:36 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:29 $
  */
 public class XSPObjectHelper implements Constants {
   /**

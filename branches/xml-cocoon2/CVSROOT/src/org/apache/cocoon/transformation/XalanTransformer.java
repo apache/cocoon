@@ -39,7 +39,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-28 16:20:49 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-29 18:30:40 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {

@@ -20,7 +20,7 @@ import org.apache.cocoon.util.IOUtils;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:30 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:26 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**

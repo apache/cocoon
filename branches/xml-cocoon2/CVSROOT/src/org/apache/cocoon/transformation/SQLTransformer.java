@@ -34,7 +34,7 @@ import java.util.Enumeration;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:01 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:40 $ $Author: rubys $
  */
 
 public class SQLTransformer extends AbstractTransformer {

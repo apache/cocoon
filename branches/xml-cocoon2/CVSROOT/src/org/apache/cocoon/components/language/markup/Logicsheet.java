@@ -31,7 +31,7 @@ import java.net.MalformedURLException;
  * This class should probably be based on an interface...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:32 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:27 $
  */
 public class Logicsheet {
   /**

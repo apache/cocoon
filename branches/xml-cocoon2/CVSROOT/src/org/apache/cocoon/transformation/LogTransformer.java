@@ -43,7 +43,7 @@ import java.util.Date;
  * 
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:01 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:40 $
  *
  */
 public class LogTransformer extends AbstractTransformer {

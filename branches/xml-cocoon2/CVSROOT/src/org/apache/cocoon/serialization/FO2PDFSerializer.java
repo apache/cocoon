@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:52 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:37 $
  *
  */
 public class FO2PDFSerializer extends DocumentHandlerWrapper 

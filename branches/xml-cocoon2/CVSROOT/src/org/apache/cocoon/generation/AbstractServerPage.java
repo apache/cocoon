@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-28 16:20:17 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:34 $
  */
 public abstract class AbstractServerPage
   extends ComposerGenerator

@@ -18,7 +18,7 @@ import java.io.IOException;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:30 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:26 $
  */
 public interface ClassLoaderManager extends Component {
   /**

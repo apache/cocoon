@@ -24,7 +24,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-22 20:41:39 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:30 $
  */
 public abstract class AbstractProgrammingLanguage
   extends AbstractNamedComponent
