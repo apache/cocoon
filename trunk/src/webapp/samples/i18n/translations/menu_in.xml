@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Indonesian message catalogue file for menu in Cocoon 2 i18n sample -->
-<!-- $Id: menu_in.xml,v 1.1 2003/03/26 07:32:20 kpiroumian Exp $ -->
+
+<!--+
+    | Indonesian message catalogue file for menu in Cocoon 2 i18n sample
+    |
+    | CVS $Id: menu_in.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="in">
     <message key="Apache Cocoon i18n Samples">Contoh Apache Cocoon i18n</message>
     <message key="Samples">Contoh</message>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Russian message catalogue file for Cocoon 2 i18n sample -->
-<!-- CVS $Id: messages_ru.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+
+<!--+
+    | Russian message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_ru.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="ru">
     <message key="count_title">На эту страницу заходили {0} раз(а). В последний раз {1}.</message>
     <message key="a_key">Это значение по ключу.</message>
