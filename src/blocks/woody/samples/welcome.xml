@@ -16,6 +16,7 @@
   <sample name="Various" href="form1">This sample shows validation, event handling and various Woody features.</sample>
   <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form.</sample>
+  <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
  </group>
 
  <group name="Binding Samples">

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
+  <title>Car selector</title>
+  <para>This example illustrates how you can programmatically update the
+    content of a selection list. See the code in the "CarSelectorHandler" class
+    to see how this is done.</para>
+  <para>After selecting a make, press the "Update models" button to see the
+    corresponding models. It would be nice to do this with an automatic submit
+    when the make list changes, but no effort has been done yet in Woody to
+    standarize Javascript-integration, so I've left that out for now.</para>
+  <content>
+    <wt:form-template action="carselector" method="POST">
+      <table border="1">
+        <tr>
+          <td valign="top"><wt:widget-label id="make"/></td>
+          <td valign="top"><wt:widget id="make"/></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <wt:widget id="updatemodels"/>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="model"/></td>
+          <td valign="top"><wt:widget id="model"/></td>
+        </tr>
+      </table>
+
+      <input type="submit"/>
+    </wt:form-template>
+  </content>
+</page>
