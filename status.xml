@@ -199,6 +199,15 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="TC" type="fix" fixes-bug="15820" due-to="John R. Daily" due-to-email="john@geekhavoc.com">
+    Fixed NPE if ESQL does not get a connection
+  </action>
+  <action dev="TC" type="fix" fixes-bug="14286" due-to="Geoff Howard" due-to-email="javageoff@yahoo.com">
+    Fixed SQL injection vulnerability of DatabaseAuthenticatorAction
+  </action>
+  <action dev="TC" type="fix" fixes-bug="18547" due-to="Neil Bacon" due-to-email="nbacon@pinnaclesoftware.com.au">
+    ESQL "Auto" support for sybase ASE. New database detection method.
+  </action>
   <action dev="CZ" type="fix">
     Removing dependency from the Cocoon core to JTidy.
   </action>
