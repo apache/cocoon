@@ -26,6 +26,7 @@ import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -47,7 +48,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.8 2004/05/01 18:06:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
@@ -88,7 +89,7 @@ implements CacheableProcessingComponent {
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         return this.inputSource.getURI();
     }
 
@@ -114,23 +115,8 @@ implements CacheableProcessingComponent {
                                   " resolved to " + this.inputSource.getURI());
             }
             SourceUtil.parse(this.manager, this.inputSource, super.xmlConsumer);
-
         } catch (SAXException e) {
-            final Exception cause = e.getException();
-            if (cause != null) {
-                if (cause instanceof ProcessingException) {
-                    throw (ProcessingException)cause;
-                }
-                if (cause instanceof IOException) {
-                    throw (IOException)cause;
-                }
-                if (cause instanceof SAXException) {
-                    throw (SAXException)cause;
-                }
-                throw new ProcessingException("Could not read resource " +
-                                              this.inputSource.getURI(), cause);
-            }
-            throw e;
+            SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
     }
 }

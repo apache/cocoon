@@ -32,11 +32,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * JPath Transformer.
- *
- * <p>
+ * @cocoon.sitemap.component.documentation
  *  Transformer implementation of the JPath XSP tag library.
- * </p>
+ * 
+ * @cocoon.sitemap.component.name   jpath
+ * @cocoon.sitemap.component.logger sitemap.transformer.jpath
+ *
  *
  * <p>
  *  This transformer (so far) supports the following jpath elements:
@@ -53,7 +54,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: JPathTransformer.java,v 1.5 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class JPathTransformer
 extends AbstractSAXTransformer implements Initializable {

@@ -22,28 +22,19 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * An extension of DirectoryGenerators that adds extra attributes for MP3
  * files.
- * <p>
- * Following extra attributes added to valid MP3 files:
- * <blockquote>
- *   <dl>
- *   <dt> frequency
- *   <dd> the frequency of the MP3 file in KHz (most common: 44.1)
- *   <dt> bitrate
- *   <dd> the bitrate of the MP3 file in Kbit, from 8 to 448.
- *   <dt> mode
- *   <dd> the mode of the MP3 file, one of the following: Stereo, Joint stereo,
- *        Dual channel, Single channel.
- *   <dt> variable-rate (optional)
- *   <dd> value is "yes" if VBR header is detected
- *   <dt> title, artitst, album, year, comment, track, genre (all optional)
- *   <dd> values obtained from MP3 ID3 tag
- *   </dl>
- * </blockquote>
+ * 
+ * @cocoon.sitemap.component.name   mp3directory
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.mp3directory
+ * @cocoon.sitemap.component.documentation.caching
+ *               Uses the last modification date of the directory and the contained files
+ * 
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {

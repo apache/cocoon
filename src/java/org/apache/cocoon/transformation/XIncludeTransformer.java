@@ -50,13 +50,23 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
+ * @cocoon.sitemap.component.documentation
+ * Implementation of an XInclude transformer.
+ * 
+ * @cocoon.sitemap.component.name   xinclude
+ * @cocoon.sitemap.component.logger sitemap.transformer.xinclude
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ * 
  * Implementation of an XInclude transformer. It supports xml:base attributes,
  * XPointer fragment identifiers (see the xpointer package to see what exactly is
  * supported), fallback elements, and does xinclude processing on the included content
  * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.19 2004/03/22 13:41:44 joerg Exp $
+ * @version CVS $Id$
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -397,7 +407,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                             xmlConsumer.setDocumentLocator(locator);
                     } catch (ResourceNotFoundException e) {
                         useFallback = true;
-                        fallBackException = new CascadingException("Resouce not found: " + url.getURI());
+                        fallBackException = new CascadingException("Resource not found: " + url.getURI());
                         getLogger().error("xIncluded resource not found: " + url.getURI(), e);
                     } catch (ParseException e) {
                         // this exception is thrown in case of an invalid xpointer expression
