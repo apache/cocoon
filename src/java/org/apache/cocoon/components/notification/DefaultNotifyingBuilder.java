@@ -69,7 +69,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Marc Liyanage (futureLAB AG)
- * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.1 2003/03/09 00:09:06 pier Exp $
+ * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.2 2003/03/16 14:09:28 stefano Exp $
  */
 public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
 
@@ -88,7 +88,7 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
             Throwable t = (Throwable) o;
             SimpleNotifyingBean n = new SimpleNotifyingBean(sender);
             n.setType(Notifying.ERROR_NOTIFICATION);
-            n.setTitle("An error occurred");
+            n.setTitle("An Error Occurred");
             if (t != null) {
                 n.setSource(t.getClass().getName());
 
@@ -148,7 +148,7 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
         } else {
             SimpleNotifyingBean n = new SimpleNotifyingBean(sender);
             n.setType(Notifying.UNKNOWN_NOTIFICATION);
-            n.setTitle("Object notification");
+            n.setTitle("Object Notification");
             n.setMessage(String.valueOf(o));
             n.setDescription("No details available.");
             return n;
@@ -204,7 +204,7 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
             cause = ((java.sql.SQLException) t).getNextException();
         }
         if (cause != null) {
-            out.print("Original exception : ");
+            out.print("Original Exception: ");
             cause.printStackTrace(out);
             out.println();
             // Recurse
