@@ -64,7 +64,7 @@ import java.util.Locale;
  * (pointing to an attribute or text-node) to and from a specific Woody
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.12 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.13 2004/02/29 06:07:37 vgritsenko Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -120,8 +120,8 @@ public class ValueJXPathBinding extends JXPathBindingBase {
             throw new BindingException("The widget with the ID [" + this.fieldId
                     + "] referenced in the binding does not exist in the form definition.");
         }
-        Object value = jxpc.getValue(this.xpath);
 
+        Object value = jxpc.getValue(this.xpath);
         if (value != null && convertor != null) {
             if (value instanceof String) {
                 value = convertor.convertFromString((String)value, convertorLocale, null);
@@ -131,9 +131,9 @@ public class ValueJXPathBinding extends JXPathBindingBase {
         }
 
         widget.setValue(value);
-
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("done loading " + toString() + " -- value= " + value);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Done loading " + toString() + " -- value= " + value);
+        }
     }
 
     /**

@@ -50,47 +50,55 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.outerj.expression.Expression;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.cocoon.woody.datatype.ValidationRule;
 import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.oro.text.regex.Pattern;
 
-import java.util.List;
+import org.outerj.expression.Expression;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField} for more information.
- * 
- * @version $Id: AggregateFieldDefinition.java,v 1.6 2004/02/11 10:43:30 antonio Exp $
+ *
+ * @version $Id: AggregateFieldDefinition.java,v 1.7 2004/02/29 06:07:37 vgritsenko Exp $
  */
-public class AggregateFieldDefinition extends AbstractWidgetDefinition {
-    private Expression combineExpr;
+public class AggregateFieldDefinition extends FieldDefinition {
+
     /**
-     * Compiled split pattern.
+     * Defines expression which combines values of nested fields into this value
      */
-    private Pattern splitPattern;
+    private Expression combineExpr;
+
     /**
-     * The original regexp expression from which the {@link #splitPattern} was compiled,
-     * used purely for informational purposes.
+     * Regular expression which splits this value on the values of the nested fields.
+     * It is compiled into the {@link #splitPattern}.
      */
     private String splitRegexp;
+
+    /**
+     * Compiled pattern out of the {@link #splitRegexp} regular expression.
+     */
+    private Pattern splitPattern;
+
     /**
      * Message to be displayed when the {@link #splitPattern} does not match what the
      * user entered. Optional.
      */
     protected XMLizable splitFailMessage;
+
     /**
      * List containing instances of {@link #splitMappings}, i.e. the mapping between
      * a group (paren) from the regular expression and corresponding field id.
      */
     private List splitMappings = new ArrayList();
-    private ContainerDefinitionDelegate container = new ContainerDefinitionDelegate(this);
+
     /**
-     * Validation rules to be applied to the not-splitted value.
+     *
      */
-    private List validationRules = new ArrayList();
-    protected boolean required = false;
+    private ContainerDefinitionDelegate container = new ContainerDefinitionDelegate(this);
+
 
     public void addWidgetDefinition(WidgetDefinition widgetDefinition) throws DuplicateIdException {
         container.addWidgetDefinition(widgetDefinition);
@@ -98,14 +106,6 @@ public class AggregateFieldDefinition extends AbstractWidgetDefinition {
 
     public boolean hasWidget(String id) {
         return container.hasWidget(id);
-    }
-
-    protected void addValidationRule(ValidationRule validationRule) {
-        validationRules.add(validationRule);
-    }
-
-    public Iterator getValidationRuleIterator() {
-        return validationRules.iterator();
     }
 
     protected void setCombineExpression(Expression expression) {
@@ -157,18 +157,9 @@ public class AggregateFieldDefinition extends AbstractWidgetDefinition {
         return aggregateField;
     }
 
-    public boolean isRequired() {
-        return required;
-    }
-
-    protected void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public static class SplitMapping
-    {
-        int group;
-        String fieldId;
+    public static class SplitMapping {
+        private int group;
+        private String fieldId;
 
         public SplitMapping(int group, String fieldId) {
             this.group = group;

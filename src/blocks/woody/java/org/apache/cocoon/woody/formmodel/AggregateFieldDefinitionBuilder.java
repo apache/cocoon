@@ -50,40 +50,35 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.ValidationRule;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.Pattern;
+import org.apache.oro.text.regex.Perl5Compiler;
+
 import org.outerj.expression.Expression;
+import org.w3c.dom.Element;
 
 import java.util.HashSet;
 
 /**
  * Builds {@link AggregateFieldDefinition}s.
- * 
- * @version $Id: AggregateFieldDefinitionBuilder.java,v 1.8 2004/02/11 10:43:30 antonio Exp $
+ *
+ * @version $Id: AggregateFieldDefinitionBuilder.java,v 1.9 2004/02/29 06:07:37 vgritsenko Exp $
  */
-public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        AggregateFieldDefinition definition = new AggregateFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
-        setDisplayData(widgetElement, definition);
-//FIXME: these are currently type-related validators
-//        setValidators(widgetElement, definition);
+public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
-        // make childfields
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        AggregateFieldDefinition aggregateDefinition = new AggregateFieldDefinition();
+        buildWidgetDefinition(aggregateDefinition, widgetElement);
+
+        // make children fields
         Element widgetsElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "widgets", true);
         Element[] fieldElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS, "field");
         for (int i = 0; i < fieldElements.length; i++) {
             FieldDefinition fieldDefinition = (FieldDefinition)buildAnotherWidgetDefinition(fieldElements[i]);
-            if (!String.class.isAssignableFrom(fieldDefinition.getDatatype().getTypeClass()))
-                throw new Exception("An aggregatefield can only contain fields with datatype string, at " + DomHelper.getLocation(fieldElements[i]));
-            definition.addWidgetDefinition(fieldDefinition);
+            aggregateDefinition.addWidgetDefinition(fieldDefinition);
         }
 
         // compile splitpattern
@@ -96,7 +91,7 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
         } catch (MalformedPatternException e) {
             throw new Exception("Invalid regular expression at " + DomHelper.getLocation(splitElement) + ": " + e.getMessage());
         }
-        definition.setSplitPattern(pattern, patternString);
+        aggregateDefinition.setSplitPattern(pattern, patternString);
 
         // read split mappings
         Element[] mapElements = DomHelper.getChildElements(splitElement, Constants.WD_NS, "map");
@@ -105,19 +100,23 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
             int group = DomHelper.getAttributeAsInteger(mapElements[i], "group");
             String field = DomHelper.getAttribute(mapElements[i], "field");
             // check that this field exists
-            if (!definition.hasWidget(field))
-                throw new Exception("Unkwon widget id \"" + field + "\"mentioned on mapping at " + DomHelper.getLocation(mapElements[i]));
-            if (encounteredFieldMappings.contains(field))
-                throw new Exception("It makes no sense to map two groups to the widget with id \"" + field + "\", at " + DomHelper.getLocation(mapElements[i]));
+            if (!aggregateDefinition.hasWidget(field)) {
+                throw new Exception("Unkwon widget id \"" + field + "\", at " +
+                                    DomHelper.getLocation(mapElements[i]));
+            }
+            if (encounteredFieldMappings.contains(field)) {
+                throw new Exception("Two groups are mapped to the same widget id \"" + field + "\", at " +
+                                    DomHelper.getLocation(mapElements[i]));
+            }
             encounteredFieldMappings.add(field);
-            definition.addSplitMapping(group, field);
+            aggregateDefinition.addSplitMapping(group, field);
         }
 
         // read split fail message (if any)
         Element failMessageElement = DomHelper.getChildElement(splitElement, Constants.WD_NS, "failmessage");
         if (failMessageElement != null) {
             XMLizable failMessage = DomHelper.compileElementContent(failMessageElement);
-            definition.setSplitFailMessage(failMessage);
+            aggregateDefinition.setSplitFailMessage(failMessage);
         }
 
         // compile combine expression
@@ -127,29 +126,16 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
         try {
             combineExpr = expressionManager.parse(combineExprString);
         } catch (Exception e) {
-            throw new Exception("Problem with combine expression defined at " + DomHelper.getLocation(combineElement) + ": " + e.getMessage());
+            throw new Exception("Problem with combine expression defined at " +
+                                DomHelper.getLocation(combineElement) + ": " + e.getMessage());
         }
-        if (combineExpr.getResultType() != null && !String.class.isAssignableFrom(combineExpr.getResultType()))
-            throw new Exception("The result of the combine expression should be a string, at " + DomHelper.getLocation(combineElement));
-        definition.setCombineExpression(combineExpr);
-
-        // add validation rules
-        Element validationElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "validation", false);
-        if (validationElement != null) {
-            Element[] validationRuleElements = DomHelper.getChildElements(validationElement, Constants.WD_NS);
-            for (int i = 0; i < validationRuleElements.length; i++) {
-                Element validationRuleElement = validationRuleElements[i];
-                ValidationRule validationRule = datatypeManager.createValidationRule(validationRuleElement);
-                if (!validationRule.supportsType(String.class, false))
-                    throw new Exception("The validation rule for the aggregatefield " + definition.getId() + " specified at " + DomHelper.getLocation(validationRuleElement) + " does not work with strings.");
-                definition.addValidationRule(validationRule);
-            }
+        Class clazz = aggregateDefinition.getDatatype().getTypeClass();
+        if (combineExpr.getResultType() != null && !clazz.isAssignableFrom(combineExpr.getResultType())) {
+            throw new Exception("The result of the combine expression should be " + clazz.getName() + ", at " +
+                                DomHelper.getLocation(combineElement));
         }
+        aggregateDefinition.setCombineExpression(combineExpr);
 
-        // requiredness
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        definition.setRequired(required);
-
-        return definition;
+        return aggregateDefinition;
     }
 }
