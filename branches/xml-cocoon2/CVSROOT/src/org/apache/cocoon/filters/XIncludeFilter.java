@@ -15,12 +15,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Stack;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.ContentHandler;
 import org.apache.cocoon.Request;
 import org.apache.cocoon.Response;
 import org.apache.cocoon.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.arch.ComponentManager;
+import org.apache.arch.Composer;
 
 /**
  * My first pass at an XInclude filter. Currently it should set the base URI 
@@ -30,11 +36,13 @@ import org.apache.cocoon.ProcessingException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-04-03 03:36:31 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-04-04 20:22:28 $ $Author: balld $
  */
-public class XIncludeFilter extends AbstractFilter {
+public class XIncludeFilter extends AbstractFilter implements Composer {
 
 	protected boolean debug = true;
+
+	protected ComponentManager manager = null;
 
 	public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
 	public static final String XMLBASE_ATTRIBUTE = "base";
@@ -75,6 +83,10 @@ public class XIncludeFilter extends AbstractFilter {
 		}
 	}
 	*/
+
+	public void setComponentManager(ComponentManager manager) {
+		this.manager = manager;
+	}
 
 	public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
 		String value;
@@ -182,7 +194,118 @@ public class XIncludeFilter extends AbstractFilter {
 					reader.close();
 				}
 			}
+		} else if (parse.equals("xml")) {
+			if (debug) { System.err.println("Parse type is XML"); }
+			Parser parser = (Parser)manager.getComponent("parser");
+			XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler,"");
+			xinclude_handler.debug = debug;
+			parser.setContentHandler(xinclude_handler);
+			parser.setLexicalHandler(xinclude_handler);
+			if (object instanceof Reader) {
+				parser.parse(new InputSource((Reader)object));
+			} else if (object instanceof InputStream) {
+				parser.parse(new InputSource((InputStream)object));
+			}
 		}
+	}
+
+	class XIncludeContentHandler implements ContentHandler,LexicalHandler {
+
+		ContentHandler content_handler;
+		LexicalHandler lexical_handler;
+		String xpath;
+		boolean debug;
+
+		XIncludeContentHandler(ContentHandler content_handler, LexicalHandler lexical_handler, String xpath) {
+			this.content_handler = content_handler;
+			this.lexical_handler = lexical_handler;
+			this.xpath = xpath;
+		}
+
+		public void setDocumentLocator(Locator locator) {
+			content_handler.setDocumentLocator(locator);
+		}
+
+		public void startDocument() {
+			if (debug) { System.err.println("Internal start document received"); }
+			/** We don't pass start document on to the "real" handler **/
+		}
+
+		public void endDocument() {
+			/** We don't pass end document on to the "real" handler **/
+		}
+
+		public void startPrefixMapping(String prefix, String uri) 
+			throws SAXException {
+			content_handler.startPrefixMapping(prefix,uri);
+		}
+
+		public void endPrefixMapping(String prefix) 
+			throws SAXException {
+			content_handler.endPrefixMapping(prefix);
+		}
+
+		public void startElement(String namespace, String name, String raw, 
+			Attributes attr) throws SAXException {
+			if (debug) { System.err.println("Internal element received: "+name); }
+			content_handler.startElement(namespace,name,raw,attr);
+		}
+
+		public void endElement(String namespace, String name, String raw)
+			throws SAXException {
+			content_handler.endElement(namespace,name,raw);
+		}
+
+		public void characters(char ary[], int start, int length) 
+			throws SAXException {
+			content_handler.characters(ary,start,length);
+		}
+
+		public void ignorableWhitespace(char ary[], int start, int length)
+			throws SAXException {
+			content_handler.ignorableWhitespace(ary,start,length);
+		}
+
+		public void processingInstruction(String target, String data)
+			throws SAXException {
+			content_handler.processingInstruction(target,data);
+		}
+
+		public void skippedEntity(String name)
+			throws SAXException {
+			content_handler.skippedEntity(name);
+		}
+
+		public void startDTD(String name, String public_id, String system_id)
+			throws SAXException {
+			lexical_handler.startDTD(name,public_id,system_id);
+		}
+
+		public void endDTD() throws SAXException {
+			lexical_handler.endDTD();
+		}
+
+		public void startEntity(String name) throws SAXException {
+			lexical_handler.startEntity(name);
+		}
+
+		public void endEntity(String name) throws SAXException {
+			lexical_handler.endEntity(name);
+		}
+
+		public void startCDATA() throws SAXException {
+			lexical_handler.startCDATA();
+		}
+
+		public void endCDATA() throws SAXException {
+			lexical_handler.endCDATA();
+		}
+
+		public void comment(char ary[], int start, int length)
+			throws SAXException {
+			lexical_handler.comment(ary,start,length);
+		}
+
 	}
 
 }
