@@ -33,12 +33,16 @@ export CLASSPATH
 # ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 OLD_ANT_HOME="$ANT_HOME"
 export ANT_HOME=tools
+OLD_ANT_OPTS="$ANT_OPTS"
+export ANT_OPTS="-Djava.endorsed.dirs=lib/endorsed"
 
-"$ANT_HOME/bin/ant" -Djava.endorsed.dirs=lib/endorsed -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
+"$ANT_HOME/bin/ant" -logger org.apache.tools.ant.NoBannerLogger -emacs  $@
 
-# ----- Restore ANT_HOME
+# ----- Restore ANT_HOME and ANT_OPTS
 export ANT_HOME=$OLD_ANT_HOME
 unset OLD_ANT_HOME
+export ANT_OPTS=$OLD_ANT_OPTS
+unset OLD_ANT_OPTS
 
 # ----- Restore CLASSPATH
 export CLASSPATH=$OLD_CLASSPATH
