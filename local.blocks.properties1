@@ -1,0 +1,120 @@
+
+#------------------------------------------------------------------------------#
+#                             Cocoon Blocks                                    #
+#------------------------------------------------------------------------------#
+
+# Remove blocks from your cocoon distribution by uncommenting the
+# corresponding exclude property.
+
+# NOTE: Don't modify this file directly but make a copy named
+# 'local.blocks.properties' and modify that. The build system will override
+# these properties with the ones in the 'local.blocks.properties' file.
+
+# NOTE: "[dependency]" indicates blocks that are required by other blocks.
+# Disabling batik, for example, will result in a RuntimeException when using
+# fop. On the other hand some dependencies come only from the block samples.
+
+
+# Stable blocks ----------------------------------------------------------------
+
+# Stable blocks are those that can be considered ready for production and
+# will contain components and API that will remain stable and where
+# developers are committed to back compatibility. In short, stuff that you
+# can depend on.
+
+#-----[dependency]: "authentication-fw" depends on "session-fw".
+#-----[dependency]: "authentication-fw" is needed by "portal", "portal-fw".
+#exclude.block.authentication-fw=true
+#-----[dependency]: "batik" is needed by "fop", "scratchpad".
+#exclude.block.batik=true
+exclude.block.bsf=true
+exclude.block.chaperon=true
+#-----[dependency]: "databases" is needed by "hsqldb", "jms", "ojb", "petstore", "repository", "xmldb".
+#exclude.block.databases=true
+#-----[dependency]: "fop" depends on "batik".
+#exclude.block.fop=true
+#-----[dependency]: "hsqldb" depends on "databases".
+#-----[dependency]: "hsqldb" is needed by "jms", "petstore".
+exclude.block.hsqldb=true
+#-----[dependency]: "html" is needed by "portal".
+exclude.block.html=true
+exclude.block.itext=true
+exclude.block.jfor=true
+exclude.block.jsp=true
+exclude.block.jxforms=true
+exclude.block.linkrewriter=true
+exclude.block.lucene=true
+exclude.block.naming=true
+exclude.block.paranoid=true
+exclude.block.php=true
+exclude.block.poi=true
+#-----[dependency]: "portal-fw" depends on "authentication-fw", "session-fw".
+exclude.block.portal-fw=true
+exclude.block.profiler=true
+exclude.block.python=true
+#-----[dependency]: "session-fw" is needed by "authentication-fw", "portal", "portal-fw".
+#exclude.block.session-fw=true
+exclude.block.swf=true
+#-----[dependency]: "velocity" is needed by "petstore", "scratchpad".
+exclude.block.velocity=true
+exclude.block.web3=true
+#-----[dependency]: "xmldb" depends on "databases".
+exclude.block.xmldb=true
+
+# Unstable blocks --------------------------------------------------------------
+
+# Unstable blocks are currently under development and do not guarantee that the
+# contracts they expose (API, xml schema, properties, behavior) will remain
+# constant in time. Developers are not committed to back-compatibility just yet.
+# This doesn't necessarily mean the blocks implementation is unstable or
+# the code can't be trusted for production, but use with care and watch
+# its development as things might change over time before they are marked
+# stable.
+
+#-----[dependency]: "apples" depends on "woody".
+exclude.block.apples=true
+#-----[dependency]: "asciiart" is needed by "mail".
+#exclude.block.asciiart=true
+exclude.block.axis=true
+#-----[dependency]: "cron" is needed by "scratchpad".
+exclude.block.cron=true
+exclude.block.deli=true
+#-----[dependency]: "eventcache" is needed by "jms", "repository", "slide".
+exclude.block.eventcache=true
+#-----[dependency]: "jms" depends on "databases", "eventcache", "hsqldb".
+#-----[dependency]: "jms" is needed by "slide".
+exclude.block.jms=true
+exclude.block.linotype=true
+#-----[dependency]: "mail" depends on "asciiart".
+#exclude.block.mail=true
+exclude.block.midi=true
+#-----[dependency]: "ojb" depends on "databases".
+#exclude.block.ojb=true
+#-----[dependency]: "petstore" depends on "databases", "hsqldb", "velocity", "woody".
+exclude.block.petstore=true
+#-----[dependency]: "portal" depends on "authentication-fw", "html", "session-fw".
+exclude.block.portal=true
+exclude.block.precept=true
+exclude.block.proxy=true
+exclude.block.qdox=true
+#-----[dependency]: "repository" depends on "databases", "eventcache".
+#-----[dependency]: "repository" is needed by "slide", "webdav".
+exclude.block.repository=true
+#-----[dependency]: "scratchpad" depends on "batik", "cron", "velocity".
+exclude.block.scratchpad=true
+#-----[dependency]: "slide" depends on "eventcache", "jms", "repository".
+exclude.block.slide=true
+exclude.block.slop=true
+exclude.block.stx=true
+exclude.block.taglib=true
+#-----[dependency]: "webdav" depends on "repository".
+exclude.block.webdav=true
+#-----[dependency]: "woody" is needed by "apples", "petstore".
+#exclude.block.woody=true
+
+# Deprecated blocks ------------------------------------------------------------
+
+# Although some of these blocks may have been stable, they are now deprecated
+# in favour of other blocks and therefore are excluded by default from the build
+
+exclude.block.xmlform=true

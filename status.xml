@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.242 2004/02/15 08:50:56 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.243 2004/02/15 10:15:55 antonio Exp $:-->
 
 <status>
  <developers>
@@ -197,7 +197,7 @@
 
  <release version="@version@" date="@date@">
  <action dev="AG" type="update">
-     Updated jdtcore to 2.1.2
+     Updated jdtcore to 2.1.2, and Ant to 1.6.1
    </action>
    <action dev="CZ" type="update" fixes-bug="26896" due-to-email="jon.evans@misgl.com" due-to="Jon Evans">
      Patch for any elemens inside a coplet:content element and not just only text.

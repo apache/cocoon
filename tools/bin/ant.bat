@@ -1,10 +1,20 @@
 @echo off
 
-REM   Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
-REM   reserved.
+REM  Copyright 2001,2004 The Apache Software Foundation
+REM
+REM  Licensed under the Apache License, Version 2.0 (the "License");
+REM  you may not use this file except in compliance with the License.
+REM  You may obtain a copy of the License at
+REM
+REM      http://www.apache.org/licenses/LICENSE-2.0
+REM
+REM  Unless required by applicable law or agreed to in writing, software
+REM  distributed under the License is distributed on an "AS IS" BASIS,
+REM  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+REM  See the License for the specific language governing permissions and
+REM  limitations under the License.
 
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
-set ANT_VERSION=1.6.0
 
 if "%OS%"=="Windows_NT" @setlocal
 
@@ -30,7 +40,7 @@ rem and for NT handling to skip to.
 :doneStart
 rem find ANT_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
-if exist "%ANT_HOME%\lib\ant-%ANT_VERSION%.jar" goto checkJava
+if exist "%ANT_HOME%\lib\ant.jar" goto checkJava
 
 rem check for ant in Program Files
 if not exist "%ProgramFiles%\ant" goto checkSystemDrive
