@@ -15,11 +15,10 @@
  */
 package org.apache.cocoon.components.modules.input;
 
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.cocoon.components.modules.input.AbstractInputModule;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -43,12 +42,20 @@ import java.util.Properties;
  *
  * <p>Example usage:
  * <pre>
- *   &lt;map:generate src="{naming:java:comp/env/url}"/&gt;
+ *   &lt;map:generate src="{naming:java:comp/env/greeting}"/&gt;
  * </pre>
- * This lookups <code>env/url</code> entry from the environment of the webapp.
+ * This lookups <code>greeting</code> entry from the environment of the webapp.
+ * Webapp's web.xml should define this entry:
+ * <pre>
+ *   &lt;env-entry&gt;
+ *     &lt;env-entry-name&gt;greeting&lt;/env-entry-name&gt;
+ *     &lt;env-entry-value&gt;Hello, World&lt;/env-entry-value&gt;
+ *     &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt;
+ *   &lt;/env-entry&gt;
+ * </pre>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: NamingInputModule.java,v 1.1 2004/06/16 20:00:07 vgritsenko Exp $
+ * @version CVS $Id: NamingInputModule.java,v 1.2 2004/06/16 20:22:10 vgritsenko Exp $
  */
 public class NamingInputModule extends AbstractInputModule implements ThreadSafe, Initializable {
 
