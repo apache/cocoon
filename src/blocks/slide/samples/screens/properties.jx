@@ -32,7 +32,7 @@
           <jx:forEach var="source" items="${source.children}">
             <tr>
               <td width="100%" align="left">
-                <a href="viewpermissions.do?path=${source.path}">
+                <a href="viewproperties.do?path=${source.path}">
                   ${source.name}
                 </a>
               </td>
@@ -42,7 +42,7 @@
             <tr>
               <td width="100%" align="left">
                 <br/>
-                  <a href="viewpermissions.do?path=${source.parent.path}">
+                  <a href="viewproperties.do?path=${source.parent.path}">
                     ..
                   </a>
               </td>
@@ -50,96 +50,57 @@
           </jx:if>
         </table>
       </column>
-      <column title="Permissions">
+      <column title="Properties">
         <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
           <tr>
             <td align="left">
-              <b>Principal</b>
+              <b>Namespace</b>
             </td>
             <td align="left">
-              <b>Privilege</b>
+              <b>Name</b>
             </td>
             <td align="left">
-              <b>Inheritable</b>
-            </td>
-            <td align="left">
-              <b>Deny</b>
+              <b>Value</b>
             </td>
             <td align="right"/>
           </tr>
-          <jx:forEach var="permission" items="${source.permissions}">
+          <jx:forEach var="property" items="${source.sourceProperties}">
             <tr>
               <td align="left">
-                ${permission.subject}
+                ${property.namespace}
               </td>
               <td align="left">
-                ${permission.privilege}
+                ${property.name}
               </td>
               <td align="left">
-                ${permission.inheritable}
-              </td>
-              <td align="left">
-                ${permission.negative}
+                ${property.value}
               </td>
               <td align="right">
-                <form action="removePermission.do" method="post">
-                  <input type="hidden" name="resourcePath" value="${source.path}"/>
-                  <input type="hidden" name="subject" value="${permission.subject}"/>
-                  <input type="hidden" name="privilege" value="{permission.privilege}"/>
-                  <input type="hidden" name="inheritable" value="{permission.inheritable}"/>
-                  <input type="hidden" name="negative" value="{permission.negative}"/>
-                  <input type="submit" name="doRemovePermission" value="Delete"/>
-                </form>
+                <jx:if test="${property.namespace != 'DAV:'}">
+                  <form action="removeproperty.do" method="post">
+                    <input type="hidden" name="resourcePath" value="${source.path}"/>
+                    <input type="hidden" name="namespace" value="${property.namespace}"/>
+                    <input type="hidden" name="name" value="${property.name}"/>
+                    <input type="submit" name="doDeleteProperty" value="Delete"/>
+                  </form>
+                </jx:if>
               </td>
             </tr>
           </jx:forEach>
           <tr>
-            <form action="addPermission.do" method="post">
+            <form action="addproperty.do" method="post">
               <input type="hidden" name="resourcePath" value="${source.path}"/>
               <td align="left">
-                <select name="subject">
-                  <option>self</option>
-                  <option>owner</option>
-                  <option>authenticated</option>
-                  <option>unauthenticated</option>
-                  <option>all</option>
-                  <jx:forEach var="role" items="${roles}">
-                    <option value="{$role.uri}">
-                      role: ${role.uri}
-                    </option>
-                  </jx:forEach>
-                  <jx:forEach var="user" items="${users}">
-                    <option value="{$user}">
-                      user: ${user}
-                    </option>
-                  </jx:forEach>
-                </select>
+                <input name="namespace" type="text" size="15" maxlength="40"/>
               </td>
               <td align="left">
-                <select name="action">
-                  <option>all</option>
-                  <option>default</option>
-                  <jx:forEach var="privilege" items="${privileges}">
-                    <option value="{$privilege}">
-                      ${privilege}
-                    </option>
-                  </jx:forEach>
-                </select>
+                <input name="name" type="text" size="15" maxlength="40"/>
               </td>
               <td align="left">
-                <select name="inheritable">
-                  <option>false</option>
-                  <option>true</option>
-                </select>
-              </td>
-              <td align="left">
-                <select name="negative">
-                  <option>false</option>
-                  <option>true</option>
-                </select>
+                <input name="value" type="text" size="15" maxlength="40"/>
               </td>
               <td align="right">
-                <input type="submit" name="doAddPermission" value="Add/Modify"/>
+                <input type="submit" name="doAddProperty" value="Add/Modify"/>
               </td>
             </form>
           </tr>

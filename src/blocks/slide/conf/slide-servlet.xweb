@@ -19,7 +19,6 @@
   insert-after="servlet[servlet-name = 'Cocoon']">
 
     <!-- Definition and configuration of Slide's WebDAV servlet. -->
-    <!--
     <servlet>
         <servlet-name>Slide</servlet-name>
         <display-name>Slide DAV Server</display-name>
@@ -167,6 +166,5 @@
         <servlet-name>Slide</servlet-name>
         <url-pattern>/webdav/*</url-pattern>
     </servlet-mapping>
-    -->
 
 </xweb>
