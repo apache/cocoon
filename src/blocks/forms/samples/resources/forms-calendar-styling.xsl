@@ -46,13 +46,13 @@
   <!--+
       | fi:field with @type 'date' : use CalendarPopup
       +-->
-  <xsl:template match="fi:field[fi:styling/@type='date']">
+  <xsl:template match="fi:field[fi:datatype/@type='date']">
     <xsl:variable name="id" select="generate-id()"/>
     
     <!-- FIXME: should use the format used by the convertor -->
     <xsl:variable name="format">
       <xsl:choose>
-        <xsl:when test="fi:styling/@format"><xsl:value-of select="fi:styling/@format"/></xsl:when>
+        <xsl:when test="fi:datatype/fi:convertor/@pattern"><xsl:value-of select="fi:datatype/fi:convertor/@pattern"/></xsl:when>
         <xsl:otherwise>yyyy-MM-dd</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
