@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,16 +108,14 @@ public class AvalonProvider extends RPCProvider {
      * @return an object that implements the service
      * @exception Exception if an error occurs
      */
-    protected Object makeNewServiceObject(
-        MessageContext msgContext, String role
-    )
-        throws Exception
-    {
+    protected Object makeNewServiceObject(MessageContext msgContext, String role)
+    throws Exception {
         ServiceManager manager =
             (ServiceManager) msgContext.getProperty(SERVICE_MANAGER);
 
-        if (manager == null)
+        if (manager == null) {
             throw new AxisFault("Could not access Avalon ServiceManager");
+        }
 
         return decorate(manager.lookup(role), manager);
     }
@@ -171,29 +169,20 @@ public class AvalonProvider extends RPCProvider {
      * @exception AxisFault if an error occurs
      */
     protected Class getServiceClass(
-        String role, SOAPService service, MessageContext msgContext
-    )
-        throws AxisFault
-    {
+        String role, SOAPService service, MessageContext msgContext )
+    throws AxisFault {
         // Assuming CocoonServiceManager semantics the ROLE name is
         // actually the class name, potentially with a variant following
         // the class name with a '/' separator
 
-        try
-        {
+        try {
             int i;
 
-            if ((i = role.indexOf('/')) != -1)
-            {
+            if ((i = role.indexOf('/')) != -1) {
                 return Class.forName(role.substring(0, i));
-            }
-            else
-            {
-                return Class.forName(role);
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
+            } 
+            return Class.forName(role);
+        } catch (ClassNotFoundException e) {
             throw new AxisFault("Couldn't create class object for role " + role, e);
         }
     }
@@ -230,8 +219,8 @@ public class AvalonProvider extends RPCProvider {
      *  on the scope of the service (ie. Request, Session & Application).
      * </p>
      */
-    final class Handler implements InvocationHandler
-    {
+    final class Handler implements InvocationHandler {
+        
         // Constants describing the ServiceLifecycle.destroy method
         private final String SL_DESTROY = "destroy";
         private final Class  SL_CLASS = ServiceLifecycle.class;
@@ -246,8 +235,7 @@ public class AvalonProvider extends RPCProvider {
          * @param object a <code>Component</code> instance
          * @param manager a <code>ServiceManager</code> instance
          */
-        public Handler(final Object object, final ServiceManager manager)
-        {
+        public Handler(final Object object, final ServiceManager manager) {
             m_object = object;
             m_manager = manager;
         }
@@ -270,22 +258,17 @@ public class AvalonProvider extends RPCProvider {
          * @exception Throwable if an error occurs
          */
         public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable
-        {
+        throws Throwable {
             // if ServiceLifecycle.destroy() called, return to CM
-            if (method.getDeclaringClass().equals(SL_CLASS))
-            {
-                if (method.getName().equals(SL_DESTROY))
-                {
+            if (method.getDeclaringClass().equals(SL_CLASS)) {
+                if (method.getName().equals(SL_DESTROY)) {
                     m_manager.release(m_object);
                 }
 
                 return null;
-            }
-            else // otherwise pass call to the real object
-            {
-                return method.invoke(m_object, args);
-            }
+            } 
+            // otherwise pass call to the real object
+            return method.invoke(m_object, args);
         }
     }
 }

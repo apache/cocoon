@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,6 +93,9 @@ public class AxisRPCReader extends ServiceableReader
         m_isDevelompent = config.getChild("development-stage").getValueAsBoolean(m_isDevelompent );
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(final ServiceManager manager) throws ServiceException {
         super.service(manager);
         // set soap server reference
@@ -121,16 +124,13 @@ public class AxisRPCReader extends ServiceableReader
         final SourceResolver resolver,
         final Map objectModel,
         final String src,
-        final Parameters parameters
-    )
-        throws ProcessingException, IOException, SAXException
-    {
+        final Parameters parameters)
+    throws ProcessingException, IOException, SAXException {
         super.setup(resolver, objectModel, src, parameters);
 
         checkHTTPPost(objectModel);
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("AxisRPCReader.setup() complete");
         }
     }
@@ -142,8 +142,7 @@ public class AxisRPCReader extends ServiceableReader
      * @exception ProcessingException if a non HTTP-POST request has been made.
      */
     private void checkHTTPPost(final Map objectModel)
-        throws ProcessingException
-    {
+    throws ProcessingException {
         String method = ObjectModelHelper.getRequest(objectModel).getMethod();
 
         if (!"POST".equalsIgnoreCase(method))
@@ -165,8 +164,7 @@ public class AxisRPCReader extends ServiceableReader
      * @exception ProcessingException if a processing error occurs
      */
     public void generate()
-        throws IOException, SAXException, ProcessingException
-    {
+    throws IOException, SAXException, ProcessingException {
         HttpServletRequest req =
             (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
         HttpServletResponse res =
@@ -178,8 +176,7 @@ public class AxisRPCReader extends ServiceableReader
         MessageContext msgContext = null;
         Message responseMsg = null;
 
-        try
-        {
+        try {
             res.setBufferSize(1024 * 8); // provide performance boost.
 
             // Get message context w/ various properties set
@@ -193,8 +190,7 @@ public class AxisRPCReader extends ServiceableReader
                     req.getHeader(HTTPConstants.HEADER_CONTENT_LOCATION)
                 );
 
-            if (getLogger().isDebugEnabled())
-            {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Request message:\n" + messageToString(requestMsg));
             }
 
@@ -203,8 +199,7 @@ public class AxisRPCReader extends ServiceableReader
             String url = req.getRequestURL().toString(); 
             msgContext.setProperty(MessageContext.TRANS_URL, url);
 
-            try
-            {
+            try {
                 //
                 // Save the SOAPAction header in the MessageContext bag.
                 // This will be used to tell the Axis Engine which service
@@ -216,8 +211,7 @@ public class AxisRPCReader extends ServiceableReader
                 //
                 soapAction = getSoapAction(req);
 
-                if (soapAction != null)
-                {
+                if (soapAction != null) {
                     msgContext.setUseSOAPAction(true);
                     msgContext.setSOAPActionURI(soapAction);
                 }
@@ -226,15 +220,13 @@ public class AxisRPCReader extends ServiceableReader
                 msgContext.setSession(new AxisHttpSession(req));
 
                 // Invoke the Axis engine...
-                if(getLogger().isDebugEnabled())
-                {
+                if(getLogger().isDebugEnabled()) {
                     getLogger().debug("Invoking Axis Engine");
                 }
 
                 m_server.invoke(msgContext);
 
-                if(getLogger().isDebugEnabled())
-                {
+                if(getLogger().isDebugEnabled()) {
                     getLogger().debug("Return from Axis Engine");
                 }
 
@@ -243,11 +235,8 @@ public class AxisRPCReader extends ServiceableReader
                     //tell everyone that something is wrong
                     throw new Exception("no response message");
                 }
-            }
-            catch (AxisFault fault)
-            {
-                if (getLogger().isErrorEnabled())
-                {
+            } catch (AxisFault fault) {
+                if (getLogger().isErrorEnabled()) {
                     getLogger().error("Axis Fault", fault);
                 }
 
@@ -258,14 +247,11 @@ public class AxisRPCReader extends ServiceableReader
                 if (responseMsg == null) {
                     responseMsg = new Message(fault);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 //other exceptions are internal trouble
                 responseMsg = msgContext.getResponseMessage();
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                if (getLogger().isErrorEnabled())
-                {
+                if (getLogger().isErrorEnabled()) {
                     getLogger().error("Error during SOAP call", e);
                 }
                 if (responseMsg == null) {
@@ -274,11 +260,8 @@ public class AxisRPCReader extends ServiceableReader
                     responseMsg = new Message(fault);
                 }
             }
-        }
-        catch (AxisFault fault)
-        {
-            if (getLogger().isErrorEnabled())
-            {
+        } catch (AxisFault fault) {
+            if (getLogger().isErrorEnabled()) {
                 getLogger().error("Axis fault occured while perforing request", fault);
             }
             processAxisFault(fault);
@@ -287,25 +270,20 @@ public class AxisRPCReader extends ServiceableReader
             if( responseMsg == null) {
                 responseMsg = new Message(fault);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ProcessingException("Exception thrown while performing request", e);
         }
 
         // Send response back
-        if (responseMsg != null)
-        {
-            if (getLogger().isDebugEnabled())
-            {
+        if (responseMsg != null) {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Sending response:\n" + messageToString(responseMsg));
             }
 
             sendResponse(getProtocolVersion(req), msgContext.getSOAPConstants(), res, responseMsg);
         }
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("AxisRPCReader.generate() complete");
         }
     }
@@ -349,7 +327,7 @@ public class AxisRPCReader extends ServiceableReader
         if (status == HttpServletResponse.SC_UNAUTHORIZED) {
             // unauth access results in authentication request
             // TODO: less generic realm choice?
-          response.setHeader("WWW-Authenticate","Basic realm=\"AXIS\"");
+            response.setHeader("WWW-Authenticate","Basic realm=\"AXIS\"");
         }
         response.setStatus(status);
     }
@@ -360,8 +338,7 @@ public class AxisRPCReader extends ServiceableReader
      * @param af Axis Fault
      * @return HTTP Status code.
      */
-    protected int getHttpServletResponseStatus(AxisFault af)
-    {
+    protected int getHttpServletResponseStatus(AxisFault af) {
         // This will raise a 401 for both "Unauthenticated" & "Unauthorized"...
         return af.getFaultCode().getLocalPart().startsWith("Server.Unauth")
                    ? HttpServletResponse.SC_UNAUTHORIZED
@@ -381,40 +358,29 @@ public class AxisRPCReader extends ServiceableReader
         final String clientVersion,
         final SOAPConstants constants,
         final HttpServletResponse res,
-        final Message responseMsg
-    )
-        throws AxisFault, IOException
-    {
-        if (responseMsg == null)
-        {
+        final Message responseMsg)
+    throws AxisFault, IOException {
+        if (responseMsg == null) {
             res.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
-            if (getLogger().isDebugEnabled())
-            {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("No axis response, not sending one");
             }
-        }
-        else
-        {
-            if (getLogger().isDebugEnabled())
-            {
+        } else {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Returned Content-Type:" + responseMsg.getContentType(constants));
                 getLogger().debug("Returned Content-Length:" + responseMsg.getContentLength());
             }
 
-            try
-            {
+            try {
                 res.setContentType(responseMsg.getContentType(constants));
                 responseMsg.writeTo(res.getOutputStream());
-            }
-            catch (SOAPException e)
-            {
+            } catch (SOAPException e) {
                 getLogger().error("Exception sending response", e);
             }
         }
 
-        if (!res.isCommitted())
-        {
+        if (!res.isCommitted()) {
             res.flushBuffer(); // Force it right now.
         }
     }
@@ -428,12 +394,10 @@ public class AxisRPCReader extends ServiceableReader
      * @throws AxisFault
      */
     private String getSoapAction(HttpServletRequest req)
-        throws AxisFault
-    {
+    throws AxisFault {
         String soapAction = req.getHeader(HTTPConstants.HEADER_SOAP_ACTION);
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("HEADER_SOAP_ACTION:" + soapAction);
         }
 
@@ -441,8 +405,7 @@ public class AxisRPCReader extends ServiceableReader
         // Technically, if we don't find this header, we should probably fault.
         // It's required in the SOAP HTTP binding.
         //
-        if (soapAction == null)
-        {
+        if (soapAction == null) {
             throw new AxisFault(
                       "Client.NoSOAPAction",
                       "No SOAPAction header",
@@ -460,7 +423,7 @@ public class AxisRPCReader extends ServiceableReader
      * Return the HTTP protocol level 1.1 or 1.0
      * by derived class.
      */
-    private String getProtocolVersion(HttpServletRequest req){
+    private String getProtocolVersion(HttpServletRequest req) {
         String ret = HTTPConstants.HEADER_PROTOCOL_V10;
         String prot = req.getProtocol();
         if (prot!= null) {
@@ -482,18 +445,13 @@ public class AxisRPCReader extends ServiceableReader
      * @param msg a <code>Message</code> value
      * @return a <code>String</code> value
      */
-    private String messageToString(final Message msg)
-    {
-        try
-        {
+    private String messageToString(final Message msg) {
+        try {
             OutputStream os = new ByteArrayOutputStream();
             msg.writeTo(os);
             return os.toString();
-        }
-        catch (Exception e)
-        {
-            if (getLogger().isWarnEnabled())
-            {
+        } catch (Exception e) {
+            if (getLogger().isWarnEnabled()) {
                 getLogger().warn(
                     "Warning, could not convert message (" + msg + ") into string", e
                 );
@@ -506,8 +464,7 @@ public class AxisRPCReader extends ServiceableReader
     /**
      * Dispose this reader. Release all held resources.
      */
-    public void dispose()
-    {
+    public void dispose() {
         manager.release(m_server);
     }
 }
