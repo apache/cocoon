@@ -61,36 +61,38 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.MRUBucketMap;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class provides a cache algorithm for the requested documents.
  * It combines a HashMap and a LinkedList to create a so called MRU
  * (Most Recently Used) cache.
  *
- * The idea was taken from the "Writing Advanced Application Tutorial" from
- * javasoft. Many thanx to the writers!
+ * <p>This implementation is based on MRUBucketMap - map with efficient
+ * O(1) implementation of MRU removal policy.
+ *
+ * <p>TODO: Port improvments to the Excalibur implementation
  *
  * @deprecated Use the Avalon Excalibur Store instead.
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MRUMemoryStore.java,v 1.2 2003/04/27 15:16:15 cziegeler Exp $
+ * @version CVS $Id: MRUMemoryStore.java,v 1.3 2003/04/27 16:41:31 vgritsenko Exp $
  */
 public final class MRUMemoryStore extends AbstractLogEnabled
     implements Store, Parameterizable, Composable, Disposable, ThreadSafe {
 
     private int maxobjects;
     private boolean persistent;
-    private Hashtable cache;
-    private LinkedList mrulist;
+    private MRUBucketMap cache;
     private Store persistentStore;
     private StoreJanitor storeJanitor;
     private ComponentManager manager;
@@ -129,8 +131,7 @@ public final class MRUMemoryStore extends AbstractLogEnabled
             throw new ParameterException("MRUMemoryStore maxobjects must be at least 1!");
         }
 
-        this.cache = new Hashtable((int)(this.maxobjects * 1.2));
-        this.mrulist = new LinkedList();
+        this.cache = new MRUBucketMap((int)(this.maxobjects * 1.2));
         this.storeJanitor.register(this);
     }
 
@@ -151,12 +152,8 @@ public final class MRUMemoryStore extends AbstractLogEnabled
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Final cache size: " + this.cache.size());
                 }
-                Enumeration enum = this.cache.keys();
-                while (enum.hasMoreElements()) {
-                    Object key = enum.nextElement();
-                    if (key == null) {
-                        continue;
-                    }
+                for (Iterator i = this.cache.keySet().iterator(); i.hasNext(); ) {
+                    Object key = i.next();
                     try {
                         Object value = this.cache.remove(key);
                         if(checkSerializable(value)) {
@@ -183,7 +180,7 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      * @param key The key for the object to store
      * @param value The object to store
      */
-    public synchronized void store(Object key, Object value) {
+    public void store(Object key, Object value) {
         this.hold(key,value);
     }
 
@@ -195,21 +192,21 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      * @param key The key of the object to be stored
      * @param value The object to be stored
      */
-    public synchronized void hold(Object key, Object value) {
+    public void hold(Object key, Object value) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Holding object in memory:");
             getLogger().debug("  key: " + key);
             getLogger().debug("  value: " + value);
         }
+
         /** ...first test if the max. objects in cache is reached... */
-        while (this.mrulist.size() >= this.maxobjects) {
+        while (this.cache.size() >= this.maxobjects) {
             /** ...ok, heapsize is reached, remove the last element... */
             this.free();
         }
+
         /** ..put the new object in the cache, on the top of course ... */
         this.cache.put(key, value);
-        this.mrulist.remove(key);
-        this.mrulist.addFirst(key);
     }
 
     /**
@@ -218,12 +215,9 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      * @param key The key of the requested object
      * @return the requested object
      */
-    public synchronized Object get(Object key) {
+    public Object get(Object key) {
         Object value = this.cache.get(key);
         if (value != null) {
-            /** put the accessed key on top of the linked list */
-            this.mrulist.remove(key);
-            this.mrulist.addFirst(key);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Found key: " + key.toString());
             }
@@ -239,12 +233,10 @@ public final class MRUMemoryStore extends AbstractLogEnabled
             value = this.persistentStore.get(getFileName(key.toString()));
             if (value != null) {
                 try {
-                    if(!this.cache.containsKey(key)) {
-                        this.hold(key, value);
-                    }
+                    this.hold(key, value);
                     return value;
                 } catch (Exception e) {
-                    getLogger().error("Error in get()!", e);
+                    getLogger().error("Error in hold()!", e);
                     return null;
                 }
             }
@@ -258,13 +250,12 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      *
      * @param key The key of to be removed object
      */
-    public synchronized void remove(Object key) {
+    public void remove(Object key) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Removing object from store");
             getLogger().debug("  key: " + key);
         }
         this.cache.remove(key);
-        this.mrulist.remove(key);
         if(this.persistent && key != null) {
             this.persistentStore.remove(getFileName(key.toString()));
         }
@@ -276,12 +267,8 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      * @param key The key of the object
      * @return true if the key exists
      */
-    public synchronized boolean containsKey(Object key) {
-        if(persistent) {
-            return (cache.containsKey(key) || persistentStore.containsKey(key));
-        } else {
-            return cache.containsKey(key);
-        }
+    public boolean containsKey(Object key) {
+        return cache.containsKey(key) || (persistent && persistentStore.containsKey(key));
     }
 
     /**
@@ -289,15 +276,25 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      *
      * @return the enumeration of the cache
      */
-    public synchronized Enumeration keys() {
-        return this.cache.keys();
+    public Enumeration keys() {
+        return new Enumeration() {
+            private Iterator i = cache.keySet().iterator();
+
+            public boolean hasMoreElements() {
+                return i.hasNext();
+            }
+
+            public Object nextElement() {
+                return i.next();
+            }
+        };
     }
 
     /**
      * Returns count of the objects in the store, or -1 if could not be
      * obtained.
      */
-    public synchronized int size() {
+    public int size() {
         return this.cache.size();
     }
 
@@ -305,28 +302,23 @@ public final class MRUMemoryStore extends AbstractLogEnabled
      * Frees some of the fast memory used by this store.
      * It removes the last element in the store.
      */
-    public synchronized void free() {
+    public void free() {
         try {
             if (this.cache.size() > 0) {
                 // This can throw NoSuchElementException
-                Object key = this.mrulist.removeLast();
-                Object value = this.cache.remove(key);
-                if (value == null) {
-                    getLogger().warn("Concurrency condition in free()");
-                }
-
+                Map.Entry node = this.cache.removeLast();
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Freeing cache.");
-                    getLogger().debug("  key: " + key);
-                    getLogger().debug("  value: " + value);
+                    getLogger().debug("  key: " + node.getKey());
+                    getLogger().debug("  value: " + node.getValue());
                 }
 
                 if (this.persistent) {
                     // Swap object on fs.
-                    if(checkSerializable(value)) {
+                    if(checkSerializable(node.getValue())) {
                         try {
                             this.persistentStore.store(
-                                getFileName(key.toString()), value);
+                                getFileName(node.getKey().toString()), node.getValue());
                         } catch(Exception e) {
                             getLogger().error("Error storing object on fs", e);
                         }
@@ -377,4 +369,3 @@ public final class MRUMemoryStore extends AbstractLogEnabled
         return URLEncoder.encode(key.toString());
     }
 }
-
