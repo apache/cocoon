@@ -27,6 +27,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Default service manager for Cocoon's components.
@@ -103,16 +104,16 @@ implements ServiceManager, Configurable {
             }
 
             if( this.roleManager != null ) {
-                final String className = this.roleManager.getDefaultClassNameForRole( role );
+                final ServiceInfo info = this.roleManager.getDefaultServiceInfoForRole( role );
 
-                if( className != null ) {
+                if( info != null ) {
                     if( this.getLogger().isDebugEnabled() ) {
                         this.getLogger().debug( "Could not find ComponentHandler, attempting to create "
                             + "one for role [" + role + "]" );
                     }
 
                     try {
-                        final Class componentClass = this.loader.loadClass( className );
+                        final Class componentClass = this.loader.loadClass( info.getServiceClassName() );
 
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
 
@@ -288,7 +289,8 @@ implements ServiceManager, Configurable {
 
                 if( null != role && !role.equals( "" ) ) {
                     if( className.equals( "" ) ) {
-                        className = roleManager.getDefaultClassNameForRole( role );
+                        final ServiceInfo info = roleManager.getDefaultServiceInfoForRole( role );
+                        className = info.getServiceClassName();
                     }
 
                     this.addComponent(className, role, configurations[i]);

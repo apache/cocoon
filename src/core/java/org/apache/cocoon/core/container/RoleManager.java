@@ -24,6 +24,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Default RoleManager implementation.  It populates the RoleManager
@@ -98,14 +99,14 @@ implements Configurable {
      * @param role  The role that has a default implementation.
      * @return the Fully Qualified Class Name (FQCN) for the role.
      */
-    public final String getDefaultClassNameForRole( final String role ) {
-        final String className = (String)this.classNames.get( role );
+    public final ServiceInfo getDefaultServiceInfoForRole( final String role ) {
+        final ServiceInfo info = (ServiceInfo)this.classNames.get( role );
 
-        if( null == className && null != this.parent ) {
-            return this.parent.getDefaultClassNameForRole( role );
+        if( info == null && this.parent != null ) {
+            return this.parent.getDefaultServiceInfoForRole( role );
         }
 
-        return className;
+        return info;
     }
 
     /**
@@ -120,8 +121,8 @@ implements Configurable {
      * @param shorthand  The shorthand name for the type of component
      * @return the FQCN for the role/key combination.
      */
-    public final String getDefaultClassNameForKey( final String role,
-                                                   final String shorthand ) {
+    public final ServiceInfo getDefaultServiceInfoForKey( final String role,
+                                                          final String shorthand ) {
         if( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug( "looking up keymap for role " + role );
         }
@@ -130,19 +131,19 @@ implements Configurable {
 
         if( null == keyMap ) {
             if( null != this.parent ) {
-                return this.parent.getDefaultClassNameForKey( role, shorthand );
+                return this.parent.getDefaultServiceInfoForKey( role, shorthand );
             } 
-            return "";
+            return null;
         }
 
         if( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug( "looking up classname for key " + shorthand );
         }
 
-        final String s = ( String ) keyMap.get( shorthand );
+        final ServiceInfo s = ( ServiceInfo ) keyMap.get( shorthand );
 
-        if( s == null && null != this.parent ) {
-            return this.parent.getDefaultClassNameForKey( role, shorthand );
+        if( s == null && this.parent != null ) {
+            return this.parent.getDefaultServiceInfoForKey( role, shorthand );
         } 
         return s;
     }
@@ -169,8 +170,11 @@ implements Configurable {
 
             shorts.put( shorthand, name );
 
-            if( null != defaultClassName ) {
-                classes.put( name, defaultClassName );
+            if( defaultClassName != null ) {
+                final ServiceInfo info = new ServiceInfo();
+                info.setServiceClassName(defaultClassName);
+                info.fill(roles[ i ]);
+                classes.put( name, info );
             }
 
             final Configuration[] keys = roles[ i ].getChildren( "hint" );
@@ -179,9 +183,13 @@ implements Configurable {
 
                 for( int j = 0; j < keys.length; j++ ) {
                     final String shortHand = keys[ j ].getAttribute( "shorthand" ).trim();
-                    String className = keys[ j ].getAttribute( "class" ).trim();
+                    final String className = keys[ j ].getAttribute( "class" ).trim();
 
-                    keyMap.put( shortHand, className );
+                    final ServiceInfo info = new ServiceInfo();
+                    info.setServiceClassName(className);
+                    info.fill(keys[ j ]);
+
+                    keyMap.put( shortHand, info );
                     if( this.getLogger().isDebugEnabled() ) {
                         this.getLogger().debug( "Adding key type " + shortHand +
                                                 " associated with role " + name +
