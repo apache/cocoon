@@ -19,11 +19,7 @@ As of March  27th, 2003, the following tests fail:
 * 0.1 This bullet list is invisible in the html output if there is no section title before it
 * Headings are not nested as they should (use cocoon-view=xdoc to check xdocs XML output)
 * 1.2, heading is interpreted as text under heading 1.1
-* 4.2, missing space in 4.1 after bold and italic words
 * 5.1 relative link points to wiki.cocoondev.org (but is it by design?)
-* 6,1 no ruler line
-* 6.2 no line break
-* 7.1 missing spaces ("allwords" and "befollowed").
 
 -- 1.HEADINGS --
 

@@ -121,7 +121,7 @@
 
  <map:pipelines>
 
-  <map:pipeline type="caching" internal-only="true">
+  <map:pipeline type="caching">
    <!-- Hint: During development you could expose this pipeline, to help
      with writing your grammars. Use a text grammar myapp.grm and request
      the myapp.xlex and myapp.xgrm URLs and then view source.

@@ -1,5 +1,5 @@
 
-%token line "\-\-\-\- (\-+)";
+%token line "\-\-\-\- (\-*)";
 
 %token bulleteditem "\*+";
 
@@ -25,10 +25,14 @@
 
 %token link   "\[( [^\[\|\]]* \| )?   [^\[\|\]]* \]";
 
-%token text  "([^\ \t\n\r\[\{\}\|\*_!#'] | _[^_] | \{[^\{] | \}[^\}] | '[^'] | \[\[)
-              ([^    \n\r\[\{\}\|_']     | _[^_] | \{[^\{] | \}[^\}] | '[^'] | \[\[ | \|[^\|\ \t])*";
+%token text  "([^\ \t\n\r\[\{\}\|\*\\\-_!#'] | _[^_\n\r] | \{[^\{\n\r] | \}[^\}\n\r] | '[^'\n\r] 
+                                             | \[\[ | \\[^\\\n\r] | \-{1,3}[^\-\n\r]?)
+              ([^    \n\r\[\{\}\|\\\-_']     | _[^_\n\r] | \{[^\{\n\r] | \}[^\}\n\r] | '[^'\n\r] 
+                                             | \[\[ | \\[^\\\n\r] | \-{1,3}[^\-\n\r]? | \|[^\ | \ \t])*";
 
 %right softbreak "\r(\n?) | \n";
+
+%right break "\\\\";
 
 %right hardbreak "(\r(\n?) | \n) (\r(\n?) | \n)+";
 
@@ -47,6 +51,7 @@ document
 section 
   : title paragraphs
   | title hardbreak paragraphs
+  | title
   ;
 
 paragraphs  
@@ -142,7 +147,9 @@ textsequence
   : textsequence textblock softbreak
   | textsequence textblock 
   | textblock softbreak  
-  | textblock           
+  | textblock
+  | textsequence textblock break
+  | textblock break
   ; 
 
 textblock 
