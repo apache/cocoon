@@ -43,6 +43,12 @@
     <sample name="Hello" href="hello">
       Simple two-page JSF application
     </sample>
+    <note>
+      License for CarStore JSF demo warns: Don't use in nuclear facility.
+    </note>
+    <sample name="CarStore" href="cardemo/">
+      CarStore demo JSF application
+    </sample>
   </group>
 
   <group name="Resources">

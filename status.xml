@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="add">
+     Faces block: Added JSF CarStore demo.
+   </action>
    <action dev="VG" type="fix">
      Flow preserves global variables on sitemap reload.
    </action>
