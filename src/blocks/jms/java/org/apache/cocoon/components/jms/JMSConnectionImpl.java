@@ -96,7 +96,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.9 2004/02/15 21:30:00 haul Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.10 2004/02/24 13:02:47 unico Exp $
  * @author <a href="mailto:haul@apache.org">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
@@ -159,19 +159,26 @@ public class JMSConnectionImpl extends AbstractLogEnabled
             this.available = true;
         } catch (NamingException e) {
             if (getLogger().isWarnEnabled()) {
-            	String rootCause = e.getRootCause().getClass().getName();
-            	String message = e.getRootCause().getMessage();
-            	if (rootCause.equals("java.lang.ClassNotFoundException")) {
-            		String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" +            			"- For the jms block to work you must install and start a JMS server and " +            			"place the client jar in WEB-INF/lib.";
-            			if (message.indexOf("exolab") > 0 ) {
-            				info += "\n- The default server, OpenJMS is configured in cocoon.xconf but is not bundled with Cocoon.";
-            			}
-					System.err.println(info);
-					getLogger().warn(info,e);
-            	} else {
-					System.out.println(message);
-					getLogger().warn("Cannot get Initial Context.  Is the JNDI server reachable?",e);
-            	}
+                Throwable rootCause = e.getRootCause();
+                if (rootCause != null) {
+                    String message = e.getRootCause().getMessage();
+                    if (rootCause instanceof ClassNotFoundException) {
+                        String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" + 
+                            "- For the jms block to work you must install and start a JMS server and " +
+                            "place the client jar in WEB-INF/lib.";
+                            if (message.indexOf("exolab") > 0 ) {
+                                info += "\n- The default server, OpenJMS is configured in cocoon.xconf but is not bundled with Cocoon.";
+                            }
+                        System.err.println(info);
+                        getLogger().warn(info,e);
+                    } else {
+                        System.out.println(message);
+                        getLogger().warn("Cannot get Initial Context. Is the JNDI server reachable?",e);
+                    }
+                }
+                else {
+                    getLogger().warn("Failed to initialize JMS.",e);
+                }
             }
         } catch (JMSException e) {
             if (getLogger().isWarnEnabled()) {
@@ -250,7 +257,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
      * @throws NamingException
      * @throws JMSException
      */
-    public synchronized TopicSession getSession() throws NamingException, JMSException {
+    public TopicSession getSession() throws NamingException, JMSException {
         return this.session;
     }
 
