@@ -55,7 +55,7 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.8 2004/03/06 14:05:04 joerg Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.9 2004/03/06 14:24:51 joerg Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
@@ -78,25 +78,26 @@ public class StreamGenerator extends ServiceableGenerator
     /**
      * Generate XML data out of request InputStream.
      */
-    public void generate() 
+    public void generate()
     throws IOException, SAXException, ProcessingException {
         SAXParser parser = null;
         int len = 0;
         String contentType = null;
-        
+
         Request request = ObjectModelHelper.getRequest(this.objectModel);
         try {
             contentType = request.getContentType();
             if (contentType == null) {
                 contentType = parameters.getParameter("defaultContentType", null);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("no Content-Type header - using contentType parameter");
+                    getLogger().debug("no Content-Type header - using contentType parameter: " + contentType);
+                }
+                if (contentType == null) {
+                    throw new IOException("both Content-Type header and defaultContentType parameter are not set");
                 }
             }
-            if (contentType == null) {
-                throw new IOException("both Content-Type header and defaultContentType parameter are not set");
-            } else if (contentType.startsWith("application/x-www-form-urlencoded")
-                       || contentType.startsWith("multipart/form-data")) {
+            if (contentType.startsWith("application/x-www-form-urlencoded") ||
+                    contentType.startsWith("multipart/form-data")) {
                 String parameter = parameters.getParameter(FORM_NAME, null);
                 if (parameter == null) {
                     throw new ProcessingException(
@@ -106,16 +107,14 @@ public class StreamGenerator extends ServiceableGenerator
                 }
                 Object xmlObject = request.get(parameter);
                 Reader xmlReader = null;
-                if (xmlObject instanceof String){
-                  xmlReader  = new StringReader((String)xmlObject);
-                }
-                else if (xmlObject instanceof Part){
-                  xmlReader = new InputStreamReader(((Part)xmlObject).getInputStream());
-                }
-                else{
-                  throw new ProcessingException("Unknown request object encountred named " + 
-                parameter + " : " + xmlObject);
-                }
+                if (xmlObject instanceof String) {
+                    xmlReader  = new StringReader((String)xmlObject);
+                } else if (xmlObject instanceof Part) {
+                    xmlReader = new InputStreamReader(((Part)xmlObject).getInputStream());
+                } else {
+                    throw new ProcessingException("Unknown request object encountered named " + 
+                                                  parameter + " : " + xmlObject);
+                }                
                 inputSource = new InputSource(xmlReader);
             } else if (contentType.startsWith("text/plain") ||
                     contentType.startsWith("text/xml") ||
