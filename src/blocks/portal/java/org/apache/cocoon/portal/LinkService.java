@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LinkService.java,v 1.5 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id: LinkService.java,v 1.6 2004/06/07 09:53:34 cziegeler Exp $
  */
 public interface LinkService extends Component {
 
@@ -54,12 +54,27 @@ public interface LinkService extends Component {
     void addEventToLink(Event event);
     
     /**
-     * Add this parameter to every link
+     * Add this parameter to every link.
+     * If the link already contains a parameter with this name,
+     * then the link will have both parameters with the same
+     * name, but different values.
      * @param name  The request parameter name
      * @param value The value for the parameter
+     * @see #addUniqueParameterToLink(String, String)
      */
     void addParameterToLink(String name, String value);
     
+    /**
+     * Add this parameter to every link.
+     * If the link already contains a parameter with this name,
+     * then this old parameter will be removed and replaced by
+     * the new one.
+     * @param name  The request parameter name
+     * @param value The value for the parameter
+     * @see #addUniqueParameterToLink(String, String)
+     */
+    void addUniqueParameterToLink(String name, String value);
+
     /**
      * Get a link that simply refreshs the portal
      * @return A URI

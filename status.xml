@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.354 2004/06/07 08:55:25 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.355 2004/06/07 09:53:33 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -205,6 +205,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix">
+     Portal: Fix transformation of non-external html links (HTMLEventLinkTransformer)
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="28687">
+     Portal: Fix problem with bookmarks and CachingURICoplet
+   </action>
    <action dev="SW" type="update">
      A new build property, "build.archive-sources", allows to include java source files
      in jar archives. Useful when using a non-released version to know what sources

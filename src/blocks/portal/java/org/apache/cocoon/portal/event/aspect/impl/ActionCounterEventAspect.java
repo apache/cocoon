@@ -32,7 +32,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ActionCounterEventAspect.java,v 1.5 2004/04/07 12:03:46 cziegeler Exp $
+ * @version CVS $Id: ActionCounterEventAspect.java,v 1.6 2004/06/07 09:53:34 cziegeler Exp $
  */
 public class ActionCounterEventAspect
 	extends AbstractLogEnabled
@@ -79,7 +79,7 @@ public class ActionCounterEventAspect
                 context.invokeNext( service );
             }
         }
-        service.getComponentManager().getLinkService().addParameterToLink( requestParameterName, String.valueOf(actionCount));
+        service.getComponentManager().getLinkService().addUniqueParameterToLink( requestParameterName, String.valueOf(actionCount));
         
         final Response response = ObjectModelHelper.getResponse( context.getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");

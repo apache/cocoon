@@ -44,7 +44,7 @@ import org.apache.cocoon.portal.PortalService;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.10 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.11 2004/06/07 09:53:34 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -74,11 +74,11 @@ public class PortalServiceImpl
     }
 
     protected PortalServiceInfo getInfo() {
-        PortalServiceInfo info = (PortalServiceInfo) this.dataStore.getRequestData(this.key);
+        PortalServiceInfo info = (PortalServiceInfo) this.dataStore.getGlobalRequestData(this.key);
         if ( info == null ) {
             info = new PortalServiceInfo();
             info.setup(ContextHelper.getObjectModel(this.context), this.portalComponentManagers);
-            this.dataStore.setRequestData(this.key, info);
+            this.dataStore.setGlobalRequestData(this.key, info);
         }
         return info;
     }
