@@ -52,18 +52,18 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 
 /**
  * Cell type codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: CellType.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: CellType.java,v 1.3 2003/08/20 17:29:07 joerg Exp $
  */
-public class CellType
-{
+public class CellType {
+
+
+    public static final int CELL_TYPE_FORMULA   = -1;
     public static final int CELL_TYPE_EMPTY     = 10;
     public static final int CELL_TYPE_BOOLEAN   = 20;
     public static final int CELL_TYPE_INTEGER   = 30;
@@ -73,33 +73,27 @@ public class CellType
     public static final int CELL_TYPE_CELLRANGE = 70;
     public static final int CELL_TYPE_ARRAY     = 80;
 
-    private CellType()
-    {
+    private CellType() {
     }
 
     /**
      * Is this a valid cell type?
      *
      * @param val value to be checked
-     *
      * @return true if valid, false otherwise
      */
-
-    public static boolean isValid(final int val)
-    {
-        switch (val)
-        {
-
+    public static boolean isValid(final int val) {
+        switch (val) {
             case CELL_TYPE_EMPTY :
             case CELL_TYPE_BOOLEAN :
             case CELL_TYPE_INTEGER :
             case CELL_TYPE_FLOAT :
             case CELL_TYPE_ERROR :
             case CELL_TYPE_STRING :
+            case CELL_TYPE_FORMULA :
             case CELL_TYPE_CELLRANGE :
             case CELL_TYPE_ARRAY :
                 return true;
-
             default :
                 return false;
         }
@@ -109,22 +103,17 @@ public class CellType
      * Convert a CellType enum into an HSSFCell enum
      *
      * @param val the value to be converted
-     *
      * @return the converted value
      */
-
-    static int convertCellType(final int val)
-    {
-        switch (val)
-        {
-
+    static int convertCellType(final int val) {
+        switch (val) {
             case CELL_TYPE_INTEGER :
             case CELL_TYPE_FLOAT :
                 return HSSFCell.CELL_TYPE_NUMERIC;
-
             case CELL_TYPE_STRING :
                 return HSSFCell.CELL_TYPE_STRING;
-
+            case CELL_TYPE_FORMULA :
+                return HSSFCell.CELL_TYPE_FORMULA;
             default :
                 return HSSFCell.CELL_TYPE_BLANK;
         }

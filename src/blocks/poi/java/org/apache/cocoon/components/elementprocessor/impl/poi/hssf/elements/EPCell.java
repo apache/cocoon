@@ -66,7 +66,7 @@ import org.apache.cocoon.components.elementprocessor.types.Validator;
  * This element has several attributes and may contain other elements.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPCell.java,v 1.3 2003/06/14 00:26:27 joerg Exp $
+ * @version CVS $Id: EPCell.java,v 1.4 2003/08/20 17:29:07 joerg Exp $
  */
 public class EPCell extends BaseElementProcessor implements LocaleAware {
 
@@ -233,7 +233,8 @@ public class EPCell extends BaseElementProcessor implements LocaleAware {
      */
     public void initialize(final Attribute[] attributes, final ElementProcessor parent) throws IOException {
         super.initialize(attributes, parent);
-        int cellType = -1;
+        // default value (when <gmr:Cell> has no ValueType attribute)
+        int cellType = CellType.CELL_TYPE_FORMULA;
         try {
             cellType = getCellType();
         } catch (NullPointerException ignored) {
