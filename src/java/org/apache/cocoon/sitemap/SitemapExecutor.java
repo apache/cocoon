@@ -24,6 +24,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.selection.SwitchSelector;
 
 /**
  * The sitemap executor executes all sitemap statements, so it actually
@@ -32,14 +33,24 @@ import org.apache.cocoon.selection.Selector;
  * plugin custom profiling or debugging tools.
  *
  * TODO - This is not finished yet!
+ * TODO - we should add invocation of a Redirector as well
  * 
  * @since 2.2
- * @version CVS $Id: SitemapExecutor.java,v 1.5 2004/06/24 13:18:01 cziegeler Exp $
+ * @version CVS $Id: SitemapExecutor.java,v 1.6 2004/07/14 13:17:45 cziegeler Exp $
  */
 public interface SitemapExecutor {
     
     /** The component role */
     String ROLE = SitemapExecutor.class.getName();
+    
+    public static class PipelineComponentDescription {
+        public String type;
+        public String source;
+        public Parameters parameters;
+        public Parameters hintParameters;
+        /** Mime-type for serializers and readers */
+        public String mimeType;
+    }
     
     /**
      * Invoke an action and return the result.
@@ -89,6 +100,23 @@ public interface SitemapExecutor {
             Parameters parameters);
     
     /**
+     * Invoke a switch selector
+     * @param context
+     * @param objectModel
+     * @param selector
+     * @param expression
+     * @param parameters
+     * @param selectorContext The context object for the switch selector
+     * @return
+     */
+    boolean invokeSwitchSelector(ExecutionContext context,
+                                 Map             objectModel,
+                                 SwitchSelector  selector, 
+                                 String expression, 
+                                 Parameters parameters,
+                                 Object selectorContext);
+
+    /**
      * Push map of information on the context stack.
      * @param context The execution context
      * @param objectModel The object model
@@ -121,4 +149,48 @@ public interface SitemapExecutor {
     String enterSitemap(ExecutionContext context, 
                         Map              objectModel,
                         String           source);
+
+    /**
+     * Add a generator
+     * @param context
+     * @param objectModel
+     * @param desc The descrption of the component
+     * @return The desc of the component to use
+     */
+    PipelineComponentDescription addGenerator(ExecutionContext context, 
+                                              Map              objectModel,
+                                              PipelineComponentDescription desc);
+
+    /**
+     * Add a transformer
+     * @param context
+     * @param objectModel
+     * @param desc The descrption of the component
+     * @return The desc of the component to use
+     */
+    PipelineComponentDescription addTransformer(ExecutionContext context, 
+                                                Map              objectModel,
+                                                PipelineComponentDescription desc);
+
+    /**
+     * Add a serializer
+     * @param context
+     * @param objectModel
+     * @param desc The descrption of the component
+     * @return The desc of the component to use
+     */
+    PipelineComponentDescription addSerializer(ExecutionContext context, 
+                                               Map              objectModel,
+                                               PipelineComponentDescription desc);
+
+    /**
+     * Add a reader
+     * @param context
+     * @param objectModel
+     * @param desc The descrption of the component
+     * @return The desc of the component to use
+     */
+    PipelineComponentDescription addReader(ExecutionContext context, 
+                                           Map              objectModel,
+                                           PipelineComponentDescription desc);
 }

@@ -27,21 +27,16 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.selection.SwitchSelector;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
- * Sampe sitemap executor that prints out everything to a logger
+ * Sample sitemap executor that prints out everything to a logger
  * 
  * @since 2.2
- * @version CVS $Id: SimpleSitemapExecutor.java,v 1.4 2004/06/24 13:18:01 cziegeler Exp $
- */
-/**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @version CVS $Id: SimpleSitemapExecutor.java,v 1.5 2004/07/14 13:17:45 cziegeler Exp $
  */
 public class SimpleSitemapExecutor 
     extends AbstractLogEnabled
@@ -124,6 +119,24 @@ public class SimpleSitemapExecutor
         }
         return result;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSwitchSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.selection.SwitchSelector, java.lang.String, org.apache.avalon.framework.parameters.Parameters, java.lang.Object)
+     */
+    public boolean invokeSwitchSelector(ExecutionContext context,
+            Map objectModel, SwitchSelector selector, String expression,
+            Parameters parameters, Object selectorContext) {
+        this.getLogger().info("- Invoking selector '" + context.getType() + "' (" +
+                context.getLocation() + ").");
+        final boolean result = selector.select(expression, selectorContext);
+        if ( result ) {
+            this.getLogger().info("- Selector '" + context.getType() + "' succeeded.");
+        } else {
+            this.getLogger().info("- Selector '" + context.getType() + "' failed.");            
+        }
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
      */
@@ -155,6 +168,47 @@ public class SimpleSitemapExecutor
                                String source) {
         this.getLogger().info("- Entering sitemap " + source);
         return source;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addGenerator(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addGenerator(ExecutionContext context,
+            Map objectModel, PipelineComponentDescription desc) {
+        this.getLogger().info("- Adding generator '" + desc.type + "' (" +
+                context.getLocation() + ").");
+        return desc;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addReader(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addReader(ExecutionContext context,
+            Map objectModel, PipelineComponentDescription desc) {
+        this.getLogger().info("- Adding reader '" + desc.type + "' (" +
+                context.getLocation() + ").");
+        return desc;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addSerializer(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addSerializer(ExecutionContext context,
+            Map objectModel, PipelineComponentDescription desc) {
+        this.getLogger().info("- Adding serializer '" + desc.type + "' (" +
+                context.getLocation() + ").");
+        return desc;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#addTransformer(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription addTransformer(
+            ExecutionContext context, Map objectModel,
+            PipelineComponentDescription desc) {
+        this.getLogger().info("- Adding transformer '" + desc.type + "' (" +
+                context.getLocation() + ").");
+        return desc;
     }
 }
 
