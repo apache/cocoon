@@ -64,30 +64,36 @@
       <macrodef name="test-include-block">
         <attribute name="name"/>
         <sequential>
-           <condition property="include.block.@{{name}}">
-          <not>
-            <istrue value="${{exclude.block.@{{name}}}}"/>
-          </not>
-        </condition>
-        <condition property="internal.exclude.block.@{{name}}">
-          <isfalse value="${{include.block.@{{name}}}}"/>
-        </condition>
+          <condition property="include.block.@{{name}}">
+            <not>
+              <istrue value="${{exclude.block.@{{name}}}}"/>
+            </not>
+          </condition>
+          <condition property="internal.exclude.block.@{{name}}">
+            <and>
+              <isfalse value="${{include.all.blocks}}"/>
+              <or>
+                <istrue value="${{exclude.all.blocks}}"/>
+                <isfalse value="${{include.block.@{{name}}}}"/>
+              </or>
+            </and>
+          </condition>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="print-excluded-block">
+      <macrodef name="print-excluded-block">
         <attribute name="name"/>
         <sequential>
-            <if>
-              <istrue value="${{internal.exclude.block.@{{name}}}}"/>
-              <then>
-                <echo message=" Block '@{{name}}' is excluded from the build."/>
-              </then>
-            </if>
+          <if>
+            <istrue value="${{internal.exclude.block.@{{name}}}}"/>
+            <then>
+              <echo message=" Block '@{{name}}' is excluded from the build."/>
+            </then>
+          </if>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-compile">
+      <macrodef name="block-compile">
         <attribute name="name"/>
         <attribute name="package"/>
         <attribute name="dir"/>
@@ -215,9 +221,9 @@
         </then>
       </if>
        </sequential>
-   </macrodef>
+      </macrodef>
 
-   <macrodef name="block-patch">
+      <macrodef name="block-patch">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -263,9 +269,9 @@
           </sitemap-components>
           -->
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-roles">
+      <macrodef name="block-roles">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -273,9 +279,9 @@
                 <include name="conf/*.xroles"/>
             </xpatch>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-patch-samples">
+      <macrodef name="block-patch-samples">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -286,9 +292,9 @@
                 <include name="conf/*.samplesxconf"/>
             </xpatch>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-samples">
+      <macrodef name="block-samples">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -307,9 +313,9 @@
             </then>
           </if>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-lib">
+      <macrodef name="block-lib">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -341,9 +347,9 @@
             </then>
           </if>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-tests">
+      <macrodef name="block-tests">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -396,9 +402,9 @@
             </then>
           </if>
         </sequential>
-    </macrodef>
+      </macrodef>
 
-    <macrodef name="block-prepare-anteater-tests">
+      <macrodef name="block-prepare-anteater-tests">
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
@@ -413,7 +419,7 @@
             </then>
           </if>
         </sequential>
-    </macrodef>
+      </macrodef>
       <xsl:apply-templates select="module"/>
     </project>
   </xsl:template>
@@ -429,12 +435,12 @@
     </target>
 
     <target name="unstable" depends="init">
-        <condition property="unstable.blocks.present">
-          <or>
-            <xsl:for-each select="$cocoon-blocks[@status='unstable']">
-                <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-                <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
-            </xsl:for-each>
+      <condition property="unstable.blocks.present">
+        <or>
+          <xsl:for-each select="$cocoon-blocks[@status='unstable']">
+            <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+            <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
+          </xsl:for-each>
         </or>
       </condition>
       <if>
