@@ -2,14 +2,13 @@
 rem ----------------------------------------------------------------------------
 rem build.bat - Win32 Build Script for Apache Cocoon
 rem
-rem $Id: build.bat,v 1.6 2004/03/04 23:51:03 joerg Exp $
+rem $Id: build.bat,v 1.7 2004/03/05 00:44:44 joerg Exp $
 rem ----------------------------------------------------------------------------
 
 rem ----- Ignore system CLASSPATH variable
 set OLD_CLASSPATH=%CLASSPATH%
 set CLASSPATH=
 for %%i in (lib\endorsed\*.jar) do call tools\bin\appendcp.bat %%i
-echo Using classpath: "%CLASSPATH%"
 
 rem ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 set OLD_ANT_HOME=%ANT_HOME%

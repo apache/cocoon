@@ -17,8 +17,6 @@ unset CLASSPATH
 CLASSPATH="`echo lib/endorsed/*.jar | tr ' ' $S`"
 export CLASSPATH
 
-echo Using classpath: \"$CLASSPATH\"
-
 # ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 OLD_ANT_HOME="$ANT_HOME"
 export ANT_HOME=tools
