@@ -63,7 +63,7 @@ import org.apache.cocoon.woody.event.ProcessingPhaseListener;
 import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.commons.collections.CursorableLinkedList;
+import org.apache.commons.collections.list.CursorableLinkedList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.14 2003/12/30 14:48:37 mpo Exp $
+ * @version CVS $Id: Form.java,v 1.15 2004/01/28 12:47:15 joerg Exp $
  */
 public class Form extends AbstractContainerWidget {
     
