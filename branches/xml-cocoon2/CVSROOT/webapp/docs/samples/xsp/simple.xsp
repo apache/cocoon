@@ -5,9 +5,12 @@
           xmlns:xsp="http://apache.org/xsp"
           xmlns:xsp-request="http://apache.org/xsp/request"
           xmlns:xsp-response="http://apache.org/xsp/response"
+	  xmlns:log="http://apache.org/xsp/log"
 >
 
   <page>
+  <log:logger name="xsp-sample" url="file:../../logs/xsp-sample.log"/>
+  <log:debug>Processing the beginning of the page</log:debug>
 
    <title>A Simple XSP Page</title>
 
@@ -65,5 +68,6 @@
 
    <para>Brought to you by Cocoon2 at <xsp:expr>new Date()</xsp:expr>.</para>
    </content>
+   <log:debug>Processing the end of the page</log:debug>
   </page>
 </xsp:page>
