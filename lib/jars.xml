@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.198 2004/03/31 07:41:37 antonio Exp $
+    | CVS $Id: jars.xml,v 1.199 2004/04/01 13:18:24 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -740,7 +740,7 @@
     <title>Slide kernel</title>
     <description>The Jakarta Slide kernel API.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-kernel-2.0b1-200040329.jar</lib>
+    <lib>slide/lib/slide-kernel-2.0b1-20040329.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -748,7 +748,7 @@
     <title>Slide stores</title>
     <description>The Jakarta Slide stores implementation.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-stores-2.0b1-200040329.jar</lib>
+    <lib>slide/lib/slide-stores-2.0b1-20040329.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
@@ -756,7 +756,7 @@
     <title>Slide WebDAV Servlet</title>
     <description>The Jakarta Slide WebDAV servlet.</description>
     <used-by>Slide block</used-by>
-    <lib>slide/lib/slide-webdavservlet-2.0b1-200040329.jar</lib>
+    <lib>slide/lib/slide-webdavservlet-2.0b1-20040329.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
