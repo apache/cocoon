@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.27 2000-11-11 07:33:57 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.28 2000-11-11 21:40:18 balld Exp $-->
 <!--
 
  ============================================================================
@@ -285,8 +285,8 @@
 
 <xsl:template match="esql:query//esql:parameter">"?"</xsl:template>
 
-<xsl:template match="esql:execute-query/esql:results">
-  <xsl:for-each select="esql:row-results[0]">
+<xsl:template match="esql:execute-query/esql:results" priority="2">
+  <xsl:for-each select="esql:row-results[1]">
     <xsl:apply-templates select="preceding-sibling::*[not(name()='esql:no-results')]"/>
     <xsp:logic>
       while (_esql_query.resultset.next()) {
