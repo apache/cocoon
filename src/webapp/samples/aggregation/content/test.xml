@@ -13,11 +13,12 @@
     <para><b><![CDATA[<xi:include href="test2.xml#xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>]]></b></para>
     <xi:include href="test2.xml#xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>
 
-
     <hr/>
     <para><b>Inclusion with an invalid xpointer expression, will cause fallback
         element content to be inserted:</b></para>
     <para><b><![CDATA[<xi:include href="test2.xml#xpointer(">]]></b></para>
+    <para><b><i>This sample is removed at the moment as Xerces seems to have problems with xi:fallback: "Unknown XInclude element xi:fallback ..."</i></b></para>
+    <!--
     <xi:include href="test2.xml#xpointer(">
       <a>
         <b>
@@ -29,7 +30,7 @@
       </xi:fallback>
       And here's some more text you shouldn't see.
     </xi:include>
-
+    -->
     <hr/>
     <para><b><![CDATA[
     <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
