@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.358 2004/06/08 20:21:38 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.359 2004/06/08 21:44:42 tony Exp $:-->
 
 <status>
  <developers>
@@ -67,6 +67,7 @@
   <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
   <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
   <person name="Ugo Cei" email="ugo@apache.org" id="UC"/>
+  <person name="Tony Collen" email="tony@apache.org" id="ATC"/>
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
@@ -205,6 +206,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="ATC" type="add" due-to="Leszek Gawron">
+     New Input modules: URLEncodeModule and URLDecodeModule
+   </action>
    <action dev="CZ" type="fix" fixes-bug="27066">
      Apply patch to fix some memory leaks in the tree processor.
    </action>
