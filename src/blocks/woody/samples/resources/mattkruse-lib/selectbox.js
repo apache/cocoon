@@ -27,7 +27,7 @@ DESCRIPTION: These are general functions to deal with and manipulate
 select boxes. Also see the OptionTransfer library to more easily 
 handle transferring options between two lists
 
-COMPATABILITY: These are fairly basic functions - they should work on
+COMPATIBILITY: These are fairly basic functions - they should work on
 all browsers that support Javascript.
 */
 
