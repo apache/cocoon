@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.30 2000-02-14 12:21:11 stefano Exp $
+  $Id: changes.xml,v 1.31 2000-02-16 01:06:28 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -15,6 +15,16 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Sean Timm" due-to-email="STimm@mailgo.com">
+    Fixed problems in stylesheet updating.
+  </action>
+  <action dev="SM" type="fix">
+    Added index.html file to simplify installation by allowing a central
+    point for aliasing that gives access to all web accessible resources.
+  </action>
+  <action dev="SM" type="fix">
+    Futher installation cleanup.
+  </action>
   <action dev="SM" type="fix">
     Patched memory usage and tested under heavy load.
   </action>
