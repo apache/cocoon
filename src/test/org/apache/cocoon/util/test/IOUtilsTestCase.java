@@ -60,7 +60,7 @@ import org.apache.cocoon.util.IOUtils;
  *
  * @author <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: IOUtilsTestCase.java,v 1.2 2003/03/16 18:03:56 vgritsenko Exp $
+ * @version CVS $Id: IOUtilsTestCase.java,v 1.3 2003/05/31 12:51:53 jefft Exp $
  */
 public class IOUtilsTestCase extends TestCase
 {
@@ -104,6 +104,8 @@ public class IOUtilsTestCase extends TestCase
                 new String[]{"a\\b\\c", "a" + File.separator + "b" + File.separator + "c"},
                 
                 new String[]{"a/b/../c", "a" + File.separator + "c"},
+                new String[]{"public/final.xml", "public_" + File.separator + "final_xml"},
+                new String[]{"123", "_123"}
                 };
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
