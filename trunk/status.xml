@@ -180,6 +180,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="SMS" type="update" fixes-bug="18466" due-to="Yury Mikhienko" due-to-email="yuryx@mobicomk.donpac.ru">
+   Enable the LDAPTransformer to obtain attribute values from LDAP using various encoding
+   schemes for stored values.
+  </action>
   <action dev="SMS" type="update" fixes-bug="19885" due-to="Torsten Knodt" due-to-email="torstenknodt@datas-world.de">
    Cleaned up MIMEUtils.
   </action>
