@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.112 2003/10/10 06:10:00 antonio Exp $
+    | CVS $Id: jars.xml,v 1.113 2003/10/14 16:40:09 haul Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -863,7 +863,7 @@
 	<lib>ojb/lib/antlr.jar</lib>
 	<homepage>http://www.antlr.org/</homepage>
   </file>
-  
+
   <file>
     <title>Jakarta Commons DBCP</title>
 	<description>
@@ -873,7 +873,7 @@
 	<lib>ojb/lib/commons-dbcp.jar</lib>
 	<homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
   </file>
-  
+
   <file>
     <title>Jakarta Commons Pool</title>
 	<description>
@@ -884,7 +884,7 @@
 	<lib>ojb/lib/commons-pool.jar</lib>
 	<homepage>http://jakarta.apache.org/commons/pool/</homepage>
   </file>
-  
+
   <file>
     <title>Apache  ObJectRelationalBridge</title>
 	<description>
@@ -896,4 +896,52 @@
 	<homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
+  <!-- JMS block begin
+  <file>
+        <title>OpenJMS</title>
+        <description>OpenJMS core libraries. OpenJMS is a OpenSource JMS, Java Messaging
+        Service, implementation.</description>
+        <used-by>JMS</used-by>
+        <lib>jms/lib/exolabcore-0.3.6.jar</lib>
+        <homepage>http://openjms.sf.net</homepage>
+  </file>
+  <file>
+        <title>OpenJMS</title>
+        <description>OpenJMS client libraries. OpenJMS is a OpenSource JMS, Java Messaging
+        Service, implementation.</description>
+        <used-by>JMS</used-by>
+        <lib>jms/lib/openjms-client-0.7.6-rc2.jar</lib>
+        <homepage>http://openjms.sf.net</homepage>
+  </file>
+  <file>
+        <title>Sun JMS API</title>
+        <description>Sun's Java Messaging Service APIs. From the website:
+           Enterprise messaging provides a reliable,
+           flexible service for the asynchronous
+           exchange of critical business data and events
+           throughout an enterprise. The JMS API adds to
+           this a common API and provider framework that
+           enables the development of portable, message
+           based applications in the Java programming
+           language.
+        </description>
+        <used-by>JMS</used-by>
+        <lib>jms/lib/jms-1.0.2a.jar</lib>
+        <homepage>http://java.sun.com/jms</homepage>
+  </file>
+  <file>
+        <title>Sun JNDI</title>
+        <description>Sun's Java Naming and Directory Interface. From the website:
+           The Java Naming and Directory Interface (JNDI) is a standard extension to
+           the Java platform, providing Java technology-enabled applications with a
+           unified interface to multiple naming and directory services in the
+           enterprise. As part of the Java Enterprise API set, JNDI enables seamless
+           connectivity to heterogeneous enterprise naming and directory services.
+           Developers can now build powerful and portable directory-enabled
+           applications using this industry standard.</description>
+        <used-by>JMS</used-by>
+        <lib>jms/lib/jndi-1.2.1.jar</lib>
+        <homepage>http://java.sun.com/jndi</homepage>
+  </file>
+  JMS block end -->
 </jars>

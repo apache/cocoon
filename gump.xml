@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.90 2003/10/11 15:57:00 ugo Exp $
+    | CVS $Id: gump.xml,v 1.91 2003/10/14 16:40:08 haul Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1040,6 +1040,28 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/ojb-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jms" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="jms"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-eventcache"/>
+    <depend project="cocoon-block-databases"/>
+    <depend project="cocoon-block-hsqldb"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/jms/mocks"/>
+
+    <jar name="blocks/jms-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
