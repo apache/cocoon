@@ -1,11 +1,11 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.4 2001-04-18 12:05:46 cziegeler Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.5 2001-04-20 20:49:44 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.excalibur.datasource.DataSourceComponent;
@@ -53,7 +53,7 @@ import java.sql.SQLException;
  * expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-18 12:05:46 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:49:44 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -205,5 +205,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.4 2001-04-18 12:05:46 cziegeler Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.5 2001-04-20 20:49:44 bloritsch Exp $
 // vim: set et ts=4 sw=4:

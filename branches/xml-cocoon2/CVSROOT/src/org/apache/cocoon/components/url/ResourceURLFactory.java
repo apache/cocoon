@@ -10,15 +10,15 @@ package org.apache.cocoon.components.url;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-import org.apache.avalon.Context;
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: ResourceURLFactory.java,v 1.1.2.2 2001-02-12 13:50:23 bloritsch Exp $
+ * @version $Id: ResourceURLFactory.java,v 1.1.2.3 2001-04-20 20:50:04 bloritsch Exp $
  */
 public class ResourceURLFactory extends AbstractLoggable implements URLFactory, Contextualizable {
 

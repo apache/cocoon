@@ -11,7 +11,7 @@ import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.log.Logger;
 
@@ -20,7 +20,7 @@ import org.apache.log.Logger;
  * Actions.  In order to get at the Logger, use getLogger().
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-13 16:02:17 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-20 20:49:43 $
  */
 public abstract class AbstractAction extends AbstractLoggable
 implements Action, Configurable, Disposable {

@@ -13,14 +13,14 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.ThreadSafe;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.logger.Loggable;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
@@ -34,9 +34,9 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-13 16:02:21 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-20 20:49:59 $
  */
-public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composer, Disposable {
+public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composable, Disposable {
 
   /** The class loader */
   private ClassLoaderManager classLoaderManager;

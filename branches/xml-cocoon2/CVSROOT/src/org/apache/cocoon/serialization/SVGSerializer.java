@@ -18,9 +18,9 @@ import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.xml.*;
 import org.apache.cocoon.xml.dom.*;
-import org.apache.avalon.Poolable;
-import org.apache.avalon.Composer;
-import org.apache.avalon.ComponentManager;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
@@ -41,10 +41,10 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-17 13:21:04 $
+ * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-20 20:50:12 $
  */
-public class SVGSerializer extends SVGBuilder 
-        implements Composer, Serializer, Configurable, Poolable, Cacheable {
+public class SVGSerializer extends SVGBuilder
+        implements Composable, Serializer, Configurable, Poolable, Cacheable {
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler=null;
@@ -158,7 +158,7 @@ public class SVGSerializer extends SVGBuilder
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
+     * <code>Composable</code>.
      */
     public void compose(ComponentManager manager) {
         this.manager = manager;

@@ -8,10 +8,10 @@
 package org.apache.cocoon.components.pipeline;
 
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Recyclable;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
+import org.apache.excalibur.pool.Recyclable;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
@@ -19,9 +19,9 @@ import org.apache.cocoon.generation.Generator;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-19 11:30:39 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:50:00 $
  */
-public interface EventPipeline extends Component, Composer, Recyclable, Processor {
+public interface EventPipeline extends Component, Composable, Recyclable, Processor {
     public void setGenerator (String role, String source, Parameters param, Exception e) throws Exception;
     public void setGenerator (String role, String source, Parameters param) throws Exception;
     public Generator getGenerator ();

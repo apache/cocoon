@@ -10,22 +10,22 @@ package org.apache.cocoon.components.url;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: ContextURLFactory.java,v 1.1.2.5 2001-04-20 13:05:00 cziegeler Exp $
+ * @version $Id: ContextURLFactory.java,v 1.1.2.6 2001-04-20 20:50:04 bloritsch Exp $
  */
 public class ContextURLFactory extends AbstractLoggable implements URLFactory, Contextualizable {
 
     /**
      * The context
      */
-    protected org.apache.avalon.Context context;
+    protected org.apache.avalon.context.Context context;
 
     /**
      * Create a URL from a location. This method supports the
@@ -58,7 +58,7 @@ public class ContextURLFactory extends AbstractLoggable implements URLFactory, C
     /**
      * Get the context
      */
-    public void contextualize(org.apache.avalon.Context context) {
+    public void contextualize(org.apache.avalon.context.Context context) {
         if (this.context == null) {
             this.context = context;
         }

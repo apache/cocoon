@@ -17,14 +17,14 @@ import org.xml.sax.SAXException;
 
 import org.apache.cocoon.ProcessingException;
 
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Recyclable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.excalibur.pool.Recyclable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 11:27:20 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-20 20:50:09 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */

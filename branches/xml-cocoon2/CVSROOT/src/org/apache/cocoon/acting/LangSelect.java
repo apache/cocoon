@@ -23,7 +23,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Session;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.xml.sax.EntityResolver;
 
@@ -103,7 +103,7 @@ public class LangSelect extends java.lang.Object implements Action {
      * </ol>
      * @return java.lang.String
      * @param objectModel java.util.Map
-     * @param par org.apache.avalon.configuration.Parameters
+     * @param par org.apache.avalon.parameter.Parameters
      */
     public static String getLang(Map objectModel, Parameters par) {
 

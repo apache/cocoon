@@ -5,10 +5,10 @@ import java.util.Enumeration;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.ThreadSafe;
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Context;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.context.Context;
 
 import java.io.IOException;
 

@@ -10,7 +10,6 @@ package org.apache.cocoon.components.parser;
 import java.io.IOException;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.dom.DOMFactory;
-import org.apache.avalon.ThreadSafe;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -29,7 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
  * If only we can get rid of the need for the Document...
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-19 16:59:47 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:49:59 $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler {

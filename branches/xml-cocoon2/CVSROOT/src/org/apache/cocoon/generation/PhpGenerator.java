@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.component.Component;
+import org.apache.excalibur.pool.Poolable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-20 12:03:25 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-20 20:50:07 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 

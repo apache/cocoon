@@ -28,7 +28,7 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 import org.apache.cocoon.util.TraxErrorHandler;
 
@@ -37,7 +37,7 @@ import org.apache.cocoon.util.TraxErrorHandler;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 14:48:27 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-20 20:49:52 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
 
@@ -72,7 +72,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
             // Set the output properties
             format.put(OutputKeys.METHOD,"text");
             // FIXME (SSA) remove the nice identing. For debug purpose only.
-            format.put(OutputKeys.INDENT,"yes"); 
+            format.put(OutputKeys.INDENT,"yes");
             handler.getTransformer().setOutputProperties(format);
 
             this.writer = new StringWriter();

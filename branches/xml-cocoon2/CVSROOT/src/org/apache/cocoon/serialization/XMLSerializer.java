@@ -16,11 +16,11 @@ import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Poolable;
+import org.apache.excalibur.pool.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-03-15 22:08:50 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-20 20:50:12 $
  */
 
 public class XMLSerializer extends AbstractTextSerializer implements Poolable {

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.56 2001-04-17 16:46:11 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.57 2001-04-20 20:49:56 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -206,7 +206,7 @@
               if (_esql_selector == null) {
                 try {
                   _esql_selector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
-                } catch (ComponentManagerException cme) {
+                } catch (ComponentException cme) {
                   getLogger().error("Could not look up the datasource component", cme);
                 }
               }

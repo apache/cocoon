@@ -14,14 +14,14 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.HashMap;
 
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Context;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Composer;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -39,9 +39,9 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-17 15:00:15 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-20 20:50:14 $
  */
-public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
+public class Manager extends AbstractLoggable implements Configurable, Composable, Contextualizable {
 
     private Context context;
 

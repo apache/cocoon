@@ -19,11 +19,11 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
@@ -41,29 +41,29 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.2 2001-04-19 16:06:16 giacomo Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.3 2001-04-20 20:50:14 bloritsch Exp $
  */
 
-public class ContentAggregator extends ContentHandlerWrapper 
-        implements Generator, Cacheable, Composer {
+public class ContentAggregator extends ContentHandlerWrapper
+        implements Generator, Cacheable, Composable {
     /** the current sitemap */
     protected Sitemap sitemap;
-    
+
     /** the root sitemap */
     protected Sitemap rootSitemap;
-    
+
     /** the root element of the aggregated content */
     protected String rootElement;
-    
+
     /** the namespace of the root element */
     protected String rootElementNS;
-    
+
     /** the elements of the parts */
     protected ArrayList partElements = new ArrayList();
-    
+
     /** the namespaces of the parts */
     protected ArrayList partNSs = new ArrayList();
-    
+
     /** the URIs of the parts */
     protected ArrayList partURIs = new ArrayList();
 
@@ -102,24 +102,24 @@ public class ContentAggregator extends ContentHandlerWrapper
 
     /**
      * Pass the <code>ComponentManager</code> to the <code>composer</code>.
-     * The <code>Composer</code> implementation should use the specified
+     * The <code>Composable</code> implementation should use the specified
      * <code>ComponentManager</code> to acquire the components it needs for
      * execution.
      *
      * @param manager The <code>ComponentManager</code> which this
-     *                <code>Composer</code> uses.
+     *                <code>Composable</code> uses.
      */
-    public void compose(ComponentManager manager) throws ComponentManagerException {
+    public void compose(ComponentManager manager) throws ComponentException {
         if (this.manager == null) {
             this.manager = manager;
         }
     }
-    
+
     /**
      * generates the content
      */
     public void generate() throws IOException, SAXException, ProcessingException {
-        getLogger().debug("ContentAggregator: generating aggregated content"); 
+        getLogger().debug("ContentAggregator: generating aggregated content");
         collectParts();
         this.documentHandler.startDocument();
         this.startElem(this.rootElementNS, this.rootElement);
@@ -156,13 +156,13 @@ public class ContentAggregator extends ContentHandlerWrapper
             EventPipeline eventPipeline = null;
             StreamPipeline pipeline = null;
             for (int i = 0; i < this.partElements.size(); i++) {
-                getLogger().debug("ContentAggregator: collecting internal resource " 
+                getLogger().debug("ContentAggregator: collecting internal resource "
                         + (String)this.partURIs.get(i));
                 try {
                     eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
                     this.partEventPipelines.add(eventPipeline);
                     pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
-                } catch (ComponentManagerException cme) {
+                } catch (ComponentException cme) {
                     getLogger().error("ContentAggregator: could not lookup pipeline components", cme);
                     throw new ProcessingException ("could not lookup pipeline components", cme);
                 }
@@ -185,7 +185,7 @@ public class ContentAggregator extends ContentHandlerWrapper
             }
         }
     }
-    
+
     /**
      * Generate the unique key.
      * This key must be unique inside the space of this component.
@@ -217,19 +217,19 @@ public class ContentAggregator extends ContentHandlerWrapper
         //}
         return null;
     }
-    
+
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
-    
+
     public void setSitemap(Sitemap sitemap) {
         this.sitemap = sitemap;
     }
-    
+
     public void setRootSitemap(Sitemap sitemap) {
         this.rootSitemap = sitemap;
     }
-    
+
     public void setRootElement(String element, String namespace) {
         this.rootElement = element;
         if (namespace == null) {
@@ -239,7 +239,7 @@ public class ContentAggregator extends ContentHandlerWrapper
         }
         getLogger().debug("ContentAggregator: root element='" + element + "' ns='" + namespace + "'");
     }
-    
+
     public void addPart(String uri, String element, String namespace) {
         if (namespace == null) {
             this.partNSs.add("");
@@ -319,7 +319,7 @@ public class ContentAggregator extends ContentHandlerWrapper
         currentNS.add(ns);
         return ns;
     }
-    
+
     private String popNS() {
         int last = currentNS.size()-1;
         String ns = (String)currentNS.get(last);
@@ -327,12 +327,12 @@ public class ContentAggregator extends ContentHandlerWrapper
         currentNS.remove(last);
         return ns;
     }
-    
+
     private String getNS() {
         int last = currentNS.size()-1;
         return (String)currentNS.get(last);
     }
-    
+
     private void startElem(String namespaceURI, String name) throws SAXException {
         this.pushNS(namespaceURI);
         AttributesImpl attrs = new AttributesImpl();
@@ -342,7 +342,7 @@ public class ContentAggregator extends ContentHandlerWrapper
         }
         this.documentHandler.startElement(namespaceURI, name, name, attrs);
     }
-    
+
     private void endElem(String name) throws SAXException {
         String ns = this.popNS();
         this.documentHandler.endElement(ns, name, name);
@@ -350,27 +350,27 @@ public class ContentAggregator extends ContentHandlerWrapper
             this.documentHandler.endPrefixMapping("");
         }
     }
-    
+
     /**
      * Ignore start and end document events
      */
     public void startDocument () throws SAXException {
     }
-    
+
     public void endDocument () throws SAXException {
     }
 
     public void startElement (String namespaceURI, String localName,
-			      String qName, Attributes atts) throws SAXException {
+                  String qName, Attributes atts) throws SAXException {
         String ns = namespaceURI;
         if (ns.equals("")) {
             ns = (String)this.getNS();
-        }        
+        }
         this.documentHandler.startElement(this.pushNS(ns), localName, qName, atts);
     }
 
     public void endElement (String namespaceURI, String localName,
-			      String qName) throws SAXException {
+                  String qName) throws SAXException {
         this.documentHandler.endElement((String)this.popNS(), localName, qName);
     }
 }

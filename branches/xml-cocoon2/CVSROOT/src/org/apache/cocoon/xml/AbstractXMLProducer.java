@@ -10,8 +10,8 @@ package org.apache.cocoon.xml;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Recyclable;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.excalibur.pool.Recyclable;
 
 /**
  * This abstract class provides default implementation of the methods specified
@@ -19,7 +19,7 @@ import org.apache.avalon.Recyclable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-04 15:42:47 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:50:19 $
  */
 public abstract class AbstractXMLProducer extends AbstractLoggable implements XMLProducer, Recyclable {
 

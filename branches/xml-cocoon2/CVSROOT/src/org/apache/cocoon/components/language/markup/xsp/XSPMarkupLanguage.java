@@ -30,7 +30,7 @@ import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.Constants;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-13 12:09:36 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 20:49:54 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 

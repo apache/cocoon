@@ -10,14 +10,14 @@ package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
-import org.apache.avalon.Recyclable;
+import org.apache.excalibur.pool.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-15 22:08:49 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 20:50:11 $
  */
 
 public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer, Recyclable {

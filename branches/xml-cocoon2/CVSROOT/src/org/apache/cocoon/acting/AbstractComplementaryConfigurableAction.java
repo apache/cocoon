@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.net.URL;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationBuilder;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -31,9 +31,9 @@ import org.xml.sax.InputSource;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 04:38:31 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-20 20:49:43 $
  */
-public abstract class AbstractComplimentaryConfigurableAction extends ComposerAction {
+public abstract class AbstractComplementaryConfigurableAction extends ComposerAction {
     private static Map configurations = new HashMap();
 
     /**
@@ -49,8 +49,8 @@ public abstract class AbstractComplimentaryConfigurableAction extends ComposerAc
             throw new ConfigurationException("The form descriptor is not set!");
         }
 
-        synchronized (AbstractComplimentaryConfigurableAction.configurations) {
-            conf = (Configuration) AbstractComplimentaryConfigurableAction.configurations.get(descriptor);
+        synchronized (AbstractComplementaryConfigurableAction.configurations) {
+            conf = (Configuration) AbstractComplementaryConfigurableAction.configurations.get(descriptor);
 
             if (conf == null) {
                 URLFactory urlFactory = null;
@@ -89,8 +89,8 @@ public abstract class AbstractComplimentaryConfigurableAction extends ComposerAc
      * Cache the configuration so that we can use it later.
      */
     private void cacheConfiguration(String descriptor, Configuration conf) {
-        synchronized (AbstractComplimentaryConfigurableAction.configurations) {
-            AbstractComplimentaryConfigurableAction.configurations.put(descriptor, conf);
+        synchronized (AbstractComplementaryConfigurableAction.configurations) {
+            AbstractComplementaryConfigurableAction.configurations.put(descriptor, conf);
         }
     }
 }

@@ -15,18 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Context;
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.component.DefaultComponentSelector;
+import org.apache.excalibur.component.DefaultComponentSelector;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -45,9 +46,9 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-17 18:18:50 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-20 20:50:13 $
  */
-public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable {
+public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable, ThreadSafe {
     private Context context;
 
     private static final int BYTE_ARRAY_SIZE = 1024;
@@ -74,7 +75,7 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
+     * <code>Composable</code>.
      */
     public void compose(ComponentManager manager)  throws ComponentException {
         this.manager = manager;

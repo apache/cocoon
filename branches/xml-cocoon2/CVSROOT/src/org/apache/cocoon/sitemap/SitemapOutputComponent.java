@@ -10,12 +10,12 @@ package org.apache.cocoon.sitemap;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-11 16:06:57 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:50:14 $
  */
 public interface SitemapOutputComponent extends Component {
 

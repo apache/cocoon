@@ -105,7 +105,7 @@
   </datasources>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
-  <pool-controller class="org.apache.avalon.component.DefaultComponentPoolController"/>
+  <pool-controller class="org.apache.excalibur.component.DefaultComponentPoolController"/>
 
   <sax-connector class="org.apache.cocoon.components.saxconnector.NullSAXConnector"/>
 
@@ -120,7 +120,7 @@
         it is set to "no", the sitemap is generated once at startup, if it is set to "yes",
         the sitemap is regenerated if it changes.
         The reload-method specifies the method for the regeneration:
-        asynchron: If the sitemap changes, the sitemap is regenerated at the next request in 
+        asynchron: If the sitemap changes, the sitemap is regenerated at the next request in
                          the background and the incoming request is served with the old sitemap.
                          All subsequent requests are served with the old sitemap until the
                          regeneration in the background has finished.
@@ -129,8 +129,8 @@
                        is served with the new sitemap.
 
         For development environment set the reload-method to synchron and the
-        check-reload to yes, for production environment it is advisable to set 
-        the reload-method to asynchron and for more safety the check-reload to no. 
+        check-reload to yes, for production environment it is advisable to set
+        the reload-method to asynchron and for more safety the check-reload to no.
      -->
   <sitemap file="sitemap.xmap" reload-method="asynchron" check-reload="yes"/>
 

@@ -13,13 +13,13 @@ import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 /**
  * Base implementation of <code>ProgrammingLanguage</code>. This class sets the
@@ -27,7 +27,7 @@ import org.apache.avalon.Loggable;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-19 21:20:26 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 20:49:57 $
  */
 public abstract class AbstractProgrammingLanguage
   implements ProgrammingLanguage, Configurable, Loggable

@@ -3,8 +3,8 @@
 package org.apache.cocoon.components.saxconnector;
 
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.avalon.Poolable;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 
@@ -16,11 +16,11 @@ import java.io.IOException;
 
 /**
  * Null implementation of the SAXConnector. Simply sends events on to the next component in the pipeline.
- * @author <a href="prussell@apache.org">Paul Russell</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-09 21:25:55 $
+ * @author <a href="prussell@apache.org">Paul Russell</a>
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:50:02 $
  */
-public class NullSAXConnector extends AbstractXMLPipe implements Poolable, SAXConnector {    
-    
+public class NullSAXConnector extends AbstractXMLPipe implements Poolable, SAXConnector {
+
     /** Setup this SAXConnector.
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters params)

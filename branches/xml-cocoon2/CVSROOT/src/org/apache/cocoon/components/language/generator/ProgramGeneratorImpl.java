@@ -12,22 +12,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Context;
-import org.apache.avalon.Contextualizable;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 import org.apache.avalon.Modifiable;
-import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
@@ -48,10 +48,10 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.47 $ $Date: 2001-04-13 16:02:20 $
+ * @version CVS $Revision: 1.1.2.48 $ $Date: 2001-04-20 20:49:50 $
  */
-public class ProgramGeneratorImpl extends AbstractLoggable 
-    implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe, Disposable {
+public class ProgramGeneratorImpl extends AbstractLoggable
+    implements ProgramGenerator, Contextualizable, Composable, Configurable, ThreadSafe, Disposable {
 
     /** The auto-reloading option */
     protected boolean autoReload = false;
@@ -134,7 +134,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable
     public CompiledComponent load(File file,
                                   String markupLanguageName,
                                   String programmingLanguageName,
-                                  EntityResolver resolver) 
+                                  EntityResolver resolver)
         throws Exception {
 
         // Create filesystem store

@@ -7,25 +7,25 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.Composer;
-import org.apache.avalon.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.cocoon.Cocoon;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-19 14:43:47 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:50:06 $
  */
 public abstract class ComposerGenerator extends AbstractGenerator
-implements Composer {
+implements Composable {
 
     /** The component manager instance */
     protected ComponentManager manager=null;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
+     * <code>Composable</code>.
      */
     public void compose(ComponentManager manager) {
         this.manager=manager;

@@ -26,11 +26,11 @@
 
  <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
        shorthand="markup-languages"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
        shorthand="programming-languages"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.components.language.generator.ProgramGenerator"
        shorthand="program-generator"
@@ -42,7 +42,7 @@
 
  <role name="org.apache.excalibur.pool.PoolController"
        shorthand="pool-controller"
-       default-class="org.apache.avalon.component.DefaultComponentPoolController"/>
+       default-class="org.apache.excalibur.component.DefaultComponentPoolController"/>
 
  <role name="org.apache.cocoon.components.saxconnector.SAXConnector"
        shorthand="sax-connector"
@@ -53,7 +53,7 @@
 
  <role name="org.apache.excalibur.datasource.DataSourceComponentSelector"
        shorthand="datasources"
-       default-class="org.apache.avalon.component.DefaultComponentSelector">
+       default-class="org.apache.excalibur.component.DefaultComponentSelector">
     <hint shorthand="jdbc" class="org.apache.excalibur.datasource.JdbcDataSource"/>
     <hint shorthand="j2ee" class="org.apache.exvalibur.datasource.J2eeDataSource"/>
 </role>
@@ -72,23 +72,23 @@
 
  <role name="org.apache.cocoon.acting.ActionSelector"
        shorthand="action"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.selection.SelectorSelector"
        shorthand="selector"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.matching.MatcherSelector"
        shorthand="matcher"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.generation.GeneratorSelector"
        shorthand="generator"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.transformation.TransformerSelector"
        shorthand="transformer"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.excalibur.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.serialization.SerializerSelector"
        shorthand="serializer"

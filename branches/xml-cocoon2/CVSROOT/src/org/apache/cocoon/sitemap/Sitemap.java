@@ -8,8 +8,8 @@
 package org.apache.cocoon.sitemap;
 
 import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Contextualizable;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.context.Contextualizable;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.pipeline.StreamPipeline;
@@ -21,7 +21,7 @@ import org.apache.cocoon.Processor;
  * Base interface for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.4.17 $ $Date: 2001-04-19 11:30:32 $
+ * @version CVS $Revision: 1.1.4.18 $ $Date: 2001-04-20 20:50:14 $
  */
 public interface Sitemap extends CompiledComponent, Configurable, Contextualizable, Processor {
     int GENERATOR = 1;
@@ -33,12 +33,12 @@ public interface Sitemap extends CompiledComponent, Configurable, Contextualizab
     int SELECTOR = MATCHER << 1;
 
     /**
-     * Process the given <code>Environment</code> 
+     * Process the given <code>Environment</code>
      */
     boolean process(Environment environment) throws Exception;
 
     /**
-     * Process the given <code>Environment</code> assebling 
+     * Process the given <code>Environment</code> assebling
      * a <code>StreamPipeline</code> and an <code>EventPipeline</code>
      */
     boolean process(Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)

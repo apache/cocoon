@@ -7,11 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.reading;
 
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.Disposable;
 import org.apache.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.configuration.Configurable;
@@ -46,7 +46,7 @@ import org.apache.cocoon.environment.Response;
  *
  * @author <a href="bloritsch@apache.org">Berin Loritsch</a>
  */
-public class DatabaseReader extends AbstractReader implements Composer, Configurable, Disposable {
+public class DatabaseReader extends AbstractReader implements Composable, Configurable, Disposable {
     ComponentSelector dbselector;
     String dsn;
 
@@ -56,7 +56,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
      * Compose the object so that we get the <code>Component</code>s we need from
      * the <code>ComponentManager</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentManagerException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.dbselector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
     }

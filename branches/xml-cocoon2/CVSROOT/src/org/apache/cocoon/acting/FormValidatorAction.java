@@ -1,11 +1,11 @@
-// $Id: FormValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:09 dims Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 
@@ -35,7 +35,7 @@ import org.apache.cocoon.environment.Request;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 18:18:09 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:49:44 $
  */
 public class FormValidatorAction extends AbstractValidatorAction
 {
@@ -44,11 +44,11 @@ public class FormValidatorAction extends AbstractValidatorAction
      */
     public Map act (EntityResolver resolver, Map objectModel, String src,
             Parameters parameters) throws Exception {
-        Request req = (Request) 
+        Request req = (Request)
             objectModel.get (Constants.REQUEST_OBJECT);
 
         /* check request validity */
-        if (req == null) 
+        if (req == null)
             return null;
 
         try {
@@ -83,5 +83,5 @@ public class FormValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: FormValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:09 dims Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
 // vim: set et ts=4 sw=4:

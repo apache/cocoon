@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.log.Logger;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This abstract class provides default implementation of the methods specified
@@ -22,7 +22,7 @@ import org.apache.avalon.AbstractLoggable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-12 14:17:47 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-20 20:50:19 $
  */
 public abstract class AbstractXMLConsumer extends AbstractLoggable implements XMLConsumer {
 

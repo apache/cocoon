@@ -29,7 +29,7 @@ import org.apache.cocoon.components.language.markup.sitemap.*;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-13 12:09:36 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:49:53 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 

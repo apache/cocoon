@@ -7,14 +7,14 @@
  *****************************************************************************/
 package org.apache.cocoon.components.browser;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 import java.util.HashMap;
 import org.w3c.dom.Document;
 
 /**
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-13 17:39:52 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:49:48 $
  */
 public interface Browser extends Component {
 

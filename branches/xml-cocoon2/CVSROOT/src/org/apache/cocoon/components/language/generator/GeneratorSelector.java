@@ -9,9 +9,8 @@ package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.DefaultConfiguration;
@@ -19,7 +18,7 @@ import org.apache.avalon.configuration.DefaultConfiguration;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
-import org.apache.avalon.component.DefaultComponentSelector;
+import org.apache.excalibur.component.DefaultComponentSelector;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -27,7 +26,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-14 21:13:24 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-20 20:49:50 $
  */
 public class GeneratorSelector extends DefaultComponentSelector implements Disposable {
     private ClassLoaderManager classManager;
@@ -35,13 +34,13 @@ public class GeneratorSelector extends DefaultComponentSelector implements Dispo
     /** The component manager */
     protected ComponentManager manager = null;
 
-    public void compose (ComponentManager manager) throws ComponentManagerException {
+    public void compose (ComponentManager manager) throws ComponentException {
         super.compose(manager);
         this.manager = manager;
 
         try {
             this.classManager = (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
-        } catch (ComponentManagerException cme) {
+        } catch (ComponentException cme) {
             throw new ComponentException("GeneratorSelector", cme);
         }
 
@@ -80,5 +79,6 @@ public class GeneratorSelector extends DefaultComponentSelector implements Dispo
 
     public void dispose() {
         this.manager.release((Component)this.classManager);
+        super.dispose();
     }
 }

@@ -16,7 +16,7 @@ import org.apache.cocoon.ProcessingException;
 
 // Avalon imports
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -44,10 +44,10 @@ import org.xml.sax.SAXException;
  * and additional interpreter (Rhino, Jython, etc.) as a Cocoon Generator
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-12 12:30:34 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:50:07 $
  */
 public class ScriptGenerator extends ComposerGenerator {
-    
+
     public void configure(Configuration conf) throws ConfigurationException {
         // TODO: figure out what configure might be good for
         // void configure

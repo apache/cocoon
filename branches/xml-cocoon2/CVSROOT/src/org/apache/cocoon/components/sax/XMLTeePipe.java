@@ -10,7 +10,7 @@
 
 package org.apache.cocoon.components.sax;
 
-import org.apache.avalon.Recyclable;
+import org.apache.excalibur.pool.Recyclable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -28,7 +28,7 @@ import org.apache.cocoon.xml.XMLProducer;
  * The incoming events are forwarded to two other components.
  *
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:55 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:50:02 $
  */
 
 public final class XMLTeePipe

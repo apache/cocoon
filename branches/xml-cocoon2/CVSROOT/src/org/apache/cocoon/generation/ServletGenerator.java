@@ -10,8 +10,8 @@ package org.apache.cocoon.generation;
 import java.util.Map;
 import java.io.IOException;
 
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Composer;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.component.Composable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -25,10 +25,10 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-02 13:53:09 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-20 20:50:07 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
-implements Composer {
+implements Composable {
 
     protected Request request=null;
     protected Response response=null;

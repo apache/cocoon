@@ -32,15 +32,15 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
@@ -53,9 +53,9 @@ import org.apache.cocoon.util.IOUtils;
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-18 15:14:22 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-20 20:49:51 $
  */
-public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
+public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composable, Configurable {
     /** The supported language table */
     protected Hashtable languages;
 
@@ -75,7 +75,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
      * Set the global component manager.
      * @param manager The sitemap-specified component manager
      */
-    public void compose(ComponentManager manager) throws ComponentManagerException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
 
         // Initialize logicsheet cache

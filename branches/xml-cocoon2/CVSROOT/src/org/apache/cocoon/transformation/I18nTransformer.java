@@ -15,13 +15,13 @@ import org.apache.cocoon.acting.LangSelect;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 
-import org.apache.avalon.Poolable;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Loggable;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.logger.Loggable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -105,7 +105,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
  */
-public class I18nTransformer extends AbstractTransformer implements Composer, Poolable {
+public class I18nTransformer extends AbstractTransformer implements Composable, Poolable {
 
     protected ComponentManager manager;
 
@@ -311,7 +311,7 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
         Object object = url.getContent();
         Parser parser = null;
 
-        try 
+        try
         {
             parser = (Parser)(manager.lookup(Roles.PARSER));
             InputSource input;
@@ -340,9 +340,9 @@ public class I18nTransformer extends AbstractTransformer implements Composer, Po
         } catch(IOException e) {
             getLogger().error("Error in initialiseDictionary", e);
             throw e;
-        } catch(ComponentManagerException e) {
+        } catch(ComponentException e) {
             getLogger().error("Error in initialiseDictionary", e);
-            throw new SAXException("ComponentManagerException in initialiseDictionary");
+            throw new SAXException("ComponentException in initialiseDictionary");
         } finally {
             if(parser != null) this.manager.release((Component) parser);
         }

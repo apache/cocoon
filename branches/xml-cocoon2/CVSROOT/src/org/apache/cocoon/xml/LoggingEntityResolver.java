@@ -5,7 +5,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import java.io.IOException;
 import org.apache.log.Logger;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.AbstractLoggable;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;

@@ -16,10 +16,10 @@ import java.util.Map;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.Cacheable;
@@ -46,7 +46,7 @@ import org.apache.cocoon.environment.Environment;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 11:27:06 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:50:00 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -60,7 +60,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
     private StreamCache streamCache;
 
     public void compose (ComponentManager manager)
-    throws ComponentManagerException {
+    throws ComponentException {
         super.compose(manager);
         this.streamCache = (StreamCache)this.manager.lookup(Roles.STREAM_CACHE);
     }

@@ -7,8 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.excalibur.pool.Poolable;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -28,7 +29,7 @@ import org.apache.velocity.VelocityContext;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-17 15:33:12 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:50:07 $
  */
 public class VelocityGenerator extends ServletGenerator implements Poolable {
 
@@ -70,8 +71,8 @@ public class VelocityGenerator extends ServletGenerator implements Poolable {
             /* lets render a template */
             StringWriter w = new StringWriter();
             Velocity.mergeTemplate(super.source, context, w );
-    
-            InputSource xmlInput = 
+
+            InputSource xmlInput =
                     new InputSource(new StringReader(w.toString()));
             parser.setContentHandler(this.contentHandler);
             parser.setLexicalHandler(this.lexicalHandler);
@@ -82,7 +83,7 @@ public class VelocityGenerator extends ServletGenerator implements Poolable {
         } catch (SAXException e){
             getLogger().error("VelocityGenerator.generate()", e);
             throw(e);
-        } catch (org.apache.avalon.ComponentManagerException e){
+        } catch (ComponentException e){
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()",e);
         } catch (Exception e){

@@ -13,13 +13,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
 
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -57,7 +56,7 @@ import org.xml.sax.EntityResolver;
  * does not cache! (If it would cache, the response would be cached twice!)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-19 11:30:38 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-20 20:50:00 $
  */
 public final class CachingEventPipeline
 extends AbstractEventPipeline
@@ -78,7 +77,7 @@ implements Disposable, CacheableEventPipeline {
     private int firstNotCacheableTransformerIndex;
 
     public void compose (ComponentManager manager)
-    throws ComponentManagerException {
+    throws ComponentException {
         super.compose(manager);
         this.eventCache = (EventCache)this.manager.lookup(Roles.EVENT_CACHE);
     }
@@ -358,7 +357,7 @@ implements Disposable, CacheableEventPipeline {
                 "Could not connect pipeline.",
                 e
             );
-        } catch ( ComponentManagerException e ) {
+        } catch ( ComponentException e ) {
             throw new ProcessingException(
                 "Could not connect pipeline.",
                 e

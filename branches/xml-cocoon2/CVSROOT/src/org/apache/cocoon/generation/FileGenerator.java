@@ -21,11 +21,11 @@ import org.apache.cocoon.util.HashUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.avalon.ComponentManager;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Poolable;
-import org.apache.avalon.Component;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.component.Component;
 
 /**
  *
@@ -37,7 +37,7 @@ import org.apache.avalon.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-13 16:02:23 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-20 20:50:06 $
  */
 public class FileGenerator extends ComposerGenerator
 implements Cacheable {
@@ -49,7 +49,7 @@ implements Cacheable {
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
+     * <code>Composable</code>.
      */
     public void compose(ComponentManager manager) {
         super.compose(manager);

@@ -33,11 +33,11 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.HashUtil;
 
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-20 11:27:22 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-20 20:50:10 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  *   </dl>
  */
 public class ResourceReader extends AbstractReader
-            implements Composer, Cacheable {
+            implements Composable, Cacheable {
 
     private ComponentManager manager;
 

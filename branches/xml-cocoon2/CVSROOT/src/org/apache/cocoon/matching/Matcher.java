@@ -9,12 +9,12 @@ package org.apache.cocoon.matching;
 
 import java.util.Map;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-15 20:35:12 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-20 20:50:08 $
  */
 public interface Matcher extends Component {
     /**

@@ -11,8 +11,8 @@ package org.apache.cocoon.components.sax;
 
 import java.util.ArrayList;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Recyclable;
+import org.apache.avalon.component.Component;
+import org.apache.excalibur.pool.Recyclable;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -26,7 +26,7 @@ import org.apache.cocoon.xml.AbstractXMLProducer;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 12:13:26 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:50:02 $
  */
 
 public final class XMLByteStreamInterpreter

@@ -21,17 +21,17 @@ import java.lang.reflect.Method;
 
 import org.apache.cocoon.environment.Request;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.Poolable;
-import org.apache.avalon.Recyclable;
+import org.apache.avalon.logger.Loggable;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.excalibur.pool.Recyclable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
@@ -68,10 +68,10 @@ import javax.xml.transform.sax.SAXResult;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-20 14:48:30 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-20 20:50:17 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
-implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
+implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
     private static String FILE = "file:/";
 
     /** The store service instance */
@@ -168,7 +168,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
+     * <code>Composable</code>.
      */
     public void compose(ComponentManager manager) {
         try {
@@ -223,10 +223,10 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
      */
     public CacheValidity generateValidity() {
         HashMap map = getLogicSheetParameters();
-        
+
         if (this.systemID.startsWith("file:") == true) {
             File xslFile = new File(this.systemID.substring("file:".length()));
-            return new CompositeCacheValidity( 
+            return new CompositeCacheValidity(
                                     new ParametersCacheValidity(map),
                                     new TimeStampCacheValidity(xslFile.lastModified())
                                     );
@@ -319,9 +319,9 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
 //
 //            /* Get the user agent; it's needed to get the browser type. */
 //            String agent = request.getParameter("user-Agent");
-//            if (agent == null) 
+//            if (agent == null)
 //                agent = request.getHeader("user-Agent");
-//            
+//
 //            /* add the accept param */
 //            transformerHandler.getTransformer().setParameter("accept", accept);
 //
@@ -395,7 +395,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
         return true;
     }
 
-    public void dispose() 
+    public void dispose()
     {
         if(this.store != null)
             this.manager.release((Component)this.store);

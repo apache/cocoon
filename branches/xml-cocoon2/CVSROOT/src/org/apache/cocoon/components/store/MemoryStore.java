@@ -9,8 +9,8 @@ package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.avalon.Component;
-import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.thread.ThreadSafe;
 
 /**
  *
@@ -20,7 +20,7 @@ import org.apache.avalon.ThreadSafe;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-29 12:17:49 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:50:03 $
  */
 public class MemoryStore implements Store, ThreadSafe {
     /* WARNING: Hashtable is threadsafe, whereas HashMap is not.
@@ -28,10 +28,10 @@ public class MemoryStore implements Store, ThreadSafe {
      * use Collections.synchronizedMap(Map map) to ensure
      * accesses are synchronized.
      */
-    
+
     /** The shared store */
     private static Hashtable table=null;
-    
+
     public MemoryStore() {
         if (table==null) table=new Hashtable();
     }
@@ -42,12 +42,12 @@ public class MemoryStore implements Store, ThreadSafe {
     public Object get(Object key) {
         return(table.get(key));
     }
-    
+
     /**
      * Store the given object in a persistent state. It is up to the
      * caller to ensure that the key has a persistent state across
      * different JVM executions.
-     */ 
+     */
     public void store(Object key, Object value) {
         this.hold(key,value);
     }
@@ -56,25 +56,25 @@ public class MemoryStore implements Store, ThreadSafe {
      * Holds the given object in a volatile state. This means
      * the object store will discard held objects if the
      * virtual machine is restarted or some error happens.
-     */ 
+     */
     public void hold(Object key, Object value) {
         table.put(key,value);
     }
-    
+
     /**
      * Remove the object associated to the given key.
      */
     public void remove(Object key) {
         table.remove(key);
     }
-    
+
     /**
      * Indicates if the given key is associated to a contained object.
      */
     public boolean containsKey(Object key) {
         return(table.containsKey(key));
     }
-    
+
     /**
      * Returns the list of used keys as an Enumeration of Objects.
      */

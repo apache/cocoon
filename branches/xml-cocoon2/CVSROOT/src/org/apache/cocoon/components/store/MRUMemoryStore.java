@@ -5,18 +5,18 @@ import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedList;
-import org.apache.avalon.Component;
-import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.Configurable;
 
 /**
  * This class provides a cache algorithm for the requested documents.
  * It combines a HashMap and a LinkedList to create a so called MRU
  * (Most Recently Used) cache.
- * The cached objects also have a "lifecycle". If the "lifecycle" of a   
+ * The cached objects also have a "lifecycle". If the "lifecycle" of a
  * object is over, it "dies" like in real life :-) and a new object will
  * be born.
  * Also could the number of objects in the cache be limited. If the Limit is
@@ -27,8 +27,8 @@ import org.apache.avalon.configuration.Configurable;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- */ 
- 
+ */
+
 public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable {
   /**
    * Indicates how much memory should be left free in the JVM for
@@ -44,9 +44,9 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
 
   /**
    * Indicates the time in seconds to sleep between memory checks.
-   */ 
+   */
   private long interval;
- 
+
   /**
    * Indicates whether we use a cleanup thread or not.
    */
@@ -56,26 +56,26 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
    * Indicates the daemon thread priority.
    */
   private int priority;
-  
+
   /**
    * Indicates the object lifetime
    */
   private int ObjectLifeTime;
-  
+
   /**
    * Indicates the max. object in the cache
    */
   private int maxobjects;
-  
-  
+
+
   /**
    * The heart of the cache
    */
   private HashMap cache;
   private LinkedList mrulist;
-  
+
   private Runtime jvm;
-  
+
   public MRUMemoryStore() {
     this.jvm     = Runtime.getRuntime();
     this.cache   = new HashMap();
@@ -83,14 +83,14 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
   }
 
   /**
-   * Initialize the MRUMemoryStore. 
+   * Initialize the MRUMemoryStore.
    * A few options can be used :
    * <UL>
    *  <LI>freememory = How much memory to keep free for normal jvm operation. (Default: 1 Mb)</LI>
    *  <LI>heapsize = The size of the heap before cleanup starts. (Default: 60 Mb)</LI>
    *  <LI>usethread = use a cleanup daemon thread. (Default: true)</LI>
    *  <LI>threadpriority = priority to run cleanup thread (1-10). (Default: 10)</LI>
-   *  <LI>interval = time in seconds to sleep between memory checks (Default: 10 seconds)</LI> 
+   *  <LI>interval = time in seconds to sleep between memory checks (Default: 10 seconds)</LI>
    *  <LI>objectlifetime = Object lifetime in seconds
    * </UL>
    */
@@ -104,11 +104,11 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
         this.interval       = params.getParameterAsInteger("interval",10);
         this.maxobjects     = params.getParameterAsInteger("maxobjects",100);
         this.priority       = params.getParameterAsInteger("threadpriority",Thread.currentThread().getPriority());
-    
+
         if ((this.priority < 1) || (this.priority > 10)) {
           throw new ConfigurationException("Thread priority must be between 1 and 10");
         }
-    
+
         this.useThread = params.getParameter("usethread","true").equals("true");
         if (this.useThread) {
           Thread checker = new Thread(this);
@@ -117,9 +117,9 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
           checker.start();
         }
   }
-  
-  /** 
-   * Background memory check. 
+
+  /**
+   * Background memory check.
    * Checks that memory is not running too low in the JVM because of the Store.
    * It will try to keep overall memory usage below the requested levels.
    */
@@ -139,7 +139,7 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
        } catch (InterruptedException ignore) {}
      }
    }
-  
+
   /**
    * Store the given object in a persistent state. It is up to the
    * caller to ensure that the key has a persistent state across
@@ -148,7 +148,7 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
   public void store(Object key, Object value) {
     this.hold(key,value);
   }
-  
+
   /**
    * This method holds the requested object in a HashMap combined with a LinkedList to
    * create the MRU.
@@ -161,9 +161,9 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
     }
     /** ..put the new object in the cache, on the top of course ... */
     this.cache.put(key, new CacheObject(value,System.currentTimeMillis()));
-    this.mrulist.addFirst(key);    
+    this.mrulist.addFirst(key);
   }
-  
+
   /**
    * Get the object associated to the given unique key.
    */
@@ -173,17 +173,17 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
       /** ...check if the object life time is reached... */
       if(TimeDiff >= (this.ObjectLifeTime * 1000)) {
         this.remove(key);
-        return null; 
+        return null;
       }
       /** put the accessed key on top of the linked list */
       this.mrulist.remove(key);
-      this.mrulist.addFirst(key); 
+      this.mrulist.addFirst(key);
       return ((CacheObject)this.cache.get(key)).getCacheObject();
     } catch(NullPointerException e) {
-      return null;  
+      return null;
     }
   }
-  
+
   /**
    * Remove the object associated to the given key and returns
    * the object associated to the given key or null if not found.
@@ -192,7 +192,7 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
     this.cache.remove(key);
     this.mrulist.remove(key);
   }
-  
+
   /**
    * Indicates if the given key is associated to a contained object.
    */
@@ -207,34 +207,34 @@ public class MRUMemoryStore implements Store, Configurable, ThreadSafe, Runnable
     /* Not yet implemented */
     return null;
   }
-  
+
   /**
    * Frees some of the fast memory used by this store.
    * It removes the last element in the cache.
    */
-  public void free() { 
+  public void free() {
     this.cache.remove(this.mrulist.getLast());
     this.mrulist.removeLast();
   }
-  
+
   /**
    * Container object for the documents.
    */
   class CacheObject {
     private long time = -1;
     private Object cacheObject;
-    
+
     public CacheObject(Object ToCacheObject, long lTime) {
       this.cacheObject = ToCacheObject;
       this.time = lTime;
     }
-        
+
     public Object getCacheObject() {
       return cacheObject;
     }
-    
+
     public long getCreateTime() {
-      return time;  
+      return time;
     }
   }
 }

@@ -16,10 +16,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Enumeration;
 import java.util.Iterator;
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Context;
-import org.apache.avalon.Contextualizable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.configuration.Configurable;
@@ -37,9 +37,9 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.avalon.component.DefaultComponentManager;
-import org.apache.avalon.component.DefaultRoleManager;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.excalibur.component.DefaultComponentManager;
+import org.apache.excalibur.component.DefaultRoleManager;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
 
@@ -52,7 +52,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.74 $ $Date: 2001-04-19 19:05:23 $
+ * @version CVS $Revision: 1.4.2.75 $ $Date: 2001-04-20 20:49:42 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */

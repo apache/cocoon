@@ -16,7 +16,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.w3c.dom.NodeList;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 /**
  * This class is used as a XSLT extension class. It is used by the sitemap
@@ -28,7 +28,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-20 13:50:30 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:50:14 $
  */
 
 public class XSLTFactoryLoader {
@@ -71,7 +71,7 @@ public class XSLTFactoryLoader {
         if (factory instanceof CodeFactory) {
             return ((CodeFactory) factory).generateParameterSource(conf);
         }
-    
+
         throw new Exception ("Wrong class \"" + factory.getClass().getName()
                              + "\". Should implement the CodeFactory interface");
     }

@@ -29,23 +29,23 @@ import org.apache.cocoon.Roles;
 
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.Composer;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Context;
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.logger.Loggable;
 
 /**
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-16 16:04:43 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-20 20:50:14 $
  */
-public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor, Disposable {
+public class Handler extends AbstractLoggable implements Runnable, Configurable, Composable, Contextualizable, Processor, Disposable {
     private Context context;
 
     /** the configuration */
@@ -165,7 +165,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
             throw new RuntimeException("The Sitemap is null, this should never be!");
         }
     }
-    
+
     public void setBasePath (String basePath) {
         this.basePath = basePath;
     }
@@ -185,7 +185,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
              * XSLTFactoryLoader, since it is created by the Xalan engine.
              */
             XSLTFactoryLoader.setLogger(getLogger());
-            
+
             programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
             smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
 

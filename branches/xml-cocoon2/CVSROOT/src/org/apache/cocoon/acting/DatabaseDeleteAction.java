@@ -20,13 +20,12 @@ import java.util.Map;
 
 import org.xml.sax.EntityResolver;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentSelector;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
@@ -43,7 +42,7 @@ import org.apache.excalibur.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-17 03:55:10 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-20 20:49:44 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();

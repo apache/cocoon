@@ -17,7 +17,7 @@ import org.apache.avalon.configuration.ConfigurationException;
 
 import org.w3c.dom.NodeList;
 
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-23 19:38:17 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 20:50:08 $
  */
 
 public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {

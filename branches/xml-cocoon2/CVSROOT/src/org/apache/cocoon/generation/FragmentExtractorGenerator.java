@@ -17,8 +17,8 @@ import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.HashUtil;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.excalibur.pool.Poolable;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -41,9 +41,9 @@ import java.io.IOException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-17 15:33:08 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-20 20:50:06 $
  */
-public class FragmentExtractorGenerator extends AbstractGenerator 
+public class FragmentExtractorGenerator extends AbstractGenerator
         implements Poolable, Cacheable {
 
     /** The fragment store. */

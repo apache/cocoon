@@ -36,16 +36,15 @@ import java.text.SimpleDateFormat;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Disposable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.SAXConfigurationHandler;
 import org.apache.excalibur.datasource.DataSourceComponent;
 
@@ -176,9 +175,9 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-17 03:55:05 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-20 20:49:44 $
  */
-public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable, Disposable {
+public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
     protected Map files = new HashMap();
     private static final Map typeConstants;
     protected ComponentSelector dbselector;
@@ -211,7 +210,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
     /**
      * Compose the Actions so that we can select our databases.
      */
-    public void compose(ComponentManager manager) throws ComponentManagerException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.dbselector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
 
         super.compose(manager);
@@ -219,7 +218,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
     /**
      * Get the Datasource we need.
      */
-    protected final DataSourceComponent getDataSource(Configuration conf) throws ComponentManagerException {
+    protected final DataSourceComponent getDataSource(Configuration conf) throws ComponentException {
         Configuration dsn = conf.getChild("connection");
 
         return (DataSourceComponent) this.dbselector.select(dsn.getValue(""));

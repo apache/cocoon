@@ -15,7 +15,7 @@ import org.apache.avalon.configuration.ConfigurationException;
 import org.w3c.dom.NodeList;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -24,7 +24,7 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-03-23 19:38:18 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-20 20:50:08 $
  */
 
 public class WildcardURIMatcherFactory implements CodeFactory, Loggable {

@@ -21,9 +21,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.excalibur.pool.Poolable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
@@ -68,7 +68,7 @@ import org.apache.regexp.RESyntaxException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-12 12:30:34 $ */
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-20 20:50:06 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 

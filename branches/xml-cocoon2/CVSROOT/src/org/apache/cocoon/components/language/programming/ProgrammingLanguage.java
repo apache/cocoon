@@ -9,7 +9,7 @@ package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.LanguageException;
@@ -18,7 +18,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 15:38:29 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-20 20:49:57 $
  */
 public interface ProgrammingLanguage extends Component {
   /**

@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 import org.apache.cocoon.environment.Environment;
 
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

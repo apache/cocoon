@@ -10,14 +10,14 @@ package org.apache.cocoon.components.pipeline;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 11:27:05 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:50:00 $
  */
 public abstract class AbstractStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     protected EventPipeline eventPipeline;
@@ -60,14 +60,14 @@ public abstract class AbstractStreamPipeline extends AbstractLoggable implements
 
     /**
      * Pass the <code>ComponentManager</code> to the <code>composer</code>.
-     * The <code>Composer</code> implementation should use the specified
+     * The <code>Composable</code> implementation should use the specified
      * <code>ComponentManager</code> to acquire the components it needs for
      * execution.
      *
      * @param manager The <code>ComponentManager</code> which this
-     *               <code>Composer</code> uses.
-     * @throws ComponentManagerException  */
-    public void compose (ComponentManager manager) throws ComponentManagerException {
+     *               <code>Composable</code> uses.
+     * @throws ComponentException  */
+    public void compose (ComponentManager manager) throws ComponentException {
         this.manager = manager;
         readerSelector = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
         serializerSelector = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);

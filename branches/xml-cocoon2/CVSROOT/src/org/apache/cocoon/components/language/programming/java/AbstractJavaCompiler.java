@@ -8,9 +8,14 @@
 
 package org.apache.cocoon.components.language.programming.java;
 
-import java.io.*;
-import java.util.*;
-import org.apache.avalon.*;
+import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
+import org.apache.avalon.logger.Loggable;
+import org.apache.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.components.language.programming.*;
 
@@ -19,7 +24,7 @@ import org.apache.log.Logger;
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.10 $ $Date: 2001-01-22 21:56:38 $
+ * @version $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:49:58 $
  * @since 2.0
  */
 public abstract class AbstractJavaCompiler implements LanguageCompiler, Recyclable, Loggable {

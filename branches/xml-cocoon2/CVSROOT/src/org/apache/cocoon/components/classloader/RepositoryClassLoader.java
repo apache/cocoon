@@ -22,7 +22,7 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.ClassUtils;
 
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -33,7 +33,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-12 05:55:19 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-20 20:49:49 $
  */
 public class RepositoryClassLoader extends URLClassLoader implements Loggable {
 

@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.IOException;
 
-import org.apache.avalon.ComponentManager;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -36,7 +35,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-11 12:41:21 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:50:00 $
  */
 public class NonCachingEventPipeline extends AbstractEventPipeline {
 

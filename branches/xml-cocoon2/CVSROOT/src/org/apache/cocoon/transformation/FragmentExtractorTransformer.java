@@ -17,11 +17,11 @@ import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.generation.FragmentExtractorGenerator;
 import org.apache.cocoon.ProcessingException;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Composer;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Component;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.Disposable;
 
 import org.xml.sax.SAXException;
@@ -45,10 +45,10 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-17 15:33:29 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-20 20:50:17 $
  */
-public class FragmentExtractorTransformer extends AbstractTransformer 
-    implements Composer, Disposable, Cacheable {
+public class FragmentExtractorTransformer extends AbstractTransformer
+    implements Composable, Disposable, Cacheable {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
     private static String EXTRACT_ELEMENT="svg";
 
@@ -69,8 +69,8 @@ public class FragmentExtractorTransformer extends AbstractTransformer
 
     private DOMFactory documentFactory;
 
-    public void compose(ComponentManager manager) 
-        throws ComponentManagerException{
+    public void compose(ComponentManager manager)
+        throws ComponentException{
         this.manager = manager;
         documentFactory = (DOMFactory) manager.lookup(Roles.PARSER);
     }

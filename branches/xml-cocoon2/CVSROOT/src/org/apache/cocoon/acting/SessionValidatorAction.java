@@ -1,4 +1,4 @@
-// $Id: SessionValidatorAction.java,v 1.1.2.3 2001-04-18 12:05:47 cziegeler Exp $
+// $Id: SessionValidatorAction.java,v 1.1.2.4 2001-04-20 20:49:46 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 
@@ -38,7 +38,7 @@ import org.apache.cocoon.environment.Session;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 12:05:47 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:49:46 $
  */
 public class SessionValidatorAction extends AbstractValidatorAction
 {
@@ -89,5 +89,5 @@ public class SessionValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: SessionValidatorAction.java,v 1.1.2.3 2001-04-18 12:05:47 cziegeler Exp $
+// $Id: SessionValidatorAction.java,v 1.1.2.4 2001-04-20 20:49:46 bloritsch Exp $
 // vim: set et ts=4 sw=4:

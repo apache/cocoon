@@ -30,7 +30,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 import org.apache.log.Logger;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -42,7 +42,7 @@ import org.apache.batik.css.CSSDocumentHandler;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:56 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:50:20 $
  */
 public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Loggable {
     protected Logger log;

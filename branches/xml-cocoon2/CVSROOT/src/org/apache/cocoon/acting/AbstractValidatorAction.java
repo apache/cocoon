@@ -1,11 +1,11 @@
-// $Id: AbstractValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:04 dims Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -49,12 +49,12 @@ import org.apache.cocoon.util.Tokenizer;
  * Default value takes place only when specified parameter is nullable and
  * really is null or empty. Long numbers may be specified in decimal, hex or
  * octal values as accepted by java.Lang.decode (String s).
- * 
+ *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 18:18:04 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:49:44 $
  */
-public abstract class AbstractValidatorAction 
-extends AbstractComplimentaryConfigurableAction
+public abstract class AbstractValidatorAction
+extends AbstractComplementaryConfigurableAction
 implements Configurable
 {
     /**
@@ -86,7 +86,7 @@ implements Configurable
             }
 
             if (!found) {
-                getLogger ().debug ("VALIDATOR: description for parameter " 
+                getLogger ().debug ("VALIDATOR: description for parameter "
                         + name + " not found");
                 return null;
             }
@@ -290,5 +290,5 @@ implements Configurable
     }
 }
 
-// $Id: AbstractValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:04 dims Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
 // vim: set et ts=4 sw=4:

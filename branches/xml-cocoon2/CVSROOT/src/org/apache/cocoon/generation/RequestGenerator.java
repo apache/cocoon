@@ -13,7 +13,7 @@ import java.util.Enumeration;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.avalon.Poolable;
+import org.apache.excalibur.pool.Poolable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
@@ -23,7 +23,7 @@ import org.apache.cocoon.environment.Request;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-30 17:14:33 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-20 20:50:07 $
  */
 public class RequestGenerator extends ServletGenerator implements Poolable {
 
@@ -35,7 +35,7 @@ public class RequestGenerator extends ServletGenerator implements Poolable {
      */
     public void generate()
     throws SAXException {
-        
+
         Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping("",URI);

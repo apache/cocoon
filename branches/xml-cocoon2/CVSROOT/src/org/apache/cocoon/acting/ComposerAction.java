@@ -7,9 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.Composable;
 import org.apache.cocoon.Cocoon;
 
 /**
@@ -17,18 +17,18 @@ import org.apache.cocoon.Cocoon;
  * that extends this to access SitemapComponents.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-11 12:41:12 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:49:44 $
  */
-public abstract class ComposerAction extends AbstractAction implements Composer {
+public abstract class ComposerAction extends AbstractAction implements Composable {
 
     /** The component manager instance */
     protected ComponentManager manager;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
+     * <code>Composable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentManagerException {
+    public void compose(ComponentManager manager) throws ComponentException {
         this.manager=manager;
     }
 }

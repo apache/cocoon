@@ -7,8 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.component.Component;
+import org.apache.excalibur.pool.Poolable;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.ProcessingException;
@@ -30,7 +30,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-12 12:30:34 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-20 20:50:06 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
 

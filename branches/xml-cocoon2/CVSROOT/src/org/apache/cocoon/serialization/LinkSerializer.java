@@ -13,7 +13,7 @@ import java.io.PrintStream;
 import java.io.IOException;
 
 import org.apache.cocoon.Constants;
-import org.apache.avalon.Poolable;
+import org.apache.excalibur.pool.Poolable;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -22,7 +22,7 @@ import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-22 17:10:44 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-20 20:50:11 $
  */
 
 public class LinkSerializer extends ExtendedXLinkPipe implements Serializer, Poolable {

@@ -10,7 +10,7 @@ package org.apache.cocoon.generation;
 import java.util.Map;
 import java.io.IOException;
 
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.ProcessingException;
@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-04 15:42:44 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-20 20:50:06 $
  */
 public abstract class AbstractGenerator extends AbstractXMLProducer implements Generator {
 

@@ -20,14 +20,14 @@ import java.util.Map;
 import java.util.Enumeration;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
+import org.apache.excalibur.pool.Poolable;
 import org.apache.avalon.Disposable;
 import org.apache.excalibur.datasource.DataSourceComponent;
 
@@ -50,10 +50,10 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-17 03:55:17 $ $Author: donaldp $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-20 20:50:17 $ $Author: bloritsch $
  */
 
-public class SQLTransformer extends AbstractTransformer implements Composer, Loggable, Poolable, Disposable {
+public class SQLTransformer extends AbstractTransformer implements Composable, Loggable, Poolable, Disposable {
 
     private Logger log;
 
@@ -112,7 +112,7 @@ public class SQLTransformer extends AbstractTransformer implements Composer, Log
         try {
             this.manager = manager;
             this.dbSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
-        } catch (ComponentManagerException cme) {
+        } catch (ComponentException cme) {
             this.log.warn("Could not get the DataSource Selector", cme);
         }
     }
@@ -544,7 +544,7 @@ public class SQLTransformer extends AbstractTransformer implements Composer, Log
             } catch (SQLException e) {
                 log.error("Caught a SQLException", e);
                 throw e;
-            } catch (ComponentManagerException cme) {
+            } catch (ComponentException cme) {
                 log.error("Could not use connection: " + connection, cme);
             } finally {
                 conn.close();
@@ -643,7 +643,7 @@ public class SQLTransformer extends AbstractTransformer implements Composer, Log
 
 
     /**
-     * dispose 
+     * dispose
      */
     public void dispose() {
         if(this.dbSelector != null) this.manager.release((Component) this.dbSelector);

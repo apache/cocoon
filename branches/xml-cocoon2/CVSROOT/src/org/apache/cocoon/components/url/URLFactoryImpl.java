@@ -14,14 +14,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Context;
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.logger.Loggable;
 
 //import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.Constants;
@@ -29,7 +29,7 @@ import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.6 2001-03-12 04:38:50 bloritsch Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.7 2001-04-20 20:50:04 bloritsch Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 
@@ -79,10 +79,10 @@ public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Comp
     }
 
     public URL getURL(URL base, String location) throws MalformedURLException {
-        if ( base != null ) { 
+        if ( base != null ) {
             return getURL(base.toExternalForm() + location);
         } else {
-            return getURL(location);    
+            return getURL(location);
         }
     }
 

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import org.apache.avalon.Recyclable;
+import org.apache.excalibur.pool.Recyclable;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-17 10:33:19 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:50:11 $
  *
  */
 public class FOPSerializer extends AbstractSerializer

@@ -65,12 +65,12 @@
     import java.util.HashMap;
     import java.util.Stack;
 
-    import org.apache.avalon.Component;
+    import org.apache.avalon.component.Component;
     import org.apache.avalon.configuration.Configurable;
     import org.apache.avalon.configuration.Configuration;
     import org.apache.avalon.configuration.ConfigurationException;
     import org.apache.avalon.configuration.DefaultConfiguration;
-    import org.apache.avalon.configuration.Parameters;
+    import org.apache.avalon.parameters.Parameters;
 
     import org.apache.regexp.RE;
     import org.apache.regexp.REProgram;
@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.98 2001-04-19 11:30:35 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.99 2001-04-20 20:49:53 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -406,7 +406,7 @@
       /**
        * Process to producing the output to the specified &lt;code&gt;OutputStream&lt;/code&gt;.
        */
-      private final boolean process(Environment environment, StreamPipeline pipeline, 
+      private final boolean process(Environment environment, StreamPipeline pipeline,
                                     EventPipeline eventPipeline, boolean internalRequest)
       throws Exception {
         /* the &lt;code&gt;List&lt;/code&gt; objects to hold the replacement values

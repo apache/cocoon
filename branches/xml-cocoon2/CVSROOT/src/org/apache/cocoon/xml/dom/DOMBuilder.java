@@ -31,7 +31,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -40,7 +40,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-09 11:49:40 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:50:20 $
  */
 public class DOMBuilder implements XMLConsumer, Loggable {
     protected Logger log;
@@ -243,10 +243,10 @@ public class DOMBuilder implements XMLConsumer, Loggable {
                                           "'"+location());
             // Recreate the document since no DTD was specified
             } else {
-				/* DISABLED pending us tracking down what's causing document 
-				 * hierachy errors when we do this. This may well break people's
-				 * code, but hopefully that will provide some enlightenment
-				 * anyhow.
+                /* DISABLED pending us tracking down what's causing document
+                 * hierachy errors when we do this. This may well break people's
+                 * code, but hopefully that will provide some enlightenment
+                 * anyhow.
                 // Recreate the document element
                 Document doc=this.factory.newDocument(n.getQName());
                 // Copy the old document root PIs
@@ -257,7 +257,7 @@ public class DOMBuilder implements XMLConsumer, Loggable {
                 }
                 // Declare the new document as the new real document
                 this.document=doc;
-				*/
+                */
                 this.current=this.document;
             }
             // Change the state before continuing

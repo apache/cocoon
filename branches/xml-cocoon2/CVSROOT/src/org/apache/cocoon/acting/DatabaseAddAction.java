@@ -20,13 +20,12 @@ import java.util.Map;
 
 import org.xml.sax.EntityResolver;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentSelector;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
@@ -40,7 +39,7 @@ import org.apache.excalibur.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-18 01:11:53 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-20 20:49:44 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();

@@ -13,13 +13,13 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import org.apache.cocoon.util.ClassUtils;
 
-import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.thread.ThreadSafe;
 
 /**
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-31 05:21:39 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-20 20:49:49 $
  */
 public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**

@@ -29,7 +29,7 @@ import org.apache.excalibur.cli.CLArgsParser;
 import org.apache.excalibur.cli.CLOption;
 import org.apache.excalibur.cli.CLOptionDescriptor;
 import org.apache.excalibur.cli.CLUtil;
-import org.apache.avalon.DefaultContext;
+import org.apache.avalon.context.DefaultContext;
 
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -51,7 +51,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.29 $ $Date: 2001-04-17 03:55:01 $
+ * @version CVS $Revision: 1.1.4.30 $ $Date: 2001-04-20 20:49:42 $
  */
 
 public class Main {
@@ -330,7 +330,7 @@ public class Main {
         while (i.hasNext()) {
             if(xspOnly)
                 this.processXSP(NetUtils.normalize((String) i.next()));
-            else 
+            else
                 this.processURI(NetUtils.normalize((String) i.next()), 0);
             nCount++;
         }
@@ -393,7 +393,7 @@ public class Main {
             String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
             translatedLinks.put(relativeLink, translatedRelativeLink);
         }
-        
+
         String filename = mangle(uri);
         File file = IOUtils.createFile(destDir, filename);
         OutputStream output = new BufferedOutputStream(new FileOutputStream(file));

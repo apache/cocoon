@@ -10,7 +10,7 @@ package org.apache.cocoon.xml;
 
 import java.util.Vector;
 
-import org.apache.avalon.Recyclable;
+import org.apache.excalibur.pool.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
 
@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributeListImpl;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 /**
  * This class is an utility class &quot;wrapping&quot; around a SAX version 1.0
@@ -35,7 +35,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:55 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:50:19 $
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer implements Loggable /*, Recyclable*/ {
 

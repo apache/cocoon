@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
 
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.DefaultContext;
+import org.apache.avalon.context.DefaultContext;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
@@ -65,7 +65,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.85 $ $Date: 2001-04-20 17:32:16 $
+ * @version CVS $Revision: 1.1.4.86 $ $Date: 2001-04-20 20:50:13 $
  */
 
 public class CocoonServlet extends HttpServlet {

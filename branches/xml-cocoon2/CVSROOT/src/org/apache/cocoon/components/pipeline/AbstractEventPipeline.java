@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.IOException;
 
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-19 11:30:37 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:49:59 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -58,7 +58,7 @@ implements EventPipeline, Disposable {
     protected ComponentManager manager;
 
     public void compose (ComponentManager manager)
-    throws ComponentManagerException {
+    throws ComponentException {
         this.manager = manager;
         generatorSelector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
         transformerSelector = (ComponentSelector)this.manager.lookup(Roles.TRANSFORMERS);
@@ -88,7 +88,7 @@ implements EventPipeline, Disposable {
     public Generator getGenerator() {
         return this.generator;
     }
-    
+
     public void addTransformer (String role, String source, Parameters param)
     throws Exception {
         this.transformers.add ((Transformer)transformerSelector.select(role));
@@ -221,7 +221,7 @@ implements EventPipeline, Disposable {
                 "Could not connect pipeline.",
                 e
             );
-        } catch ( ComponentManagerException e ) {
+        } catch ( ComponentException e ) {
             throw new ProcessingException(
                 "Could not connect pipeline.",
                 e
@@ -231,9 +231,9 @@ implements EventPipeline, Disposable {
     }
 
     public void dispose() {
-        if(generatorSelector != null)        
+        if(generatorSelector != null)
             manager.release((Component)generatorSelector);
-        if(transformerSelector != null)        
+        if(transformerSelector != null)
             manager.release((Component)transformerSelector);
     }
 

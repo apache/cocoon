@@ -14,16 +14,14 @@ import java.util.Map;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.parameters.Parameters;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
@@ -38,18 +36,18 @@ import java.io.IOException;
  * This action simply checks to see if a given resource exists. It takes a
  * single parameter named 'url' and returns an empty map if it exists and
  * null otherwise. It has only been tested with context urls.
- * 
+ *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-16 20:24:30 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:49:45 $
  */
 public class ResourceExistsAction extends ComposerAction {
-    
+
     protected URLFactory urlFactory;
 
     public void configure(Configuration conf) throws ConfigurationException {
         try {
             urlFactory = (URLFactory)this.manager.lookup(Roles.URL_FACTORY);
-        } catch (ComponentManagerException e) {
+        } catch (ComponentException e) {
             throw new ConfigurationException("Could not lookup url factory",e);
         }
     }

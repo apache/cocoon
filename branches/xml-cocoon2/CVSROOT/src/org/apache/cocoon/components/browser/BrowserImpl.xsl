@@ -25,12 +25,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.xml.dom.DOMFactory;
@@ -48,7 +47,7 @@ import java.util.TreeSet;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @version 2.0
  * @since April 13, 2001 */
-public class BrowserImpl implements Component, Browser, Composer, Disposable
+public class BrowserImpl implements Component, Browser, Composable, Disposable
 {
   /**
    * <code>byMimeType</code> describes how to map from a generic MIME
@@ -122,15 +121,15 @@ public class BrowserImpl implements Component, Browser, Composer, Disposable
 
   /**
    * Set the current <code>ComponentManager</code> instance used by this
-   * <code>Composer</code>.
+   * <code>Composable</code>.
    */
 ]]>
 
-  public void compose(ComponentManager manager) 
-    throws ComponentManagerException {
+  public void compose(ComponentManager manager)
+    throws ComponentException {
       this.manager=manager;
       parser = (Parser)this.manager.lookup(Roles.PARSER);
-      
+
       HashMap browser0 = new HashMap();
       Document document;
 
@@ -182,7 +181,7 @@ loop:
       StringTokenizer tokenizer = new StringTokenizer(acceptHeader, ", ");
       while (tokenizer.hasMoreElements()) {
         String mediaType = ((String)tokenizer.nextElement()).trim();
-        
+
         if (currentType.equals(mediaType)) {
           exactMatch = currentType;
           break loop;
@@ -195,7 +194,7 @@ loop:
     }
 
     String type = null;
-    
+
     if (exactMatch != null)
       type = exactMatch;
     else if (partialMatch != null)
@@ -293,7 +292,7 @@ class UserAgentComparator implements Comparator
 
 
  <xsl:template match="browser-category//*[name() != 'browser'
-	                and name() != 'user-agent']
+                    and name() != 'user-agent']
                       | browser-category//@*">
   <xsl:param name="depth" select="0"/>
     browser<xsl:value-of select="$depth"/>.put("<xsl:value-of select="name()"/>", "<xsl:value-of select="."/>");

@@ -36,7 +36,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
-import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.logger.AbstractLoggable;
 
 import org.apache.cocoon.util.TraxErrorHandler;
 
@@ -48,7 +48,7 @@ import org.apache.cocoon.util.TraxErrorHandler;
  * transformed into an equivalent XSLT stylesheet anyway... This class should probably be based on an interface...
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-20 14:48:26 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:49:51 $
  */
 public class Logicsheet extends AbstractLoggable {
     /** The trax TransformerFactory */
@@ -82,13 +82,13 @@ public class Logicsheet extends AbstractLoggable {
             tfactory = (SAXTransformerFactory)TransformerFactory.newInstance();
             tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
 
-            // Create a Templates ContentHandler to handle parsing of the 
+            // Create a Templates ContentHandler to handle parsing of the
             // stylesheet.
-            javax.xml.transform.sax.TemplatesHandler templatesHandler = 
+            javax.xml.transform.sax.TemplatesHandler templatesHandler =
                                                 tfactory.newTemplatesHandler();
 
             // Create an XMLReader and set its ContentHandler.
-            org.xml.sax.XMLReader reader = 
+            org.xml.sax.XMLReader reader =
                            org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
             reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 
@@ -98,8 +98,8 @@ public class Logicsheet extends AbstractLoggable {
 
             saveNSFilter.setContentHandler(templatesHandler);
             //reader.setContentHandler(templatesHandler);
-    
-            // Parse the stylesheet.                       
+
+            // Parse the stylesheet.
             reader.parse(inputSource);
 
             // Get the Templates object (generated during the parsing of the stylesheet)
@@ -170,7 +170,7 @@ public class Logicsheet extends AbstractLoggable {
         }
 
         public void startElement (String namespaceURI, String localName,
-        			      String qName, Attributes atts) throws SAXException {
+                          String qName, Attributes atts) throws SAXException {
             super.startElement(namespaceURI, localName, qName, atts);
         }
     }

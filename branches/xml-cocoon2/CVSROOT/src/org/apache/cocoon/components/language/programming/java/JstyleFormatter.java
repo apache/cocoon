@@ -19,7 +19,7 @@ import jstyle.JSBeautifier;
 import org.apache.cocoon.components.language.programming.*;
 
 import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.logger.Loggable;
 
 /**
  * This class implements <code>CodeFormatter</code> based on
@@ -27,7 +27,7 @@ import org.apache.avalon.Loggable;
  * beautifier. This implementation is very improvised...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:39 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:49:59 $
  */
 public class JstyleFormatter implements CodeFormatter, Loggable {
   protected Logger log;

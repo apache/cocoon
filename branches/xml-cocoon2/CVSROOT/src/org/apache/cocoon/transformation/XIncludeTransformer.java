@@ -27,15 +27,15 @@ import org.xml.sax.ContentHandler;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
-import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.excalibur.pool.Poolable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.Component;
+import org.apache.avalon.component.Component;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
@@ -53,9 +53,9 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-13 16:02:27 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-20 20:50:17 $ $Author: bloritsch $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable, Disposable {
+public class XIncludeTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
 
     protected URLFactory urlFactory;
 
@@ -226,7 +226,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
         } else if (parse.equals("xml")) {
             getLogger().debug("Parse type is XML");
             Parser parser = null;
-            try 
+            try
             {
                 getLogger().debug("Looking up " + Roles.PARSER);
                 parser = (Parser)manager.lookup(Roles.PARSER);
@@ -278,9 +278,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             } catch(IOException e) {
                 getLogger().error("Error in processXIncludeElement", e);
                 throw e;
-            } catch(ComponentManagerException e) {
+            } catch(ComponentException e) {
                 getLogger().error("Error in processXIncludeElement", e);
-                throw new SAXException("ComponentManagerException in processXIncludeElement");
+                throw new SAXException("ComponentException in processXIncludeElement");
             } finally {
                 if(parser != null) this.manager.release((Component) parser);
             }

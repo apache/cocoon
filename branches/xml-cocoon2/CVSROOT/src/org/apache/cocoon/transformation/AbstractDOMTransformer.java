@@ -15,10 +15,10 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.Roles;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.configuration.Parameters;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.Disposable;
 
 /**
@@ -33,7 +33,7 @@ import org.apache.avalon.Disposable;
  * @version CVS $Revision $Date
  */
 public abstract class AbstractDOMTransformer extends DOMBuilder
-    implements Transformer, DOMBuilder.Listener, Composer, Disposable {
+    implements Transformer, DOMBuilder.Listener, Composable, Disposable {
 
     /** The SAX entity resolver */
     protected EntityResolver resolver;
