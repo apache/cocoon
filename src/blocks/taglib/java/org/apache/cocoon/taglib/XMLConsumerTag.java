@@ -20,8 +20,9 @@ import org.apache.cocoon.xml.XMLConsumer;
 
 /**
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: XMLConsumerTag.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface XMLConsumerTag extends Tag, XMLConsumer {
 
+    // just a combination of the two interfaces
 }

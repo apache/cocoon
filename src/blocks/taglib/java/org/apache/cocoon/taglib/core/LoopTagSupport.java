@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * @see javax.servlet.jsp.jstl.core.LoopTagSupport
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: LoopTagSupport.java,v 1.5 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, IterationTag //, TryCatchFinally
 {
@@ -351,22 +351,22 @@ public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, I
                 return (last); // use cached value
             }
             public Integer getBegin() {
-                if (beginSpecified)
+                if (beginSpecified) {
                     return (new Integer(begin));
-                else
-                    return null;
+                }
+                return null;
             }
             public Integer getEnd() {
-                if (endSpecified)
+                if (endSpecified) {
                     return (new Integer(end));
-                else
-                    return null;
+                }
+                return null;
             }
             public Integer getStep() {
-                if (stepSpecified)
+                if (stepSpecified) {
                     return (new Integer(step));
-                else
-                    return null;
+                }
+                return null;
             }
         }
 
@@ -375,8 +375,9 @@ public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, I
          * implementation, we just need one per instance, but I'd rather
          * not keep the reference around once release() has been called.
          */
-        if (status == null)
+        if (status == null) {
             status = new Status();
+        }
 
         return status;
     }

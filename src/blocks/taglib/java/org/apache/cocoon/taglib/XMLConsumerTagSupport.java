@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: XMLConsumerTagSupport.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class XMLConsumerTagSupport extends VarTagSupport implements XMLConsumerTag {
 
@@ -29,108 +29,126 @@ public abstract class XMLConsumerTagSupport extends VarTagSupport implements XML
      * @see ContentHandler#characters(char[], int, int)
      */
     public void characters(char[] ch, int start, int length) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#endDocument()
      */
     public void endDocument() throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#endElement(String, String, String)
      */
     public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#endPrefixMapping(String)
      */
     public void endPrefixMapping(String prefix) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#ignorableWhitespace(char[], int, int)
      */
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#processingInstruction(String, String)
      */
     public void processingInstruction(String target, String data) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#setDocumentLocator(Locator)
      */
     public void setDocumentLocator(Locator locator) {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#skippedEntity(String)
      */
     public void skippedEntity(String name) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#startDocument()
      */
     public void startDocument() throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#startElement(String, String, String, Attributes)
      */
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see ContentHandler#startPrefixMapping(String, String)
      */
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see LexicalHandler#comment(char[], int, int)
      */
     public void comment(char[] ch, int start, int length) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see LexicalHandler#endCDATA()
      */
     public void endCDATA() throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see LexicalHandler#endDTD()
      */
     public void endDTD() throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see LexicalHandler#endEntity(String)
      */
     public void endEntity(String name) throws SAXException {
-    }
+        // nothing to do here
+   }
 
     /*
      * @see LexicalHandler#startCDATA()
      */
     public void startCDATA() throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see LexicalHandler#startDTD(String, String, String)
      */
     public void startDTD(String name, String publicId, String systemId) throws SAXException {
+        // nothing to do here
     }
 
     /*
      * @see LexicalHandler#startEntity(String)
      */
     public void startEntity(String name) throws SAXException {
-    }
+        // nothing to do here
+   }
 
 }

@@ -20,7 +20,7 @@ import org.apache.cocoon.taglib.i18n.LocaleTag;
 
 /**
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: UpperCaseTag.java,v 1.3 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class UpperCaseTag extends StringTagSupport {
 
@@ -31,9 +31,8 @@ public class UpperCaseTag extends StringTagSupport {
         LocaleTag localeTag = (LocaleTag) TagSupport.findAncestorWithClass(this, LocaleTag.class);
         if (localeTag == null) {
             return str.toUpperCase();
-        } else {
-            return str.toUpperCase(localeTag.getLocale());
         }
+        return str.toUpperCase(localeTag.getLocale());
     }
 
 }

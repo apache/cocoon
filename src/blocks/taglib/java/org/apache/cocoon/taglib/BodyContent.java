@@ -24,12 +24,10 @@ import org.apache.cocoon.xml.SaxBuffer;
 public class BodyContent {
 
     private SaxBuffer content;
-    private XMLConsumer consumer;
 
 
     public BodyContent(SaxBuffer content, XMLConsumer consumer) {
         this.content = content;
-        this.consumer = consumer;
     }
 
     public void clearBody() {
