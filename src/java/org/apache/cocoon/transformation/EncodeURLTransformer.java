@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *     ...
  *       &lt;map:transformer type=&quot;encodeURL&quot;
  *         src=&quot;org.apache.cocoon.optional.transformation.EncodeURLTransformer&quot;&gt;
- *         &lt;exclude-name&gt;img/@src&lt;/exclude-name&gt;
+ *         &lt;exclude-name&gt;img/@src|a/@href=.&amp;asterik;adserver&lt;/exclude-name&gt;
  *         &lt;include-name&gt;.&amp;asterik;/@href|.&amp;asterik;/@src|.&amp;asterik;/@action&lt;/include-name&gt;
  *       &lt;/map:transformer&gt;
  *   ...
@@ -87,7 +87,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.8 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -266,7 +266,7 @@ public class EncodeURLTransformer
 
                     String value = new_attributes.getValue(i);
 
-                    if (elementAttributeMatching.matchesElementAttribute(lname, attr_lname)) {
+                    if (elementAttributeMatching.matchesElementAttribute(lname, attr_lname, value)) {
                         // don't use simply this.response.encodeURL(value)
                         // but be more smart about the url encoding
                         final String new_value = this.encodeURL(value);
@@ -322,7 +322,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.8 2004/06/17 14:55:24 cziegeler Exp $
+     * @version    CVS $Id$
      */
     public class ElementAttributeMatching {
         /**
@@ -353,14 +353,15 @@ public class EncodeURLTransformer
         /**
          * Return true iff element_name attr_name pair is not matched by exclude-name,
          * but is matched by include-name
-         *
          * @param  element_name
          * @param  attr_name
+         * @param value TODO
+         *
          * @return               boolean true iff value of attribute_name should get rewritten, else
          *   false.
          */
-        public boolean matchesElementAttribute(String element_name, String attr_name) {
-            String element_attr_name = canonicalizeElementAttribute(element_name, attr_name);
+        public boolean matchesElementAttribute(String element_name, String attr_name, String value) {
+            String element_attr_name = canonicalizeElementAttribute(element_name, attr_name, value);
 
             if (excludeNameRE != null && includeNameRE != null) {
                 return !matchesExcludesElementAttribute(element_attr_name) &&
@@ -377,13 +378,14 @@ public class EncodeURLTransformer
          *   String concatenated <code>element name + "/@" + attribute name</code>
          *   is matched against the include and excluding patterns.
          * </p>
-         *
          * @param  element_name  Description of Parameter
          * @param  attr_name     Description of Parameter
+         * @param value The value
+         *
          * @return               Description of the Returned Value
          */
-        private String canonicalizeElementAttribute(String element_name, String attr_name) {
-            return element_name + "/@" + attr_name;
+        private String canonicalizeElementAttribute(String element_name, String attr_name, String value) {
+            return element_name + "/@" + attr_name + "=" + value;
         }
 
 
