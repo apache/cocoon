@@ -18,13 +18,13 @@
 <!--+
     | German message catalogue file for menu in Cocoon 2 i18n sample
     |
-    | CVS $Id: menu_de.xml,v 1.4 2004/04/05 12:34:23 antonio Exp $
+    | CVS $Id: menu_de.xml,v 1.5 2004/04/06 08:51:37 antonio Exp $
     +-->
 
 <catalogue xml:lang="de">
     <message key="Apache Cocoon i18n Samples">Apache Cocoon i18n Beispiele</message>
     <message key="Samples">Beispiele</message>
-    <message key="Introduction">Einführung</message>
+    <message key="Introduction">EinfÃ¼hrung</message>
     <message key="Static (XML)">Statisch (XML)</message>
     <message key="Dynamic (XSP)">Dynamisch (XSP)</message>
     <message key="Sitemap source">Sitemap Quelle</message>    
