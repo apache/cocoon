@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.38 2004/04/05 12:34:22 antonio Exp $
+    | CVS $Id: samples.xml,v 1.39 2004/04/28 21:38:52 upayavira Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -87,7 +87,7 @@
   <group name="Cocoon Control Flow">
     <note>
       Since the Cocoon Control Flow is a core technology you find more examples
-      that make use of it e.g. the Petstore, JXForms and Woody block
+      that make use of it e.g. the Petstore and Cocoon Forms blocks.
     </note>      
     <sample name="Examples" href="flow/">
       Examples of Cocoon's control flow of Web pages.
