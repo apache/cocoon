@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.197 2004/03/29 19:22:06 unico Exp $
+    | CVS $Id: jars.xml,v 1.198 2004/03/31 07:41:37 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -966,7 +966,7 @@
       translators from grammatical descriptions containing Java, C#, or C++ actions
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/antlr-2.7.2.jar</lib>
+    <lib>ojb/lib/antlr-2.7.3.jar</lib>
     <homepage>http://www.antlr.org/</homepage>
   </file>
 
