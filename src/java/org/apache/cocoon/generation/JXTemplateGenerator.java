@@ -352,7 +352,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.23 2003/12/12 05:39:37 antonio Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.24 2003/12/28 22:54:07 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -2970,14 +2970,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             MyJexlContext jexlContext,
                             JXPathContext jxpathContext,
                             Node node) throws SAXException {
-        Parser parser = new Parser();
-        DOMStreamer streamer = new DOMStreamer(parser);
+        DOMStreamer streamer = new DOMStreamer(consumer);
         streamer.stream(node);
-        execute(consumer,
-                jexlContext,
-                jxpathContext,
-                parser.getStartEvent(), null);
-    }
+   }
 
     private void call(Locator location,
                       String messagePrefix,
