@@ -75,4 +75,20 @@ public final class ActionRequest extends PortletRequest {
     public BufferedReader getReader() throws IOException {
         return getActionRequest().getReader();
     }
+
+    /**
+     * Action request provides content length for custom upload handling
+     */
+    public int getContentLength()
+    {
+        return getActionRequest().getContentLength();
+    }
+
+    /**
+     * Action request provides content type for custom upload handling
+     */
+    public String getContentType()
+    {
+        return getActionRequest().getContentType();
+    }
 }
