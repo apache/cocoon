@@ -90,12 +90,12 @@
    </p>
    <source><![CDATA[
 <?xml version="1.0"
- xmlns:error="http://apache.org/cocoon/error/2.0
  encoding="UTF-8"?>
  
 <error:notify
  error:type="error" 
- error:sender="org.apache.cocoon.sitemap.ErrorNotifier">
+ error:sender="org.apache.cocoon.sitemap.ErrorNotifier"
+ xmlns:error="http://apache.org/cocoon/error/2.0">
  
  <error:title>Cocoon error</error:title>
  <error:source>java.lang.NullPointerException</error:source>
