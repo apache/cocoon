@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.51 2000-04-08 00:36:15 stefano Exp $
+  $Id: changes.xml,v 1.52 2000-04-08 10:17:07 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update" fixes-bug="102">
+   Improved error message when XSP repository directory is not writable.
+  </action>
+  <action dev="SM" type="update" due-to="Michel Lehon" due-to-email="michel.lehon@outwares.com">
+   Added an improved memory store that checks for memory overflow in the background.
+  </action>
   <action dev="SM" type="fix" due-to="Ovidiu Predescu" due-to-email="ovidiu@cup.hp.com">
    Fixed a number of NPE when using Cocoon from the command line.
   </action>
