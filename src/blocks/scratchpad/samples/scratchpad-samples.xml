@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.6 2003/11/07 10:41:26 bdelacretaz Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.7 2003/12/15 20:32:26 tony Exp $ -->
 
 <samples>
 
@@ -52,6 +52,10 @@
     <sample name="Sitemap Viewer" href="sitemap-viewer/">
         Experimental sitemap viewer
     </sample>
+  </group>
+  
+  <group name="Othello">
+    <sample name="Example" href="othello/">Template based static web site.</sample>
   </group>
 
 </samples>
