@@ -45,7 +45,8 @@
                 <section>
                     <title>Manage Cron Jobs scheduled</title>
                     <p>
-                        Here you can define new CronJobs
+                        Here you can define new CronJobs based on the sample class
+                        org.apache.cocoon.components.cron.TestCronJob.
                     </p>
                     <form method="post" action="continue.${continuation.id}?action=add">
                         <table>
