@@ -56,9 +56,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.Enumeration;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -68,18 +70,31 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.cocoon.components.source.RestrictableSource;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
+import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.util.HttpURL;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.DepthSupport;
+import org.apache.webdav.lib.Property;
+import org.apache.webdav.lib.PropertyName;
+import org.apache.webdav.lib.ResponseEntity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.InputSource;
+
+import org.w3c.dom.Document;
 
 /**
  *  A source implementation to get access to WebDAV repositories. Use it
@@ -88,10 +103,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.4 2003/07/27 20:53:39 gianugo Exp $
+ *  @version $Id: WebDAVSource.java,v 1.5 2003/08/22 12:23:41 gcasper Exp $
 */
-public class WebDAVSource
-    implements Source, RestrictableSource, ModifiableTraversableSource {
+public class WebDAVSource implements Composable, Source,
+    RestrictableSource, ModifiableTraversableSource, InspectableSource {
 
 
     private final String NAMESPACE = "http://apache.org/cocoon/webdav/1.0";
@@ -101,6 +116,8 @@ public class WebDAVSource
     private final String RESOURCE_NAME = "resource";
 
     private final String COLLECTION_NAME = "collection";
+
+    private ComponentManager manager = null;
 
     private String systemId;
     
@@ -190,6 +207,18 @@ public class WebDAVSource
     private WebDAVSource (WebdavResource source) {
     	this.resource = source;
     	this.systemId = source.getHttpURL().getURI();
+    }
+
+    /**
+     * Pass the ComponentManager to the composer. The Composable implementation
+     * should use the specified ComponentManager to acquire the components it needs for execution
+     *
+     * @param manager The ComponentManager which this Composable uses
+     *
+     * @throws ComponentException
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
     }
 
     /**
@@ -670,5 +699,151 @@ public class WebDAVSource
         }
     }
     
+    /**
+     * Returns a enumeration of the properties
+     *
+     * @return Enumeration of SourceProperty
+     *
+     * @throws SourceException If an exception occurs.
+     */
+     public SourceProperty[] getSourceProperties() throws SourceException {
+
+         Vector sourceproperties = new Vector();
+         DOMParser parser = null;
+         String xml = "";
+         Enumeration props= null;
+         org.apache.webdav.lib.Property prop = null;
+         String propValue = null;
+        
+         try {
+             parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
+             Enumeration responses = this.resource.propfindMethod(0);
+             while (responses.hasMoreElements()) {
+
+                 ResponseEntity response = (ResponseEntity)responses.nextElement();
+                 props = response.getProperties();
+                 final String quote = "\"";
+                 while (props.hasMoreElements()) {
+
+                     prop = (Property) props.nextElement();
+                     String localName = prop.getLocalName();
+                     String namespaceURI = prop.getNamespaceURI();
+                     String pre = "<"+localName+" xmlns="+quote+namespaceURI+quote+" >";
+                     String post = "</"+localName+" >";
+                     propValue = prop.getPropertyAsString();
+                     xml = pre+propValue+post;
+                     StringReader reader = new StringReader(xml);
+                     Document doc = parser.parseDocument(new InputSource(reader));
+                     SourceProperty srcProperty = new SourceProperty(doc.getDocumentElement());
+                     sourceproperties.addElement(srcProperty);
+                 }
+             }
+
+         } catch (Exception e) {
+             throw new SourceException("Could not parse property "+xml, e);
+
+         } finally {
+             this.manager.release((Component) parser);
+         }
+         SourceProperty[] sourcepropertiesArray = new SourceProperty[sourceproperties.size()];
+         for (int i = 0; i<sourceproperties.size(); i++) {
+             sourcepropertiesArray[i] = (SourceProperty) sourceproperties.elementAt(i);
+         }
+         return sourcepropertiesArray;
+    }
+
+    /**
+     * Returns a property from a source.
+     *
+     * @param namespace Namespace of the property
+     * @param name Name of the property
+     *
+     * @return Property of the source.
+     *
+     * @throws SourceException If an exception occurs.
+     */
+    public SourceProperty getSourceProperty (String namespace, String name)
+    throws SourceException {
+
+          Vector sourceproperties = new Vector();
+          DOMParser parser = null;
+          String xml = "";
+          Enumeration props= null;
+          org.apache.webdav.lib.Property prop = null;
+          String propValue = null;
+
+          try {
+              parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
+              Enumeration responses = this.resource.propfindMethod(0);
+              while (responses.hasMoreElements()) {
+                  ResponseEntity response = (ResponseEntity)responses.nextElement();
+                  props = response.getProperties();
+                  final String quote = "\"";
+                  while (props.hasMoreElements()) {
+                      prop = (Property) props.nextElement();
+
+                      if (namespace.equals(prop.getNamespaceURI())
+                          && name.equals(prop.getLocalName())){
+
+                          String localName = prop.getLocalName();
+                          String namespaceURI = prop.getNamespaceURI();
+                          String pre = "<"+localName+" xmlns="+quote+namespaceURI+quote+" >";
+                          String post = "</"+localName+" >";
+                          propValue = prop.getPropertyAsString();
+                          xml = pre+propValue+post;
+                          StringReader reader = new StringReader(xml);
+                          Document doc = parser.parseDocument(new InputSource(reader));
+    
+                          return new SourceProperty(doc.getDocumentElement());
+                      }
+
+                  }
+              }
+          } catch (Exception e) {
+              throw new SourceException("Could not parse property "+xml, e);
+          } finally {
+              this.manager.release((Component) parser);
+          }
+          return null;
+    }
+
+    /**
+     * Remove a specified source property.
+     *
+     * @param namespace Namespace of the property.
+     * @param name Name of the property.
+     *
+     * @throws SourceException If an exception occurs.
+     */
+    public void removeSourceProperty(String namespace, String name)
+    throws SourceException {
+
+        try {
+            this.resource.proppatchMethod(new PropertyName(namespace, name), "", false);
+        } catch (Exception e) {
+            throw new SourceException("Could not remove property ", e);
+        }
+    }
+
+    /**
+     * Sets a property for a source.
+     *
+     * @param sourceproperty Property of the source
+     *
+     * @throws SourceException If an exception occurs during this operation
+     */
+    public void setSourceProperty(SourceProperty sourceproperty)
+    throws SourceException {
+
+        try {
+            // FIXME SourceProperty.getValueAsString only delivers Text nodes
+            this.resource.proppatchMethod(
+                   new PropertyName(sourceproperty.getNamespace(),sourceproperty.getName()),
+                   sourceproperty.getValueAsString(), true);
+        } catch (Exception e) {
+            throw new SourceException("Could not set property ", e);
+        }
+    }
+
 
 }
