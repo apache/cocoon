@@ -60,18 +60,31 @@ import org.apache.cocoon.ProcessingException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutFactory.java,v 1.3 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: LayoutFactory.java,v 1.4 2003/05/26 14:03:49 cziegeler Exp $
  */
 public interface LayoutFactory  {
     
     String ROLE = LayoutFactory.class.getName();
     
-	// TODO - define the interface
-    
+    /**
+     * This method is invoked for a newly loaded profile
+     */
     void prepareLayout(Layout layout)
     throws ProcessingException;
     
+    /**
+     * Create a new layout instance.
+     * The instance is also registered at the profile manager.
+     */
     Layout newInstance(String name)
+    throws ProcessingException;
+    
+    /**
+     * Remove the layout instance.
+     * The instance (and all childs) will also be unregistered from
+     * the profile manager.
+     */
+    void remove(Layout layout)
     throws ProcessingException;
     
     List getLayoutDescriptions();

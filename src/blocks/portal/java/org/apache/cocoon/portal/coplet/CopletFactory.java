@@ -57,7 +57,7 @@ import org.apache.cocoon.ProcessingException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletFactory.java,v 1.2 2003/05/22 15:19:45 cziegeler Exp $
+ * @version CVS $Id: CopletFactory.java,v 1.3 2003/05/26 14:03:49 cziegeler Exp $
  */
 public interface CopletFactory  {
     
@@ -70,7 +70,17 @@ public interface CopletFactory  {
     void prepare(CopletInstanceData copletInstanceData)
     throws ProcessingException;
     
+    /** 
+     * Create a new coplet instance.
+     * This is also registered at the profile manager.
+     */
     CopletInstanceData newInstance(CopletData copletData)
     throws ProcessingException;
     
+    /**
+     * Remove the coplet instance data.
+     * This is also unregistered at the profile manager.
+     */
+    void remove(CopletInstanceData copletInstanceData)
+    throws ProcessingException;
 }

@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -73,6 +74,7 @@ import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDataHandler;
 import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
+import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
@@ -90,7 +92,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.7 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.8 2003/05/26 14:03:48 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -275,18 +277,40 @@ public class DefaultLayoutFactory
         if ( e instanceof LayoutRemoveEvent ) {
             LayoutRemoveEvent event = (LayoutRemoveEvent)e;
             Layout layout = (Layout)event.getTarget();
-            this.remove( layout );
+            try {
+                this.remove( layout );
+            } catch (ProcessingException pe) {
+                throw new CascadingRuntimeException("Exception during removal.", pe);
+            }
         }
     }
 
-    public void remove(Layout layout) {
-        // TODO - if this is a coplet layout remove coplet instance data
-        // TODO - remove this from the profile manager
-        // TODO - if this is a composite layout, recursive remove
-        Item parent = layout.getParent();
-        if ( parent != null && parent.getParent() != null) {
-            parent.getParent().removeItem( parent );
+    public void remove(Layout layout) 
+    throws ProcessingException {
+        if ( layout != null ) {
+            // TODO - unregister
+            if ( layout instanceof CompositeLayout ) {
+                Iterator itemIterator = ((CompositeLayout)layout).getItems().iterator();
+                while ( itemIterator.hasNext() ) {
+                    this.remove( ((Item)itemIterator.next()).getLayout());               
+                }
+            }
+            Item parent = layout.getParent();
+            if ( parent != null && parent.getParent() != null) {
+                parent.getParent().removeItem( parent );
+            }
+            
+            if ( layout instanceof CopletLayout ) {
+                CopletFactory factory = null;
+                try {
+                    factory = (CopletFactory)this.manager.lookup(CopletFactory.ROLE);
+                    factory.remove( ((CopletLayout)layout).getCopletInstanceData());
+                } catch (ComponentException ce) {
+                    throw new ProcessingException("Unable to lookup coplet factory.", ce);
+                } finally {
+                    this.manager.release( (Component)factory );
+                }
+            }
         }
-        
     }
 }

@@ -81,7 +81,7 @@ import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.2 2003/05/22 15:19:48 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.3 2003/05/26 14:03:49 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -165,6 +165,7 @@ public class DefaultCopletFactory
             adapterSelector = (ComponentSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
             adapter = (CopletAdapter)adapterSelector.select( adapterName );
             adapter.init( instance );
+            adapter.login( instance );
         } catch (ComponentException ce) {
             throw new ProcessingException("Unable to lookup coplet adapter selector or adaptor.", ce);
         } finally {
@@ -173,6 +174,8 @@ public class DefaultCopletFactory
             }
             this.manager.release( adapterSelector );
         }
+        
+        // TODO - register
         return instance;
     }
     
@@ -248,6 +251,33 @@ public class DefaultCopletFactory
                 DefaultAspectDataHandler instanceHandler = new DefaultAspectDataHandler(instanceDesc, this.storeSelector);
                 this.coplets.put(desc.getName(), new Object[] {desc, handler, instanceHandler});
                 this.descriptions.add(desc);
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#remove(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
+    public void remove(CopletInstanceData copletInstanceData) 
+    throws ProcessingException {
+        // TODO - unregister
+        if ( copletInstanceData != null ) {
+            // now lookup the adapter
+            final String adapterName = copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName();
+            CopletAdapter adapter = null;
+            ComponentSelector adapterSelector = null;
+            try {
+                adapterSelector = (ComponentSelector) this.manager.lookup( CopletAdapter.ROLE + "Selector");
+                adapter = (CopletAdapter)adapterSelector.select( adapterName );
+                adapter.logout( copletInstanceData );
+                adapter.destroy( copletInstanceData );
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Unable to lookup coplet adapter selector or adaptor.", ce);
+            } finally {
+                if ( adapterSelector != null) {
+                    adapterSelector.release( adapter );
+                }
+                this.manager.release( adapterSelector );
             }
         }
     }
