@@ -51,6 +51,10 @@
         <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-patch</xsl:for-each></xsl:attribute>
       </target>
 
+      <target name="roles">
+        <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-roles</xsl:for-each></xsl:attribute>
+      </target>
+
       <target name="samples">
         <xsl:attribute name="depends">init<xsl:for-each select="project[contains(@name,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@name"/>-samples</xsl:for-each></xsl:attribute>
       </target>
@@ -97,6 +101,14 @@
          <antcall target="{$block-name}-patches"/>
       </target>
       
+      <target name="{@name}-roles" unless="unless.exclude.block.{$block-name}">
+         <xsl:if test="depend">
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
+         </xsl:if>
+
+         <antcall target="{$block-name}-roles"/>
+      </target>
+           
       <target name="{@name}-samples" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-samples</xsl:for-each></xsl:attribute>
@@ -159,8 +171,6 @@
                <include name="META-INF/**" />
             </fileset>
          </copy>
-
-         <xpatch extension="xroles" directory="{string('${blocks}')}/{$block-name}/conf" configuration="{string('${build.dest}/org/apache/cocoon/cocoon.roles')}"/>
 
          <!-- This is a little bit tricky:
               As the javac task checks, if a src directory is available and
@@ -248,6 +258,10 @@
          </copy>
       </target>
 
+	  <target name="{$block-name}-roles">
+         <xpatch directory="{string('${blocks}')}/{$block-name}/conf" extension="xroles" configuration="{string('${build.dest}/org/apache/cocoon/cocoon.roles')}"/>
+      </target>
+      
       <target name="{$block-name}-patches" depends="{$block-name}-prepare">
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xmap" configuration="{string('${build.webapp}')}/sitemap.xmap"/>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xpipe" configuration="{string('${build.webapp}')}/sitemap.xmap"/>
