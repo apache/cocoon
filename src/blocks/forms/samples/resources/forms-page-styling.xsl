@@ -194,7 +194,7 @@
     Group items layout : default is no layout
   -->
   <xsl:template match="fi:group" mode="group-layout">
-    <xsl:apply-templates select="fi:items/*"/>
+    <xsl:apply-templates select="fi:items/*|fi:items/text()"/>
   </xsl:template>
 
   <!--
