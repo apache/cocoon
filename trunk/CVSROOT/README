@@ -13,7 +13,7 @@ Contents
 * What is it?
 * Where is it?
 * Requirements
-* Release Notes for Cocoon 1.8
+* Release Notes for Cocoon 1.8.1 and previous versions
 * Licensing and Legal Issues
 
 
@@ -63,6 +63,71 @@ Contents
 
   Look for the most updated documentation on the Cocoon web site under
   the Apache XML Project (http://xml.apache.org/cocoon/).
+
+
+  Release Notes for Cocoon 1.8.1
+  ------------------------------
+
+  This is mainly a bugfix release - a large number of fixes and updates
+  have been made.
+
+  As usual, changes since previous releases are documented in docs/changes.html
+
+  Major improvements include:
+
+  * First official release of the esql logicsheet for database access in Cocoon.
+    Esql, which was previously an undocumented experimental feature, supports
+    features like integration with other logicsheets, prepared statements, and
+    multiple encodings. Esql now supercedes both the sql taglib and the sql 
+    processor. IMPORTANT NOTE: Although the esql syntax has changed since Cocoon 1.8
+    (see the documentation), it is now expected to be fairly stable.
+
+  * The much-maligned Internet Explorer PDF bug, which caused so much gnashing of
+    teeth, has finally been "fixed" in Cocoon! (We think.)
+    See the FAQ for full details - see also samples/fo for practical examples.
+
+  * Updated installation instructions for a number of servlet engines, including Tomcat.
+    Cocoon now comes with walk-through installation instructions for a greater range of
+    platforms than ever before! This is very useful because Cocoon is a complex servlet
+    and therefore quite complicated to install.
+
+  * Support for FOP 0.15 (though not later versions).
+    Unfortunately this is rather inefficient - Cocoon 2 will address this.
+    FOP is an XML-to-PDF converter based at xml.apache.org. FOP 0.15 supports more 
+    features and fixes many bugs, but it is based on a newer XSL:FO 
+    specification than FOP 0.13, so some pages may need changing. FOP Samples 
+    have been updated accordingly.
+
+  Other highlights include:
+
+  * New LinkEncodingProcessor to encode all links on a page
+    - no more messing about with response.encodeUrl all over the place
+    or unportable XSLT extensions!
+  * sax-bugfix.jar that allows you to see line numbers in parsing errors. See Installing.
+  * Documentation has been tweaked and improved in many places.
+  * Of interest to JServ users - You can now override options in cocoon.properties, 
+    in web.xml or zone.properties.
+  * User-agent support for command-line mode.
+  * Slightly better encoding and CLASSPATH support for XSP.
+  * More informative error information in places.
+  * Numerous other bugfixes, including a workaround for a Websphere bug that prevented
+    Cocoon from working.
+
+  Also new since the last release is a Bug Database and a Patch Queue on the Cocoon website.
+  If you've posted us a bugfix and it hasn't been acted on yet, please feel free to file
+  a bug report - it helps us keep track! (To file a report you need to first
+  register, and then login.) Of course, we would like to see as much information
+  as possible in bug reports, as this aids in tracking down bugs and testing bugfixes.
+
+  As usual, if upgrading from an earlier release, you need to replace your
+  cocoon.properties file with the one supplied in
+  src/org/apache/cocoon/cocoon.properties,
+  (then make any site-specific adjustments if you have any),
+  or Cocoon will very likely not work at all.
+
+  Again, it may cause errors if you use old samples with a new Cocoon.
+  If you use the ESQL taglib, the syntax has changed between Cocoon 1.8 and Cocoon 1.8.1.
+  See the documentation for more details.
 
 
   Release Notes for Cocoon 1.8
