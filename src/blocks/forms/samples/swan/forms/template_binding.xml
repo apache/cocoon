@@ -16,7 +16,7 @@
 -->
 
 <!--
-Binding for CForms form template editor.
+Binding for Swan form template editor.
 
 @version CVS $Id$
 -->
@@ -34,7 +34,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:case/>
 </fb:insert-node>
       <fb:struct id="case" path="ft:case">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -45,7 +47,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:class/>
 </fb:insert-node>
       <fb:struct id="class" path="ft:class">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -56,6 +60,8 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:form-template/>
 </fb:insert-node>
       <fb:struct id="form-template" path="ft:form-template">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -66,7 +72,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:new/>
 </fb:insert-node>
       <fb:struct id="new" path="ft:new">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
       </fb:struct>
     </fb:case>
   </fb:class>
@@ -76,7 +84,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:repeater-size/>
 </fb:insert-node>
       <fb:struct id="repeater-size" path="ft:repeater-size">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
       </fb:struct>
     </fb:case>
   </fb:class>
@@ -86,8 +96,10 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:repeater-widget/>
 </fb:insert-node>
       <fb:struct id="repeater-widget" path="ft:repeater-widget">
-        <fb:value id="id" path="@id"/>
-        <fb:insert-node></fb:insert-node>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+          <fb:insert-node></fb:insert-node>
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -98,11 +110,13 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:struct/>
 </fb:insert-node>
       <fb:struct id="struct" path="ft:struct">
-        <fb:value id="id" path="@id"/>
-        <fb:new id="label-class"/>
-        <fb:insert-node>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+          <fb:new id="label-class"/>
+          <fb:insert-node>
   <ft:widgets/>
   </fb:insert-node>
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -113,7 +127,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:union/>
 </fb:insert-node>
       <fb:struct id="union" path="ft:union">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
         <!--<ft:new id="label-class"/>-->
         <fb:new id="items-class"/>
       </fb:struct>
@@ -125,7 +141,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:widget/>
 </fb:insert-node>
       <fb:struct id="widget" path="ft:widget">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
       </fb:struct>
     </fb:case>
   </fb:class>
@@ -135,7 +153,9 @@ Binding for CForms form template editor.
       <fb:insert-node><ft:widget-label/>
 </fb:insert-node>
       <fb:struct id="widget-label" path="ft:widget-label">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
       </fb:struct>
     </fb:case>
   </fb:class>
@@ -145,6 +165,8 @@ Binding for CForms form template editor.
     <fb:case id="table" path=".">
       <fb:insert-node><table/></fb:insert-node>
       <fb:struct id="table" path="table">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -152,6 +174,8 @@ Binding for CForms form template editor.
     <fb:case id="tr" path=".">
       <fb:insert-node><tr/></fb:insert-node>
       <fb:struct id="tr" path="tr">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -159,6 +183,8 @@ Binding for CForms form template editor.
     <fb:case id="td" path=".">
       <fb:insert-node><td/></fb:insert-node>
       <fb:struct id="td" path="td">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -166,6 +192,8 @@ Binding for CForms form template editor.
     <fb:case id="p" path=".">
       <fb:insert-node><p/></fb:insert-node>
       <fb:struct id="p" path="p">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -173,13 +201,17 @@ Binding for CForms form template editor.
     <fb:case id="input" path=".">
       <fb:insert-node><input/></fb:insert-node>
       <fb:struct id="input" path="input">
-        <fb:value id="id" path="@id"/>
+        <fb:struct id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:struct>
       </fb:struct>
     </fb:case>
 
     <fb:case id="content" path=".">
       <fb:insert-node><content/></fb:insert-node>
       <fb:struct id="content" path="content">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -187,6 +219,8 @@ Binding for CForms form template editor.
     <fb:case id="title" path=".">
       <fb:insert-node><title/></fb:insert-node>
       <fb:struct id="title" path="title">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
@@ -194,20 +228,20 @@ Binding for CForms form template editor.
     <fb:case id="page" path=".">
       <fb:insert-node><page/></fb:insert-node>
       <fb:struct id="page" path="page">
+        <fb:struct id="stuff" path=".">
+        </fb:struct>
         <fb:new id="items-class"/>
       </fb:struct>
     </fb:case>
 
   </fb:class>
 
-  <fb:class id="label-class">
-    <fb:value id="label" path="ft:label"/>
-  </fb:class>
-
   <fb:class id="view-selector-class">
     <fb:javascript id="view-selector" path="." direction="load">
       <fb:load-form>
-        widget.setValue("edit");
+        widget.setValue("view");
+        // View is selected by buttons.
+        widget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
       </fb:load-form>
     </fb:javascript>
   </fb:class>
@@ -222,14 +256,11 @@ Binding for CForms form template editor.
   </fb:class>
 
   <fb:class id="item-row-class">
-    <fb:new id="view-selector-class"/>
-    <fb:javascript id="type-selector" path=".">
+    <fb:javascript id="type-selector" path="." direction="load">
       <fb:load-form>
         var node = jxpathPointer.getNode().getFirstChild();
         widget.setValue(node.getLocalName());
       </fb:load-form>
-      <fb:save-form>
-      </fb:save-form>
     </fb:javascript>
     <fb:union id="union" path=".">
       <fb:new id="case-class"/>
@@ -244,6 +275,16 @@ Binding for CForms form template editor.
       <fb:new id="widget-label-class"/>
       <fb:new id="default-class"/>
     </fb:union>
+    <!--
+    The view-selector binding must happen last,
+    so that all the widgets will exist that the 
+    view-selector's on-value-changed handler needs.
+    -->
+    <fb:new id="view-selector-class"/>
+  </fb:class>
+
+  <fb:class id="label-class">
+    <fb:value id="label" path="ft:label"/>
   </fb:class>
 
 </fb:context>

@@ -16,7 +16,7 @@
 -->
 
 <!--
-Binding for example CForms form model GUI.
+Binding for Swan form model editor.
 
 @version CVS $Id: form_model_gui_binding.xml,v 1.3 2004/04/12 14:05:09 tim Exp $
 -->
@@ -232,7 +232,8 @@ Binding for example CForms form model GUI.
   <fb:class id="item-row-class">
     <fb:javascript id="type-selector" path="." direction="load">
       <fb:load-form>
-        widget.setValue(jxpathPointer.getNode().getFirstChild().getLocalName());
+        var node = jxpathPointer.getNode().getFirstChild();
+        widget.setValue(node.getLocalName());
       </fb:load-form>
     </fb:javascript>
     <fb:union id="union" path=".">
@@ -258,7 +259,7 @@ Binding for example CForms form model GUI.
   </fb:class>
 
   <fb:class id="label-class">
-      <fb:value id="label" path="fd:label"/>
+    <fb:value id="label" path="fd:label"/>
   </fb:class>
 
 </fb:context>
