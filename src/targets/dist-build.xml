@@ -51,9 +51,16 @@
     <fixcrlf srcdir="${dist}" includes="antRun" eol="lf"/>
     <fixcrlf srcdir="${dist}" includes="**.bat" eol="crlf"/>
 
-    <zip zipfile="${dist.target}/${dist.name}.zip" basedir="${dist}"/>
+    <zip zipfile="${dist.target}/${dist.name}.zip" 
+         basedir="${dist.root}" 
+         includes="${dist.name}/**">
+    </zip>
 
-    <tar tarfile="${dist.target}/${dist.name}.tar" basedir="${dist}" longfile="gnu"/>
+    <tar tarfile="${dist.target}/${dist.name}.tar" 
+         longfile="gnu"
+         basedir="${dist.root}"
+         includes="${dist.name}/**">
+    </tar>
     <gzip zipfile="${dist.target}/${dist.name}.tar.gz" src="${dist.target}/${dist.name}.tar"/>
     <delete file="${dist.target}/${dist.name}.tar"/>
   </target>
