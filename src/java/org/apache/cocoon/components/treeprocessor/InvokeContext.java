@@ -47,7 +47,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InvokeContext extends AbstractLogEnabled
                            implements Serviceable, Disposable {
@@ -58,6 +58,10 @@ public class InvokeContext extends AbstractLogEnabled
 
     /** True if building pipeline only, not processing it. */
     private boolean isBuildingPipelineOnly;
+
+    /** The redirector */
+    protected Redirector redirector;
+
 
     /** The current component manager, as set by the last call to compose() or recompose() */
     private ServiceManager currentManager;
@@ -74,6 +78,9 @@ public class InvokeContext extends AbstractLogEnabled
     /** The object model used to resolve processingPipelineParameters */
     protected Map processingPipelineObjectModel;
 
+    /** The Selector for the processing pipeline */
+    protected ServiceSelector pipelineSelector;
+
     /** The ProcessingPipeline used */
     protected ProcessingPipeline processingPipeline;
 
@@ -82,12 +89,7 @@ public class InvokeContext extends AbstractLogEnabled
 
     /** The last processor */
     protected Processor lastProcessor;
-    
-    /** The redirector */
-    protected Redirector redirector;
 
-    /** The Selector for the processing pipeline */
-    protected ServiceSelector pipelineSelector;
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
      * the current request is external.
@@ -146,7 +148,8 @@ public class InvokeContext extends AbstractLogEnabled
 
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
-                                                   this, this.processingPipelineObjectModel)
+                                                   this,
+                                                   this.processingPipelineObjectModel)
             );
         }
         return this.processingPipeline;
@@ -164,7 +167,7 @@ public class InvokeContext extends AbstractLogEnabled
                 this.processingPipeline, this.pipelineSelector, this.pipelinesManager);
         this.internalPipelineDescription.lastProcessor = this.lastProcessor;
         this.internalPipelineDescription.prefix = desc.prefix;
-        this.internalPipelineDescription.uri = desc.uri;        
+        this.internalPipelineDescription.uri = desc.uri;
     }
 
     /**
@@ -180,11 +183,11 @@ public class InvokeContext extends AbstractLogEnabled
         }
         return this.internalPipelineDescription;
     }
-    
-    /** 
+
+    /**
      * Set the last processor
      */
-    public void setLastProcessor(Processor p) {  
+    public void setLastProcessor(Processor p) {
         this.lastProcessor = p;
     }
 
@@ -206,27 +209,26 @@ public class InvokeContext extends AbstractLogEnabled
      * Get the result Map by anchor name
      */
     public final Map getMapByAnchor(String anchor) {
-        return((Map) this.nameToMap.get(anchor));
+        return (Map) this.nameToMap.get(anchor);
     }
 
     /**
      * Push a Map on top of the current Map stack.
      */
     public final void pushMap(String anchorName, Map map) {
-        mapStack.add(map);
+        this.mapStack.add(map);
 
-        if (this.getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             dumpParameters();
         }
 
         if (anchorName != null) {
-            if (!nameToMap.containsKey(anchorName)) {
-                nameToMap.put(anchorName,map);
-                mapToName.put(map,anchorName);
-            }
-            else {
-                if (this.getLogger().isErrorEnabled()) {
-                    this.getLogger().error("name [" + anchorName + "] clashes");
+            if (!this.nameToMap.containsKey(anchorName)) {
+                this.nameToMap.put(anchorName,map);
+                this.mapToName.put(map,anchorName);
+            } else {
+                if (getLogger().isErrorEnabled()) {
+                    getLogger().error("name [" + anchorName + "] clashes");
                 }
             }
         }
@@ -236,23 +238,23 @@ public class InvokeContext extends AbstractLogEnabled
      * Dumps all sitemap parameters to log
      */
     protected void dumpParameters() {
-        if (!mapStack.isEmpty()) {
+        if (!this.mapStack.isEmpty()) {
             StringBuffer sb = new StringBuffer();
 
             sb.append("\nCurrent Sitemap Parameters:\n");
             String path = "";
 
-            for (int i = mapStack.size() - 1; i >= 0; i--) {
-                Map map = (Map) mapStack.get(i);
+            for (int i = this.mapStack.size() - 1; i >= 0; i--) {
+                Map map = (Map) this.mapStack.get(i);
                 sb.append("LEVEL ").append(i+1);
-                if (mapToName.containsKey(map)) {
-                    sb.append(" is named '").append(String.valueOf(mapToName.get(map))).append("'");
+                if (this.mapToName.containsKey(map)) {
+                    sb.append(" is named '").append(String.valueOf(this.mapToName.get(map))).append("'");
                 }
                 sb.append("\n");
 
-                Iterator keys = map.keySet().iterator();
-                while (keys.hasNext()) {
-                    Object key = keys.next();
+                for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
+                    final Map.Entry me = (Map.Entry)iter.next();
+                    final Object key = me.getKey();
                     sb.append("PARAM: '").append(path).append(key).append("' ");
                     sb.append("VALUE: '").append(map.get(key)).append("'\n");
                 }
@@ -260,19 +262,18 @@ public class InvokeContext extends AbstractLogEnabled
                 path = "../" + path;
             }
 
-            this.getLogger().debug(sb.toString());
+            getLogger().debug(sb.toString());
         }
-
     }
 
     /**
      * Pop the topmost element of the current Map stack.
      */
     public final void popMap() {
-        Object map = mapStack.remove(mapStack.size() - 1);
-        Object name = mapToName.get(map);
-        mapToName.remove(map);
-        nameToMap.remove(name);
+        Object map = this.mapStack.remove(this.mapStack.size() - 1);
+        Object name = this.mapToName.get(map);
+        this.mapToName.remove(map);
+        this.nameToMap.remove(name);
     }
 
     /**
@@ -294,16 +295,6 @@ public class InvokeContext extends AbstractLogEnabled
     }
 
     /**
-     * Prepare this context for reuse
-     */
-    public final void reset() {
-        this.mapStack.clear();
-        this.mapToName.clear();
-        this.nameToMap.clear();
-        dispose();
-    }
-
-    /**
      * Release the pipelines, if any, if they were looked up by this context.
      */
     public void dispose() {
@@ -315,7 +306,10 @@ public class InvokeContext extends AbstractLogEnabled
                 this.pipelineSelector = null;
             }
             this.pipelinesManager = null;
+
+            this.processingPipelineName = null;
             this.processingPipelineParameters = null;
+            this.processingPipelineObjectModel = null;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,13 +38,14 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
-public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
+public class ConcreteTreeProcessor extends AbstractLogEnabled
+                                   implements Processor {
 
     /** Our ServiceManager */
     private ServiceManager manager;
-    
+
     /** Our class loader */
     private ClassLoader classloader;
 
@@ -76,7 +77,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         // Get the sitemap executor - we use the same executor for each sitemap
         this.sitemapExecutor = sitemapExecutor;
     }
-    
+
     /** Set the processor data, result of the treebuilder job */
     public void setProcessorData(ServiceManager manager, ClassLoader classloader, ProcessingNode rootNode, List disposableNodes) {
         if (this.rootNode != null) {
@@ -110,7 +111,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
             System.arraycopy(parentArray, 0, newArray, 1, parentArray.length);
             newArray[0] = this.componentConfigurations;
             return newArray;
-        } 
+        }
         return new Configuration[] {this.componentConfigurations};
     }
 
@@ -192,11 +193,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         synchronized (this) {
             requestCount++;
         }
-        
+
         Thread currentThread = Thread.currentThread();
         ClassLoader oldClassLoader = currentThread.getContextClassLoader();
         currentThread.setContextClassLoader(this.classloader);
-        
+
         try {
             // and now process
             EnvironmentHelper.enterProcessor(this, this.manager, environment);
@@ -329,14 +330,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     public String getContext() {
         return wrappingProcessor.getContext();
     }
-
     /**
      * Return the sitemap executor
      */
     public SitemapExecutor getSitemapExecutor() {
         return this.sitemapExecutor;
     }
-    
+
     public ServiceManager getServiceManager() {
         return this.manager;
     }
