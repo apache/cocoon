@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.128 2003/11/28 01:23:09 joerg Exp $
+    | CVS $Id: jars.xml,v 1.129 2003/11/28 13:25:00 michi Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -646,7 +646,7 @@
     <title>Jing</title>
     <description>RELAX NG validator</description>
     <used-by>build</used-by>
-    <lib>tools/lib/jing-20020724.jar</lib>
+    <lib>tools/lib/jing-20030619.jar</lib>
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
   -->
