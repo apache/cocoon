@@ -82,7 +82,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.8 2003/11/15 04:21:30 joerg Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.9 2003/12/10 05:31:01 crossley Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -190,7 +190,7 @@ public class DefaultEventRegistryImpl
                     ctx.getRealPath("/WEB-INF"), 
                         DefaultEventRegistryImpl.PERSISTENT_FILE);
         if (m_persistentFile == null) {
-            throw new ContextException("Could not obtain persistent file. " +                "The cache event registry cannot be " +                "used inside an unexpanded WAR file.");
+            throw new ContextException("Could not obtain persistent file. " +                "The cache event registry cannot be " +                "used inside an unexpanded WAR file.");
         }
 	}
 
