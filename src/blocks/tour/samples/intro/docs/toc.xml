@@ -48,6 +48,7 @@
         <toc-item name="Flow examples" href="flow/docs/index"/>
         <toc-item name="Number guessing game" href="flow/docs/number-guess"/>
         <toc-item name="Multi-page form" href="flow/docs/multi-page"/>
+        <toc-item name="Java shapes: using Java objects from Flow" href="flow/docs/java-shapes"/>
     </toc-section>
 
     <toc-section name="Cocoon Forms sample application">
