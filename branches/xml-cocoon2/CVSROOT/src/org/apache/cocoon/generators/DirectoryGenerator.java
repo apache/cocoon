@@ -19,7 +19,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 12:56:17 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-03-19 01:08:47 $
  */
 public class DirectoryGenerator extends ComposerGenerator {
 
@@ -44,11 +44,11 @@ public class DirectoryGenerator extends ComposerGenerator {
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping("",URI);
         AttributesImpl attr=new AttributesImpl();
-        
+
         this.attribute(attr,"name",d.getName()+"/");
         this.start("directory",attr);
         this.data("\n");
-        
+
         String c[]=d.list();
         for (int x=0; x<c.length; x++) {
             File f=new File(d,c[x]);
@@ -66,18 +66,18 @@ public class DirectoryGenerator extends ComposerGenerator {
             }
             this.data("\n");
         }
-        
-        this.end("directoty");
+
+        this.end("directory");
 
         // Finish
         this.contentHandler.endPrefixMapping("");
         this.contentHandler.endDocument();
     }
-    
+
     private void attribute(AttributesImpl attr, String name, String value) {
         attr.addAttribute("",name,name,"CDATA",value);
     }
-    
+
     private void start(String name, AttributesImpl attr)
     throws SAXException {
         super.contentHandler.startElement(URI,name,name,attr);
@@ -88,7 +88,7 @@ public class DirectoryGenerator extends ComposerGenerator {
     throws SAXException {
         super.contentHandler.endElement(URI,name,name);
     }
-    
+
     private void data(String data)
     throws SAXException {
         super.contentHandler.characters(data.toCharArray(),0,data.length());
