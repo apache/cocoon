@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * union widget.</li>
  * </ol>
  *
- * CVS $Id: UnionJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * CVS $Id: UnionJXPathBinding.java,v 1.2 2004/01/06 13:43:49 joerg Exp $
  * @author Timothy Larson
  */
 public class UnionJXPathBinding extends ComposedJXPathBindingBase {
@@ -96,7 +96,6 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
             throw new RuntimeException("Binding: Expected Union widget, but received class: \"" +
                     widget.getClass().getName() + "\".");
         Union unionWidget = (Union)widget;
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;
@@ -116,7 +115,6 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Union unionWidget = (Union)frmModel.getWidget(this.widgetId);
-        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;
