@@ -34,7 +34,7 @@
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
- APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT, 
+ APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
  INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
  DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
  OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
@@ -50,14 +50,15 @@
 */
 package org.apache.cocoon.bean.helpers;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.cocoon.bean.BeanListener;
 
@@ -66,61 +67,61 @@ import org.apache.cocoon.bean.BeanListener;
  * with file destination.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OutputStreamListener.java,v 1.5 2003/10/06 12:40:14 upayavira Exp $
+ * @version CVS $Id: OutputStreamListener.java,v 1.6 2003/10/07 09:59:17 upayavira Exp $
  */
 public class OutputStreamListener implements BeanListener {
-    
+
     private final PrintWriter writer;
     private final List brokenLinks = new ArrayList();
-    private final long startTimeMillis;    
+    private final long startTimeMillis;
     private String reportFile = null;
     private String reportType = "text";
     private long siteSize = 0L;
     private int sitePages = 0;
-   
+
     public OutputStreamListener(OutputStream os) {
         writer = new PrintWriter(os);
         startTimeMillis = System.currentTimeMillis();
     }
-    
+
     public void setReportFile(String filename) {
         reportFile = filename;
     }
 
     public void setReportType(String type) {
-        reportType = type;     
+        reportType = type;
     }
-    
+
     public void pageGenerated(String sourceURI,
-                              String destinationURI, 
+                              String destinationURI,
                               int pageSize,
-                              int linksInPage, 
-                              int newLinksInPage, 
-                              int pagesRemaining, 
-                              int pagesComplete, 
+                              int linksInPage,
+                              int newLinksInPage,
+                              int pagesRemaining,
+                              int pagesComplete,
                               long timeTaken) {
         this.siteSize += pageSize;
         this.sitePages++;
-        
+
         double time = (((double)timeTaken)/1000);
-        
+
         String size;
         if (pageSize < 1024) {
             size = pageSize + "b";
         } else {
             size = ((float)((int)(pageSize/102.4)))/10 + "Kb";
         }
-        
+
         if (linksInPage == -1) {
             this.print("* " + sourceURI);
         } else {
-            this.print(pad(12, "* [" + pagesComplete + "/" + pagesRemaining + "] ") + 
+            this.print(pad(12, "* [" + pagesComplete + "/" + pagesRemaining + "] ") +
                        pad(10, "[" + newLinksInPage + "/" + linksInPage + "] ") +
                        pad(7,time + "s ") +
                        pad(7, size) + " " +
                        sourceURI);
-        }     
-           
+        }
+
     }
     public void messageGenerated(String msg) {
         this.print(msg);
@@ -133,7 +134,7 @@ public class OutputStreamListener implements BeanListener {
     public void brokenLinkFound(String uri, String parentURI, String message, Throwable t) {
         this.print(pad(42,"X [0] ")+uri+"\tBROKEN: "+message);
         brokenLinks.add(uri + "\t" + message);
-        
+
 //            StringWriter sw = new StringWriter();
 //            t.printStackTrace(new PrintWriter(sw));
 //            System.out.println(sw.toString());
@@ -143,16 +144,17 @@ public class OutputStreamListener implements BeanListener {
     public void pageSkipped(String uri, String message) {
         this.print(pad(37, "^ ") + uri);
     }
-    
+
     public void complete() {
         outputBrokenLinks();
 
         long duration = System.currentTimeMillis() - startTimeMillis;
-        
-        this.print("Total time: " + 
-                   (duration / 60000) + " minutes " + 
-                   (duration % 60000)/1000 + " seconds, " + 
-                   " Site size: " + this.siteSize +
+        DecimalFormat df = new DecimalFormat("###,###,##0");
+
+        this.print("Total time: " +
+                   (duration / 60000) + " minutes " +
+                   (duration % 60000)/1000 + " seconds, " +
+                   " Site size: " + df.format(this.siteSize) +
                    " Site pages: " + this.sitePages);
         this.close();
     }
@@ -160,7 +162,7 @@ public class OutputStreamListener implements BeanListener {
     public boolean isSuccessful() {
         return brokenLinks.size() == 0;
     }
-    
+
     private void outputBrokenLinks() {
         if (reportFile == null) {
             return;
@@ -170,7 +172,7 @@ public class OutputStreamListener implements BeanListener {
             outputBrokenLinksAsXML();
         }
     }
-    
+
     private void outputBrokenLinksAsText() {
         PrintWriter writer;
         try {
@@ -219,12 +221,12 @@ public class OutputStreamListener implements BeanListener {
         }
         return str;
     }
-    
+
     private void print(String message) {
         writer.println(message);
         writer.flush();
     }
-    
+
     private void close() {
         writer.close();
     }
