@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="UV" type="add">
+      CocoonBean can now process a URL to a SAX ContentHandler (skipping the serialiser), via cocoon.process(uri, handler).
+   </action>
    <action dev="VG" type="update">
      OJB Block: Integrated OJB logging with Cocoon logging.
    </action>
