@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.159 2003/09/30 14:13:32 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.160 2003/10/01 14:50:15 haul Exp $:-->
 
 <status>
  <developers>
@@ -191,6 +191,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CH" type="add">
+     SimpleFormTransformer: multiple values not repeatedly inserted anymore,
+     value is consumed instead. Add repeater tag. Make transformer inherit from
+     AbstractSAXTransformer. Update examples to show basic repeat tag usage.
+   </action>
    <action dev="VG" type="fix" fixes-bug="23516">
      Fix default namespace handling in Xscript variables.
    </action>

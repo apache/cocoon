@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
   <title>Formvalidation and -prefilling</title>
+  <h1>Receipt</h1>
   <content>
 
     <para>
@@ -14,8 +15,15 @@
 		 <input type="text" name="persons" readonly="true"/> has been reserved for you.
          Please leave the deposit of EUR <input type="text" name="deposit" readonly="true"/>
 		 at the reception. The invoice will be send to <textarea name="address"/> and a
-		 confirmation email will be send to <input type="text" readonly="true" name="email"/>. Thank you.
+		 confirmation email will be send to <input type="text" readonly="true" name="email"/>.
        </para>
+	   <para>Allowed drivers are</para>
+	   <ol>
+	   	<repeat on="driver">
+			<li><input type="text" name="driver" readonly="true"/></li>
+		</repeat>
+	   </ol>
+	   <para>Thank you for choosing Cocoon.</para>
     </form>
 
   </content>

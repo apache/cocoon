@@ -11,6 +11,7 @@ error {
 }
 </style>
 </head>
+  <title>Formvalidation and -prefilling</title>
 	<body>
 		<h1>Reserve a car with Cocoon Cars!</h1>
 
@@ -19,7 +20,7 @@ error {
            form using a combination of the SimpleFormInstanceTransformer and
            the SimpleFormTransformer. In addition, user input is validated
            with the FormValidatorAction and the submitted data is filled
-           in with another SimpleFormTransformer which also selects which 
+           in with another SimpleFormTransformer which also selects which
            error tags shall occurr in the resulting page.</p>
 
 		<h2>Car Reservation</h2>
@@ -31,6 +32,9 @@ error {
                 <persons>4</persons>
                 <deposit>50</deposit>
                 <email>your email</email>
+				<driver/>
+				<driver/>
+				<driver/>
             </form-instance>
 			<table>
 				<tbody>
@@ -38,7 +42,7 @@ error {
 						<td>
             	           The car should seat
 						   <select size="1" name="persons">
-							<option value="" disabled="true">Please select</option>
+							<option value="" selected="true" disabled="true">Please select</option>
 						   	<option value="2">2</option>
 						   	<option value="4">4</option>
 						   	<option value="5">5</option>
@@ -55,7 +59,7 @@ error {
 						<td>
 							The car should by a
 							<select size="1" name="type">
-							<option value="" disabled="true" selected="true">Please select</option>
+							<option value="" selected="true" disabled="true">Please select</option>
 							<option value="sedan">Sedan Car</option>
 							<option value="station">Station Wagon</option>
 							<option value="cabrio">Cabrio</option>
@@ -81,6 +85,14 @@ error {
 						</td>
 						<td><error name="address" when-ge="error">*</error></td>
 					</tr>
+					<repeat on="driver">
+						<tr>
+							<td>
+								Allowed driver	<input name="driver" type="text" size="20" />
+							</td>
+							<td><error name="driver" when-ge="error">*</error></td>
+						</tr>
+					</repeat>
 					<tr>
 						<td colspan="2">
 							<error name="*" when-ge="error">An error occurred. Please check your input and the messages below for more information.</error>
@@ -94,7 +106,9 @@ error {
 							<error name="address" when="too-small">Your address seems to be incorrect. Please fill in a correct billing address.</error>
 							<error name="type" when="is-null">Please select the type of car you would like to drive.</error>
 							<error name="type" when="no-match">Please select one of the existing type of car.</error>
-						</td>
+
+							<error name="driver" when="error">Please enter at least one valid driver's name.</error>
+      					</td>
 					</tr>
 					<tr>
 						<td></td>
