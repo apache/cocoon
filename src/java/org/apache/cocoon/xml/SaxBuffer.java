@@ -75,7 +75,7 @@ import java.util.Iterator;
  * <p>Both ContentHandler and LexicalHandler are supported, the only exception is
  * that the setDocumentLocator event is not recorded.
  * 
- * @version CVS $Id: SaxBuffer.java,v 1.4 2003/11/17 02:17:42 antonio Exp $
+ * @version CVS $Id: SaxBuffer.java,v 1.5 2003/11/20 14:09:59 bruno Exp $
  */
 public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Recyclable {
     private ArrayList saxbits = new ArrayList();
@@ -192,7 +192,7 @@ public class SaxBuffer implements ContentHandler, LexicalHandler, XMLizable, Rec
             this.namespaceURI = namespaceURI;
             this.localName = localName;
             this.qName = qName;
-            this.attrs = attrs;
+            this.attrs = new org.xml.sax.helpers.AttributesImpl(attrs);
         }
 
         public void send(ContentHandler contentHandler) throws SAXException {
