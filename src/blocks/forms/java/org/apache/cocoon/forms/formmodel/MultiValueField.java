@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.formmodel;
 
 import java.util.Locale;
+import java.lang.reflect.Array;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
@@ -46,7 +47,7 @@ import org.xml.sax.SAXException;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.12 2004/05/08 11:49:01 bruno Exp $
+ * @version $Id: MultiValueField.java,v 1.13 2004/06/21 13:51:04 bruno Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -76,7 +77,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
             // be valid, so the conversion from String to native datatype should
             // never fail. But it could fail if users start messing around with
             // request parameters.
-            Object[] tempValues = new Object[enteredValues.length];
+            Object[] tempValues = (Object[])Array.newInstance(getDatatype().getTypeClass(), enteredValues.length);
             for (int i = 0; i < enteredValues.length; i++) {
                 String param = enteredValues[i];
                 ConversionResult conversionResult = definition.getDatatype().convertFromString(param, formContext.getLocale());
