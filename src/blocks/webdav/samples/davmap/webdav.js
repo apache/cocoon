@@ -1,6 +1,7 @@
 
-importPackage(Packages.org.apache.cocoon.components.repository);
-var repository = cocoon.getComponent(SourceRepository.ROLE);
+//importPackage(Packages.org.apache.cocoon.components.repository);
+//var repository = cocoon.getComponent(SourceRepository.ROLE);
+var repository = cocoon.getComponent("org.apache.cocoon.components.repository.SourceRepository");
 
 function selectMethod() {
   var page = cocoon.parameters["page"];
@@ -51,3 +52,24 @@ function mkcol() {
   }
 }
 
+function copy() {
+  var from = cocoon.parameters["from"];
+  var to   = cocoon.parameters["to"];
+  try {
+    var status = repository.copy(from,to);
+    cocoon.sendPage("status/" + status, {message:""});
+  } catch (e) {
+    cocoon.log.error("status/500",{message:""});
+  }
+}
+
+function move() {
+  var from = cocoon.parameters["from"];
+  var to   = cocoon.parameters["to"];
+  try {
+    var status = repository.move(from,to);
+    cocoon.sendPage("status/" + status, {message:""});
+  } catch (e) {
+    cocoon.log.error("status/500",{message:""});
+  }
+}

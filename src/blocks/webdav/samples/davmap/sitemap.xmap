@@ -14,12 +14,31 @@
       />
       <map:generator name="jx" 
         src="org.apache.cocoon.generation.JXTemplateGenerator" 
-        logger="sitemap.generator.jx" 
+        logger="generator.jx" 
         label="content" 
         pool-min="2" pool-grow="2" pool-max="16" 
       />
     </map:generators>
-
+    
+    <map:transformers default="xslt">
+      <map:transformer 
+        name="spw" 
+        src="org.apache.cocoon.transformation.SourcePropsWritingTransformer" 
+        logger="transformer.spw" 
+        pool-min="2" pool-grow="2" pool-max="16" 
+      />
+    </map:transformers>
+    
+    <!-- You'll need event caching if you want to PROPPATCH
+    <map:pipes default="caching">
+      <map:pipe name="event-caching" 
+        src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
+      >
+        <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
+      </map:pipe>
+    </map:pipes>
+    -->
+    
   </map:components>
 
 <!-- ========================== Flowscript ================================= -->
@@ -80,8 +99,18 @@
     </map:pipeline>
     
 <!-- ========================= Public Resources =========================== -->
-
+    
+    <!--map:pipeline type="event-caching"-->
+    
     <map:pipeline type="caching">
+      
+      <map:match pattern="test">
+        <map:generate src="proppatch.xml" />
+        <map:transform src="styles/proppatch2propwrite.xsl">
+          <map:parameter name="location" value="test" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
       
       <map:match pattern="repo">
         <map:call function="selectMethod">
@@ -110,7 +139,7 @@
       
       <map:match pattern="PROPFIND/**">
         <map:generate type="traverse" src="{global:staging}{1}">
-          <map:parameter name="depth" value="{request-header:depth}" />
+          <map:parameter name="depth" value="{request-header:Depth}" />
         </map:generate>
         <map:transform src="styles/collection2propfind.xsl">
           <map:parameter name="requestURI" value="{request:requestURI}" />
@@ -171,17 +200,29 @@
       </map:match>
       
       <map:match pattern="COPY/**">
-        <map:generate src="dummy.xml"/>
-        <map:serialize type="xml"/>
+        <map:call function="copy">
+          <map:parameter name="from" value="{global:staging}{1}" />
+          <map:parameter name="to"   value="{request-header:Destination}" />
+        </map:call>
       </map:match>
+      
       <map:match pattern="MOVE/**">
-        <map:generate src="dummy.xml"/>
-        <map:serialize type="xml"/>
+        <map:call function="move">
+          <map:parameter name="from" value="{global:staging}{1}" />
+          <map:parameter name="to"   value="{request-header:Destination}" />
+        </map:call>
       </map:match>
+      
       <map:match pattern="PROPPATCH/**">
-        <map:generate src="dummy.xml"/>
-        <map:serialize type="xml"/>
+        <map:generate type="stream" />
+        <map:transform src="styles/proppatch2propwrite.xsl" />
+        <map:transform type="spw" />
+        <!--
+        <map:transform src="styles/propwrite2proppatch.xsl" />
+        -->
+        <map:serialize type="xml" />
       </map:match>
+      
       <map:match pattern="LOCK/**">
         <map:generate src="dummy.xml"/>
         <map:serialize type="xml"/>
