@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,17 +40,16 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.3 2004/07/14 19:39:10 cziegeler Exp $
+ * @version CVS $Id$
  */
-public final class CocoonComponentManager
-extends ExcaliburComponentManager {
- 
+public final class CocoonComponentManager extends ExcaliburComponentManager {
+
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
-    
+
     /** The parent component manager for implementing parent aware components */
     private ComponentManager parentManager;
-    
+
     /** Temporary list of parent-aware components.  Will be null for most of
      * our lifecycle. */
     private ArrayList parentAwareComponents = new ArrayList();
@@ -67,13 +66,13 @@ extends ExcaliburComponentManager {
 
     /** Create the ComponentManager with a Classloader and parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager, final ClassLoader loader) {
-        super( manager, loader );
+        super(manager, loader);
         this.parentManager = manager;
     }
 
     /** Create the ComponentManager with a parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager) {
-        super( manager);
+        super(manager);
         this.parentManager = manager;
     }
 
@@ -82,9 +81,10 @@ extends ExcaliburComponentManager {
      * Fully Qualified Name(FQN)--unless there are multiple Components for the same Role.  In that
      * case, the Role's FQN is appended with "Selector", and we return a ComponentSelector.
      */
-    public Component lookup( final String role )
+    public Component lookup(final String role)
     throws ComponentException {
-        if( null == role ) {
+
+        if(null == role) {
             final String message =
                 "ComponentLocator Attempted to retrieve component with null role.";
 
@@ -96,7 +96,7 @@ extends ExcaliburComponentManager {
 
             // FIXME: how can we prevent that this is called over and over again?
             SitemapConfigurationHolder holder;
-            
+
             holder = (SitemapConfigurationHolder)this.sitemapConfigurationHolders.get( role );
             if ( null == holder ) {
                 // create new holder
@@ -110,6 +110,7 @@ extends ExcaliburComponentManager {
                 throw new ComponentException(role, "Exception during setup of SitemapConfigurable.", ce);
             }
         }
+
         return component;
     }
 
@@ -117,7 +118,8 @@ extends ExcaliburComponentManager {
      * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#addComponent(java.lang.String, java.lang.Class, org.apache.avalon.framework.configuration.Configuration)
      */
     public void addComponent(String role, Class clazz, Configuration conf)
-        throws ComponentException {
+    throws ComponentException {
+
         super.addComponent(role, clazz, conf);
         // Note that at this point, we're not initialized and cannot do
         // lookups, so defer parental introductions to initialize().
@@ -126,10 +128,9 @@ extends ExcaliburComponentManager {
         }
     }
 
-    public void initialize()
-        throws Exception
-    {
+    public void initialize() throws Exception {
         super.initialize();
+
         if (parentAwareComponents == null) {
             throw new ComponentException(null, "CocoonComponentManager already initialized");
         }
@@ -154,4 +155,3 @@ extends ExcaliburComponentManager {
         parentAwareComponents = null;  // null to save memory, and catch logic bugs.
     }
 }
-

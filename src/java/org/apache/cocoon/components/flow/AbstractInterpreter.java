@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,18 +53,18 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.22 2004/07/07 05:56:04 sylvain Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Serviceable, Contextualizable, Interpreter,
              SingleThreaded, Configurable, Disposable
 {
-    // The instance counters, used to produce unique IDs 
+    // The instance counters, used to produce unique IDs
     private static int instanceCounter = 0;
-    
+
     // The instance ID of this interpreter, used to identify user scopes
     private String instanceID;
-    
+
     protected org.apache.avalon.framework.context.Context avalonContext;
 
     /**
@@ -75,7 +75,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     protected org.apache.cocoon.environment.Context context;
     protected ServiceManager manager;
     protected ContinuationsManager continuationsMgr;
-    
+
     /**
      * Whether reloading of scripts should be done. Specified through
      * the "reload-scripts" attribute in <code>flow.xmap</code>.
@@ -94,11 +94,11 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             this.instanceID = String.valueOf(instanceCounter);
         }
     }
-    
+
     /**
      * Get the unique ID for this interpreter, which can be used to distinguish user value scopes
      * attached to the session.
-     * 
+     *
      * @return a unique ID for this interpreter
      */
     protected String getInterpreterID() {
@@ -179,8 +179,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      * @exception Exception If an error occurs.
      */
     public void process(String uri, Object biz, OutputStream out)
-        throws Exception 
-    {
+    throws Exception {
         // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
         PipelineUtil pipeUtil = new PipelineUtil();
         try {
@@ -195,8 +194,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     public void forwardTo(String uri, Object bizData,
                           WebContinuation continuation,
                           Redirector redirector)
-        throws Exception
-    {
+    throws Exception {
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
