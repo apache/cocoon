@@ -35,7 +35,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.26 2004/03/09 13:54:08 reinhard Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.27 2004/03/31 20:34:12 vgritsenko Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -86,12 +86,16 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         if (this.insertRowBinding != null) {
             this.insertRowBinding.setParent(this);
         }
-        this.deleteRowBinding = new ComposedJXPathBindingBase(
-                JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
-                deleteBindings);
-        if (this.deleteRowBinding != null) {
+
+        if (deleteBindings != null) {
+            this.deleteRowBinding = new ComposedJXPathBindingBase(
+                    JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                    deleteBindings);
             this.deleteRowBinding.setParent(this);
+        } else {
+            this.deleteRowBinding = null;
         }
+
         // New unique key management
         uniqueRowBinding = new ArrayList();
         // Create a UniqueFieldJXPathBining for the unique define in old-style
