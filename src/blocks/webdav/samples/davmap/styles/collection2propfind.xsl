@@ -56,9 +56,8 @@
       <D:propstat>
         <D:prop>
           <D:displayname><xsl:value-of select="@name"/></D:displayname>
-          <D:creationdate><xsl:value-of select="@created"/></D:creationdate>
+          <D:getlastmodified><xsl:value-of select="@date"/></D:getlastmodified>
           <D:resourcetype><D:collection /></D:resourcetype>
-          <D:getcontenttype>httpd/unix-directory</D:getcontenttype>
         </D:prop>
         <D:status>HTTP/1.1 200 OK</D:status>
       </D:propstat>
@@ -75,9 +74,10 @@
       <D:propstat>
         <D:prop>
           <D:displayname><xsl:value-of select="@name"/></D:displayname>
-          <D:creationdate><xsl:value-of select="@created"/></D:creationdate>
-          <D:getlastmodified><xsl:value-of select="@modified"/></D:getlastmodified>
+          <D:getlastmodified><xsl:value-of select="@date"/></D:getlastmodified>
           <D:getcontenttype>text/xml</D:getcontenttype>
+          <D:getcontentlength><xsl:value-of select="@size" /></D:getcontentlength>
+          <D:resourcetype />
         </D:prop>
         <D:status>HTTP/1.1 200 OK</D:status>
       </D:propstat>
