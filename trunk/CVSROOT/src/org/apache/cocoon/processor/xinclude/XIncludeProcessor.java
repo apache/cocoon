@@ -102,7 +102,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.19 $ $Date: 2000-11-20 01:43:55 $ $Author: greenrd $
+ * @version CVS $Revision: 1.20 $ $Date: 2001-01-23 01:23:50 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status, Cacheable {
 
@@ -110,6 +110,8 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 
 	public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
 	public static final String XMLBASE_ATTRIBUTE = "base";
+	public static final String XINCLUDE_NAMESPACE_TAG = "xinclude:";
+	public static final String XINCLUDE_TAG = "include";
 
 	public static final String XINCLUDE_NAMESPACE_URI = "http://www.w3.org/1999/XML/xinclude";
 	public static final String XINCLUDE_HREF_ATTRIBUTE = "href";
@@ -273,6 +275,12 @@ class XIncludeProcessorWorker {
 	}
 
 	boolean scanForXInclude(Element element, Element parent) {
+          if ((element.getNodeName().equals(processor.XINCLUDE_TAG) || element.getNodeName().equals(processor.XINCLUDE_NAMESPACE_TAG+processor.XINCLUDE_TAG)) && element.hasAttribute(processor.XINCLUDE_NAMESPACE_TAG + processor.XINCLUDE_HREF_ATTRIBUTE) && element.hasAttribute(processor.XINCLUDE_NAMESPACE_TAG + processor.XINCLUDE_PARSE_ATTRIBUTE)) {
+            String href = element.getAttribute(processor.XINCLUDE_NAMESPACE_TAG + processor.XINCLUDE_HREF_ATTRIBUTE);
+            String parse = element.getAttribute(processor.XINCLUDE_NAMESPACE_TAG + processor.XINCLUDE_PARSE_ATTRIBUTE);
+            xinclude_elements.addElement(new XIncludeElement(element,parent,href,parse,current_xmlbase));
+            return true;
+          }
 		if (element.hasAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_HREF_ATTRIBUTE) && element.hasAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_PARSE_ATTRIBUTE)) {
 			String href = element.getAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_HREF_ATTRIBUTE);
 			String parse = element.getAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_PARSE_ATTRIBUTE);

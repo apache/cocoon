@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.187 2001-01-22 03:58:39 balld Exp $ 
+  $Id: changes.xml,v 1.188 2001-01-23 01:23:49 balld Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix" due-to="Kirk Woerner" due-to-email="kirk@stoneseeker.com">
+    Patched XIncludeProcessor to handle non-DOM2 nodes resulting from XSLT transformation.
+  </action>
   <action dev="DB" type="fix" due-to="Peter Haight" due-to-email="peterh@sapros.com">
     Patched FOP2PDFFormatter to work with JDK-1.1.
   </action>
