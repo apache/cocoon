@@ -216,15 +216,14 @@ public class BetwixtTransformer
 
                 beanWriter.getBindingConfiguration().setMapIDs(this.refIds);
             }
-
             if (bean instanceof Collection) {
-                Iterator i = ((Collection) bean).iterator();
-                while (i.hasNext()) {
-                    if (element == null) {
-                        beanWriter.write(bean);
-                    } else {
-                        beanWriter.write(element, bean);
-                    }
+                for (Iterator i = ((Collection) bean).iterator(); i.hasNext();) {
+                  Object o = i.next();
+                  if (element == null) {
+                     beanWriter.write(o);
+                  } else {
+                     beanWriter.write(element, o);
+                  }
                 }
             } else {
                 if (element == null) {

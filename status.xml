@@ -416,6 +416,9 @@
      Mail block: The mail transformer ignored configured toAddresses from a
      pipeline parameter. This is fixed now.
    </action>
+   <action dev="AG" type="fix" fixes-bug="28209" due-to="Enrico Maccias" due-to-email="enrico.maccias@free.fr">
+     Fixing BetwixtTransformer does not marshal Collections properly (java.lang.OutOfMemoryError).
+   </action>
    <action dev="AG" type="update">
      Update qdox to 1.5 and jdt-core to 3.0.0.
    </action>
