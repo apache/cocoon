@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.6 2000-01-07 13:20:50 ricardo Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.7 2000-01-09 02:47:24 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.6 $ $Date: 2000-01-07 13:20:50 $
+ * @version $Revision: 1.7 $ $Date: 2000-01-09 02:47:24 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -129,11 +129,11 @@ public class XSPUtil {
     return
       (
         new File(
-	  new File(
-	    requestRealPath(request, context)
-	  ).getParent(),
-	  filename
-	)
+          new File(
+            requestRealPath(request, context)
+          ).getParent(),
+          filename
+        )
       ).getCanonicalPath();
   }
 
@@ -143,20 +143,6 @@ public class XSPUtil {
   ) throws IOException
   {
     return relativeFilename(filename, request, null);
-  }
-
-  public static String getFileContents(String filename) throws IOException {
-    return getFileContents(new FileReader(filename));
-  }
-
-  public static String getFileContents(Reader reader) throws IOException {
-    int len;
-    char[] chr = new char[4096];
-    StringBuffer buffer = new StringBuffer();
-    while ((len = reader.read(chr)) > 0) {
-      buffer.append(chr, 0, len);
-    }
-    return buffer.toString();
   }
 
   public static String requestRealPath(
@@ -372,14 +358,14 @@ public class XSPUtil {
       } else if (c[i] == ' ') {
         buffer.append('+');
       } else {
-	buffer.append('%');
+        buffer.append('%');
         String hex = Integer.toHexString((byte) c[i]).toUpperCase();
 
-	if (hex.length() < 2) {
-	  buffer.append('0');
-	}
+        if (hex.length() < 2) {
+          buffer.append('0');
+        }
 
-	buffer.append(hex);
+        buffer.append(hex);
       }
     }
 
@@ -390,7 +376,31 @@ public class XSPUtil {
     return URLDecoder.decode(text);
   }
 
-  /* Date */
+  /* Library Utility Methods */
+  // Inclusion
+  public static String getURLContents(String url) throws IOException {
+    return getContents(new URL(url).openStream());
+  }
+
+  public static String getFileContents(String filename) throws IOException {
+    return getContents(new FileReader(filename));
+  }
+
+  public static String getContents(InputStream in) throws IOException {
+    return getContents(new InputStreamReader(in));
+  }
+
+  public static String getContents(Reader reader) throws IOException {
+    int len;
+    char[] chr = new char[4096];
+    StringBuffer buffer = new StringBuffer();
+    while ((len = reader.read(chr)) > 0) {
+      buffer.append(chr, 0, len);
+    }
+    return buffer.toString();
+  }
+
+  // Date
   public static String formatDate(Date date, String pattern) {
     if (pattern == null || pattern.length() == 0) {
       pattern = "yyyy/MM/dd hh:mm:ss aa";
@@ -400,5 +410,22 @@ public class XSPUtil {
     } catch (Exception e) {
       return date.toString();
     }
+  }
+
+  // Counters
+  private static int count = 0;
+
+  public static synchronized int getCount() {
+    return ++count;
+  }
+
+  public static synchronized int getSessionCount(HttpSession session) {
+    Integer integer = (Integer) session.getValue("util.counter");
+    if (integer == null) {
+      integer = new Integer(0);
+    }
+    int cnt = integer.intValue() + 1;
+    session.putValue("util.counter", new Integer(cnt));
+    return cnt;
   }
 }
