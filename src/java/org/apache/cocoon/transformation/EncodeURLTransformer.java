@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.6 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.7 2004/03/06 04:58:58 joerg Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -116,12 +116,12 @@ public class EncodeURLTransformer
     /**
      * check if encoding of URLs is neccessary.
      * 
-     * THis is true if session object exists, and session-id   
+     * This is true if session object exists, and session-id   
      * was provided from URL, or session is new.
      * The result is stored in some instance variables
      */
     protected void checkForEncoding(Request request) {
-        this.session = request.getSession();
+        this.session = request.getSession(false);
         this.isEncodeURLNeeded = false;
         
         if ( null != this.session ) {
@@ -132,9 +132,7 @@ public class EncodeURLTransformer
             }
         }
     }
-                
 
-    
     /**
      * Setup the transformer.
      * <p>
@@ -312,7 +310,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.6 2004/03/05 13:02:59 bdelacretaz Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.7 2004/03/06 04:58:58 joerg Exp $
      */
     public class ElementAttributeMatching {
         /**
