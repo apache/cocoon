@@ -61,7 +61,7 @@
 	</xsl:variable>
 	<xsl:variable name="tag-case">
 		<xsl:call-template name="get-nested-content">
-			<xsl:with-param name="content" select="sql:tag-base"/>
+			<xsl:with-param name="content" select="sql:tag-case"/>
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="null-indicator">
