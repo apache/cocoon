@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaPreprocessor.java,v 1.4 2000-02-13 18:29:37 stefano Exp $ -- 
+/*-- $Id: XSPJavaPreprocessor.java,v 1.5 2000-03-22 17:44:53 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:37 $
+ * @version $Revision: 1.5 $ $Date: 2000-03-22 17:44:53 $
  */
 public class XSPJavaPreprocessor implements XSPPreprocessor {
   protected static XSPJavaProcessor javaProcessor = new XSPJavaProcessor();
@@ -97,7 +97,8 @@ public class XSPJavaPreprocessor implements XSPPreprocessor {
         if (
           tagName.equals("xsp:expr") ||
           tagName.equals("xsp:logic") ||
-          tagName.equals("xsp:structure")
+          tagName.equals("xsp:structure") ||
+          tagName.equals("xsp:include")
         ) {
           return;
         }
