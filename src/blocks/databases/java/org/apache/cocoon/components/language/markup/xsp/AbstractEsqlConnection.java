@@ -59,7 +59,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.4 2003/05/15 16:18:32 tcurdt Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.5 2003/06/09 10:55:47 tcurdt Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -171,7 +171,8 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
             else if (database.indexOf("mysql") > -1) {
                 query = new MysqlEsqlQuery(connection,queryString);
             }
-            else if (database.indexOf("adaptive server anywhere") > -1 || database.indexOf("microsoft sql server") > -1) {
+            else if (database.indexOf("adaptive server anywhere") > -1 ||
+                     database.indexOf("microsoft sql server") > -1) {
                 query = new SybaseEsqlQuery(connection,queryString);
             }
             else if (database.indexOf("oracle") > -1) {
@@ -182,6 +183,8 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
             }
             else if (database.indexOf("hsql") > -1 ||
                      database.indexOf("interbase") > -1 ||
+                     database.indexOf("access") > -1 ||
+                     database.indexOf("sap db") > -1 ||
                      database.indexOf("sybase sql server") > -1) {
                 query = new JdbcEsqlQuery(getConnection(),queryString);
             }
