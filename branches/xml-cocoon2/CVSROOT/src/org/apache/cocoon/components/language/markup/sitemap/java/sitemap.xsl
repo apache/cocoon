@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.70 $ $Date: 2000-12-11 06:17:25 $
+     * @version CVS $Revision: 1.1.2.71 $ $Date: 2000-12-15 01:02:41 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -531,7 +531,7 @@
     <xsl:choose>
       <xsl:when test="./*">
         if ((list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
-          log.debug("Action <xsl:value-of select="$action-name"/>");
+         log.debug("Action <xsl:value-of select="translate($action-name,'&quot;',' ')"/>"); 
           listOfLists.add (list);
           <xsl:apply-templates/>
           listOfLists.remove(list);
