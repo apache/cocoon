@@ -27,14 +27,6 @@
 
   <!-- compiles mocks -->
   <target name="compile-mocks" depends="prepare">
-    <!-- copy those files that need to be in the classpath -->
-    <copy todir="${build.dest}">
-      <fileset dir="${java}">
-        <exclude name="**/*.java"/>
-        <exclude name="**/*.xroles"/>
-        <exclude name="**/*.xconf"/>
-      </fileset>
-    </copy>
     <mkdir dir="${build.mocks}"/>
     <javac srcdir="${mocks}"
            destdir="${build.mocks}"
@@ -50,6 +42,14 @@
 
   <!-- compiles the core -->
   <target name="compile-core" depends="compile-mocks, clover.on">
+    <!-- copy those files that need to be in the classpath -->
+    <copy todir="${build.dest}">
+      <fileset dir="${java}">
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.xroles"/>
+        <exclude name="**/*.xconf"/>
+      </fileset>
+    </copy>
     <javac srcdir="${java}"
            destdir="${build.dest}"
            debug="${compiler.debug}"
