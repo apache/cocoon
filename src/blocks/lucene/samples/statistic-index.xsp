@@ -26,9 +26,9 @@
     
     Directory directory;
     
-    void init() throws ProcessingException {
+    void init(String indexName) throws ProcessingException {
       try {
-        directory = LuceneCocoonHelper.getDirectory( new File( workDir, "index" ), false );
+        directory = LuceneCocoonHelper.getDirectory( new File( workDir, indexName ), false );
       } catch (Exception e) {
         throw new ProcessingException( "Exception in init()!", e );
       }
@@ -131,7 +131,9 @@
   
   <page>
     <xsp:logic>
-      init();
+      String indexName = request.getParameter("indexName");
+      if (indexName == null) indexName = "index";
+      init(indexName);
     </xsp:logic>
     <title>Index Statistics</title>
     <content>

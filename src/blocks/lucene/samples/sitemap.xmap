@@ -12,8 +12,12 @@
    </map:generators>
    <map:transformers default="xslt">
      <map:transformer name="log"
-        src="org.apache.cocoon.transformation.LogTransformer"/>
+       src="org.apache.cocoon.transformation.LogTransformer"/>
+     <map:transformer name="index" 
+       logger="sitemap.transformer.luceneindextransformer" 
+       src="org.apache.cocoon.transformation.LuceneIndexTransformer"/>
    </map:transformers>
+
    <map:readers default="resource"/>
    <map:serializers default="html"/>
    <map:matchers default="wildcard"/>
@@ -68,8 +72,39 @@
       <map:transform src="stylesheets/search2html.xsl"/>
       <map:serialize/>
     </map:match>
+
+    <map:match pattern="findIt2">
+      <map:generate type="search">
+        <map:parameter name="index" value="index2"/>
+      </map:generate>
+      <map:transform type="log"/>
+      <map:transform src="stylesheets/search-index2html.xsl"/>
+      <map:serialize/>
+    </map:match>
+
+    <map:match pattern="document-files.xsp">
+      <map:generate type="serverpages" src="document-files.xsp">
+      </map:generate>
+
+      <map:transform src="stylesheets/all-files2content.xsl"/>
+      <map:transform type="cinclude"/>
+      <map:transform src="stylesheets/content2lucene.xsl"/>
+      <map:transform type="index"/>
+
+      <map:transform src="stylesheets/lucene-index2html.xsl"/>
+
+      <map:serialize/>
+    </map:match>
+
+    <map:match pattern="*.xsp">
+      <map:generate type="serverpages" src="{1}.xsp">
+        <map:parameter name="p1" value="context://docs/xdocs"/>
+      </map:generate>
+
+      <map:serialize type="xml"/>
+    </map:match>
     
-    <map:match pattern="**">
+    <map:match pattern="*">
       <map:generate type="serverpages" src="{1}-index.xsp"/>
       <!--
         Run-time configuration is done through these

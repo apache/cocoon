@@ -27,6 +27,12 @@
       <h2>Creating an Index</h2>
       <p>
         You must create a Lucene index first, before you can do the searching.
+        You can create a Lucene index either by crawling, or by using
+        LuceneIndexTransformer.
+      </p>
+
+      <h3>Creating Index By Crawling</h3>
+      <p>
         Create an index by specifying a base url from which to start
         crawling (the indexer will follow the links to build its content).
         The base url should be 
@@ -38,10 +44,26 @@
       </p>
       <p>
         This following page allows you to <a href="create">create</a> an
-        index.
+        index, named index.
       </p>
-      
+
+      <h3>Creating Index2 By Transforming</h3>
+      <p>
+        Create an index by using LuceneIndexTransformer. 
+        An XSP Page gathers all files of directory docs/xdocs, includes all
+        the files and pipes it through LuceneIndexTransformer, creating an
+        index, named index2.
+      </p>
+      <p>
+        This following page allows you to <a href="document-files.xsp">create</a> an
+        index, named index2.
+      </p>
+
       <h2>Searching</h2>
+      <p>
+        If you have created a Lucene index, you can search the created index.
+      </p>
+      <h3>Searching Index</h3>
       <p>
         Enter a query and search the Lucene index that you have created
         - using <a href="search?queryString=lucene">XSP</a>.
@@ -50,7 +72,12 @@
         Enter a query and search the Lucene index that you have created
         - using <a href="findIt?queryString=lucene">Cocoon Generators</a>.
       </p>
-      
+
+      <h3>Searching Index2</h3>
+      <p>
+        Enter a query and search the Lucene index2 that you have created
+        - using <a href="findIt2?queryString=cocoon">Cocoon Generators</a>.
+      </p>
       
       <h2>Internals</h2>
       <p>
