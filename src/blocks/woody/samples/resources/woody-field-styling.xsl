@@ -232,7 +232,7 @@
       | wi:field with @type 'output' : rendered as text
       +-->
   <xsl:template match="wi:field[wi:styling[@type='output']]" priority="2">
-    <xsl:copy-of select="wi:value"/>
+    <xsl:copy-of select="wi:value/node()"/>
   </xsl:template>
 
   <!--+
