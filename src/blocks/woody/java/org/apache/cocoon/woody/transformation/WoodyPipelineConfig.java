@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
 /**
  * WoodyPipeLineConfig
  * 
- * @version CVS $Id: WoodyPipelineConfig.java,v 1.3 2003/12/31 04:23:09 antonio Exp $
+ * @version CVS $Id: WoodyPipelineConfig.java,v 1.4 2004/01/21 16:44:05 tim Exp $
  */
 public class WoodyPipelineConfig {
 
@@ -162,7 +162,7 @@ public class WoodyPipelineConfig {
     }
 
     /**
-     * Overloads {@see #findForm(String)} by setting the jxpath-expression to null
+     * Overloads {@link #findForm(String)} by setting the jxpath-expression to null
      */
     public Form findForm() throws SAXException {
         return this.findForm(null);
@@ -180,11 +180,11 @@ public class WoodyPipelineConfig {
      * @return the found form if found
      * @throws SAXException in any of the following cases:
      * <ul><li>The provided jxpathExpression (if not null) not point to a
-     * {@see Form} instance.</li>
-     * <li>The request is not holding a {@see Form} instance under the key 
+     * {@link Form} instance.</li>
+     * <li>The request is not holding a {@link Form} instance under the key 
      * specified by 'attribute-name' (if specified)</li>
      * <li>Both jxpathExpression and 'attribute-name' were not specified AND
-     * also the default location was not holding a valid {@see Form} instance.</li>
+     * also the default location was not holding a valid {@link Form} instance.</li>
      * </ol> 
      */
     public Form findForm(String jxpathExpression) throws SAXException {
@@ -218,7 +218,7 @@ public class WoodyPipelineConfig {
     /**
      * Replaces JXPath expressions embedded inside #{ and } by their value.
      * This will parse the passed String looking for #{} occurences and then
-     * uses the {@see #evaluateExpression(String)} to evaluate the found expression.
+     * uses the {@link #evaluateExpression(String)} to evaluate the found expression.
      * 
      * @return the original String with it's #{}-parts replaced by the evaulated results.
      */
@@ -300,7 +300,7 @@ public class WoodyPipelineConfig {
      * The value for the wi:form-generated/@action. 
      * Note: wi:form-template copies this from its wt:form-template counterpart.
      *  
-     * @return the {@see #translateText(String)} result of the 'form-action' sitemap 
+     * @return the {@link #translateText(String)} result of the 'form-action' sitemap 
      * parameter to the pipeline component, or null if that parameter was not set.
      */
     public String getFormAction() {
