@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: qdox2html.xsl,v 1.2 2004/03/06 02:26:14 antonio Exp $ -->
+<!-- $Id$ -->
 
 <!DOCTYPE xsl:stylesheet [
   <!ENTITY nbsp "&#160;">
@@ -261,7 +261,7 @@
         </dt>
         <dd>
           <xsl:for-each select="jd:author">
-            <xsl:value-of select="text()" disable-output-escaping="yes" />
+            <xsl:value-of select="." disable-output-escaping="yes" />
             <xsl:if test="position() != last()">
               <xsl:text>, </xsl:text>
             </xsl:if>

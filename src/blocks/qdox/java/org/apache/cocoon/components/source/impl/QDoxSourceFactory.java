@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.source.impl;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -37,6 +38,7 @@ import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
+
 
 /**
  * This {@link org.apache.excalibur.source.SourceFactory SourceFactory} creates {@link
