@@ -1,6 +1,6 @@
-#!/bin/sh -x
+#!/bin/sh
 
-# $Id: create-repository-jars.sh,v 1.5 2004/02/02 20:03:24 giacomo Exp $
+# $Id: create-repository-jars.sh,v 1.6 2004/02/02 20:12:36 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
@@ -45,6 +45,11 @@ fi
 # Where is the path on the remote host the repository is located at
 if [ "$REMOTEPATH" = "" ]; then
   REMOTEPATH=/www/www.apache.org/dist/java-repository/cocoon
+fi
+
+# Where is the md5sum command to be used
+if [ "$MD5CMD" = "" ]; then
+  MD5CMD=/sbin/md5
 fi
 
 # ------- NO NEED TO CHANGE ANYTHING BELOW HERE ----------
@@ -196,7 +201,7 @@ for i in $JARS; do
     CMD=""
   fi
   ssh $REMOTEHOST "$CMD; \
-                   md5sum $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
+                   $MD5SUM $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar | \
                      sed 's/ .*$//' >$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar.md5; \
                    chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.*"
 done
@@ -221,7 +226,7 @@ else
   CMD=""
 fi
 ssh $REMOTEHOST "$CMD; \
-                 md5sum $REMOTEPATH/wars/cocoon-war-$TVERSION.jar | \
+                 $MD5SUM $REMOTEPATH/wars/cocoon-war-$TVERSION.jar | \
                    sed 's/ .*$//' >$REMOTEPATH/jars/cocoon-war-$TVERSION.jar.md5; \
                  chmod g+w $REMOTEPATH/jars/cocoon-war-$TVERSION.*"
 
