@@ -497,7 +497,7 @@
     <title>JCS</title>
     <description>Java Caching System</description>
     <used-by>JCS Store</used-by>
-    <lib>core/jcs-1.1-dev-20040811.jar</lib>
+    <lib>core/jcs-1.2.5-dev-20050313.jar</lib>
     <homepage>http://jakarta.apache.org/turbine/jcs</homepage>
   </file>
 
