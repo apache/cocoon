@@ -1,5 +1,5 @@
-<!--<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Apache Cocoon Targets">-->
+<?xml version="1.0"?>
+<project default="webapp" basedir="." name="Apache Forrest targets">
 
   <target name="forrest" depends="prepare, forrest.init" description="Generates static HTML documentation">
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
@@ -140,4 +140,4 @@
     <fail message="Need to define $${forrest.home}"/>
   </target>
 
-<!--</project>-->
+</project>

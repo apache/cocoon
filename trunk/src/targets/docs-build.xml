@@ -1,5 +1,5 @@
-<!--<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Apache Cocoon Targets">-->
+<?xml version="1.0"?>
+<project default="webapp" basedir="." name="Documentation targets">
   <!-- Documentation Targets ================================================= -->
 
   <target name="prepare-docs" depends="blocks">
@@ -233,4 +233,4 @@
            force="true"/>
   </target>
 
-<!--</project>-->
+</project>
