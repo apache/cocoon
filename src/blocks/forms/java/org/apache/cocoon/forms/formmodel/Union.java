@@ -24,7 +24,7 @@ import org.apache.cocoon.forms.FormContext;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.10 2004/04/30 12:19:01 bruno Exp $
+ * @version $Id: Union.java,v 1.11 2004/05/07 16:43:43 mpo Exp $
  */
 public class Union extends AbstractContainerWidget {
     
@@ -58,7 +58,7 @@ public class Union extends AbstractContainerWidget {
     // *widget* (not definition) references after the expansion has put all of the widgets in place.
     public void resolve() {
         String caseWidgetId = definition.getCaseWidgetId();
-        caseWidget = ((ContainerWidget)getParent()).getWidget(caseWidgetId);
+        caseWidget = ((ContainerWidget)getParent()).getChild(caseWidgetId);
     }
 
     /**
@@ -80,7 +80,7 @@ public class Union extends AbstractContainerWidget {
         // Read current case from request
         String value = (String)getValue();
         if (value != null && !value.equals(""))
-            if ((widget = getWidget(value)) != null)
+            if ((widget = getChild(value)) != null)
                 widget.readFromRequest(formContext);
 
         // Read union discriminant value from request
@@ -94,15 +94,15 @@ public class Union extends AbstractContainerWidget {
         // Read current case from request
         String value = (String)getValue();
         if (value != null && !value.equals(""))
-            if ((widget = getWidget(value)) != null)
+            if ((widget = getChild(value)) != null)
                 valid = valid & widget.validate();
         return valid;
     }
 
-    public Widget getWidget(String id) {
+    public Widget getChild(String id) {
         if (!widgets.hasWidget(id) && ((ContainerDefinition)definition).hasWidget(id))
             ((ContainerDefinition)definition).createWidget(this, id);
-        return super.getWidget(id);
+        return super.getChild(id);
     }
 
     

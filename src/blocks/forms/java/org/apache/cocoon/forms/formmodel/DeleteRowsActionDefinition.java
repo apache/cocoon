@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.event.ActionListener;
  * The definition for a repeater action that deletes the selected rows of a sibling repeater.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: DeleteRowsActionDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: DeleteRowsActionDefinition.java,v 1.2 2004/05/07 16:43:42 mpo Exp $
  */
 public class DeleteRowsActionDefinition extends RepeaterActionDefinition {
     
@@ -37,7 +37,7 @@ public class DeleteRowsActionDefinition extends RepeaterActionDefinition {
                 Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
                 for (int i = repeater.getSize() - 1; i >= 0; i--) {
                     Repeater.RepeaterRow row = repeater.getRow(i);
-                    if (Boolean.TRUE.equals(row.getWidget(DeleteRowsActionDefinition.this.selectName).getValue())) {
+                    if (Boolean.TRUE.equals(row.getChild(DeleteRowsActionDefinition.this.selectName).getValue())) {
                         repeater.removeRow(i);
                     }
                 }

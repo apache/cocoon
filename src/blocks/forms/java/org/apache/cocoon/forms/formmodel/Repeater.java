@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.12 2004/05/07 13:42:09 mpo Exp $
+ * @version $Id: Repeater.java,v 1.13 2004/05/07 16:43:42 mpo Exp $
  */
 public class Repeater extends AbstractWidget 
 //implements ContainerWidget 
@@ -61,10 +61,6 @@ public class Repeater extends AbstractWidget
         return rows.size();
     }
 
-//    public void addWidget(Widget widget) {
-//        throw new RuntimeException("Repeater.addWidget(): Please use addRow() instead.");
-//    }
-
     public RepeaterRow addRow() {
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         rows.add(repeaterRow);
@@ -83,6 +79,24 @@ public class Repeater extends AbstractWidget
 
     public RepeaterRow getRow(int index) {
         return (RepeaterRow)rows.get(index);
+    }
+    
+    /**
+     * Overrides {@link AbstractWidget#getChild(String)} to return the 
+     * repeater-row indicated by the index in 'id'
+     * 
+     * @param id index of the row as a string-id
+     * @return the repeater-row at the specified index
+     */
+    public Widget getChild(String id) {
+        int rowIndex = -1;
+        try {
+        	rowIndex = Integer.parseInt(id);
+        } catch (NumberFormatException nfe) {
+        }
+        if (rowIndex < 0 && rowIndex > getSize()) 
+            return null;
+        return getRow(rowIndex);
     }
     
     /**
@@ -161,7 +175,7 @@ public class Repeater extends AbstractWidget
      */
     public Widget getWidget(int rowIndex, String id) {
         RepeaterRow row = (RepeaterRow)rows.get(rowIndex);
-        return row.getWidget(id);
+        return row.getChild(id);
     }
 //
 //    public boolean hasWidget(String id) {

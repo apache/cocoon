@@ -22,25 +22,27 @@ import java.util.Iterator;
  * widget, the {@link ContainerWidget}s being the branches/forks, and the
  * {@link Widget}s with values being the leaves.
  *
- * @version $Id: ContainerWidget.java,v 1.4 2004/04/23 23:34:56 joerg Exp $
+ * @version $Id: ContainerWidget.java,v 1.5 2004/05/07 16:43:42 mpo Exp $
  */
 public interface ContainerWidget extends Widget {
     
     /**
      * Adds a child widget.
      */
-    public void addWidget(Widget widget);
+    public void addChild(Widget widget);
+    //TODO: check to remove since we have no removeChild
+    
 
     /**
      * Checks if there is a child widget with the given id.
      */
-    public boolean hasWidget(String id);
+    public boolean hasChild(String id);
 
     /**
      * Gets the child widget with the given id.
      * @return null if there is no child with the given id.
      */
-    public Widget getWidget(String id);
+    public Widget getChild(String id);
 
     /**
      * @return an iterator over the widgets this object contains

@@ -34,7 +34,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.7 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.8 2004/05/07 16:43:42 mpo Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -334,7 +334,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             int size = childBindings.length;
             for (int i = 0; i < size; i++) {
                 String fieldId = ((ValueJXPathBinding)childBindings[i]).getFieldId();
-                Widget widget = row.getWidget(fieldId);
+                Widget widget = row.getChild(fieldId);
                 Object value = widget.getValue();
                 identity.add(value);
             }

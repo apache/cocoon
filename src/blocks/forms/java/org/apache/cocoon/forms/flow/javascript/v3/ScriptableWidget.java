@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.2 2004/05/07 13:42:11 mpo Exp $
+ * @version $Id: ScriptableWidget.java,v 1.3 2004/05/07 16:43:43 mpo Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject implements ValueChangedListener, ActionListener, WidgetValidator {
@@ -119,11 +119,9 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
 
     public boolean has(String id, Scriptable start) {
         if (delegate != null) {
-            if (delegate instanceof ContainerWidget) {
-                Widget sub = ((ContainerWidget)delegate).getWidget(id);
-                if (sub != null) {
-                    return true;
-                }
+            Widget sub = delegate.lookupWidget(id);
+            if (sub != null) {
+                return true;
             }
         } 
         return super.has(id, start);
@@ -149,8 +147,8 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
         if (result != NOT_FOUND) {
             return result;
         }
-        if (delegate != null && delegate instanceof ContainerWidget) {
-            Widget sub = ((ContainerWidget)delegate).getWidget(id);
+        if (delegate != null) {
+            Widget sub = delegate.lookupWidget(id);
             if (sub != null) {
                 return wrap(sub);
             }
@@ -329,7 +327,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
                 for (int i = 0; i < ids.length; i++) {
                     String id = String.valueOf(ids[i]);
                     Object val = getProperty(obj, id);
-                    ScriptableWidget wid = wrap(aggregateField.getWidget(id));
+                    ScriptableWidget wid = wrap(aggregateField.getChild(id));
                     if (wid == null) {
                         throw new JavaScriptException("No field \"" + id + "\" in widget \"" + aggregateField.getId() + "\"");
                     }
@@ -409,7 +407,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
                 for (int i = 0; i < ids.length; i++) {
                     String id = String.valueOf(ids[i]);
                     Object val = getProperty(obj, id);
-                    ScriptableWidget wid = wrap(row.getWidget(id));
+                    ScriptableWidget wid = wrap(row.getChild(id));
                     if (wid == null) {
                         throw new JavaScriptException("No field \"" + id + "\" in row " + i + " of repeater \"" + row.getParent().getId() + "\"");
                     }
@@ -489,10 +487,9 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
         return false;
     }
 
-    public ScriptableWidget jsFunction_getWidget(String id) {
+    public ScriptableWidget jsFunction_lookupWidget(String id) {
         Widget sub = null;
-        if (delegate instanceof ContainerWidget)
-            sub = ((ContainerWidget)delegate).getWidget(id);
+        sub = delegate.lookupWidget(id);
         return wrap(sub);
     }
 

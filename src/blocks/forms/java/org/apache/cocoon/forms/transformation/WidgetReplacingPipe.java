@@ -44,7 +44,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.7 2004/05/07 13:42:10 mpo Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.8 2004/05/07 16:43:43 mpo Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -250,7 +250,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         if (widgetId == null || widgetId.equals("")) {
             throw new SAXException("FormsTemplateTransformer: missing id attribute on a Cocoon Forms element.");
         }
-        Widget widget = ((ContainerWidget)contextWidget).getWidget(widgetId);
+        Widget widget = ((ContainerWidget)contextWidget).getChild(widgetId);
         if (widget == null) {
             throw new SAXException("FormsTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getRequestParameterName());
         }
