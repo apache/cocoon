@@ -86,7 +86,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.6 2003/05/07 19:15:02 vgritsenko Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.7 2003/07/03 09:26:03 cziegeler Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Composable, Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -260,7 +260,7 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
     /**
      * Generate the unique key.
      * This key must be unique inside the space of this component.
-     * This method must be invoked before the generateValidity() method.
+     * This method must be invoked before the getValidity() method.
      *
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
@@ -271,7 +271,7 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
 
     /**
      * Generate the validity object.
-     * Before this method can be invoked the generateKey() method
+     * Before this method can be invoked the getKey() method
      * must be invoked.
      *
      * @return The generated validity object or <code>null</code> if the
@@ -285,9 +285,9 @@ implements Composable, Serializer, Configurable, Poolable, CacheableProcessingCo
      * Returns true so the pipeline implementation will buffer generated
      * output and write content length to the response.
      * <p>Batik's PNGTranscoder closes the output stream, therefore we
-     * cannot pass {@link #output} directly to Batik and have to
+     * cannot pass the output stream directly to Batik and have to
      * instruct pipeline to buffer it. If we do not buffer, we would get
-     * an exception when {@link org.apache.cocoon.Cocoon#process}
+     * an exception when {@link org.apache.cocoon.Cocoon#process(Environment)}
      * tries to close the stream.
      */
     public boolean shouldSetContentLength() {

@@ -63,16 +63,13 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractAspectalizableDescription.java,v 1.3 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizableDescription.java,v 1.4 2003/07/03 09:26:03 cziegeler Exp $
  */
 public abstract class AbstractAspectalizableDescription
     implements AspectalizableDescription  {
 
     protected List aspects = new ArrayList();
 
-    /**
-     * @return
-     */
     public List getAspectDescriptions() {
         return this.aspects;
     }

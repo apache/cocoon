@@ -57,18 +57,18 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ProducibleDescription.java,v 1.2 2003/06/06 11:33:39 cziegeler Exp $
+ * @version CVS $Id: ProducibleDescription.java,v 1.3 2003/07/03 09:26:03 cziegeler Exp $
  */
 public interface ProducibleDescription
     extends AspectalizableDescription {
 
     /**
-     * @return
+     * @return The class name
      */
     String getClassName();
 
     /**
-     * @return
+     * @return The configured name
      */
     String getName();
     

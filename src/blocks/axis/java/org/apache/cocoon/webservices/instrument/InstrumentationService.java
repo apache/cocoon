@@ -58,7 +58,7 @@ import org.apache.excalibur.instrument.InstrumentManageable;
  * InstrumentManager.
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: InstrumentationService.java,v 1.1 2003/03/09 00:02:29 pier Exp $
+ * @version CVS $Id: InstrumentationService.java,v 1.2 2003/07/03 09:26:03 cziegeler Exp $
  */
 public interface InstrumentationService extends InstrumentManageable, Component {
 	
@@ -102,7 +102,7 @@ public interface InstrumentationService extends InstrumentManageable, Component 
     /**
      * Obtains an array of instrumentable sample names
      *
-     * @return a {@link String[]} array of sample names
+     * @return a {@link String}[] array of sample names
      */
     String[] getSampleNames();
 }

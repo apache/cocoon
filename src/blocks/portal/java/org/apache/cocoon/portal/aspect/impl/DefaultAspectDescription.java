@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.aspect.AspectDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDescription.java,v 1.3 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDescription.java,v 1.4 2003/07/03 09:26:03 cziegeler Exp $
  */
 public class DefaultAspectDescription 
     implements AspectDescription {
@@ -93,14 +93,14 @@ public class DefaultAspectDescription
     }
     
     /**
-     * @return
+     * @return The class name
      */
     public String getClassName() {
         return className;
     }
 
     /**
-     * @return
+     * @return The configred name
      */
     public String getName() {
         return name;

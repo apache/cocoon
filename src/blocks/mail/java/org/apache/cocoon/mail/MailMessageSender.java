@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.2 2003/07/03 08:00:00 cziegeler Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.3 2003/07/03 09:26:03 cziegeler Exp $
  */
 public class MailMessageSender {
 
@@ -349,7 +349,7 @@ public class MailMessageSender {
     }
 
     /**
-     *  Accesses any Exception caught by {@link sendIt}.
+     *  Accesses any Exception caught by {@link #sendIt(SourceResolver)}.
      * @return AddressException or MessagingException
      */
     public Exception getException() {

@@ -109,7 +109,7 @@ import javax.mail.internet.AddressException;
  *    is assumed, that the argument describes a request parameter of an
  *    uploaded file, which
  *    Cocoon has internally turned into a 
- *    {@link org.apache.cocoon.components.request.multipart.FilePart} 
+ *    {@link Part} 
  *    object.</dd>
  * </dl>
  * <p>
@@ -136,7 +136,7 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.1 2003/04/17 20:30:03 haul Exp $
+ * @version CVS $Id: Sendmail.java,v 1.2 2003/07/03 09:26:03 cziegeler Exp $
  */
 public class Sendmail extends AbstractAction implements ThreadSafe, Configurable {
     private final static String STATUS = "status";

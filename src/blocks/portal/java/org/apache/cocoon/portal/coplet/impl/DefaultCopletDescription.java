@@ -63,16 +63,13 @@ import org.apache.cocoon.portal.factory.impl.AbstractProducibleDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletDescription.java,v 1.1 2003/05/22 12:32:47 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletDescription.java,v 1.2 2003/07/03 09:26:03 cziegeler Exp $
  */
 public class DefaultCopletDescription
     extends AbstractProducibleDescription  {
 
     protected List instanceAspects = new ArrayList();
 
-    /**
-     * @return
-     */
     public List getInstanceAspectDescriptions() {
         return this.instanceAspects;
     }
