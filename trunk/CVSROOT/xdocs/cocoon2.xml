@@ -295,17 +295,16 @@
 </s1>
 
 <s1 title="Development Status">
-  <p>Cocoon 2 development has already started, but should be considered "alpha
-  quality" - i.e. certainly not ready for use on public websites!
-  If you dare, you might take a look at it on the <em>xml-cocoon2</em>
-  CVS branch in the Cocoon CVS module. If you are not a CVS expert, this means
+  <p>Cocoon 2 development has reached "near beta quality"
+  You might take a look at it on the <em>xml-cocoon2</em>
+  CVS module. If you are not a CVS expert, this means
   typing:</p>
 
   <source>
     cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic login
     Password: anoncvs
 
-    cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic checkout -r xml-cocoon2 xml-cocoon
+    cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic checkout xml-cocoon2
   </source>
 
   <p>For more information on CVS access, refer to the CVS docs on this web site.</p>
