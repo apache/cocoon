@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.73 2000-05-12 12:43:26 stefano Exp $
+  $Id: changes.xml,v 1.74 2000-05-16 20:03:01 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix">
+  	fixed bug in SQL taglib when doc-element was missing
+  </action>
+  <action dev="DB" type="fix" due-to="Giacomo Pati" due-to-email="Giacomo.Pati@pwr.ch">
+   fixed bug in SQL taglib's count rows query
+  </action>
   <action dev="SM" type="fix" due-to="Bill Parkinson" due-to-email="bill_parkinson@merck.com">
    Work around context.getRealPath() that fails on some engines.
   </action>
