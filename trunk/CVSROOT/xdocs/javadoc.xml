@@ -71,17 +71,16 @@ phases:</p>
       to move over to the actual XML doclet implementation.
    </p>
    <p>
-      The problem is that the original Javadoc XML proposal author quit the
-      project for lack of time, so <strong>we are currently looking for people</strong>
-      to move the task forward since we are almost stuck at this point.
+      The XML Doclet code (consider it alpha at this point) is included in the
+      Cocoon distribution under <code>/src/org/apache/tools/doclet/xml/XMLDoclet.java</code>.
    </p>
   </s1>
-  
+
   <s1 title="To do">
    <p>
-      Being the first phase complete (the DTD is still in working-draft phase,
-      but it's complete and usable), we need to write the doclet, but the
-      task is stalled for lack of active contributors. <strong>Any help is
+      Being the first two phases complete (the DTD is still in working-draft phase,
+      but it's complete and usable), we need to write the stylesheets that
+      generate HTML out of the javadoc XML files. <strong>Any help is
       always welcome</strong>.
    </p>
   </s1>
