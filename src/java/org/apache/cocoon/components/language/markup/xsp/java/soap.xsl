@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- $Id: soap.xsl,v 1.2 2003/05/22 21:26:26 vgritsenko Exp $-->
+<!-- $Id: soap.xsl,v 1.3 2003/10/19 12:42:58 sylvain Exp $-->
 <!--
 
  ============================================================================
@@ -59,7 +59,7 @@
  * Date: July 21, 2001
  *
  * @author <a href="mailto:ovidiu@cup.hp.com>Ovidiu Predescu</a>
- * @version CVS $Revision: 1.2 $ $Date: 2003/05/22 21:26:26 $
+ * @version CVS $Revision: 1.3 $ $Date: 2003/10/19 12:42:58 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -87,6 +87,14 @@
       <xsl:choose>
         <xsl:when test="soap:url"><xsl:value-of select="soap:url"/></xsl:when>
         <xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
+        <xsl:otherwise>""</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+   <xsl:variable name="authorization">
+      <xsl:choose>
+        <xsl:when test="soap:authorization"><xsl:value-of select="soap:authorization"/></xsl:when>
+        <xsl:when test="@authorization">"<xsl:value-of select="@authorization"/>"</xsl:when>
         <xsl:otherwise>""</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -133,6 +141,7 @@
                              XSPRequestHelper.getRequestedURL(objectModel),
                              String.valueOf(<xsl:value-of select="$url"/>),
                              <xsl:value-of select="$method"/>,
+                             <xsl:value-of select="$authorization"/>,
                              <xscript:get scope="request" name="{$tempvar}" as="object"/>).invoke(),
               <xsl:value-of select="$scope"/>);
           if (getLogger().isDebugEnabled()) {
@@ -168,6 +177,7 @@
       <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
         <xsl:apply-templates select="*[name() != 'soap:url'
                                        and name() != 'soap:method'
+                                       and name() != 'soap:authorization'                                       
                                        and name() != 'soap:namespace']"/>
       </SOAP-ENV:Header>
   </xsl:template>
@@ -184,6 +194,7 @@
     <SOAP-ENV:Body xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
       <xsl:apply-templates select="*[name() != 'soap:url'
                                      and name() != 'soap:method'
+                                     and name() != 'soap:authorization'
                                      and name() != 'soap:namespace']"/>
     </SOAP-ENV:Body>
     <xsp:logic>
