@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
-<!DOCTYPE todo SYSTEM "./dtd/todo-v10.dtd">
+<!-- <!DOCTYPE todo SYSTEM "./dtd/todo-v10.dtd"> -->
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.2 1999-11-30 16:29:50 stefano Exp $
+  $Id: todo.xml,v 1.3 1999-12-03 00:07:16 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -12,59 +12,55 @@
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
   <person name="Ricardo Rocha" email="rrocha@plenix.org" id="RR"/>
-  <person name="Kenneth Murphy" email="murphyk@umsystem.edu" id="KM"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
  
  <action priority="showstopper" assigned-to="SM" context="docs">
-  Finish XML-ize the docs (xsp-spec).
+  Finish XML-ize the docs (install, DCP, SQL).
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="docs">
-  Write the stylesheets for the docs and traslations to stylebook DTD.
- </action>
-
- <action priority="showstopper" assigned-to="SM" context="docs">
-  Integrate docs with xml.apache.org.
- </action>
-
- <action priority="showstopper" context="code">
-  pass request/session parameters to the XSLT processors for dynamic
-  stylesheet operation.
+  Write the HTML/FO stylesheets.
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="build">
-  Finish Ant makefile to build instead of makefile.
+  Finish Ant build file and clean it up.
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="admin">
-  Make sure you removed all the java.apache.org instances around.
+  Make sure all the java.apache.org stuff is removed.
  </action>
 
 
+ <action priority="high" context="code">
+  Pass request/session parameters to the XSLT processors for dynamic
+  stylesheet operation.
+ </action>
+
+ <action priority="high" context="code">
+  Work on external entities inclusion (follows sitemap stuff).
+ </action>
+
+ <action priority="high" assigned-to="RR" context="code">
+  Integrate Ricardo's XSP compiler.
+ </action>
+
+ <action priority="high" assigned-to="SM" context="code">
+  Check tomcat installation.
+ </action>
+
+ <action priority="medium" assigned-to="SM" context="admin">
+  Add the Cocoon2 branch with the new interface.
+ </action>
 
 
  <action priority="medium" assigned-to="SM" context="design">
   Write SiteMap document.
  </action>
 
- <action priority="medium" assigned-to="SM" context="code">
-  Play around with Tomcat.
- </action>
-
- <action priority="medium" assigned-to="SM" context="admin">
-  Add the Cocoon2 branch with the Kali sources.
- </action>
-
- <action priority="medium" assigned-to="RR" context="code">
-  Add the XSP compiler.
- </action>
-
  <action priority="medium" assigned-to="PF" context="design">
   Merge stylebook technology with Cocoon
  </action>
- 
- 
  
  
  

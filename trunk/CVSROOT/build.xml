@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 
 <!-- ===================================================================
 
@@ -34,7 +34,7 @@ Fixme:
 Copyright:
   Copyright (c) 1999 The Apache Software Foundation.
   
-   $Id: build.xml,v 1.1 1999-11-30 16:29:50 stefano Exp $
+   $Id: build.xml,v 1.2 1999-12-03 00:07:16 stefano Exp $
    
 ==================================================================== -->
 
@@ -48,7 +48,9 @@ Copyright:
   <property name="debug" value="off"/>
   
   <property name="src.dir" value="./src"/>
-  <property name="stylesheets" value="./docs/stylesheets"/>
+  <property name="docs.dir" value="./docs"/>
+  <property name="sheets.dir" value="./stylesheets"/>
+  <property name="images.dir" value="./resources"/>
   <property name="version.file" value="org/apache/cocoon/Defaults.java"/>
   
   <!-- this sucks! we should have a way to tell something like "org.apache.cocoon.*"
@@ -63,6 +65,8 @@ Copyright:
   <property name="build.javadocs" value="./build/javadocs"/>
 
   <property name="dist.dir" value="./dist"/>
+
+  <property name="site.dir" value="../xml-site/sources/cocoon"/>
 
   <target name="prepare">
     <!-- create temporary build dirs -->
@@ -93,8 +97,8 @@ Copyright:
               version="true" 
               use="true"
               windowtitle="${name} API"
-              doctitle="<h2>${name}</h2>"
-              bottom="<font size="-1">Copyright &copy; ${YEAR} Apache XML Project. All Rights Reserved.</font>"
+              doctitle="${name}"
+              bottom="Copyright &#169; ${YEAR} Apache XML Project. All Rights Reserved."
     />
   </target>
 
@@ -114,6 +118,25 @@ Copyright:
    
   </target>
   
+  <target name="site">
+    <copyfile src="${docs.dir}/book.xml" dest="${site.dir}/../cocoon.xml"/>
+    <xslt src="${docs.dir}/index.xml" dest="${site.dir}/index-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/installing.xml" dest="${site.dir}/installing-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/cocoon2.xml" dest="${site.dir}/cocoon2-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/dcpprocessor.xml" dest="${site.dir}/dcpprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/sqlprocessor.xml" dest="${site.dir}/sqlprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/license.xml" dest="${site.dir}/license-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/javadoc.xml" dest="${site.dir}/javadoc-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/guide.xml" dest="${site.dir}/guide-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/technologies.xml" dest="${site.dir}/technologies-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/dynamic.xml" dest="${site.dir}/dynamic-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
+    <xslt src="${docs.dir}/faq.xml" dest="${site.dir}/faq-sbk.xml" sheet="${sheets.dir}/faq-stylebook.xsl"/>
+    <xslt src="${docs.dir}/WD-xsp.xml" dest="${site.dir}/WD-xsp-sbk.xml" sheet="${sheets.dir}/spec-stylebook.xsl"/>
+    <xslt src="changes.xml" dest="${site.dir}/changes-sbk.xml" sheet="${sheets.dir}/changes-stylebook.xsl"/>
+    <xslt src="todo.xml" dest="${site.dir}/todo-sbk.xml" sheet="${sheets.dir}/todo-stylebook.xsl"/>
+    <copydir src="${images.dir}" dest="${site.dir}/images"/>
+  </target>            
+                       
   <target name="clean">
     <deltree dir="${build.dir}"/>
     <deltree dir="${dist.dir}"/>
