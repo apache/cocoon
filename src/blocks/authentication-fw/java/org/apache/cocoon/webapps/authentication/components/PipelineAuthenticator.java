@@ -51,7 +51,6 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
@@ -63,7 +62,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
@@ -90,7 +88,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.4 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.5 2003/10/23 11:29:36 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -255,16 +253,6 @@ public class PipelineAuthenticator
 
                     // store the authentication data in the context
                     authContext.init(doc);
-
-                    // And now load applications
-                    Iterator applications = configuration.getApplications().values().iterator();
-
-                    while ( applications.hasNext() ) {
-                        ApplicationConfiguration appHandler = (ApplicationConfiguration)applications.next();
-                        if ( !appHandler.getLoadOnDemand() ) {
-                            handler.getContext().loadApplicationXML( appHandler, this.resolver );
-                        }
-                    }
 
                 } // end sync
             }
