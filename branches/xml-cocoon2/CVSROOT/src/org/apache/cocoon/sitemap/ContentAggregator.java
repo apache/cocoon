@@ -41,7 +41,7 @@ import org.apache.cocoon.xml.XMLProducer;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.7 2001-04-24 20:21:26 giacomo Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.8 2001-04-24 22:26:50 giacomo Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
@@ -54,6 +54,9 @@ public class ContentAggregator extends ContentHandlerWrapper
 
     /** the namespace of the root element */
     protected String rootElementNS;
+
+    /** the namespace prefix of the root element */
+    protected String rootElementNSPrefix;
 
     /** the parts */
     protected ArrayList parts = new ArrayList();
@@ -114,11 +117,13 @@ public class ContentAggregator extends ContentHandlerWrapper
         public String uri;
         public String element;
         public String namespace;
+        public String prefix;
         boolean stripRootElement;
-        public Part (String uri, String element, String namespace, String stripRoot) {
+        public Part (String uri, String element, String namespace, String stripRoot, String prefix) {
             this.uri = uri;
             this.element = element;
             this.namespace = namespace;
+            this.prefix = prefix;
             if (stripRoot.equals("yes") || stripRoot.equals("true")) {
                 this.stripRootElement = true;
             } else {
@@ -134,17 +139,19 @@ public class ContentAggregator extends ContentHandlerWrapper
         getLogger().debug("ContentAggregator: generating aggregated content");
         collectParts();
         this.documentHandler.startDocument();
-        this.startElem(this.rootElementNS, this.rootElement);
+        this.startElem(this.rootElementNS, this.rootElementNSPrefix, this.rootElement);
         try {
             for (int i = 0; i < this.partEventPipelines.size(); i++) {
                 Part part = (Part)this.parts.get(i);
                 this.rootElementIndex = (part.stripRootElement ? 0 : -1);
                 String ns = part.namespace;
+                String prefix = part.prefix;
                 if (ns.equals("")) {
                     ns = this.getNS();
+                    prefix = "";
                 }
                 if (!part.element.equals("")) {
-                    this.startElem(ns, part.element);
+                    this.startElem(ns, prefix, part.element);
                 }
                 EventPipeline ep = (EventPipeline)this.partEventPipelines.get(i);
                 ((XMLProducer)ep).setConsumer(this);
@@ -158,12 +165,12 @@ public class ContentAggregator extends ContentHandlerWrapper
                     this.manager.release(ep);
                     this.environment.popURI();
                     if (!part.element.equals("")) {
-                        this.endElem(part.element);
+                        this.endElem(prefix, part.element);
                     }
                 }
             }
         } finally {
-            this.endElem(this.rootElement);
+            this.endElem(this.rootElementNSPrefix, this.rootElement);
             this.documentHandler.endDocument();
         }
         getLogger().debug("ContentAggregator: finished aggregating content");
@@ -232,19 +239,17 @@ public class ContentAggregator extends ContentHandlerWrapper
         this.sitemap = sitemap;
     }
 
-    public void setRootElement(String element, String namespace) {
+    public void setRootElement(String element, String namespace, String prefix) {
         this.rootElement = element;
-        if (namespace == null) {
-            this.rootElementNS = "";
-        } else {
-            this.rootElementNS = namespace;
-        }
-        getLogger().debug("ContentAggregator: root element='" + element + "' ns='" + namespace + "'");
+        this.rootElementNS = namespace;
+        this.rootElementNSPrefix = prefix;
+        getLogger().debug("ContentAggregator: root element='" + element + "' ns='" + namespace + "' prefix='" + prefix + "'");
     }
-    
-    public void addPart(String uri, String element, String namespace, String stripRootElement) {
-        this.parts.add(new Part(uri, element, namespace, stripRootElement));
-        getLogger().debug("ContentAggregator: part uri='" + uri + "' element='" + element + "' ns='" + namespace + "' stripRootElement='" + stripRootElement + "'");
+
+    public void addPart(String uri, String element, String namespace, String stripRootElement, String prefix) {
+        this.parts.add(new Part(uri, element, namespace, stripRootElement, prefix));
+        getLogger().debug("ContentAggregator: part uri='" + uri + "' element='" + element + "' ns='" + namespace
+                        + "' stripRootElement='" + stripRootElement + "' prefix='" + prefix + "'");
     }
 
     /**
@@ -286,6 +291,7 @@ public class ContentAggregator extends ContentHandlerWrapper
         this.parameters = null;
         this.rootElement = null;
         this.rootElementNS = null;
+        this.rootElementNSPrefix = null;
         this.parts.clear();
         this.environment = null;
         this.partEventPipelines.clear();
@@ -324,21 +330,26 @@ public class ContentAggregator extends ContentHandlerWrapper
         return (String)currentNS.get(last);
     }
 
-    private void startElem(String namespaceURI, String name) throws SAXException {
+    private void startElem(String namespaceURI, String prefix, String name) throws SAXException {
         this.pushNS(namespaceURI);
         AttributesImpl attrs = new AttributesImpl();
+        String qname = name;
         if (!namespaceURI.equals("")) {
-            this.documentHandler.startPrefixMapping("", namespaceURI);
-            attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
+            this.documentHandler.startPrefixMapping(prefix, namespaceURI);
+            if (!prefix.equals("")) {
+                attrs.addAttribute("", prefix, "xmlns:" + prefix, "CDATA", namespaceURI);
+            } else {
+                attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
+            }
         }
         this.documentHandler.startElement(namespaceURI, name, name, attrs);
     }
 
-    private void endElem(String name) throws SAXException {
+    private void endElem(String prefix, String name) throws SAXException {
         String ns = this.popNS();
         this.documentHandler.endElement(ns, name, name);
         if (!ns.equals("")) {
-            this.documentHandler.endPrefixMapping("");
+            this.documentHandler.endPrefixMapping(prefix);
         }
     }
 

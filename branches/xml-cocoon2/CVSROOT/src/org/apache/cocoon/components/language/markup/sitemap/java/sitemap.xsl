@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.106 2001-04-24 20:21:27 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.107 2001-04-24 22:26:48 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -976,7 +976,7 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
+    <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>", "<xsl:value-of select="@prefix"/>");
     <xsl:apply-templates select="./map:part">
       <xsl:with-param name="ca"><xsl:value-of select="$ca"/></xsl:with-param>
     </xsl:apply-templates>
@@ -992,7 +992,7 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>", "<xsl:value-of select="@strip-root"/>");
+    <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>", "<xsl:value-of select="@strip-root"/>", "<xsl:value-of select="@prefix"/>");
   </xsl:template> <!-- match="map:part" -->
 
   <!-- collect parameter definitions -->
