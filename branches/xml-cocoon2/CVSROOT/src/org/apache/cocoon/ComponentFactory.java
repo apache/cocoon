@@ -19,13 +19,17 @@ import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Context;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Initializable;
+import org.apache.avalon.Disposable;
+import org.apache.avalon.Stoppable;
+import org.apache.avalon.Startable;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-22 17:10:18 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-01 19:29:02 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
     private Logger log;
@@ -88,10 +92,28 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
             ((Configurable)comp).configure(this.conf);
         }
 
+        if ( comp instanceof Initializable ) {
+            ((Initializable)comp).init();
+        }
+
+        if ( comp instanceof Startable ) {
+            ((Startable)comp).start();
+        }
+
         return comp;
     }
 
     public final Class getCreatedClass() {
         return componentClass;
+    }
+
+    public final void decommission(Poolable comp) throws Exception {
+        if ( comp instanceof Stoppable ) {
+            ((Stoppable)comp).stop();
+        }
+
+        if ( comp instanceof Disposable ) {
+            ((Disposable)comp).dispose();
+        }
     }
 }
