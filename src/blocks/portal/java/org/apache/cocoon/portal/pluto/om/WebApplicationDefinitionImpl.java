@@ -63,6 +63,7 @@ import org.apache.pluto.om.common.SecurityRoleSet;
 import org.apache.pluto.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.om.servlet.ServletDefinitionList;
 import org.apache.pluto.om.servlet.WebApplicationDefinition;
+import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.om.common.ParameterSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.SecurityRoleSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.Support;
@@ -74,26 +75,10 @@ import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.3 2004/01/27 08:05:34 cziegeler Exp $
+ * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.4 2004/01/27 10:37:35 cziegeler Exp $
  */
 public class WebApplicationDefinitionImpl 
 implements WebApplicationDefinition, Support {
-
-
-    // <not used variables - only for castor>
-    public String icon;
-    public String distributable;
-    public String sessionConfig;
-    public String welcomeFileList;
-    public String errorPage;
-    public String taglib;
-    public String resourceRef;
-    public String securityConstraint;
-    public String loginConfig;
-    public String securityRole;
-    public String envEntry;
-    public String ejbRef;
-    // </not used variables - only for castor>
 
 
     private String contextPath;        
@@ -101,19 +86,20 @@ implements WebApplicationDefinition, Support {
     private DisplayNameSet displayNames =  new DisplayNameSetImpl();
     private String id = "";
     private ParameterSet initParams = new ParameterSetImpl();
+    /** The object id */
     private ObjectID objectId;
     private Collection servletMappings = new ArrayList();
     private ServletDefinitionList servlets = new ServletDefinitionListImpl();
     private SecurityRoleSet securityRoles = new SecurityRoleSetImpl();
-    private TagDefinition castorTagDefinition = new TagDefinition();
 
-    // WebApplicationDefinition implementation.
-    
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getId()
+     */
     public ObjectID getId() {
-        if (objectId==null) {
-            objectId = org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl.createFromString(id);
+        if (this.objectId == null) {
+            this.objectId = ObjectIDImpl.createFromString(id);
         }
-        return objectId;
+        return this.objectId;
     }
 
     /* (non-Javadoc)
@@ -123,40 +109,52 @@ implements WebApplicationDefinition, Support {
         return displayNames.get(locale);
     }
 
-    public Description getDescription(Locale locale)
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getDescription(java.util.Locale)
+     */
+    public Description getDescription(Locale locale) {
         return descriptions.get(locale);
     }
 
-    public ParameterSet getInitParameterSet()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getInitParameterSet()
+     */
+    public ParameterSet getInitParameterSet() {
         return initParams;
     }
 
-    public ServletDefinitionList getServletDefinitionList()
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getServletDefinitionList()
+     */
+    public ServletDefinitionList getServletDefinitionList() {
         return servlets;
     }
 
-    public ServletContext getServletContext(ServletContext servletContext)
-    {
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getServletContext(javax.servlet.ServletContext)
+     */
+    public ServletContext getServletContext(ServletContext servletContext) {
         return servletContext.getContext(contextPath);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getContextRoot()
+     */
     public String getContextRoot() {
-
         return contextPath;
     }
 
-    // Support implementation.
-
-    public void postBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postBuild(java.lang.Object)
+     */
+    public void postBuild(Object parameter) throws Exception {
         // not needed in this implementation
     }
 
-    public void postLoad(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postLoad(java.lang.Object)
+     */
+    public void postLoad(Object parameter) throws Exception {
         Vector structure = (Vector)parameter;
         PortletApplicationDefinition portletApplication = (PortletApplicationDefinition)structure.get(0);
 
@@ -169,13 +167,17 @@ implements WebApplicationDefinition, Support {
 
     }
 
-    public void postStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#postStore(java.lang.Object)
+     */
+    public void postStore(Object parameter) throws Exception {
         ((Support)servlets).postStore(this);
     }
 
-    public void preBuild(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preBuild(java.lang.Object)
+     */
+    public void preBuild(Object parameter) throws Exception {
         Vector structure = (Vector)parameter;
         PortletApplicationDefinition portletApplication = (PortletApplicationDefinition)structure.get(0);
         String contextString = (String)structure.get(1);
@@ -197,8 +199,10 @@ implements WebApplicationDefinition, Support {
         ((Support)portletApplication).preBuild(structure3);
     }
 
-    public void preStore(Object parameter) throws Exception
-    {
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.pluto.om.common.Support#preStore(java.lang.Object)
+     */
+    public void preStore(Object parameter) throws Exception {
         Vector structure = (Vector)parameter;
         PortletApplicationDefinition portletApplication = (PortletApplicationDefinition)structure.get(0);
 
@@ -209,6 +213,11 @@ implements WebApplicationDefinition, Support {
     
     // additional methods.
     
+    public void setCastorId(String id) {        
+        this.id = id;
+        objectId = null;
+    }
+    
     public String getCastorId() {                
         if (id.length() > 0) {
             return getId().toString();
@@ -217,81 +226,48 @@ implements WebApplicationDefinition, Support {
         }
     }
 
-    public Collection getCastorInitParams()
-    {
+    public Collection getCastorInitParams() {
         return(ParameterSetImpl)initParams;
     }
 
-    public Collection getCastorServlets()
-    {
+    public Collection getCastorServlets() {
         return(ServletDefinitionListImpl)servlets;
     }
 
-    public Collection getCastorDisplayNames()
-    {
+    public Collection getCastorDisplayNames() {
         return(DisplayNameSetImpl)displayNames;
     }
 
-    public Collection getCastorDescriptions()
-    {
+    public Collection getCastorDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-    public SecurityRoleSet getSecurityRoles()
-    {
+    public SecurityRoleSet getSecurityRoles() {
         return securityRoles;
     }
 
-    public Collection getServletMappings()
-    {
+    public Collection getServletMappings() {
         return servletMappings;
     }
-    public void setCastorId(String id) {        
-        setId(id);
-    }
     
-    protected void setContextRoot(String contextPath)
-    {
+    protected void setContextRoot(String contextPath) {
         this.contextPath = contextPath;
     }    
 
-    public void setDescriptions(DescriptionSet descriptions)
-    {
+    public void setDescriptions(DescriptionSet descriptions) {
         this.descriptions = descriptions;
     }
 
-    public void setDisplayNames(DisplayNameSet displayNames)
-    {
+    public void setDisplayNames(DisplayNameSet displayNames) {
         this.displayNames = displayNames;
     }
 
-    public void setCastorDescriptions(DescriptionSet castorDescriptions)
-    {
+    public void setCastorDescriptions(DescriptionSet castorDescriptions) {
         this.descriptions = castorDescriptions;
     }
 
-    public void setCastorDisplayNames(DisplayNameSet castorDisplayNames)
-    {
+    public void setCastorDisplayNames(DisplayNameSet castorDisplayNames) {
         this.displayNames = castorDisplayNames;
     }
 
-    public void setId(String id)
-    {
-        this.id = id;
-        objectId = null;
-    }
-
-    /**
-     * @return
-     */
-    public TagDefinition getCastorTagDefinition() {
-        return castorTagDefinition;
-    }
-
-    /**
-     * @param definition
-     */
-    public void setCastorTagDefinition(TagDefinition definition) {
-        castorTagDefinition = definition;
-    }
 }

@@ -146,7 +146,6 @@
     <field name="castorId" type="java.lang.String">
       <bind-xml name="id" node="attribute"/>
     </field>
-
     <field name="castorDisplayNames" 
          type="org.apache.cocoon.portal.pluto.om.common.DisplayNameImpl"
          collection="collection">
@@ -174,52 +173,12 @@
            required="true">
       <bind-xml name="servlet-mapping" node="element"/>
     </field>
-    
-    <field name="castorTagDefinition" type="org.apache.cocoon.portal.pluto.om.TagDefinition">
-       <bind-xml name="taglib" node="element" />
-    </field>
-
-    <!-- only for completion, not used in class file -->
-    <field name="icon" transient="true" direct="true">
-        <bind-xml name="icon" node="element"/>
-    </field>
-    <field name="distributable" transient="true" direct="true">
-        <bind-xml name="distributable" node="element"/>
-    </field>
-    <field name="sessionConfig" transient="true" direct="true">
-        <bind-xml name="session-config" node="element"/>
-    </field>
-    <field name="welcomeFileList" transient="true" direct="true">
-        <bind-xml name="welcome-file-list" node="element"/>
-    </field>
-    <field name="errorPage" transient="true" direct="true">
-        <bind-xml name="error-page" node="element"/>
-    </field>
-    
-    <field name="resourceRef" transient="true" direct="true">
-        <bind-xml name="resource-ref" node="element"/>
-    </field>
-    <field name="securityConstraint" transient="true" direct="true">
-        <bind-xml name="security-constraint" node="element"/>
-    </field>
-    <field name="loginConfig" transient="true" direct="true">
-        <bind-xml name="login-config" node="element"/>
-    </field>
-    <!--field name="securityRole" transient="false" direct="true">
-        <bind-xml name="security-role" node="element"/>
-    </field-->
     <field name="securityRoles"
     	transient="false"
     	type="org.apache.cocoon.portal.pluto.om.common.SecurityRoleImpl"
     	required="false"
     	collection="collection">
       <bind-xml name="security-role" node="element"/>
-    </field>
-    <field name="envEntry" transient="true" direct="true">
-        <bind-xml name="env-entry" node="element"/>
-    </field>
-    <field name="ejbRef" transient="true" direct="true">
-        <bind-xml name="ejb-ref" node="element"/>
     </field>
   </class>
   
