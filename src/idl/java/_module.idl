@@ -67,7 +67,7 @@
  * </p>
  * <p>
  *   It is required, though, to provide the definition of all Java
- *   &quot;native&quot; ojbects accessible from the Apache Cocoon scripting
+ *   &quot;native&quot; objects accessible from the Apache Cocoon scripting
  *   layers, because if any of the future scripting environment implemented
  *   does not support automatic wrapping, developers will have to implement
  *   those manually.
