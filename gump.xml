@@ -92,6 +92,7 @@
     <work nested="build/cocoon-@@DATE@@/classes"/>
     <work nested="build/cocoon-@@DATE@@/deprecated"/>
     <work nested="build/cocoon-@@DATE@@/test"/>
+    <work nested="build/cocoon-@@DATE@@/mocks"/>
     <work nested="tools/anttasks"/>
     <work nested="tools/loader"/>
 
