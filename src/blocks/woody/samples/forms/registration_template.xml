@@ -2,7 +2,7 @@
 <page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
   <title>Registration</title>
   <content>
-    <form action="registration" method="POST">
+    <wt:form-template action="registration" method="POST">
       <wt:widget-label id="name"/>
       <wt:widget id="name"/>
       <br/>
@@ -23,6 +23,6 @@
       <br/>
 
       <input type="submit"/>
-    </form>
+    </wt:form-template>
   </content>
 </page>
