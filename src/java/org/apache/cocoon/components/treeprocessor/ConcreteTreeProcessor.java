@@ -23,16 +23,13 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
@@ -49,23 +46,21 @@ import org.apache.cocoon.sitemap.impl.DefaultExecutor;
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
  *
- * @version CVS $Id: ConcreteTreeProcessor.java,v 1.4 2004/06/25 15:36:38 cziegeler Exp $
+ * @version CVS $Id: ConcreteTreeProcessor.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
 
 	/** The processor that wraps us */
 	private TreeProcessor wrappingProcessor;
 
-	/** Component manager defined by the &lt;map:components&gt; of this sitemap */
-    ComponentManager sitemapComponentManager;
-
-    private ServiceManager serviceManager;
-
     	/** Processing nodes that need to be disposed with this processor */
     private List disposableNodes;
 
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
+    
+    /** The component info needed to build child processors */
+    private ProcessorComponentInfo componentInfo;
 
     private Map sitemapComponentConfigurations;
 
@@ -82,16 +77,34 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
 	/** Builds a concrete processig, given the wrapping processor */
 	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor) {
+        // Store our wrapping processor
 		this.wrappingProcessor = wrappingProcessor;
+        
+        // Initialize component info
+        if (this.wrappingProcessor.parent == null) {
+            // top-level processor
+            this.componentInfo = new ProcessorComponentInfo(null);
+        } else {
+            // chain to the parent processor
+            this.componentInfo = new ProcessorComponentInfo(
+                this.wrappingProcessor.parent.concreteProcessor.getComponentInfo()
+            );
+        }
+        
+        
+        
         // get the sitemap executor - we use the same executor for each sitemap
         this.releaseSitemapExecutor = false;
         if ( this.wrappingProcessor.parent == null ) {
-            final ComponentManager manager = this.wrappingProcessor.manager;
-            if ( manager.hasComponent(SitemapExecutor.ROLE) ) {
+            final ServiceManager manager = this.wrappingProcessor.parentServiceManager;
+            
+            // FIXME(SW): do we really need to check hasService()? If a default class is defined
+            // in cocoon.roles, the lookup is always successful.
+            if ( manager.hasService(SitemapExecutor.ROLE) ) {
                 try {
                     this.sitemapExecutor = (SitemapExecutor) manager.lookup(SitemapExecutor.ROLE);
                     this.releaseSitemapExecutor = true;
-                } catch (ComponentException ce) {
+                } catch (ServiceException ce) {
                     // this should not happen as we called hasComponent first
                     // but we ignore it
                     this.getLogger().error("Unable to lookup sitemap executor.", ce);
@@ -117,16 +130,20 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 	}
 
 	/** Set the processor data, result of the treebuilder job */
-	public void setProcessorData(ComponentManager manager, ProcessingNode rootNode, List disposableNodes) {
-		if (this.sitemapComponentManager != null) {
+	public void setProcessorData(ProcessingNode rootNode, List disposableNodes) {
+	    if (this.rootNode != null) {
 			throw new IllegalStateException("setProcessorData() can only be called once");
 		}
 
-		this.sitemapComponentManager = manager;
-		this.serviceManager = new ComponentManagerWrapper(manager);
 		this.rootNode = rootNode;
 		this.disposableNodes = disposableNodes;
+        
    	}
+    
+    /** Get the component info for this processor */
+    public ProcessorComponentInfo getComponentInfo() {
+        return this.componentInfo;
+    }
 
 	/** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
@@ -163,7 +180,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
                         // and now check for new configurations
                         for(int m = 0; m < childs.length; m++) {
 
-                            final String r = this.wrappingProcessor.roleManager.getRoleForName(childs[m].getName());
+                            final String r = this.wrappingProcessor.rootRoleManager.getRoleForName(childs[m].getName());
                             this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
                                                                              (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
                         }
@@ -237,7 +254,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         InvokeContext context = new InvokeContext( true );
 
         context.enableLogging(getLogger());
-        context.setLastProcessor(this);
         try {
             if ( process(environment, context) ) {
                 return context.getInternalPipelineDescription(environment);
@@ -267,7 +283,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     		try {
 
     	        // and now process
-    	        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
+    	        EnvironmentHelper.enterProcessor(this, this.componentInfo.getServiceManager(), environment);
 
     	        final Redirector oldRedirector = context.getRedirector();
 
@@ -275,6 +291,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     	        TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
     	        setupLogger(redirector);
     	        context.setRedirector(redirector);
+            context.service(this.componentInfo.getServiceManager());
+            context.setLastProcessor(this);
 
     	        try {
     	            boolean success = this.rootNode.invoke(environment, context);
@@ -356,8 +374,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         // Ensure it won't be used anymore
         this.rootNode = null;
-        if ( this.releaseSitemapExecutor ) {
-            this.wrappingProcessor.manager.release( (Component)this.sitemapExecutor );
+        if (this.releaseSitemapExecutor) {
+            this.componentInfo.getServiceManager().release(this.sitemapExecutor);
             this.sitemapExecutor = null;
         }
 	}
@@ -399,4 +417,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     public SitemapExecutor getSitemapExecutor() {
         return this.sitemapExecutor;
     }
+    
+
 }

@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToNodeBuilder.java,v 1.6 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: RedirectToNodeBuilder.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
@@ -94,7 +94,7 @@ public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
 
             this.callNode.setResource(
                 resources,
-                this.resourceName
+                VariableResolverFactory.getResolver(this.resourceName, this.manager)
             );
         }
     }

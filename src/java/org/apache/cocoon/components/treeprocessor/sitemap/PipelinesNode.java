@@ -16,9 +16,9 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
@@ -31,12 +31,12 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.13 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.14 2004/07/15 12:49:50 sylvain Exp $
  */
 public final class PipelinesNode extends SimpleParentProcessingNode
-                                 implements Composable, Disposable {
+                                 implements Serviceable, Disposable {
 
-    private ComponentManager manager;
+    private ServiceManager manager;
 
     private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
@@ -53,9 +53,9 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      * Keep the component manager used everywhere in the tree so that we can
      * cleanly dispose it.
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
-        this.errorHandlerHelper.compose(manager);
+        this.errorHandlerHelper.service(manager);
     }
 
     public void enableLogging(Logger logger) {
@@ -86,7 +86,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         super.invoke(env, context);
 
         // Recompose context (and pipelines) to the local component manager
-        context.recompose(this.manager);
+        context.service(this.manager);
 
         try {
             // FIXME : is there any useful information that can be passed as top-level parameters,

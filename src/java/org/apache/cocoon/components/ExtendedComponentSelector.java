@@ -15,13 +15,22 @@
  */
 package org.apache.cocoon.components;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManager;
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.WrapperComponentManager;
+import org.apache.avalon.framework.component.WrapperComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.WrapperServiceSelector;
 import org.apache.cocoon.components.container.ComponentLocatorImpl;
 
 /**
@@ -29,7 +38,7 @@ import org.apache.cocoon.components.container.ComponentLocatorImpl;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.10 2004/07/14 19:39:09 cziegeler Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.11 2004/07/15 12:49:49 sylvain Exp $
  */
 
 public class ExtendedComponentSelector 
@@ -291,6 +300,10 @@ public class ExtendedComponentSelector
      * Does this selector or its parent have the given hint ?
      */
     public boolean hasComponent(Object hint) {
+        if (hint == null) {
+            hint = this.defaultHint;
+        }
+
         boolean exists = super.hasComponent( hint );
         if ( !exists && this.parentSelector != null ) {
             exists = this.parentSelector.hasComponent( hint );
@@ -306,6 +319,10 @@ public class ExtendedComponentSelector
      * @return <code>true</code> if this selector has the specified hint
      */
     protected boolean hasDeclaredComponent(Object hint) {
+        if (hint == null) {
+            hint = this.defaultHint;
+        }
+
         return super.hasComponent(hint);
     }
 
@@ -321,7 +338,37 @@ public class ExtendedComponentSelector
             throw new ComponentException(null, "Parent selector is already set");
         }
         this.parentLocator = locator;
-        this.parentSelector = (ExtendedComponentSelector) locator.lookup();
+        
+        // Get the parent, unwrapping it as far as needed
+        Object parent = locator.lookup();
+        
+        
+        //FIXME(SW): this is a BIG TIME HACK, as there is no public way to access the wrapper
+        // selector which we need to properly establish the chain.
+        try {
+            Field componentField = WrapperComponentSelector.class.getDeclaredField("m_selector");
+            componentField.setAccessible(true);
+            Field serviceField = WrapperServiceSelector.class.getDeclaredField("m_selector");
+            serviceField.setAccessible(true);
+            
+            while(true) {
+                if (parent instanceof WrapperServiceSelector) {
+                    parent = serviceField.get(parent);
+                } else if (parent instanceof WrapperComponentSelector) {
+                    parent = componentField.get(parent);
+                } else {
+                    break;
+                }
+            }
+        } catch(Exception e) {
+            throw new CascadingRuntimeException("Cannot unwrap selector", e);
+        }
+                
+        if (parent instanceof ExtendedComponentSelector) {
+            this.parentSelector = (ExtendedComponentSelector)parent;
+        } else {
+            throw new IllegalArgumentException("Parent selector is not an extended component selector (" + parent + ")");
+        }
     }
 
     /* (non-Javadoc)

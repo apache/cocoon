@@ -15,32 +15,32 @@
  */
 package org.apache.cocoon.components.treeprocessor.variables;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.sitemap.PatternException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.modules.input.InputModule;
+import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.sitemap.PatternException;
+
 /**
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.10 2004/05/06 19:27:55 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.11 2004/07/15 12:49:51 sylvain Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
-    private ComponentManager manager;
-    private ComponentSelector selector;
+    private ServiceManager manager;
+    private ServiceSelector selector;
     private List tokens;
     private boolean needsMapStack;
     
@@ -62,7 +62,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static Token CLOSE_TOKEN = new Token(CLOSE);    
     private static Token EMPTY_TOKEN = new Token(EXPR);
     
-    public PreparedVariableResolver(String expr, ComponentManager manager) throws PatternException {
+    public PreparedVariableResolver(String expr, ServiceManager manager) throws PatternException {
         
         super(expr);
         this.manager = manager;
@@ -189,8 +189,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         if (this.selector == null) {
             try {
                 // First access to a module : lookup selector
-                this.selector = (ComponentSelector)this.manager.lookup(InputModule.ROLE + "Selector");
-            } catch(ComponentException ce) {
+                this.selector = (ServiceSelector)this.manager.lookup(InputModule.ROLE + "Selector");
+            } catch(ServiceException ce) {
                 throw new PatternException("Cannot access input modules selector", ce);
             }
         }
@@ -199,7 +199,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         InputModule module;
         try {
             module = (InputModule)this.selector.select(moduleName);
-        } catch(ComponentException ce) {
+        } catch(ServiceException ce) {
             throw new PatternException("Cannot get InputModule named '" + moduleName +
                 "' in expression '" + this.originalExpr + "'", ce);
         }
@@ -324,7 +324,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                 Object result = im.getAttribute(expr.getStringValue(), null, objectModel);
                 return new Token(EXPR, result==null ? "" : result.toString());
 
-            } catch(ComponentException compEx) {
+            } catch(ServiceException compEx) {
                 throw new PatternException("Cannot get module '" + moduleName +
                     "' in expression '" + this.originalExpr + "'", compEx);
                                     

@@ -17,9 +17,9 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
@@ -33,16 +33,16 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ErrorHandlerHelper.java,v 1.5 2004/03/13 22:02:30 unico Exp $
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
  */
-public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable {
+public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceable {
 
-    private ComponentManager manager;
+    private ServiceManager manager;
 
     /**
      * The component manager is used to create notifying builders.
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 
@@ -80,7 +80,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable
 			// Build a new context
 			errorContext = new InvokeContext();
 			errorContext.enableLogging(getLogger());
-			errorContext.compose(this.manager);
+			errorContext.service(this.manager);
 			
 			nodeSuccessful = node.invoke(env, errorContext);
         } catch (Exception subEx) {

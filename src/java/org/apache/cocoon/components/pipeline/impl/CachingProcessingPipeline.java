@@ -15,7 +15,11 @@
  */
 package org.apache.cocoon.components.pipeline.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.Iterator;
+
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
@@ -28,16 +32,12 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
 
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.Iterator;
-
 /**
  * The CachingProcessingPipeline
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.6 2004/05/06 19:34:13 upayavira Exp $
+ * @version CVS $Id: CachingProcessingPipeline.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
  */
 public class CachingProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -138,7 +138,7 @@ public class CachingProcessingPipeline
                     this.connect(environment, prev, next);
                 }
 
-            } catch ( ComponentException e ) {
+            } catch ( ServiceException e ) {
                 throw new ProcessingException("Could not connect pipeline.", e);
             }
     }

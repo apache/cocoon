@@ -20,20 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  * Node handler for calling functions and resuming continuations in
@@ -41,94 +35,74 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.11 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.12 2004/07/15 12:49:50 sylvain Exp $
  */
-public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
-    protected List parameters;
+public class CallFunctionNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
+
+    protected Map parameters;
     protected VariableResolver functionName;
     protected VariableResolver continuationId;
-    protected ComponentManager manager;
+    protected String[] argumentNames;
     protected Interpreter interpreter;
 
-    public static List resolveList(List expressions, ComponentManager manager, InvokeContext context, Map objectModel)
-        throws PatternException {
-        int size;
-        if (expressions == null || (size = expressions.size()) == 0)
-            return Collections.EMPTY_LIST;
-
-        List result = new ArrayList(size);
-
-        for (int i = 0; i < size; i++) {
-            Interpreter.Argument arg = (Interpreter.Argument)expressions.get(i);
-            String value = VariableResolverFactory.getResolver(arg.value, manager).resolve(context, objectModel);
-            result.add(new Interpreter.Argument(arg.name, value));
-        }
-
-        return result;
-    }
-
-    public CallFunctionNode(VariableResolver functionName, VariableResolver continuationId) {
+    public CallFunctionNode(VariableResolver functionName, VariableResolver continuationId, String[] argumentNames) {
         super(null);
         this.functionName = functionName;
         this.continuationId = continuationId;
+        this.argumentNames = argumentNames;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode#setParameters(java.util.Map)
+     */
+    public void setParameters(Map parameterMap) {
+        this.parameters = parameterMap;
     }
 
     public void setInterpreter(Interpreter interp) throws Exception {
         this.interpreter = interp;
     }
 
-    /**
-     * Obtain the configuration specific to this node type and update
-     * the internal state.
-     *
-     * @param config a <code>Configuration</code> value
-     * @exception ConfigurationException if an error occurs
-     */
-    public void configure(Configuration config) throws ConfigurationException {
+    public boolean invoke(Environment env, InvokeContext context) throws Exception {
+        
+        Map objectModel = env.getObjectModel();
+        
+        // Resolve parameters
+        Parameters params = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        
+        // Build the list of positional arguments
         //TODO (SW): Deprecate this in the future.
         // It has be found to be bad practice to pass sitemap parameters
         // as function arguments, as these are name-value pairs in the sitemap
         // and positional arguments in the flowscript. If the user doesn't respect
         // the argument order, this leads to difficult to solve bugs.
-        parameters = new ArrayList();
-
-        Configuration[] params = config.getChildren("parameter");
-        for (int i = 0; i < params.length; i++) {
-            Configuration param = params[i];
-            String name = param.getAttribute("name", null);
-            String value = param.getAttribute("value", null);
-            parameters.add(new Interpreter.Argument(name, value));
-        }
-    }
-
-    public void compose(ComponentManager manager) {
-        this.manager = manager;
-    }
-
-    public boolean invoke(Environment env, InvokeContext context) throws Exception {
-        List params = null;
-
-        // Resolve parameters
-        if (parameters != null) {
-            params = resolveList(parameters, manager, context, env.getObjectModel());
+        List args;
+        if (argumentNames.length != 0) {
+            args = new ArrayList(argumentNames.length);
+            for (int i = 0; i < argumentNames.length; i++) {
+                String name = argumentNames[i];
+                args.add(new Interpreter.Argument(name, params.getParameter(name)));
+            }
+        } else {
+            args = Collections.EMPTY_LIST;
         }
 
-        String continuation = continuationId.resolve(context, env.getObjectModel());
+        String continuation = continuationId.resolve(context, objectModel);
 
         // If the continuation id is not null, it takes precedence over
         // the function call, so we invoke it here.
         if (continuation != null && continuation.length() > 0) {
-            interpreter.handleContinuation(continuation, params, context.getRedirector());
+            interpreter.handleContinuation(continuation, args, context.getRedirector());
             return true;
         }
 
         // We don't have a continuation id passed in <map:call>, so invoke
         // the specified function
 
-        String name = functionName.resolve(context, env.getObjectModel());
+        String name = functionName.resolve(context, objectModel);
 
         if (name != null && name.length() > 0) {
-            interpreter.callFunction(name, params, context.getRedirector());
+            interpreter.callFunction(name, args, context.getRedirector());
             return true;
         }
         

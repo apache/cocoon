@@ -18,8 +18,8 @@ package org.apache.cocoon;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
@@ -29,7 +29,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.10 2004/06/02 20:11:35 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.11 2004/07/15 12:49:49 sylvain Exp $
  */
 public interface Processor extends Component {
 
@@ -39,15 +39,15 @@ public interface Processor extends Component {
     public static class InternalPipelineDescription {
         
         public InternalPipelineDescription(ProcessingPipeline pp, 
-                                           ComponentSelector selector,
-                                           ComponentManager manager) {
+                                           ServiceSelector selector,
+                                           ServiceManager manager) {
             this.processingPipeline = pp;
             this.pipelineSelector = selector;
             this.pipelineManager = manager;
         }
         public ProcessingPipeline processingPipeline;
-        public ComponentManager pipelineManager;
-        public ComponentSelector pipelineSelector;
+        public ServiceManager pipelineManager;
+        public ServiceSelector pipelineSelector;
         public Processor lastProcessor;
         public String prefix;
         public String uri;

@@ -23,21 +23,30 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.WrapperServiceManager;
+import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.container.CocoonComponentManager;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
+import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.reading.Reader;
+import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.sitemap.SitemapComponentSelector;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.regexp.RE;
 
@@ -45,19 +54,19 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.12 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.13 2004/07/15 12:49:50 sylvain Exp $
  */
 public class SitemapLanguage extends DefaultTreeBuilder {
 
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
-
+    
     /**
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ComponentManager createComponentManager(Configuration tree) throws Exception {
+    protected ServiceManager createServiceManager(Configuration tree) throws Exception {
 
         // Get the map:component node
         // Don't check namespace here : this will be done by node builders
@@ -70,25 +79,122 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             config = new DefaultConfiguration("", "");
         }
 
-        final CocoonComponentManager manager = new CocoonComponentManager(this.parentManager);
+        CocoonComponentManager newManager = new CocoonComponentManager(new WrapperComponentManager(this.parentProcessorManager));
 
-        manager.enableLogging(getLogger());
+        newManager.enableLogging(getLogger());
 
-        final LoggerManager loggerManager = (LoggerManager) this.parentManager.lookup(LoggerManager.ROLE);
-        manager.setLoggerManager(loggerManager);
+        final LoggerManager loggerManager = (LoggerManager) this.parentProcessorManager.lookup(LoggerManager.ROLE);
+        newManager.setLoggerManager(loggerManager);
 
         if (null != this.context ) {
-            manager.contextualize(this.context);
+            newManager.contextualize(this.context);
         }
 
-        if (null != this.roleManager) {
-            manager.setRoleManager(this.roleManager);
+        if (null != this.processorRoleManager) {
+            newManager.setRoleManager(this.processorRoleManager);
         }
 
-        manager.configure(config);
-        manager.initialize();
+        newManager.configure(config);
+        newManager.initialize();
 
-        return manager;
+        // Extract additional component info
+        // Default component types
+        setupDefaultType(config, Action.ROLE, "actions");
+        setupDefaultType(config, Matcher.ROLE, "matchers");
+        setupDefaultType(config, Selector.ROLE, "selectors");
+        setupDefaultType(config, Generator.ROLE, "generators");
+        setupDefaultType(config, Transformer.ROLE, "transformers");
+        setupDefaultType(config, Serializer.ROLE, "serializers");
+        setupDefaultType(config, Reader.ROLE, "readers");
+        setupDefaultType(config, ProcessingPipeline.ROLE, "pipes");
+        
+        // Labels and pipeline hints
+        setupLabelsAndPipelineHints(config, Generator.ROLE, "generators");
+        setupLabelsAndPipelineHints(config, Transformer.ROLE, "transformers");
+        setupLabelsAndPipelineHints(config, Serializer.ROLE, "serializers");
+        
+        // Mime types
+        setupMimeTypes(config, Serializer.ROLE, "serializers");
+        setupMimeTypes(config, Reader.ROLE, "readers");
+        
+        // Wrap the ComponentManager in a ServiceManager
+        ServiceManager result = new WrapperServiceManager(newManager);
+        
+        // Register manager and prevent further modifications
+        getProcessor().getComponentInfo().setServiceManager(result);
+        getProcessor().getComponentInfo().lock();
+        
+        return result;
+    }
+    
+    /**
+     * Setup the default compnent type for a given role.
+     * 
+     * @param componentsConfig the &lt;map:components&gt; configuration
+     * @param role the compomonent role
+     * @param childName the name of the configuration element defining <code>role</code>'s selector
+     */
+    private void setupDefaultType(Configuration componentsConfig, String role, String childName) {
+        Configuration selectorConfig = componentsConfig.getChild(childName, false);
+        if (selectorConfig != null) {
+            getProcessor().getComponentInfo().setDefaultType(role, selectorConfig.getAttribute("default", null));
+        }
+    }
+    
+    /**
+     * Setup view labels and pipeline hints for the components of a given role
+     */
+    private void setupLabelsAndPipelineHints(Configuration componentsConfig, String role, String childName)
+        throws ConfigurationException {
+        
+        Configuration selectorConfig = componentsConfig.getChild(childName, false);
+        ProcessorComponentInfo info = getProcessor().getComponentInfo();
+        if (selectorConfig != null) {
+            Configuration[] configs = selectorConfig.getChildren();
+            for (int configIdx = 0; configIdx < configs.length; configIdx++) {
+                Configuration config = configs[configIdx];
+                String name = config.getAttribute("name");
+                
+                // Labels
+                String label = config.getAttribute("label", null);
+                if (label != null) {
+                    StringTokenizer st = new StringTokenizer(label, " ,", false);
+                    String[] labels = new String[st.countTokens()];
+                    for (int tokenIdx = 0; tokenIdx < labels.length; tokenIdx++) {
+                        labels[tokenIdx] = st.nextToken();
+                    }
+                    info.setLabels(role, name, labels);
+                } else {
+                    // Set no labels, overriding those defined in the parent sitemap, if any
+                    info.setLabels(role, name, null);
+                }
+
+                // Pipeline hints
+                String pipelineHint = config.getAttribute("hint", null);
+                info.setPipelineHint(role, name, pipelineHint);
+            }
+        }
+    }
+    
+    /**
+     * Setup mime types for components of a given role
+     */
+    private void setupMimeTypes(Configuration componentsConfig, String role, String childName)
+        throws ConfigurationException {
+
+        Configuration selectorConfig = componentsConfig.getChild(childName, false);
+        ProcessorComponentInfo info = getProcessor().getComponentInfo();
+        if (selectorConfig != null) {
+            Configuration[] configs = selectorConfig.getChildren();
+            for (int i = 0; i < configs.length; i++) {
+                Configuration config = configs[i];
+                info.setMimeType(
+                    role,
+                    config.getAttribute("name"),
+                    config.getAttribute("mime-type", null)
+                );
+            }
+        }
     }
 
     //---- Views management
@@ -205,20 +311,11 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         // 1 - labels defined on the component
         if (role != null && role.length() > 0) {
-            SitemapComponentSelector selector = null;
-            try {
-                selector = (SitemapComponentSelector)this.manager.lookup(role + "Selector");
-                String[] compLabels = selector.getLabels(hint);
-                if (compLabels != null) {
-                    for (int i = 0; i < compLabels.length; i++) {
-                        labels.add(compLabels[i]);
-                    }
+            String[] compLabels = getProcessor().getComponentInfo().getLabels(role, hint);
+            if (compLabels != null) {
+                for (int i = 0; i < compLabels.length; i++) {
+                    labels.add(compLabels[i]);
                 }
-            } catch(Exception e) {
-                // Ignore (no selector for this role)
-                getLogger().warn("No selector for role " + role);
-            } finally {
-                this.manager.release( selector );
             }
         }
 
@@ -341,18 +438,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
         // firstly, determine if any pipeline-hints are defined at the component level
         // if so, inherit these pipeline-hints (these hints can be overriden by local pipeline-hints)
-        SitemapComponentSelector selector = null;
-        try {
-            selector = (SitemapComponentSelector)this.manager.lookup(role + "Selector");
-            componentHintParams = selector.getPipelineHint(hint);
-        } catch (Exception ex) {
-            if (getLogger().isWarnEnabled()) {
-                getLogger().warn("pipeline-hints: Component Exception: could not " +
-                             "check for component level hints " + ex);
-            }
-        } finally {
-            this.manager.release(selector);
-        }
+        componentHintParams = getProcessor().getComponentInfo().getPipelineHint(role, hint);
 
         if (componentHintParams != null) {
             hintParams = componentHintParams;
@@ -391,16 +477,16 @@ public class SitemapLanguage extends DefaultTreeBuilder {
                                        + "\npipeline-hints: (value) [implicit] true");
                     }
 
-                    params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.manager),
-                                VariableResolverFactory.getResolver("true", this.manager));
+                    params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.processorManager),
+                                VariableResolverFactory.getResolver("true", this.processorManager));
                 } else {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("pipeline-hints: (name) " + nameValuePair[0]
                                           + "\npipeline-hints: (value) " + nameValuePair[1]);
                     }
 
-                    params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.manager),
-                                VariableResolverFactory.getResolver(nameValuePair[1], this.manager));
+                    params.put( VariableResolverFactory.getResolver(nameValuePair[0], this.processorManager),
+                                VariableResolverFactory.getResolver(nameValuePair[1], this.processorManager));
                 }
             } catch(PatternException pe) {
                 String msg = "Invalid pattern '" + hintParams + "' at " + statement.getLocation();
@@ -423,5 +509,5 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         } else {
             return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
         }
-    }
+    }    
 }

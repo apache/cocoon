@@ -19,19 +19,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.NamedProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
 import org.apache.cocoon.environment.Environment;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNode.java,v 1.4 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ActionSetNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
  */
 
-public class ActionSetNode extends SimpleSelectorProcessingNode
+public class ActionSetNode extends AbstractProcessingNode
   implements NamedProcessingNode {
       
     public static final String CALLER_PARAMETERS = ActionSetNode.class.getName() + "/CallerParameters";

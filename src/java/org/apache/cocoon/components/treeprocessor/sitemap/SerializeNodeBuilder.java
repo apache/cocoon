@@ -21,6 +21,7 @@ import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 
+import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
 
 import java.util.Collection;
@@ -29,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SerializeNodeBuilder.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: SerializeNodeBuilder.java,v 1.4 2004/07/15 12:49:50 sylvain Exp $
  */
 
 public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
@@ -47,7 +48,12 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        String type = this.treeBuilder.getTypeForStatement(config, Serializer.ROLE + "Selector");
+        String type = this.treeBuilder.getTypeForStatement(config, Serializer.ROLE);
+
+        String mimeType = config.getAttribute("mime-type", null);
+        if (mimeType == null) {
+            mimeType = this.treeBuilder.getProcessor().getComponentInfo().getMimeType(Serializer.ROLE, type);
+        }
 
         this.views = ((SitemapLanguage)this.treeBuilder).getViewsForStatement(Serializer.ROLE, type, config);
         this.pipelineHints = ((SitemapLanguage)this.treeBuilder).getHintsForStatement(Serializer.ROLE, type, config);
@@ -55,7 +61,7 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
         this.node = new SerializeNode(
             type,
             VariableResolverFactory.getResolver(config.getAttribute("src", null), this.manager),
-            VariableResolverFactory.getResolver(config.getAttribute("mime-type", null), this.manager),
+            VariableResolverFactory.getResolver(mimeType, this.manager),
             config.getAttributeAsInteger("status-code", -1)
         );
         this.node.setPipelineHints(this.pipelineHints);

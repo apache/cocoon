@@ -28,7 +28,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActNodeBuilder.java,v 1.5 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ActNodeBuilder.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
  */
 public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
                             implements LinkedProcessingNodeBuilder {
@@ -58,7 +58,7 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
 
             String name = config.getAttribute("name", null);
             String source = config.getAttribute("src", null);
-            String type = this.treeBuilder.getTypeForStatement(config, Action.ROLE + "Selector");
+            String type = this.treeBuilder.getTypeForStatement(config, Action.ROLE);
 
             ActTypeNode actTypeNode = new ActTypeNode(
                 type,
