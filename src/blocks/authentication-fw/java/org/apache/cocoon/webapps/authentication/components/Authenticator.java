@@ -63,6 +63,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.MediaManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
+import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.webapps.session.components.SessionManager;
@@ -86,7 +87,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.3 2003/04/27 14:45:04 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.4 2003/05/01 09:49:14 cziegeler Exp $
 */
 public final class Authenticator 
     extends AbstractLogEnabled
@@ -216,7 +217,7 @@ public final class Authenticator
                 
                 handler = new UserHandler(configuration);
                 
-                SessionContext context = handler.getContext();
+                AuthenticationContext context = handler.createContext();
 
                 MediaManager mediaManager = null;
                 String mediaType;
@@ -248,7 +249,7 @@ public final class Authenticator
                     authNode.appendChild(specialElement);
 
                     // store the authentication data in the context
-                    context.setNode("/" + configuration.getName(), doc);
+                    context.init(doc);
 
                     // And now load applications
                     boolean loaded = true;

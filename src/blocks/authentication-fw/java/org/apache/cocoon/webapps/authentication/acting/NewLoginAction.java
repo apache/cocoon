@@ -60,7 +60,7 @@ import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.components.Manager;
-import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceParameters;
 
 /**
@@ -71,7 +71,7 @@ import org.apache.excalibur.source.SourceParameters;
  *  into the temporary context.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NewLoginAction.java,v 1.1 2003/04/27 14:45:03 cziegeler Exp $
+ * @version CVS $Id: NewLoginAction.java,v 1.2 2003/05/01 09:49:14 cziegeler Exp $
 */
 public final class NewLoginAction
 extends ComposerAction
@@ -115,12 +115,12 @@ implements ThreadSafe {
         Manager authManager = null;
         try {
             authManager = (Manager) this.manager.lookup(Manager.ROLE);
-            if ( authManager.login( handlerName, 
-                                    par.getParameter("application", null),
-                                    authenticationParameters)) {
+            UserHandler handler = authManager.login( handlerName, 
+                                       par.getParameter("application", null),
+                                       authenticationParameters);
+            if ( handler != null) {
                 // success
-                RequestState state = RequestState.getState();
-                map = state.getHandler().getContext().getContextInfo();
+                map = handler.getContext().getContextInfo();
 
             }
         } finally {

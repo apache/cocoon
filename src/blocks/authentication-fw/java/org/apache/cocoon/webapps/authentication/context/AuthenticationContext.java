@@ -61,13 +61,13 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
-import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
+import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -80,7 +80,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.2 2003/04/27 14:45:03 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.3 2003/05/01 09:49:14 cziegeler Exp $
 */
 public final class AuthenticationContext
 implements SessionContext {
@@ -90,21 +90,32 @@ implements SessionContext {
     private SessionContext  authContext;
     private String          handlerName;
     private String          applicationName;
-
-    public AuthenticationContext() {
+    private boolean        initialized;
+    
+    public AuthenticationContext(UserHandler handler) {
         this.name = AuthenticationConstants.SESSION_CONTEXT_NAME;
 
-        RequestState state = RequestState.getState();
-        this.handler = state.getHandler();
+        this.handler = handler;
         this.handlerName = this.handler.getHandlerName();
-        this.applicationName = state.getApplicationName();
         try {
             this.authContext = new SimpleSessionContext();
         } catch (ProcessingException pe) {
             throw new CascadingRuntimeException("Unable to create simple context.", pe);
         }
     }
-
+    
+    public void setApplicationName(String name) {
+        this.applicationName = name;
+    }
+    
+    public void init(Document doc) 
+    throws ProcessingException {
+        if ( initialized ) {
+            throw new ProcessingException("The context can only be initialized once.");
+        }
+        this.authContext.setNode("/", doc.getFirstChild());
+    }
+    
     /** Set the name of the context.
      *  This method must be invoked in the init phase.
      *  In addition a load and a save resource can be provided.
