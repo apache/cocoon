@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ import org.apache.cocoon.util.IOUtils;
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-12 21:12:35 $
+ * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-13 12:09:35 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -267,23 +269,48 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             return codeGenerator.generateCode(tranBuilder, input, filename);
     }
 
+    LinkedList logicSheetList = new LinkedList();
+
+    /**
+     * Add logicsheet list to the code generator.
+     * @param codeGenerator The code generator
+     */
+    protected void addLogicsheetsToGenerator(LogicsheetCodeGenerator codeGenerator)
+        throws MalformedURLException, IOException, SAXException {
+
+        if (codeGenerator == null) {
+            getLogger().debug("This should never happen: codeGenerator is null");
+            throw new SAXException("codeGenerator must never be null.");
+        }
+
+        // Walk backwards and remove duplicates.
+        LinkedList newLogicSheetList = new LinkedList();
+        for(int i = logicSheetList.size()-1;i>=0;i--) {
+            Logicsheet logicsheet = (Logicsheet) logicSheetList.get(i);
+            if(newLogicSheetList.indexOf(logicsheet) == -1)
+                newLogicSheetList.addFirst(logicsheet);
+        }
+
+        // Add the list of logicsheets now.
+        ListIterator iterator = newLogicSheetList.listIterator();
+        while(iterator.hasNext()) {
+            Logicsheet logicsheet = (Logicsheet) iterator.next();
+            codeGenerator.addLogicsheet(logicsheet);
+        }
+    }
+
     /**
      * Add a logicsheet to the code generator.
-     * @param codeGenerator The code generator
      * @param logicsheetLocation Location of the logicsheet to be added
      * @param document The input document
      * @exception MalformedURLException If location is invalid
      * @exception IOException IO Error
      * @exception SAXException Logicsheet parse error
      */
-    protected void addLogicsheet(LogicsheetCodeGenerator codeGenerator, LanguageDescriptor language, String logicsheetLocation, EntityResolver entityResolver)
+    protected void addLogicsheetToList(LanguageDescriptor language, String logicsheetLocation, EntityResolver entityResolver)
         throws MalformedURLException, IOException, SAXException {
             String systemId = null;
             InputSource inputSource = null;
-            if (codeGenerator == null) {
-                getLogger().debug("This should never happen: codeGenerator is null");
-                throw new SAXException("codeGenerator must never be null.");
-            }
 
             URL url = null;
             URLFactory urlFactory = null;
@@ -317,7 +344,9 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             if (entry.isFile()) {
                 this.addDependency(IOUtils.getFullFilename(entry.getFile()));
             }
-            codeGenerator.addLogicsheet(logicsheet);
+
+            logicSheetList.add(logicsheet);
+
             Map namespaces = logicsheet.getNamespaces();
             if(!logicsheetLocation.equals(language.getLogicsheet()))
             {
@@ -329,7 +358,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                         if(namedLogicsheetName!= null && !logicsheetLocation.equals(namedLogicsheetName)) {
                             getLogger().debug("Adding embedded logic sheet for " + namespace + ":" + namedLogicsheetName);
                             // Add embedded logic sheets too.
-                            addLogicsheet(codeGenerator, language, namedLogicsheetName, entityResolver);
+                            addLogicsheetToList(language, namedLogicsheetName, entityResolver);
                         }
                     }
                 }
@@ -548,12 +577,12 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                         String[] prefixNamingArray = (String[]) this.startPrefixes.get(i);
                         String namedLogicsheetName = this.language.getNamedLogicsheet(prefixNamingArray[0]);
                         if (namedLogicsheetName != null) {
-                            AbstractMarkupLanguage.this.addLogicsheet(this.logicsheetMarkupGenerator, language, 
-                                                namedLogicsheetName, resolver);
+                            AbstractMarkupLanguage.this.addLogicsheetToList(language, namedLogicsheetName, resolver);
                         }
                     }
                     // Add the language stylesheet (Always the last one)
-                    AbstractMarkupLanguage.this.addLogicsheet(this.logicsheetMarkupGenerator, language, this.language.getLogicsheet(), resolver);
+                    AbstractMarkupLanguage.this.addLogicsheetToList(language, this.language.getLogicsheet(), resolver);
+                    AbstractMarkupLanguage.this.addLogicsheetsToGenerator(this.logicsheetMarkupGenerator);
                 } catch (IOException ioe) {
                     throw new SAXException(ioe);
                 }

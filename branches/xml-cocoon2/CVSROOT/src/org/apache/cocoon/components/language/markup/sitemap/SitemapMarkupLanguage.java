@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-12 21:12:37 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-13 12:09:36 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -296,8 +296,8 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
                     int end = href.indexOf(quote);
                     href = href.substring(0, end);
                     try {
-                        SitemapMarkupLanguage.this.addLogicsheet(
-                            this.logicsheetMarkupGenerator, language,  href, this.resolver
+                        SitemapMarkupLanguage.this.addLogicsheetToList(
+                            language,  href, this.resolver
                         );
                     } catch (IOException ioe) {
                         log.warn("IOException in SitemapMarkupLanguage", ioe);
@@ -338,10 +338,8 @@ public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
                     if ("map:logicsheet".equals(qName)) {
                         String location = atts.getValue("location");
                         try {
-                            SitemapMarkupLanguage.this.addLogicsheet(
-                                this.logicsheetMarkupGenerator, language, 
-                                location,
-                                this.resolver
+                            SitemapMarkupLanguage.this.addLogicsheetToList(
+                                language, location,this.resolver
                             );
                         } catch (IOException ioe) {
                             log.warn("IOException in SitemapMarkupLanguage", ioe);

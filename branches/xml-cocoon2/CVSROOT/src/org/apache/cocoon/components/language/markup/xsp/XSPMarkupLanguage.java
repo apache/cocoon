@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-12 21:12:38 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-13 12:09:36 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 
@@ -359,9 +359,8 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
                     int end = href.indexOf(quote);
                     href = href.substring(0, end);
                     try {
-                        XSPMarkupLanguage.this.addLogicsheet(
-                            this.logicsheetMarkupGenerator, language, 
-                            href, this.resolver
+                        XSPMarkupLanguage.this.addLogicsheetToList(
+                            language, href, this.resolver
                         );
                     } catch (IOException ioe) {
                         log.warn("XSPMarkupLanguage.processingInstruction", ioe);
@@ -412,9 +411,8 @@ public class XSPMarkupLanguage extends AbstractMarkupLanguage {
                     if ("xsp:logicsheet".equals(qName)) {
                         String location = atts.getValue("location");
                         try {
-                            XSPMarkupLanguage.this.addLogicsheet(
-                                this.logicsheetMarkupGenerator, language, 
-                                location, this.resolver
+                            XSPMarkupLanguage.this.addLogicsheetToList(
+                                language, location, this.resolver
                             );
                         } catch (IOException ioe) {
                             log.warn("XSPMarkupLanguage.startElement", ioe);
