@@ -75,7 +75,11 @@
 	      <map:generate type="jxforms" src="wizard/{1}.xml"/>
 	
 	      <!-- Personalize the look and feel of the form controls  -->
-	      <map:transform type="xalan" src="stylesheets/wizard2html.xsl" />
+	      <!--map:transform type="xalan" src="stylesheets/wizard2html.xsl" /-->
+
+          <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+          </map:transform>
 
 	      <!-- Transform the JXForms controls to HTML controls -->
 

@@ -1,30 +1,30 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <br/><br/><br/>
-    <table align="center" width="50%" cellspacing="20">
+  <header>
+    <title>JXForms: Calculator</title>
+    <tab href=".." title="Back"/>
+  </header>
+  <body>
+    <section>
+      <table width="760">
         <tr>
-            <td align="center">
-                <h1>
-                    Congratulations, Wizard Complete!
-                </h1>
-            </td>
+          <td>
+            <h4 class="samplesGroup"> Congratulations, Wizard Complete! </h4>
+          </td>
         </tr>
-
         <tr>
-            <td align="center" class="info">
-                <code>
-                    Your feedback form was processed successfully.
-                </code>
-            </td>
+          <td align="center">
+            <br/> Your feedback form was processed successfully. <br/>
+            <br/>
+          </td>
         </tr>
-         
         <tr>
-            <td align="center">
-                <h3>
-                    <a href="../">Go to home page.</a>
-                </h3>
-            </td>
+          <td align="center">
+            <br/>
+            <a href="../">Go to home page.</a>
+          </td>
         </tr>
-    </table>
+      </table>
+    </section>
+  </body>
 </document>
-

@@ -21,16 +21,13 @@
 		<xf:form method="post">
 			<xsl:copy-of select="@*" />
 			<br/>
-			<br/>
-			<br/>
-			<br/>
-			<table align="center" border="0">
+			<table align="left" border="0">
 				<tr>
-					<td align="center" colspan="3">
-						<h1>
+					<td align="left" colspan="3" with="760">
+						<h4 class="samplesGroup">
 							<xsl:value-of select="xf:label"/>
-							<hr/>
-						</h1>
+						</h4>
+						<br/>
 					</td>
 				</tr>
 				<xsl:if test="count(error/xf:violation) > 0">
@@ -103,15 +100,12 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="xf:output[@form]">
-		<div align="center">
-			<hr width="30%"/>
-			<br/>
-			<font size="-1">
-				<code> <xsl:value-of select="xf:label" /> : <xsl:copy-of
-					select="." /> </code>
-			</font>
-			<br/>
-		</div>
+	    <br clear="all"/>
+	    <br/>
+		<font size="-1">
+			<code> <xsl:value-of select="xf:label" /> : <xsl:copy-of
+				select="." /> </code>
+		</font>
 	</xsl:template>
 	<xsl:template match="xf:label"/>
 	<xsl:template match="xf:*">
