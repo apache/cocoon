@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+
+  <header>
+    <title>Aggregation</title>
+    <authors>
+      <person name="Upayavira" email="upayavira@apache.org"/>
+    </authors>
+  </header>
+
+<body>
+
+    <s1 title="Introduction">
+      <p>
+        Aggregation allows content from a number of sources to be combined into a single XML stream. 
+        An aggregator takes the place of the generator in a pipeline.
+      </p>
+      <p>
+        To merge content from <code>file1.html</code> to <code>file2.html</code>, you can use
+        something like the following in your sitemap:
+      </p>
+      <source>
+<![CDATA[
+  <map:match pattern="page.html">
+    <map:aggregate element="data">
+      <map:part src="file1.xml"/>
+      <map:part src="file2.xml"/>
+    </map:aggregate>
+    <map:transform .../>
+    ...
+    <map:serialize/>
+  </map:match>
+]]>
+      </source>
+      <p>All of the contents of the sources referenced by a <code>&lt;map:part&gt;</code> element will 
+         be wrapped by another element as specified in the <code>element</code> attribute of 
+         <code>&lt;map:aggregate&gt;</code>.</p>
+      <p>All sources referred to by the <code>src</code> attribute are standard Cocoon sources, and thus
+         can refer to files, to HTTP URLs, to the <code>cocoon:</code> protocol, or any other protocol 
+         available to Cocoon.</p>
+    </s1>
+    <s1 title="When to Use Aggregation">
+       <p>You can use aggregation when you have a fixed number of static sources that need to be merged. 
+          In such a case, you can name each source within your sitemap, as shown above.</p>
+       <p>If you need to merge a variable number of sources, or sources who's details aren't known at
+          design time (and can't be calculated with wildcards), then you should use either an 
+          <link href="../transformers/xinclude-transformer.html">XInclude Transformer</link> or an
+          <link href="../transformers/cinclude-transformer.html">CInclude Transformer</link>.</p>
+    </s1>
+
+</body>
+</document>
