@@ -69,7 +69,7 @@ import java.util.Locale;
  */
 public class SelectionListBuilder {
 
-    public static SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
+    public static StaticSelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
         StaticSelectionList selectionList = new StaticSelectionList(datatype);
         Convertor convertor = null;
         Convertor.FormatCache formatCache = new DefaultFormatCache();
