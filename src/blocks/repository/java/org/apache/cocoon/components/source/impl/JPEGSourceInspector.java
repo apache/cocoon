@@ -64,20 +64,37 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: JPEGSourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
+ * @version CVS $Id: JPEGSourceInspector.java,v 1.2 2003/10/23 16:57:17 unico Exp $
  */
 public class JPEGSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {
 
-    private String PROPERTY_NS = "http://apache.org/cocoon/inspector/jpeg/1.0";
-    private static String IMAGE_WIDTH_PROPERTY_NAME = "width";
-    private static String IMAGE_HEIGHT_PROPERTY_NAME = "height";
-
+    /**
+     * The namespace uri of the properties exposed by this SourceInspector.
+     * The value is <code>http://apache.org/cocoon/inspector/jpeg/1.0</code> .
+     */
+    private static final String PROPERTY_NS = "http://apache.org/cocoon/inspector/jpeg/1.0";
+    
+    /**
+     * <code>width</code> property name.
+     */
+    private static final String IMAGE_WIDTH_PROPERTY_NAME = "width";
+    
+    /**
+     * <code>height</code> property name.
+     */
+    private static final String IMAGE_HEIGHT_PROPERTY_NAME = "height";
+    
+    private static final String[] EXPOSED_PROPERTIES = new String[] {
+        PROPERTY_NS + "#" + IMAGE_WIDTH_PROPERTY_NAME,
+        PROPERTY_NS + "#" + IMAGE_HEIGHT_PROPERTY_NAME
+    };
+    
+    
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException {
 
         if ((namespace.equals(PROPERTY_NS)) && 
-            ((name.equals(IMAGE_WIDTH_PROPERTY_NAME)) || (name.equals(IMAGE_HEIGHT_PROPERTY_NAME))) && 
             (source.getURI().endsWith(".jpg")) && (isJPEGFile(source))) {
 
             if (name.equals(IMAGE_WIDTH_PROPERTY_NAME))
@@ -189,6 +206,10 @@ public class JPEGSourceInspector extends AbstractLogEnabled implements
                     in.close(); 
                 } catch (Exception e) {}
         }
+    }
+    
+    public String[] getExposedSourcePropertyTypes() {
+        return EXPOSED_PROPERTIES;
     }
 
 }

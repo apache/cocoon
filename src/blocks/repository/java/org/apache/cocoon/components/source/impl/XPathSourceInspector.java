@@ -73,15 +73,34 @@ import java.io.IOException;
  * This source inspector inspects XML files with a xpath expression
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.2 2003/10/23 16:57:57 unico Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe, Parameterizable {
 
-    private String propertynamespace = "http://apache.org/cocoon/inspector/xpath/1.0";
-    private String propertyname = "result";
-    private String extension = null;
-    private String xpath = null;
+    /**
+     * The default namespace uri of the property
+     * exposed by this SourceInspector.
+     * <p>
+     * The value is <code>http://apache.org/cocoon/inspector/xpath/1.0</code> .
+     * </p>
+     */
+    public static final String DEFAULT_PROPERTY_NS = 
+        "http://apache.org/cocoon/inspector/xpath/1.0";
+        
+    /**
+     * The default property name exposed by this
+     * SourceInspector.
+     * <p>
+     * The value is <code>result</code> .
+     * </p>
+     */
+    public static final String DEFAULT_PROPERTY_NAME = "result";
+    
+    private String propertynamespace;
+    private String propertyname;
+    private String extension;
+    private String xpath;
 
     private ComponentManager manager = null;
 
@@ -90,9 +109,8 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
     }
 
     public void parameterize(Parameters params)  {
-        this.propertynamespace = params.getParameter("namespace", 
-            "http://apache.org/cocoon/inspector/xpath/1.0");
-        this.propertyname = params.getParameter("name", "result");
+        this.propertynamespace = params.getParameter("namespace", DEFAULT_PROPERTY_NS);
+        this.propertyname = params.getParameter("name", DEFAULT_PROPERTY_NAME);
         this.extension = params.getParameter("extension", ".xml");
         this.xpath = params.getParameter("xpath", "/*");
     }
@@ -150,6 +168,10 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
         if (property!=null)
             return new SourceProperty[]{property};
         return null;
+    }
+    
+    public String[] getExposedSourcePropertyTypes() {
+        return new String[] {propertynamespace + "#" + propertyname};
     }
 
 }
