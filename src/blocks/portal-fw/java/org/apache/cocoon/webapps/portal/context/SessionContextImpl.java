@@ -95,7 +95,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.2 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.3 2003/05/06 17:08:53 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -287,8 +287,7 @@ implements SessionContext {
             }
         }
 
-        if (path.equals("layout") == true
-            || path.startsWith("layout/") == true) {
+        if (path.equals("layout") || path.startsWith("layout/") ) {
             try {
                 this.getLayoutDOM();
                 if (this.layoutDOM != null) list = DOMUtil.selectNodeList(this.layoutDOM, path);
@@ -297,8 +296,7 @@ implements SessionContext {
             }
         }
 
-        if (path.equals("configuration") == true
-            || path.startsWith("configuration/") == true) {
+        if (path.equals("configuration") || path.startsWith("configuration/") ) {
             try {
                 if (this.configurationDOM != null) list = DOMUtil.selectNodeList(this.configurationDOM, path);
             } catch (javax.xml.transform.TransformerException localException) {
@@ -306,8 +304,7 @@ implements SessionContext {
             }
         }
 
-        if (path.startsWith("coplet-data/") == true
-            || path.equals("coplet-data") == true) {
+        if (path.startsWith("coplet-data/") || path.equals("coplet-data") ) {
 
             if (this.statusProfile != null) {
                 if (this.copletID != null && this.copletNumber != null) {
@@ -357,9 +354,8 @@ implements SessionContext {
     public synchronized void setXML(String path, DocumentFragment fragment)
     throws ProcessingException {
         if (path != null) {
-            if (path.startsWith("/") == true) path = path.substring(1);
-            if (path.startsWith("coplet-data/") == true
-                || path.equals("coplet-data") == true) {
+            if (path.startsWith("/") ) path = path.substring(1);
+            if (path.startsWith("coplet-data/") || path.equals("coplet-data") ) {
 
                 if (this.statusProfile != null) {
                     if (this.copletID != null && this.copletNumber != null) {
@@ -390,7 +386,7 @@ implements SessionContext {
                             }
                         }
 
-                        if (this.copletPars.getParameter(PortalConstants.PARAMETER_PERSISTENT, "false").equals("true") == true) {
+                        if (this.copletPars.getParameter(PortalConstants.PARAMETER_PERSISTENT, "false").equals("true") ) {
                             this.profile.put(PortalConstants.PROFILE_SAVE_STATUS_FLAG, "true");
                         }
                     }

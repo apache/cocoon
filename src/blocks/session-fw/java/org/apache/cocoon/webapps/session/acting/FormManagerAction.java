@@ -48,54 +48,47 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.portal.generation;
+package org.apache.cocoon.webapps.session.acting;
 
-import java.io.IOException;
+import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.generation.ComposerGenerator;
-import org.apache.cocoon.webapps.portal.components.PortalManager;
+import org.apache.cocoon.acting.ComposerAction;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.session.FormManager;
-import org.xml.sax.SAXException;
 
 /**
- * This generator generates the portal for the current user.
+ * This action invokes the form manager to process incomming form values
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalGenerator.java,v 1.4 2003/05/06 17:08:53 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: FormManagerAction.java,v 1.1 2003/05/06 17:08:25 cziegeler Exp $
 */
-public final class PortalGenerator
-extends ComposerGenerator {
+public final class FormManagerAction
+extends ComposerAction
+implements ThreadSafe {
 
-    public void generate()
-    throws IOException, SAXException, ProcessingException {
-
-        PortalManager portal = null;
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String source,
+                   Parameters par)
+    throws ProcessingException {
         FormManager formManager = null;
         try {
             formManager = (FormManager)this.manager.lookup(FormManager.ROLE);
             formManager.processInputFields();
-
-            portal = (PortalManager) this.manager.lookup(PortalManager.ROLE);
-            this.xmlConsumer.startDocument();
-
-            final Request request = ObjectModelHelper.getRequest(this.objectModel);
-            if (request.getSession(false) != null) {
-
-                portal.showPortal(this.xmlConsumer, false, false);
-
-            }
-            this.xmlConsumer.endDocument();
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of PortalManager failed.", ce);
+            throw new ProcessingException("Error during lookup of formManager component.", ce);
         } finally {
-            this.manager.release( (Component)formManager);
-            this.manager.release(portal);
+            this.manager.release( (Component)formManager );
         }
+
+        return EMPTY_MAP;
     }
 
 }

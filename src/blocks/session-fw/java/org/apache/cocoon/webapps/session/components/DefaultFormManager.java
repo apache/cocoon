@@ -50,42 +50,38 @@
 */
 package org.apache.cocoon.webapps.session.components;
 
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.RequestLifecycleComponent;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.FormManager;
 import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.webapps.session.SessionManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.w3c.dom.DocumentFragment;
-import org.xml.sax.SAXException;
 
 /**
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: DefaultFormManager.java,v 1.2 2003/05/06 17:08:26 cziegeler Exp $
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled
-implements Composable, Component, Recomposable, Recyclable, FormManager, RequestLifecycleComponent {
+implements Composable, Component, FormManager, ThreadSafe
+     /*,RequestProcessingListener, SitemapProcessingListener*/ {
 
     /** This session attribute is used to store the information for the inputxml tags */
     private static final String ATTRIBUTE_INPUTXML_STORAGE = "org.apache.cocoon.webapps.session.InputXMLStorage";
@@ -93,65 +89,11 @@ implements Composable, Component, Recomposable, Recyclable, FormManager, Request
     /** The <code>ComponentManager</code> */
     private ComponentManager manager;
 
-    /** The request */
-    private Request    request;
-    /** The response */
-    private Response   response;
-    /** The object model */
-    private Map        objectModel;
-    /** The resolver */
-    private SourceResolver resolver;
-
     /**
      * Avalon Composer Interface
      */
     public void compose(ComponentManager manager) {
         this.manager = manager;
-    }
-
-    /**
-     * Recomposable
-     */
-    public void recompose( ComponentManager componentManager )
-    throws ComponentException {
-        this.manager = componentManager;
-    }
-
-    /**
-     * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
-     * used to process the request.
-     *  Set up the SessionManager.
-     *  This method is automatically called for each request. Do not invoke
-     *  this method by hand.
-     */
-    public void setup(SourceResolver resolver, Map objectModel)
-    throws ProcessingException, SAXException, IOException {
-        // no sync required
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN setup objectModel=" + objectModel);
-        }
-        this.objectModel = objectModel;
-        this.request = ObjectModelHelper.getRequest(objectModel);
-        this.response = ObjectModelHelper.getResponse(objectModel);
-        this.resolver = resolver;
-
-        this.processInputFields();
-
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END setup");
-        }
-    }
-
-    /**
-     *  Recycling the SessionManager.
-     *  This method is automatically called after each request. Do not invoke
-     *  this method by hand.
-     */
-    public void recycle() {
-        this.objectModel = null;
-        this.request = null;
-        this.response = null;
-        this.resolver = null;
     }
 
     /**
@@ -184,8 +126,7 @@ implements Composable, Component, Recomposable, Recyclable, FormManager, Request
     }
     
     /**
-     * Register input field and return the current value of the field.
-     * This is a private method and should not be invoked directly.
+     * @see FormManager.registerInputField(String, String, String, String)
      */
     public DocumentFragment registerInputField(String contextName,
                                                String path,
@@ -216,7 +157,9 @@ implements Composable, Component, Recomposable, Recyclable, FormManager, Request
         if (context == null) {
             throw new ProcessingException("SessionManager.registerInputField: Context not found " + contextName);
         }
-        Session session = this.request.getSession(false);
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Request request = ObjectModelHelper.getRequest( objectModel );
+        Session session = request.getSession(false);
         if (session == null) {
             throw new ProcessingException("SessionManager.registerInputField: Session is required for context " + contextName);
         }
@@ -243,41 +186,50 @@ implements Composable, Component, Recomposable, Recyclable, FormManager, Request
      * any values.
      * This is a private method and should not be invoked directly.
      */
-    private void processInputFields()
-    throws ProcessingException {
+    private void processInputFields(Map objectModel) {
+        // we only want to invoke the testing once per request
+        if (objectModel.containsKey(this.getClass().getName())) {
+            return;
+        }
+        objectModel.put(this.getClass().getName(), "done");
+
         // synchronized
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN processInputFields");
         }
 
-        final String formName = this.request.getParameter(SessionConstants.SESSION_FORM_PARAMETER);
+        final Request request = ObjectModelHelper.getRequest( objectModel );
+        final String formName = request.getParameter(SessionConstants.SESSION_FORM_PARAMETER);
         if ( null != formName ) {
-            final Session session = this.request.getSession(false);
+            final Session session = request.getSession(false);
             if (session != null) {
                 synchronized(session) {
                     final Map inputFields = (Map)session.getAttribute(ATTRIBUTE_INPUTXML_STORAGE);
                     if (inputFields != null) {
-                        final Enumeration keys = this.request.getParameterNames();
+                        final Enumeration keys = request.getParameterNames();
                         String   currentKey;
                         Object[] contextAndPath;
 
-                        while (keys.hasMoreElements() == true) {
+                        while (keys.hasMoreElements()) {
                             currentKey = (String)keys.nextElement();
-                            if (inputFields.containsKey(currentKey) == true) {
+                            if (inputFields.containsKey(currentKey)) {
                                 contextAndPath = (Object[])inputFields.get(currentKey);
                                 inputFields.remove(currentKey);
 
                                 SessionContext context = (SessionContext)contextAndPath[0];
                                 String path            = (String)contextAndPath[1];
 
-                                if (formName.equals(contextAndPath[2]) == true) {
-                                    context.setXML(path,
-                                                 this.getContextFragment(SessionConstants.REQUEST_CONTEXT, "/parameter/"+currentKey));
+                                if (formName.equals(contextAndPath[2])) {
+                                    try {
+                                        context.setXML(path,
+                                                     this.getContextFragment(SessionConstants.REQUEST_CONTEXT, "/parameter/"+currentKey));
+                                    } catch (ProcessingException ignore) {
+                                        this.getLogger().warn("Exception during processing of input fields.", ignore);
+                                    }
                                 }
                             }
                         }
                     }
-                    // inputFields.clear();
                 }
             }
         }
@@ -287,5 +239,22 @@ implements Composable, Component, Recomposable, Recyclable, FormManager, Request
         }
     }
 
+    public void processInputFields() {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        this.processInputFields( objectModel ) ;
+    }
+    
+    public void sitemapProcessingStarted(Map objectModel) {
+        this.processInputFields( objectModel );
+    }
+    
+    public void sitemapProcessingEnded(Map objectModel) {
+    }
 
+    public void requestProcessingStarted(Map objectModel) {
+        this.processInputFields( objectModel );
+    }
+
+    public void requestProcessingEnded(Map objectModel) {
+    }
 }
