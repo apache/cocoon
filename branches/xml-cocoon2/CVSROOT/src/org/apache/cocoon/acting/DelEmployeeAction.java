@@ -33,7 +33,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-11 21:01:42 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-13 16:28:49 $
  */
 public class DelEmployeeAction extends ComposerAction {
 
@@ -61,6 +61,7 @@ public class DelEmployeeAction extends ComposerAction {
     public Map act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
         HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
         String id = req.getParameter("employee");
+        log.debug("deleting employee " + id);
         String name = req.getParameter("name");
 
         if (deleteEmployee(id) == true) {

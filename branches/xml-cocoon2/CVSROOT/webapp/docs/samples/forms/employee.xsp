@@ -3,7 +3,7 @@
 <xsp:page
           language="java"
           xmlns:xsp="http://apache.org/xsp"
-	  xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2"
 >
   <page>
     <xsp:logic>
@@ -19,12 +19,12 @@
           <select size="1" name="employee"
               onChange="top.location.href=window.location.pathname + '?employee=' + document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value">
             <option value="-1">-- New employee --</option>
-	    <esql:connection>
-	      <esql:pool>personnel</esql:pool>
+            <esql:connection>
+              <esql:pool>personnel</esql:pool>
               <esql:execute-query>
                 <esql:query>select id, department_id, name from employee_table order by name</esql:query>
                 <esql:results>
-		  <esql:row-results>
+                  <esql:row-results>
                     <option>
                       <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
                       <xsp:attribute name="selected"><xsp:expr>(<esql:get-string column="id"/>.equals(empID)?"true":"false")</xsp:expr></xsp:attribute>
@@ -35,25 +35,26 @@
                       </xsp:logic>
                       <esql:get-string column="name"/>
                     </option>
-		  </esql:row-results>
+                  </esql:row-results>
                 </esql:results>
               </esql:execute-query>
-	    </esql:connection>
+            </esql:connection>
           </select>
       </form>
       <form action="" method="POST" name="EmployeeEntry">
         <script>document.forms["EmployeeEntry"].action = window.location.pathname</script>
+        <input type="hidden" name="employee"/>
+        <script>document.forms["EmployeeEntry"].employee.value = document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value</script>
         <para>Employee Name: <input name="name" type="text"/>
-          <xsp:logic>
-            if (empID != null &amp;&amp; !empID.equals("-1")) {
-              <script>document.forms["EmployeeEntry"].name.value = document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].text</script>
-            }
-          </xsp:logic>
+          <script>
+            if (document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value != -1)
+              document.forms["EmployeeEntry"].name.value = document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].text
+          </script>
         </para>
         <para>Department:
           <select name="department">
-	    <esql:connection>
-	      <esql:pool>personnel</esql:pool>
+            <esql:connection>
+              <esql:pool>personnel</esql:pool>
               <esql:execute-query>
                 <esql:query>select id, name from department_table order by name</esql:query>
                 <esql:results>
@@ -63,10 +64,10 @@
                       <xsp:attribute name="selected"><xsp:expr>(<esql:get-string column="id"/>.equals(depID)?"true":"false")</xsp:expr></xsp:attribute>
                       <esql:get-string column="name"/>
                     </option>
-	          </esql:row-results>
+                  </esql:row-results>
                 </esql:results>
               </esql:execute-query>
-	    </esql:connection>
+            </esql:connection>
           </select>
         </para>
         <xsp:logic>
