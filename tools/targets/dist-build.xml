@@ -1,4 +1,9 @@
-<!-- === Distribution targets ============================================== -->
+<?xml version="1.0"?>
+<project name="dist">
+
+  <description>
+    Distribution targets
+  </description>
 
   <target name="dist" depends="init" description="[admin] Builds the distribution">
 
@@ -82,4 +87,6 @@
     <delete file="${dist.target}/${dist.name}-src.tar.gz"/>
     <delete file="${dist.target}/${dist.name}-src.zip"/>
     <delete dir="${dist.root}"/>
-  </target>  
+  </target>
+  
+</project>

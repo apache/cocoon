@@ -1,4 +1,9 @@
-<!-- === Webapp targets ==================================================== -->
+<?xml version="1.0"?>
+<project name="webapp">
+
+  <description>
+    Webapp targets
+  </description>
 
   <target name="prepare-webapp" depends="blocks, package">
     <mkdir dir="${build.webapp}"/>
@@ -161,4 +166,4 @@
        <include name="${customconf}/*.xweb" />
     </xpatch>
   </target>
-
+</project>
