@@ -50,12 +50,12 @@
 */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
+import org.apache.excalibur.mpool.Resettable;
 
 /**
  * This class is an utility class &quot;wrapping&quot; around a SAX version 2.0
@@ -65,9 +65,9 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Id: ContentHandlerWrapper.java,v 1.1 2003/03/09 00:09:45 pier Exp $
+ * @version CVS $Id: ContentHandlerWrapper.java,v 1.2 2003/10/22 18:04:23 bloritsch Exp $
  */
-public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable {
+public class ContentHandlerWrapper extends AbstractXMLConsumer implements Resettable {
 
     /** The current <code>ContentHandler</code>. */
     protected ContentHandler contentHandler;
@@ -124,7 +124,7 @@ public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recycl
         this.lexicalHandler=lexicalHandler;
     }
 
-    public void recycle () {
+    public void reset () {
         this.contentHandler = null;
         this.lexicalHandler = null;
     }

@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.excalibur.mpool.Resettable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -61,11 +61,11 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractXMLProducer.java,v 1.1 2003/03/09 00:09:45 pier Exp $
+ * @version CVS $Id: AbstractXMLProducer.java,v 1.2 2003/10/22 18:04:23 bloritsch Exp $
  */
 public abstract class AbstractXMLProducer
 extends AbstractLogEnabled
-implements XMLProducer, Recyclable {
+implements XMLProducer, Resettable {
 
     /** The <code>XMLConsumer</code> receiving SAX events. */
     protected XMLConsumer xmlConsumer;
@@ -115,7 +115,7 @@ implements XMLProducer, Recyclable {
     /**
      * Recycle the producer by removing references
      */
-    public void recycle() {
+    public void reset() {
         this.xmlConsumer = null;
         this.contentHandler = null;
         this.lexicalHandler = null;
