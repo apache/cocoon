@@ -13,10 +13,12 @@
             </fileset>
             <fileset dir="{string('${lib.endorsed}')}">
                <include name="*.jar"/>
-            </fileset>      
-            <fileset dir="{string('${lib.core}/jvm${target.vm}')}">
-               <include name="*.jar"/>
-            </fileset>
+            </fileset>    
+            <!-- Currently, we have no JVM dependent libraries               
+              <fileset dir="{string('${lib.core}/jvm${target.vm}')}">
+                 <include name="*.jar"/>
+              </fileset>
+            -->
             <fileset dir="{string('${lib.optional}')}">
                <include name="*.jar"/>
             </fileset>
