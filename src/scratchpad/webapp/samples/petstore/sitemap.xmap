@@ -63,6 +63,7 @@
         <map:generate src="view/xsp/{1}.xsp" type="serverpages"/>
         <map:transform src="stylesheets/site2html.xsl" />
         <map:serialize type="html"/>
+     </map:match>
    </map:pipeline>
 
    <map:pipeline>
