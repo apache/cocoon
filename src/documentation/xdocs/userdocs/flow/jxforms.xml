@@ -1,21 +1,21 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 <document>
  <header>
-  <title>Advanced Control Flow</title> 
+  <title>Advanced Control Flow</title>
   <authors>
    <person name="Christopher Oliver" email="coliver@apache.org" />
   </authors>
  </header>
  <body>
   <s1 title="JXForms">
-   <p><em>JX</em>Forms is a framework that uses Apache <link href="http://jakarta.apache.org/commons/jxpath"><em>JX</em>Path</link> to support <link href="http://www.w3.org/MarkUp/Forms/">W3C XForms</link>-based markup and automated server-side binding to 
-   <link href="http://java.sun.com/products/javabeans/">JavaBeans</link>, 
-   <link href="http://www.w3.org/DOM/">XML/DOM</link>, 
+   <p><em>JX</em>Forms is a framework that uses Apache <link href="http://jakarta.apache.org/commons/jxpath"><em>JX</em>Path</link> to support <link href="http://www.w3.org/MarkUp/Forms/">W3C XForms</link>-based markup and automated server-side binding to
+   <link href="http://java.sun.com/products/javabeans/">JavaBeans</link>,
+   <link href="http://www.w3.org/DOM/">XML/DOM</link>,
    <link href="http://www.jdom.org/">JDOM</link>,
    <link href="http://jakarta.apache.org/commons/beanutils/api/org/apache/commons/beanutils/DynaBean.html">DynaBeans</link>, and JavaScript objects.
     </p>
-		
+
   <s2 title="Table of Contents">
    <p><link href="#Overview">Overview</link></p>
    <p><link href="#Controls">Form Controls</link></p>
@@ -81,7 +81,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
          expiry: ""
       }
       form.setModel(model);
-      form.sendView("form.xml");  // like sendPageAndWait this call blocks 
+      form.sendView("form.xml");  // like sendPageAndWait this call blocks
                                   // until the form is submitted
 
       // process the form's values:
@@ -89,9 +89,9 @@ intentionally defaulted the JXForms namespace prefix here):</p>
           ...
       } else if (model.method == "cc") {
           ....
-      } 
+      }
    </source>
-   <p> 
+   <p>
    JXForms also supports declarative <link href="#validation">validation</link> of form elements using Schematron, and automated <link href="#backNext">support</link> for back/forward navigation in multi-page forms using continuations.
    </p>
   </s1>
@@ -115,7 +115,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
     </input>
      ...
   </form>
-      ]]></source> 
+      ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
  <ul>
@@ -134,7 +134,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
     <input ref="/firstName">
       <label>First Name</label>
     </input>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <s2 title="help">
@@ -145,18 +145,18 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       <label>Email</label>
       <help>Please check this carefully</help>
     </input>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <s2 title="hint">
- <p>JXForms <code>&lt;hint&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-commonelems-hint">hint</link> element.The optional element <code>hint</code> provides a convenient way to attach hint information to a form control.</p> 
+ <p>JXForms <code>&lt;hint&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-commonelems-hint">hint</link> element.The optional element <code>hint</code> provides a convenient way to attach hint information to a form control.</p>
  <p>Example:</p>
     <source><![CDATA[
     <submit id="next" phase="userIdentity" continuation="forward" class="button">
       <label>Next</label>
-      <hint>Go to next page</hint>    
+      <hint>Go to next page</hint>
     </submit>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <anchor id="value"/><s2 title="value">
@@ -170,7 +170,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
               <value>Some value</value>
             </item>
           </select1>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <anchor id="item"/><s2 title="item">
@@ -189,18 +189,18 @@ intentionally defaulted the JXForms namespace prefix here):</p>
               <value>Another value</value>
             </item>
           </select1>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <s2 title="violations">
- <p>The JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms. It is a placeholder used by the JXForms generator. For each validation error that occur with respect to its containing element, the JXForms generator inserts a <link href="violation"><code>violation</code></link> element containing the validation error message.</p>
+ <p>The JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms. It is a placeholder used by the JXForms generator. For each validation error that occur with respect to its containing element, the JXForms generator inserts a <link href="#violation"><code>violation</code></link> element containing the validation error message.</p>
  <p>Example:</p>
       <source><![CDATA[
     <input ref="/age">
       <label>Age</label>
       <violations class="error"/>
     </input>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <anchor id="violation"/><s2 title="violation">
@@ -213,7 +213,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
     Age should be a reasonably big positive number.
     </assert>
 </rule>
-      ]]></source> 
+      ]]></source>
       <p>
       And a JXForms element such as:</p>
       <source><![CDATA[
@@ -221,7 +221,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       <label>Age</label>
       <violations class="error"/>
     </input>
-      ]]></source> 
+      ]]></source>
       <p>
       After executing the JXForms generator the element would be transformed into the following:</p>
       <source><![CDATA[
@@ -233,14 +233,14 @@ Age should be a reasonably big positive number.
        </violation>
       </violations>
     </input>
-      ]]></source> 
+      ]]></source>
  <p></p>
  </s2>
  <s2 title="input">
  <p>JXForms <code>&lt;input&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-input">input</link> element. It allows the user to do free-form data entry.</p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
  <ul>
@@ -254,7 +254,7 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;secret&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-secret">secret</link> element. It is is used for entering information that is considered sensitive, and thus not echoed to a visual or aural display as it is being entered, e.g., password entry. </p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
 <p>It supports the following attributes:</p>
 
@@ -269,7 +269,7 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;textarea&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-textarea">textarea</link> element. </p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
  <ul>
@@ -282,7 +282,7 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;output&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-output">output</link> element. It is used to display values from the model, but provides no means to enter or modify those values.</p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
  <p>It supports the following attributes:</p>
  <ul>
@@ -298,7 +298,7 @@ Age should be a reasonably big positive number.
  <p>JXForms <code>&lt;select&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectMany">select</link> element. </p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
 
 <p>It supports the following attributes:</p>
@@ -309,7 +309,7 @@ Age should be a reasonably big positive number.
  </ul>
  </s2>
  <anchor id="select1"/><s2 title="select1">
- <p>JXForms <code>&lt;select1&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectOne">select1</link> element. 
+ <p>JXForms <code>&lt;select1&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectOne">select1</link> element.
 This form control allows the user to make a single selection from multiple choices. It supports the following attributes:</p>
  <ul>
    <li><code>ref</code></li>
@@ -318,7 +318,7 @@ This form control allows the user to make a single selection from multiple choic
  </ul>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
  <p/>
  </s2>
@@ -326,7 +326,7 @@ This form control allows the user to make a single selection from multiple choic
  <p>JXForms <code>&lt;submit&gt;</code> differs from <link href="http://www.w3.org/TR/xforms/slice8.html#ui-submit">that</link> of W3C XForms. </p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
 
 <p>It supports the following attributes:</p>
@@ -342,7 +342,7 @@ This form control allows the user to make a single selection from multiple choic
  <p>JXForms <code>&lt;group&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-group">group</link> element.</p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
 
  <p>It supports the following attributes:</p>
@@ -358,7 +358,7 @@ This form control allows the user to make a single selection from multiple choic
  <p>JXForms <code>&lt;repeat&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-repeat">repeat</link> element.</p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
 <p> It supports the following attributes:</p>
  <ul>
@@ -370,7 +370,7 @@ This form control allows the user to make a single selection from multiple choic
  <p>JXForms <code>&lt;itemset&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-common-elements-itemset">itemset</link> element. It is used for the dynamic creation of selections within the <code>select</code> and <code>select1</code> elements.</p>
  <p>Example:</p>
       <source><![CDATA[
-      ]]></source> 
+      ]]></source>
  <p></p>
 <p> It supports the following attributes:</p>
  <ul>
@@ -378,7 +378,7 @@ This form control allows the user to make a single selection from multiple choic
  </ul>
  <p/>
  </s2>
- </s1>  
+ </s1>
 <anchor id="JSAPI"/><s1 title="JavaScript API">
   <p>
   JXForms provides a JavaScript <code>JXForm</code> object that provides methods for you to manage your form's <em>model</em> and to invoke its associated <em>view</em> and any validation rules you've specified.
@@ -398,7 +398,7 @@ This form control allows the user to make a single selection from multiple choic
   <p>
   </p>
   <anchor id="jxform"/><s2 title="jxform">
-      <p> 
+      <p>
       The entry point from the Cocoon <link href="#Sitemap">Sitemap</link> to your form is the <code>jxform</code> function:
       </p>
       <p>
@@ -428,7 +428,7 @@ This form control allows the user to make a single selection from multiple choic
       <p>
  Sends view to presentation pipeline and waits for subsequent submission.
  Automatically resends view if validation fails.
- Creates two continuations: one immediately before the page is sent 
+ Creates two continuations: one immediately before the page is sent
  and one immediately after. These are used to implement automated support
  for back/forward navigation in the form. When you move forward in the
  form the second continuation is invoked. When you move back from the
@@ -458,7 +458,7 @@ This form control allows the user to make a single selection from multiple choic
       <p>
       <em>Function</em> <code>[java.util.Iterator] iterate([String] xpath)</code>
       </p>
-      <p>Returns an iterator over a nodeset value of an xpath expression evaluated 
+      <p>Returns an iterator over a nodeset value of an xpath expression evaluated
  against the model of this form</p>
     </s3>
     <s3 title = "finish"><anchor id="finish"/>
@@ -468,13 +468,13 @@ This form control allows the user to make a single selection from multiple choic
       <p>Forwards to <code>uri</code> (if provided) and then releases all resources associated with this form.</p>
     </s3>
   </s2>
- </s1>  
+ </s1>
  <anchor id="Sitemap"/><s1 title="Sitemap">
 <p>To use JXForms, you will need to add several elements to your Cocoon <link href="../concepts/sitemap.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator, add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
 <source>
 &lt;map:generators&gt;
-  &lt;map:generator label="content,data" 
-      logger="sitemap.generator.jxforms" name="jxforms" 
+  &lt;map:generator label="content,data"
+      logger="sitemap.generator.jxforms" name="jxforms"
          src="org.apache.cocoon.generation.JXFormsGenerator"/&gt;
 &lt;/map:generators&gt;
  </source>
@@ -484,9 +484,9 @@ This form control allows the user to make a single selection from multiple choic
      <map:call function="jxform">
         <map:parameter name="function" value="{1}"/>
         <map:parameter name="id" value="form-feedback"/>
-        <map:parameter name="validator-schema-namespace" 
+        <map:parameter name="validator-schema-namespace"
                  value="http://www.ascc.net/xml/schematron"/>
-        <map:parameter name="validator-schema" 
+        <map:parameter name="validator-schema"
                value="schematron/wizard-xmlform-sch-report.xml"/>
      </map:call>
    </map:match>
@@ -495,12 +495,12 @@ This form control allows the user to make a single selection from multiple choic
   <p>
   The required <code>function</code> parameter specifies the name of a JavaScript function that will provide the page flow for your form. The required <code>id</code> attribute must match the value of the <code>id</code> attribute of the <link href="#form">form</link> element of your form. The optional <code>validator-schema-namespace</code> and <code>validator-schema</code> parameters identify the the schema namespace and instance document of your validation rules, if provided. Currently, only the <link href="#Validation">Schematron</link> assertion language is supported.
   </p>
- </s1>  
+ </s1>
  <s1 title="Validation"><anchor id="Validation"/>
  <p>
  JXForms provides declarative form validation using the <link href="http://www.ascc.net/xml/resource/schematron/Schematron2000.html">Schematron</link> assertion language. Since Schematron is also based on XPath, you use the same expressions to reference your model in your validation rules as in your forms. In addition, because JXForms implements Schematron using <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>, you can make assertions about Java and JavaScript objects in your validation rules as well as about XML documents.
  </p>
- </s1>  
+ </s1>
  <s1 title="Conversion to HTML"><anchor id="HTML"/>
  <p>For conversion of JXForms controls to XHTML, JXForms provides two XSLT stylesheets that must be applied to the output of JXFormsGenerator: <code>jxforms-default.xsl</code> and <code>jxforms2html.xsl</code>. The former performs formatting of validation error messages. The latter converts the result to XHTML.</p>
  <p>A typical JXForms pipeline would look like this:</p>
@@ -508,21 +508,21 @@ This form control allows the user to make a single selection from multiple choic
       <map:match pattern="view/*.xml">
 	      <!-- original JXForms document -->
 	      <map:generate type="jxforms" src="view/{1}.xml"/>
-	
+
 	      <!-- Personalize the look and feel of the form controls  -->
 	      <map:transform type="xslt" src="stylesheets/mystyle.xsl" />
 
 	      <!-- Transform the JXForms controls to HTML controls -->
 
 	      <map:transform type="xslt" src="stylesheets/jxforms-default.xsl" />
-	
+
 	      <map:transform type="xslt" src="stylesheets/jxforms2html.xsl" />
-	      
+
 	      <!-- sending the HTML back to the browser -->
 	      <map:serialize type="html"/>
-      </map:match>	      
+      </map:match>
 ]]></source>
  <p/>
- </s1>  
+ </s1>
  </body>
 </document>
