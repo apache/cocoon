@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.37 2003/04/10 14:28:28 stephan Exp $
+  CVS $Id: gump.xml,v 1.38 2003/04/10 15:08:10 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -131,7 +131,8 @@
 
     <jar name="blocks/fop-block.jar"/>
 
-    <nag from="Gump" to="cocoon-dev@xml.apache.org, fop-dev@xml.apache.org"/>
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+    <nag from="Gump" to="fop-dev@xml.apache.org"/>
   </project>
 
   <project name="cocoon-block-batik">
