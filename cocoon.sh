@@ -16,7 +16,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.12 2004/03/08 06:07:14 antonio Exp $
+# $Id: cocoon.sh,v 1.13 2004/03/16 16:25:31 mpo Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -143,7 +143,7 @@ JETTY_WEBAPP="-Dwebapp=$COCOON_WEBAPP_HOME"
 JETTY_HOME="-Dhome=$COCOON_HOME"
 JETTY_PORT_ARGS="-Djetty.port=$JETTY_PORT"
 JETTY_ADMIN_ARGS="-Djetty.admin.port=$JETTY_ADMIN_PORT"
-JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib:$ENDORSED_LIBS"
+JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP}${ENDORSED_LIBS}"
 
 # ----- Do the action ----------------------------------------------------------
 
