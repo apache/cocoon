@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.4 2003/03/27 02:05:29 jefft Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.5 2003/05/04 02:07:31 jefft Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -84,6 +84,23 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         </map:transform>
         <map:serialize />
       </map:match>               
+
+      <map:match pattern="requestparam">
+        <map:redirect-to uri="requestparam.xsp?foo=foo+param&amp;bar=bar+param"/>
+      </map:match>
+      <map:match pattern="content/requestparam.xsp">
+        <map:generate type="serverpages" src="properties.xsp">
+          <map:parameter name="foo" value="{request-param:foo}"/>
+          <map:parameter name="bar" value="{request-param:bar}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="Request Parameter Input Module (RequestParameterModule)"/>
+          <map:parameter name="description" value="Provides access to request
+            parameters. Edit the URL of this page to see the request parameter
+            values change (parts after the '?' are request parameters) ."/>
+        </map:transform>
+        <map:serialize />
+      </map:match>
 
       <map:match pattern="content/session.xsp">
         <map:generate type="serverpages" src="properties.xsp">
@@ -217,6 +234,33 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:serialize />
       </map:match>
 
+      <map:match pattern="content/randomnumber.xsp">
+        <map:generate type="serverpages" src="properties.xsp">
+          <map:parameter name="x" value="{random:x}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="Random number module (RandomNumberModule)"/>
+          <map:parameter name="description" value="Returns a random number in a
+            user-configurable range (by default 0 to 9999999999)"/>
+        </map:transform>
+        <map:serialize />
+      </map:match>
+
+
+      <map:match pattern="content/realpath.xsp">
+        <map:generate type="serverpages" src="properties.xsp">
+          <map:parameter name="/" value="{realpath:/}"/>
+          <map:parameter name="/images" value="{realpath:/images}"/>
+          <map:parameter name="/WEB-INF" value="{realpath:/WEB-INF}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="RealPath Module (RealPathModule)"/>
+          <map:parameter name="description" value="Returns the real path of a
+            context-relative virtual path (if not deployed from a .war)."/>
+        </map:transform>
+        <map:serialize />
+      </map:match>               
+ 
       <!-- Menu generation -->
       <map:match pattern="menu/*">
         <map:generate src="menu.xml"/>
