@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -26,7 +26,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * Default component selector for Cocoon's components. This selector "flattens" its declaration
@@ -93,7 +93,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
             if (compInstanceName == null) {
                 // component-instance implicitly defined by the presence of the 'class' attribute
                 if (classAttr == null) {
-                    final ServiceInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    final ComponentInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
                     className = info.getServiceClassName();
                 } else {
                     className = classAttr;
@@ -104,7 +104,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
                 if (compInstanceName.equals(instance.getName())) {
                     className = (classAttr == null) ? null : classAttr;
                 } else {
-                    final ServiceInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    final ComponentInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
                     className = info.getServiceClassName();
                 }
             }
@@ -192,7 +192,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
     public static class Factory extends ComponentFactory {
         private final String role;
         
-        public Factory(ComponentEnvironment env, ServiceInfo info, String role) 
+        public Factory(ComponentEnvironment env, ComponentInfo info, String role) 
         throws Exception {
             super(env, info);
             this.role = role;

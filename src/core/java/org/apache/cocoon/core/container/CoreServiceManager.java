@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -42,7 +42,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -322,7 +322,7 @@ public class CoreServiceManager
             }
 
             if( this.roleManager != null ) {
-                final ServiceInfo info = this.roleManager.getDefaultServiceInfoForRole( role );
+                final ComponentInfo info = this.roleManager.getDefaultServiceInfoForRole( role );
 
                 if( info != null ) {
                     if( this.getLogger().isDebugEnabled() ) {
@@ -513,7 +513,7 @@ public class CoreServiceManager
         
         ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
         if (handler != null) {
-            ServiceInfo info = handler.getInfo();
+            ComponentInfo info = handler.getInfo();
             throw new ServiceException(role, "Component already defined at " + info.getLocation()); 
         }
         
@@ -577,7 +577,7 @@ public class CoreServiceManager
                                                     final String className,
                                                     final Configuration configuration)
     throws Exception {
-        ServiceInfo info = new ServiceInfo();
+        ComponentInfo info = new ComponentInfo();
         info.setConfiguration(configuration);
         info.setServiceClassName(className);
         
@@ -619,7 +619,7 @@ public class CoreServiceManager
                 String className = componentConfig.getAttribute("class", null);
                 if (className == null) {
                     // Get the default class name for this role
-                    final ServiceInfo info = roleManager.getDefaultServiceInfoForRole(role);
+                    final ComponentInfo info = roleManager.getDefaultServiceInfoForRole(role);
                     if (info == null) {
                         throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
                     }
@@ -772,7 +772,7 @@ public class CoreServiceManager
             ComponentHandler existingHandler) throws ConfigurationException {
         
         // We only allow selectors to be overloaded
-        ServiceInfo info = existingHandler.getInfo();
+        ComponentInfo info = existingHandler.getInfo();
         if (!className.equals(info.getServiceClassName())) {
             throw new ConfigurationException("Role " + role + " redefined with a different class name, at " +
                     config.getLocation());

@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -23,7 +23,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * Factory for Avalon based components.
@@ -32,7 +32,7 @@ import org.apache.cocoon.components.ServiceInfo;
  */
 public class ComponentFactory {
     
-    protected final ServiceInfo serviceInfo;
+    protected final ComponentInfo serviceInfo;
     
     protected final ComponentEnvironment environment;
     
@@ -61,7 +61,7 @@ public class ComponentFactory {
      *
      */
     public ComponentFactory( final ComponentEnvironment environment,
-                             final ServiceInfo info) 
+                             final ComponentInfo info) 
     throws Exception {
         this.environment = environment;
         this.serviceInfo = info;
@@ -70,7 +70,7 @@ public class ComponentFactory {
         // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
         if( this.environment.loggerManager != null && this.serviceInfo.getConfiguration() != null) {
             final String category = this.serviceInfo.getConfiguration().getAttribute("logger", null);
-            if(category != null) {
+            if (category != null) {
                 actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
             }
         }

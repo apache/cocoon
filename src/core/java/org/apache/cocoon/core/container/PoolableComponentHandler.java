@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * The PoolableComponentHandler to make sure that poolable components are initialized
@@ -91,7 +91,7 @@ extends AbstractFactoryHandler {
      *                managed by the ComponentHandler.
      * @param config The configuration to use to configure the pool.
      */
-    public PoolableComponentHandler( final ServiceInfo info,
+    public PoolableComponentHandler( final ComponentInfo info,
                                      final Logger logger,
                                      final ComponentFactory factory,
                                      final Configuration config )

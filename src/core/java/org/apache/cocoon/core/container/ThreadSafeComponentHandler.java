@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -17,7 +17,7 @@
 package org.apache.cocoon.core.container;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * The ThreadSafeComponentHandler to make sure components are initialized
@@ -37,7 +37,7 @@ extends AbstractFactoryHandler {
      * @param factory The factory object which is responsible for creating the components
      *                managed by the handler.
      */
-    public ThreadSafeComponentHandler( final ServiceInfo info,
+    public ThreadSafeComponentHandler( final ComponentInfo info,
                                        final Logger logger,
                                        final ComponentFactory factory ) {
         super(info, logger, factory);

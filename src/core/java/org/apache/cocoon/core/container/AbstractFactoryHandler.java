@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -17,7 +17,7 @@
 package org.apache.cocoon.core.container;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * This class acts like a Factory to instantiate the correct version
@@ -33,7 +33,7 @@ public abstract class AbstractFactoryHandler extends AbstractComponentHandler {
     /**
      * Creates a new ComponentHandler.
      */
-    public AbstractFactoryHandler(ServiceInfo info, Logger logger, ComponentFactory factory) {
+    public AbstractFactoryHandler(ComponentInfo info, Logger logger, ComponentFactory factory) {
         super(info, logger);
         this.factory = factory;
     }

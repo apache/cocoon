@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -23,7 +23,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * Default RoleManager implementation.  It populates the RoleManager
@@ -98,8 +98,8 @@ implements Configurable {
      * @param role  The role that has a default implementation.
      * @return the Fully Qualified Class Name (FQCN) for the role.
      */
-    public final ServiceInfo getDefaultServiceInfoForRole( final String role ) {
-        final ServiceInfo info = (ServiceInfo)this.classNames.get( role );
+    public final ComponentInfo getDefaultServiceInfoForRole( final String role ) {
+        final ComponentInfo info = (ComponentInfo)this.classNames.get( role );
 
         if( info == null && this.parent != null ) {
             return this.parent.getDefaultServiceInfoForRole( role );
@@ -120,7 +120,7 @@ implements Configurable {
      * @param shorthand  The shorthand name for the type of component
      * @return the FQCN for the role/key combination.
      */
-    public final ServiceInfo getDefaultServiceInfoForKey( final String role,
+    public final ComponentInfo getDefaultServiceInfoForKey( final String role,
                                                           final String shorthand ) {
         if( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug( "looking up keymap for role " + role );
@@ -139,7 +139,7 @@ implements Configurable {
             this.getLogger().debug( "looking up classname for key " + shorthand );
         }
 
-        final ServiceInfo s = ( ServiceInfo ) keyMap.get( shorthand );
+        final ComponentInfo s = ( ComponentInfo ) keyMap.get( shorthand );
 
         if( s == null && this.parent != null ) {
             return this.parent.getDefaultServiceInfoForKey( role, shorthand );
@@ -187,10 +187,10 @@ implements Configurable {
             }
 
             if( defaultClassName != null ) {
-                ServiceInfo info = (ServiceInfo)this.classNames.get(roleName);
+                ComponentInfo info = (ComponentInfo)this.classNames.get(roleName);
                 if (info == null) {
                     // Create a new info and store it
-                    info = new ServiceInfo();
+                    info = new ComponentInfo();
                     info.setServiceClassName(defaultClassName);
                     info.fill(role);
                     this.classNames.put(roleName, info);
@@ -218,9 +218,9 @@ implements Configurable {
                     final String shortHand = key.getAttribute( "shorthand" ).trim();
                     final String className = key.getAttribute( "class" ).trim();
 
-                    ServiceInfo info = (ServiceInfo)keyMap.get(shortHand);
+                    ComponentInfo info = (ComponentInfo)keyMap.get(shortHand);
                     if (info == null) {       
-                        info = new ServiceInfo();
+                        info = new ComponentInfo();
                         info.setServiceClassName(className);
                         info.fill(key);
     

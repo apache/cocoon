@@ -1,5 +1,5 @@
 /* 
- * Copyright 2002-2004 The Apache Software Foundation
+ * Copyright 2002-2005 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
@@ -17,7 +17,7 @@
 package org.apache.cocoon.core.container;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.components.ComponentInfo;
 
 /**
  * A component handler used to alias roles: it delegates all its calls to another
@@ -30,7 +30,7 @@ public class AliasComponentHandler extends AbstractComponentHandler {
     ComponentHandler aliasedHandler;
     
     public AliasComponentHandler(Logger logger, ComponentHandler aliasedHandler) {
-        super(new ServiceInfo(), logger);
+        super(new ComponentInfo(), logger);
         getInfo().setConfiguration(CoreServiceManager.EMPTY_CONFIGURATION);
         this.aliasedHandler = aliasedHandler;
     }
