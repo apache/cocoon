@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,6 +33,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -112,25 +113,33 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
             params = resolveList(parameters, manager, context, env.getObjectModel());
         }
 
-        String continuation = continuationId.resolve(context, env.getObjectModel());
+        // Need redirector in any case
+        Redirector redirector = context.getRedirector();
 
         // If the continuation id is not null, it takes precedence over
         // the function call, so we invoke it here.
+        String continuation = continuationId.resolve(context, env.getObjectModel());
         if (continuation != null && continuation.length() > 0) {
-            interpreter.handleContinuation(continuation, params, context.getRedirector());
+            interpreter.handleContinuation(continuation, params, redirector);
+            if (!redirector.hasRedirected()) {
+                throw new ProcessingException("<map:call continuation> did not send a response, at " +
+                                              getLocation());
+            }
             return true;
         }
 
         // We don't have a continuation id passed in <map:call>, so invoke
         // the specified function
-
         String name = functionName.resolve(context, env.getObjectModel());
-
         if (name != null && name.length() > 0) {
-            interpreter.callFunction(name, params, context.getRedirector());
+            interpreter.callFunction(name, params, redirector);
+            if (!redirector.hasRedirected()) {
+                throw new ProcessingException("<map:call function> did not send a response, at " +
+                                              getLocation());
+            }
             return true;
         }
-        
+
         // Found neither continuation nor function to call
         throw new ProcessingException("No function nor continuation given in <map:call function> at " + getLocation());
     }

@@ -62,7 +62,7 @@
     
     <httpRequest href="${redirect-test}/donothing-from-flow">
       <match>
-        <responseCode value="404"/>
+        <responseCode value="500"/>
       </match>
     </httpRequest>
     
