@@ -75,7 +75,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.7 2003/08/26 09:05:15 mpo Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.8 2003/09/04 13:20:27 mpo Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
@@ -190,7 +190,7 @@ public class ContinuationsManagerImpl
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Manual Expire of Continuation " + wk.getId());
         }
-        idToWebCont.remove(wk.getId());
+        disposeContinuation(wk);
         expirations.remove(wk);
 
         // Invalidate all the children continuations as well
@@ -199,7 +199,17 @@ public class ContinuationsManagerImpl
         for (int i = 0; i < size; i++) {
             _invalidate((WebContinuation) children.get(i));
         }
-        
+    }
+    
+    /**
+     * Makes the continuation inaccessible for lookup, and triggers possible needed
+     * cleanup code through the ContinuationsDisposer interface.
+     * 
+     * @param wk the continuation to dispose.
+     */
+    private void disposeContinuation(WebContinuation wk) {
+        idToWebCont.remove(wk.getId());
+           
         // Call specific possible implementation-specific clean-up on this continuation.
         ContinuationsDisposer disposer = wk.getDisposer();
         if (disposer != null) {
@@ -271,7 +281,7 @@ public class ContinuationsManagerImpl
         }
 
         // remove access to this contination
-        idToWebCont.remove(wk.getId());
+        disposeContinuation(wk);
 
         WebContinuation parent = wk.getParentContinuation();
         if (parent == null) {
@@ -341,7 +351,7 @@ public class ContinuationsManagerImpl
 
         // clean up
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("WK CurrentSytemTime[" + System.currentTimeMillis() +
+            getLogger().debug("WK CurrentSystemTime[" + System.currentTimeMillis() +
                               "]: Cleaning up expired Continuations....");
         }
         WebContinuation wk;
