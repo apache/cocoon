@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<n:news xmlns:n="http://www.betaversion.org/linotype/news/1.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:r="http://apache.org/cocoon/request/2.0" online="on" author="" creation-date="June 16, 2003" creation-time="19:30" creation-fulldate="Tue, 17 Jun 2003 00:30:52 GMT"><n:title>How to use Linotype</n:title><body xmlns:h="http://apache.org/cocoon/request/2.0">First of all, click on the linotype here on the left.<br/>
+<n:news xmlns:n="http://www.betaversion.org/linotype/news/1.0"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:r="http://apache.org/cocoon/request/2.0" online="on" author=""
+creation-date="June 16, 2003" creation-time="19:30"
+creation-fulldate="Tue, 17 Jun 2003 00:30:52 GMT"><n:title>How to use
+Linotype</n:title><body
+xmlns:h="http://apache.org/cocoon/request/2.0">First of all, make sure
+that file upload is enabled on web.xml.<br/>
+<br/>
+Then click on the linotype here on the left.<br/>
 <br/>
 When the login appear, use:<br/>
 <ul><li>user -&gt; guest</li>
