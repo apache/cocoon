@@ -174,7 +174,7 @@
     Column group items layout
   -->
   <xsl:template match="wi:group[wi:styling/@layout='column']" mode="group-layout">
-    <table border="0">
+    <table border="0" summary="{wi:hint}">
       <tbody>
         <xsl:apply-templates select="wi:items/*" mode="group-column-content"/>
       </tbody>
@@ -197,7 +197,7 @@
     Columns group items layout
   -->
   <xsl:template match="wi:group[wi:styling/@layout='columns']" mode="group-layout">
-    <table border="0">
+    <table border="0" summary="{wi:hint}">
       <tbody>
         <xsl:apply-templates select="wi:items/*" mode="group-columns-content"/>
       </tbody>
@@ -218,7 +218,7 @@
     Row group items layout
   -->
   <xsl:template match="wi:group[wi:styling/@layout='row']" mode="group-layout">
-    <table border="0">
+    <table border="0" summary="{wi:hint}">
       <tbody>
         <tr>
           <xsl:apply-templates select="wi:items/*" mode="group-row-content"/>
@@ -239,7 +239,7 @@
     Rows group items layout
   -->
   <xsl:template match="wi:group[wi:styling/@layout='rows']" mode="group-layout">
-    <table border="0">
+    <table border="0" summary="{wi:hint}">
       <tbody>
         <tr>
           <xsl:apply-templates select="wi:items/*" mode="group-rows-labels"/>
