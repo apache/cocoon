@@ -179,10 +179,7 @@
 			column_formats.put(name,format);
 		}
 		</xsl:for-each>
-
-	<xsp:content>
-	<xsp:expr>
-		XSPSQLLibrary.processQuery(
+		Element result_elements[] = XSPSQLLibrary.processQuery(
 			document,
 			String.valueOf(<xsl:copy-of select="$driver"/>),
 			String.valueOf(<xsl:copy-of select="$dburl"/>),
@@ -203,9 +200,10 @@
 			String.valueOf(<xsl:copy-of select="$update-rows-attribute"/>),
 			String.valueOf(<xsl:copy-of select="$namespace"/>),
 			String.valueOf(<xsl:copy-of select="$query"/>),
-			column_formats)
-	</xsp:expr>
-	</xsp:content>
+			column_formats);
+		for (int i=0; i&lt;result_elements.length; i++) {
+			<xsp:content><xsp:expr>result_elements[i]</xsp:expr></xsp:content>
+		}
 	}
 	</xsp:logic>
 </xsl:template>

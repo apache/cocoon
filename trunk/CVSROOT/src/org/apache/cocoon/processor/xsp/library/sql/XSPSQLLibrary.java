@@ -60,12 +60,12 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.6 $ $Date: 2000-05-16 18:36:10 $
+ * @version $Revision: 1.7 $ $Date: 2000-05-16 20:01:06 $
  */
 
 public class XSPSQLLibrary {
 
-    public static Node processQuery(
+    public static Element[] processQuery(
       Document document,
       String driver,
       String dburl,
@@ -119,9 +119,9 @@ public class XSPSQLLibrary {
             results_node = document.createDocumentFragment();
         } else {
             results_element = createElement(document,namespace,doc_element_name);
+			results_node = results_element;
         }
-        results_node = results_element;
-        if (!count_attribute.equals("")) {
+        if (results_element != null && !count_attribute.equals("")) {
             String count_query = getCountQuery(query);
             if (count_query != null) {
                 rs = st.executeQuery(count_query);
@@ -131,13 +131,13 @@ public class XSPSQLLibrary {
                 rs.close();
             }
         }
-        if (!query_attribute.equals("")) {
+        if (results_element != null && !query_attribute.equals("")) {
             results_element.setAttribute(query_attribute,URLEncoder.encode(query));
         }
-        if (!skip_rows_attribute.equals("")) {
+        if (results_element != null && !skip_rows_attribute.equals("")) {
             results_element.setAttribute(skip_rows_attribute,""+skip_rows);
         }
-        if (!max_rows_attribute.equals("")) {
+        if (results_element != null && !max_rows_attribute.equals("")) {
             results_element.setAttribute(max_rows_attribute,""+max_rows);
         }
         if (!st.execute(query)) {
@@ -220,7 +220,19 @@ public class XSPSQLLibrary {
             rs.close();
         }
         st.close(); conn.close();
-        return results_node;
+		if (results_element != null) {
+			Element ary[] = new Element[1];
+			ary[0] = results_element;
+			return ary;
+		} else {
+			NodeList nodes = results_node.getChildNodes();
+			int length = nodes.getLength();
+			Element ary[] = new Element[length];
+			for (int i=0; i<length; i++) {
+				ary[i] = (Element)nodes.item(i);
+			}
+			return ary;
+		}
     }
 
     protected static Column[] getColumns(ResultSetMetaData md, String tag_case) throws SQLException {
