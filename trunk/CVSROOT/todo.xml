@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.12 2000-01-08 00:09:05 stefano Exp $
+  $Id: todo.xml,v 1.13 2000-01-08 13:03:16 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -17,8 +17,7 @@
 
  <actions priority="high">
   <action context="code">
-   Implement "xsl:output" instead of "cocoon-format" PI and redesign
-   formatting subsystem. (follows sitemap)
+   Implement the sitemap.
   </action>
   <action context="code">
    Pass request/session parameters to the XSLT processors for dynamic
@@ -26,6 +25,9 @@
   </action>
   <action context="code">
    Work on external entities inclusion (follows sitemap).
+  </action>
+  <action context="code">
+   Create a caching virtual URL file system for external inclusions.
   </action>
  </actions>
  

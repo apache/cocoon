@@ -330,6 +330,7 @@ of build files, give credits to the original authors. Thank you.
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
   <target name="site">
+    <mkdir dir="${site.dir}"/>  
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${site.dir}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${site.dir}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${site.dir}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
