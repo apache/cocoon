@@ -50,14 +50,14 @@
 */
 package org.apache.cocoon.woody.datatype;
 
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.cocoon.woody.datatype.typeimpl.StringTypeBuilder;
-import org.apache.cocoon.woody.datatype.typeimpl.LongTypeBuilder;
-import org.apache.cocoon.woody.datatype.validationruleimpl.*;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.w3c.dom.Element;
@@ -74,50 +74,61 @@ import java.util.HashMap;
  * become externally configurable in the future.
  *
  */
-public class DefaultDatatypeManager implements DatatypeManager, Initializable, ThreadSafe, Composable {
+public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Composable, Configurable {
     private Map typeBuilderMap = new HashMap();
     private Map validationRuleBuilderMap = new HashMap();
     private ComponentManager componentManager;
 
-    public void initialize() throws Exception {
+    public void configure(Configuration configuration) throws ConfigurationException {
         LifecycleHelper lifecycleHelper = new LifecycleHelper(null, null, componentManager, null, null, null);
 
-        // TODO all the stuff below should come from a configuration file, so that this is extensible
+        // read available datatypes from configuration
+        Configuration[] datatypeConfs = configuration.getChild("datatypes").getChildren("datatype");
+        if (datatypeConfs.length == 0)
+            getLogger().warn("No Woody datatypes found in DatatypeManager configuration.");
 
-        // Setup the type builders
-        Object typeBuilder;
+        for (int i = 0; i < datatypeConfs.length; i++) {
+            String name = datatypeConfs[i].getAttribute("name");
+            String factoryClassName = datatypeConfs[i].getAttribute("factory");
+            Class clazz;
+            try {
+                clazz = Class.forName(factoryClassName);
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not load class \"" + factoryClassName + "\" specified at " + datatypeConfs[i].getLocation(), e);
+            }
+            DatatypeBuilder datatypeBuilder;
+            try {
+                datatypeBuilder = (DatatypeBuilder)clazz.newInstance();
+                lifecycleHelper.setupComponent(datatypeBuilder);
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not create DatatypeBuilder \"" + factoryClassName + "\"", e);
+            }
+            typeBuilderMap.put(name, datatypeBuilder);
+        }
 
-        typeBuilder = new StringTypeBuilder();
-        lifecycleHelper.setupComponent(typeBuilder);
-        typeBuilderMap.put("string", typeBuilder);
+        // read available validation rules from configuration
+        Configuration[] validationRuleConfs = configuration.getChild("validation-rules").getChildren("validation-rule");
+        if (validationRuleConfs.length == 0)
+            getLogger().warn("No Woody validation rules found in DatatypeManager configuration");
 
-        typeBuilder = new LongTypeBuilder();
-        lifecycleHelper.setupComponent(typeBuilder);
-        typeBuilderMap.put("long", typeBuilder);
-
-
-        // Setup the validation rule builders
-        Object validationRuleBuilder;
-
-        validationRuleBuilder = new LengthValidationRuleBuilder();
-        lifecycleHelper.setupComponent(validationRuleBuilder);
-        validationRuleBuilderMap.put("length", validationRuleBuilder);
-
-        validationRuleBuilder = new EmailValidationRuleBuilder();
-        lifecycleHelper.setupComponent(validationRuleBuilder);
-        validationRuleBuilderMap.put("email", validationRuleBuilder);
-
-        validationRuleBuilder = new ValueCountValidationRuleBuilder();
-        lifecycleHelper.setupComponent(validationRuleBuilder);
-        validationRuleBuilderMap.put("value-count", validationRuleBuilder);
-
-        validationRuleBuilder = new RangeValidationRuleBuilder();
-        lifecycleHelper.setupComponent(validationRuleBuilder);
-        validationRuleBuilderMap.put("range", validationRuleBuilder);
-
-        validationRuleBuilder = new AssertValidationRuleBuilder();
-        lifecycleHelper.setupComponent(validationRuleBuilder);
-        validationRuleBuilderMap.put("assert", validationRuleBuilder);
+        for (int i = 0; i < validationRuleConfs.length; i++) {
+            String name = validationRuleConfs[i].getAttribute("name");
+            String factoryClassName = validationRuleConfs[i].getAttribute("factory");
+            Class clazz;
+            try {
+                clazz = Class.forName(factoryClassName);
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not load class \"" + factoryClassName + "\" specified at " + validationRuleConfs[i].getLocation(), e);
+            }
+            ValidationRuleBuilder validationRuleBuilder;
+            try {
+                validationRuleBuilder = (ValidationRuleBuilder)clazz.newInstance();
+                lifecycleHelper.setupComponent(validationRuleBuilder);
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not create ValidationRuleBuilder \"" + factoryClassName + "\"", e);
+            }
+            validationRuleBuilderMap.put(name, validationRuleBuilder);
+        }
     }
 
     public void compose(ComponentManager componentManager) throws ComponentException {
@@ -137,7 +148,7 @@ public class DefaultDatatypeManager implements DatatypeManager, Initializable, T
         String name  = validationRuleElement.getLocalName();
         ValidationRuleBuilder builder = (ValidationRuleBuilder)validationRuleBuilderMap.get(name);
         if (builder == null)
-            throw new Exception("Unknown validation rule + \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement));
+            throw new Exception("Unknown validation rule \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement));
         else
             return builder.build(validationRuleElement);
     }
