@@ -29,7 +29,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
+import org.apache.cocoon.caching.EventAware;
 import org.apache.cocoon.caching.IdentifierCacheKey;
+import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -66,7 +69,7 @@ import org.xml.sax.SAXException;
  * always. <code>0</code> can be used to achieve the exact opposite. That is to say,
  * the cached contents will be thrown out and updated immediately and unconditionally.
  * <p>
- * @version CVS $Id: CachingSource.java,v 1.13 2004/07/01 14:24:36 unico Exp $
+ * @version CVS $Id$
  */
 public class CachingSource extends AbstractLogEnabled
 implements Source, Serviceable, Initializable, XMLizable {
@@ -206,7 +209,14 @@ implements Source, Serviceable, Initializable, XMLizable {
         boolean storeResponse = false;
         CachedSourceResponse response = this.response;
         if (response == null) {
-            response = new CachedSourceResponse(new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() });
+            SourceValidity[] validities;
+            if (this.cache instanceof EventAware) {
+                validities = new SourceValidity[] { new EventValidity(new NamedEvent(this.source.getURI())) };
+            }
+            else {
+                validities = new SourceValidity[] { new ExpiresValidity(getExpiration()), source.getValidity() };
+            }
+            response = new CachedSourceResponse(validities);
             storeResponse = true;
         }
         if (response.getExtra() == null) {
@@ -573,32 +583,40 @@ implements Source, Serviceable, Initializable, XMLizable {
     private boolean checkValidity() {
         if (this.response == null) return false;
         
-        final ExpiresValidity expiresValidity = (ExpiresValidity) this.response.getValidityObjects()[0];
-        final SourceValidity sourceValidity = this.response.getValidityObjects()[1];
-
+        final SourceValidity[] validities = this.response.getValidityObjects();
         boolean valid = true;
-        
-        if (expiresValidity.isValid() != SourceValidity.VALID) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Cached response of source " + getSourceURI() + " is expired.");
-            }
-            if (!isValid(sourceValidity, source.getValidity())) {
+        if (validities.length == 2) {
+            final ExpiresValidity expiresValidity = (ExpiresValidity) validities[0];
+            final SourceValidity sourceValidity = validities[1];
+
+            if (expiresValidity.isValid() != SourceValidity.VALID) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Cached response of source " + getSourceURI() + " is invalid.");
+                    getLogger().debug("Cached response of source " + getSourceURI() + " is expired.");
                 }
-                valid = false;
+                if (!isValid(sourceValidity, source.getValidity())) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Cached response of source " + getSourceURI() + " is invalid.");
+                    }
+                    valid = false;
+                }
+                else {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Cached response of source " + getSourceURI() + " is still valid.");
+                    }
+                    // set new expiration period
+                    this.response.getValidityObjects()[0] = new ExpiresValidity(getExpiration());
+                }
             }
             else {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Cached response of source " + getSourceURI() + " is still valid.");
+                    getLogger().debug("Cached response of source " + getSourceURI() + " is NOT expired.");
                 }
-                // set new expiration period
-                this.response.getValidityObjects()[0] = new ExpiresValidity(getExpiration());
             }
         }
         else {
+            // assert(validities.length == 1 && validities[0] instanceof EventValidity)
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Cached response of source " + getSourceURI() + " is NOT expired.");
+                getLogger().debug("Cached response of source does not expire");
             }
         }
         return valid;
