@@ -191,7 +191,7 @@
 
     <s3 title="Generators">
      <p>
-      A <jump anchor="interface-generator"><code>Generator</code></jump> generates XML content as SAX events and initialize the 
+      A <link href="#interface-generator"><code>Generator</code></link> generates XML content as SAX events and initialize the 
       pipeline processing. 
      </p>
 
@@ -216,7 +216,7 @@
 
     <s3 title="Filters">
      <p>
-      A <jump anchor="interface-filter"><code>Filter</code></jump> transform SAX events in SAX events.
+      A <link href="#interface-filter"><code>Filter</code></link> transform SAX events in SAX events.
      </p>
 
      <source>
@@ -239,7 +239,7 @@
 
     <s3 title="Serializers">
      <p>
-      A <jump anchor="interface-serializer"><code>Serializers</code></jump> transform SAX events 
+      A <link href="#interface-serializer"><code>Serializers</code></link> transform SAX events 
       in binary or char streams for final client consumption.
      </p>
 
@@ -286,7 +286,7 @@
 
     <s3 title="Choosers">
      <p>
-      A <jump anchor="interface-chooser"><code>Chooser</code></jump> evaluate a boolean expression.
+      A <link href="#interface-chooser"><code>Chooser</code></link> evaluate a boolean expression.
      </p>
      <source>
       <![CDATA[
@@ -313,16 +313,16 @@
 
      <p> 
       Because the sitemap will be translated and compiled into a java class at runtime a 
-      <jump anchor="interface-chooser"><code>Chooser</code></jump> can specify a attribute <code>factory</code>
-      instead of a <code>src</code>. This <jump anchor="interface-chooser-factory"><code>ChooserFactory</code></jump>
+      <link href="#interface-chooser"><code>Chooser</code></link> can specify a attribute <code>factory</code>
+      instead of a <code>src</code>. This <link href="#interface-chooser-factory"><code>ChooserFactory</code></link>
       class must be capable to return a java source code fragment that can be embedded into a method corresponding 
-      to the <jump anchor="interface-chooser"><code>Chooser</code></jump>s evaluate method.
+      to the <link href="#interface-chooser"><code>Chooser</code></link>s evaluate method.
      </p>
     </s3>
 
     <s3 title="Matchers">
      <p>
-      A <jump anchor="interface-matcher"><code>Matcher</code></jump> maps a pattern to a resource.
+      A <link href="#interface-matcher"><code>Matcher</code></link> maps a pattern to a resource.
      </p>
      <source>
       <![CDATA[
@@ -345,10 +345,10 @@
 
      <p> 
       Because the sitemap will be translated and compiled into a java class at runtime a 
-      <jump anchor="interface-matcher"><code>Matcher</code></jump> can specify a attribute <code>factory</code>
-      instead of a <code>src</code>. This <jump anchor="interface-matcher-factory"><code>MatcherFactory</code></jump>
+      <link href="#interface-matcher"><code>Matcher</code></link> can specify a attribute <code>factory</code>
+      instead of a <code>src</code>. This <link href="#interface-matcher-factory"><code>MatcherFactory</code></link>
       class must be capable to return a java source code fragment that can be embedded into a method corresponding 
-      to the <jump anchor="interface-matcher"><code>Matcher</code></jump>s match method.
+      to the <link href="#interface-matcher"><code>Matcher</code></link>s match method.
      </p>
     </s3>
    </s2>
@@ -599,7 +599,7 @@
    <s2 title="ChooserFactory">
     <p>
      A <code>ChooserFactory</code> is capable to return the java source code of the evaluate method of a
-     <jump anchor="interface-chooser"><code>Chooser</code></jump> object. It gets the value of the test 
+     <link href="#interface-chooser"><code>Chooser</code></link> object. It gets the value of the test 
      attribute from the sitemap.
     </p>
 
@@ -632,7 +632,7 @@
    <s2 title="MatcherFactory">
     <p>
      A <code>MatcherFactory</code> is capable to return the java source code of the match method of a
-     <jump anchor="interface-matcher"><code>Matcher</code></jump> object. It gets the value of the pattern 
+     <link href="#interface-matcher"><code>Matcher</code></link> object. It gets the value of the pattern 
      attribute from the sitemap.
     </p>
 
