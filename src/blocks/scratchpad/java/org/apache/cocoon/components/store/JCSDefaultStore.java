@@ -54,7 +54,7 @@ public class JCSDefaultStore extends JCSTransientStore implements Contextualizab
     /**
      *  TODO: describe options
      * 
-     * @param params the configuration parameters
+     * @param parameters the configuration parameters
      * @exception  ParameterException
      */
     public void parameterize(Parameters parameters) throws ParameterException {
