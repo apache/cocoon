@@ -84,9 +84,9 @@
    </p>
    
    <p>
-    First thing to do is to make sure that the components needed by Cocoon (and
-    explained in the above paragraphs) are visible. This implies adding this to
-    the servlet engine classpath by adding a line like this in your 
+    First thing to do is to make sure that Cocoon and all the needed components
+    (as explained in the above paragraphs) are visible. This implies adding 
+    this to the servlet engine classpath by adding a line like this in your 
     <code>jserv.properties</code> file for each jar package you have to install
     after substituting <em>[path-to-jar]</em> with the path to the jar file and
     <em>[jar-name]</em> with the package file name.
@@ -95,36 +95,25 @@
    <source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
    
    <p>
-    <em>Note:</em> do not add the <code>cocoon.jar</code> package here since
-    this might corrupt it's normal operation. Here, you should add all the 
-    required packages <em>but</em> Cocoon itself.
+    <em>Note:</em> from this version of Cocoon the <code>Cocoon.jar</code> 
+    package should be added to the servlet engine classpath as any other
+    required package (as shown above).
    </p>
    
    <p>
-    At this point, you must tell the servlet engine to locate Cocoon (since
-    you didn't do this in the step right above!). To do this, you should choose
-    the servlet zone where you want Cocoon to reside. If you don't know what
-    a servlet zone is, you probably want to open the <code>zone.properties</code>
-    file that represents the default servlet zone. Now add the 
-    <code>cocoon.jar</code> package to your servlet zone by making sure
-    a line like this is present in your zone property file.
-   </p>
-   
-   <source>repositories=...,[path-to-cocoon]/bin/cocoon.jar</source>
-   
-   <p>
-    where ... stands for any other servlet repository the servlet zone already
-    contains (or might be empty if no other repository is used by this zone) and
-    <em>[path-to-cocoon]</em> is substitued by the actual path to the <code>
-    cocoon.jar</code> file.
+    At this point, you must set the Cocoon configurations. To do this, you 
+    must choose the servlet zone(s) where you want Cocoon to reside (Note that
+    Cocoon can safely reside on different servlet zones with different
+    configuration files). If you don't know what a servlet zone is, you 
+    probably want to open the <code>zone.properties</code> file that represents 
+    the default servlet zone.
    </p>
    
    <p>
-    Now the servlet engine knows where to locate the Cocoon servlet
-    but Cocoon must need to know its configurations to be able to start. 
     To configure Cocoon, you must pass the <code>cocoon.properties</code>
     file location to the servlet by adding the following to the 
-    <code>zone.properties</code> file:
+    <code>zone.properties</code> file (or each servlet zone file you want
+    Cocoon to reside):
    </p>
    
    <source>servlet.org.apache.cocoon.Cocoon.initArgs=properties=[path-to-cocoon]/bin/cocoon.properties</source>
@@ -151,11 +140,27 @@
     and <em>/servlet/</em> is the mount point of your servlet zone (and the
     above is the standard name for servlet mapping for Apache JServ).
    </p>
-     
+   
    <p>
     Everything should be configured fine. Restart both Apache and Apache JServ
     and try accessing the samples contained in the distribution to see
     Cocoon in action.
+   </p>
+   
+   <p>
+    <strong>Note</stong>: you may want Cocoon to handle two different 
+    extentions with different
+    configurations. To do this, you must set the two different configurations
+    in two different servlet zones, then associate the extentions like this:
+   </p>
+   
+<source>ApJServAction .xml1 /zone1/org.apache.cocoon.Cocoon
+ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>           
+
+   <p>
+    where <em>.xml1</em> is handled by the Cocoon residing on <em>zone1</em>
+    and <em>.xml2</em> is handled by the Cocoon residing on <em>zone2</em>
+    which have different configurations and thus different behavior.
    </p>
   </s2>
   
