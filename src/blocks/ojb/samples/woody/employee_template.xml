@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: employee_template.xml,v 1.1 2003/09/28 04:31:11 antonio Exp $-->
+<!-- $Id: employee_template.xml,v 1.2 2004/02/18 19:58:17 joerg Exp $-->
 <!--
 
  ============================================================================
@@ -54,15 +54,15 @@
  * Employee template
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/09/28 04:31:11 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/02/18 19:58:17 $
 -->
 <page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
   <title>Employee</title>
   <content>
     <wt:form-template action="#{$continuation/id}.continue" method="POST">
-        <wt:widget-label id="id"/><wt:widget id="id"/><br/><br/>
-        <wt:widget-label id="name"/><wt:widget id="name"/><br/><br/>
-        <wt:widget-label id="department_id"/><wt:widget id="department_id"/><br/><br/>
+        <wt:widget-label id="id"/>: <wt:widget id="id"/><br/><br/>
+        <wt:widget-label id="name"/>: <wt:widget id="name"/><br/><br/>
+        <wt:widget-label id="department_id"/>: <wt:widget id="department_id"/><br/><br/>
         <input type="submit"/>
     </wt:form-template>
   </content>
