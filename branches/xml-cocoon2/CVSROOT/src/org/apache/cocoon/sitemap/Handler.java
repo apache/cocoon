@@ -31,33 +31,33 @@ import org.apache.avalon.ComponentManager;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-28 19:14:05 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-04 20:54:38 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
 
     /** the configuration */
-    private Configuration conf = null;
+    private Configuration conf;
 
     /** the component manager */
-    private ComponentManager manager = null;
+    private ComponentManager manager;
 
     /** the source of this sitemap */
-    private File sourceFile = null;
+    private File sourceFile;
 
     /** the last error */
-    private Exception exception = null;
+    private Exception exception;
 
     /** the managed sitemap */
-    private Sitemap sitemap = null;
+    private Sitemap sitemap;
     private boolean check_reload = true;
  
     /** the regenerating thread */ 
-    private Thread regeneration = null; 
+    private Thread regeneration;
     private boolean isRegenerationRunning = false;
-    private Environment environment = null;
+    private Environment environment;
  
     /** the sitemaps base path */ 
-    private String basePath = null; 
+    private String basePath;
 
     public void setComponentManager (ComponentManager manager) {
         this.manager = manager;
@@ -75,14 +75,14 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
             s = source + "sitemap.xmap";
             this.sourceFile = new File (s);
         } else {
-            sourceFile = new File (source);
-            if (!sourceFile.isFile()) {
+            this.sourceFile = new File (source);
+            if (!this.sourceFile.isFile()) {
                 s = source + File.separatorChar + "sitemap.xmap";
-                sourceFile = new File (s);
+                this.sourceFile = new File (s);
             }
-            if (!sourceFile.canRead()) {
-                throw new FileNotFoundException ("file " + s + " not found or cannot be opened for reading");
-            }
+        }
+        if (!this.sourceFile.canRead()) {
+            throw new FileNotFoundException ("file " + s + " not found or cannot be opened for reading");
         }
     }
 
@@ -133,7 +133,7 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
 
     /** Generate the Sitemap class */
     public void run() {
-        Sitemap smap = null;
+        Sitemap smap;
         InputSource inputSource = new InputSource (sourceFile.getPath());
         String systemId = inputSource.getSystemId();
 
