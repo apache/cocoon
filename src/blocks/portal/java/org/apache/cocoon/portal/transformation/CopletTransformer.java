@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.14 2004/02/13 11:50:30 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.15 2004/02/28 17:26:27 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -197,20 +197,26 @@ extends AbstractCopletTransformer {
                     newAttrs.removeAttribute("path");
                     newAttrs.removeAttribute("value");
                     
-                    JXPathEvent event;
+                    JXPathEvent event = null;
                     if ( attr.getValue("layout") != null ) {
                         newAttrs.removeAttribute("layout");
                         final String layoutId = attr.getValue("layout");
                         Object layout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
-                        event = new JXPathEvent(layout, path, value);
+                        if ( layout != null ) {
+                            event = new JXPathEvent(layout, path, value);
+                        }
                     } else {
                         String copletId = attr.getValue("coplet");
                         newAttrs.removeAttribute("coplet");
                         final CopletInstanceData cid = this.getCopletInstanceData(copletId);
-                        event = new CopletJXPathEvent(cid, path, value);
+                        if ( cid != null ) {
+                            event = new CopletJXPathEvent(cid, path, value);
+                        }
                     }
                     if ( this.insideLinks ) {
-                        this.collectedEvents.add(event);
+                        if ( event != null ) {
+                            this.collectedEvents.add(event);
+                        }
                     } else {
                         final String href = linkService.getLinkURI(event);
                         this.output(href, format, newAttrs );
