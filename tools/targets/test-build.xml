@@ -23,13 +23,14 @@
   <!-- Runs all tests -->
   <target name="test" depends="junit-tests, block-tests" description="Runs all tests"/>
 
-  <!-- Runs JUnit tests -->
-  <target name="junit-tests" depends="compile-tests">
+  <target name="junit-prepare">
     <delete dir="${build.test.output}"/>
     <mkdir dir="${build.test.output}"/>
-    <junit printsummary="yes" fork="yes">
-      <!--jvmarg value="-Xdebug"/>
-      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"/-->
+  </target>
+
+  <!-- Runs JUnit tests -->
+  <target name="junit-tests" depends="compile-tests, junit-prepare">
+    <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
       <classpath refid="test.classpath"/>
       <formatter type="plain"/>
       <formatter type="xml"/>
@@ -44,12 +45,32 @@
         </fileset>
       </batchtest>
     </junit>
+    <antcall target="junit-report"/>
+  </target>
+
+  <!-- Runs JUnit tests in debug mode -->
+  <target name="junit-test-debug" depends="compile-tests, junit-prepare">
+    <fail unless="junit.testcase" message="Please set the property $${junit.testcase} to a JUnit testcase (package.Classname, e.g. org.test.MyTestCase)."/>
+    <echo message="The JVM will be suspended until you connect with your favourite debugger to port ${junit.test.debugport}."/>
+    <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
+      <jvmarg value="-Xdebug"/>
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=${junit.test.debugport}"/>
+      <classpath refid="test.classpath"/>
+      <formatter type="plain"/>
+      <formatter type="xml"/>
+      <test name="${junit.testcase}" todir="${build.test.output}"/>
+    </junit>
+    <antcall target="junit-report"/>
+  </target>
+
+  <target name="junit-report">
     <junitreport todir="${build.test.output}">
       <fileset dir="${build.test.output}">
        <include name="TEST-*.xml"/>
       </fileset>
       <report format="frames" todir="${build.test.output}"/>
     </junitreport>
+    <fail if="junit.test.failed" message="One or more JUnit tests failed or caused errors. Please have a look into the report for details."/>
   </target>
 
   <!-- Anteater tests  -->
