@@ -56,7 +56,7 @@ import org.apache.excalibur.source.Source;
 import org.w3c.dom.Element;
 
 /**
- * Work interface for the component that can create {@link FormDefinition}'s.
+ * Work interface for the component that can create {@link Form}s.
  */
 public interface FormManager {
     public static final String ROLE = "org.apache.cocoon.woody.FormManager";
