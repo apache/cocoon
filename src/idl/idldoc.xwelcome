@@ -1,7 +1,0 @@
-<xwelcome xpath="/welcome" unless="message[@id='idldocs']">
-
-  <message id="idldocs">
-   Here you find the <link href="api/fom/index.html">Flow Object Model (FOM) documentation</link>.
-  </message>
-  
-</xwelcome>
