@@ -50,14 +50,10 @@
 */
 package org.apache.cocoon.components;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -67,7 +63,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.6 2003/11/06 14:30:01 cziegeler Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.7 2003/11/06 19:18:32 joerg Exp $
  */
 
 public class ExtendedComponentSelector 
