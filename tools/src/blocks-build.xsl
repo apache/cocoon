@@ -213,13 +213,23 @@
                useexternalfile="yes"
                additionalparam="${{javadoc.additionalparam}}"
                maxmemory="128m">
-               
-        <link offline="true" href="http://avalon.apache.org/framework/api" packagelistloc="${{resources.javadoc}}/avalon-framework"/>
-        <link offline="true" href="http://avalon.apache.org/excalibur/api" packagelistloc="${{resources.javadoc}}/avalon-excalibur"/>
-        <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api" packagelistloc="${{resources.javadoc}}/xerces"/>
-        <link offline="true" href="http://xml.apache.org/xalan-j/apidocs" packagelistloc="${{resources.javadoc}}/xalan"/>
-        <link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api" packagelistloc="${{resources.javadoc}}/j2se"/>
-        <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${{resources.javadoc}}/j2ee"/>
+
+        <link packagelistloc="${{resources.javadoc}}/avalon-excalibur"
+              offline="true" href="http://avalon.apache.org/excalibur/api"/>
+        <link packagelistloc="${{resources.javadoc}}/avalon-framework"
+              offline="true" href="http://avalon.apache.org/framework/api"/>
+        <link packagelistloc="${{resources.javadoc}}/avalon-logkit"
+              offline="true" href="http://avalon.apache.org/logkit/api"/>
+        <link packagelistloc="${{resources.javadoc}}/j2ee"
+              offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api"/>
+        <link packagelistloc="${{resources.javadoc}}/j2se"
+              offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api"/>
+        <link packagelistloc="${{resources.javadoc}}/jstl"
+              offline="true" href="http://java.sun.com/products/jsp/jstl/1.1/docs/api"/>
+        <link packagelistloc="${{resources.javadoc}}/xalan"
+              offline="true" href="http://xml.apache.org/xalan-j/apidocs"/>
+        <link packagelistloc="${{resources.javadoc}}/xerces"
+              offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"/>
 
         <tag name="avalon.component"   scope="types"   description="Avalon component" />
         <tag name="avalon.service"     scope="types"   description="Implements service:" />
