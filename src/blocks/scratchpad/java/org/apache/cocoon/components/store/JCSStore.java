@@ -53,12 +53,25 @@ package org.apache.cocoon.components.store;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
+import java.util.Properties;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.impl.AbstractReadWriteStore;
-import org.apache.jcs.JCS;
+import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * TODO - This store implementation should be moved to excalibur store
@@ -69,54 +82,114 @@ import org.apache.jcs.access.exception.CacheException;
  * @author <a href="mailto:cmoss@tvnz.co.nz">Corin Moss</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  */
-public abstract class AbstractJCSStore
-    extends AbstractReadWriteStore
-    implements Store, ThreadSafe {
+public class JCSStore extends AbstractReadWriteStore
+    implements Store, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
     
-    /** The Java Cache System object */
-    protected JCS m_JCS;
+    /** The JCS configuration properties */
+    private Properties m_properties;
     
-    /**The Region as used by JCS*/
+    /** The Region as used by JCS*/
     private String m_region;
-
-    /**The group name as used by JCS getGroupKeys*/
+    
+    /** The group name as used by JCS getGroupKeys*/
     private String m_group;
     
-     
-    public void setup(final String configFile, 
-                      final String regionName, 
-                      final String groupName) 
-    throws IOException, CacheException {
-   
-        this.m_region = regionName;
-        this.m_group = groupName;
-        
-        if ( this.getLogger().isDebugEnabled() ) {
-            getLogger().debug("CEM Loading config: '" + configFile + "'");
-            getLogger().debug("CEM Loading region: '" + this.m_region + "'");
-            getLogger().debug("CEM Loading group: '" + this.m_group + "'");
-        }
-
-        JCS.setConfigFilename( configFile );
-
-        try {
-           m_JCS = JCS.getInstance( m_region );
-           System.out.println("m_JCS" + m_JCS);
-        } catch (CacheException ce) { 
-            ce.printStackTrace();
-            throw new CacheException( "Error initialising JCS with region: " + this.m_region );
-        }
-         
-
-    } 
+    /** JCS Cache manager */
+    private CompositeCacheManager m_cacheManager;
     
-     /**
+    /** The Java Cache System object */
+    private JCSCacheAccess m_JCS;
+    
+    /** Access to the SourceResolver */
+    private ServiceManager m_manager;
+    
+    
+    // ---------------------------------------------------- Lifecycle
+    
+    public JCSStore() {
+    }
+    
+    public void service(ServiceManager manager) throws ServiceException {
+        m_manager = manager;
+    }
+    
+    /**
+     *  Configure the Component.<br>
+     *  A few options can be used
+     *  <ul>
+     *    <li>
+     *      <code>config-file</code>: the name of the file which specifies 
+     *       the configuration parameters
+     *    </li>
+     *    <li>
+     *      <code>region-name<code>: the region to be used as defined in the config file
+     *    </li>
+     *    <li>
+     *      <code>group-name</code>: the group to be used as defined in the config file
+     *    </li>
+     *  </ul>
+     *
+     * @param params the configuration paramters
+     * @exception  ParameterException
+     */
+    public void parameterize(Parameters params) throws ParameterException {
+        // TODO - These are only values for testing:
+        String configFile = params.getParameter("config-file", "context://WEB-INF/cache.ccf");
+        m_region = params.getParameter("region-name", "indexedRegion1");
+        m_group = params.getParameter("group-name", "indexedDiskCache");
+
+        if (this.getLogger().isDebugEnabled()) {
+            getLogger().debug("CEM Loading config: '" + configFile + "'");
+            getLogger().debug("CEM Loading region: '" + m_region + "'");
+            getLogger().debug("CEM Loading group: '" + m_group + "'");
+        }
+        
+        Source source = null;
+        SourceResolver resolver = null;
+        try {
+            resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+            source = resolver.resolveURI(configFile);
+            if (!source.exists()) {
+                throw new ParameterException("No config file at configured location: " + configFile);
+            }
+            m_properties = new Properties();
+            m_properties.load(source.getInputStream());
+        }
+        catch (IOException e) {
+            throw new ParameterException("Failed to load JCS properties file",e);
+        }
+        catch (ServiceException e) {
+            throw new ParameterException("Missing service dependency: SourceResolver",e);
+        }
+        finally {
+            if (resolver != null && source != null) {
+                resolver.release(source);
+            }
+        }
+    }
+    
+    public void initialize() throws Exception {
+        
+        m_cacheManager = CompositeCacheManager.getUnconfiguredInstance();
+        m_cacheManager.configure(m_properties);
+        m_JCS = new JCSCacheAccess(m_cacheManager.getCache(m_region));
+        
+    }
+
+    public void dispose() {
+        // FIXME: how to actually persist the stored items?
+        m_JCS.save();
+        m_cacheManager.freeCache(m_region);
+    }
+    
+    // ---------------------------------------------------- Store implementation
+    
+    /**
      * Returns a Object from the store associated with the Key Object
      *
      * @param key the Key object
      * @return the Object associated with Key Object
      */
-    
     protected Object doGet(Object key) 
     {
         Object value = null;
@@ -275,13 +348,17 @@ public abstract class AbstractJCSStore
     
     protected int doGetSize() 
     {
-        //The following is protected - I shall try and 
-        //find a way to get to it, but I'm not sure yet
-        //return this.m_JCS.cacheControl.getSize();
-        
-        //Nothing seems to rely on this out side of the instrumentation
-        //so, I'll be bad
-        return 0;
+        return m_JCS.getSize();
     }
     
+    
+    private static class JCSCacheAccess extends GroupCacheAccess {
+        private JCSCacheAccess(CompositeCache cacheControl) {
+            super(cacheControl);
+        }
+        
+        private int getSize() {
+            return super.cacheControl.getSize();
+        }
+    }
 }

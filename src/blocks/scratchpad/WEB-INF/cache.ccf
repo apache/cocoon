@@ -46,4 +46,4 @@ jcs.auxiliary.indexedDiskCache.attributes.DiskPath=/www/cocoon/webapps/cocoon/in
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache2=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.indexedDiskCache2.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.indexedDiskCache2.attributes.DiskPath=target/test-sandbox/indexed-disk-cache2
+jcs.auxiliary.indexedDiskCache2.attributes.DiskPath=build/test-sandbox/indexed-disk-cache2
