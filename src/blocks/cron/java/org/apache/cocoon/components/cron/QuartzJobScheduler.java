@@ -59,7 +59,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.12 2004/03/11 22:05:12 sylvain Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.13 2004/07/21 09:23:32 cziegeler Exp $
  *
  * @since 2.1.1
  */
@@ -654,32 +654,32 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     }
 
     /**
-     * Create the tiggers
+     * Create the triggers
      *
-     * @param tiggers array of tigger configuration elements
+     * @param triggers array of trigger configuration elements
      *
      * @throws ConfigurationException thrown in case of configuration failures
      */
-    private void createTriggers(final Configuration[] tiggers)
+    private void createTriggers(final Configuration[] triggers)
     throws ConfigurationException {
-        for (int i = 0; i < tiggers.length; i++) {
-            String cron = tiggers[i].getChild("cron").getValue(null);
+        for (int i = 0; i < triggers.length; i++) {
+            String cron = triggers[i].getChild("cron").getValue(null);
 
             if (null == cron) {
-                final String seconds = tiggers[i].getChild("seconds").getValue("0");
-                final String minutes = tiggers[i].getChild("minutes").getValue("*");
-                final String hours = tiggers[i].getChild("hours").getValue("*");
-                final String days = tiggers[i].getChild("days").getValue("*");
-                final String months = tiggers[i].getChild("months").getValue("*");
-                final String weekdays = tiggers[i].getChild("weekdays").getValue("?");
-                final String years = tiggers[i].getChild("years").getValue("*");
+                final String seconds = triggers[i].getChild("seconds").getValue("0");
+                final String minutes = triggers[i].getChild("minutes").getValue("*");
+                final String hours = triggers[i].getChild("hours").getValue("*");
+                final String days = triggers[i].getChild("days").getValue("*");
+                final String months = triggers[i].getChild("months").getValue("*");
+                final String weekdays = triggers[i].getChild("weekdays").getValue("?");
+                final String years = triggers[i].getChild("years").getValue("*");
                 cron = seconds + " " + minutes + " " + hours + " " + days + " " + months + " " + weekdays + " " +
                        years;
             }
 
             try {
-                addJob(tiggers[i].getAttribute("name"), tiggers[i].getAttribute("target"), cron,
-                       tiggers[i].getAttributeAsBoolean("concurrent-runs", true));
+                addJob(triggers[i].getAttribute("name"), triggers[i].getAttribute("target"), cron,
+                       triggers[i].getAttributeAsBoolean("concurrent-runs", true));
             } catch (final CascadingException ce) {
                 throw new ConfigurationException("failed adding trigger to scheduler", ce);
             }
@@ -717,7 +717,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.12 2004/03/11 22:05:12 sylvain Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.13 2004/07/21 09:23:32 cziegeler Exp $
      */
     private static class ThreadPool extends AbstractLogEnabled implements org.quartz.spi.ThreadPool {
         /** Our executor thread pool */
