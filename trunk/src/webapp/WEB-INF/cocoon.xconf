@@ -153,6 +153,19 @@
   </component>
   +-->
 
+  <!--+
+      | Source Factories
+      |
+      | Each source factory adds a special uri schemes to the system.
+      +-->
+	<url-source id="url" logger="core.source.url" />
+	<context-source id="context" logger="core.source.context" />
+	<cocoon-source id="cocoon" logger="core.source.cocoon" />
+	<file-source id="file" logger="core.source.file" />
+	<resource-source id="resource" logger="core.source.resource" />
+	
+    <source-resolver id="cocoon-source-resolver" logger="core.source-resolver" />
+
 <!-- TODO: entries below are still 2.1 configuration -->
 
 <!-- ========================= Sitemap Flowscript ========================== -->
@@ -346,22 +359,6 @@
 
 <!-- ================================= XML ================================ -->
 
-  <!--+
-      | Source Factories
-      |
-      | Each source factory adds a special uri schemes to the system.
-      +-->
-  <source-factories>
-    <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
-    <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
-    <component-instance class="org.apache.cocoon.components.source.impl.SitemapSourceFactory" name="cocoon"/>
-    <!-- The "file:" protocol is modifiable (can be written to) and traversable (directory structures
-         can be crawled). -->
-    <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
-    <!-- the "*" protocol handles all uri schemes that are not explicitely specified. This includes all
-         JDK standard protocols. -->
-    <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
-  </source-factories>
   <!--+
       | Entity resolution catalogs
       |
