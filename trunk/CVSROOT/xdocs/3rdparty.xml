@@ -117,7 +117,7 @@ System (CMS), based on Oracle CMS."</td>
     <td>Logicsheet</td>
     <td>Implements a generic SOAP client. Any SOAP server wanting to present its
      services to the world over a uniform HTTP-based interface can do so via
-     an XML page using the SOAP taglib.</td>
+     an XML page using the SOAP taglib. Includes sample app and comprehensive docs.</td>
     <td>"Suitable for production use. Syntax/Concept <strong>not</strong> finalized."
      Currently not Cocoon 2 compatible.</td>
     <td>Open Source</td>
