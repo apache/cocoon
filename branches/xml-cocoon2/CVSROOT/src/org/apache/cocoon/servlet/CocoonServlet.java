@@ -44,6 +44,7 @@ import org.apache.log.LogTarget;
 import org.apache.log.Logger;
 import org.apache.log.Priority;
 import org.apache.log.filter.PriorityFilter;
+import org.apache.log.format.AvalonFormatter;
 import org.apache.log.output.FileOutputLogTarget;
 import org.apache.log.output.ServletOutputLogTarget;
 import org.xml.sax.SAXException;
@@ -56,7 +57,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.94 $ $Date: 2001-05-07 15:21:11 $
+ * @version CVS $Revision: 1.1.4.95 $ $Date: 2001-05-09 16:43:37 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -273,14 +274,23 @@ public class CocoonServlet extends HttpServlet {
             if (logName == null) {
                 logName = "cocoon.log";
             }
-            final String path = logDir + logName ;
+            final String path = logDir + logName;
+            final AvalonFormatter formatter = new AvalonFormatter();
+            formatter.setFormat( "%7.7{priority} %5.5{time}   [%8.8{category}] " +
+                                 "(%{context}): %{message}\\n%{throwable}" );
 
             this.log = Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon");
             this.log.setPriority(logPriority);
 
+            FileOutputLogTarget fileTarget = new FileOutputLogTarget(path);
+            ServletOutputLogTarget servTarget = new ServletOutputLogTarget(context);
+
+            fileTarget.setFormatter(formatter);
+            servTarget.setFormatter(formatter);
+
             PriorityFilter filter = new PriorityFilter(Priority.ERROR);
-            filter.addTarget( new ServletOutputLogTarget(context) );
-            LogTarget[] targets = new LogTarget[] { new FileOutputLogTarget(path), filter };
+            filter.addTarget( servTarget );
+            LogTarget[] targets = new LogTarget[] { fileTarget, filter };
             this.log.setLogTargets( targets );
         } catch (Exception e) {
             Hierarchy.getDefaultHierarchy().log("Could not set up Cocoon Logger, will use screen instead", e);
