@@ -86,7 +86,11 @@
 <![CDATA[
 <map:match pattern="mail/*">
   <map:act type="sendmail">
-    <map:parameter name="smtphost" value="localhost"/>
+    <!-- To override defaults specified in cocoon.xconf:
+    <map:parameter name="smtp-host" value="localhost"/>
+    <map:parameter name="smtp-user" value="john"/>
+    <map:parameter name="smtp-password" value="john"/>
+    -->
     <map:parameter name="from" value="cocoon@localhost"/>
     <map:parameter name="to" value="mailinglist@somewhere.com"/>
     <map:parameter name="subject" value="{request-param:subject}"/>
@@ -131,11 +135,25 @@
           <th>Description:</th>
         </tr>
         <tr>
-          <td>smtphost</td>
+          <td>smtp-host</td>
           <td>no</td>
           <td>
             The IP address or the name of the host, which should deliver the
             email message. Better known as the mail transfer agent or short MTA.
+          </td>
+        </tr>
+        <tr>
+          <td>smtp-user</td>
+          <td>no</td>
+          <td>
+            User name
+          </td>
+        </tr>
+        <tr>
+          <td>smtp-password</td>
+          <td>no</td>
+          <td>
+            Password
           </td>
         </tr>
         <tr>
