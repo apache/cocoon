@@ -68,7 +68,7 @@ import org.apache.excalibur.source.SourceParameters;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSourceFactory.java,v 1.5 2003/09/24 22:34:52 cziegeler Exp $
+ *  @version $Id: WebDAVSourceFactory.java,v 1.6 2003/11/21 11:48:14 unico Exp $
 */
 public class WebDAVSourceFactory
     extends AbstractLogEnabled
@@ -101,7 +101,7 @@ public class WebDAVSourceFactory
         }
 
         WebDAVSource source =
-            WebDAVSource.newWebDAVSource(location, principal, password, protocol);
+            WebDAVSource.newWebDAVSource(location, principal, password, protocol,getLogger());
             
         return source;
     }

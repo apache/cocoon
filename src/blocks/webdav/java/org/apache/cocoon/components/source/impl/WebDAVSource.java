@@ -69,6 +69,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.source.RestrictableSource;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
@@ -103,9 +105,9 @@ import org.w3c.dom.NodeList;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.10 2003/10/29 14:16:53 vgritsenko Exp $
+ *  @version $Id: WebDAVSource.java,v 1.11 2003/11/21 11:48:14 unico Exp $
 */
-public class WebDAVSource implements Source,
+public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
 
 
@@ -169,7 +171,8 @@ public class WebDAVSource implements Source,
     public static WebDAVSource newWebDAVSource(String location,
                                                String principal,
                                                String password,
-                                               String protocol) throws SourceException {
+                                               String protocol,
+                                               Logger logger) throws SourceException {
         // FIXME: wild hack needed for writing to a new resource.
         // if a resource doesn't exist, an exception
         // will be thrown, unless such resource isn't created with the
@@ -178,21 +181,25 @@ public class WebDAVSource implements Source,
         // properties of an exixting resource. So either we do this
         // hack here or we fill properties on the fly when requested.
         // This "solution" is scary, but the SWCL is pretty dumb.
+        WebDAVSource source;
         try {
-            return new WebDAVSource(location, principal, password, protocol, false);
+            source = new WebDAVSource(location, principal, password, protocol, false);
         }  catch (HttpException he) {
             try {
-                return new WebDAVSource(location, principal, password, protocol, true);
+                source = new WebDAVSource(location, principal, password, protocol, true);
             } catch (HttpException finalHe) {
-                finalHe.printStackTrace(System.err);
-                throw new SourceException("Error creating the source: ", finalHe);
+                final String message = "Error creating the source.";
+                throw new SourceException(message, finalHe);
             } catch (IOException e) {
-                e.printStackTrace(System.err);
-                throw new SourceException("Error creating the source: ", e);
+                final String message = "Error creating the source.";
+                throw new SourceException(message, e);
             }
         } catch (IOException e) {
-            throw new SourceException("Error creating the source: ", e);
+            final String message = "Error creating the source.";
+            throw new SourceException(message, e);
         }
+        source.enableLogging(logger);
+        return source;
     }
 
     /**
@@ -433,7 +440,7 @@ public class WebDAVSource implements Source,
      */
     public void setSourcePermission(SourcePermission sourcepermission)
         throws SourceException {
-        throw new SourceException("Operation not supported");
+        //FIXME
     }
 
     /**
@@ -442,7 +449,8 @@ public class WebDAVSource implements Source,
      * @return Array of SourcePermission
      */
     public SourcePermission[] getSourcePermissions() throws SourceException {
-        throw new SourceException("Operation not supported");
+        //FIXME
+        return null;
     }
 
     public class WebDAVSourceOutputStream extends ByteArrayOutputStream {
@@ -514,7 +522,11 @@ public class WebDAVSource implements Source,
         ContentHandler handler)
         throws SAXException {
         for (int i = 0; i < resources.length; i++) {
-            System.out.println("RESOURCE: " + resources[i].getDisplayName());
+            if (getLogger().isDebugEnabled()) {
+                final String message =
+                    "RESOURCE: " + resources[i].getDisplayName();
+                getLogger().debug(message);
+            }
             if (resources[i].isCollection()) {
                 try {
                     WebdavResource[] childs =
@@ -537,13 +549,34 @@ public class WebDAVSource implements Source,
                         COLLECTION_NAME,
                         PREFIX + ":" + COLLECTION_NAME);
                 } catch (HttpException e) {
-                    e.printStackTrace();
+                    if (getLogger().isDebugEnabled()) {
+                        final String message =
+                            "Unable to get WebDAV children. Server responded " +
+                            e.getReasonCode() + " (" + e.getReason() + ") - " 
+                            + e.getMessage();
+                        getLogger().debug(message);
+                    }
                 } catch (SAXException e) {
-                    e.printStackTrace();
+                    if (getLogger().isDebugEnabled()) {
+                        final String message =
+                            "Unable to get WebDAV children: " 
+                            + e.getMessage();
+                        getLogger().debug(message,e);
+                    }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if (getLogger().isDebugEnabled()) {
+                        final String message =
+                            "Unable to get WebDAV children: " 
+                            + e.getMessage();
+                        getLogger().debug(message,e);
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    if (getLogger().isDebugEnabled()) {
+                        final String message =
+                            "Unable to get WebDAV children: " 
+                            + e.getMessage();
+                        getLogger().debug(message,e);
+                    }
                 }
             } else {
                 AttributesImpl attrs = new AttributesImpl();
@@ -578,17 +611,27 @@ public class WebDAVSource implements Source,
             for (int i = 0; i < resources.length; i++) {
                 if (childName.equals(resources[i].getDisplayName())) {
                 	String childLocation = this.location + "/" + childName;
-					WebDAVSource source = WebDAVSource.newWebDAVSource(childLocation, this.principal, this.password, this.protocol);
+					WebDAVSource source = WebDAVSource.newWebDAVSource(
+                        childLocation, 
+                        this.principal, 
+                        this.password, 
+                        this.protocol, 
+                        this.getLogger());
 					source.setSourceCredential(this.getSourceCredential());
 					return source;
                 }
             }
         } catch (HttpException e) {
-            e.printStackTrace();
-            throw new SourceException(e.getMessage());
+            if (getLogger().isDebugEnabled()) {
+                final String message =
+                    "Unable to get WebDAV children. Server responded " +
+                    e.getReasonCode() + " (" + e.getReason() + ") - " 
+                    + e.getMessage();
+                getLogger().debug(message);
+            }
+            throw new SourceException("Failed to get WebDAV collection child.",e);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new SourceException(e.getMessage());
+            throw new SourceException("Failed to get WebDAV collection child.",e);
         }
         return child;
     }
@@ -607,11 +650,15 @@ public class WebDAVSource implements Source,
                 children.add(src);
             }
         } catch (HttpException e) {
-            // TODO: getLogger.debug()
-            throw new SourceException(e.getMessage(), e);
+            if (getLogger().isDebugEnabled()) {
+                final String message =
+                    "Unable to get WebDAV children. Server responded " +                    e.getReasonCode() + " (" + e.getReason() + ") - " 
+                    + e.getMessage();
+                getLogger().debug(message);
+            }
+            throw new SourceException("Failed to get WebDAV collection children.", e);
         } catch (IOException e) {
-            // TODO: getLogger.debug()
-            throw new SourceException(e.getMessage(), e);
+            throw new SourceException("Failed to get WebDAV collection children.", e);
         }
         return children;
     }
@@ -635,7 +682,8 @@ public class WebDAVSource implements Source,
                 myLocation,
                 this.principal,
                 this.password,
-                this.protocol);
+                this.protocol,
+                this.getLogger());
         wds.setSourceCredential(this.getSourceCredential());
         return wds;
     }
