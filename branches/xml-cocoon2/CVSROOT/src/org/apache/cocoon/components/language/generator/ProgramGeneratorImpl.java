@@ -5,10 +5,12 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.components.serverpages;
+package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
 import java.io.FileReader;
+
+import org.apache.arch.Modifiable;
 
 import org.apache.arch.Composer;
 import org.apache.arch.ComponentManager;
@@ -24,7 +26,6 @@ import org.apache.cocoon.Parameters;
 import org.apache.cocoon.components.store.MemoryStore;
 import org.apache.cocoon.components.store.FilesystemStore;
 
-import org.apache.cocoon.generators.ServerPagesGenerator;
 
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.MarkupLanguage;
@@ -46,13 +47,13 @@ import org.xml.sax.SAXException;
 import java.io.FileNotFoundException;
 
 /**
- * The default implementation of <code>ServerPagesGeneratorLoader</code>
+ * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:09 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-24 20:17:03 $
  */
-public class ServerPagesLoaderImpl
-  implements ServerPagesLoader, Composer, Configurable
+public class ProgramGeneratorImpl
+  implements ProgramGenerator, Composer, Configurable
 {
   /** The in-memory store */
   protected MemoryStore cache = new MemoryStore();
@@ -100,18 +101,18 @@ public class ServerPagesLoaderImpl
   }
 
   /**
-   * Load a <code>Generator</code> built from an XML document written in a
+   * Load a program built from an XML document written in a
    * <code>MarkupLanguage</code>
    *
    * @param file The input document's <code>File</code>
    * @param markupLanguage The <code>MarkupLanguage</code> in which the input
    * document is written
    * @param programmingLanguage The <code>ProgrammingLanguage</code> in which
-   * the generator must be written
-   * @return The loaded generator
+   * the program must be written
+   * @return The loaded program instance
    * @exception Exception If an error occurs during generation or loading
    */
-  public ServerPagesGenerator load(
+  public Modifiable load(
     File file, String markupLanguageName, String programmingLanguageName
   ) throws Exception {
     // Get markup and programming languages
@@ -130,52 +131,48 @@ public class ServerPagesLoaderImpl
     String sourceExtension = programmingLanguage.getSourceExtension();
 
     // Ensure no 2 requests for the same file overlap
-    Object generatorProgram = null;
-    ServerPagesGenerator generator = null;
+    Object program = null;
+    Modifiable programInstance = null;
 
     synchronized(filename.intern()) {
-      // Attempt to load generator class from cache
-      generatorProgram = this.cache.get(filename);
+      // Attempt to load program object from cache
+      program = this.cache.get(filename);
   
-      if (generatorProgram == null) {
-        try {
+      try {
+        if (program == null) {
           // FIXME: Why pass null as encoding?
-          generatorProgram = programmingLanguage.load(
+          program = programmingLanguage.load(
             normalizedName, this.repositoryName, null
           );
   
-	  // Instantiate generator
-          generator = (ServerPagesGenerator)
-	    programmingLanguage.instantiate(generatorProgram);
-
-          // Store loaded program in cache
-          this.cache.store(filename, generatorProgram);
-        } catch (LanguageException e) {
+	  // Instantiate program
+          programInstance =
+	    (Modifiable) programmingLanguage.instantiate(program);
 	}
-      } else {
-        generator = (ServerPagesGenerator)
-	  programmingLanguage.instantiate(generatorProgram);
-      }
+
+        programInstance = (Modifiable) programmingLanguage.instantiate(program);
+
+        // Store loaded program in cache
+        this.cache.store(filename, program);
+      } catch (LanguageException e) {}
       
       if (
 	  this.autoReload &&
-          generator != null && (
-            generator.dateCreated() < file.lastModified() ||
-            generator.hasChanged()
-          )
+          programInstance != null &&
+	  programInstance.modifiedSince(file.lastModified())
       )
       {
         // Unload program
         programmingLanguage.unload(
-	  generatorProgram, normalizedName, this.repositoryName
+	  program, normalizedName, this.repositoryName
         );
   
-        // Invalidate previous generator
-	generator = null;
-        generatorProgram = null;
+        // Invalidate previous program/instance pair
+        program = null;
+	programInstance = null;
       }
   
-      if (generatorProgram == null) {
+      if (program == null) {
         // Generate code
         Document document =
 	  DOMUtils.DOMParse(new InputSource(new FileReader(file)));
@@ -203,19 +200,18 @@ public class ServerPagesLoaderImpl
         }
   
         // [Compile]/Load generated program
-        generatorProgram = programmingLanguage.load(
+        program = programmingLanguage.load(
 	  normalizedName, this.repositoryName, encoding
 	);
 
-	// Instantiate generator
-        generator = (ServerPagesGenerator)
-	  programmingLanguage.instantiate(generatorProgram);
+	// Instantiate
+        programInstance = (Modifiable) programmingLanguage.instantiate(program);
 
         // Store generated program in cache
-        this.cache.store(filename, generatorProgram);
+        this.cache.store(filename, program);
       }
     }
 
-    return generator;
+    return programInstance;
   }
 }

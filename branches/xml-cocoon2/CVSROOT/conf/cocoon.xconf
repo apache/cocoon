@@ -54,13 +54,13 @@
   </component>
 
   <component
-    role="serverpages-loader"
-    class="org.apache.cocoon.components.serverpages.ServerPagesLoaderImpl">
+    role="program-generator"
+    class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
       <parameter name="repository" value="/tmp/repository"/>
       <parameter name="auto-reload" value="true"/>
   </component>
 
-  <generator  name="serverpages" class="org.apache.cocoon.generators.ServerPagesProxy"/>
+  <generator  name="serverpages" class="org.apache.cocoon.generators.ServerPagesGenerator"/>
 
   <!--
   <component
