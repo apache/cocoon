@@ -54,12 +54,12 @@ package org.apache.cocoon.generation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.excalibur.pool.Recyclable;
+
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.repository.Principal;
@@ -75,9 +75,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * principals from a PrincipalProvider.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalListGenerator.java,v 1.3 2003/09/05 07:31:46 cziegeler Exp $
+ * @version CVS $Id: PrincipalListGenerator.java,v 1.4 2003/09/23 18:41:39 joerg Exp $
  */
-public class PrincipalListGenerator extends ComposerGenerator 
+public class PrincipalListGenerator extends ServiceableGenerator 
         implements Recyclable {
 
     /** Namespace of the generated list. */
@@ -115,10 +115,10 @@ public class PrincipalListGenerator extends ComposerGenerator
      */
     public void generate() throws IOException, SAXException, ProcessingException {
 
-        ComponentSelector principalproviders = null;
+        ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(this.principalprovidername);
 
@@ -176,8 +176,8 @@ public class PrincipalListGenerator extends ComposerGenerator
             this.contentHandler.endPrefixMapping("");
             this.contentHandler.endDocument();
 
-        } catch (ComponentException ce) {
-            getLogger().error("Could not lookup for component.", ce);
+        } catch (ServiceException se) {
+            getLogger().error("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
