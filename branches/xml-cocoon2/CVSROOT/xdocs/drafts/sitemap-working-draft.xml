@@ -381,7 +381,7 @@ methods such as CVS, WebDAV or other forms of databases.
     <set-parameter name="month" value="$2"/>
     <set-parameter name="day" value="$3"/>
 
-    <generator name="serverpages" src="/dailynews.xsp">
+    <generator name="serverpages" src="/dailynews.xsp"/>
     <filter type="xslt" src:local="./stylesheet/news.xsl"/>
     <serializer type="html"/>
   </process>
