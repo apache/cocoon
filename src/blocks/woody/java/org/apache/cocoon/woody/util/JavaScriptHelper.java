@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.9 2004/04/30 22:52:43 joerg Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.10 2004/04/30 22:57:22 joerg Exp $
  */
 public class JavaScriptHelper {
 
@@ -132,7 +132,7 @@ public class JavaScriptHelper {
      * that can be provided by a flowscript higher in the call stack, giving visibility to flowscript
      * functions and global (session) variables.
      * 
-     * @param request a request where the flowscript scope will be searched (can be <code>null</code>).
+     * @param objectModel an objectModel where the flowscript scope will be searched (can be <code>null</code>).
      * @return an appropriate parent scope.
      */
     public static Scriptable getParentScope(Map objectModel) {

@@ -32,7 +32,7 @@ import java.util.zip.ZipFile;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: CharsetFactory.java,v 1.2 2004/04/30 19:34:46 pier Exp $
+ * @version CVS $Id: CharsetFactory.java,v 1.3 2004/04/30 22:57:22 joerg Exp $
  */
 public final class CharsetFactory {
 
@@ -181,8 +181,6 @@ public final class CharsetFactory {
     /**
      * Return the <code>Charset</code> instance for the default charset.
      *
-     * @throws UnsupportedEncodingException If the default is invalid or
-     *                                      cannot be accessed.
      */
     public Charset getDefaultCharset() {
         return(defaultCharset);

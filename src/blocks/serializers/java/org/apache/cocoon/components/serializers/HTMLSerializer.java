@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HTMLSerializer.java,v 1.3 2004/04/30 19:34:46 pier Exp $
+ * @version CVS $Id: HTMLSerializer.java,v 1.4 2004/04/30 22:57:22 joerg Exp $
  */
 public class HTMLSerializer extends XHTMLSerializer {
 
@@ -86,7 +86,7 @@ public class HTMLSerializer extends XHTMLSerializer {
     /**
      * Receive notification of the beginning of the document body.
      *
-     * @param uri The namespace URI of the root element.
+     * @param nsuri The namespace URI of the root element.
      * @param local The local name of the root element.
      * @param qual The fully-qualified name of the root element.
      */
