@@ -25,7 +25,7 @@
   the calculator example, and goes back in the processing several
   times. -->
   <target name="calc">
-    <property name="calc" value="${anteater.env.cocoon}/samples/flow/calc/"/>
+    <property name="calc" value="${anteater.env.cocoon}/samples/flow/jxcalc/"/>
 
       <httpRequest href="${calc}/"
 		   description="Test the 'calc' JavaScript implementation">
