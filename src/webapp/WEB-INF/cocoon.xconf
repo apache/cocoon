@@ -32,11 +32,11 @@
       | Include all configuration files ending with ".xconf" 
       | from the xconf directory.
       +-->
-  <include dir="context://WEB-INF/xconf" postfix=".xconf"/>
+  <include dir="context://WEB-INF/xconf" pattern="*.xconf"/>
 
   <!--+
       | Include all configuration files ending with ".samplesxconf" 
       | from the xconf directory.
       +-->
-  <include dir="context://WEB-INF/xconf" postfix=".samplesxconf"/>
+  <include dir="context://WEB-INF/xconf" pattern="*.samplesxconf"/>
 </cocoon>
