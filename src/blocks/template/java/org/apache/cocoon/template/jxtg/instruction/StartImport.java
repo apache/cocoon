@@ -20,7 +20,7 @@ import java.util.Stack;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.expression.ExpressionContext;
-import org.apache.cocoon.environment.FlowObjectModelHelper;
+import org.apache.cocoon.environment.TemplateObjectModelHelper;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
@@ -122,7 +122,7 @@ public class StartImport extends StartInstruction {
                 Object obj = this.select.getValue(expressionContext);
                 selectExpressionContext = new ExpressionContext(expressionContext);
                 selectExpressionContext.setContextBean(obj);
-                FlowObjectModelHelper.fillContext(obj, selectExpressionContext);
+                TemplateObjectModelHelper.fillContext(obj, selectExpressionContext);
             } catch (Exception exc) {
                 throw new SAXParseException(exc.getMessage(), getLocation(), exc);
             } catch (Error err) {
