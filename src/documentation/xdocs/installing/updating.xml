@@ -145,6 +145,10 @@
    </s2>
    <s2 title="XSLT Processor">
     <p>
+        There are some issues related to JDK 1.4
+    </p>
+<!--
+    <p>
         The default XSLT processor has changed, and there are some issues related to JDK 1.4
     </p>
     <s3 title="Xalan vs. XSLTC">
@@ -166,6 +170,7 @@
       that gives errors.
     </p>
      </s3>
+-->
      <s3 title="XML/XSLT with JDK 1.4">
       <p>Another serious issue is the presence of the Xalan and Xerces
        package in the JDK 1.4. For general information on this please read the
