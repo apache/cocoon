@@ -50,7 +50,6 @@ public class PipelineNodeBuilder
 
         this.treeBuilder.setupNode(node, config);
         node.setInternalOnly(config.getAttributeAsBoolean("internal-only", false));
-        node.setInternalErrorHandler(config.getAttributeAsBoolean("internal-error-handling", false));
 
         // Main (with no "type" attribute) error handler : new in Cocoon 2.1, must have a generator
         ProcessingNode mainHandler = null;
