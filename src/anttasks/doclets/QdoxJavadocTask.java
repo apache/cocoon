@@ -32,7 +32,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 /**
  * Customized javadoc task genrates API docs only for marked classes
  * 
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/25 12:53:43 $
+ * @version CVS $Id$
  */
 public class QdoxJavadocTask extends AbstractQdoxTask {
     

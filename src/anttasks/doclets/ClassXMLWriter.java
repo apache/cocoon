@@ -29,9 +29,9 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaSource;
 
 /**
- * Generates javadoc for a given class 
+ * Generates javadoc for a given class
  * 
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/25 12:53:43 $
+ * @version CVS $Id$
  */
 public class ClassXMLWriter extends AbstractXMLWriter{
     

@@ -31,11 +31,11 @@ import org.xml.sax.SAXException;
 import com.thoughtworks.qdox.model.JavaClass;
 
 /**
- * Generates class index for a given package 
+ * Generates class index for a given package.
  * 
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/25 12:53:43 $
+ * @version CVS $Id$
  */
-public class PackageXMLWriter extends AbstractXMLWriter{
+public class PackageXMLWriter extends AbstractXMLWriter {
 
     public PackageXMLWriter(Resolver resolver) {
         super(resolver);

@@ -31,7 +31,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 /**
  * Generates index of available classes 
  * 
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/25 12:53:43 $
+ * @version CVS $Id$
  */
 public class ClassOverviewXMLWriter extends AbstractXMLWriter {
     
