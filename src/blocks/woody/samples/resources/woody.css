@@ -26,9 +26,15 @@
     z-index: 2;
 }
 
-.woody-validation-message-indicator:link {
+.woody-validation-message {
     color: red;
     font-weight: bold;
+}
+
+.woody-validation-errors {
+}
+
+.woody-validation-error {
 }
 
 .woody-field-required {

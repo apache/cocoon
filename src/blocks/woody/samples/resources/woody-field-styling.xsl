@@ -109,7 +109,7 @@
       | 
       +-->
   <xsl:template match="wi:validation-message">
-    <a href="#" class="woody-validation-message-indicator" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
+    <a href="#" class="woody-validation-message" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
   </xsl:template>
 
   <!--+
@@ -457,7 +457,7 @@
           <xsl:copy-of select="header"/>
         </xsl:when>
         <xsl:otherwise>
-          <p class="validation-errors">The following errors have been detected (marked with !):</p>
+          <p class="woody-validation-errors">The following errors have been detected (marked with !):</p>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -467,7 +467,7 @@
           <xsl:copy-of select="footer"/>
         </xsl:when>
         <xsl:otherwise>
-          <p class="validation-errors">Please, correct them and re-submit the form.</p>
+          <p class="woody-validation-errors">Please, correct them and re-submit the form.</p>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -476,7 +476,7 @@
       <xsl:copy-of select="$header"/>
       <ul>
         <xsl:for-each select="$frm//wi:validation-message">
-          <li class="validation-error">
+          <li class="woody-validation-error">
             <xsl:if test="../wi:label">
               <xsl:value-of select="../wi:label"/><xsl:text>: </xsl:text>
             </xsl:if>
