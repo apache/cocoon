@@ -16,13 +16,14 @@ import org.xml.sax.EntityResolver;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Recyclable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-12 05:55:23 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-13 06:50:06 $
  */
-public abstract class AbstractReader extends AbstractLoggable implements Poolable, Reader {
+public abstract class AbstractReader extends AbstractLoggable implements Poolable, Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
     /** The current <code>Map</code> of the object model. */
@@ -49,7 +50,7 @@ public abstract class AbstractReader extends AbstractLoggable implements Poolabl
      * Set the <code>OutputStream</code>
      */
     public void setOutputStream(OutputStream out) {
-        this.out = new BufferedOutputStream(out);
+          this.out = new BufferedOutputStream(out);
     }
 
     /**
@@ -59,5 +60,16 @@ public abstract class AbstractReader extends AbstractLoggable implements Poolabl
      */
     public String getMimeType() {
         return null;
+    }
+
+    /**
+     * Recycle the component
+     */
+    public void recycle() {
+        this.out = null;
+        this.resolver = null;
+        this.source = null;
+        this.parameters = null;
+        this.objectModel = null;
     }
 }
