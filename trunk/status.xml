@@ -180,6 +180,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="SMS" type="update" fixes-bug="14986" due-to="Michael Homeijer" due-to-email="m.homeijer@devote.nl">
+   Patch velocity generator, so that the scope of objects can be specified (request, session, sitemap).
+  </action>
   <action dev="GR" type="update" fixes-bug="19978" due-to="Ciro Mondueri" due-to-email="cmr@adinet.com.uy">
    Fixed namespace handling in XMLDBSource.
   </action>
