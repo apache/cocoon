@@ -121,6 +121,17 @@
     </wd:validation>
   </wd:aggregatefield>
 
+  <wd:field id="ipaddress" required="true">
+    <wd:label>Please enter your IP address</wd:label>
+    <wd:datatype base="string">
+      <wd:validation>
+        <wd:regexp pattern="^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])$">
+          <wd:failmessage>Invalid IP address.</wd:failmessage>
+        </wd:regexp>
+      </wd:validation>
+    </wd:datatype>
+  </wd:field>
+
   <wd:repeater id="contacts">
     <wd:field id="firstname">
       <wd:label>Firstname</wd:label>
