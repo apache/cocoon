@@ -60,7 +60,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.Context;
@@ -68,7 +67,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.fortress.impl.handler.ComponentHandler;
 import org.apache.avalon.fortress.impl.handler.PoolableComponentHandler;
 import org.apache.avalon.fortress.impl.handler.ComponentFactory;
-import org.apache.avalon.excalibur.logger.LoggerManager;
 
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
@@ -114,7 +112,7 @@ import org.apache.excalibur.mpool.ObjectFactory;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.4 2003/10/16 14:50:22 bloritsch Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.5 2003/10/19 16:13:36 cziegeler Exp $
  */
 public class ServerPagesAction
         extends ConfigurableServiceableAction
