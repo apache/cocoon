@@ -58,6 +58,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.httpclient.HttpURL;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -69,7 +70,7 @@ import org.apache.excalibur.source.SourceParameters;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSourceFactory.java,v 1.2 2003/07/13 01:25:43 vgritsenko Exp $
+ *  @version $Id: WebDAVSourceFactory.java,v 1.3 2003/07/17 12:24:52 gianugo Exp $
 */
 public class WebDAVSourceFactory
     extends AbstractLogEnabled
@@ -98,33 +99,21 @@ public class WebDAVSourceFactory
         }
 
         final String protocol = location.substring(0, location.indexOf(':'));
-        int position = location.indexOf("://");
-        if (position >= 0)
-            position += 3;
-        else
-            position = 0;
 
-        // create the queryString (if available)
-        String queryString = null;
-        SourceParameters locationParameters = null;
-        int queryStringPos = location.indexOf('?');
-        if (queryStringPos != -1) {
-            queryString = location.substring(queryStringPos + 1);
-            location = location.substring(position, queryStringPos);
-            locationParameters = new SourceParameters(queryString);
+		HttpURL url = new HttpURL("http://" + location.substring(location.indexOf(':')+3));       
+		String principal = url.getUser();
+		String password = url.getPassword();
+		location = url.getHost() + ":" + url.getPort();
+		if(url.getPathQuery() != null) location += url.getPathQuery();
 
-        } else if (position > 0) {
-            location = location.substring(position);
-            locationParameters = new SourceParameters();
+        if(principal == null || password == null) {
+			String queryString = url.getQuery();
+			SourceParameters locationParameters = new SourceParameters(queryString);
+			principal = locationParameters.getParameter("principal", principal);
+			password = locationParameters.getParameter("password", password);
         }
 
-        String repository = locationParameters.getParameter("repository", null);
-        String namespace = locationParameters.getParameter("namespace", null);
-        String principal = locationParameters.getParameter("principal", null);
-        String password = locationParameters.getParameter("password", null);
-        String revision = locationParameters.getParameter("revision", null);
-
-        WebDAVSource source = 
+        WebDAVSource source =
             WebDAVSource.newWebDAVSource(location, principal, password, protocol);
 
         return source;
