@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
 public class MockRequest implements Request {
-
+    
     private Hashtable attributes = new Hashtable();
     private String scheme;
     private String protocol = "HTTP/1.1";
@@ -55,64 +55,68 @@ public class MockRequest implements Request {
     private String charEncoding;
     private String serverName;
     private int port = 80;
-
+    
     private Hashtable parameters = new Hashtable();
     private Hashtable headers = new Hashtable();
-    private HashMap cookies = new HashMap();
-
+    private Map cookies = new HashMap();
+    
     private MockSession session;
-
+    
+    private boolean isRequestedSessionIdFromCookie = true;
+    private boolean isRequestedSessionIdFromURL = false;
+    
     public Object get(String name) {
         return getAttribute(name);
     }
-
+    
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
-
+    
     public Enumeration getAttributeNames() {
         return attributes.keys();
     }
-
+    
     public void setAttribute(String name, Object o) {
-        if (o == null)
+        if (o == null) {
             attributes.remove(name);
-        else
+        } else {
             attributes.put(name, o);
+        }
     }
-
+    
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
-
+    
     public String getAuthType() {
         return authType;
     }
-
+    
     public String getCharacterEncoding() {
         return charEncoding;
     }
-
+    
     public void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException {
         charEncoding = enc;
     }
-
+    
     public int getContentLength() {
         return -1;
     }
-
+    
     public String getContentType() {
         return contentType;
     }
-
+    
     public String getParameter(String name) {
         return (String)parameters.get(name);
     }
-
+    
     public Enumeration getParameterNames() {
         return parameters.keys();
     }
-
+    
     public String[] getParameterValues(String name) {
         Object param = parameters.get(name);
         if( null == param )
@@ -125,43 +129,43 @@ public class MockRequest implements Request {
             }
         }
     }
-
+    
     public void addParameter(String name, String value) {
         parameters.put(name, value);
     }
-
+    
     public String getProtocol() {
         return protocol;
     }
-
+    
     public String getScheme() {
         return scheme;
     }
-
+    
     public String getServerName() {
         return serverName;
     }
-
+    
     public int getServerPort() {
         return port;
     }
-
+    
     public String getRemoteAddr() {
         return remoteAddr;
     }
-
+    
     public String getRemoteHost() {
         return remoteHost;
     }
-
+    
     public Locale getLocale() {
         return locale;
     }
-
+    
     public Enumeration getLocales() {
         return Collections.enumeration(Collections.singleton(getLocale()));
     }
-
+    
     public boolean isSecure() {
         if(scheme==null){
             return false;
@@ -169,7 +173,7 @@ public class MockRequest implements Request {
             return scheme.equalsIgnoreCase("HTTPS");
         }
     }
-
+    
     public Cookie[] getCookies() {
         if (cookies.isEmpty())
             return null;
@@ -178,17 +182,17 @@ public class MockRequest implements Request {
             return (Cookie []) cookies.values().toArray(cookieArray);
         }
     }
-
+    
     public Map getCookieMap() {
         return cookies;
     }
-
+    
     public long getDateHeader(String name) {
         String s1 = getHeader(name);
-        if(s1 == null)
+        if (s1 == null) {
             return -1L;
-        try
-        {
+        }
+        try {
             DateFormat dateFormat = new SimpleDateFormat();
             return dateFormat.parse(s1).getTime();
         }
@@ -196,94 +200,96 @@ public class MockRequest implements Request {
             throw new IllegalArgumentException("Cannot parse date: " + s1);
         }
     }
-
+    
     public String getHeader(String name) {
         return (String) headers.get(name);
     }
-
+    
     public Enumeration getHeaders(String name) {
         throw new AssertionFailedError("Not implemented");
     }
-
+    
     public Enumeration getHeaderNames() {
         return headers.keys();
     }
-
+    
     public String getMethod() {
         return method;
     }
-
+    
     public String getPathInfo() {
         return pathInfo;
     }
-
+    
     public String getPathTranslated() {
         throw new AssertionFailedError("Not implemented");
     }
-
+    
     public String getContextPath() {
         return contextPath;
     }
-
+    
     public void setContextPath(String path) {
         contextPath = path;
     }
-
+    
     public String getQueryString() {
         return queryString;
     }
-
+    
     public void setQueryString(String string) {
         queryString = string;
     }
-
+    
     public String getRemoteUser() {
         return remoteUser;
     }
-
+    
     public Principal getUserPrincipal() {
         return principal;
     }
-
+    
     public boolean isUserInRole(String role) {
         return userRole.equals(role);
     }
-
+    
     public String getRequestedSessionId() {
         return reqSessionId;
     }
-
+    
     public String getRequestURI() {
         return requestURI;
     }
-
+    
     public void setRequestURI(String uri) {
         requestURI = uri;
     }
-
+    
     public String getSitemapURI() {
         return requestURI;
     }
-
+    
     public String getServletPath() {
         return servletPath;
     }
-
+    
     public Session getSession(boolean create) {
-        if ((session == null) && (create))
+        if ((session == null) && (create)) {
             this.session = new MockSession();
-        else if ((session != null) && (!(session).isValid()) && (create))
+        } else if ((session != null) && (!(session).isValid()) && (create)) {
             this.session = new MockSession();
-        if ((session != null) && ((session).isValid()))
+        }
+        if ((session != null) && ((session).isValid())) {
             return this.session;
-        else
+        } else {
             return null;
+        }
     }
-
+    
     public Session getSession() {
         return getSession(true);
     }
-
+    
     public boolean isRequestedSessionIdValid() {
         if (session != null) {
             try {
@@ -295,15 +301,13 @@ public class MockRequest implements Request {
         } else
             return false;
     }
-
+    
     public boolean isRequestedSessionIdFromCookie() {
-        return true;
+        return isRequestedSessionIdFromCookie;
     }
-
     public boolean isRequestedSessionIdFromURL() {
-        return false;
+        return isRequestedSessionIdFromURL;
     }
-
     public void reset() {
         attributes.clear();
         scheme = null;
@@ -326,8 +330,26 @@ public class MockRequest implements Request {
         charEncoding = null;
         serverName = null;
         port = 80;
-
+        
         parameters.clear();
         headers.clear();
+    }
+    
+    public void setHeader( String key, String value ) {
+        this.headers.put(key, value );
+    }
+    
+    public void setMethod( String method ) {
+        this.method = method;
+    }
+    
+    public void clearSession() {
+        this.session = null;
+    }
+    public void setIsRequestedSessionIdFromURL( boolean isRequestedSessionIdFromURL ) {
+        this.isRequestedSessionIdFromURL = isRequestedSessionIdFromURL;
+    }
+    public void setIsRequestedSessionIdFromCooki( boolean isRequestedSessionIdFromCookie ) {
+        this.isRequestedSessionIdFromCookie = isRequestedSessionIdFromCookie;
     }
 }

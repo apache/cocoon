@@ -30,6 +30,7 @@ public class MockSession implements Session {
     private int maxinactiveinterval = -1;
     private Hashtable attributes = new Hashtable();
     private boolean valid = true;
+    private boolean isNew = false;
 
     public long getCreationTime() {
         checkValid();
@@ -87,16 +88,21 @@ public class MockSession implements Session {
 
     public boolean isNew() {
         checkValid();
-        return false;
+        return isNew;
     }
 
     private void checkValid() throws IllegalStateException {
-        if (!valid)
+        if (!valid) {
             throw new AssertionFailedError("session has been invalidated!");
+        }
     }
 
     public boolean isValid() {
         return valid;
+    }
+    
+    public void setIsNew(boolean isNew ) {
+        this.isNew = isNew;
     }
 }
 
