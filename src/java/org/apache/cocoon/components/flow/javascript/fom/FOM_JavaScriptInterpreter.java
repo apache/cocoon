@@ -421,7 +421,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
 
         public void put(String name, Scriptable start, Object value) {
-            if (!has(name, start) && this.locked) {
+            //Allow setting values to existing variables, or if this is a
+            //java class (used by importClass & importPackage)
+            if (this.locked && !has(name, start) && !(value instanceof NativeJavaClass)) {
                 // Need to wrap into a runtime exception as Scriptable.put has no throws clause...
                 throw new WrappedException (new JavaScriptException("Implicit declaration of global variable '" + name +
                   "' forbidden. Please ensure all variables are explicitely declared with the 'var' keyword"));
@@ -432,7 +434,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
         public void put(int index, Scriptable start, Object value) {
             // FIXME(SW): do indexed properties have a meaning on the global scope?
-            if (!has(index, start) && this.locked) {
+            if (this.locked && !has(index, start)) {
                 throw new WrappedException(new JavaScriptException("Global scope locked. Cannot set value for index " + index));
             }
             this.useSession = true;
