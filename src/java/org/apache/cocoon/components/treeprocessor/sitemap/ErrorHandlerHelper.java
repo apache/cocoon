@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ErrorHandlerHelper.java,v 1.4 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.5 2004/03/13 22:02:30 unico Exp $
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable {
 
@@ -51,7 +51,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable
 		Map objectModel = env.getObjectModel();
   	
         InvokeContext errorContext = null;
-		boolean nodeSuccessfull = false;
+		boolean nodeSuccessful = false;
 		
         try {
         	if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
@@ -82,9 +82,9 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable
 			errorContext.enableLogging(getLogger());
 			errorContext.compose(this.manager);
 			
-			nodeSuccessfull = node.invoke(env, errorContext);
+			nodeSuccessful = node.invoke(env, errorContext);
         } catch (Exception subEx) {
-            getLogger().error("An exception occured in while handling errors at " + node.getLocation(), subEx);
+            getLogger().error("An exception occured while handling errors at " + node.getLocation(), subEx);
             // Rethrow it : it will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
             throw subEx;
         } finally {
@@ -93,7 +93,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable
             }
         }
         
-        if (nodeSuccessfull) {
+        if (nodeSuccessful) {
         	return true;
         } else {
 			throw ex;
