@@ -18,6 +18,7 @@ package org.apache.cocoon.util.jxpath;
 import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,7 +28,7 @@ import org.w3c.dom.Node;
  * that creates DOM elements.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version $Id: DOMFactory.java,v 1.3 2004/03/17 09:29:15 cziegeler Exp $
+ * @version $Id$
  */
 
 public class DOMFactory extends AbstractFactory {
@@ -110,10 +111,10 @@ public class DOMFactory extends AbstractFactory {
                 return element.getNamespaceURI();
             }
             
-            String namespace = ((Element)tmp).getAttribute(nsAttr);
-            if (namespace != null) {
-                //System.out.println("Found attribute '" + nsAttr + "'='" + namespace + "' on element " + tmp.getNodeName());
-                return namespace;
+            // Note: stupid DOM api returns "" when an attribute doesn't exist, so we use the Attr node.
+            Attr nsAttrNode = ((Element)tmp).getAttributeNode(nsAttr);
+            if (nsAttrNode != null) {
+                return nsAttrNode.getValue();
             }
             tmp = tmp.getParentNode();
         }
