@@ -96,6 +96,14 @@ function options() {
   var options = "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PUT" 
               + ",MKCOL,PROPFIND,PROPPATCH,COPY,MOVE";
   cocoon.response.setHeader("Allow",options);
+
+  //interoperability with Windows 2000
+  var w2kDAVDiscoverAgent = "Microsoft Data Access Internet"
+                          + " Publishing Provider Protocol Discovery";
+  if (cocoon.request.getHeader("User-Agent") == w2kDAVDiscoverAgent) {
+      cocoon.response.setHeader("MS-Author-Via","DAV");
+  }
+
   sendStatus(200);
 }
 
