@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.48 2000-03-31 11:26:16 stefano Exp $
+  $Id: changes.xml,v 1.49 2000-04-04 11:09:09 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,27 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" fixes-bug="91">
+   Fixed a problem with document stylesheets that messed up anchors.
+  </action>
+  <action dev="SM" type="add" fixes-bug="90">
+   Added ability to specify formatting information from the cocoon property
+   file instead of having to create a custom formatter every time. Also
+   fixed the output encoding problem since now a specific encoding for the
+   output stream can be forced.
+  </action>
+  <action dev="SM" type="add" fixes-bug="83">
+   Added XML encoding prediction to fix the encoding problem for
+   ProducerFromFile. Cocoon should now work with all encoding supported by
+   the XML parser used.
+  </action>
+  <action dev="SM" type="fix" due-to="Robin Green" due-to-email="greenrd@hotmail.com">
+   Added ability to call "hasChanged" from inside the XSP engine to avoid
+   dynamic page regeneration even XSP pages.
+  </action>
+ </release>
+
+ <release version="1.7.2" date="March 31 2000">
   <action dev="SM" type="fix">
    Changed log setting.
   </action>
@@ -24,7 +45,7 @@
   </action>
  </release>
 
- <release version="1.7.1" date="March 29, 2000">
+ <release version="1.7.1" date="March 29 2000">
   <action dev="SM" type="update" due-to="Paul Lamb" due-to-email="paul@oil-law.com">
    Fixed problem with basename evaluation when included into a JSP.
   </action>
@@ -114,7 +135,7 @@
   </action>
  </release>
 
- <release version="1.7" date="February 24, 2000">
+ <release version="1.7" date="February 24 2000">
   <action dev="SM" type="update">
     Fixed docs creation problem due to an XSLT problem that appeared after
     updating Xalan.
