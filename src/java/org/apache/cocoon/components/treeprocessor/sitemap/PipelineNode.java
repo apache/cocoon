@@ -37,7 +37,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.12 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.13 2004/03/10 23:37:31 unico Exp $
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
@@ -71,8 +71,8 @@ public class PipelineNode
      * A constructor to receive the optional expires parameter
      * and optional parameters for the processing pipeline
      */
-    public PipelineNode(Configuration config) {
-        this.processingPipeline = config.getAttribute("type", null);
+    public PipelineNode(String name) {
+        this.processingPipeline = name;
     }
 
     /**
