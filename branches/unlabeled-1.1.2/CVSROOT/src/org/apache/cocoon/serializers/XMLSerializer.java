@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 15:02:03 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-12 00:31:40 $
  * @since Cocoon 2.0
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
@@ -177,11 +177,10 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
             this.closeElement();
             return;
         }
-        
         this.print('<');
         this.print('/');
         this.print(this.qualify(uri,loc,raw));
-        this.closeElement();
+        this.print('>');
     }
 
     /**

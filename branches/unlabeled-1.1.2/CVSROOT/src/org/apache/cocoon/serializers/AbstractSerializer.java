@@ -8,6 +8,7 @@
 package org.apache.cocoon.serializers;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.framework.AbstractComponent;
 import org.apache.cocoon.framework.ConfigurationException;
 import org.apache.cocoon.framework.Configurations;
 
@@ -17,14 +18,13 @@ import org.apache.cocoon.framework.Configurations;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 15:02:03 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-12 00:31:40 $
  * @since Cocoon 2.0
  */
-public abstract class AbstractSerializer implements Serializer {
+public abstract class AbstractSerializer extends AbstractComponent
+implements Serializer {
     /** This <code>AbstractSerializer</code> configuration parameters. */
     protected Configurations configurations=null;
-    /** This <code>AbstractSerializer</code> instance of <code>Cocoon</code>.*/
-    protected Cocoon cocoon=null;
 
     /**
      * Configure this <code>XMLSerializer</code>.
@@ -45,15 +45,5 @@ public abstract class AbstractSerializer implements Serializer {
      */
     public boolean modifiedSince(long date) {
         return(false);
-    }
-
-    /**
-     * Set the <code>Cocoon</code> instance used by this
-     * <code>XMLSerializer</code>.
-     * <br>
-     * By default this method only stores the <code>Cocoon</code> instance.
-     */
-    public void setCocoonInstance(Cocoon cocoon) {
-        this.cocoon=cocoon;
     }
 }
