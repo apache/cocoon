@@ -15,7 +15,7 @@
 */
 
 // flowscripts for using the Query Bean
-// $Id: query.js,v 1.3 2004/07/05 14:56:03 asavory Exp $
+// $Id$
 
 
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
@@ -63,13 +63,19 @@ function simpleLuceneQuery() {
 			query = new SimpleLuceneQueryBean(type, null, match, field, cocoon.parameters["query"]);
 		} else if ( "".equals(historyid) ) {            // test for: new query
 			query = new SimpleLuceneQueryBean(type, null, match, field, "");
-			edit(query);
+			if (!edit(query)) {
+				cocoon.sendPage("screen/cancelled", {message: "cancel.note"});
+				return;
+			}
 		} else {
 			try {
 				var edition = history.get(historyid);
 				if (page == null) {                          // edit a query already in the history
 					query = edition.copy();                   // clone it first so history items are separate
-					edit(query);    
+					if (!edit(query)) {
+						cocoon.sendPage("screen/cancelled", {message: "cancel.note"});
+						return;
+					}    
 				} else {                                     // page a query already in the history
 					query = edition;
 					query.page = page;
@@ -123,6 +129,9 @@ function edit(query) {
 	form.showForm(cocoon.parameters["form"]);
 	if ("submit".equals(form.submitId)) {
 		form.save(query);
+		return true;
+	} else {
+		return false;
 	}
 }
 
