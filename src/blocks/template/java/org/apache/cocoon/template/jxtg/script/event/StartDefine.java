@@ -39,7 +39,7 @@ public class StartDefine extends StartInstruction {
     public void finish() throws SAXException {
         Event e = next;
         boolean params = true;
-        while (e != this.endInstruction) {
+        while (e != this.getEndInstruction()) {
             if (e instanceof StartParameter) {
                 StartParameter startParam = (StartParameter) e;
                 if (!params) {
@@ -53,7 +53,7 @@ public class StartDefine extends StartInstruction {
                     throw new SAXParseException("duplicate parameter: \""
                             + startParam.name + "\"", location, null);
                 }
-                e = startParam.endInstruction;
+                e = startParam.getEndInstruction();
             } else if (e instanceof IgnorableWhitespace) {
                 // EMPTY
             } else if (e instanceof Characters) {
@@ -78,7 +78,7 @@ public class StartDefine extends StartInstruction {
             e = e.getNext();
         }
         if (this.getBody() == null) {
-            this.setBody(this.endInstruction);
+            this.setBody(this.getEndInstruction());
         }
     }
 

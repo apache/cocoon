@@ -22,8 +22,8 @@ public class StartInstruction extends Event {
         this.startElement = startElement;
     }
 
-    final StartElement startElement;
-    EndInstruction endInstruction;
+    private final StartElement startElement;
+    private EndInstruction endInstruction;
 
     public EndInstruction getEndInstruction() {
         return endInstruction;
