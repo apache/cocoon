@@ -34,7 +34,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNode.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: MatchNode.java,v 1.4 2004/06/11 08:51:56 cziegeler Exp $
  */
 
 public class MatchNode extends SimpleSelectorProcessingNode
@@ -86,12 +86,20 @@ public class MatchNode extends SimpleSelectorProcessingNode
 
         if (this.threadSafeMatcher != null) {
             // Avoid select() and try/catch block (faster !)
-            result = this.threadSafeMatcher.match(resolvedPattern, objectModel, resolvedParams);
+            result = this.executor.invokeMatcher(this, 
+                                                 objectModel, 
+                                                 this.threadSafeMatcher, 
+                                                 resolvedPattern, 
+                                                 resolvedParams);
         } else {
             // Get matcher from selector
             Matcher matcher = (Matcher)this.selector.select(this.componentName);
             try {
-                result = matcher.match(resolvedPattern, objectModel, resolvedParams);
+                result = this.executor.invokeMatcher(this, 
+                        objectModel, 
+                        matcher, 
+                        resolvedPattern, 
+                        resolvedParams);
             } finally {
                 this.selector.release(matcher);
             }

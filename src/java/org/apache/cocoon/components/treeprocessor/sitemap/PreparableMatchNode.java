@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.5 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.6 2004/06/11 08:51:56 cziegeler Exp $
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
                                  implements ParameterizableProcessingNode, Composable, Disposable {
@@ -56,17 +56,23 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
 
     protected ComponentManager manager;
 
-    public PreparableMatchNode(String type, String pattern, String name) throws PatternException {
+    public PreparableMatchNode(String type, String pattern, String name) {
         super(type);
         this.pattern = pattern;
         this.name = name;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode#setParameters(java.util.Map)
+     */
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
     }
 
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         setSelector((ComponentSelector)manager.lookup(Matcher.ROLE + "Selector"));
@@ -92,6 +98,9 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
       
@@ -135,8 +144,8 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
         }
     }
 
-    /**
-     * Disposable Interface
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if (this.threadSafeMatcher != null) {

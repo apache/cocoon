@@ -21,6 +21,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.matching.PreparableMatcher;
 
 /**
  * The sitemap executor executes all sitemap statements, so it actually
@@ -31,7 +33,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: SitemapExecutor.java,v 1.2 2004/06/09 13:43:04 cziegeler Exp $
+ * @version CVS $Id: SitemapExecutor.java,v 1.3 2004/06/11 08:51:57 cziegeler Exp $
  */
 public interface SitemapExecutor {
     
@@ -42,29 +44,54 @@ public interface SitemapExecutor {
      * Invoke an action and return the result.
      */
     Map invokeAction(ExecutionContext context,
+                     Map              objectModel, 
                      Action           action, 
                      Redirector       redirector, 
                      SourceResolver   resolver, 
-                     Map              objectModel, 
                      String           resolvedSource, 
                      Parameters       resolvedParams )
     throws Exception;
     
+    /**
+     * Invoke a match and return the result
+     */
+    Map invokeMatcher(ExecutionContext context,
+                      Map              objectModel,
+                      Matcher          matcher,
+                      String           pattern,
+                      Parameters       resolvedParams )
+    throws PatternException;
     
+    /**
+     * Invoke a match and return the result
+     */
+    Map invokePreparableMatcher(ExecutionContext context,
+                      Map               objectModel,
+                      PreparableMatcher matcher,
+                      Object            preparedPattern,
+                      Parameters        resolvedParams )
+    throws PatternException;
+
     /**
      * Push map of information on the context stack.
      * @param context The execution context
+     * @param objectModel The object model
      * @param key A key that can be used to identify this map (can be null)
      * @param variables The variables as key/value pairs
      * @return The variables that are used in the sitemap. The executor can
      *         modify the set of available variables by returning a different
      *         map.
      */
-    Map pushVariables(ExecutionContext context, String key, Map variables);
+    Map pushVariables(ExecutionContext context, 
+                      Map              objectModel,
+                      String           key, 
+                      Map              variables);
     
     /**
      * Pop a map of information from the context stack.
-     * @param context The execution context
+     * @param context     The execution context
+     * @param objectModel The object model
      */
-    void popVariables(ExecutionContext context);
+    void popVariables(ExecutionContext context,
+                      Map              objectModel);
 }

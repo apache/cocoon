@@ -38,7 +38,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.8 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.9 2004/06/11 08:51:56 cziegeler Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -119,20 +119,20 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
         // If action is ThreadSafe, avoid select() and try/catch block (faster !)
         if (this.threadSafeAction != null) {
             actionResult = this.executor.invokeAction(this, 
+                                             objectModel, 
                                              this.threadSafeAction, 
                                              redirector, 
                                              resolver, 
-                                             objectModel, 
                                              resolvedSource, 
                                              resolvedParams);
         } else {
             Action action = (Action)this.selector.select(this.componentName);
             try {
                 actionResult = this.executor.invokeAction(this,
+                                                 objectModel, 
                                                  action, 
                                                  redirector, 
                                                  resolver, 
-                                                 objectModel, 
                                                  resolvedSource, 
                                                  resolvedParams);
             } finally {

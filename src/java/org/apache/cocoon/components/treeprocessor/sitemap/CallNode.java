@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CallNode.java,v 1.4 2004/06/09 13:43:04 cziegeler Exp $
+ * @version CVS $Id: CallNode.java,v 1.5 2004/06/11 08:51:56 cziegeler Exp $
  */
 
 public class CallNode extends AbstractProcessingNode
@@ -103,13 +103,13 @@ public class CallNode extends AbstractProcessingNode
 
         if (this.resourceNode != null) {
             // Static resource name
-            params = this.executor.pushVariables(this, null, params);
+            params = this.executor.pushVariables(this, objectModel, null, params);
             context.pushMap(null, params);
             
             try {
                 return this.resourceNode.invoke(env, context);
             } finally {
-                this.executor.popVariables(this);
+                this.executor.popVariables(this, objectModel);
                 context.popMap();
             }
     
@@ -121,13 +121,13 @@ public class CallNode extends AbstractProcessingNode
             }
             
             // and only now push the parameters
-            params = this.executor.pushVariables(this, null, params);
+            params = this.executor.pushVariables(this, objectModel, null, params);
             context.pushMap(null,params);
             
             try {
                 return this.resources.invokeByName(name, env, context);
             } finally {
-                this.executor.popVariables(this);
+                this.executor.popVariables(this, objectModel);
                 context.popMap();
             }
         }
