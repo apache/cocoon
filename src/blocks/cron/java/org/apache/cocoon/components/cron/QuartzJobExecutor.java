@@ -35,7 +35,7 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java,v 1.6 2004/03/11 15:38:31 sylvain Exp $
+ * @version CVS $Id: QuartzJobExecutor.java,v 1.7 2004/03/22 12:45:32 unico Exp $
  *
  * @since 2.1.1
  */
@@ -89,7 +89,7 @@ implements Job {
 			throw new JobExecutionException(mue);
 		}
         CocoonComponentManager.enterEnvironment(env, env.getManager(), env.getProcessor());
-
+        boolean release = false;
         try {
             jobrole = (String)data.get(QuartzJobScheduler.DATA_MAP_ROLE);
 
@@ -97,6 +97,7 @@ implements Job {
                 job = data.get(QuartzJobScheduler.DATA_MAP_OBJECT);
             } else {
                 job = manager.lookup(jobrole);
+                release = true;
             }
 
             if (job instanceof ConfigurableCronJob) {
@@ -127,7 +128,7 @@ implements Job {
             
             CocoonComponentManager.leaveEnvironment();
 
-            if (null != manager) {
+            if (release && null != manager) {
                 manager.release(job);
             }
         }
