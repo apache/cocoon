@@ -73,7 +73,7 @@
   <xsl:template name="woody-field-common">
     <xsl:apply-templates select="wi:validation-message"/>
     <xsl:if test="@required='true'">
-      <b>*</b>
+      <span class="woody-field-required"> * </span>
     </xsl:if>
   </xsl:template>
   
