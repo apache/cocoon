@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@
 <!ENTITY ccedil           "&#x000E7;">
 ]>
 
-<!-- CVS $Id$ -->
+<!-- SVN $Id$ -->
 
 <status>
  <developers>
@@ -460,6 +460,12 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="CZ" type="fix" fixes-bug="32987" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+     Apply patch for a better exception handling in the Meta-InputModule when an input module is not found.
+   </action>
+   <action dev="SW" type="fix" fixes-bug="33178" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
+     Fix handling of environment context when returning from a pass-through sitemap mount.
+   </action>
    <action dev="CZ" type="add" fixes-bug="33287" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
      Portal Block: Add portal tools framework contribution.
    </action>

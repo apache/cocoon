@@ -341,7 +341,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                 if (cs.isSelectable(name)) {
                     release = true;
                     try {
-                    input = (InputModule) cs.select(name);
+                        input = (InputModule) cs.select(name);
                     } catch (ServiceException e) {
                         throw new ConfigurationException(
                                 "MetaModule unable to create "+
@@ -349,8 +349,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                                 " specified internal module '"+name+"'", e);
                     }
                 } else {
-                    if (getLogger().isWarnEnabled())
-                        getLogger().warn("No such InputModule: "+name);
+                    throw new ConfigurationException("MetaModule: No such InputModule: "+name);
                 }
             }
 
