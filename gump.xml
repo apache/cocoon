@@ -152,12 +152,10 @@
     <depend project="commons-betwixt"/>
     <depend project="jakarta-velocity"/>
     <depend project="jakarta-servletapi-4"/>
-    <depend project="cocoon-block-velocity"/>
-    <depend project="cocoon-block-cron"/>
-    <depend project="cocoon-block-batik" type="samples"/>
-    <depend project="cocoon-block-xsp"/>
-    <depend project="cocoon-block-faces"/>
     <depend project="cocoon-block-axis"/>
+    <depend project="cocoon-block-batik" type="samples"/>
+    <depend project="cocoon-block-cron"/>
+    <depend project="cocoon-block-xsp"/>
     <depend project="apache-garbage"/>
 
     <library name="servlet-2_3" bundle="false"/>
@@ -165,6 +163,8 @@
     <library name="castor"/>
     <library name="commons-jexl"/>
     <library name="commons-betwixt"/>
+    <library name="commons-beanutils"/>
+    <library name="commons-digester"/>
     <library name="apache-garbage"/>
 
     <work nested="tools/anttasks"/>

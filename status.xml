@@ -197,42 +197,49 @@
    </actions>
   </todo>
 
+
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     Scratchpad block: Restored CastorTransformer support for context beans,
+     restored bean lookup logic, fixed sample.
+   </action>
    <action dev="SW" type="fix">
-     The CocoonBean now creates its own private logger hierarchy, thus avoiding to pollute the CocoonServlet
-     hierarchy when called in that context (e.g. when generating a static site from a CMS)
+     The CocoonBean now creates its own private logger hierarchy, thus avoiding to
+     pollute the CocoonServlet hierarchy when called in that context (e.g. when
+     generating a static site from a CMS)
    </action>
-
    <action dev="GP" type="add">
-     Added replacement for Excalibur Event package in org.apache.cocoon.components.thread and migrated most 
-     classes using their own threads to that package
+     Added replacement for Excalibur Event package in
+     org.apache.cocoon.components.thread and migrated most classes using their own
+     threads to that package
    </action>
-
    <action dev="AG" type="update">
      Updated antlr to 2.7.4, db-ojb to 1.0.1
    </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
-     Javaflow: also support inherited methods
+     Javaflow block: also support inherited methods
    </action>
    <action dev="TC" type="add">
-     Javaflow: ported back parameter support from trunk
+     Javaflow block: ported back parameter support from trunk
    </action>
    <action dev="SW" type="add">
-     CForms: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
+     CForms block: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
      state. Updated the stylesheets accordingly to use HTML's disabled inputs.
    </action>
    <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
-     BetwixtTransformer: removed deprecation warning with latest betwixt
+     Scratchpad block: BetwixtTransformer: removed deprecation warning with
+     latest betwixt
    </action>
    <action dev="SW" type="fix" fixes-bug="25951">
-     Flowscript: enforce the explicit declaration of variables in the global scope (attached to the session).
-     This avoids the implicit declaration of variables in the global scope when the 'var' keyword is missing,
-     which leads to weird bugs difficult to track down, especially with continuations.
+     Flowscript: enforce the explicit declaration of variables in the global
+     scope (attached to the session). This avoids the implicit declaration of
+     variables in the global scope when the 'var' keyword is missing, which
+     leads to weird bugs difficult to track down, especially with continuations.
    </action>
    <action dev="ATC" type="update">
      Deprecated the PHP block since the PHP servlet the generator depends on
-	 never worked properly. Explicitly excluded the PHP block from blocks.properties.
+     never worked properly. Explicitly excluded the PHP block from blocks.properties.
    </action>
    <action dev="VG" type="fix" fixes-bug="27176" due-to="Guillaume Deflache" due-to-email="guillaume@anyware-tech.com">
      XSP Block: Add space="strip" attribute support for &lt;xsp:page&gt;
