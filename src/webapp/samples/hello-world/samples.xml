@@ -121,6 +121,9 @@
    <sample name="PDF" href="../blocks/fop/hello.pdf">
     Hello from the fop block in Portable Document Format.
    </sample>
+   <sample name="PS" href="../blocks/fop/hello.ps">
+    Hello from the fop block in PostScript format.
+   </sample>
    <sample name="PDF" href="../blocks/itext/hello.pdf">
     Another hello in Portable Document Format, from the itext block.
    </sample>

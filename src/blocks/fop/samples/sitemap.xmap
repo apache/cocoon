@@ -17,7 +17,7 @@
 
 <!--+
     | FOP block samples sitemap
-    | CVS $Id: sitemap.xmap,v 1.10 2004/03/06 02:26:17 antonio Exp $
+    | CVS $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -61,6 +61,12 @@
         <map:generate src="context://samples/hello-world/content/hello.xml"/>
         <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
         <map:serialize type="fo2pdf"/>
+      </map:match>
+
+      <map:match pattern="hello.ps">
+        <map:generate src="context://samples/hello-world/content/hello.xml"/>
+        <map:transform src="context://samples/hello-world/style/xsl/page2fo.xsl"/>
+        <map:serialize type="fo2ps"/>
       </map:match>
 
       <!-- xsl-fo document access -->
