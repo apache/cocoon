@@ -117,7 +117,19 @@ public interface Widget {
      *   of the path an invalid section was encountered. 
      */
     public Widget lookupWidget(String path);
-    
+
+    /**
+     * Returns whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for this widget.
+     */
+    public boolean getProcessRequests();
+
+    /**
+     * Controls whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for this widget.
+     */
+    public void setProcessRequests(boolean processRequests);
+
     /**
      * Lets this widget read its data from a request. At this point the Widget
      * may try to convert the request parameter to its native datatype (if it

@@ -47,9 +47,15 @@ import org.xml.sax.SAXException;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.13 2004/06/21 13:51:04 bruno Exp $
+ * @version $Id$
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
+
+    private static final String MULTIVALUEFIELD_EL = "multivaluefield";
+    private static final String VALUES_EL = "values";
+    private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
+
     private final MultiValueFieldDefinition definition;
     
     private SelectionList selectionList;
@@ -66,35 +72,38 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void readFromRequest(FormContext formContext) {
-        enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
-        validationError = null;
-        values = null;
-
-        boolean conversionFailed = false;
-        if (enteredValues != null) {
-            // Normally, for MultiValueFields, the user selects the values from
-            // a SelectionList, and the values in a SelectionList are garanteed to
-            // be valid, so the conversion from String to native datatype should
-            // never fail. But it could fail if users start messing around with
-            // request parameters.
-            Object[] tempValues = (Object[])Array.newInstance(getDatatype().getTypeClass(), enteredValues.length);
-            for (int i = 0; i < enteredValues.length; i++) {
-                String param = enteredValues[i];
-                ConversionResult conversionResult = definition.getDatatype().convertFromString(param, formContext.getLocale());
-                if (conversionResult.isSuccessful()) {
-                    tempValues[i] = conversionResult.getResult();
-                } else {
-                    conversionFailed = true;
-                    break;
+        if(getProcessRequests() == true) {
+            enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
+            validationError = null;
+            values = null;
+ 
+            boolean conversionFailed = false;
+            if (enteredValues != null) {
+                // Normally, for MultiValueFields, the user selects the values from
+                // a SelectionList, and the values in a SelectionList are garanteed to
+                // be valid, so the conversion from String to native datatype should
+                // never fail. But it could fail if users start messing around with
+                // request parameters.
+                Object[] tempValues = (Object[])Array.newInstance(getDatatype().getTypeClass(), enteredValues.length);
+                for (int i = 0; i < enteredValues.length; i++) {
+                    String param = enteredValues[i];
+                    ConversionResult conversionResult =
+                        definition.getDatatype().convertFromString(param, formContext.getLocale());
+                    if (conversionResult.isSuccessful()) {
+                        tempValues[i] = conversionResult.getResult();
+                    } else {
+                        conversionFailed = true;
+                        break;
+                    }
                 }
+ 
+                if (!conversionFailed)
+                    values = tempValues;
+                else
+                    values = null;
+            } else {
+                values = new Object[0];
             }
-
-            if (!conversionFailed)
-                values = tempValues;
-            else
-                values = null;
-        } else {
-            values = new Object[0];
         }
     }
 
@@ -106,12 +115,6 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
         return validationError == null ? super.validate() : false;
     }
-
-    private static final String MULTIVALUEFIELD_EL = "multivaluefield";
-    private static final String VALUES_EL = "values";
-    private static final String VALUE_EL = "value";
-    private static final String VALIDATION_MSG_EL = "validation-message";
-
 
     /**
      * @return "multivaluefield"

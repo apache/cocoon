@@ -49,7 +49,7 @@ import org.outerj.expression.ExpressionException;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.12 2004/07/11 17:19:54 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class AggregateField extends Field implements ContainerWidget {
 
@@ -95,24 +95,26 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
-        if (newEnteredValue != null) {
-            // There is one aggregated entered value. Read it and split it.
-            super.readFromRequest(formContext);
-            if (this.valueState == VALUE_UNPARSED) {
-                setFieldsValues(enteredValue);
-            }
-        } else {
-            // Check if there are multiple splitted values. Read them and aggregate them.
-            for (Iterator i = fields.iterator(); i.hasNext();) {
-                Field field = (Field)i.next();
-                field.readFromRequest(formContext);
-                if (field.valueState == VALUE_UNPARSED) {
-                    this.valueState = VALUE_UNPARSED;
+        if(getProcessRequests() == true) {
+            String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
+            if (newEnteredValue != null) {
+                // There is one aggregated entered value. Read it and split it.
+                super.readFromRequest(formContext);
+                if (this.valueState == VALUE_UNPARSED) {
+                    setFieldsValues(enteredValue);
                 }
-            }
-            if (this.valueState == VALUE_UNPARSED) {
-                combineFields();
+            } else {
+                // Check if there are multiple splitted values. Read them and aggregate them.
+                for (Iterator i = fields.iterator(); i.hasNext();) {
+                    Field field = (Field)i.next();
+                    field.readFromRequest(formContext);
+                    if (field.valueState == VALUE_UNPARSED) {
+                        this.valueState = VALUE_UNPARSED;
+                    }
+                }
+                if (this.valueState == VALUE_UNPARSED) {
+                    combineFields();
+                }
             }
         }
     }

@@ -43,7 +43,12 @@ public abstract class AbstractWidget implements Widget {
      * property through own implemented getParent()
      */
     private Widget parent;
-    
+
+    /**
+     * Process request parameters for this widget?
+     */
+    private boolean processRequests = true;
+
     /**
      * Lazy loaded reference to the top-level form.
      */
@@ -197,6 +202,22 @@ public abstract class AbstractWidget implements Widget {
 
     public void setValue(Object object) {
         throw new RuntimeException("Cannot set the value of widget " + getRequestParameterName());
+    }
+
+    /**
+     * Returns whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for this widget.
+     */
+    public boolean getProcessRequests() {
+      return this.processRequests;
+    }
+
+    /**
+     * Controls whether {@link #readFromRequest(FormContext formContext)}
+     * processes the request parameter(s) for this widget.
+     */
+    public void setProcessRequests(boolean processRequests) {
+      this.processRequests = processRequests;
     }
 
     public boolean isRequired() {
