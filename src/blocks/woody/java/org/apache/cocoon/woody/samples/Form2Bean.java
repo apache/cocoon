@@ -57,7 +57,7 @@ import java.util.Date;
 /**
  * Sample bean used in the form2 binding demo.
  * 
- * @version $Id: Form2Bean.java,v 1.5 2004/02/11 10:43:32 antonio Exp $
+ * @version $Id: Form2Bean.java,v 1.6 2004/02/17 09:54:40 danielf Exp $
  */
 public class Form2Bean {
     private String email;
@@ -73,6 +73,7 @@ public class Form2Bean {
     private Sex sex;
 
     private Collection contacts = new ArrayList();
+    private Collection drinks = new ArrayList();
 
     /**
      * @return Returns the sex.
@@ -153,6 +154,18 @@ public class Form2Bean {
 
     public void setChoose(boolean choose) {
         this.choose = choose;
+    }
+
+    public Collection getDrinks() {
+        return drinks;
+    }
+
+    public void setDrinks(Collection drinks) {
+        this.drinks = drinks;
+    }
+
+    public void addDrink(String drink) {
+        drinks.add(drink);
     }
 
     public Collection getContacts() {

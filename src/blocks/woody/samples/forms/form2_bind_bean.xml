@@ -29,6 +29,8 @@
     <wb:value id="cntr"   path="phoneCountry"/>
   </wb:aggregate>
 
+  <wb:multi-value id="drinks" parent-path="." row-path="drinks" direction="load"/>
+
   <!-- repeater requires unique identification mechanism of the row-nodes -->
   <!-- (it is of course possible to implement other binding strategies) -->
   <wb:repeater id="contacts"

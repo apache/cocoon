@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<data><wrapper><context>
+<data>
+  <wrapper>
+    <context>
 
-	<info>
-	  <email boolBindingWorks="false">yourname@yourdomain.com</email>
-    <number value="3"/>
-    <choose value="true"/>
-    
-    <phone cntr="32">
-    	<zone>2</zone>
-    	<number>2222222</number>
-    </phone>
-	</info>
-	
-  <ipaddress changed="false">10.34.44.78</ipaddress>
-  <birthday>1960-04-10</birthday>
+      <info>
+        <email boolBindingWorks="false">yourname@yourdomain.com</email>
+        <number value="3"/>
+        <choose value="true"/>
+        
+        <phone cntr="32">
+          <zone>2</zone>
+          <number>2222222</number>
+        </phone>
+      </info>
+        
+      <ipaddress changed="false">10.34.44.78</ipaddress>
+      <birthday>1960-04-10</birthday>
+      
+      <drinks>
+        <drink>Jupiler</drink>
+        <drink>Hoegaarden</drink>
+      </drinks>
 
-  <contacts>
-    <contact id="1" row-state="original">
-    	<firstname>Lucien</firstname>
-	  	<lastname>Vandevelde</lastname>
-		  <phone nr="+32-2-2222222"/>
-      <email>lv@vdvld.be</email>
-    </contact>
-    <contact id="2" row-state="original">
-    	<firstname>Joris</firstname>
-	  	<lastname>Veldweghel</lastname>
-		  <phone nr="+32-59-595959"/>
-      <email>jrsvldwghl@hotmail.com</email>
-    </contact>
-  </contacts>
-	
-</context></wrapper></data>
+      <contacts>
+        <contact id="1" row-state="original">
+          <firstname>Lucien</firstname>
+          <lastname>Vandevelde</lastname>
+          <phone nr="+32-2-2222222"/>
+          <email>lv@vdvld.be</email>
+        </contact>
+        <contact id="2" row-state="original">
+          <firstname>Joris</firstname>
+          <lastname>Veldweghel</lastname>
+          <phone nr="+32-59-595959"/>
+          <email>jrsvldwghl@hotmail.com</email>
+        </contact>
+      </contacts>
+        
+    </context>
+  </wrapper>
+</data>

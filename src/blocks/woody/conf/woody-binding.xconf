@@ -5,6 +5,7 @@
   <woody-binding logger="woody.binding">
     <bindings>
       <binding name="value" src="org.apache.cocoon.woody.binding.ValueJXPathBindingBuilder"/>
+      <binding name="multi-value" src="org.apache.cocoon.woody.binding.MultiValueJXPathBindingBuilder"/>
       <binding name="context" src="org.apache.cocoon.woody.binding.ContextJXPathBindingBuilder"/>
       <binding name="repeater" src="org.apache.cocoon.woody.binding.RepeaterJXPathBindingBuilder"/>
       <binding name="simple-repeater" src="org.apache.cocoon.woody.binding.SimpleRepeaterJXPathBindingBuilder"/>
