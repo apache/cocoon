@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.8 2000-02-23 00:50:50 stefano Exp $ --
+/*-- $Id: MemoryStore.java,v 1.9 2000-03-25 12:50:21 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-02-23 00:50:50 $
+ * @version $Revision: 1.9 $ $Date: 2000-03-25 12:50:21 $
  */
 
 public class MemoryStore implements Store, Status {
@@ -214,8 +214,11 @@ public class MemoryStore implements Store, Status {
      * Returns the signature of this store implementation
      */
     public String getStatus() {
+        // give back info on the total memory used.
         StringBuffer buffer = new StringBuffer();
-        buffer.append("Memory Object Storage System<br>");
+        buffer.append("Memory Object Storage System:<br>");
+        buffer.append("Minimum required free memory:  " + memory + "<br>");
+        buffer.append("Current free memory: " + this.jvm.freeMemory() + "<br>");
         Enumeration e = list();
         while (e.hasMoreElements()) {
             buffer.append("<li>");
