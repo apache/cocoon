@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -28,10 +28,6 @@
    <coplet-instance-data id="Portal-Bottom-1" name="standard">
       <coplet-data>Portal-Bottom</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Demo-1" name="standard">
-      <coplet-data>Portal-Demo</coplet-data>
-   </coplet-instance-data>
-
    <coplet-instance-data id="Login-1" name="standard">
       <coplet-data>Login</coplet-data>
    </coplet-instance-data>
