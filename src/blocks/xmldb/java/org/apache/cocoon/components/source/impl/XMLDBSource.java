@@ -50,11 +50,6 @@
 */
 package org.apache.cocoon.components.source.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -81,16 +76,73 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * This class implements the xmldb:// pseudo-protocol and allows to get XML
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.7 2003/10/29 14:26:09 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.8 2003/12/05 00:29:02 vgritsenko Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, XMLizable {
+
+    //
+    // Static Strings used for XML Collection representation
+    //
+
+    /** Source namespace */
+    public static final String URI = "http://apache.org/cocoon/xmldb/1.0";
+
+    /** Source prefix */
+    public static final String PREFIX = "xmldb";
+
+    /** Root element <code>&lt;collections&gt;</code> */
+    protected static final String COLLECTIONS  = "collections";
+    /** Root element <code>&lt;xmldb:collections&gt;</code> (raw name) */
+    protected static final String QCOLLECTIONS  = PREFIX + ":" + COLLECTIONS;
+    /** Attribute <code>resources</code> on the root element indicates count of resources in the collection */
+    protected static final String RESOURCE_COUNT_ATTR = "resources";
+    /** Attribute <code>collections</code> on the root element indicates count of collections in the collection */
+    protected static final String COLLECTION_COUNT_ATTR  = "collections";
+    protected static final String COLLECTION_BASE_ATTR  = "base";
+
+    /** Element <code>&lt;collection&gt;</code> */
+    protected static final String COLLECTION  = "collection";
+    /** Element <code>&lt;xmldb:collection&gt;</code> (raw name) */
+    protected static final String QCOLLECTION  = PREFIX + ":" + COLLECTION;
+
+    /** Element <code>&lt;resource&gt;</code> */
+    protected static final String RESOURCE  = "resource";
+    /** Element <code>&lt;resource&gt;</code> (raw name) */
+    protected static final String QRESOURCE  = PREFIX + ":" + RESOURCE;
+    /** Attribute <code>name</code> on the collection/resource element */
+    protected static final String NAME_ATTR  = "name";
+
+    /** Root element <code>&lt;results&gt;</code> */
+    protected static final String RESULTSET = "results";
+    /** Root element <code>&lt;xmldb:results&gt;</code> (raw name) */
+    protected static final String QRESULTSET = PREFIX + ":" + RESULTSET;
+    protected static final String QUERY_ATTR = "query";
+    protected static final String RESULTS_COUNT_ATTR = "resources";
+
+    /** Element <code>&lt;result&gt;</code> */
+    protected static final String RESULT = "result";
+    /** Element <code>&lt;xmldb:result&gt;</code> (raw name) */
+    protected static final String QRESULT = PREFIX + ":" + RESULT;
+    protected static final String RESULT_DOCID_ATTR = "docid";
+    protected static final String RESULT_ID_ATTR = "id";
+
+    protected static final String CDATA  = "CDATA";
+
+    //
+    // Instance variables
+    //
 
     /** The requested URL */
     protected String url;
@@ -110,43 +162,6 @@ public class XMLDBSource extends AbstractLogEnabled
     /** ServiceManager */
     protected ServiceManager manager;
     
-    /** Static Strings used for XML Collection representation */
-
-    protected static final String URI = "http://apache.org/cocoon/xmldb/1.0";
-
-    protected static final String PREFIX = "xmldb";
-
-    /** Root element &lt;collections&gt; */
-    protected static final String COLLECTIONS  = "collections";
-    protected static final String QCOLLECTIONS  = PREFIX + ":" + COLLECTIONS;
-    protected static final String RESOURCE_COUNT_ATTR = "resources";
-    protected static final String COLLECTION_COUNT_ATTR  = "collections";
-    protected static final String COLLECTION_BASE_ATTR  = "base";
-
-    /** Element &lt;collection&gt; */
-    protected static final String COLLECTION  = "collection";
-    protected static final String QCOLLECTION  = PREFIX + ":" + COLLECTION;
-
-    /** Element &lt;resource&gt; */
-    protected static final String RESOURCE  = "resource";
-    protected static final String QRESOURCE  = PREFIX + ":" + RESOURCE;
-    protected static final String NAME_ATTR  = "name";
-
-    /** Root element &lt;results&gt; */
-    protected static final String RESULTSET = "results";
-    protected static final String QRESULTSET = PREFIX + ":" + RESULTSET;
-    protected static final String QUERY_ATTR = "query";
-    protected static final String RESULTS_COUNT_ATTR = "resources";
-
-    /** Element &lt;result&gt; */
-    protected static final String RESULT = "result";
-    protected static final String QRESULT = PREFIX + ":" + RESULT;
-    protected static final String RESULT_DOCID_ATTR = "docid";
-    protected static final String RESULT_ID_ATTR = "id";
-
-    protected static final String CDATA  = "CDATA";
-
-
     /**
      * The constructor.
      *
@@ -165,6 +180,7 @@ public class XMLDBSource extends AbstractLogEnabled
         this.user = credential.getPrincipal();
         this.password = credential.getPassword();
 
+        // Parse URL
         int start = url.indexOf('#');
         if (start != -1) {
             this.url = url.substring(0, start);
@@ -179,7 +195,6 @@ public class XMLDBSource extends AbstractLogEnabled
      * resource is a collection, build an XML view of it.
      */
     public void toSAX(ContentHandler handler) throws SAXException {
-
         try {
             if (url.endsWith("/")) {
                 this.collectionToSAX(handler);
@@ -191,7 +206,8 @@ public class XMLDBSource extends AbstractLogEnabled
         }
     }
 
-    private void resourceToSAX(ContentHandler handler) throws SAXException, ProcessingException {
+    private void resourceToSAX(ContentHandler handler)
+    throws SAXException, ProcessingException {
 
         final String col = url.substring(0, url.lastIndexOf('/'));
         final String res = url.substring(url.lastIndexOf('/') + 1);
@@ -237,7 +253,8 @@ public class XMLDBSource extends AbstractLogEnabled
         }
     }
 
-    private void collectionToSAX(ContentHandler handler) throws SAXException, ProcessingException {
+    private void collectionToSAX(ContentHandler handler)
+    throws SAXException, ProcessingException {
 
         AttributesImpl attributes = new AttributesImpl();
 
@@ -246,7 +263,7 @@ public class XMLDBSource extends AbstractLogEnabled
             collection = DatabaseManager.getCollection(url, user, password);
             if (collection == null) {
                 throw new ResourceNotFoundException("Collection " + url +
-                        " not found");
+                                                    " not found");
             }
 
             if (query != null) {
@@ -262,14 +279,14 @@ public class XMLDBSource extends AbstractLogEnabled
                     getLogger().debug("Listing collection " + url);
                 }
 
-                final String ncollections = Integer.toString(collection.getChildCollectionCount());
                 final String nresources = Integer.toString(collection.getResourceCount());
                 attributes.addAttribute("", RESOURCE_COUNT_ATTR,
-                        RESOURCE_COUNT_ATTR, "CDATA", nresources);
+                                        RESOURCE_COUNT_ATTR, "CDATA", nresources);
+                final String ncollections = Integer.toString(collection.getChildCollectionCount());
                 attributes.addAttribute("", COLLECTION_COUNT_ATTR,
-                        COLLECTION_COUNT_ATTR, "CDATA", ncollections);
+                                        COLLECTION_COUNT_ATTR, "CDATA", ncollections);
                 attributes.addAttribute("", COLLECTION_BASE_ATTR,
-                        COLLECTION_BASE_ATTR, "CDATA", url);
+                                        COLLECTION_BASE_ATTR, "CDATA", url);
 
                 handler.startDocument();
                 handler.startPrefixMapping(PREFIX, URI);
@@ -280,8 +297,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 for (int i = 0; i < collections.length; i++) {
                     attributes.clear();
                     attributes.addAttribute("", NAME_ATTR, NAME_ATTR, CDATA, collections[i]);
-                    handler.startElement(URI, COLLECTION,
-                            QCOLLECTION, attributes);
+                    handler.startElement(URI, COLLECTION, QCOLLECTION, attributes);
                     handler.endElement(URI, COLLECTION, QCOLLECTION);
                 }
 
@@ -290,8 +306,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 for (int i = 0; i < resources.length; i++) {
                     attributes.clear();
                     attributes.addAttribute("", NAME_ATTR, NAME_ATTR, CDATA, resources[i]);
-                    handler.startElement(URI, RESOURCE,
-                            QRESOURCE, attributes);
+                    handler.startElement(URI, RESOURCE, QRESOURCE, attributes);
                     handler.endElement(URI, RESOURCE, QRESOURCE);
                 }
 
@@ -312,19 +327,20 @@ public class XMLDBSource extends AbstractLogEnabled
         }
     }
 
-    private void queryToSAX(ContentHandler handler, Collection collection, String resource) throws SAXException {
+    private void queryToSAX(ContentHandler handler, Collection collection, String resource)
+    throws SAXException {
 
         AttributesImpl attributes = new AttributesImpl();
 
         try {
             XPathQueryService service =
-                (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+                    (XPathQueryService) collection.getService("XPathQueryService", "1.0");
             ResourceSet resultSet = (resource == null) ?
                     service.query(query) : service.queryResource(resource, query);
 
             attributes.addAttribute("", QUERY_ATTR, QUERY_ATTR, "CDATA", query);
             attributes.addAttribute("", RESULTS_COUNT_ATTR,
-                    RESULTS_COUNT_ATTR, "CDATA", Long.toString(resultSet.getSize()));
+                                    RESULTS_COUNT_ATTR, "CDATA", Long.toString(resultSet.getSize()));
 
             handler.startDocument();
             handler.startPrefixMapping(PREFIX, URI);
@@ -343,16 +359,15 @@ public class XMLDBSource extends AbstractLogEnabled
                 attributes.clear();
                 if (id != null) {
                     attributes.addAttribute("", RESULT_ID_ATTR, RESULT_ID_ATTR,
-                        CDATA, id);
+                                            CDATA, id);
                 }
                 if (documentId != null) {
                     attributes.addAttribute("", RESULT_DOCID_ATTR, RESULT_DOCID_ATTR,
-                        CDATA, documentId);
+                                            CDATA, documentId);
                 }
+
                 handler.startElement(URI, RESULT, QRESULT, attributes);
-
                 result.getContentAsSAX(includeHandler);
-
                 handler.endElement(URI, RESULT, QRESULT);
             }
 
@@ -377,11 +392,11 @@ public class XMLDBSource extends AbstractLogEnabled
     }
     
     public long getContentLength() {
-      return -1;
+        return -1;
     }
 
     public long getLastModified() {
-      return 0;
+        return 0;
     }
 
     public boolean exists() {
@@ -445,21 +460,20 @@ public class XMLDBSource extends AbstractLogEnabled
         ComponentSelector serializerSelector = null;
         Serializer serializer = null;
         try {
-
             serializerSelector = (ComponentSelector) this.manager.lookup(Serializer.ROLE + "Selector");
             serializer = (Serializer)serializerSelector.select("xml");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             serializer.setOutputStream(os);
 
-            this.toSAX(serializer);
+            toSAX(serializer);
 
             return new ByteArrayInputStream(os.toByteArray());
-        } catch (ServiceException se) {
-            throw new CascadingIOException("could not lookup pipeline components", se);
-        } catch (ComponentException cme) {
-            throw new CascadingIOException("could not lookup pipeline components", cme);
+        } catch (ServiceException e) {
+            throw new CascadingIOException("Could not lookup pipeline components", e);
+        } catch (ComponentException e) {
+            throw new CascadingIOException("Could not lookup pipeline components", e);
         } catch (Exception e) {
-            throw new CascadingIOException("Exception during processing of " + this.getURI(), e);
+            throw new CascadingIOException("Exception during processing of " + getURI(), e);
         } finally {
             if (serializer != null) {
                 serializerSelector.release(serializer);
