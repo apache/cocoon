@@ -35,7 +35,7 @@ import java.util.Map;
  * @cocoon.sitemap.component.documentation
  * Make a DOM object from SAX events and write it to the session.
  * 
- * @cocoon.sitemap.component.name   writeDOMsession
+ * @cocoon.sitemap.component.name   writedomsession
  * @cocoon.sitemap.component.logger sitemap.transformer.writeDOMsession
  * 
  * 
@@ -52,7 +52,7 @@ import java.util.Map;
  *   dom-root-element is the trigger that will be the root element of the DOM
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: WriteDOMSessionTransformer.java,v 1.4 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class WriteDOMSessionTransformer

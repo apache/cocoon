@@ -41,7 +41,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @cocoon.sitemap.component.documentation
  * The encodeURL transformer emits encoded URLs.
  * 
- * @cocoon.sitemap.component.name   encodeURL
+ * @cocoon.sitemap.component.name   encodeurl
  * @cocoon.sitemap.component.logger sitemap.transformer.encodeURL
  * @cocoon.sitemap.component.documentation.caching
  *               TBD
