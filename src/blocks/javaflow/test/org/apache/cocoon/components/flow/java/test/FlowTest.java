@@ -260,6 +260,8 @@ public class FlowTest extends TestCase {
     public void testFormFlow() throws Exception {
         Class clazz = loader.loadClass("org.apache.cocoon.samples.flow.java.FormFlow");
         Continuable flow = (Continuable) clazz.newInstance();
+        
+        assertNotNull(flow);
     }
 
 /*    public static void testOJBFlow() throws Exception {

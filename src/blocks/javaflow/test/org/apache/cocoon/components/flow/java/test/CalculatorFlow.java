@@ -17,7 +17,7 @@ package org.apache.cocoon.components.flow.java.test;
 
 import org.apache.cocoon.components.flow.java.*;
 
-public class CalculatorFlow extends AbstractCocoonFlow {
+public class CalculatorFlow extends AbstractContinuable {
 
     public void run() {
 

@@ -30,7 +30,7 @@ import java.io.OutputStream;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractContinuable.java,v 1.1 2004/04/01 12:40:40 stephan Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.2 2004/04/16 09:39:57 stephan Exp $
  */
 public abstract class AbstractContinuable implements Continuable {
 
@@ -52,7 +52,8 @@ public abstract class AbstractContinuable implements Continuable {
 
         ContinuationContext context = getContext();
 
-        context.getLogger().debug("send page and wait '" + uri + "'");
+				if (context.getLogger()!=null)
+            context.getLogger().debug("send page and wait '" + uri + "'");
 
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 
@@ -81,7 +82,8 @@ public abstract class AbstractContinuable implements Continuable {
 
         ContinuationContext context = getContext();
 
-        context.getLogger().debug("send page '" + uri + "'");
+				if (context.getLogger()!=null)
+            context.getLogger().debug("send page '" + uri + "'");
 
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 
