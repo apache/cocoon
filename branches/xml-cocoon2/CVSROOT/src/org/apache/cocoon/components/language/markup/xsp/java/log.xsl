@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-30 21:41:19 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-21 22:16:47 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -66,7 +66,7 @@
             Category logCategory = LogKit.createCategory(<xsl:value-of select="$name"/>,
                                          LogKit.getPriorityForName(<xsl:value-of select="$level"/>));
 
-            log = new Logger(logCategory, log);
+            log = new Logger(logCategory, cocoonLogger);
           } catch (Exception e) {
             cocoonLogger.error("Could not create logger for \"" +
                                <xsl:value-of select="$name"/> + "\".", e);
