@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.35 2003/10/31 11:30:20 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.36 2003/12/28 21:05:07 unico Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -51,7 +51,14 @@
       | All components follow this scheme.
       +-->
   <map:generators default="file">
-    <map:generator label="content" logger="sitemap.generator.file" name="file" pool-grow="4" pool-max="32" pool-min="8" src="org.apache.cocoon.generation.FileGenerator"/>
+    <map:generator 
+      name="file" 
+      src="org.apache.cocoon.generation.FileGenerator"
+      logger="sitemap.generator.file" 
+      label="content" 
+      pool-grow="4" pool-max="32" pool-min="8" 
+    />
+    <!--
     <map:generator label="content" logger="sitemap.generator.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.generation.ServerPagesGenerator"/>
     <map:generator label="content" logger="sitemap.generator.directory" name="directory" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.DirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.xpathdirectory" name="xpathdirectory" src="org.apache.cocoon.generation.XPathDirectoryGenerator"/>
@@ -61,9 +68,15 @@
     <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-grow="2" pool-max="16" pool-min="1" src="org.apache.cocoon.generation.StreamGenerator"/>
     <map:generator label="content" logger="sitemap.generator.status" name="status" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.StatusGenerator"/>
     <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+    -->
     <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
          representation of the exception that caused the error handler to be executed -->
-    <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
+    <map:generator 
+      name="notifying" 
+      src="org.apache.cocoon.sitemap.NotifyingGenerator"
+      logger="sitemap.generator.notifying"
+      pool-min="2" pool-max="32" pool-grow="2"
+    />
   </map:generators>
 
   <!--+
@@ -102,7 +115,7 @@
       <xslt-processor-role>xsltc</xslt-processor-role>
       <check-includes>true</check-includes>
     </map:transformer>
-
+    <!--
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.cinclude" name="cinclude" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.CIncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.encodeURL" name="encodeURL" src="org.apache.cocoon.transformation.EncodeURLTransformer"/>
@@ -113,33 +126,27 @@
     <map:transformer logger="sitemap.transformer.readDOMsession" name="readDOMsession" src="org.apache.cocoon.transformation.ReadDOMSessionTransformer"/>
     <map:transformer logger="sitemap.transformer.log" name="log" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.LogTransformer"/>
     <map:transformer logger="sitemap.transformer.jx" name="jx" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.JXTemplateTransformer"/>
+    -->
   </map:transformers>
 
   <!--+
       | Serializers consume SAX events and produce a character stream. Every
       | pipeline needs to be terminated by a serializer.
       +-->
-  <map:serializers default="html">
-    <map:serializer logger="sitemap.serializer.links" name="links" src="org.apache.cocoon.serialization.LinkSerializer"/>
-    <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-grow="4" pool-max="32" pool-min="4" src="org.apache.cocoon.serialization.HTMLSerializer"/>
-    <map:serializer logger="sitemap.serializer.wml" mime-type="text/vnd.wap.wml" name="wml" src="org.apache.cocoon.serialization.XMLSerializer">
-     <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
-     <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
-     <encoding>ASCII</encoding>
-     <omit-xml-declaration>yes</omit-xml-declaration>
-    </map:serializer>
-    <map:serializer logger="sitemap.serializer.chtml" mime-type="text/html" name="chtml" src="org.apache.cocoon.serialization.HTMLSerializer">
-     <!--+ Compact HTML for Small Information Appliances,
-         | based on http://www.w3.org/TR/1998/NOTE-compactHTML-19980209/
-         + -->
-     <doctype-public>-//W3C//DTD Compact HTML 1.0 Draft//EN</doctype-public>
-    </map:serializer>
-    <map:serializer logger="sitemap.serializer.svgxml" mime-type="image/svg+xml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer">
-     <doctype-public>-//W3C//DTD SVG 1.0//EN</doctype-public>
-     <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
-    </map:serializer>
-    <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-grow="2" pool-max="64" pool-min="2" src="org.apache.cocoon.serialization.XMLSerializer">
+  <map:serializers default="xhtml">
+    <map:serializer 
+      name="xml" 
+      src="org.apache.cocoon.serialization.XMLSerializer"
+      logger="sitemap.serializer.xml" 
+      mime-type="text/xml" 
+      pool-min="2" pool-max="32" pool-grow="2"
+    />
+    <map:serializer 
+      name="xhtml" 
+      src="org.apache.cocoon.serialization.XMLSerializer"
+      logger="sitemap.serializer.xhtml" 
+      mime-type="text/html" 
+      pool-grow="2" pool-max="32" pool-min="2">
       <!--+
           | You can choose from Strict, Transitional, or Frameset XHTML.
           | For Strict XHTML set doctype to:
@@ -159,6 +166,30 @@
       <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
       <encoding>UTF-8</encoding>
     </map:serializer>
+    <map:serializer 
+      name="links" 
+      logger="sitemap.serializer.links" 
+      src="org.apache.cocoon.serialization.LinkSerializer" 
+      pool-min="2" pool-max="32" pool-grow="2" 
+    />
+    <!--
+    <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-grow="4" pool-max="32" pool-min="4" src="org.apache.cocoon.serialization.HTMLSerializer"/>
+    <map:serializer logger="sitemap.serializer.wml" mime-type="text/vnd.wap.wml" name="wml" src="org.apache.cocoon.serialization.XMLSerializer">
+     <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
+     <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
+     <encoding>ASCII</encoding>
+     <omit-xml-declaration>yes</omit-xml-declaration>
+    </map:serializer>
+    <map:serializer logger="sitemap.serializer.chtml" mime-type="text/html" name="chtml" src="org.apache.cocoon.serialization.HTMLSerializer">
+     <!- -+ Compact HTML for Small Information Appliances,
+         | based on http://www.w3.org/TR/1998/NOTE-compactHTML-19980209/
+         + - ->
+     <doctype-public>-//W3C//DTD Compact HTML 1.0 Draft//EN</doctype-public>
+    </map:serializer>
+    <map:serializer logger="sitemap.serializer.svgxml" mime-type="image/svg+xml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer">
+     <doctype-public>-//W3C//DTD SVG 1.0//EN</doctype-public>
+     <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
+    </map:serializer>
     <map:serializer logger="sitemap.serializer.xhtml" mime-type="application/xhtml+xml" name="xhtml11" pool-grow="2" pool-max="64" pool-min="2" src="org.apache.cocoon.serialization.XMLSerializer">
       <doctype-public>-//W3C//DTD XHTML 1.1//EN</doctype-public>
       <doctype-system>http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</doctype-system>
@@ -171,6 +202,7 @@
     <map:serializer logger="sitemap.serializer.sxc"  mime-type="application/vnd.sun.xml.calc" name="sxc" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
     <map:serializer logger="sitemap.serializer.sxd"  mime-type="application/vnd.sun.xml.draw" name="sxd" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
     <map:serializer logger="sitemap.serializer.sxi"  mime-type="application/vnd.sun.xml.impress" name="sxi" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+    -->
   </map:serializers>
 
   <!--+
@@ -180,7 +212,12 @@
       | reader. They are useful for delivering binary content like images.
       +-->
   <map:readers default="resource">
-    <map:reader logger="sitemap.reader.resource" name="resource" pool-max="32" src="org.apache.cocoon.reading.ResourceReader"/>
+    <map:reader 
+      name="resource" 
+      src="org.apache.cocoon.reading.ResourceReader"
+      logger="sitemap.reader.resource" 
+      pool-min="2" pool-max="32" pool-grow="2"
+    />
   </map:readers>
 
   <!--+
@@ -193,6 +230,7 @@
       +-->
   <map:matchers default="wildcard">
     <map:matcher logger="sitemap.matcher.wildcard" name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
+    <!--
     <map:matcher logger="sitemap.matcher.regexp" name="regexp" src="org.apache.cocoon.matching.RegexpURIMatcher"/>
     <map:matcher logger="sitemap.matcher.request-parameter" name="request-parameter" src="org.apache.cocoon.matching.RequestParameterMatcher"/>
     <map:matcher logger="sitemap.matcher.cookie" name="cookie" src="org.apache.cocoon.matching.CookieMatcher"/>
@@ -204,6 +242,7 @@
     <map:matcher logger="sitemap.matcher.referer-match" name="referer-match" src="org.apache.cocoon.matching.WildcardHeaderMatcher">
       <header-name>referer</header-name>
     </map:matcher>
+    -->
   </map:matchers>
 
   <!--+
@@ -212,12 +251,13 @@
       | compared with a java switch statement.
       +-->
   <map:selectors default="browser">
+   <!--
    <map:selector logger="sitemap.selector.browser" name="browser" src="org.apache.cocoon.selection.BrowserSelector">
-    <!--+
+    <!- -+
         | NOTE: The appearance indicates the search order. This is very important since
         |       some words may be found in more than one browser description. (MSIE is
         |       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
-        +-->
+        +- ->
     <browser name="explorer" useragent="MSIE"/>
     <browser name="pocketexplorer" useragent="MSPIE"/>
     <browser name="handweb" useragent="HandHTTP"/>
@@ -233,6 +273,7 @@
     <browser name="mozilla5" useragent="Netscape6/"/>
     <browser name="netscape" useragent="Mozilla"/>
    </map:selector>
+   -->
    
    <!--+
        | Exception selector : used in <map:handle> errors to build different pipelines
@@ -248,24 +289,25 @@
      <exception class="java.lang.Throwable" unroll="true"/>
    </map:selector>
 
-
+   <!--
    <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
-    <!-- Define now which request parameter to use; or do it later,
+    <!- - Define now which request parameter to use; or do it later,
          when using this selector, via "parameter-name" parameter.
     <parameter-name>myparam</parameter-name> 
-    -->
+    - ->
    </map:selector>
    <map:selector logger="sitemap.selector.request-attribute" name="request-attribute" src="org.apache.cocoon.selection.RequestAttributeSelector">
-    <!-- <attribute-name>myparam</attribute-name> -->
+    <!- - <attribute-name>myparam</attribute-name> - ->
    </map:selector>
    <map:selector logger="sitemap.selector.session-attribute" name="session-attribute" src="org.apache.cocoon.selection.SessionAttributeSelector">
-    <!-- <attribute-name>myparam</attribute-name> -->
+    <!- - <attribute-name>myparam</attribute-name> - ->
    </map:selector>
    <map:selector logger="sitemap.selector.parameter" name="parameter" src="org.apache.cocoon.selection.ParameterSelector"/>
    <map:selector logger="sitemap.selector.header" name="header" src="org.apache.cocoon.selection.HeaderSelector">
-    <!-- <header-name>myparam</header-name> -->
+    <!- - <header-name>myparam</header-name> - ->
    </map:selector>
    <map:selector logger="sitemap.selector.host" name="host" src="org.apache.cocoon.selection.HostSelector"/>
+   -->
   </map:selectors>
 
   <!--+
@@ -278,6 +320,7 @@
       | entirely and execution proceeds from the element right below the action.
       +-->
   <map:actions>
+   <!--
    <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
    <map:action logger="sitemap.action.form-validator" name="form-validator" src="org.apache.cocoon.acting.FormValidatorAction"/>
    <map:action logger="sitemap.action.session-state" name="session-state" src="org.apache.cocoon.acting.SessionStateAction"/>
@@ -287,6 +330,7 @@
    <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
    <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
    <map:action logger="sitemap.action.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.acting.ServerPagesAction"/>
+   -->
   </map:actions>
 
   <!--+
@@ -327,8 +371,9 @@
       | cache points.
       +-->
    <map:pipes default="caching">
+     <!--
      <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
-       <!--+
+       <!- -+
            | If not specified, the value of the outputBufferSize parameter is -1.
            | This will cause Cocoon to buffer all output until processing has finished
            | before sending it to the client. This has the advantage that in case
@@ -340,13 +385,14 @@
            | is being generated.
            | For more granularity, you can also supply this parameter to
            | individual map:pipeline elements (using map:parameter syntax).
-           +-->
-       <!-- parameter name="outputBufferSize" value="8192"/ -->
+           +- ->
+       <!- - parameter name="outputBufferSize" value="8192"/ - ->
      </map:pipe>
      <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
        <autoCachingPoint>On</autoCachingPoint>
-       <!-- parameter name="outputBufferSize" value="8192"/ -->
+       <!- - parameter name="outputBufferSize" value="8192"/ - ->
      </map:pipe>
+     -->
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
@@ -373,7 +419,7 @@
       <map:transform src="stylesheets/system/xml2html.xsl"/>
       <map:serialize type="html"/>
     </map:view>
-
+    
     <map:view from-position="last" name="links">
       <map:serialize type="links"/>
     </map:view>
@@ -575,6 +621,7 @@
         | error to be displayed on screen. The "exception" selector can help
         | you to define different screens for different error types.
         +-->
+    <!--
     <map:handle-errors>
       <map:select type="exception">
 
@@ -605,6 +652,7 @@
       </map:select>
 
     </map:handle-errors>
+    -->
 
   </map:pipeline>
  </map:pipelines>
