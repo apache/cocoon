@@ -34,7 +34,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-10 17:31:56 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-10 19:31:39 $
  */
 public class AddEmployeeAction extends ComposerAction {
 
@@ -44,11 +44,13 @@ public class AddEmployeeAction extends ComposerAction {
      * Get the <code>Configuration</code> object for this <code>Component</code>
      */
     public void configure( Configuration configuration) throws ConfigurationException {
+        Configuration connElement = configuration.getChild("use-connection");
+
         try {
             ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
-            this.datasource = (DataSourceComponent) selector.select(configuration.getChild("use-connection").getValue());
+            this.datasource = (DataSourceComponent) selector.select(connElement.getValue());
         } catch (ComponentManagerException cme) {
-            throw new ConfigurationException("Could not get the DataSource Object", cme);
+            throw new ConfigurationException("Could not get the DataSource Component", cme);
         }
     }
 
