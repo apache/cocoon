@@ -24,7 +24,7 @@ import java.io.InputStream;
  * Defines an interface to provide client context information .
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: Context.java,v 1.2 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  *
  */
 
