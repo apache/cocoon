@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,11 +84,11 @@ import org.xml.sax.SAXException;
  *     &lt;source:reinsert&gt;[Optional] The XPath (relative to &lt;source:replace/&gt;) to backup the overwritten node to&lt;/source:reinsert&gt; - eg: "foo/versions" or "/doc/versions/foo". NOTE: If specified and a node is replaced, all children of this replaced node will be reinserted at the given path.
  *     &lt;source:fragment&gt;The XML Fragment to be written&lt;/source:fragment&gt; - eg: "&lt;foo&gt;&lt;bar id="dogcow"/&gt;&lt;/foo&gt;" or "&lt;foo/&gt;&lt;bar&gt;&lt;dogcow/&gt;&lt;bar/&gt;" etc.
  * &lt;source:insert&gt;
- * 
+ *
  * &lt;source:delete &gt; - deletes an existing asset.
  *     &lt;source:source&gt;The System ID of the asset to be deleted&lt;/source:source&gt; - eg: "docs/blah.xml" or "context://blah.xml" etc.
  *     &lt;source:path&gt;[Ignored] XPath to specify how your content is wrapped&lt;/source:path&gt;
- *     &lt;source:fragment&gt;[Ignored]The XML Fragment to be written&lt;/source:fragment&gt; 
+ *     &lt;source:fragment&gt;[Ignored]The XML Fragment to be written&lt;/source:fragment&gt;
  * &lt;source:delete&gt;
  * </pre>
  *
@@ -283,13 +283,13 @@ public class SourceWritingTransformer
 
     /** The XPath processor */
     protected XPathProcessor xpathProcessor;
-    
+
     /**
      * Constructor.
      * Sets the namespace.
      */
     public SourceWritingTransformer() {
-        this.namespaceURI = SWT_URI;
+        this.defaultNamespaceURI = SWT_URI;
     }
 
     /**
@@ -336,7 +336,7 @@ public class SourceWritingTransformer
         }
 
         // Element: insert
-        if (this.state == STATE_OUTSIDE 
+        if (this.state == STATE_OUTSIDE
             && (name.equals(INSERT_ELEMENT) || name.equals(WRITE_ELEMENT))) {
 
             this.state = (name.equals(INSERT_ELEMENT) ? STATE_INSERT : STATE_WRITE);
@@ -470,9 +470,9 @@ public class SourceWritingTransformer
                     this.stack.pop();
                 }
             } while ( !tag.equals("END"));
-            
+
             this.deleteSource(sourceName);
-            this.state = STATE_OUTSIDE;                       
+            this.state = STATE_OUTSIDE;
         // Element: file
         } else if (name.equals(SOURCE_ELEMENT) && this.state == STATE_FILE) {
             this.state = this.parent_state;
@@ -769,11 +769,11 @@ public class SourceWritingTransformer
         this.reportResult(localSerializer, tagname, message, target, result, action);
     }
 
-    private void reportResult(String localSerializer, 
-                                String tagname, 
-                                String message, 
-                                String target, 
-                                String result, 
+    private void reportResult(String localSerializer,
+                                String tagname,
+                                String message,
+                                String target,
+                                String result,
                                 String action)
     throws SAXException {
         sendStartElementEvent(RESULT_ELEMENT);
@@ -799,8 +799,8 @@ public class SourceWritingTransformer
             }
         sendEndElementEvent(RESULT_ELEMENT);
     }
-    
-    
+
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */

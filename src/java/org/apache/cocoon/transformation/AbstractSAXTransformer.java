@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,65 +57,73 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- *  This class is the basis for all transformers. It provides various useful
- *  methods and hooks for implementing own custom transformers.<p>
- *  <p>
- *  The basic behaviour of each transformer consists of the following four parts:
- *  <ul>
- *  <li>Listen for specific events with a given namespace</li>
- *  <li>Collect information via these events</li>
- *  <li>Process the information</li>
- *  <li>Create new events from the processed information</li>
- *  </ul><p>
- *  For all these four purposes the AbstractSAXTransformer offers some
- *  powerful methods and hooks:
- *  <p>
- *  Namespace handling<p>
- *  By setting the instance variable namespaceURI to the namespace the
- *  events are filtered and only events with this namespace are send to
- *  the two hooks startTransformingElement() and endTransformingElement().<p>
- *  It is possible to override the default
- *  namespace for the transformer by specifying the parameter "namespaceURI"
- *  in the pipeline. This avoids possible namespace collisions.<p>
+ * This class is the basis for all transformers. It provides various useful
+ * methods and hooks for implementing own custom transformers.
  *
- *  Recording of information<p>
- *  There are several methods for recording information, e.g. startRecording(),
- *  startTextRecording() etc. These methods collect information from the xml
- *  stream for further processing.<p>
+ * <p>The basic behaviour of each transformer consists of the following four
+ * parts:</p>
+ * <ul>
+ * <li>Listen for specific events with a given namespace</li>
+ * <li>Collect information via these events</li>
+ * <li>Process the information</li>
+ * <li>Create new events from the processed information</li>
+ * </ul>
  *
- *  Creating new events<p>
- *  New events can be easily created with the <code>sendEvents()</code>
- *  method, the <code>sendStartElementEvent()</code> methods, the <code>sendEndElementEvent()</code>
- *  method or the <code>sendTextEvent()</code> method.<p>
+ * <p>For all these four purposes the AbstractSAXTransformer offers some
+ * powerful methods and hooks:</p>
  *
- *  Initialization<p>
- *  Before the document is processed the setupTransforming() hook is invoked.
+ * <h3>Namespace handling</h3>
+ * By setting the instance variable namespaceURI to the namespace the
+ * events are filtered and only events with this namespace are send to
+ * the two hooks: <code>startTransformingElement</code> and
+ * <code>endTransformingElement</code>. It is possible to override the default
+ * namespace for the transformer by specifying the parameter "namespaceURI"
+ * in the pipeline. This avoids possible namespace collisions.
  *
+ * <h3>Recording of information</h3>
+ * There are several methods for recording information, e.g. startRecording(),
+ * startTextRecording() etc. These methods collect information from the xml
+ * stream for further processing.
+ *
+ * <h3>Creating new events</h3>
+ * New events can be easily created with the <code>sendEvents()</code>
+ * method, the <code>sendStartElementEvent()</code> methods, the
+ * <code>sendEndElementEvent()</code> method or the
+ * <code>sendTextEvent()</code> method.
+ *
+ * <h3>Initialization</h3>
+ * Before the document is processed the <code>setupTransforming</code> hook
+ * is invoked.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version CVS $Id$
 */
 public abstract class AbstractSAXTransformer
-extends AbstractTransformer
-implements Serviceable, Configurable, Recyclable {
+        extends AbstractTransformer
+        implements Serviceable, Configurable, Recyclable {
 
-    /** Controlls SAX event handling.
-     *  If set to true all whitespace events are ignored.
+    /**
+     * Controlls SAX event handling.
+     * If set to true all whitespace events are ignored.
      */
     protected boolean ignoreWhitespaces;
-    /** Controlls SAX event handling
-     *  If set to true all characters events containing only whitespaces
-     *  are ignored.
+
+    /**
+     * Controlls SAX event handling.
+     * If set to true all characters events containing only whitespaces
+     * are ignored.
      */
     protected boolean ignoreEmptyCharacters;
 
-    /** Controlls SAX event handling
+    /**
+     * Controlls SAX event handling.
      * If this is incremented all events are not forwarded to the next
      * pipeline component, but the hooks are still called.
      */
     protected int ignoreEventsCount;
 
-    /** Controlls SAX event handling
+    /**
+     * Controlls SAX event handling.
      * If this is greater than zero, the hooks are not called. Attention,
      * make sure, that you decrement this counter properly as your hooks are
      * not called anymore!
@@ -123,25 +131,31 @@ implements Serviceable, Configurable, Recyclable {
     protected int ignoreHooksCount;
 
     /**
-     *  The used namespace for the SAX filtering.
-     *  This is either the defaultNamespaceURI or the value
-     *  set by the "namespaceURI" parameter for the pipeline.
+     * The namespace used by the transformer for the SAX events filtering.
+     * This either equals to the {@link #defaultNamespaceURI} or to the value
+     * set by the <code>namespaceURI</code> sitemap parameter for the pipeline.
+     * Must never be null.
      */
-    protected String  namespaceURI;
+    protected String namespaceURI;
 
     /**
      * This is the default namespace used by the transformer.
-     * It should be set in the constructor.
+     * Implementations should set its value in the constructor.
+     * Must never be null.
      */
-    protected String  defaultNamespaceURI;
+    protected String defaultNamespaceURI;
 
-    /** A stack for collecting information.
-     *  The stack is important for collection information especially when
-     *  the tags can be nested.
+    /**
+     * A stack for collecting information.
+     * The stack is important for collection information especially when
+     * the tags can be nested.
      */
-    protected Stack   stack = new Stack();
-    /** The stack of current used recorders */
-    protected Stack   recorderStack = new Stack();
+    protected Stack stack = new Stack();
+
+    /**
+     * The stack of current used recorders
+     */
+    protected Stack recorderStack = new Stack();
 
     /** The current Request object */
     protected Request            request;
@@ -163,22 +177,24 @@ implements Serviceable, Configurable, Recyclable {
     /** Are we already initialized for the current request? */
     private boolean isInitialized;
 
-    /** Empty attributes (for performance). This can be used
-     *  do create own attributes, but make sure to clean them
-     *  afterwords.
+    /**
+     * Empty attributes (for performance). This can be used
+     * do create own attributes, but make sure to clean them
+     * afterwords.
      */
     protected AttributesImpl emptyAttributes = new AttributesImpl();
 
     /** The namespaces and their prefixes */
     private List namespaces = new ArrayList(5);
+
     /** The current prefix for our namespace */
     private String ourPrefix;
-    
+
+
     /* (non-Javadoc)
      * @see Configurable#configure(Configuration)
      */
-    public void configure(Configuration configuration)
-    throws ConfigurationException {
+    public void configure(Configuration configuration) throws ConfigurationException {
     }
 
     /* (non-Javadoc)
@@ -187,19 +203,19 @@ implements Serviceable, Configurable, Recyclable {
     public void setup(SourceResolver resolver,
                       Map            objectModel,
                       String         src,
-                      Parameters     par)
-    throws ProcessingException,
-           SAXException,
-           IOException {
+                      Parameters     params)
+    throws ProcessingException, SAXException, IOException {
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Setup resolver=" + resolver +
-                                   ", objectModel="+objectModel+
-                                   ", src="+src+
-                                   ", parameters="+par);
+                              ", objectModel=" + objectModel +
+                              ", src=" + src +
+                              ", parameters=" + params);
         }
 
+        // defaultNamespaceURI should never be null
         if (this.defaultNamespaceURI == null) {
-            this.defaultNamespaceURI = this.namespaceURI;
+            this.defaultNamespaceURI = "";
         }
         this.objectModel = objectModel;
 
@@ -207,13 +223,13 @@ implements Serviceable, Configurable, Recyclable {
         this.response = ObjectModelHelper.getResponse(objectModel);
         this.context = ObjectModelHelper.getContext(objectModel);
         this.resolver = resolver;
-        this.parameters = par;
+        this.parameters = params;
         this.source = src;
         this.isInitialized = false;
 
         // get the current namespace
-        this.namespaceURI = this.parameters.getParameter("namespaceURI",
-                    this.defaultNamespaceURI);
+        this.namespaceURI = params.getParameter("namespaceURI",
+                                                this.defaultNamespaceURI);
 
         this.ignoreHooksCount = 0;
         this.ignoreEventsCount = 0;
@@ -226,6 +242,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void recycle() {
         super.recycle();
+        this.namespaceURI = null;
         this.objectModel = null;
         this.request = null;
         this.response = null;
@@ -254,7 +271,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startDocument()
     throws SAXException {
-        if ( !this.isInitialized ) {
+        if (!this.isInitialized) {
             try {
                 this.setupTransforming();
             } catch (ProcessingException local) {
@@ -290,18 +307,14 @@ implements Serviceable, Configurable, Recyclable {
                              String raw,
                              Attributes attr)
     throws SAXException {
-        if (uri != null
-            && namespaceURI != null
-            && uri.equals(namespaceURI) == true
-            && this.ignoreHooksCount == 0) {
-
+        if (namespaceURI.equals(uri) && ignoreHooksCount == 0) {
             // this is our namespace:
             try {
-                this.startTransformingElement(uri, name, raw, attr);
-            } catch (ProcessingException pException) {
-                throw new SAXException("ProcessingException: " + pException, pException);
-            } catch (IOException ioe) {
-                throw new SAXException("Exception occured during processing: " + ioe, ioe);
+                startTransformingElement(uri, name, raw, attr);
+            } catch (ProcessingException e) {
+                throw new SAXException("ProcessingException: " + e, e);
+            } catch (IOException e) {
+                throw new SAXException("IOException occured during processing: " + e, e);
             }
         } else {
             if (ignoreEventsCount == 0) {
@@ -310,25 +323,21 @@ implements Serviceable, Configurable, Recyclable {
         }
     }
 
-
     /**
      * Process the SAX event.
      * The namespace of the event is checked. If it is the defined namespace
      * for this transformer the endTransformingElement() hook is called.
      */
-    public void endElement(String uri, String name, String raw) throws SAXException {
-        if (uri != null
-            && namespaceURI != null
-            && uri.equals(namespaceURI) == true
-            && this.ignoreHooksCount == 0) {
-
+    public void endElement(String uri, String name, String raw)
+    throws SAXException {
+        if (namespaceURI.equals(uri) && this.ignoreHooksCount == 0) {
             // this is our namespace:
             try {
-                this.endTransformingElement(uri, name, raw);
+                endTransformingElement(uri, name, raw);
             } catch (ProcessingException e) {
                 throw new SAXException("ProcessingException: " + e, e);
-            } catch (IOException ioe) {
-                throw new SAXException("Exception occured during processing: " + ioe, ioe);
+            } catch (IOException e) {
+                throw new SAXException("IOException occured during processing: " + e, e);
             }
         } else {
             if (ignoreEventsCount == 0) {
@@ -343,7 +352,7 @@ implements Serviceable, Configurable, Recyclable {
     public void characters(char[] p0, int p1, int p2)
     throws SAXException {
         if (this.ignoreEventsCount == 0) {
-            if (this.ignoreEmptyCharacters == true) {
+            if (this.ignoreEmptyCharacters) {
                 String value = new String(p0, p1, p2);
                 if (value.trim().length() > 0) {
                     super.characters(p0, p1, p2);
@@ -364,11 +373,13 @@ implements Serviceable, Configurable, Recyclable {
         }
     }
 
+
     /*
      * Recording of events.
      * With this method all events are not forwarded to the next component in the pipeline.
      * They are recorded to create a document fragment.
      */
+
     private LexicalHandler   originalLexicalHandler;
     private ContentHandler   originalContentHandler;
 
@@ -377,13 +388,13 @@ implements Serviceable, Configurable, Recyclable {
      * Do not invoke this method directly.
      */
     protected void addRecorder(XMLConsumer recorder) {
-        if (this.recorderStack.empty() == true) {
+        if (this.recorderStack.empty()) {
             // redirect if first (top) recorder
             this.originalLexicalHandler = this.lexicalHandler;
             this.originalContentHandler = this.contentHandler;
         }
-        this.setContentHandler(recorder);
-        this.setLexicalHandler(recorder);
+        setContentHandler(recorder);
+        setLexicalHandler(recorder);
         this.recorderStack.push(recorder);
     }
 
@@ -395,15 +406,16 @@ implements Serviceable, Configurable, Recyclable {
         Object recorder = this.recorderStack.pop();
         if (this.recorderStack.empty() == true) {
             // undo redirect if no recorder any more
-            this.setContentHandler(originalContentHandler);
-            this.setLexicalHandler(originalLexicalHandler);
+            setContentHandler(originalContentHandler);
+            setLexicalHandler(originalLexicalHandler);
             this.originalLexicalHandler = null;
             this.originalContentHandler = null;
         } else {
-            XMLConsumer next = (XMLConsumer)recorderStack.peek();
-            this.setContentHandler(next);
-            this.setLexicalHandler(next);
+            XMLConsumer next = (XMLConsumer) recorderStack.peek();
+            setContentHandler(next);
+            setLexicalHandler(next);
         }
+
         return recorder;
     }
 
@@ -415,7 +427,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startSAXRecording()
     throws SAXException {
-        this.addRecorder(new SaxBuffer());
+        addRecorder(new SaxBuffer());
     }
 
     /**
@@ -426,7 +438,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public XMLizable endSAXRecording()
     throws SAXException {
-        return (XMLizable)this.removeRecorder();
+        return (XMLizable) this.removeRecorder();
     }
 
     /**
@@ -439,8 +451,7 @@ implements Serviceable, Configurable, Recyclable {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Start text recording");
         }
-        XMLConsumer recorder = new TextRecorder();
-        addRecorder(recorder);
+        addRecorder(new TextRecorder());
 
         sendStartPrefixMapping();
     }
@@ -453,7 +464,7 @@ implements Serviceable, Configurable, Recyclable {
     throws SAXException {
         sendEndPrefixMapping();
 
-        TextRecorder recorder = (TextRecorder)this.removeRecorder();
+        TextRecorder recorder = (TextRecorder) removeRecorder();
         String text = recorder.getText();
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("End text recording. Text=" + text);
@@ -485,7 +496,7 @@ implements Serviceable, Configurable, Recyclable {
     public String endSerializedXMLRecording()
     throws SAXException, ProcessingException {
         DocumentFragment fragment = endRecording();
-        String text = XMLUtils.serializeNode(fragment, (Properties)this.stack.pop());
+        String text = XMLUtils.serializeNode(fragment, (Properties) this.stack.pop());
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("End serialized XML recording. XML=" + text);
         }
@@ -504,8 +515,7 @@ implements Serviceable, Configurable, Recyclable {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Start parameters recording");
         }
-        XMLConsumer recorder = new ParametersRecorder();
-        addRecorder(recorder);
+        addRecorder(new ParametersRecorder());
 
         sendStartPrefixMapping();
     }
@@ -521,7 +531,7 @@ implements Serviceable, Configurable, Recyclable {
     throws SAXException {
         sendEndPrefixMapping();
 
-        ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
+        ParametersRecorder recorder = (ParametersRecorder) this.removeRecorder();
         SourceParameters parameters = recorder.getParameters(source);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("End parameters recording. Parameters=" + parameters);
@@ -540,7 +550,7 @@ implements Serviceable, Configurable, Recyclable {
     throws SAXException {
         sendEndPrefixMapping();
 
-        ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
+        ParametersRecorder recorder = (ParametersRecorder) removeRecorder();
         SourceParameters parameters = recorder.getParameters(source);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("End parameters recording. Parameters=" + parameters);
@@ -584,6 +594,7 @@ implements Serviceable, Configurable, Recyclable {
         final DocumentFragment recordedDocFrag = doc.createDocumentFragment();
         final Node root = doc.getDocumentElement();
         root.normalize();
+
         boolean appendedNode = false;
         while (root.hasChildNodes() == true) {
             Node child = root.getFirstChild();
@@ -672,7 +683,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendTextEvent(String text)
     throws SAXException {
-        this.characters(text.toCharArray(), 0, text.length());
+        characters(text.toCharArray(), 0, text.length());
     }
 
     /**
@@ -684,7 +695,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendStartElementEvent(String localname)
     throws SAXException {
-        this.startElement("", localname, localname, emptyAttributes);
+        startElement("", localname, localname, emptyAttributes);
     }
 
     /**
@@ -697,8 +708,8 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendStartElementEventNS(String localname)
     throws SAXException {
-        this.startElement(this.namespaceURI, 
-                          localname, this.ourPrefix+':' + localname, emptyAttributes);
+        startElement(this.namespaceURI,
+                     localname, this.ourPrefix + ':' + localname, emptyAttributes);
     }
 
     /**
@@ -711,7 +722,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendStartElementEvent(String localname, Attributes attr)
     throws SAXException {
-        this.startElement("", localname, localname, attr);
+        startElement("", localname, localname, attr);
     }
 
     /**
@@ -724,8 +735,8 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendStartElementEventNS(String localname, Attributes attr)
     throws SAXException {
-        this.startElement(this.namespaceURI, 
-                          localname, this.ourPrefix+':' + localname, attr);
+        startElement(this.namespaceURI,
+                     localname, this.ourPrefix + ':' + localname, attr);
     }
 
     /**
@@ -737,7 +748,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendEndElementEvent(String localname)
     throws SAXException {
-        this.endElement("", localname, localname);
+        endElement("", localname, localname);
     }
 
     /**
@@ -749,8 +760,8 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendEndElementEventNS(String localname)
     throws SAXException {
-        this.endElement(this.namespaceURI,
-                         localname, this.ourPrefix+':' + localname);
+        endElement(this.namespaceURI,
+                   localname, this.ourPrefix + ':' + localname);
     }
 
     /**
@@ -851,7 +862,7 @@ implements Serviceable, Configurable, Recyclable {
         if (prefix != null) {
             this.namespaces.add(new String[] {prefix, uri});
         }
-        if ( this.namespaceURI != null && this.namespaceURI.equals(uri)) {
+        if (namespaceURI.equals(uri)) {
             this.ourPrefix = prefix;
         }
         if (this.ignoreEventsCount == 0) {
@@ -883,7 +894,7 @@ implements Serviceable, Configurable, Recyclable {
             }
 
             this.namespaces.remove(i);
-            if ( prefix.equals(this.ourPrefix) ) {
+            if (prefix.equals(this.ourPrefix)) {
                 this.ourPrefix = null;
                 // now search if we have a different prefix for our namespace
                 found = false;
@@ -891,13 +902,13 @@ implements Serviceable, Configurable, Recyclable {
                 i = l-1;
                 while (!found && i >= 0) {
                     String currentNS = ((String[])this.namespaces.get(i))[1];
-                    if (currentNS.equals(this.namespaceURI)) {
+                    if (namespaceURI.equals(currentNS)) {
                         found = true;
                     } else {
                         i--;
                     }
                 }
-                if ( found ) {
+                if (found) {
                     this.ourPrefix = ((String[])this.namespaces.get(i))[0];
                 }
             }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,14 +43,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/** 
+/**
  * @cocoon.sitemap.component.documentation
- * Eliminates the need for XSP to use FormValidatorAction or HTML forms. 
+ * Eliminates the need for XSP to use FormValidatorAction or HTML forms.
  * Caveat: Select options need a value attribute to work correctly.
  *
  * @cocoon.sitemap.component.name   simple-form
  * @cocoon.sitemap.component.logger sitemap.transformer.simple-form
- * 
+ *
  *
  * <p>This transformer fills all HTML 4 form elements with values from
  * an InputModule, e.g. request, with the same name. It handles select
@@ -77,13 +77,13 @@ import java.util.Map;
  *
  * <p><em>Names of error elements are never augmented by prefix, suffix or
  * form name.</em></p>
- * 
+ *
  * <p>Page parts with multiple occurrences depending on the number of
  * actual parameters can be enclosed in &lt;repeat on="expr" using="var"/&gt;
  * elements. <em>expr</em> is used to determine the number of occurrences
  * and <em>var</em> will be expanded with the ordinary number. Repeat elements
  * can be nested.</p>
- * 
+ *
  * <p>Example:</p>
  * <pre>
  *  <repeat on="mult" using="i"><input type="text" name="mult[${i}]"/></repeat>
@@ -100,9 +100,9 @@ import java.util.Map;
  *
  * <p>Configuration elements:
  * <table>
- *   <tr><td>input-module</td><td>(String) InputModule configuration, 
+ *   <tr><td>input-module</td><td>(String) InputModule configuration,
  *           defaults to an empty configuration and the "request-param" module</td></tr>
- *   <tr><td>fixed-attribute</td><td>(String) Name of the attribute used to 
+ *   <tr><td>fixed-attribute</td><td>(String) Name of the attribute used to
  *           indicate that this element should not be changed. ("fixed")</td></tr>
  *   <tr><td>use-form-name</td><td>(boolean) Add the name of the form to the
  *           name of form elements. Uses default Separator , if default separator is null
@@ -110,7 +110,7 @@ import java.util.Map;
  *   <tr><td>use-form-name-twice</td><td>(boolean) Add the name of the form twice to the
  *           name of form elements. This is useful when the form instance has no
  *           all enclosing root tag and the form name is used instead <em>and</em> the
- *           form name needs to be used to find the form data. Uses default Separator , 
+ *           form name needs to be used to find the form data. Uses default Separator ,
  *           if default separator is null or empty, separator is set to "/".("false")</td></tr>
  *   <tr><td>separator</td><td>(String) Separator between form name and element name ("/")
  *           </td></tr>
@@ -277,7 +277,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     protected Map formValues = null;
 
     /**
-     * Keep track of repeater status. 
+     * Keep track of repeater status.
      */
     protected class RepeaterStatus {
         public String var = null;
@@ -296,7 +296,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     }
 
     /**
-     * Keep track of multiple values. 
+     * Keep track of multiple values.
      */
     protected static class ValueList {
         private int current = -1;
@@ -320,7 +320,6 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
 
     public SimpleFormTransformer() {
         this.defaultNamespaceURI = "";
-        this.namespaceURI = "";
     }
 
     /** set per instance variables to defaults */
@@ -464,7 +463,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         this.reset();
     }
 
-    /** 
+    /**
      * Generate string representation of attributes. For debug only.
      */
     protected String printAttributes(Attributes attr) {
@@ -761,8 +760,8 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
 
     /**
      * Start processing a form element. Sets protection indicator if attribute
-     * "fixed" is present and either "true" or "yes". Removes attribute "fixed" 
-     * if present. 
+     * "fixed" is present and either "true" or "yes". Removes attribute "fixed"
+     * if present.
      * @param uri The namespace of the element.
      * @param name The local name of the element.
      * @param raw The qualified name of the element.
@@ -797,7 +796,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * Start recording repeat element contents and push repeat expression and
      * variable to repeater stack. Only start recording, if no other recorder is
      * currently running.
-     * 
+     *
      * @param uri
      * @param name
      * @param raw
@@ -826,7 +825,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Stop recording repeat contents and replay required number of times.
      * Stop only if outmost repeat element is ending.
-     * 
+     *
      * @param uri
      * @param name
      * @param raw
@@ -962,7 +961,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Remove extra information from element's attributes. Currently only removes
      * the repeater variable from the element's name attribute if present.
-     * 
+     *
      * @param attr
      * @return modified attributes
      */
@@ -1041,7 +1040,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Obtain values from used InputModule if not done already and return the
      * next value. If no more values exist, returns null.
-     * 
+     *
      * @param name
      * @return
      */
@@ -1114,7 +1113,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
 
     /**
      * Calls the super's method startTransformingElement.
-     * 
+     *
      * @param uri
      * @param name
      * @param raw
@@ -1131,9 +1130,9 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * ignoreEventsCount if skip is true. Increment can be done either before
      * invoking super's method, so that the element itself is skipped, or afterwards,
      * so that only the children are skipped.
-     * 
+     *
      * @param skip
-     * @param skipChildrenOnly 
+     * @param skipChildrenOnly
      * @param uri
      * @param name
      * @param raw
@@ -1172,7 +1171,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Calls the super's method endTransformingElement and decrements the
      * ignoreEventsCount if larger than zero.
-     * 
+     *
      * @param uri
      * @param name
      * @param raw

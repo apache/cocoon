@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,10 +32,10 @@ import org.xml.sax.SAXException;
  * pipeline.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPreTransformer.java,v 1.4 2004/03/19 14:16:54 cziegeler Exp $
+ * @version CVS $Id$
 */
 public class SessionPreTransformer
-extends AbstractSessionTransformer {
+        extends AbstractSessionTransformer {
 
     /*
      * The XML commands
@@ -61,7 +61,7 @@ extends AbstractSessionTransformer {
     protected int processingGetXML;
 
     public SessionPreTransformer() {
-        this.namespaceURI = SessionConstants.SESSION_NAMESPACE_URI;
+        this.defaultNamespaceURI = SessionConstants.SESSION_NAMESPACE_URI;
     }
 
     /**
@@ -90,11 +90,9 @@ extends AbstractSessionTransformer {
      */
     public void endElement(String uri, String name, String raw) throws SAXException {
         super.endElement(uri, name, raw);
-        if (uri != null
-            && namespaceURI != null
-            && uri.equals(namespaceURI) == true
+        if (namespaceURI.equals(uri)
             && this.processingGetXML > 0
-            && name.equals(GETXML_ELEMENT) == true) {
+            && name.equals(GETXML_ELEMENT)) {
             this.processingGetXML--;
             this.ignoreEventsCount--;
             this.ignoreHooksCount--;
@@ -111,11 +109,9 @@ extends AbstractSessionTransformer {
                              String raw,
                              Attributes attr)
     throws SAXException {
-        if (uri != null
-            && namespaceURI != null
-            && uri.equals(namespaceURI) == true
+        if (namespaceURI.equals(uri)
             && this.processingGetXML > 0
-            && name.equals(GETXML_ELEMENT) == true) {
+            && name.equals(GETXML_ELEMENT)) {
             this.processingGetXML++;
             this.ignoreEventsCount++;
             this.ignoreHooksCount++;

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,36 +33,35 @@ import org.xml.sax.SAXException;
 /**
  * This transformer supports the basket feature. It can generate links to
  * add content and to upload files into the basket.
- * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a> 
- * 
- * @version CVS $Id: BasketTransformer.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ *
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id$
  */
 public class BasketTransformer
 extends AbstractSAXTransformer {
 
     /** The namespace URI to listen for. */
     public static final String NAMESPACE_URI = "http://apache.org/cocoon/portal/basket/1.0";
-    
+
     /** Element to add a link */
     protected static final String ADD_ITEM_ELEMENT = "add-item";
-    
+
     /** Element to upload an item */
     protected static final String UPLOAD_ITEM_ELEMENT = "upload-item";
-    
+
     /** Element for the upload form */
     protected static final String UPLOAD_FORM_ELEMENT = "upload-form";
 
     /** Upload element list */
     protected List uploadElements = new ArrayList();
-    
+
     /**
      * Constructor
      */
     public BasketTransformer() {
-        this.namespaceURI = NAMESPACE_URI;
+        this.defaultNamespaceURI = NAMESPACE_URI;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
@@ -85,7 +84,7 @@ extends AbstractSAXTransformer {
             this.uploadElements = new ArrayList();
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startTransformingElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
@@ -112,9 +111,11 @@ extends AbstractSAXTransformer {
             } finally {
                 this.manager.release(service);
             }
+
         } else if ( UPLOAD_ITEM_ELEMENT.equals(name) ) {
             this.uploadElements.add(attr.getValue("name"));
             this.startElement("", "input", "input", attr);
+
         } else if ( UPLOAD_FORM_ELEMENT.equals(name) ) {
             AttributesImpl ai = new AttributesImpl(attr);
             PortalService service = null;
@@ -147,7 +148,7 @@ extends AbstractSAXTransformer {
                     this.endElement("", "input", "input");
                 }
             }
+
         }
     }
-
 }
