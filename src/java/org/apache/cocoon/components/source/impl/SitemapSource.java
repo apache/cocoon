@@ -23,7 +23,6 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
@@ -54,7 +53,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.18 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -69,23 +68,17 @@ implements Source, XMLizable {
     /** The system id used for caching */
     private String systemIdForCaching;
     
-    /** The uri */
-//    private String uri;
-
     /** The current ComponentManager */
-    private ComponentManager manager;
+    private final ComponentManager manager;
 
     /** The processor */
-    private Processor processor;
+    private final Processor processor;
 
     /** The pipeline processor */
     private Processor pipelineProcessor;
 
     /** The environment */
     private MutableEnvironmentFacade environment;
-
-    /** The prefix for the processing */
-//    private String prefix;
 
     /** The <code>ProcessingPipeline</code> */
     private ProcessingPipeline processingPipeline;
@@ -149,11 +142,7 @@ implements Source, XMLizable {
         String prefix;
         if (uri.startsWith("//", position)) {
             position += 2;
-            try {
-                this.processor = (Processor)this.manager.lookup(Processor.ROLE);
-            } catch (ComponentException e) {
-                throw new MalformedURLException("Cannot get Processor instance");
-            }
+            this.processor = CocoonComponentManager.getCurrentProcessor().getRootProcessor();
             prefix = ""; // start at the root
         } else if (uri.startsWith("/", position)) {
             position ++;
@@ -285,7 +274,7 @@ implements Source, XMLizable {
         } finally {
             // Unhide wrapped environment output stream
             this.environment.setOutputStream(null);
-            reset();
+            this.needsRefresh = true;
         }
     }
 
@@ -311,9 +300,6 @@ implements Source, XMLizable {
      *  <code>null</code> is returned.
      */
     public SourceValidity getValidity() {
-        if (this.needsRefresh) {
-            this.refresh();
-        }
         if (this.redirectSource != null) {
             return this.redirectValidity;
         }
@@ -403,8 +389,7 @@ implements Source, XMLizable {
      * Stream content to the content handler
      */
     public void toSAX(ContentHandler contentHandler)
-        throws SAXException
-    {
+    throws SAXException {
         if (this.needsRefresh) {
             refresh();
         }
@@ -442,7 +427,7 @@ implements Source, XMLizable {
             throw new SAXException("Exception during processing of "
                                           + this.systemId, e);
         } finally {
-            reset();
+            this.needsRefresh = true;
         }
     }
 
