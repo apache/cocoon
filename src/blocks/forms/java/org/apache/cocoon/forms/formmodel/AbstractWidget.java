@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.20 2004/05/11 09:30:24 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.21 2004/05/11 12:55:53 vgritsenko Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -180,7 +180,7 @@ public abstract class AbstractWidget implements Widget {
     
     public Widget getWidget(String id) {
         throw new UnsupportedOperationException("getWidget(id) got deprecated from the API. \n" +
-                "Considering using getChild(id) or even lookupWidget(path) in stead.");
+                "Consider using getChild(id) or even lookupWidget(path) instead.");
     }
     
     public Object getValue() {

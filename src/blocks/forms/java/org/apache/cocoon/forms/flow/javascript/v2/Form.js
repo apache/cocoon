@@ -62,7 +62,7 @@ function Form(formDefinition) {
 Form.prototype.getWidget = function(name) {
     if (name != undefined) {
     	throw "getWidget(id) has been deprecated.\n" +
-    	      "Consider using getChild(id) or lookupWidget(path) in stead."
+    	      "Consider using getChild(id) or lookupWidget(path) instead."
     } 
     return this.formWidget_;
 }
