@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.4 2003/05/23 09:18:48 cziegeler Exp $
+ * @version CVS $Id: Constants.java,v 1.5 2003/06/04 09:25:53 upayavira Exp $
  */
 public final class Constants {
 
@@ -134,34 +134,6 @@ public final class Constants {
      * FIXME(GP): Isn't this Servlet specific?
      */
     public static final String ACTION_PARAM_PREFIX = "cocoon-action-";
-
-    /**
-     * The directory to use as context root.
-     *
-     * FIXME(GP): Isn't this CLI specific?
-     */
-    public static final String DEFAULT_CONTEXT_DIR = "./webapp";
-
-    /**
-     * The diretory to use to use for the generated output.
-     *
-     * FIXME(GP): Isn't this CLI specific?
-     */
-    public static final String DEFAULT_DEST_DIR = "./site";
-
-    /**
-     * The diretory to use for generated files.
-     *
-     * FIXME(GP): Isn't this CLI specific?
-     */
-    public static final String DEFAULT_WORK_DIR = "./work";
-
-    /**
-     * How a default configuration file is named.
-     *
-     * FIXME(GP): Isn't this CLI specific?
-     */
-    public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
     /** The name of the property holding the class for a XML parser */
     public static final String PARSER_PROPERTY = "org.apache.excalibur.xml.sax.SAXParser";
@@ -297,13 +269,6 @@ public final class Constants {
      * The name of a <code>NotifyingObject</code> in the so called objectModel <code>Map</code>.
      */
     public static final String NOTIFYING_OBJECT = "notifying-object";
-
-    /**
-     * Describe variable <code>INDEX_URI</code> here.
-     *
-     * FIXME(GP): It seems to be (CLI) Environment specific!
-     */
-    public static final String INDEX_URI = "index";
 
     /** The namespace URI for the Error/Exception XML */
     public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/" + CONF_VERSION;
