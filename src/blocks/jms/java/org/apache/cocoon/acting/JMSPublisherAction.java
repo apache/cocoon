@@ -31,10 +31,22 @@ import org.apache.cocoon.components.jms.AbstractMessagePublisher;
  * Action to publish TextMessages to a JMS Topic. For description of static
  * parameter configuration see {@link org.apache.cocoon.components.jms.AbstractMessagePublisher}
  * 
- * <p>Sitemap-Parameters:</p>
- * <table>
+ * <p>Sitemap parameters:</p>
+ * <table border="1">
  *  <tbody>
- *   <tr><td>message</td><td>Content of TextMessage to publish (required, no default)</td></tr>
+ *   <tr>
+ *     <th align="left">parameter</th>
+ *     <th align="left">required</th>
+ *     <th align="left">default</th>
+ *     <th align="left">description</th>
+ *   </tr>
+ *  <tbody>
+ *   <tr>
+ *     <td>message</td>
+ *     <td>required</td>
+ *     <td>&nbsp;</td>
+ *     <td>Content of TextMessage to publish</td>
+ *   </tr>
  *  </tbody>
  * </table>
  */

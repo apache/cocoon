@@ -29,18 +29,24 @@ import org.apache.cocoon.components.jms.AbstractMessageListener;
  * JMS listener will notify an {@link org.apache.cocoon.caching.EventAware} component
  * of external events. This could be used for example to do external cache invalidation.
  * 
- * <p>Parameters:</p>
+ * <p>
+ * Besides those inherited from 
+ * {@link org.apache.cocoon.components.jms.AbstractMessageListener} 
+ * parameters are:
+ * </p>
  * <table border="1">
  *  <tbody>
  *   <tr>
  *     <th align="left">parameter</th>
- *     <th align="left">required/default</th>
+ *     <th align="left">required</th>
+ *     <th align="left">default</th>
  *     <th align="left">description</th>
  *   </tr>
  *   <tr>
- *     <td>eventcache-role</td>
- *     <td>(org.apache.cocoon.caching.Cache/EventAware)</td>
- *     <td>The role name to lookup the event cache from the service manager.</td>
+ *     <td valign="top">eventcache-role</td>
+ *     <td valign="top">no</td>
+ *     <td valign="top">org.apache.cocoon.caching.Cache/EventAware</td>
+ *     <td valign="top">The role name to lookup the event cache from the service manager.</td>
  *   </tr>
  *  </tbody>
  * </table>
