@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.30 2004/01/11 02:53:08 antonio Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.31 2004/01/27 11:39:53 gianugo Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -1191,8 +1191,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             int ch;
             boolean inExpr = false;
             boolean xpath = false;
-//            int line = location.getLineNumber();
-            int column = location.getColumnNumber();
+//            int line = this.location.getLineNumber();
+            int column = this.location.getColumnNumber();
             try {
                 top: while ((ch = in.read()) != -1) {
                     column++;
@@ -2776,8 +2776,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             synchronized (cache) {
                 StartDocument startEvent = (StartDocument)cache.get(uri);
                 if (startEvent != null) {
-                    int valid = startEvent.compileTime.isValid();
-                    if ( valid == SourceValidity.UNKNOWN ) {
+                    int valid = SourceValidity.UNKNOWN;
+                    if (startEvent.compileTime != null) 
+                        valid = startEvent.compileTime.isValid();                    
+                    if ( valid == SourceValidity.UNKNOWN && startEvent.compileTime != null ) {
                         SourceValidity validity = inputSource.getValidity();
                         valid = startEvent.compileTime.isValid(validity);
                     }
