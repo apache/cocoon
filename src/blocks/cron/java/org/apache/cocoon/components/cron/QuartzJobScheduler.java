@@ -84,7 +84,8 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.4 2003/09/04 15:57:41 giacomo Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.5 2003/09/05 10:21:28 giacomo Exp $
+ *
  * @since 2.1.1
  */
 public class QuartzJobScheduler
@@ -176,35 +177,6 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         return null;
     }
 
-    /**
-     * Schedule a period job. Note that if a Job already has same name then it is overwritten.
-     *
-     * @param name the name of the job
-     * @param jobrole The Avalon components role name of the job itself
-     * @param period Every period seconds this job is started
-     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
-     */
-    public void addPeriodicJob(String name, 
-                               String jobrole, 
-                               long period, 
-                               boolean canRunConcurrently,
-                               Parameters params, 
-                               Map objects)
-    throws CascadingException {
-        final JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put(DATA_MAP_ROLE, jobrole);
-
-        final long ms = period * 1000;
-        final SimpleTrigger timeEntry = new SimpleTrigger(name, 
-                                                          DEFAULT_QUARTZ_JOB_GROUP,
-                                                          new Date(System.currentTimeMillis() + ms),
-                                                          null,
-                                                          SimpleTrigger.REPEAT_INDEFINITELY,
-                                                          ms);
-
-        addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
-    }
-
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#addJob(java.lang.String, java.lang.Object, java.lang.String, boolean, org.apache.avalon.framework.parameters.Parameters, java.util.Map)
      */
@@ -246,6 +218,32 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     public void addJob(final String name, final String jobrole, final String cronSpec, final boolean canRunConcurrently)
     throws CascadingException {
         addJob(name, jobrole, cronSpec, canRunConcurrently, null, null);
+    }
+
+    /**
+     * Schedule a period job. Note that if a Job already has same name then it is overwritten.
+     *
+     * @param name the name of the job
+     * @param jobrole The Avalon components role name of the job itself
+     * @param period Every period seconds this job is started
+     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
+     * @param params additional Parameters to be passed to the job
+     * @param objects additional objects to be passed to the job
+     *
+     * @throws CascadingException in case of failures
+     */
+    public void addPeriodicJob(String name, String jobrole, long period, boolean canRunConcurrently, Parameters params,
+                               Map objects)
+    throws CascadingException {
+        final JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put(DATA_MAP_ROLE, jobrole);
+
+        final long ms = period * 1000;
+        final SimpleTrigger timeEntry =
+            new SimpleTrigger(name, DEFAULT_QUARTZ_JOB_GROUP, new Date(System.currentTimeMillis() + ms), null,
+                              SimpleTrigger.REPEAT_INDEFINITELY, ms);
+
+        addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
     }
 
     /* (non-Javadoc)
@@ -393,16 +391,13 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     public void removeJob(final String name)
     throws NoSuchElementException {
         try {
-            if( m_scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP) )
-            {
-                getLogger().info( "job " + name + " removed by request" );
-            }
-            else
-            {
-                getLogger().error( "couldn't remove requested job " + name  );
+            if (m_scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP)) {
+                getLogger().info("job " + name + " removed by request");
+            } else {
+                getLogger().error("couldn't remove requested job " + name);
             }
         } catch (final SchedulerException se) {
-            getLogger().error( "cannot remove job " + name, se );
+            getLogger().error("cannot remove job " + name, se);
             throw new NoSuchElementException(se.getMessage());
         }
     }
@@ -491,6 +486,15 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     private void addJob(final String name, final JobDataMap jobDataMap, final Trigger trigger,
                         final boolean canRunConcurrently, final Parameters params, final Map objects)
     throws CascadingException {
+        try {
+            final JobDetail jobdetail = m_scheduler.getJobDetail(name, DEFAULT_QUARTZ_JOB_GROUP);
+
+            if (jobdetail != null) {
+                removeJob(name);
+            }
+        } catch (final SchedulerException se) {
+        }
+
         jobDataMap.put(DATA_MAP_NAME, name);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
         jobDataMap.put(DATA_MAP_MANAGER, m_manager);
@@ -509,20 +513,20 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
         if (getLogger().isInfoEnabled()) {
             getLogger().info("Adding CronJob '" + trigger.getFullName() + "'");
-
-            if (getLogger().isDebugEnabled()) {
-                if (trigger instanceof CronTrigger) {
-                    getLogger().debug("Time schedule summary:\n" + ((CronTrigger)trigger).getExpressionSummary());
-                } else if (trigger instanceof SimpleTrigger) {
-                    getLogger().debug("Next scheduled time: " + ((SimpleTrigger)trigger).getNextFireTime());
-                }
-            }
         }
 
         try {
             m_scheduler.scheduleJob(detail, trigger);
         } catch (final SchedulerException se) {
             throw new CascadingException(se.getMessage(), se);
+        }
+
+        if (getLogger().isDebugEnabled()) {
+            if (trigger instanceof CronTrigger) {
+                getLogger().debug("Time schedule summary:\n" + ((CronTrigger)trigger).getExpressionSummary());
+            } else {
+                getLogger().debug("Next scheduled time: " + trigger.getNextFireTime());
+            }
         }
     }
 
@@ -673,7 +677,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.4 2003/09/04 15:57:41 giacomo Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.5 2003/09/05 10:21:28 giacomo Exp $
      */
     private static class ThreadPool
     extends AbstractLogEnabled
