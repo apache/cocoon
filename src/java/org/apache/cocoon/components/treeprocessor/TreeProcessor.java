@@ -64,7 +64,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.32 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.33 2004/06/04 13:35:05 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -379,7 +379,7 @@ public class TreeProcessor
         
         // Get the processor that should process this request
         TreeProcessor processor;
-        if (getRootProcessor().getContext().equals(this.getContext())) {
+        if ( newEnv.getURIPrefix().equals("") ) {
             processor = (TreeProcessor)getRootProcessor();
         } else {
             processor = this;
