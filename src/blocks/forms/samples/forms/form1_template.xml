@@ -39,6 +39,7 @@
                   <fi:styling layout="columns"/>
                   <fi:items>
                     <ft:widget id="email"/>
+                    <ft:widget id="birthdate"/>
                     <ft:widget id="fourchars">
                       <!-- particular styling for the enumeration -->
                       <fi:styling list-type="listbox" listbox-size="4"/>
@@ -82,7 +83,6 @@
                 <ft:widget id="visa"/>
                 <ft:widget id="ipaddress"/>
                 <ft:widget id="altbirthdate"/>
-                <ft:widget id="birthdate"/>
                 <ft:widget id="dieselprice"/>
               </fi:items>
             </fi:group>
