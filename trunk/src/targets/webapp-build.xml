@@ -124,9 +124,9 @@
     <xpatch directory="${documentation}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
   </target>
   
-  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-config,init-loader"/>
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-config,init-loader" description="Builds web application folder"/>
 
-  <target name="war" depends="webapp">
+  <target name="war" depends="webapp" description="Builds web application archieve">
     <!-- A task to create manifest for webapp. -->
     <taskdef name="manifest" classname="ManifestToolTask" classpath="${tools.tasks.dest}"/>
     <!-- Create WAR manifest -->
