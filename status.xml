@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.97 2003/07/29 02:07:31 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.98 2003/07/29 09:01:01 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="NN" type="add">Dummy action</action>
+ </release>
+ <release version="2.1rc1" date="July 29 2003">
   <action dev="VG" type="update">
     Updated FOP to the latest released version, 0.20.5.
   </action>
