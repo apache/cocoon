@@ -64,7 +64,7 @@ import org.w3c.dom.Element;
 /**
  * Test case for the {@link EnumConvertorBuilder} class.
  * 
- * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.1 2003/11/16 08:55:29 ugo Exp $
+ * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.2 2003/11/17 16:17:17 ugo Exp $
  */
 public class EnumConvertorBuilderTestCase extends TestCase {
 
@@ -95,7 +95,7 @@ public class EnumConvertorBuilderTestCase extends TestCase {
      * @throws Exception
      */
     public void testBuild() throws Exception {
-        Source confSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/EnumConvertorTestCase.conf.xml");
+        Source confSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/convertor/EnumConvertorTestCase.conf.xml");
         Document sample = parser.parse(confSource.getInputStream());
         Element convertorElement = (Element) sample.getElementsByTagNameNS(Constants.WD_NS, "convertor").item(0);
         String enumClassName = convertorElement.getElementsByTagNameNS(Constants.WD_NS, "enum").item(0).getFirstChild().getNodeValue();
