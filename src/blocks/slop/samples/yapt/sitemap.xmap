@@ -54,7 +54,7 @@
 
             <!-- XML data of a complete presentation -->
             <map:match pattern="presentations/**/xml/presentation">
-                <map:generate type="slop" src="presentations/{1}.txt">
+                <map:generate label="raw-content" type="slop" src="presentations/{1}.txt">
                     <map:parameter name="encoding" value="iso-8859-1"/>
                 </map:generate>
                 <map:transform src="stylesheets/filter-slop-output.xsl"/>
