@@ -61,6 +61,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -69,6 +70,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -81,7 +83,6 @@ import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
-import org.exolab.castor.mapping.Mapping;
 
 /**
  * The profile manager using the authentication framework
@@ -91,7 +92,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.2 2003/05/27 12:24:36 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.3 2003/05/27 14:07:16 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
@@ -99,10 +100,6 @@ public class AuthenticationProfileManager
 
     protected ComponentManager manager;
 
-    private Mapping layoutMapping;
-
-    private Map layoutStati = new HashMap(100);
-    
     private Map attributes = new HashMap();
     
     private ReadWriteLock lock = new ReadWriteLock();
@@ -127,6 +124,42 @@ public class AuthenticationProfileManager
         }
     }
     
+    public void login() {
+        // TODO - we should move most of the stuff from getPortalLayout to here
+        // for now we use a hack :)
+        this.getPortalLayout(null);
+    }
+    
+    public void logout() {
+        PortalService service = null;
+        String attribute = null;
+        ComponentSelector adapterSelector = null;
+        try {
+            adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+
+            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
+            
+            Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
+            while ( iter.hasNext() ) {
+                CopletInstanceData cid = (CopletInstanceData) iter.next();
+                CopletAdapter adapter = null;
+                try {
+                    adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                    adapter.logout( cid );
+                } finally {
+                    adapterSelector.release( adapter );
+                }
+            }
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
+        } finally {
+            this.manager.release(service);
+            this.manager.release(adapterSelector);
+        }        
+    }
+    
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(Object)
      */
@@ -134,11 +167,13 @@ public class AuthenticationProfileManager
         PortalService service = null;
         LayoutFactory factory = null;
         CopletFactory copletFactory = null;
+        ComponentSelector adapterSelector = null;
         
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
             factory = (LayoutFactory) this.manager.lookup(LayoutFactory.ROLE);
             copletFactory = (CopletFactory) this.manager.lookup(CopletFactory.ROLE);
+            adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             
             if ( null == key ) {
                 Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT");
@@ -205,6 +240,19 @@ public class AuthenticationProfileManager
 					map.put("profile", "layout");
 					map.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
 					layout = (Layout)this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service, factory);
+                    
+                    // now invoke login on each instance
+                    Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
+                    while ( iter.hasNext() ) {
+                        CopletInstanceData cid = (CopletInstanceData) iter.next();
+                        CopletAdapter adapter = null;
+                        try {
+                            adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                            adapter.login( cid );
+                        } finally {
+                            adapterSelector.release( adapter );
+                        }
+                    }
 				} finally {
 					this.lock.releaseLocks();
 				}
@@ -218,6 +266,7 @@ public class AuthenticationProfileManager
             this.manager.release(service);
             this.manager.release((Component)factory);
             this.manager.release((Component)copletFactory);
+            this.manager.release(adapterSelector);
         }
     }
     

@@ -69,11 +69,13 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This is the adapter to use pipelines as coplets
+ * 
+ * TODO - implement timeout
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.3 2003/05/26 10:15:01 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.4 2003/05/27 14:07:16 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -114,9 +116,7 @@ public abstract class AbstractCopletAdapter
     public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
         Boolean bool = (Boolean) this.getConfiguration( coplet, "buffer" );
-        // FIXME - remove this
-        bool = new Boolean(true);
-        
+
         if ( bool != null && bool.booleanValue() ) {
             boolean read = false;
             XMLSerializer serializer = null;
@@ -152,12 +152,14 @@ public abstract class AbstractCopletAdapter
                     this.manager.release( deserializer );
                 }
             } else {
-                // FIXME - get correct error message
-                contentHandler.startDocument();
-                XMLUtils.startElement( contentHandler, "p");
-                XMLUtils.data( contentHandler, "The coplet " + coplet.getId() + " is currently not available.");
-                XMLUtils.endElement(contentHandler, "p");
-                contentHandler.endDocument();                
+                if ( !this.renderErrorContent(coplet, contentHandler)) {
+                    // FIXME - get correct error message
+                    contentHandler.startDocument();
+                    XMLUtils.startElement( contentHandler, "p");
+                    XMLUtils.data( contentHandler, "The coplet " + coplet.getId() + " is currently not available.");
+                    XMLUtils.endElement(contentHandler, "p");
+                    contentHandler.endDocument();                
+                }
             }
         } else {
             this.streamContent( coplet, contentHandler );
@@ -177,4 +179,15 @@ public abstract class AbstractCopletAdapter
     public void logout(CopletInstanceData coplet) {
     }
     
+    /**
+     * Render the error content for a coplet
+     * @param coplet
+     * @param handler
+     * @return True if the error content has been rendered, otherwise false
+     * @throws SAXException
+     */
+    protected boolean renderErrorContent(CopletInstanceData coplet, ContentHandler handler)
+    throws SAXException {
+        return false;
+    }
 }

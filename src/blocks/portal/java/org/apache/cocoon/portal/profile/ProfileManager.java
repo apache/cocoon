@@ -65,7 +65,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.4 2003/05/27 09:15:07 cziegeler Exp $
+ * @version CVS $Id: ProfileManager.java,v 1.5 2003/05/27 14:07:16 cziegeler Exp $
  */
 public interface ProfileManager extends Component {
     
@@ -78,6 +78,12 @@ public interface ProfileManager extends Component {
     CopletInstanceData getCopletInstanceData(String copletID);
     
     List getCopletInstanceData(CopletData data);
+    
+    // TODO - not called yet
+    void login();
+    
+    // TODO - not called yet
+    void logout();
     
     void register(CopletInstanceData coplet);
     

@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletAdapter.java,v 1.4 2003/05/26 10:15:01 cziegeler Exp $
+ * @version CVS $Id: CopletAdapter.java,v 1.5 2003/05/27 14:07:16 cziegeler Exp $
  */
 public interface CopletAdapter 
     extends Component {
@@ -99,7 +99,6 @@ public interface CopletAdapter
      * Destroy the coplet
      * This method is invoked when a coplet instance will be destroyed
      * For each coplet, this method is only invoked once.
-     * TODO - not implemented yet
      * @param coplet
      */
     void destroy(CopletInstanceData coplet);
@@ -114,7 +113,6 @@ public interface CopletAdapter
      * User logs in to a coplet
      * This method is invoked when a user logs in for each coplet instance
      * of the user
-     * TODO - not implemented yet
      */
     void login(CopletInstanceData coplet);
         
@@ -122,7 +120,6 @@ public interface CopletAdapter
      * User logs out from a coplet
      * This method is invoked when a user logs out for each coplet instance
      * of this user.
-     * TODO - not implemented yet
      */
     void logout(CopletInstanceData coplet);
 }

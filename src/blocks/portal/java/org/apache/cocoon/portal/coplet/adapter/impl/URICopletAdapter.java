@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.9 2003/05/26 12:49:14 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.10 2003/05/27 14:07:16 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -101,7 +101,14 @@ public class URICopletAdapter
     
     public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
-		final String uri = (String)coplet.getCopletData().getAttribute("uri");
+        final String uri = (String)coplet.getCopletData().getAttribute("uri");
+        this.streamContent( coplet, uri, contentHandler);
+    }
+
+    public void streamContent(final CopletInstanceData coplet, 
+                               final String uri,
+                               final ContentHandler contentHandler)
+    throws SAXException {
 		Source copletSource = null;
 		PortalService portalService = null;
 		try {
@@ -213,6 +220,27 @@ public class URICopletAdapter
         } finally {
             this.manager.release( eventManager );
         }
+    }
+
+    /**
+     * Render the error content for a coplet
+     * @param coplet
+     * @param handler
+     * @return True if the error content has been rendered, otherwise false
+     * @throws SAXException
+     */
+    protected boolean renderErrorContent(CopletInstanceData coplet, ContentHandler handler)
+    throws SAXException {
+        final String uri = (String) this.getConfiguration(coplet, "error-uri");
+        if ( uri != null ) {
+            // TODO - if an error occured for this coplet, remember this
+            //         and use directly the error-uri from now on
+            // We need for this the ability to dynamically add aspects to
+            // objects!
+            this.streamContent( coplet, uri, handler);
+            return true;
+        }
+        return false;
     }
 
 }
