@@ -28,10 +28,8 @@ import java.io.IOException;
  *
  * This element has a single attribute, value, which is boolean.
  *
- * This element is not used in HSSFSerializer 1.0
- *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Draft.java,v 1.5 2004/03/05 13:02:04 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class EP_Draft extends BaseElementProcessor {
     private static final String _value_attribute = "value";
@@ -40,7 +38,6 @@ public class EP_Draft extends BaseElementProcessor {
     /**
      * constructor
      */
-
     public EP_Draft() {
         super(null);
         _value = null;
@@ -51,12 +48,18 @@ public class EP_Draft extends BaseElementProcessor {
      *
      * @exception IOException if the value is malformed or missing
      */
-
     public boolean getValue() throws IOException {
         if (_value == null) {
-            _value =
-                BooleanConverter.extractBoolean(getValue(_value_attribute));
+            _value = BooleanConverter.extractBoolean(getValue(_value_attribute));
         }
         return _value.booleanValue();
+    }
+
+    /**
+     * Setup whether or not the worksheet is printed in draft format
+     * @exception IOException
+     */
+    public void endProcessing() throws IOException{
+        this.getSheet().setDraft(this.getValue());
     }
 }   // end public class EP_Draft
