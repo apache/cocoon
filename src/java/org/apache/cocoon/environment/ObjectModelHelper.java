@@ -66,7 +66,7 @@ import java.util.Map;
  * environment.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ObjectModelHelper.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: ObjectModelHelper.java,v 1.2 2003/03/17 02:28:12 vgritsenko Exp $
  */
 
 public final class ObjectModelHelper {
@@ -83,13 +83,16 @@ public final class ObjectModelHelper {
     /** Key for the environment {@link Context} in the object model. */
     public final static String CONTEXT_OBJECT  = "context";
 
-    /** Key for the environment {@link Context} in the object model. */
+    /** Key for the expiration value (Long) in the object model. */
     public final static String EXPIRES_OBJECT  = "expires";
 
-    /** Key for a {@link Map} containing information from
-     * a parent request provided to a sub-request (internal processing) */
+    /**
+     * Key for a {@link Map} containing information from
+     * a parent request provided to a sub-request (internal processing)
+     */
     public final static String PARENT_CONTEXT = "parent-context";
-     
+
+
     private ObjectModelHelper() {
         // Forbid instantiation
     }
@@ -109,6 +112,4 @@ public final class ObjectModelHelper {
     public static final Long getExpires(Map objectModel) {
         return (Long)objectModel.get(EXPIRES_OBJECT);
     }
-
 }
-
