@@ -168,10 +168,11 @@ public class ContinuationsManagerImpl
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
+                                                 String interpreterId, 
                                                  ContinuationsDisposer disposer) {
         int ttl = (timeToLive == 0 ? defaultTimeToLive : timeToLive);
 
-        WebContinuation wk = generateContinuation(kont, parent, ttl, disposer);
+        WebContinuation wk = generateContinuation(kont, parent, ttl, interpreterId, disposer);
         wk.enableLogging(getLogger());
 
         if (parent == null) {
@@ -198,10 +199,11 @@ public class ContinuationsManagerImpl
         return wk;
     }
 
-    public WebContinuation lookupWebContinuation(String id) {
+    public WebContinuation lookupWebContinuation(String id, String interpreterId) {
         // REVISIT: Is the following check needed to avoid threading issues:
         // return wk only if !(wk.hasExpired) ?
-        return (WebContinuation) idToWebCont.get(id);
+        WebContinuation kont = (WebContinuation) idToWebCont.get(id);
+        return (kont.interpreterMatches(interpreterId)) ? kont : null;
     }
 
     /**
@@ -215,6 +217,7 @@ public class ContinuationsManagerImpl
      * @param kont an <code>Object</code> value representing continuation
      * @param parent value representing parent <code>WebContinuation</code>
      * @param ttl <code>WebContinuation</code> time to live
+     * @param interpreterId id of interpreter invoking continuation creation
      * @param disposer <code>ContinuationsDisposer</code> instance to use for
      * cleanup of the continuation.
      * @return the generated <code>WebContinuation</code> with unique identifier
@@ -222,7 +225,8 @@ public class ContinuationsManagerImpl
     private WebContinuation generateContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int ttl,
-                                                 ContinuationsDisposer disposer) {
+                                                 String interpreterId,
+                                                 ContinuationsDisposer disposer ) {
 
         char[] result = new char[bytes.length * 2];
         WebContinuation wk = null;
@@ -239,7 +243,7 @@ public class ContinuationsManagerImpl
             final String id = new String(result);
             synchronized (idToWebCont) {
                 if (!idToWebCont.containsKey(id)) {
-                    wk = new WebContinuation(id, kont, parent, ttl, disposer);
+                    wk = new WebContinuation(id, kont, parent, ttl, interpreterId, disposer);
                     idToWebCont.put(id, wk);
                     continuationsCount.setValue(idToWebCont.size());
                     break;

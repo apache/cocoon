@@ -31,7 +31,7 @@ package org.apache.cocoon.components.flow;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
  * @see WebContinuation
- * @version CVS $Id: ContinuationsManager.java,v 1.6 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface ContinuationsManager {
     public final String ROLE = ContinuationsManager.class.getName();
@@ -47,6 +47,7 @@ public interface ContinuationsManager {
      * @param timeToLive an <code>int</code> value indicating how long
      * in seconds this continuation will live in the server if not
      * accessed
+     * @param interpreterId id of interpreter invoking continuation creation
      * @param disposer a <code>ContinuationsDisposer</code> instance to called when 
      * the continuation gets cleaned up.
      * @return a <code>WebContinuation</code> value
@@ -55,6 +56,7 @@ public interface ContinuationsManager {
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parentKont,
                                                  int timeToLive,
+                                                 String interpreterId,
                                                  ContinuationsDisposer disposer);
 
     /**
@@ -71,12 +73,16 @@ public interface ContinuationsManager {
     /**
      * Given a <code>WebContinuation</code> id, retrieve the associated
      * <code>WebContinuation</code> object.
-     *
      * @param id a <code>String</code> value
-     * @return a <code>WebContinuation</code> object, or null if no such
-     * <code>WebContinuation</code> could be found.
+     * @param interpreterId Id of an interpreter that queries for 
+     * the continuation
+     *
+     * @return a <code>WebContinuation</code> object, null if no such
+     * <code>WebContinuation</code> could be found. Also null if 
+     * <code>WebContinuation</code> was found but interpreter id does 
+     * not match the one that the continuation was initialy created for.
      */
-    public WebContinuation lookupWebContinuation(String id);
+    public WebContinuation lookupWebContinuation(String id, String interpreterId);
 
     /**
      * Prints debug information about all web continuations into the log file.
