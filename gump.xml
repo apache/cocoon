@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.75 2003/08/15 15:34:22 vgritsenko Exp $
+  CVS $Id: gump.xml,v 1.76 2003/08/25 07:41:18 cziegeler Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -791,6 +791,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-session-fw"/>
     <depend project="cocoon-block-authentication-fw"/>
+    <depend project="jtidy"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
 
