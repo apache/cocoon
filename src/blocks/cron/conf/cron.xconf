@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,6 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.cron.JobScheduler']">
 
     <component role="org.apache.cocoon.components.cron.JobScheduler"
@@ -114,41 +116,55 @@
             +-->
 
         <!--+
-            | Sample trigger definitions
-            <trigger name="test-job1"
+            | Sample trigger definitions, use components defined below.
+        <trigger name="test-job1"
                  target="org.apache.cocoon.components.cron.CronJob/test"
                  concurrent-runs="false">
-                <cron>*/12 * * * * ? *</cron>
-            </trigger>
-            <trigger name="test-job2"
+          <cron>*/12 * * * * ? *</cron>
+        </trigger>
+        <trigger name="test-job2"
                  target="org.apache.cocoon.components.cron.CronJob/test"
                  concurrent-runs="true">
-                 <seconds>*/12</seconds>
-                 <minutes>*/5</minutes>
-                 <hours>8,10,12,14,16,18</hours>
-                 <days>?</days>
-                 <months>*</months>
-                 <weekdays>SUN-FRI</weekdays>
-            </trigger>
-            <trigger name="pipeline-test"
-	         target="org.apache.cocoon.components.cron.CronJob/pipeline-test"
-		 concurrent-runs="true">
-		 <minutes>0</minutes>
-		 <hours>12</hours>
-		 <days>?</days>
-		 <months>*</months>
-		 <weekdays>MON-FRI</weekdays>
-	    </trigger>
-            -->
+          <seconds>*/12</seconds>
+          <minutes>*/5</minutes>
+          <hours>8,10,12,14,16,18</hours>
+          <days>?</days>
+          <months>*</months>
+          <weekdays>SUN-FRI</weekdays>
+        </trigger>
+        <trigger name="pipeline-test"
+                 target="org.apache.cocoon.components.cron.CronJob/pipeline-test"
+                 concurrent-runs="true">
+          <minutes>0</minutes>
+          <hours>12</hours>
+          <days>?</days>
+          <months>*</months>
+          <weekdays>MON-FRI</weekdays>
+        </trigger>
+            +-->
       </triggers>
     </component>
-  
-    <!-- sample definition of cron job -->
-    <component role="org.apache.cocoon.components.cron.CronJob/test"
-               class="org.apache.cocoon.components.cron.TestCronJob"
-               logger="cron.test">
-      <msg>I'm here</msg>
-      <sleep>23000</sleep>
-    </component>
-    
+
+  <!--+
+      | Sample definition of the TestCronJob cron job, used by
+      | trigger configuration above.
+  <component role="org.apache.cocoon.components.cron.CronJob/test"
+             class="org.apache.cocoon.components.cron.TestCronJob"
+             logger="cron.test">
+    <msg>I'm here</msg>
+    <sleep>23000</sleep>
+    <pipeline>samples/hello-world/hello.xhtml</pipeline>
+  </component>
+      +-->
+
+  <!--+
+      | Sample definition of the CocoonPipelineCronJob cron job, used by
+      | trigger configuration above.
+  <component role="org.apache.cocoon.components.cron.CronJob/pipeline-test"
+             class="org.apache.cocoon.components.cron.CocoonPipelineCronJob"
+             logger="cron.pipeline">
+      <pipeline>samples/hello-world/hello.xhtml</pipeline>
+  </component>
+      +-->
+
 </xconf>
