@@ -203,7 +203,7 @@
   <changes>
   <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Updated antlr to 2.7.5, groovy to 1.0-beta-10
+     Updated antlr to 2.7.5, groovy to 1.0-beta-10, jetty to 4.2.23
    </action>
    <action dev="VG" type="update">
      OJB Block: Marked as stable.
