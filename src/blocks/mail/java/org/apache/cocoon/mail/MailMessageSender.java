@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.8 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.9 2004/02/18 21:23:03 joerg Exp $
  */
 public class MailMessageSender {
 
@@ -441,7 +441,7 @@ public class MailMessageSender {
 
     /** Sets the address(es), which should receive a carbon copy of the
      * message. The address is in the format, that
-     * {@link javax.mail.internet.InternetAddress#parse} can handle
+     * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
      * @param cc the address(es), which should receive a carbon copy.
      * @see javax.mail.internet.InternetAddress#parse(String)
@@ -454,7 +454,7 @@ public class MailMessageSender {
 
     /** Sets the address(es), which should receive a black carbon copy of
      * the message. The address is in the format, that
-     * {@link javax.mail.internet.InternetAddress#parse} can handle
+     * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
      * @param bcc the address(es), which should receive a black carbon copy.
      * @see javax.mail.internet.InternetAddress#parse(String)
