@@ -24,7 +24,7 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  * NOTE: this is based on XLink W3C Candidate Recommendation 3 July 2000
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 14:31:10 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-01 00:16:05 $
  */
  
 public abstract class XLinkPipe extends AbstractXMLPipe implements XLinkHandler {
@@ -135,7 +135,9 @@ public abstract class XLinkPipe extends AbstractXMLPipe implements XLinkHandler 
 		    } else {
                 super.startElement(uri, name, raw, attr);
             }
-		}
+		} else {
+            super.startElement(uri, name, raw, attr);
+        }
 	}
 
 	public void endElement(String uri, String name, String raw) throws SAXException {
