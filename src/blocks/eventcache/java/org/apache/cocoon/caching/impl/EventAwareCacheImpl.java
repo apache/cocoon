@@ -73,7 +73,7 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * TODO: Handle MultiThreading
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.2 2003/07/15 02:02:02 ghoward Exp $
  */
 public class EventAwareCacheImpl 
         extends CacheImpl 
@@ -137,7 +137,9 @@ public class EventAwareCacheImpl
      * @param e The Event to be processed.
      */
     public void processEvent(Event e) {
+        if (e == null) return;
         PipelineCacheKey[] pcks = m_eventRegistry.keysForEvent(e);
+        if (pcks == null) return;
         for (int i=0;i<pcks.length; i++) {
             if (pcks[i] != null) {
                 if (getLogger().isDebugEnabled()) {
@@ -178,6 +180,7 @@ public class EventAwareCacheImpl
      */
     public void veryifyEventCache() {
         PipelineCacheKey[] pcks = m_eventRegistry.allKeys();
+        if (pcks == null) return;
         for (int i=0; i<pcks.length; i++) {
             if (!this.containsKey(pcks[i])) {
                 m_eventRegistry.removeKey(pcks[i]);

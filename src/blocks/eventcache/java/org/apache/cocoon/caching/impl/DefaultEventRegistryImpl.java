@@ -81,7 +81,7 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.2 2003/07/15 02:02:02 ghoward Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
@@ -104,10 +104,21 @@ public class DefaultEventRegistryImpl
      * @param key
      */
     public void register(Event e, PipelineCacheKey key) {
-        m_keyMMap.put(key,e);
-        m_eventMMap.put(e,key);
+        synchronized(this) {
+            m_keyMMap.put(key,e);
+            m_eventMMap.put(e,key);
+        }
     }
 
+    /**
+     * Remove all registered data.
+     */
+    public void clear() {
+        synchronized(this) {
+            m_keyMMap.clear();
+            m_eventMMap.clear();
+        }
+    }
 
     /**
      * Retrieve all pipeline keys mapped to this event.
@@ -125,6 +136,15 @@ public class DefaultEventRegistryImpl
     }
 
     /**
+     * Return all pipeline keys mapped to any event
+     */
+    public PipelineCacheKey[] allKeys() {
+        Set keys = this.m_keyMMap.keySet();
+        return (PipelineCacheKey[])keys.toArray(
+                        new PipelineCacheKey[keys.size()]);
+    }
+
+    /**
      * When a CachedResponse is removed from the Cache, any entries 
      * in the event mapping must be cleaned up.
      */
@@ -132,9 +152,10 @@ public class DefaultEventRegistryImpl
         Collection coll = (Collection)m_keyMMap.get(key);
         if (coll==null || coll.isEmpty()) {
             return;
-        } else {
-            // get the iterator over all matching PCK keyed 
-            // entries in the key-indexed MMap.
+        } 
+        // get the iterator over all matching PCK keyed 
+        // entries in the key-indexed MMap.
+        synchronized(this) {
             Iterator it = coll.iterator();
             while (it.hasNext()) {
                 /* remove all entries in the event-indexed map where this
@@ -148,57 +169,12 @@ public class DefaultEventRegistryImpl
                     m_eventMMap.remove((Event)o,key);            
                 }
             }
+    
+            // remove all entries in the key-indexed map where this PCK key 
+            // is the key -- confused yet?
+            m_keyMMap.remove(key);
         }
-        // remove all entries in the key-indexed map where this PCK key 
-        // is the key -- confused yet?
-        m_keyMMap.remove(key);
     }
-
-    /**
-     * Return the keys held as an array
-     */
-    public PipelineCacheKey[] allKeys() {
-        Set keys = this.m_keyMMap.keySet();
-        return (PipelineCacheKey[])keys.toArray(
-                        new PipelineCacheKey[keys.size()]);
-    }
-
-    /**
-     * Remove all registered data.
-     */
-	public void clear() {
-        m_keyMMap.clear();
-        m_eventMMap.clear();
-	}
-
-    /** 
-     * We must persist the data at container shutdown.  If the serialization 
-     * fails, an error is logged but not thrown.  The missing/invalid state is 
-     * handled at startup.
-     */
-    public void dispose() {
-        ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(
-			                            new FileOutputStream(this.m_persistentFile));
-            EventRegistryDataWrapper ecdw = new EventRegistryDataWrapper();
-            ecdw.setupMaps(this.m_keyMMap, this.m_eventMMap);
-            oos.writeObject(ecdw);
-            oos.flush();
-		} catch (FileNotFoundException e) {
-			getLogger().error("Unable to persist EventRegistry", e);
-		} catch (IOException e) {
-            getLogger().error("Unable to persist EventRegistry", e);
-		} finally {
-            try {
-                if (oos != null) oos.close();
-            } catch (IOException e) {}
-		}
-        m_keyMMap.clear();
-        m_keyMMap = null;
-        m_eventMMap.clear();
-        m_eventMMap = null;
-	}
 
     /**
      * Set up the persistence file.
@@ -226,7 +202,41 @@ public class DefaultEventRegistryImpl
 	public boolean init() {
         return recover();
 	}
-    
+
+    /** 
+     * Clean up resources at container shutdown.  An EventRegistry must persist 
+     * its data.  If the serialization fails, an error is logged but not thrown  
+     * because missing/invalid state is handled at startup.
+     */
+    public void dispose() {
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(
+                                        new FileOutputStream(this.m_persistentFile));
+            EventRegistryDataWrapper ecdw = new EventRegistryDataWrapper();
+            ecdw.setupMaps(this.m_keyMMap, this.m_eventMMap);
+            oos.writeObject(ecdw);
+            oos.flush();
+        } catch (FileNotFoundException e) {
+            getLogger().error("Unable to persist EventRegistry", e);
+        } catch (IOException e) {
+            getLogger().error("Unable to persist EventRegistry", e);
+        } finally {
+            try {
+                if (oos != null) oos.close();
+            } catch (IOException e) {}
+        }
+        m_keyMMap.clear();
+        m_keyMMap = null;
+        m_eventMMap.clear();
+        m_eventMMap = null;
+    }
+
+    /* 
+     * I don't think this needs to get synchronized because it should 
+     * only be called during initialize, which should only be called 
+     * once by the container.
+     */
     private boolean recover() {
         if (this.m_persistentFile.exists()) {
             ObjectInputStream ois = null;
