@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:components>
     <map:generators default="file"/>
     <map:transformers default="xslt">
-      <map:transformer name="instance" src="org.apache.cocoon.precept.InstanceTransformer" logger="webapp.validation"/>
+      <map:transformer name="instance" src="org.apache.cocoon.precept.transformation.InstanceTransformer" logger="webapp.validation"/>
     </map:transformers>
     <map:readers default="resource"/>
     <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>    
+    <map:matchers default="wildcard"/>
     <map:selectors default="browser"/>
     <map:actions>
       <map:action name="demo" src="org.apache.cocoon.precept.acting.PreceptorDemoAction" logger="webapp.validation"/>
@@ -24,11 +23,11 @@
       </map:match>
 
       <map:match pattern="welcome">
-          <map:generate src="samples.xml"/>
-    	  <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-    	     <map:parameter name="contextPath" value="{request:contextPath}"/>
-    	  </map:transform>
-          <map:serialize/>
+        <map:generate src="samples.xml"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="model.xml">
@@ -39,26 +38,22 @@
       <map:match pattern="**.html">
         <map:act type="request">
 
-          <map:match pattern="app/**">
-            <map:match pattern="**/example1.*">
-              <map:act type="demo">
-                <map:generate src="example1/{page}.xml"/>
-                <map:transform type="instance"/>
-                <map:transform src="example1/{page}.xsl"/>
-                <map:serialize/>
-              </map:act>
-            </map:match>
+          <map:match pattern="app/example1.*">
+            <map:act type="demo">
+              <map:generate src="example1/{page}.xml"/>
+              <map:transform type="instance"/>
+              <map:transform src="example1/{page}.xsl"/>
+              <map:serialize/>
+            </map:act>
           </map:match>
 
-          <map:match pattern="app/**">
-            <map:match pattern="**/example2.*">
-              <map:act type="demo">
-                <map:generate src="example2/{page}.xml"/>
-                <map:transform type="instance"/>
-                <map:transform src="example2/i2html.xsl"/>
-                <map:serialize/>
-              </map:act>
-            </map:match>
+          <map:match pattern="app/example2.*">
+            <map:act type="demo">
+              <map:generate src="example2/{page}.xml"/>
+              <map:transform type="instance"/>
+              <map:transform src="example2/i2html.xsl"/>
+              <map:serialize/>
+            </map:act>
           </map:match>
 
         </map:act>
@@ -67,3 +62,4 @@
 
   </map:pipelines>
 </map:sitemap>
+
