@@ -120,6 +120,9 @@
        Due to some interface changes in the Cocoon logging components, custom java
        components (generators,transformers or actions for example) compiled for Cocoon 2.0.x will not run
        under Cocoon 2.1 unless recompiled.</p>
+       <p>It's also advisable to change your implementations from using <em>LogEnabled</em>
+         instead of <em>Loggable</em> when it comes to logging in your components.
+       </p>
   </s1>
   <s1 title="Components">
    <p>
@@ -237,6 +240,14 @@
         <em>org.apache.cocoon.servlet.multipart.Part</em>, and the <em>getFilePath()</em> has been renamed
         <em>Part.getUploadName().</em>
      </p>
+   </s2>
+   <s2 title="RequestLifeCycleComponent">
+    <p>If you are using the marker interface <em>RequestLifeCycleComponent</em> for your
+    own components, you have to make sure that your implementations still implement
+    the <em>Component</em> interface. The <em>RequestLifeCycleComponent</em> does no
+    longer extend the <em>Component</em> interface, so you have to declare it in your
+    own components together with <em>RequestLifeCycleComponent</em>. Otherwise you
+    will get a <em>ClassCastException</em> as soon as you access your component.</p>
    </s2>
   </s1>
   <s1 title="Components from the scratchpad">
