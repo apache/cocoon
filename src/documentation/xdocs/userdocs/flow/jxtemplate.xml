@@ -233,12 +233,71 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
 </source>
  <p/>
 </s2>
+<s2 title="formatNumber">
+<p>
+The <code>formatNumber</code> tag is used to display numeric data, including currencies and percentages, in a locale-specific manner. It determines from the locale, for example, whether to use a period or a comma for delimiting the integer and decimal portions of a number. Here is its syntax: 
+</p>
+<p><source>
+&lt;formatNumber value="Expression"
+    [type="Type"] [pattern="Expression"]
+    [currencyCode="Expression"] [currencySymbol="Expression"]
+    [maxIntegerDigits="Expression"] [minIntegerDigits="Expression"]
+    [maxFractionDigits="Expression"] [minFractionDigits="Expression"]
+    [groupingUsed="Expression"]
+    [var="Name"] [locale="Expression"]&gt;
+</source>
+</p>
+<p>
+Only the <code>value</code> attribute is required. It is used to specify the numeric value that is to be formatted.
+</p>
+<p>
+The value of the <code>type</code> attribute should be either "number", "currency", or "percentage", and indicates what type of numeric value is being formatted. The default value for this attribute is "number". The <code>pattern</code> attribute takes precedence over the <code>type</code> attribute and allows more precise formatting of numeric values following the pattern conventions of the <code>java.text.DecimalFormat</code> class. 
+</p>
+<p>
+When the <code>type</code> attribute has a value of "currency", the <code>currencyCode</code> attribute can be used to explicitly specify the currency for the numerical value being displayed. As with language and country codes, currency codes are governed by an ISO standard. This code is used to determine the currency symbol to display as part of the formatted value. 
+</p>
+<p>
+Alternatively, you can use the <code>currencySymbol</code> attribute to explicitly specify the currency symbol. Note that as of JDK 1.4 and the associated introduction of the <code>java.util.Currency</code> class, the <code>currencyCode</code> attribute of <code>formatNumber</code> takes precedence over the <code>currencySymbol</code> attribute. For earlier versions of the JDK, however, the <code>currencySymbol</code> attribute takes precedence. 
+</p>
+<p>
+The <code>maxIntegerDigits</code>, <code>minIntegerDigits</code>, <code>maxFractionDigits</code>, and <code>minFractionDigits</code> attributes are used to control the number of significant digits displayed before and after the decimal point. These attributes require integer values. 
+</p>
+<p>
+The <code>groupingUsed</code> attribute takes a <code>Boolean</code> value and controls whether digits before the decimal point are grouped. For example, in English-language locales, large numbers have their digits grouped by threes, with each set of three delimited by a comma. Other locales delimit such groupings with a period or a space. The default value for this attribute is <code>true</code>. 
+</p>
+
+</s2>
+<s2 title="formatDate">
+<p>The <code>formatDate</code> tag provides facilities to format Date values:</p> 
+<p>
+<source>
+&lt;formatDate value="Expression" [dateStyle="Style"] 
+ [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"] 
+ [locale="Expression"]&gt;
+</source>
+</p>
+<p>
+Only the value attribute is required. Its value should be an instance of the <code>java.util.Date</code> class, specifying the date and/or time data to be formatted and displayed.</p>
+
+<p>The optional <code>timeZone</code> attribute indicates the time zone in which the date and/or time are to be displayed. If not present, then the JVM's default time zone is used (that is, the time zone setting specified for the local operating system). </p>
+<p>
+The <code>type</code> attribute indicates which fields of the specified <code>Date</code> instance are to be displayed, and should be either "time", "date", or "both". The default value for this attribute is "date", so if no <code>type</code> attribute is present, the <code>formatDate</code> tag -- true to its name -- will only display the date information associated with the <code>Date</code> instance, specified using the tag's value attribute. 
+</p>
+<p>
+The <code>dateStyle</code> and <code>timeStyle</code> attributes indicate how the date and time information should be formatted, respectively. Valid styles are "default", "short", "medium", "long", and "full". The default value is, naturally, "default", indicating that a locale-specific style should be used. The semantics for the other four style values are as defined by the @link{java.text.DateFormat} class. 
+</p>
+<p>
+Rather than relying on the built-in styles, you can use the pattern attribute to specify a custom style. When present, the value of the pattern attribute should be a pattern string following the conventions of the @link{java.text.SimpleDateFormat} class. These patterns are based on replacing designated characters within the pattern with corresponding date and time fields. For example, the pattern MM/dd/yyyy indicates that two-digit month and date values and a four-digit year value should be displayed, separated by forward slashes. 
+</p>
+<p>
+If the <code>var</code> attribute is specified, then a String value containing the formatted date is assigned to the named variable. Otherwise, the <code>formatDate</code> tag will write out the formatting results.
+</p>
+</s2>
 <s2 title="macro"> 
 <p>The <code>macro</code> tag allows you define a new custom tag.</p><source>
 &lt;macro name="Name" [targetNamespace="Namespace"]&gt;
   &lt;parameter name="Name" [optional="Boolean"] [default="Value"]/&gt;*
   body
-
 &lt;/macro&gt;
 </source>
  <p> For example:</p><source>
