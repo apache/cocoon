@@ -74,7 +74,7 @@ import org.apache.log.LogEvent;
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CocoonLogFormatter.java,v 1.1 2003/03/09 00:09:44 pier Exp $
+ * @version CVS $Id: CocoonLogFormatter.java,v 1.2 2003/08/19 08:43:00 cziegeler Exp $
  */
 public class CocoonLogFormatter extends ExtensiblePatternFormatter
 {
@@ -87,12 +87,14 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
     protected final static int     TYPE_CLASS  = MAX_TYPE + 1;
     protected final static int     TYPE_URI    = MAX_TYPE + 2;
     protected final static int     TYPE_THREAD = MAX_TYPE + 3;
+    protected final static int     TYPE_HOST   = MAX_TYPE + 4;
 
     protected final static String  TYPE_CLASS_STR       = "class";
     protected final static String  TYPE_CLASS_SHORT_STR = "short";
 
     protected final static String  TYPE_URI_STR         = "uri";
     protected final static String  TYPE_THREAD_STR      = "thread";
+    protected final static String  TYPE_HOST_STR        = "host";
 
     protected final SimpleDateFormat dateFormatter = new SimpleDateFormat("(yyyy-MM-dd) HH:mm.ss:SSS");
 
@@ -155,6 +157,8 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
             return TYPE_URI;
         else if (type.equalsIgnoreCase(TYPE_THREAD_STR))
             return TYPE_THREAD;
+        else if (type.equalsIgnoreCase(TYPE_HOST_STR))
+            return TYPE_HOST;
         else
             return super.getTypeIdFor( type );
     }
@@ -172,6 +176,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
 
             case TYPE_THREAD :
                 return getThread(event.getContextMap());
+            
+            case TYPE_HOST :
+                return getHost(event.getContextMap());
         }
 
         return super.formatPatternRun(event, run);
@@ -223,6 +230,27 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
                 Request request = ObjectModelHelper.getRequest((Map)context);
                 if (request != null) {
                     result = request.getRequestURI();
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Find the host header of the request that is being processed.
+     */
+    private String getHost(ContextMap ctxMap) {
+        String result = "Unknown-host";
+
+        // Get URI from the the object model.
+        if (ctxMap != null) {
+            Object context = ctxMap.get("objectModel");
+            if (context != null && context instanceof Map) {
+                // Get the request
+                Request request = ObjectModelHelper.getRequest((Map)context);
+                if (request != null) {
+                    result = request.getHeader("host");
                 }
             }
         }
