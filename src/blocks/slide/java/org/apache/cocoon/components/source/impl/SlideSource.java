@@ -96,7 +96,6 @@ import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.slide.authenticate.CredentialsToken;
 import org.apache.slide.common.NamespaceAccessToken;
 import org.apache.slide.common.NamespaceConfig;
-import org.apache.slide.common.ServiceAccessException;
 import org.apache.slide.common.SlideException;
 import org.apache.slide.common.SlideToken;
 import org.apache.slide.common.SlideTokenImpl;
@@ -109,13 +108,11 @@ import org.apache.slide.content.NodeRevisionNumber;
 import org.apache.slide.content.RevisionDescriptorNotFoundException;
 import org.apache.slide.lock.Lock;
 import org.apache.slide.lock.NodeLock;
-import org.apache.slide.lock.ObjectLockedException;
 import org.apache.slide.macro.Macro;
 import org.apache.slide.security.AccessDeniedException;
 import org.apache.slide.security.NodePermission;
 import org.apache.slide.security.Security;
 import org.apache.slide.structure.GroupNode;
-import org.apache.slide.structure.LinkedObjectNotFoundException;
 import org.apache.slide.structure.ObjectNode;
 import org.apache.slide.structure.ObjectNotFoundException;
 import org.apache.slide.structure.Structure;
@@ -128,7 +125,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.10 2003/12/08 18:06:43 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.11 2003/12/10 14:09:07 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -244,7 +241,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         } 
         catch (ObjectNotFoundException e) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Source doesn't exist.",e);
+                getLogger().debug("Not found.",e);
             }
             // assert m_node == null;
         }  
@@ -470,8 +467,8 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
         try {
             m_nat.begin();
-            m_structure.create(m_slideToken,collection,m_config.getFilesPath()+m_path);
-            m_content.create(m_slideToken,m_config.getFilesPath()+m_path,descriptor,null);
+            m_structure.create(m_slideToken,collection,getRepositoryPath());
+            m_content.create(m_slideToken,getRepositoryPath(),descriptor,null);
             m_nat.commit();
         } catch (Exception se) {
             try {
@@ -484,12 +481,16 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
     
     public Source getChild(String name) throws SourceException {
-        SlideSource child = new SlideSource(m_nat,m_scheme,m_path+"/"+name,m_credential,null);
+        return getChildByUri(m_path+"/"+name);
+    }
+    
+    private Source getChildByUri(String uri) throws SourceException {
+        SlideSource child = new SlideSource(m_nat,m_scheme,uri,m_credential,null);
         child.enableLogging(getLogger());
         child.contextualize(m_context);
         child.service(m_manager);
         child.initialize();
-        return child;
+        return child;        
     }
 
     public Collection getChildren() throws SourceException {
@@ -500,7 +501,10 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         final Enumeration children = m_node.enumerateChildren();
         while (children.hasMoreElements()) {
             String child = (String) children.nextElement();
-            result.add(getChild(child));
+            if (child.startsWith(m_config.getFilesPath())) {
+                child = child.substring(m_config.getFilesPath().length());
+            }
+            result.add(getChildByUri(child));
         }
         return result;
     }
@@ -547,10 +551,11 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             return false;
         }
         if (m_descriptor == null) {
+            // FIXME: is this correct?
             return true;
         }
         NodeProperty property = m_descriptor.getProperty("resourcetype");
-        if ((property!=null) && (property.getValue().equals("<collection/>"))) {
+        if (property != null && property.getValue().equals("<collection/>")) {
             return true;
         }
         return false;
@@ -584,25 +589,22 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
 
             try {
                 NodeRevisionContent content = new NodeRevisionContent();
-
                 bytes = toByteArray();
                 content.setContent(bytes);
 
-                if (m_descriptor==null) {
+                if (m_descriptor == null) {
                     m_descriptor = new NodeRevisionDescriptor(0);
 
                     String resourceName = m_config.getFilesPath()+m_path;
                     int lastSlash = resourceName.lastIndexOf('/');
 
-                    if (lastSlash!=-1) {
+                    if (lastSlash != -1) {
                         resourceName = resourceName.substring(lastSlash+1);
                     }
                     m_descriptor.setName(resourceName);
                 }
 
                 m_descriptor.setContentLength(bytes.length);
-
-                // Last modification date
                 m_descriptor.setLastModified(new Date());
 
                 m_nat.begin();
@@ -1557,18 +1559,17 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      *
      * @throws SourceException If an exception occurs.
      */
-    public SourceProperty getSourceProperty(String namespace,
-                                            String name)
-                                              throws SourceException {
+    public SourceProperty getSourceProperty(String namespace, String name) 
+        throws SourceException {
 
-        if (m_descriptor==null) {
+        if (m_descriptor == null) {
             return null;
         }
 
         final String quote = "\"";
         NodeProperty property = m_descriptor.getProperty(name, namespace);
 
-        if (property==null) {
+        if (property == null) {
             return null;
         }
 
