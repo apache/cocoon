@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.23 2001-04-13 09:20:32 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.24 2001-04-15 12:50:02 giacomo Exp $
 -->
 
 
@@ -95,11 +95,6 @@
   <action context="code">
    Remove deprecated methods from org.apache.cocoon.xml.util and make it clean
    for SAX2 final.
-  </action>
-
-  <action context="code">
-   Write a better error handling code for CocoonServlet to avoid hardcoding
-   HTML inside the servlet which sucks big time.
   </action>
 
   <action context="code">
