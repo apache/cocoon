@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.239 2004/07/11 15:28:46 antonio Exp $
+    | CVS $Id: jars.xml,v 1.240 2004/07/11 22:06:26 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -926,8 +926,8 @@
       definitions from source files complete with JavaDoc @tags.
     </description>
     <used-by>QDoxSource (qdox block)</used-by>
-    <lib>qdox/lib/qdox-1.4.jar</lib>
-    <homepage>http://qdox.codehaus.org</homepage>
+    <lib>qdox/lib/qdox-1.5.jar</lib>
+    <homepage>http://qdox.codehaus.org/</homepage>
    </file>
 
    <file>
