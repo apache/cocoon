@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -227,7 +227,7 @@ public final class XConfToolTask extends MatchingTask {
         String extension = filename.lastIndexOf(".")>0?filename.substring(filename.lastIndexOf(".")+1):"";
         String basename = basename(filename);
 
-	if (!elem.getTagName().equals(extension)) {
+        if (!elem.getTagName().equals(extension)) {
             throw new BuildException("Not a valid xpatch file: "+filename);
         }
 
@@ -238,7 +238,9 @@ public final class XConfToolTask extends MatchingTask {
 
         // Get 'root' node were 'component' will be inserted into
         String xpath = getAttribute(elem, "xpath", replaceProperties);
-
+        if ( xpath == null ) {
+            throw new IOException("Attribute 'xpath' is required.");    
+        }
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
         // Suspend, because the xpath returned not one node
