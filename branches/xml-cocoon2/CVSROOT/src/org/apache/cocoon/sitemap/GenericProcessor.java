@@ -17,6 +17,7 @@ import org.apache.arch.Composer;
 import org.apache.arch.config.Configurable;
 import org.apache.arch.config.Configuration;
 import org.apache.arch.config.ConfigurationException;
+import org.apache.cocoon.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Request;
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 05:45:19 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-02-27 07:14:32 $
  */
 public class GenericProcessor implements Composer, Configurable, Processor {
 
@@ -48,10 +49,16 @@ public class GenericProcessor implements Composer, Configurable, Processor {
     private PatternTranslator targetTranslator=null;
     /** The generator role */
     private String generator=null;
+    /** The generator parameters */
+    private Parameters generatorParam=null;
     /** The filter roles vector */
     private Vector filters=new Vector();
+    /** The filter parameters vector */
+    private Vector filtersParam=new Vector();
     /** The serializer role */
     private String serializer=null;
+    /** The serializer role */
+    private Parameters serializerParam=null;
 
     /**
      * Create a new <code>SitemapPartition</code> instance.
@@ -92,11 +99,13 @@ public class GenericProcessor implements Composer, Configurable, Processor {
         if (c==null)
             throw new ConfigurationException("Generator not specified",conf);
         this.generator="generator:"+c.getAttribute("name");
+        this.generatorParam=Parameters.fromConfiguration(c);
         // Get the serializer
         c=conf.getConfiguration("serializer");
         if (c==null)
             throw new ConfigurationException("Serializer not specified",conf);
         this.serializer="serializer:"+c.getAttribute("name");
+        this.serializerParam=Parameters.fromConfiguration(c);
         // Set up the filters vetctor
         Enumeration e=conf.getConfigurations("filter");
         while (e.hasMoreElements()) {
@@ -120,9 +129,8 @@ public class GenericProcessor implements Composer, Configurable, Processor {
                 throw new ProcessingException("Error translating \""+
                                               req.getUri()+"\"");
         }
-if (this.serializer==null) throw new NullPointerException("SER");
         Serializer s=(Serializer)this.manager.getComponent(this.serializer);
-        s.setup(req,res,src,null);
+        s.setup(req,res,src,this.serializerParam);
         s.setOutputStream(out);
         XMLConsumer current=s;
         for (int x=0; x<this.filters.size(); x++) {
@@ -132,10 +140,10 @@ if (this.serializer==null) throw new NullPointerException("SER");
             f.setConsumer(current);
             current=f;
         }
-if (this.generator==null) throw new NullPointerException("GEN");
+
         Generator g=(Generator)this.manager.getComponent(this.generator);
         g.setConsumer(current);
-        g.setup(req,res,src,null);
+        g.setup(req,res,src,this.generatorParam);
         g.generate();
         return(true);
     }
