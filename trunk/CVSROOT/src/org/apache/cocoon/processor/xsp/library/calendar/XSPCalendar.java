@@ -70,7 +70,7 @@ public class XSPCalendar {
 	/** Generates a calendar of the form:
 	    <pre>
 		 <month number="3" name="March">
-		  <week number="1">
+		  <week number="1" week_of_year="20">
 		   <day/>
 		   <day/>
 		   <day/>
@@ -79,14 +79,14 @@ public class XSPCalendar {
 		   <day number="1" string="01 March 2000"/>
 		   <day number="2" string="02 March 2000"/>
 		  </week>
-		  <week number="2">
+		  <week number="2" week_of_year="21">
 		   <day number="3"/>
 		   <day number="4"/>
 		   <day number="5"/>
 		   <day number="6"/>
 		   <day number="7"/>
 		   <day number="8"/>
-		   <day number="9"/>
+		   <day number="9" day_of_year="100"/>
 		  </week>
 		  ...
 		 </month>
@@ -106,6 +106,8 @@ public class XSPCalendar {
 		Element week_element = document.createElement("week");
 		int week_number = 1;
 		week_element.setAttribute("number","1");
+        int week_of_year_number = calendar.get(Calendar.WEEK_OF_YEAR);
+        week_element.setAttribute("week_of_year",""+week_of_year_number);
 		month_element.appendChild(week_element);
 		calendar.set(Calendar.DAY_OF_MONTH,1);
 		Calendar temp = (Calendar)calendar.clone();
@@ -115,14 +117,16 @@ public class XSPCalendar {
 		}
 		temp.setTime(calendar.getTime());
 		while (temp.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) {
-			if (temp.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			if (temp.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && temp.get(Calendar.DAY_OF_MONTH) != 1) {
 				week_number++;
 				week_element = document.createElement("week");
 				week_element.setAttribute("number",""+week_number);
+                week_element.setAttribute("week_of_year",""+(week_of_year_number + week_number));
 				month_element.appendChild(week_element);
 			}
 			Element day_element = document.createElement("day");
 			day_element.setAttribute("number",""+temp.get(Calendar.DAY_OF_MONTH));
+            day_element.setAttribute("day_of_year",""+temp.get(Calendar.DAY_OF_YEAR));
 			day_element.setAttribute("string",""+format.format(temp.getTime()));
 			week_element.appendChild(day_element);
 			temp.add(Calendar.DATE,1);
