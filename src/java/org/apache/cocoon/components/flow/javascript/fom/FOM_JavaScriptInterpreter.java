@@ -63,6 +63,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -113,7 +115,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.20 2004/01/31 16:50:56 bruno Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.21 2004/02/11 18:15:29 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -179,7 +181,13 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     byte[] contents) {
             javaSource.put(src.getURI(), src.getValidity());
             javaClass.put(className, contents);
-            sourceToClass.put(src.getURI(), className);
+            String uri = src.getURI();
+            Set set = (Set)sourceToClass.get(uri);
+            if (set == null) {
+                set = new HashSet();
+                sourceToClass.put(uri, set);
+            }
+            set.add(className);
             classToSource.put(className, src.getURI());
         }
 
@@ -217,11 +225,16 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             iter = invalid.iterator();
             while (iter.hasNext()) {
                 String uri = (String)iter.next();
-                String className = (String)sourceToClass.get(uri);
-                sourceToClass.remove(className);
-                javaClass.remove(className);
+                Set set = (Set)sourceToClass.get(uri);
+                Iterator ii = set.iterator();
+                while (ii.hasNext()) {
+                    String className = (String)ii.next();
+                    sourceToClass.remove(className);
+                    javaClass.remove(className);
+                    classToSource.remove(className);
+                }
+                set.clear();
                 javaSource.remove(uri);
-                classToSource.remove(className);
             }
             return invalid.size() == 0;
         }
@@ -332,15 +345,15 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 classLoader.addSourceListener(
                         new CompilingClassLoader.SourceListener() {
                             public void sourceCompiled(Source src) {
-                            // no action
+                                // no action
                             }
 
                             public void sourceCompilationError(Source src,
-                                                String errMsg) {
-                                throw Context.reportRuntimeError(
-                                        ToolErrorReporter.getMessage(
-                                                "msg.uncaughtJSException",
-                                                errMsg));
+                                                               String errMsg) {
+                                
+                                if (src != null) {
+                                    throw Context.reportRuntimeError(errMsg);
+                                }
                             }
                         });
                 updateSourcePath();
