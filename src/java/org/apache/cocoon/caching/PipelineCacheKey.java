@@ -24,16 +24,16 @@ import java.util.List;
  * It consists of one or more {@link ComponentCacheKey}s.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineCacheKey.java,v 1.2 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: PipelineCacheKey.java,v 1.3 2004/05/19 08:42:40 cziegeler Exp $
  */
 public final class PipelineCacheKey
         implements Serializable {
 
     /** The keys */
-    private List keys;
+    private final List keys;
 
     /** the hash code */
-    private int hashCode = 0;
+    private int hashCode;
 
     /**
      * Constructor
@@ -116,7 +116,6 @@ public final class PipelineCacheKey
      * Generate a hash code
      */
     public int hashCode() {
-        // FIXME - this is not very safe
         if (this.hashCode == 0) {
             final int len = this.keys.size();
             for(int i=0; i < len; i++) {
