@@ -448,7 +448,7 @@
  </release>
  <release version="2.1.7" date="TBD">
    <action dev="AG" type="update">
-     Updated quartz to 1.4.3, nekodtd to 0.1.11 and nekohtml to 0.9.4.
+     Updated quartz to 1.4.3, nekodtd to 0.1.11, nekohtml to 0.9.4 and rhino to 1.6R1.
    </action>
    <action dev="AG" type="add">
      Added commons-transaction 1.0 and commons-codec 1.3. Both are needed by slide 2.1.
