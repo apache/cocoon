@@ -112,7 +112,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <pipeline-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*|map:parameters" mode="copy" />
+      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
       <!-- TODO:
       allow map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to ?
       -->
@@ -137,7 +137,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <match-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
+      <xsl:apply-templates select="@*" mode="copy" />
       <xsl:if test="not(@type)">
         <!-- set the default type -->
         <xsl:if test="/map:sitemap/map:components/map:matchers/@default">
@@ -155,6 +155,7 @@
         </xsl:element>
       </xsl:for-each>
     </match-node>
+    <xsl:apply-templates select="map:parameter" mode="copy" />
     <xsl:apply-templates select="map:match|map:select|map:act|map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
       <xsl:with-param name="parent-id">
         <xsl:value-of select="$id"/>
@@ -168,7 +169,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <select-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
+      <xsl:apply-templates select="@*" mode="copy" />
       <xsl:if test="not(@type)">
         <!-- set the default type -->
         <xsl:if test="/map:sitemap/map:components/map:selectors/@default">
@@ -177,6 +178,7 @@
           </xsl:attribute>
         </xsl:if>
       </xsl:if>
+      <xsl:apply-templates select="map:parameter" mode="copy" />
       <xsl:apply-templates select="map:when|map:otherwise" mode="config">
         <xsl:with-param name="parent-id">
           <xsl:value-of select="$id"/>
@@ -225,7 +227,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <act-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
+      <xsl:apply-templates select="@*" mode="copy" />
       <xsl:if test="not(@type)">
         <!-- set the default type -->
         <xsl:if test="/map:sitemap/map:components/map:actions/@default">
@@ -241,6 +243,7 @@
           </xsl:attribute>
         </xsl:element>
       </xsl:for-each>
+      <xsl:apply-templates select="map:parameter" mode="copy" />
     </act-node>
     <xsl:apply-templates select="map:match|map:select|map:act|map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to">
       <xsl:with-param name="parent-id">
@@ -255,7 +258,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <generate-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@src|map:parameters" mode="copy" />
+      <xsl:apply-templates select="@*" mode="copy" />
       <xsl:choose>
         <xsl:when test="not(@type)">
           <xsl:if test="/map:sitemap/map:components/map:generators/@default">
@@ -272,6 +275,7 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
+      <xsl:apply-templates select="map:parameter" mode="copy" />
     </generate-node>
   </xsl:template>
   
@@ -281,7 +285,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <transform-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*|map:parameters" mode="copy" />
+      <xsl:apply-templates select="@*" mode="copy" />
       <xsl:choose>
         <xsl:when test="not(@type)">
           <xsl:if test="/map:sitemap/map:components/map:transformers/@default">
@@ -298,6 +302,7 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
+      <xsl:apply-templates select="map:parameter" mode="copy" />
     </transform-node>
   </xsl:template>
   
@@ -307,7 +312,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <serialize-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*|map:parameters" mode="copy" />
+      <xsl:apply-templates select="map:parameter" mode="copy" />
       <xsl:choose>
         <xsl:when test="not(@type)">
           <xsl:if test="/map:sitemap/map:components/map:serializers/@default">
@@ -324,6 +329,7 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
+      <xsl:apply-templates select="map:parameter" mode="copy" />
     </serialize-node>
   </xsl:template>
   
@@ -333,7 +339,7 @@
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
     </xsl:variable>
     <read-node id="{$id}" logger="sitemap.processor">
-      <xsl:apply-templates select="@*" mode="copy" />
+      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
     </read-node>
   </xsl:template>
   
