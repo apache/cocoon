@@ -21,7 +21,7 @@ import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-29 01:04:49 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-01 00:18:45 $
  */
 
 public class LinkSerializer extends ExtendedXLinkPipe implements Serializer {
@@ -45,15 +45,17 @@ public class LinkSerializer extends ExtendedXLinkPipe implements Serializer {
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr)
     throws SAXException {
-        if (isLocal(href)) out.println(href);
+        if (traversable(href)) out.println(href);
     }
 
     public void startLocator(String href, String role, String title, String label, String uri, String name, String raw, Attributes attr)
     throws SAXException {
-        if (isLocal(href)) out.println(href);
+        if (traversable(href)) out.println(href);
     }
 
-    private boolean isLocal(String href) {
-        return (href.indexOf("://") == -1);
+    private boolean traversable(String href) {
+        if (href.charAt(0) == '#') return false;
+        if (href.indexOf("://") != -1) return false;
+        return true;
     }
 }
