@@ -298,11 +298,21 @@
     </target>
 
     <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
-      <xsl:if test="depend">
-        <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:attribute>
-      </xsl:if>
+      <xsl:attribute name="depends"><xsl:value-of select="$block-name"/>-prepare<xsl:if test="depend">,<xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:if></xsl:attribute>
                                                                                                                                                                                
-      <antcall target="{$block-name}-patches"/>
+      <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xmap"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
+        <include name="{$block-name}/conf/*.xconf"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xlog"/>
+      </xpatch>
+      <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xweb"/>
+      </xpatch>
+
     </target>
                                                                                                                                                                                
     <target name="{@name}-roles" unless="unless.exclude.block.{$block-name}">
@@ -310,7 +320,9 @@
         <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
       </xsl:if>
                                                                                                                                                                                
-      <antcall target="{$block-name}-roles"/>
+      <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
+        <include name="{$block-name}/conf/*.xroles"/>
+      </xpatch>
     </target>
 
     <target name="{@name}-patch-samples" unless="unless.exclude.block.{$block-name}">
@@ -502,27 +514,6 @@
       </javac>
     </target>
 
-    <target name="{$block-name}-roles" unless="unless.exclude.block.{$block-name}">
-      <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
-        <include name="{$block-name}/conf/*.xroles"/>
-      </xpatch>
-    </target>
-                                                                                                                                                                               
-    <target name="{$block-name}-patches" depends="{$block-name}-prepare" unless="unless.exclude.block.{$block-name}">
-      <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
-        <include name="{$block-name}/conf/*.xmap"/>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
-        <include name="{$block-name}/conf/*.xconf"/>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
-        <include name="{$block-name}/conf/*.xlog"/>
-      </xpatch>
-      <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
-        <include name="{$block-name}/conf/*.xweb"/>
-      </xpatch>
-    </target>
-
     <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
@@ -585,16 +576,15 @@
     <target name="{@name}-prepare-anteater-tests" unless="unless.exclude.block.{$block-name}">
 
       <!-- Test if this block has Anteater tests -->
-      <available property="{$block-name}.has.anteater-tests" file="${{blocks}}/{$block-name}/test/anteater"/>
-
-      <antcall target="{$block-name}-prepare-anteater-tests"/>
-    </target>
-
-    <target name="{$block-name}-prepare-anteater-tests" if="{$block-name}.has.anteater-tests">
-      <copy todir="${{build.test}}/anteater">
-        <fileset dir="${{blocks}}/{$block-name}/test/anteater"/>
-        <mapper type="glob" from="*.xml" to="{$block-name}-*.xml"/>
-      </copy>
+      <if>
+        <available file="${{blocks}}/{$block-name}/test/anteater"/>
+        <then>
+          <copy todir="${{build.test}}/anteater">
+            <fileset dir="${{blocks}}/{$block-name}/test/anteater"/>
+            <mapper type="glob" from="*.xml" to="{$block-name}-*.xml"/>
+          </copy>
+        </then>
+      </if>
     </target>
   </xsl:template>
 </xsl:stylesheet>
