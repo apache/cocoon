@@ -17,6 +17,7 @@ package org.apache.cocoon.components.language.programming.java;
 
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
@@ -30,7 +31,7 @@ import org.apache.cocoon.core.container.AbstractComponentHandler;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public class JavaProgram implements Program {
+public class JavaProgram extends AbstractLogEnabled implements Program {
 
     protected Class program;
 
@@ -49,7 +50,7 @@ public class JavaProgram implements Program {
         return AbstractComponentHandler.getComponentHandler(
                 program,
                 new DefaultConfiguration("", "GeneratorSelector"),
-                manager, context, null, null, null);
+                manager, context, getLogger(), null, null);
     }
 
     public CompiledComponent newInstance() throws Exception {

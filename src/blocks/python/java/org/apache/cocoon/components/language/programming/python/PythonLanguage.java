@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.language.programming.python;
 
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.cocoon.components.language.programming.AbstractProgrammingLanguage;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.components.language.programming.Program;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
  * The class specified will be used as a Java wrapper interpreting javascript program.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PythonLanguage.java,v 1.3 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PythonLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {
 
@@ -100,7 +101,9 @@ public class PythonLanguage extends AbstractProgrammingLanguage implements Progr
             }
         }
 
-        return new PythonProgram(sourceFile, clazz, dependecies);
+        final Program p = new PythonProgram(sourceFile, clazz, dependecies);
+        ContainerUtil.enableLogging(p, this.getLogger());
+        return p;
     }
 
     private String getMeta(String line, String meta) {

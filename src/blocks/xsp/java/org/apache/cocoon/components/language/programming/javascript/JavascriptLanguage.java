@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.language.programming.javascript;
 
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
 import org.apache.cocoon.components.language.programming.AbstractProgrammingLanguage;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
  * The class specified will be used as a Java wrapper interpreting javascript program.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavascriptLanguage.java,v 1.1 2004/03/10 12:58:08 stephan Exp $
+ * @version CVS $Id$
  */
 public class JavascriptLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {
 
@@ -95,7 +96,9 @@ public class JavascriptLanguage extends AbstractProgrammingLanguage implements P
             }
         }
 
-        return new JavascriptProgram(sourceFile, clazz, dependecies);
+        final Program p = new JavascriptProgram(sourceFile, clazz, dependecies);
+        ContainerUtil.enableLogging(p, this.getLogger());
+        return p;
     }
 
     private String getMeta(String line, String meta) {

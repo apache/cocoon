@@ -18,6 +18,7 @@ package org.apache.cocoon.components.language.programming.javascript;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
@@ -34,7 +35,7 @@ import java.util.Iterator;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public class JavascriptProgram implements Program {
+public class JavascriptProgram extends AbstractLogEnabled implements Program {
 
     protected File file;
     protected Class clazz;
@@ -67,7 +68,7 @@ public class JavascriptProgram implements Program {
     throws Exception {
 
         return AbstractComponentHandler.getComponentHandler(
-                clazz, config, manager, context, null, null, null);
+                clazz, config, manager, context, getLogger(), null, null);
     }
 
     public CompiledComponent newInstance() throws Exception {

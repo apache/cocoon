@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.language.programming;
 
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -33,7 +34,7 @@ import java.io.File;
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: CompiledProgrammingLanguage.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
 
@@ -141,7 +142,10 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
             Class program = this.loadProgram(filename, baseDirectory);
             // Create and discard test instance.
             program.newInstance();
-            return new JavaProgram(program);
+
+            final Program p = new JavaProgram(program);
+            ContainerUtil.enableLogging(p, this.getLogger());
+            return p;
         } catch (Throwable t) {
             throw new LanguageException("Unable to preload program " + filename, t);
         }
@@ -197,6 +201,8 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
             throw new LanguageException("Can't load program : " + baseDirectory.toString() + File.separator + filename);
         }
 
-        return new JavaProgram(program);
+        final Program p = new JavaProgram(program);
+        ContainerUtil.enableLogging(p, this.getLogger());
+        return p;
     }
 }
