@@ -87,7 +87,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.5 2003/07/11 08:59:03 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.6 2003/07/31 03:54:22 vgritsenko Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -611,7 +611,8 @@ public abstract class AbstractProcessingPipeline
             }
         } catch ( SocketException se ) {
             if (se.getMessage().indexOf("reset") > 0
-                || se.getMessage().indexOf("aborted") > 0) {
+                    || se.getMessage().indexOf("aborted") > 0
+                    || se.getMessage().indexOf("connection abort") > 0) {
                 throw new ConnectionResetException("Connection reset by peer", se);
             } else {
                 throw new ProcessingException("Failed to execute reader pipeline.", se);

@@ -58,6 +58,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -122,7 +123,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.9 2003/07/09 07:42:22 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.10 2003/07/31 03:54:22 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1111,11 +1112,19 @@ public class CocoonServlet extends HttpServlet {
                                 "The requested resource \"" + request.getRequestURI() + "\" could not be found",
                                 rse);
                 return;
+
+            } catch ( SocketException se ) {
+                if (log.isDebugEnabled()) {
+                    log.debug("The connection was reset", se);
+                } else if (log.isWarnEnabled()) {
+                    log.warn(se.getMessage());
+                }
+
             } catch (ConnectionResetException cre) {
                 if (log.isDebugEnabled()) {
-                    log.debug("The connection was reset", cre);
+                    log.debug(cre.getMessage(), cre);
                 } else if (log.isWarnEnabled()) {
-                    log.warn("The connection was reset.");
+                    log.warn(cre.getMessage());
                 }
 
             } catch (Exception e) {
@@ -1153,7 +1162,10 @@ public class CocoonServlet extends HttpServlet {
                 }
             }
         } finally {
-            if (ctxMap != null) ctxMap.clear();
+            if (ctxMap != null) {
+                ctxMap.clear();
+            }
+
             try {            
                 if (request instanceof MultipartHttpServletRequest) {
                     ((MultipartHttpServletRequest) request).cleanup();
@@ -1161,11 +1173,19 @@ public class CocoonServlet extends HttpServlet {
             } catch (IOException e) {
                 log.error("Cocoon got an Exception while trying to cleanup the uploaded files.", e);
             }
+
             try {
                 ServletOutputStream out = res.getOutputStream();
                 out.flush();
                 out.close();
-            } catch(Exception e) {
+            } catch (SocketException se) {
+                if (log.isDebugEnabled()) {
+                    log.debug("SocketException while trying to close stream.", se);
+                } else if (log.isWarnEnabled()) {
+                    log.warn("SocketException while trying to close stream.");
+                }
+
+            } catch (Exception e) {
                 log.error("Cocoon got an Exception while trying to close stream.", e);
             }
         }
