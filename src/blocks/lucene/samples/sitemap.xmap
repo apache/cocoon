@@ -55,16 +55,21 @@
 </map:views>
 
 
+  <map:flow language="javascript">
+    <map:script src="flow.js"/>
+  </map:flow>
+
 <!-- =========================== Pipelines ================================= -->
 
 <map:pipelines>
   
   <map:pipeline>
   	
-		<!-- mount query bean pipelines
-		<map:match pattern="query/**">
-			<map:mount check-reload="yes" src="query/sitemap.xmap" uri-prefix="query"/>
-		</map:match> -->
+    <!-- mount query bean pipelines
+      <map:match pattern="query/**">
+        <map:mount check-reload="yes" src="query/sitemap.xmap" uri-prefix="query"/>
+      </map:match> 
+    -->
 
     <map:match pattern="images/*.gif">
       <map:read src="images/{1}.gif" mime-type="image/gif">
@@ -88,39 +93,22 @@
       <map:serialize/>
     </map:match>
 
-    <map:match pattern="document-files.xsp">
-      <map:generate type="serverpages" src="document-files.xsp">
-      </map:generate>
-
-      <map:transform src="stylesheets/all-files2content.xsl"/>
-      <map:transform type="cinclude"/>
-      <map:transform src="stylesheets/content2lucene.xsl"/>
-      <map:transform type="index"/>
-
-      <map:transform src="stylesheets/lucene-index2html.xsl"/>
-
+    <map:match pattern="welcome">
+      <map:generate src="welcome-index.xml"/>
+      <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
       <map:serialize/>
     </map:match>
 
-    <map:match pattern="*.xsp">
-      <map:generate type="serverpages" src="{1}.xsp">
-        <map:parameter name="p1" value="context://docs/xdocs"/>
-      </map:generate>
-
-      <map:serialize type="xml"/>
+    <map:match pattern="create">
+      <map:call function="create"/>
     </map:match>
-    
-    <map:match pattern="*">
-      <map:generate type="serverpages" src="{1}-index.xsp"/>
-      <!--
-        Run-time configuration is done through these
-        <map:parameter/> elements. Again, let's have a look at the
-        javadocs:
-        "[...] All <map:parameter> declarations will be made
-        available in the XSLT stylesheet as xsl:variables. [...]" 
-      -->
+
+    <map:match pattern="create-index.jx">
+      <map:generate type="jx" src="create-index.jx"/>
       <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
       </map:transform>
       <map:serialize/>
     </map:match>
