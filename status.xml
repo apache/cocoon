@@ -180,6 +180,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="update">
+     PLACEHOLDER
+  </action>
+ </release>
+ <release version="2.1m2" date="May 20 2003">
   <action dev="SMS" type="update">
    Changed namespace for the RequestGenerator to 'http://apache.org/cocoon/request/2.0'.
   </action>
