@@ -56,7 +56,7 @@ import org.mozilla.javascript.Undefined;
 
 /**
  *
- * @version CVS $Id: JSWebContinuation.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: JSWebContinuation.java,v 1.3 2003/08/26 09:05:52 mpo Exp $
  */
 public class JSWebContinuation extends ScriptableObject
 {
@@ -107,7 +107,7 @@ public class JSWebContinuation extends ScriptableObject
 
     JSWebContinuation jswk = new JSWebContinuation();
     WebContinuation wk
-      = contMgr.createWebContinuation(kont, pwk, ttl);
+      = contMgr.createWebContinuation(kont, pwk, ttl, null);
     wk.setUserObject(jswk);
 
     jswk.cocoon = cocoon;

@@ -84,7 +84,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.9 2003/08/06 15:54:13 bruno Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.10 2003/08/26 09:05:52 mpo Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -153,7 +153,8 @@ public class FOM_Cocoon extends ScriptableObject {
             wk = lastContinuation = 
                 contMgr.createWebContinuation(continuation,
                                               lastContinuation,
-                                              0);
+                                              0,
+                                              null);
         }
         
         String redUri = uri;
@@ -964,7 +965,8 @@ public class FOM_Cocoon extends ScriptableObject {
             componentManager.lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (WebContinuation)(parent == null ? null : parent.getWebContinuation()),
-                                           timeToLive);
+                                           timeToLive,
+                                           null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
         result.setParentScope(getParentScope());
         result.setPrototype(getClassPrototype(getParentScope(), 
