@@ -50,18 +50,19 @@
 */
 package org.apache.cocoon.webapps.session.components;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.SessionConstants;
@@ -80,12 +81,15 @@ import org.xml.sax.SAXException;
  *  This is the default implementation of the session manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSessionManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: DefaultSessionManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
 */
 public final class DefaultSessionManager
 extends AbstractLogEnabled
-implements Composable, Component, ThreadSafe, SessionManager, Disposable {
+implements Composable, Component, ThreadSafe, SessionManager, Disposable, Contextualizable {
 
+    /** The context */
+    private Context context;
+    
     /** The <code>ComponentManager</code> */
     private ComponentManager manager;
 
@@ -135,13 +139,13 @@ implements Composable, Component, ThreadSafe, SessionManager, Disposable {
      * If createFlag is true, the session is created if it does not exist.
      */
     public Session getSession(boolean createFlag) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Request request = ContextHelper.getRequest(this.context);
 
         // synchronized
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN getSession create=" + createFlag);
         }
-        Session session = ObjectModelHelper.getRequest(objectModel).getSession(createFlag);
+        Session session = request.getSession(createFlag);
 
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END getSession session=" + session);
@@ -522,6 +526,13 @@ implements Composable, Component, ThreadSafe, SessionManager, Disposable {
 
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
 
 }

@@ -73,6 +73,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -85,7 +86,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.8 2003/05/23 09:42:50 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.9 2003/05/23 12:13:15 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -106,6 +107,19 @@ public class SimpleProfileManager
         this.manager = componentManager;
     }
 
+    public RequestState getRequestState() {
+        AuthenticationManager authManager = null;
+        try {
+            authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
+            return authManager.getState();    
+        } catch (ComponentException ce) {
+            // ignore this here
+            return null;
+        } finally {
+            this.manager.release( (Component)authManager );
+        }
+    }
+    
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(Object)
      */
@@ -138,11 +152,12 @@ public class SimpleProfileManager
 				map.put("portalname", service.getPortalName());
 				
 				// TODO Change to KeyManager usage
-				UserHandler handler = RequestState.getState().getHandler();
+                RequestState state = this.getRequestState();
+				UserHandler handler = state.getHandler();
 				HashMap keyMap = new HashMap();
 				keyMap.put("user", handler.getUserId());
 				keyMap.put("role", handler.getContext().getContextInfo().get("role"));
-				keyMap.put("config", RequestState.getState().getApplicationConfiguration().getConfiguration("portal"));
+				keyMap.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
 	
 				// load coplet base data
 				map.put("profile", "copletbasedata");
@@ -224,11 +239,12 @@ public class SimpleProfileManager
 			map.put("type", "user");
 				
 			// TODO Change to KeyManager usage
-			UserHandler handler = RequestState.getState().getHandler();
+            RequestState state = this.getRequestState();
+			UserHandler handler = state.getHandler();
 			HashMap key = new HashMap();
 			key.put("user", handler.getUserId());
 			key.put("role", handler.getContext().getContextInfo().get("role"));
-			key.put("config", RequestState.getState().getApplicationConfiguration().getConfiguration("portal"));
+			key.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
 	
 			// save coplet instance data
 			map.put("profile", "copletinstancedata");

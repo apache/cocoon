@@ -54,67 +54,63 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.ContextManager;
-import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
-import org.apache.cocoon.webapps.session.context.StandardSessionContextProvider;
 import org.xml.sax.SAXException;
 
 /**
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: DefaultContextManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
-implements Composable, ContextManager, ThreadSafe, Component {
+implements Composable, ContextManager, ThreadSafe, Component, Contextualizable, Disposable {
 
     /** The <code>ComponentManager</code> */
     private ComponentManager manager;
 
-    /** Registered context provider */
-    private Map contextProvider = new HashMap();
-
+    /** The context */
+    private Context context;
+    
+    /** selector for context provider */
+    private ComponentSelector contextSelector;
+    
     /* The list of reserved contexts */
-    static private String[] reservedContextNames = {"session",
-                                                    "context"};
+    static private final String[] reservedContextNames = {"session",
+                                                            "context"};
     /**
      * Avalon Composer Interface
      */
     public void compose(ComponentManager manager) 
     throws ComponentException {
         this.manager = manager;
-        // add standard provider
-        SessionContextProvider provider = new StandardSessionContextProvider();
-        try {
-			this.addSessionContextProvider(provider, SessionConstants.TEMPORARY_CONTEXT);
-            this.addSessionContextProvider(provider, SessionConstants.REQUEST_CONTEXT);
-            this.addSessionContextProvider(provider, SessionConstants.RESPONSE_CONTEXT);
-		} catch (ProcessingException e) {
-			throw new ComponentException("Unable to register default session context provider.", e);
-		}
+        this.contextSelector = (ComponentSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
     }
 
     /**
      * Get the session
      */
     private Session getSession(boolean create) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        final Request request = ObjectModelHelper.getRequest( objectModel );
+        final Request request = ContextHelper.getRequest( this.context );
         return request.getSession( create );
     }
     
@@ -146,25 +142,17 @@ implements Composable, ContextManager, ThreadSafe, Component {
             i++;
         }
         if (!found ) {
-            found = (contextProvider.get(name) != null);
+            found = false;
+            SessionContextProvider provider = null;
+            try {
+                provider = (SessionContextProvider)this.contextSelector.select( name );
+                found = true;
+            } catch (ComponentException ignore) {
+            } finally {
+                this.contextSelector.release( (Component)provider);
+            }
         }
         return found;
-    }
-
-    /**
-     * Add a context provider.
-     */
-    public synchronized void addSessionContextProvider(SessionContextProvider provider,
-                                                          String                 contextName)
-    throws ProcessingException {
-        if (contextName != null && provider != null) {
-            if (this.isReservedContextName(contextName)) {
-                throw new ProcessingException("Unable to register context '"+contextName+"' : Already registered.");
-            }
-            this.contextProvider.put(contextName, provider);
-        } else {
-            throw new ProcessingException("Unable to add new provider: Name or provider info missing.");
-        }
     }
 
     /**
@@ -174,9 +162,13 @@ implements Composable, ContextManager, ThreadSafe, Component {
     throws ProcessingException {
         // synchronized (not needed)
         boolean exists = false;
-        SessionContextProvider provider = (SessionContextProvider)contextProvider.get(name);
-        if (provider != null) {
+        SessionContextProvider provider = null;
+        try {
+            provider = (SessionContextProvider)this.contextSelector.select( name );
             exists = provider.existsSessionContext( name );
+        } catch (ComponentException ignore) {
+        } finally {
+            this.contextSelector.release( (Component)provider);
         }
 
         return exists;
@@ -189,11 +181,15 @@ implements Composable, ContextManager, ThreadSafe, Component {
     throws ProcessingException {
         // synchronized 
         SessionContext context = null;
-        SessionContextProvider provider = (SessionContextProvider)contextProvider.get(name);
-        if (provider != null) {
+        SessionContextProvider provider = null;
+        try {
+            provider = (SessionContextProvider)this.contextSelector.select( name );
             synchronized (provider) {
                 context = provider.getSessionContext(name);
             }
+        } catch (ComponentException ignore) {
+        } finally {
+            this.contextSelector.release( (Component)provider);
         }
 
         return context;
@@ -353,5 +349,23 @@ implements Composable, ContextManager, ThreadSafe, Component {
         }
     }
 
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null) {
+            this.manager.release( this.contextSelector );
+            this.manager = null;
+            this.contextSelector = null;
+        }
+    }
 
 }

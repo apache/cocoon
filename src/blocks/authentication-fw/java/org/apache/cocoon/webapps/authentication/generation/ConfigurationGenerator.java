@@ -64,6 +64,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
@@ -86,7 +87,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.3 2003/05/16 07:12:29 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.4 2003/05/23 12:13:14 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ComposerGenerator {
@@ -105,8 +106,16 @@ extends ComposerGenerator {
     public void generate()
     throws IOException, SAXException, ProcessingException {
 
+        AuthenticationManager authManager = null;
+        RequestState state = null;
+        try {
+            authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
+            state = authManager.getState();
+            
+        } catch (Exception ignore) {
+        }
+        
         this.xmlConsumer.startDocument();
-        RequestState state = RequestState.getState();
         if ( state != null ) {
             try {
                 UserHandler userhandler = state.getHandler();

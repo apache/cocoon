@@ -59,9 +59,12 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
@@ -73,11 +76,11 @@ import org.apache.cocoon.portal.event.RequestEvent;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.3 2003/05/23 12:13:15 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
-    implements ThreadSafe, LinkService, Composable, Disposable {
+    implements ThreadSafe, LinkService, Composable, Disposable, Contextualizable {
 
 
     class Info {
@@ -89,10 +92,12 @@ public class DefaultLinkService
     
     protected EventConverter   converter;
     protected ComponentManager manager;
+    protected Context context;
+    
     // FIXME - comparable events are not completly implemented yet
     
     protected Info getInfo() {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Map objectModel = ContextHelper.getObjectModel(this.context);
         Info info = (Info)objectModel.get(DefaultLinkService.class.getName());
         if ( info == null ) {
             info = new Info();
@@ -219,6 +224,13 @@ public class DefaultLinkService
             this.manager = null;
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
 
 }

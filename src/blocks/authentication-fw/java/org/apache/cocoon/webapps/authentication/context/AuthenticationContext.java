@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.6 2003/05/23 07:11:02 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.7 2003/05/23 12:13:14 cziegeler Exp $
 */
 public final class AuthenticationContext
 implements SessionContext {
@@ -91,6 +91,8 @@ implements SessionContext {
     private SessionContext  authContext;
     private String          handlerName;
     private boolean        initialized;
+    
+    ThreadLocal     state = new InheritableThreadLocal();
     
     public AuthenticationContext(UserHandler handler) {
         this.name = AuthenticationConstants.SESSION_CONTEXT_NAME;
@@ -102,6 +104,10 @@ implements SessionContext {
         } catch (ProcessingException pe) {
             throw new CascadingRuntimeException("Unable to create simple context.", pe);
         }
+    }
+    
+    private RequestState getState() {
+        return (RequestState)state.get();
     }
     
     public void init(Document doc) 
@@ -140,7 +146,7 @@ implements SessionContext {
         }
         if (!path.startsWith("/")) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
         
         DocumentFragment frag = null;
 
@@ -221,7 +227,7 @@ implements SessionContext {
         }
         if (!path.startsWith("/")) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         if ( path.equals("/") ) {
             // set all is not allowed with "/"
@@ -266,7 +272,7 @@ implements SessionContext {
         }
         if (!path.startsWith("/") ) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         if ( path.equals("/") ) {
             // set all is not allowed with "/"
@@ -309,7 +315,7 @@ implements SessionContext {
         }
         if (!path.startsWith("/") ) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         if (path.equals("/") ) {
             this.cleanParametersCache();
@@ -428,7 +434,7 @@ implements SessionContext {
         }
         if (!path.startsWith("/") ) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         if (path.equals("/") ) {
             // get all: first authentication then application
@@ -475,7 +481,7 @@ implements SessionContext {
     throws SAXException, ProcessingException, IOException {
         if (!path.startsWith("/") ) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
         if (path.equals("/") ) {
             // load all: first authentication then application
             this.loadAuthenticationXML("/authentication",
@@ -528,7 +534,7 @@ implements SessionContext {
     throws SAXException, ProcessingException, IOException {
         if (!path.startsWith("/") ) path = '/' + path;
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         if (path.equals("/") ) {
             // save all: first authentication then application
@@ -666,7 +672,7 @@ implements SessionContext {
                                     SourceResolver     resolver,
                                     ComponentManager   manager)
     throws ProcessingException {
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         final ApplicationConfiguration conf = (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get( applicationName );
         String loadResource = conf.getLoadResource();
@@ -706,7 +712,7 @@ implements SessionContext {
                                     SourceResolver     resolver,
                                     ComponentManager   manager)
     throws ProcessingException {
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
         final ApplicationConfiguration conf = (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get( applicationName );
         String saveResource = conf.getSaveResource();
         SourceParameters saveResourceParameters = conf.getSaveResourceParameters();
@@ -752,7 +758,7 @@ implements SessionContext {
     throws ProcessingException {
         if (parameters == null) parameters = new SourceParameters();
 
-        final String applicationName = RequestState.getState().getApplicationName();
+        final String applicationName = this.getState().getApplicationName();
 
         // add all elements from inside the handler data
         this.addParametersFromAuthenticationXML("/data",

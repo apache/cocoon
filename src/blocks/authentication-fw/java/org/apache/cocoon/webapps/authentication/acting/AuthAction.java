@@ -70,7 +70,7 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  using a handler. If not a redirect takes place.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthAction.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: AuthAction.java,v 1.3 2003/05/23 12:13:13 cziegeler Exp $
 */
 public final class AuthAction
 extends ComposerAction
@@ -104,7 +104,7 @@ implements ThreadSafe {
                 // All events are ignored
                 // the sitemap.xsl ensures that only the redirect is processed
             } else {
-                RequestState state = RequestState.getState();
+                RequestState state = authManager.getState();
                 map = state.getHandler().getContext().getContextInfo();
             }
         } finally {

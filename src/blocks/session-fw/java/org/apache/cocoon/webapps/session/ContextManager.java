@@ -54,7 +54,6 @@ import java.io.IOException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.session.context.SessionContext;
-import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.xml.sax.SAXException;
 
 /**
@@ -67,19 +66,12 @@ import org.xml.sax.SAXException;
  *  objects.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: ContextManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
 */
 public interface ContextManager {
 
     /** Avalon role */
     String ROLE = ContextManager.class.getName();;
-
-    /**
-     * Add a context provider.
-     */
-    void addSessionContextProvider(SessionContextProvider provider,
-                                  String                 contextName)
-    throws ProcessingException;
 
     /**
      *  Create a new public context in the session.

@@ -50,7 +50,14 @@
 */
 package org.apache.cocoon.webapps.authentication.context;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.context.SessionContext;
@@ -61,11 +68,14 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.3 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.4 2003/05/23 12:13:14 cziegeler Exp $
 */
 public final class AuthenticationContextProvider
-implements SessionContextProvider {
+extends AbstractLogEnabled
+implements SessionContextProvider, ThreadSafe, Component, Composable {
 
+    protected ComponentManager manager;
+    
     /**
      * Get the context
      * @param name The name of the context
@@ -76,11 +86,22 @@ implements SessionContextProvider {
     throws ProcessingException {
         AuthenticationContext context = null;
         if (name.equals(org.apache.cocoon.webapps.authentication.AuthenticationConstants.SESSION_CONTEXT_NAME) ) {
-            RequestState state = RequestState.getState();
+            
+            AuthenticationManager authManager = null;
+            RequestState state = null;
+            try {
+                authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
+                state = authManager.getState();
+            } catch (ComponentException ignore) {
+            } finally {
+                this.manager.release( (Component)authManager );
+            }
+            
             if ( null != state ) {
                 UserHandler handler = state.getHandler();
                 if ( handler != null ) {
                     context = handler.getContext();
+                    context.state.set( state );
                 }
             }
         }
@@ -93,6 +114,13 @@ implements SessionContextProvider {
     public boolean existsSessionContext(String name)
     throws ProcessingException {
         return (this.getSessionContext( name ) != null);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void compose(ComponentManager manager)  {
+        this.manager = manager;
     }
 
 }

@@ -54,10 +54,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
@@ -67,15 +69,16 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestAspectDataStore.java,v 1.2 2003/05/21 13:06:02 cziegeler Exp $
+ * @version CVS $Id: RequestAspectDataStore.java,v 1.3 2003/05/23 12:13:14 cziegeler Exp $
  */
 public class RequestAspectDataStore 
     extends AbstractLogEnabled
-    implements Component, ThreadSafe, AspectDataStore {
+    implements Component, ThreadSafe, AspectDataStore, Contextualizable {
+    
+    protected Context context;
     
     protected Map getMap(Aspectalizable owner) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        final Request request = ObjectModelHelper.getRequest( objectModel );
+        final Request request = ContextHelper.getRequest(this.context);
         Map componentMap = (Map)request.getAttribute(this.getClass().getName());
         if ( componentMap == null) {
             componentMap = new HashMap(3);
@@ -100,4 +103,13 @@ public class RequestAspectDataStore
     public boolean isPersistent() {
         return false;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+
+    }
+
 }

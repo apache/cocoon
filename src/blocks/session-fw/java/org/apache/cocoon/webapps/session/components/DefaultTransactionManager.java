@@ -54,11 +54,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.TransactionManager;
@@ -68,19 +70,19 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  * This is the default implementation for the transaction manager.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultTransactionManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
+ * @version CVS $Id: DefaultTransactionManager.java,v 1.2 2003/05/23 12:13:14 cziegeler Exp $
 */
 public final class DefaultTransactionManager
 extends AbstractLogEnabled
-implements Component, ThreadSafe, TransactionManager {
+implements Component, ThreadSafe, TransactionManager, Contextualizable {
 
+    protected Context context;
 
     /**
      * Get the transaction states from the current session
      */
     private TransactionState getSessionContextsTransactionState(SessionContext context) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        final Request request = ObjectModelHelper.getRequest( objectModel );
+        final Request request = ContextHelper.getRequest(this.context);
         final Session session = request.getSession(true);
         Map transactionStates = (Map)session.getAttribute(this.getClass().getName());
         if (transactionStates == null) {
@@ -177,6 +179,13 @@ implements Component, ThreadSafe, TransactionManager {
         ts.nw=0;
         ts.nwtotal--;
         notifyAll();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
 
 }

@@ -50,11 +50,8 @@
 */
 package org.apache.cocoon.webapps.authentication.user;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -65,41 +62,30 @@ import org.apache.excalibur.source.SourceResolver;
  * is currently used for this request.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestState.java,v 1.4 2003/05/22 14:09:34 cziegeler Exp $
+ * @version CVS $Id: RequestState.java,v 1.5 2003/05/23 12:13:13 cziegeler Exp $
 */
 public final class RequestState
 implements java.io.Serializable {
 
-    private static final String KEY = RequestState.class.getName();
-    
     /** The handlers */
     private UserHandler handler;
         
     /** The application */
     private String application;
     
-    public static RequestState getState() {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        return (RequestState)objectModel.get(KEY);
-    }
-    
-    protected static void setState(RequestState status) {
-        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
-        if ( status != null ) {
-            objectModel.put( KEY, status);
-        } else {
-            objectModel.remove( KEY );
-        }
-    }
-    
     /**
      * Create a new handler object.
      */
-    public RequestState(UserHandler handler, String app, SourceResolver resolver) 
-    throws ProcessingException {
+    public RequestState(UserHandler handler, String app) {
         this.handler = handler;
         this.application = app;
-        setState(this);
+    }
+    
+    /**
+     * Initialize
+     */
+    public void initialize(SourceResolver resolver)
+    throws ProcessingException {
         if ( this.application != null && !this.handler.getApplicationsLoaded()) {
             ApplicationConfiguration conf = (ApplicationConfiguration) this.handler.getHandlerConfiguration().getApplications().get(this.application);
             if ( !this.handler.isApplicationLoaded( conf ) ) {
