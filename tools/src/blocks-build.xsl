@@ -29,7 +29,14 @@
             <path location="{string('${build.scratchpad.dest}')}"/>
          </path>
 
-         <target name="init"/>
+         <target name="init">
+           <xsl:for-each select="module/project[contains(@name,'cocoon-block-')]">
+             <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')" />
+             <condition property="unless.exclude.block.{$block-name}">
+               <istrue value="{string('${exclude.block.')}{$block-name}{string('}')}"/>
+             </condition> 
+           </xsl:for-each>
+         </target>
 
          <xsl:apply-templates select="module" />
       </project>
@@ -58,9 +65,9 @@
    <xsl:template match="project">
       <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')" />
 
-      <target name="{@name}" unless="exclude.block.{$block-name}"/>
-
-      <target name="{@name}-compile" unless="exclude.block.{$block-name}">
+      <target name="{@name}" unless="unless.exclude.block.{$block-name}"/>
+      
+      <target name="{@name}-compile" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-compile</xsl:for-each></xsl:attribute>
          </xsl:if>
@@ -82,7 +89,7 @@
          <antcall target="{$block-name}-compile"/>
       </target>
 
-      <target name="{@name}-patch" unless="exclude.block.{$block-name}">
+      <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:attribute>
          </xsl:if>
@@ -90,7 +97,7 @@
          <antcall target="{$block-name}-patches"/>
       </target>
       
-      <target name="{@name}-samples" unless="exclude.block.{$block-name}">
+      <target name="{@name}-samples" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-samples</xsl:for-each></xsl:attribute>
          </xsl:if>
@@ -101,7 +108,7 @@
          <antcall target="{$block-name}-samples"/>
       </target>
       
-      <target name="{@name}-lib" unless="exclude.block.{$block-name}">
+      <target name="{@name}-lib" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
             <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-lib</xsl:for-each></xsl:attribute>
          </xsl:if>
