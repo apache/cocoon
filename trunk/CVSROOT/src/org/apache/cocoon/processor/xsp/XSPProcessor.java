@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.35 2000-12-22 11:51:09 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.36 2001-01-09 18:30:36 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.35 $ $Date: 2000-12-22 11:51:09 $
+ * @version $Revision: 1.36 $ $Date: 2001-01-09 18:30:36 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -200,8 +200,8 @@ public class XSPProcessor extends AbstractActor
           + repositoryFile
           + ". Make sure it's there or you have writing permissions.<br>"
           + "In case this path is relative we highly suggest you to"
-          + "change this to an absolute path so you can control its location directly"
-          + "and provide valid access rights." );
+          + " change this to an absolute path so you can control its location directly"
+          + " and provide valid access rights." );
       }
     }
 
