@@ -1228,7 +1228,7 @@
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
-      <property name="block-name" value="paranoid"/>
+      <property name="block-name" value="xsp"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
 
