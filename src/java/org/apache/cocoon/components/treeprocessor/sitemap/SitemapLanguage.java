@@ -89,7 +89,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         Environment env = EnvironmentHelper.getCurrentEnvironment();
         newContext.put(Constants.CONTEXT_ENV_URI, env.getURI());
         newContext.put(Constants.CONTEXT_ENV_PREFIX, env.getURIPrefix());
-        // FIXME How to get rif of EnvironmentHelper?
+        // FIXME How to get rid of EnvironmentHelper?
         newContext.put(Constants.CONTEXT_ENV_HELPER, getProcessor().getWrappingProcessor().getEnvironmentHelper());
         return newContext;
     }
@@ -118,6 +118,9 @@ public class SitemapLanguage extends DefaultTreeBuilder {
      */
     public static final String LAST_POS_LABEL = "!last!";
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public void recycle() {
         super.recycle();
 
