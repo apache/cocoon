@@ -31,7 +31,7 @@ import org.apache.cocoon.kernel.composition.Wire;
 /**
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class WirableConnection implements Component, Connection {
 
@@ -83,6 +83,15 @@ public class WirableConnection implements Component, Connection {
             this.wire.dispose();
             throw (exception);
         }
+    }
+
+    /**
+     * <p>Return the orignal (nested) connection instance.</p>
+     *
+     * @returns a <b>non null</b> {@link Connection} instance.:
+     */
+    protected Connection getConnection() {
+        return(this.connection);
     }
 
     /* ====================================================================== */

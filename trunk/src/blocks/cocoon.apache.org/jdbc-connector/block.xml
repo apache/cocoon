@@ -1,5 +1,9 @@
-<interface xmlns="http://apache.org/cocoon/blocks/descriptor/1.0"
-           id="http://cocoon.apache.org/blocks/jdbc-connector/1.0.0">
+<block xmlns="http://apache.org/cocoon/blocks/descriptor/1.0"
+       id="http://cocoon.apache.org/blocks/jdbc-connector/1.0.0">
+
+  <implementations>
+    <implements block="http://cocoon.apache.org/blocks/jdbc-connection/1.0"/>
+  </implementations>
 
   <name>JDBC Connector</name>
 
@@ -15,10 +19,10 @@
 
   <author href="http://www.vnunet.com/">Pier Fumagalli</author>
 
-  <provides class="org.apache.cocoon.blocks.jdbc.WirableConnection"/>
+  <provides composer="org.apache.cocoon.blocks.jdbc.ConnectionComposer"/>
 
   <libraries>
     <library url="protected.jar" access="protected"/>
   </libraries>
 
-</interface>
+</block>
