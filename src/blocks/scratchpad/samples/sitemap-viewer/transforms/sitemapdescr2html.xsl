@@ -401,7 +401,7 @@
                 </xsl:choose>
                 <xsl:choose>
                     <xsl:when test="name()='serialize' or name()='act' or name()='call'"><xsl:value-of select="name()"/></xsl:when>
-                    <xsl:when test="name()='transform'">xlst</xsl:when>
+                    <!--xsl:when test="name()='transform'">xslt</xsl:when-->
                 </xsl:choose>
             </td></tr>
           <tr class="comments">
@@ -433,7 +433,7 @@
                             <xsl:value-of select="@parameter"/>
                         </xsl:when>
                         <xsl:when test="@*">
-                            <xsl:for-each select="@*[name()!='pattern' and name()!='@src' and name()!='ref']">
+                            <xsl:for-each select="@*[name()!='pattern' and name()!='src' and name()!='ref']">
                                 <xsl:value-of select="concat(name(),'=',.)"/>
                                 <xsl:if test="position()>1"><br/></xsl:if>
                             </xsl:for-each>
