@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-12 16:00:58 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-16 16:04:44 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composer, Contextualizable {
 
@@ -174,6 +174,6 @@ public class Manager extends AbstractLoggable implements Configurable, Composer,
             throws Exception {
         environment.changeContext(uri_prefix, source);
         if (! sitemapHandler.available())
-            throw new ProcessingException("The sitemap handler's sitemap is not available.");
+            throw new ProcessingException("The sitemap handler's sitemap is not available.", sitemapHandler.getException());
     }
 }

@@ -43,7 +43,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-13 16:02:25 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-16 16:04:43 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Contextualizable, Processor, Disposable {
     private Context context;
@@ -217,6 +217,10 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
 
     public void throwEventualException() throws Exception {
         if (this.exception != null) throw this.exception;
+    }
+
+    public Exception getException() {
+        return this.exception;
     }
 
     /**
