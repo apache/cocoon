@@ -306,7 +306,7 @@ select="@project"/>-tests</xsl:for-each></xsl:attribute>
             <classpath refid="{$block-name}.classpath"/>
             <classpath>
                <pathelement location="{string('${build.test}')}"/>
-               <pathelement location="${tools.lib}" />
+               <pathelement location="{string('${tools.lib}')}"/>
             </classpath>
          </javac>
 
@@ -316,7 +316,7 @@ select="@project"/>-tests</xsl:for-each></xsl:attribute>
                <pathelement path="{string('${java.class.path}')}"/>
                <pathelement location="{string('${build.test}')}"/>
                <pathelement location="{string('${build.blocks}')}/{$block-name}/test"/>
-               <pathelement location="${tools.lib}" />
+               <pathelement location="{string('${tools.lib}')}"/>
             </classpath>
             <formatter type="plain" usefile="no"/>
             <batchtest>
