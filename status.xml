@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
+    Apply patch: Add support for calling webservices from within Flowscript.
+   </action>   
    <action dev="TC" type="fix" fixes-bug="31545">
     Throw a more meaningful exception if charset classes are missing
    </action>
