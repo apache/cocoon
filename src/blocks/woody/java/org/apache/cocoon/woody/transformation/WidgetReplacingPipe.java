@@ -215,6 +215,21 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 String[] namesToTranslate = {"action"};
                 Attributes transAtts = translateAttributes(attributes, namesToTranslate);
                 contentHandler.startElement(Constants.WI_NS , FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL, transAtts);
+
+            } else if (localName.equals("continuation-id")){
+                // Insert the continuation id
+                // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
+                Object idObj = pipeContext.getJXPathContext().getValue("$continuation/id");
+                if (idObj == null) {
+                    throw new SAXException("No continuation found");
+                }
+                
+                String id = idObj.toString();
+                contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
+                contentHandler.startElement(Constants.WI_NS, "continuation-id", Constants.WI_PREFIX_COLON + "continuation-id", attributes);
+                contentHandler.characters(id.toCharArray(), 0, id.length());
+                contentHandler.endElement(Constants.WI_NS, "continuation-id", Constants.WI_PREFIX_COLON + "continuation-id");
+                contentHandler.endPrefixMapping(Constants.WI_PREFIX);
             } else {
                 throw new SAXException("Unsupported WoodyTemplateTransformer element: " + localName);
             }
@@ -346,8 +361,8 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             contextWidget = null;
             contentHandler.endElement(Constants.WI_NS, FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
             contentHandler.endPrefixMapping(Constants.WI_PREFIX);
-        } else {
-            super.endElement(namespaceURI, localName, qName);
+        } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals("continuation-id")) {
+            // nothing
         }
         elementNestingCounter--;
     }
