@@ -27,14 +27,14 @@ import org.apache.cocoon.environment.SourceResolver;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.17 2004/03/08 13:57:35 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.18 2004/03/12 15:25:17 cziegeler Exp $
  */
 public interface Processor {
 
     /** The role of the root processor */
     String ROLE = Processor.class.getName();
 
-    public class InternalPipelineDescription {
+    public static class InternalPipelineDescription {
         
         public InternalPipelineDescription(ProcessingPipeline pp, ServiceManager s) {
             this.processingPipeline = pp;
