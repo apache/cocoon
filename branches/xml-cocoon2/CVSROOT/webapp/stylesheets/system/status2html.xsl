@@ -7,7 +7,7 @@
   <xsl:template match="status:statusinfo">
     <html>
       <head>
-        <title>Cocoon2 status [<xsl:value-of select="@host"/>]</title>
+        <title>Cocoon2 status [<xsl:value-of select="@status:host"/>]</title>
       </head>
       <body bgcolor="white">
 
@@ -22,7 +22,7 @@
       </td>
       <td bgcolor="#0086b2" valign="top" align="right">
        <FONT face="arial,helvetica,sanserif" color="#ffffff">
-	[<xsl:value-of select="@host"/>] <xsl:value-of select="@date"/>
+	[<xsl:value-of select="@status:host"/>] <xsl:value-of select="@status:date"/>
        </FONT>
       </td>
     </tr>
@@ -49,7 +49,7 @@
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left" colspan="2">
        <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+1">
-        -<xsl:value-of select="@name"/>
+        -<xsl:value-of select="@status:name"/>
        </FONT>
       </td>
     </tr>
@@ -75,7 +75,7 @@
     <tr>
       <td bgcolor="#0086b2" valign="top" align="left">
        <FONT face="arial,helvetica,sanserif" color="#ffffff">
-        <xsl:value-of select="@name"/>
+        <xsl:value-of select="@status:name"/>
        </FONT>
       </td>
       <td bgcolor="ffffff" width="100%">
