@@ -19,6 +19,10 @@
   The newly added test file will be picked up and executed
   auto-magically.
 
+  For block-specific tests, create anteater scripts in a subdirectory
+  called "test/anteater", for example src/blocks/batik/test/anteater
+  for the batik block.
+
   -->
 
 <project name="all-tests" default="all">
@@ -27,7 +31,15 @@
   <typedef resource="META-INF/Anteater.types"/>
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
+  <property name="cocoon.base.dir" value="../../../.."/>
+
   <target name="init">
+    <!-- use build.properties as in the main build file, for example to selectively disable tests -->
+    <property file="${user.home}/cocoon.build.properties"/>
+    <property file="${cocoon.base.dir}/local.build.properties"/>
+    <property file="${cocoon.base.dir}/build.properties"/>
+
+    <echo>test init ${anteater.target.host}</echo>
     <property name="cocoon" value="http://${host}:${port}/${base}"/>
     <property name="src-webapp-dir" value="../../../../src/webapp"/>
     <property name="deploy-dir" value="../../../../build/webapp"/>
