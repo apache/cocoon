@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
-<!-- Author: Nicola Ken Barozzi "nicolaken@apache.org" -->
-<!-- Author: Vadim Gritsenko "vgritsenko@apache.org" -->
-<!-- Author: Christian Haul "haul@apache.org" -->
+
+<!--+
+    | Covert samples file to the HTML page. Uses styles/main.css stylesheet.
+    |
+    | Author: Nicola Ken Barozzi "nicolaken@apache.org"
+    | Author: Vadim Gritsenko "vgritsenko@apache.org"
+    | Author: Christian Haul "haul@apache.org"
+    | CVS $Id: simple-samples2html.xsl,v 1.4 2003/05/06 19:23:51 vgritsenko Exp $
+    +-->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <xsl:param name="contextPath" select="string('/cocoon')"/>
@@ -9,42 +16,45 @@
  <xsl:template match="/">
   <html>
    <head>
-    <title>Apache Cocoon @version@</title>
-    <link rel="SHORTCUT ICON" href="favicon.ico"/>
+     <title>Apache Cocoon 2.1-M2-dev</title>
+     <link rel="SHORTCUT ICON" href="favicon.ico"/>
+     <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
    </head>
-   <body bgcolor="#ffffff" link="#0086b2" vlink="#00698c" alink="#743e75">
+   <body>
     <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
-     <tr>
-      <td width="*"><font face="arial,helvetica,sanserif" color="#000000">The Apache Software Foundation is proud to present...</font></td>
-      <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
-      <td width="30%" align="center"><font face="arial,helvetica,sanserif" color="#000000"><b>version @version@</b></font></td>
-     </tr>
-     <tr>
-       <table bgcolor="#000000" border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
-         <tr>
-            <td width="60%" bgcolor="#0086b2">
-              <font size="+1" face="arial,helvetica,sanserif" color="#ffffff"><xsl:value-of select="samples/@name"/></font>
-            </td>
-            <td align="right" bgcolor="#0086b2"><i>orthogonal views: </i></td>
-            <td nowrap="nowrap" bgcolor="#ffffff"><a href="?cocoon-view=content"><i>content</i></a></td>
-            <td nowrap="nowrap" bgcolor="#ffffff"><a href="?cocoon-view=pretty-content"><i>pretty content</i></a></td>
-            <td nowrap="nowrap" bgcolor="#ffffff"><a href="?cocoon-view=links"><i>links</i></a></td>
-          </tr>
-       </table>
-     </tr>
+      <tr>
+        <td width="*">The Apache Software Foundation is proud to present...</td>
+        <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
+        <td width="30%" align="center">Version: <b>@version@</b></td>
+      </tr>
+    </table>
+
+    <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
+      <tr>
+        <td width="75%">
+          <h2><xsl:value-of select="samples/@name"/></h2>
+        </td>
+        <td nowrap="nowrap" align="right">
+          Orthogonal views:
+          <a href="?cocoon-view=content">Content</a>
+          &#160;
+          <a href="?cocoon-view=pretty-content">Pretty content</a>
+          &#160;
+          <a href="?cocoon-view=links">Links</a>
+        </td>
+      </tr>
     </table>
 
     <xsl:apply-templates select="samples"/>
 
-    <p align="center">
-     <font size="-1">
-      Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.<br/>
+    <p class="copyright">
+      Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
       All rights reserved.
-     </font>
     </p>
    </body>
   </html>
  </xsl:template>
+
 
  <xsl:template match="samples">
   <xsl:variable name="gc" select="4"/><!-- group correction -->
@@ -103,82 +113,36 @@
     <xsl:value-of select="substring-before($half-possibilities, ' ')"/>
   </xsl:variable>
 
-  <table width="100%">
-   <tr>
-    <td width="50%" valign="top">
-     <xsl:for-each select="group">  
-      <xsl:variable name="group-position" select="position()"/>
-
-      <xsl:choose>
-       <xsl:when test="$group-position &lt;= $half">
-       <table border="0" bgcolor="#000000" cellpadding="0" cellspacing="0" width="97%">
-        <tbody>
-         <tr>
-          <td>
-
-        <table bgcolor="#000000" border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
-         <tr>
-          <td bgcolor="#0086b2" width="100%" align="left">
-           <font size="+1" face="arial,helvetica,sanserif" color="#ffffff"><xsl:value-of select="@name"/></font>
-          </td>
-         </tr>
-         <tr>
-          <td width="100%" bgcolor="#ffffff" align="left">
-           <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2"  width="100%" align="center">
-            <xsl:apply-templates/>
-           </table>
-          </td>
-         </tr>
-        </table>
-        
-          </td>
-         </tr>        
-         </tbody>
-        </table>
-        
-        <br/>
-       </xsl:when>
-       <xsl:otherwise></xsl:otherwise>
-      </xsl:choose>
-     </xsl:for-each>
-    </td>
-    <td valign="top">
-     <xsl:for-each select="group">  <!-- [position()<=$half] -->
-      <xsl:variable name="group-position" select="position()"/>
-
-      <xsl:choose>
-       <xsl:when test="$group-position &gt; $half">
-       <table border="0" bgcolor="#000000" cellpadding="0" cellspacing="0" width="97%">
-        <tbody>
-         <tr>
-          <td>       
-        <table bgcolor="#000000" border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
-         <tr>
-          <td bgcolor="#0086b2" width="100%" align="left">
-           <font size="+1" face="arial,helvetica,sanserif" color="#ffffff"><xsl:value-of select="@name"/></font>
-          </td>
-         </tr>
-         <tr>
-          <td width="100%" bgcolor="#ffffff" align="left">
-           <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2"  width="100%" align="center">
-            <xsl:apply-templates/>
-           </table>
-          </td>
-         </tr>
-        </table>
-         </td>
-         </tr>        
-         </tbody>
-        </table>
-        <br/>
-       </xsl:when>
-       <xsl:otherwise></xsl:otherwise>
-      </xsl:choose>
-     </xsl:for-each>
-    </td>
-   </tr>
+  <table width="100%" cellspacing="5">
+    <tr>
+      <td width="50%" valign="top">
+        <xsl:for-each select="group">  
+          <xsl:variable name="group-position" select="position()"/>
+          <xsl:choose>
+            <xsl:when test="$group-position &lt;= $half">
+              <h4 class="group"><xsl:value-of select="@name"/></h4>
+              <p><xsl:apply-templates/></p>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </td>
+      <td valign="top">
+        <xsl:for-each select="group">  <!-- [position()<=$half] -->
+          <xsl:variable name="group-position" select="position()"/>
+          <xsl:choose>
+            <xsl:when test="$group-position &gt; $half">
+              <h4 class="group"><xsl:value-of select="@name"/></h4>
+              <p><xsl:apply-templates/></p>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </td>
+    </tr>
   </table>
  </xsl:template>
+
  
  <xsl:template match="sample">
    <xsl:variable name="link">
@@ -191,24 +155,16 @@
        </xsl:otherwise>
      </xsl:choose>
    </xsl:variable>
-   <tr>
-     <td width="100%" bgcolor="#ffffff" align="left">
-       <font size="+0" face="arial,helvetica,sanserif" color="#000000">    
-       <a href="{$link}"><xsl:value-of select="@name"/></a><xsl:text> - </xsl:text>
-       <xsl:value-of select="."/>
-     </font>
-   </td>
-  </tr>
+
+   <a href="{$link}"><xsl:value-of select="@name"/></a><xsl:text> - </xsl:text>
+   <xsl:value-of select="."/>
+   <br/>
  </xsl:template>
+
  
  <xsl:template match="note">
-  <tr>
-   <td width="100%" bgcolor="#ffffff" align="left">
-    <font size="+0" face="arial,helvetica,sanserif" color="#000000">    
-      <xsl:value-of select="."/>
-    </font>
-   </td>
-  </tr>
+   <xsl:value-of select="."/>
+   <br/>
  </xsl:template>
 
 </xsl:stylesheet>
