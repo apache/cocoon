@@ -184,15 +184,15 @@
 &lt;/component&gt;
 			    </source>
             </section>
-            <!--
+
             <section>
                 <title>Samples</title>
                 <p>
                     Now you should take a look at the samples to show you how the API of the 
-           		    <link href="cron.xsp.html"><code>JobScheduler</code></link> can be used.
+           		    <link href="cron.html"><code>JobScheduler</code></link> can be used.
            		</p>
             </section>
-            -->
+
         </section>
     </body>
 </document>
