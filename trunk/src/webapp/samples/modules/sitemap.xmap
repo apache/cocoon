@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.3 2003/03/26 21:21:48 stefano Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.4 2003/03/27 02:05:29 jefft Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -43,41 +43,41 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
 
       <map:match pattern="content/request.xsp">
         <map:generate type="serverpages" src="properties.xsp">
-          <map:parameter name="attribute-names" value="{request:attributeNames}"/>
-          <map:parameter name="auth-type" value="{request:authType}"/>
-          <map:parameter name="character-encoding" value="{request:characterEncoding}"/>
-          <map:parameter name="cookie-map" value="{request:cookieMap}"/>
+          <map:parameter name="attributeNames" value="{request:attributeNames}"/>
+          <map:parameter name="authType" value="{request:authType}"/>
+          <map:parameter name="characterEncoding" value="{request:characterEncoding}"/>
+          <map:parameter name="cookieMap" value="{request:cookieMap}"/>
           <map:parameter name="cookies" value="{request:cookies}"/>
-          <map:parameter name="content-length" value="{request:contentLength}"/>
-          <map:parameter name="content-type" value="{request:contentType}"/>
-          <map:parameter name="context-path" value="{request:contextPath}"/>
+          <map:parameter name="contentLength" value="{request:contentLength}"/>
+          <map:parameter name="contentType" value="{request:contentType}"/>
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
           <map:parameter name="headers" value="{request:headers}"/>
-          <map:parameter name="header-names" value="{request:header-names}"/>
+          <map:parameter name="headerNames" value="{request:headerNames}"/>
           <map:parameter name="locale" value="{request:locale}"/>
           <map:parameter name="locales" value="{request:locales}"/>
           <map:parameter name="method" value="{request:method}"/>
           <!--map:parameter name="parameter-map" value="{request:parameterMap}"/-->
-          <map:parameter name="parameter-names" value="{request:parameterNames}"/>
-          <map:parameter name="path-info" value="{request:pathInfo}"/>
-          <map:parameter name="path-translated" value="{request:pathTranslated}"/>
+          <map:parameter name="parameterNames" value="{request:parameterNames}"/>
+          <map:parameter name="pathInfo" value="{request:pathInfo}"/>
+          <map:parameter name="pathTranslated" value="{request:pathTranslated}"/>
           <map:parameter name="protocol" value="{request:protocol}"/>
-          <map:parameter name="query-string" value="{request:queryString}"/>
-          <map:parameter name="remote-addr" value="{request:remoteAddr}"/>
-          <map:parameter name="remote-host" value="{request:remoteHost}"/>
-          <map:parameter name="remote-user" value="{request:remoteUser}"/>
-          <map:parameter name="request-uri" value="{request:requestURI}"/>
-          <map:parameter name="requested-session-id" value="{request:requestedSessionId}"/>
-          <map:parameter name="requested-session-id-from-cookie" value="{request:requestedSessionIdFromCookie}"/>
-          <map:parameter name="requested-session-id-from-url" value="{request:requestedSessionIdFromURL}"/>
-          <map:parameter name="requested-session-id-valid" value="{request:requestedSessionIdValid}"/>
+          <map:parameter name="queryString" value="{request:queryString}"/>
+          <map:parameter name="remoteAddr" value="{request:remoteAddr}"/>
+          <map:parameter name="remoteHost" value="{request:remoteHost}"/>
+          <map:parameter name="remoteUser" value="{request:remoteUser}"/>
+          <map:parameter name="requestURI" value="{request:requestURI}"/>
+          <map:parameter name="requestedSessionId" value="{request:requestedSessionId}"/>
+          <map:parameter name="requestedSessionIdFromCookie" value="{request:requestedSessionIdFromCookie}"/>
+          <map:parameter name="requestedSessionIdFromURL" value="{request:requestedSessionIdFromURL}"/>
+          <map:parameter name="requestedSessionIdValid" value="{request:requestedSessionIdValid}"/>
           <map:parameter name="scheme" value="{request:scheme}"/>
           <map:parameter name="secure" value="{request:secure}"/>
-          <map:parameter name="server-name" value="{request:serverName}"/>
-          <map:parameter name="server-port" value="{request:serverPort}"/>
-          <map:parameter name="servlet-path" value="{request:servletPath}"/>
+          <map:parameter name="serverName" value="{request:serverName}"/>
+          <map:parameter name="serverPort" value="{request:serverPort}"/>
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="session [truncated]" value="{request:concat('org. ... .', substring(session, 36))}"/>
-          <map:parameter name="sitemap-uri" value="{request:sitemapURI}"/>
-          <map:parameter name="user-principal" value="{request:userPrincipal}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="userPrincipal" value="{request:userPrincipal}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="Request Input Module (RequestModule)"/>
@@ -87,10 +87,10 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
 
       <map:match pattern="content/session.xsp">
         <map:generate type="serverpages" src="properties.xsp">
-          <map:parameter name="attribute-names" value="{session:attributeNames}"/>
-          <map:parameter name="creation-time" value="{session:creationTime}"/>
-          <map:parameter name="last-accessed-time" value="{session:lastAccessedTime}"/>
-          <map:parameter name="max-inactive-interval" value="{session:maxInactiveInterval}"/>
+          <map:parameter name="attributeNames" value="{session:attributeNames}"/>
+          <map:parameter name="creationTime" value="{session:creationTime}"/>
+          <map:parameter name="lastAccessedTime" value="{session:lastAccessedTime}"/>
+          <map:parameter name="maxInactiveInterval" value="{session:maxInactiveInterval}"/>
           <map:parameter name="id" value="{session:id}"/>
           <map:parameter name="new" value="{session:new}"/>
         </map:generate>
