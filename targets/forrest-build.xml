@@ -138,8 +138,8 @@
       Then either:
 
       - Set FORREST_HOME as the Forrest build instructions describe
-      - Create a build.properties, with the forrest.home property pointing to
-        the forrest shbat directory, eg:
+      - Create a project.properties, with the forrest.home property
+        pointing to the forrest shbat directory, e.g.
 
         forrest.home=${winpath}  (Windows)
         forrest.home=${unixpath}  (Unix)
