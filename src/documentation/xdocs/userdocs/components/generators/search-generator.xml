@@ -254,9 +254,9 @@
    <search:hit rank="2" score="1.0"
      uri="http://localhost:8080/cocoon/documents/hosting.html"/>
    <search:hit rank="3" score="0.93121004"
-     uri="http://localhost:8080/cocoon/documents/userdocs/actions/actions.html"/>
+     uri="http://localhost:8080/cocoon/documents/userdocs/components/actions/actions.html"/>
    <search:hit rank="4" score="0.93121004"
-     uri="http://localhost:8080/cocoon/documents/userdocs/actions/actions.html"/>
+     uri="http://localhost:8080/cocoon/documents/userdocs/components/actions/actions.html"/>
    <search:hit rank="5" score="0.7112235"
      uri="http://localhost:8080/cocoon/documents/mail-archives.html"/>
    <search:hit rank="6" score="0.70967746"

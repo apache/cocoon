@@ -79,7 +79,7 @@
     Assume there is an action (named MyAction) that sets a parameter 
     (named MyRegion) to several possible values.  For more information on actions, 
     including a simple example of an action that creates a sitemap parameter, see
-    <link href="../concepts/actions.html">Creating and Using Actions</link>.
+    <link href="../../concepts/actions.html">Creating and Using Actions</link>.
    </p>
    <source><![CDATA[
    <map:match pattern="*.xml">
