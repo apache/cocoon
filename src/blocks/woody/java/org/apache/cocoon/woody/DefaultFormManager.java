@@ -63,12 +63,11 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.woody.CacheManager;
 import org.apache.cocoon.woody.formmodel.*;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
-import org.apache.commons.collections.FastHashMap;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.InputSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,13 +79,15 @@ public class DefaultFormManager
   extends AbstractLogEnabled 
   implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
       
+    protected static final String PREFIX = "WoodyForm:";
     protected ServiceManager manager;
     protected Configuration configuration;
     protected SimpleServiceSelector widgetDefinitionBuilderSelector;
-    protected FastHashMap formDefinitionCache = new FastHashMap();
+    protected CacheManager cacheManager;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
+        this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
     }
 
     /**
@@ -129,7 +130,7 @@ public class DefaultFormManager
     }
 
     public FormDefinition getFormDefinition(Source source) throws Exception {
-        FormDefinition formDefinition = getStoredFormDefinition(source);
+        FormDefinition formDefinition = (FormDefinition)this.cacheManager.get(source, PREFIX);
         if (formDefinition == null) {
             Document formDocument;
             try {
@@ -149,49 +150,9 @@ public class DefaultFormManager
 
             FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
             formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
-            storeFormDefinition(formDefinition, source);
+            this.cacheManager.set(formDefinition, source, PREFIX);
         }
         return formDefinition;
-    }
-
-    protected FormDefinition getStoredFormDefinition(Source source) {
-        String key = "WoodyForm:" + source.getURI();
-        SourceValidity newValidity = source.getValidity();
-
-        if (newValidity == null) {
-            formDefinitionCache.remove(key);
-            return null;
-        }
-
-        Object[] formDefinitionAndValidity = (Object[])formDefinitionCache.get(key);
-        if (formDefinitionAndValidity == null)
-            return null;
-
-        SourceValidity storedValidity = (SourceValidity)formDefinitionAndValidity[1];
-        int valid = storedValidity.isValid();
-        boolean isValid;
-        if (valid == 0) {
-            valid = storedValidity.isValid(newValidity);
-            isValid = (valid == 1);
-        } else {
-            isValid = (valid == 1);
-        }
-
-        if (!isValid) {
-            formDefinitionCache.remove(key);
-            return null;
-        }
-
-        return (FormDefinition)formDefinitionAndValidity[0];
-    }
-
-    protected void storeFormDefinition(FormDefinition formDefinition, Source source) throws IOException {
-        String key = "WoodyForm:" + source.getURI();
-        SourceValidity validity = source.getValidity();
-        if (validity != null) {
-            Object[] formDefinitionAndValidity = {formDefinition,  validity};
-            formDefinitionCache.put(key, formDefinitionAndValidity);
-        }
     }
 
     /**
@@ -200,6 +161,6 @@ public class DefaultFormManager
     public void dispose() {
         widgetDefinitionBuilderSelector.dispose();
         this.manager = null;
-        this.formDefinitionCache = null;
+        this.cacheManager = null;
     }
 }

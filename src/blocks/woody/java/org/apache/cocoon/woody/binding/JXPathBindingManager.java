@@ -57,14 +57,14 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.woody.CacheManager;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
-import org.apache.commons.collections.FastHashMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.w3c.dom.Document;
@@ -76,23 +76,23 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingManager.java,v 1.17 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.18 2004/02/05 21:29:17 tim Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled
         implements BindingManager, Serviceable, Disposable,
                    Initializable, Configurable, ThreadSafe {
 
+    private static final String PREFIX = "WoodyBinding:";
     private ServiceManager serviceManager;
     private DatatypeManager datatypeManager;
     private Configuration configuration;
     private SimpleServiceSelector bindingBuilderSelector;
-
-    protected static final String bindingKeyPrefix = "WoodyBinding:";
-    protected FastHashMap definitionCache = new FastHashMap();
+    private CacheManager cacheManager;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
         this.datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
+        this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -106,12 +106,8 @@ public class JXPathBindingManager extends AbstractLogEnabled
     }
 
     public Binding createBinding(Source source) throws BindingException {
-        return getBindingDefinition(source);
-    }
-
-    public Binding getBindingDefinition(Source source) throws BindingException {
-        Binding bindingDefinition = getStoredBindingDefinition(source);
-        if (bindingDefinition == null) {
+        Binding binding = (Binding)this.cacheManager.get(source, PREFIX);
+        if (binding == null) {
             try {
                 InputSource is = new InputSource(source.getInputStream());
                 is.setSystemId(source.getURI());
@@ -119,66 +115,20 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 Document doc = DomHelper.parse(is);
                 Element rootElm = doc.getDocumentElement();
                 if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
-                    bindingDefinition = getBuilderAssistant().getBindingForConfigurationElement(rootElm);
-                    ((JXPathBindingBase)bindingDefinition).enableLogging(getLogger());
-                    getLogger().debug("Creation of new Binding finished. " + bindingDefinition);
+                    binding = getBuilderAssistant().getBindingForConfigurationElement(rootElm);
+                    ((JXPathBindingBase)binding).enableLogging(getLogger());
+                    getLogger().debug("Creation of new Binding finished. " + binding);
                 } else {
                     getLogger().debug("Root Element of said binding file is in wrong namespace.");
                 }
-                storeBindingDefinition(bindingDefinition, source);
+                this.cacheManager.set(binding, source, PREFIX);
             } catch (BindingException e) {
                 throw e;
             } catch (Exception e) {
                 throw new BindingException("Error creating binding from " + source.getURI(), e);
             }
         }
-        return bindingDefinition;
-    }
-
-    protected Binding getStoredBindingDefinition(Source source) {
-        return getStoredDefinition(source, bindingKeyPrefix + source.getURI());
-    }
-
-    protected void storeBindingDefinition(Binding bindingDefinition, Source source) throws IOException {
-        storeDefinition(bindingDefinition, source, bindingKeyPrefix + source.getURI());
-    }
-
-    protected Binding getStoredDefinition(Source source, String key) {
-        SourceValidity newValidity = source.getValidity();
-
-        if (newValidity == null) {
-            definitionCache.remove(key);
-            return null;
-        }
-
-        Object[] definitionAndValidity = (Object[])definitionCache.get(key);
-        if (definitionAndValidity == null)
-            return null;
-
-        SourceValidity storedValidity = (SourceValidity)definitionAndValidity[1];
-        int valid = storedValidity.isValid();
-        boolean isValid;
-        if (valid == 0) {
-            valid = storedValidity.isValid(newValidity);
-            isValid = (valid == 1);
-        } else {
-            isValid = (valid == 1);
-        }
-
-        if (!isValid) {
-            definitionCache.remove(key);
-            return null;
-        }
-
-        return (Binding)definitionAndValidity[0];
-    }
-
-    protected void storeDefinition(Object definition, Source source, String key) throws IOException {
-        SourceValidity validity = source.getValidity();
-        if (validity != null) {
-            Object[] definitionAndValidity = {definition,  validity};
-            definitionCache.put(key, definitionAndValidity);
-        }
+        return binding;
     }
 
     private Assistant getBuilderAssistant() {
@@ -190,7 +140,7 @@ public class JXPathBindingManager extends AbstractLogEnabled
         this.bindingBuilderSelector = null;
         this.serviceManager.release(this.datatypeManager);
         this.datatypeManager = null;
-        this.definitionCache = null;
+        this.cacheManager = null;
     }
 
     /**
@@ -198,12 +148,12 @@ public class JXPathBindingManager extends AbstractLogEnabled
      * childBindings to recursively
      *
      * This patterns was chosen to prevent Inversion Of Control between
-     * this factory and its builder classes (that could be provided by third
-     * parties)
+     * this factory and its builder classes (that could be provided by
+     * third parties.)
      */
     /* NOTE: To get access to the logger in this inner class you must not call
      * getLogger() as with JDK 1.3 this gives a NoSuchMethod error. You need to
-     * implement an explicite access method for the logger in the outer class.
+     * implement an explicit access method for the logger in the outer class.
      */
     public class Assistant {
 
