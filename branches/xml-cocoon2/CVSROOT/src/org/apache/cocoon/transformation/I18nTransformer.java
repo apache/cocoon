@@ -9,6 +9,7 @@ package org.apache.cocoon.transformation;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -25,9 +26,13 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.acting.LangSelect;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
-import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.cocoon.util.HashUtil;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -48,13 +53,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * &lt;map:match pattern="file"&gt;<br>
  *        &lt;map:generate src="file.xml"/&gt;<br>
- *         &lt;map:transform type="translate"&gt;<br>
- *                &lt;parameter name="default_lang" value="fi"/&gt;<br>
- *                &lt;parameter name="available_lang_1" value="fi"/&gt;<br>
- *                &lt;parameter name="available_lang_2" value="en"/&gt;<br>
- *                &lt;parameter name="available_lang_3" value="sv"/&gt;<br>
- *                &lt;parameter name="src"<br>
- *                        value="translations/file_trans.xml"/&gt;<br>
+ *         &lt;map:transform type="translate"<br>
+ *                src"translations/file_trans.xml"&gt;<br>
  *        &lt;/map:transform&gt;<br>
  * </p>
  * <p>
@@ -99,7 +99,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
  */
-public class I18nTransformer extends AbstractTransformer implements Composable, Poolable {
+public class I18nTransformer extends AbstractTransformer implements Composable, Recyclable, Cacheable {
 
     protected ComponentManager manager;
 
@@ -123,6 +123,11 @@ public class I18nTransformer extends AbstractTransformer implements Composable, 
     protected boolean translate = false;
     protected boolean is_element = false;
     protected String lang;
+    protected String source;
+    /** The input source */
+    private InputSource inputSource;
+    /** The system ID of the input source */
+    private String      systemID;
 
     /**
      *  Uses <code>org.apache.cocoon.acting.LangSelect.getLang()</code>
@@ -134,18 +139,21 @@ public class I18nTransformer extends AbstractTransformer implements Composable, 
             Parameters parameters)
             throws ProcessingException, SAXException, IOException {
 
+        this.inputSource = resolver.resolveEntity(null, source);
+        this.systemID = this.inputSource.getSystemId();
+
         lang = (String)(objectModel.get("lang"));
         if (lang == null) {
             lang = LangSelect.getLang(objectModel, parameters);
         }
 
-        String translations_file = parameters.getParameter("src", null);
+        this.source = source;
 
         URL tr = null;
         URLFactory urlFactory = null;
         try {
             urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
-            tr = urlFactory.getURL(resolver.resolveEntity(null, translations_file).getSystemId());
+            tr = urlFactory.getURL(this.systemID);
         } catch (Exception e) {
             getLogger().error("cannot obtain the URLFactory", e);
             throw new SAXException("cannot obtain the URLFactory", e);
@@ -153,6 +161,33 @@ public class I18nTransformer extends AbstractTransformer implements Composable, 
             if (urlFactory != null) this.manager.release((Component)urlFactory);
         }
         initialiseDictionary(tr);
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        if (this.systemID.startsWith("file:") == true) {
+            return HashUtil.hash(this.source);
+        }
+        return 0;
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        if (this.systemID.startsWith("file:") == true) {
+            File xmlFile = new File(this.systemID.substring("file:".length()));
+            return new TimeStampCacheValidity(xmlFile.lastModified());
+        }
+        return null;
     }
 
 
@@ -340,5 +375,15 @@ public class I18nTransformer extends AbstractTransformer implements Composable, 
         } finally {
             if(parser != null) this.manager.release((Component) parser);
         }
+    }
+
+    /**
+     * Recycle this component.
+     * All instance variables are set to <code>null</code>.
+     */
+    public void recycle() {
+        super.recycle();
+        this.inputSource = null;
+        this.systemID = null;
     }
 }

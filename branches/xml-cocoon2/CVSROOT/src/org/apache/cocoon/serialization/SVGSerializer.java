@@ -10,16 +10,13 @@ package org.apache.cocoon.serialization;
 
 import java.awt.Color;
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.Map;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -30,7 +27,6 @@ import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.SVGBuilder;
@@ -38,7 +34,6 @@ import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.log.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -47,7 +42,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.38 $ $Date: 2001-05-04 00:31:28 $
+ * @version CVS $Revision: 1.1.2.39 $ $Date: 2001-05-04 13:38:18 $
  */
 public class SVGSerializer extends SVGBuilder
         implements Composable, Serializer, Configurable, Poolable, Cacheable {
@@ -213,7 +208,7 @@ public class SVGSerializer extends SVGBuilder
             TranscoderInput transInput = new TranscoderInput(doc);
             TranscoderOutput transOutput = new TranscoderOutput(this.output);
             transcoder.transcode(transInput, transOutput);
-            this.output.flush();
+            //this.output.flush();
         } catch (Exception ex) {
             log.error("SVGSerializer: Exception writing image", ex);
             throw new SAXException("Exception writing image ", ex);

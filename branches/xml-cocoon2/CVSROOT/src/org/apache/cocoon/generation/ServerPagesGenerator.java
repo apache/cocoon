@@ -12,17 +12,25 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.ParametersCacheValidity;
+import org.apache.cocoon.caching.CompositeCacheValidity;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;
 import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.util.HashUtil;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.xml.sax.Attributes;
@@ -38,11 +46,11 @@ import org.xml.sax.ext.LexicalHandler;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-30 14:17:24 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-05-04 13:38:03 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler, Recyclable, Disposable
+  implements ContentHandler, LexicalHandler, Recyclable, Disposable, Cacheable
 {
   /**
    * The sitemap-defined server pages program generator
@@ -50,6 +58,8 @@ public class ServerPagesGenerator
   protected static ProgramGenerator programGenerator = null;
 
   protected static URLFactory factory = null;
+
+  protected XSPGenerator generator = null;
 
   /**
    * Set the global component manager. This method sets the sitemap-defined
@@ -73,6 +83,32 @@ public class ServerPagesGenerator
   }
 
   /**
+   * Generates the unique key.
+   * This key must be unique inside the space of this component.
+   * Users may override this method to take
+   * advantage of SAX event cacheing
+   *
+   * @return A long representing the cache key (defaults to not cachable)
+   */
+  public long generateKey() {
+    return HashUtil.hash(this.source + generator.generateKey());
+  }
+
+  /**
+   * Generate the validity object.
+   * 
+   * @return The generated validity object or <code>null</code> if the
+   *         component is currently not cachable.
+   */
+  public CacheValidity generateValidity() {
+    CacheValidity genValidity = generator.generateValidity();
+    HashMap map = new HashMap (1);
+    map.put("source", this.source);
+    ParametersCacheValidity pcv = new ParametersCacheValidity(map);
+    return new CompositeCacheValidity(genValidity, pcv);
+  }
+
+  /**
    * The loaded generator's <code>MarkupLanguage</code>
    */
   protected String markupLanguage;
@@ -92,19 +128,11 @@ public class ServerPagesGenerator
    */
   public final static String DEFAULT_PROGRAMMING_LANGUAGE = "java";
 
+  public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+      throws ProcessingException, SAXException, IOException {
 
-  /**
-   * Generate XML data. This method loads a server pages generator associated
-   * with its (file) input source and delegates SAX event generator to it
-   * taking care of "closing" any event left open by the loaded generator as a
-   * result of its possible "premature" return (a common situation in server
-   * pages)
-   *
-   * @exception IOException IO Error
-   * @exception SAXException SAX event generation error
-   * @exception ProcessingException Error during load/execution
-   */
-  public void generate() throws IOException, SAXException, ProcessingException {
+    super.setup(resolver, objectModel, src, par);
+
     InputSource inputSource = this.resolver.resolveEntity(null, this.source);
 
     String systemId = inputSource.getSystemId();
@@ -130,8 +158,6 @@ public class ServerPagesGenerator
         );
     }
 
-    XSPGenerator generator = null;
-
     try {
       generator = (XSPGenerator)
         programGenerator.load(file, this.markupLanguage, this.programmingLanguage, this.resolver);
@@ -139,10 +165,24 @@ public class ServerPagesGenerator
       getLogger().warn("ServerPagesGenerator.generate()", e);
       throw new ResourceNotFoundException(e.getMessage(), e);
     }
+    generator.setup(this.resolver, this.objectModel, this.source, this.parameters);
+  }
+
+  /**
+   * Generate XML data. This method loads a server pages generator associated
+   * with its (file) input source and delegates SAX event generator to it
+   * taking care of "closing" any event left open by the loaded generator as a
+   * result of its possible "premature" return (a common situation in server
+   * pages)
+   *
+   * @exception IOException IO Error
+   * @exception SAXException SAX event generation error
+   * @exception ProcessingException Error during load/execution
+   */
+  public void generate() throws IOException, SAXException, ProcessingException {
 
     generator.setContentHandler(this);
     generator.setLexicalHandler(this);
-    generator.setup(this.resolver, this.objectModel, this.source, this.parameters);
 
     // log exception and ensure that generator is released.
     try {
@@ -404,6 +444,14 @@ public class ServerPagesGenerator
     protected String getSystemId() { return this.systemId; }
     protected String getName() { return this.name; }
   }
+
+    /**
+     * Recycle the generator by removing references
+     */
+    public void recycle() {
+        super.recycle();
+        this.generator = null;
+    }
 
     /**
      * dispose

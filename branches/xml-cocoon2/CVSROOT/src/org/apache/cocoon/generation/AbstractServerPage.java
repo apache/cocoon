@@ -8,6 +8,8 @@
 package org.apache.cocoon.generation;
 
 import java.io.File;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.environment.Request;
 import org.xml.sax.SAXException;
@@ -18,10 +20,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:07:35 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-05-04 13:37:58 $
  */
 public abstract class AbstractServerPage
-  extends ServletGenerator implements CompiledComponent
+  extends ServletGenerator implements CompiledComponent, Cacheable
 {
   /**
    * Code generators should produce a static
@@ -74,6 +76,28 @@ public abstract class AbstractServerPage
    */
   public boolean hasContentChanged(Request request) {
     return true;
+  }
+
+  /**
+   * Generates the unique key.
+   * This key must be unique inside the space of this component.
+   * Users may override this method to take
+   * advantage of SAX event cacheing
+   *
+   * @return A long representing the cache key (defaults to not cachable)
+   */
+  public long generateKey() {
+    return 0;
+  }
+
+  /**
+   * Generate the validity object.
+   * 
+   * @return The generated validity object or <code>null</code> if the
+   *         component is currently not cachable.
+   */
+  public CacheValidity generateValidity() {
+    return null;
   }
 
   // FIXME: Add more methods!
