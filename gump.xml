@@ -804,7 +804,6 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="ws-axis"/>
-    <depend project="excalibur-util"/>
     <depend project="wsdl4j"/>
     <depend project="commons-discovery"/>
     <depend project="jakarta-servletapi"/>
@@ -812,7 +811,6 @@
     <library name="axis"/>
     <library name="axis-saaj"/>
     <library name="axis-jaxrpc"/>
-    <library name="excalibur-util"/>
     <library name="wsdl4j"/>
     <library name="commons-discovery"/>
     <library name="servlet"/>
