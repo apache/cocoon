@@ -34,7 +34,6 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import javax.xml.transform.sax.TransformerHandler;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,9 +49,9 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: Logicsheet.java,v 1.2 2004/05/17 11:21:08 unico Exp $
+ * @version CVS $Id: Logicsheet.java,v 1.3 2004/05/17 13:44:47 unico Exp $
  */
-public class Logicsheet extends AbstractLogEnabled implements Serializable
+public class Logicsheet extends AbstractLogEnabled
 {
     /**
      * The Source Resolver object for this logicsheet.
