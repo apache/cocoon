@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,11 +30,10 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @version CVS $Id: CallNodeBuilder.java,v 1.3 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-
 public class CallNodeBuilder extends AbstractProcessingNodeBuilder
-  implements LinkedProcessingNodeBuilder {
+                             implements LinkedProcessingNodeBuilder {
 
     protected ProcessingNode node;
     protected String resourceName;
@@ -42,8 +41,7 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
     protected String continuationId;
 
     public ProcessingNode buildNode(Configuration config)
-        throws Exception
-    {
+    throws Exception {
         resourceName = config.getAttribute("resource", null);
         functionName = config.getAttribute("function", null);
         continuationId = config.getAttribute("continuation", null);
@@ -60,7 +58,7 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
                 VariableResolverFactory.getResolver(functionName, this.manager),
                 VariableResolverFactory.getResolver(continuationId, this.manager)
             );
-            
+
         } else {
             // Building a Call(Resource)Node
             if (functionName != null || continuationId != null) {
@@ -73,7 +71,7 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
         }
 
         this.treeBuilder.setupNode(this.node, config);
-        if (node instanceof Configurable) 
+        if (node instanceof Configurable)
             ((Configurable)this.node).configure(config);
 
         return this.node;

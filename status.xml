@@ -205,6 +205,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="update">
+     Flow invocations (function calls or continuation invocations) should always
+     result in a response. Flowscripts with no response are prohibited.
+   </action>
    <action dev="CZ" type="add" due-to="Juergen Seitz" due-to-email="Juergen.Seitz@Basf-It-Services.Com">
      Portal block: Apply batch for configuring the type handling in the Castor converter.
    </action>
@@ -223,9 +227,9 @@
    <action dev="TC" type="fix" fixes-bug="31545">
     Throw a more meaningful exception if charset classes are missing
    </action>
-    <action dev="TC" type="fix" fixes-bug="30874">
+   <action dev="TC" type="fix" fixes-bug="30874">
      Fixes the SQLTransformer not to close the statement twice
-    </action>
+   </action>
    <action dev="TC" type="fix" fixes-bug="30994">
      Change constructor to be public in order to fix bug 30270
    </action>
