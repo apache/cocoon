@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: authenticate.xsl,v 1.1 2003/03/09 00:02:24 pier Exp $ 
+<!-- $Id: authenticate.xsl,v 1.2 2003/05/03 16:17:59 vgritsenko Exp $ 
 
 -->
 
