@@ -145,7 +145,7 @@ public class MountNode extends AbstractProcessingNode
                 actualSource = source;
             }
 
-            processor = this.parentProcessor.createChildProcessor(this.manager, actualSource);
+            processor = this.parentProcessor.createChildProcessor(this.manager, actualSource, this.checkReload);
 
             // Associate to the original source
             processors.put(source, processor);

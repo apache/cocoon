@@ -139,12 +139,14 @@ public class TreeProcessor
      * @return a new child processor.
      */
     public TreeProcessor createChildProcessor(ComponentManager manager,
-                                              String           actualSource)
+                                              String           actualSource,
+                                              boolean          checkReload)
     throws Exception {
 
         // Note: lifecycle methods aren't called, since this constructors copies all
         // that can be copied from the parent (see above)
         TreeProcessor child = new TreeProcessor(this, manager);
+        child.checkReload = checkReload;
         child.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
         child.source = new DelayedRefreshSourceWrapper(child.resolver.resolveURI(actualSource), lastModifiedDelay);
         

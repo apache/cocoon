@@ -246,7 +246,7 @@ implements Processor, Disposable {
                     CocoonComponentManager.leaveEnvironment();
                     // Restore old redirector and resolver
      	            context.setRedirector(oldRedirector);
-                    objectModel.put(PipelinesNode.OBJECT_SOURCE_RESOLVER, oldResolver);
+                    objectModel.put(ProcessingNode.OBJECT_SOURCE_RESOLVER, oldResolver);
     	        }
 
     		} finally {

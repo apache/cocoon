@@ -154,11 +154,11 @@ public class PipelineNode
             } else if (error404 != null && ex instanceof ResourceNotFoundException) {
                 // Invoke 404-specific handler
                 handledErrorsLogger.error(ex.getMessage(), ex);
-                return errorHandlerHelper.invokeErrorHandler(error404, ex, env);
+                return errorHandlerHelper.invokeErrorHandler(error404, ex, env, context);
             } else if (error500 != null) {
                 // Invoke global handler
                 handledErrorsLogger.error(ex.getMessage(), ex);
-                return errorHandlerHelper.invokeErrorHandler(error500, ex, env);
+                return errorHandlerHelper.invokeErrorHandler(error500, ex, env, context);
             } else {
                 // No handler : propagate
                 throw ex;
