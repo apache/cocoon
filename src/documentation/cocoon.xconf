@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cocoon version="2.1">
 
-<!-- ================ Apache Cocoon configuration file ================== -->
-<!-- For full description of the components and their parameters ...
+<!-- For full description of the components and their parameters, see ...
      - Apache Cocoon User Documentation at /userdocs/
-     - webapp/WEB-INF/cocoon.xconf (this file) - describes each core component
+     - webapp/WEB-INF/cocoon.xconf - describes each core component in detail
      - each optional component/.../*.xconf - these describe the parameters
      for each component and are automatically included at build-time.
 
