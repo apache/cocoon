@@ -176,7 +176,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * Interpretes the value of the lenient attribute into a Boolean object
          * allowing three-state logic (true/false/unset)
          * @param leniency value of the @lenient attribute
-         * @return null if the leniency parameter is is null or a String otherwise the allowed values
+         * @return null if the leniency parameter is null or a String otherwise the allowed values
          */
         private static Boolean decideLeniency(String leniency) {
             return BooleanUtils.toBooleanObject(leniency);
