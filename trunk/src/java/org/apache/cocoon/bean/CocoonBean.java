@@ -99,27 +99,22 @@ public class CocoonBean
     private boolean m_alreadyLoaded;
     private Map m_properties;
 
-    public CocoonBean()
-    {
+    public CocoonBean() {
         m_confBuilder = new FortressConfig();
         m_parentClassLoader = Thread.currentThread().getContextClassLoader();
         m_initializationLogger = new NullLogger();
-        m_contManager = null;
         m_alreadyLoaded = false;
         m_properties = new HashMap();
     }
 
-    public CompilingProcessor getRootProcessor()
-    {
+    public CompilingProcessor getRootProcessor() {
+        // TODO - the rootProcessor is never released
         ServiceManager manager = getServiceManager();
 
         CompilingProcessor rootProcessor = null;
-        try
-        {
+        try {
             rootProcessor = (CompilingProcessor)manager.lookup( CompilingProcessor.ROLE);
-        }
-        catch ( ServiceException e )
-        {
+        } catch ( ServiceException e ) {
             throw new CascadingRuntimeException("Error retrieving root processor", e);
         }
 
@@ -127,14 +122,10 @@ public class CocoonBean
     }
 
     protected ServiceManager getServiceManager(){
-        if (null == m_contManager)
-        {
-            try
-            {
+        if (null == m_contManager) {
+            try {
                 initialize();
-            }
-            catch ( Exception e )
-            {
+            } catch ( Exception e ) {
                 throw new CascadingRuntimeException("Error starting up container", e);
             }
         }
@@ -145,145 +136,115 @@ public class CocoonBean
     }
 
 
-    public Logger getInitializationLogger()
-    {
+    public Logger getInitializationLogger() {
         return m_initializationLogger;
     }
 
-    public void setInitializationLogger( Logger initializationLogger )
-    {
+    public void setInitializationLogger( Logger initializationLogger ) {
         m_initializationLogger = initializationLogger;
     }
 
-    public File getWorkDirectory()
-    {
+    public File getWorkDirectory() {
         return m_workDirectory;
     }
 
-    public void setWorkDirectory( File workDirectory )
-    {
+    public void setWorkDirectory( File workDirectory ) {
         m_workDirectory = workDirectory;
     }
 
-    public int getThreadsPerCPU()
-    {
+    public int getThreadsPerCPU() {
         return m_threadsPerCPU;
     }
 
-    public void setThreadsPerCPU( int threadsPerCPU )
-    {
+    public void setThreadsPerCPU( int threadsPerCPU ) {
         m_threadsPerCPU = threadsPerCPU;
     }
 
-    public ClassLoader getParentClassLoader()
-    {
+    public ClassLoader getParentClassLoader() {
         return m_parentClassLoader;
     }
 
-    public void setParentClassLoader( ClassLoader parentClassLoader )
-    {
+    public void setParentClassLoader( ClassLoader parentClassLoader ) {
         m_parentClassLoader = parentClassLoader;
     }
 
-    public long getThreadTimeOut()
-    {
+    public long getThreadTimeOut() {
         return m_threadTimeOut;
     }
 
-    public void setThreadTimeOut( long threadTimeOut )
-    {
+    public void setThreadTimeOut( long threadTimeOut ) {
         m_threadTimeOut = threadTimeOut;
     }
 
-    public String getContextURI()
-    {
+    public String getContextURI() {
         return m_contextURI;
     }
 
-    public void setContextURI( String contextURI )
-    {
+    public void setContextURI( String contextURI ) {
         m_contextURI = contextURI;
     }
 
-    public String getInstrumentConfigURI()
-    {
+    public String getInstrumentConfigURI() {
         return m_instrumentConfigURI;
     }
 
-    public void setInstrumentConfigURI( String instrumentConfigURI )
-    {
+    public void setInstrumentConfigURI( String instrumentConfigURI ) {
         m_instrumentConfigURI = instrumentConfigURI;
     }
 
-    public String getLogConfigURI()
-    {
+    public String getLogConfigURI() {
         return m_logConfigURI;
     }
 
-    public void setLogConfigURI( String logConfigURI )
-    {
+    public void setLogConfigURI( String logConfigURI ) {
         m_logConfigURI = logConfigURI;
     }
 
-    public String getLogCategory()
-    {
+    public String getLogCategory() {
         return m_logCategory;
     }
 
-    public void setLogCategory( String logCategory )
-    {
+    public void setLogCategory( String logCategory ) {
         m_logCategory = logCategory;
     }
 
-    public String getConfigURI()
-    {
+    public String getConfigURI() {
         return m_configURI;
     }
 
-    public void setConfigURI( String configURI )
-    {
+    public void setConfigURI( String configURI ) {
         m_configURI = configURI;
     }
 
-    public List getClassForceLoadList()
-    {
+    public List getClassForceLoadList() {
         return m_classForceLoadList;
     }
 
-    public void setClassForceLoadList( List classForceLoadList )
-    {
+    public void setClassForceLoadList( List classForceLoadList ) {
         m_classForceLoadList = classForceLoadList;
     }
 
-    public String getClassPath()
-    {
+    public String getClassPath() {
         return m_classPath;
     }
 
-    public void setClassPath( String classPath )
-    {
+    public void setClassPath( String classPath ) {
         m_classPath = classPath;
     }
 
-    public void setProperty( String key, Object value )
-    {
-        if ( null == value )
-        {
+    public void setProperty( String key, Object value ) {
+        if ( null == value ) {
             m_properties.remove( key );
-        }
-        else
-        {
+        } else {
             m_properties.put( key, value );
         }
     }
 
-    public Object getProperty( String key )
-    {
+    public Object getProperty( String key ) {
         return m_properties.get( key );
     }
 
-    public void clearAllProperties()
-    {
+    public void clearAllProperties() {
         m_properties.clear();
     }
 
@@ -312,8 +273,7 @@ public class CocoonBean
 
         DefaultContext initContext = new ComponentContext( m_confBuilder.getContext() );
         Iterator it = m_properties.entrySet().iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             Map.Entry entry = (Map.Entry)it.next();
             initContext.put(entry.getKey(), entry.getValue());
         }
@@ -322,32 +282,26 @@ public class CocoonBean
         ContainerUtil.initialize( m_contManager );
     }
 
-    private LifecycleExtensionManager getLifecycleExtensionManager()
-    {
+    private LifecycleExtensionManager getLifecycleExtensionManager() {
         LifecycleExtensionManager manager = new LifecycleExtensionManager();
         manager.addCreatorExtension(new SitemapConfigurableCreator());
 
         return manager;
     }
 
-    private void forceLoadClasses()
-    {
+    private void forceLoadClasses() {
         if ( m_alreadyLoaded ) return;
 
         m_initializationLogger.debug("Loading classes");
 
         Iterator it = m_classForceLoadList.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             String className = (String) it.next();
             m_initializationLogger.debug("Loading class: " + className);
 
-            try
-            {
+            try {
                 m_parentClassLoader.loadClass(className);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 m_initializationLogger.warn("Could not load class: " + className, e);
             }
         }
@@ -355,15 +309,13 @@ public class CocoonBean
         m_alreadyLoaded = true;
     }
 
-    public void dispose()
-    {
+    public void dispose() {
         m_initializationLogger.debug("Shutting down Cocoon");
         ContainerUtil.dispose( m_contManager );
         m_contManager = null;
     }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         dispose();
         super.finalize();
     }

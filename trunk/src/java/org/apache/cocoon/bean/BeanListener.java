@@ -55,7 +55,7 @@ package org.apache.cocoon.bean;
  * as the bean makes progress through the links to be called.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanListener.java,v 1.4 2003/10/17 17:49:23 bloritsch Exp $
+ * @version CVS $Id: BeanListener.java,v 1.5 2004/01/23 11:07:28 cziegeler Exp $
  */
 public interface BeanListener {
 
@@ -69,14 +69,14 @@ public interface BeanListener {
      * @param pagesComplete  Number of pages already generated
      * @param timeTaken      Length of time for processing in millis
      */
-    public void pageGenerated(String sourceURI,
-                              String destinationURI,
-                              int pageSize,
-                              int linksInPage,
-                              int newLinksinPage,
-                              int pagesRemaining,
-                              int pagesComplete,
-                              long timeTaken);
+    void pageGenerated(String sourceURI,
+                       String destinationURI,
+                       int pageSize,
+                       int linksInPage,
+                       int newLinksinPage,
+                       int pagesRemaining,
+                       int pagesComplete,
+                       long timeTaken);
 
     /**
      * Report a that was skipped because its URI matched an
@@ -84,13 +84,13 @@ public interface BeanListener {
      * @param uri      The uri for the report
      * @param message  The message for skipping
      */
-    public void pageSkipped(String uri, String message);
+    void pageSkipped(String uri, String message);
 
     /**
      * Report a general message about operation of the bean
      * @param msg            The message to be reported
      */
-    public void messageGenerated(String msg);
+    void messageGenerated(String msg);
 
     /**
      * Report a warning about something non-fatal that happened within
@@ -98,19 +98,19 @@ public interface BeanListener {
      * @param uri            The page being generated when warning was triggered
      * @param warning        The warning to be reported
      */
-    public void warningGenerated(String uri, String warning);
+    void warningGenerated(String uri, String warning);
 
     /**
      * Report a broken link
      * @param uri            The URI that failed to be generated
      * @param message        A reason why the link was not generated
      */
-    public void brokenLinkFound(String uri, String parentURI, String message, Throwable t);
+    void brokenLinkFound(String uri, String parentURI, String message, Throwable t);
 
     /**
      * Signals completion of the generation process. This method can
      * be used to write out reports, display time generation duration,
      * etc.
      */
-    public void complete();
+    void complete();
 }

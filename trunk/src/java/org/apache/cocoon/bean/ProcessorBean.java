@@ -71,8 +71,8 @@ import java.io.IOException;
  * @author <a href="bloritsch.at.apache.org">Berin Loritsch</a>
  * @version CVS $ Revision: 1.1 $
  */
-public class ProcessorBean extends CocoonBean
-{
+public class ProcessorBean extends CocoonBean {
+    
     protected static final String DEFAULT_USER_AGENT = Constants.COMPLETE_NAME;
     protected static final String DEFAULT_ACCEPT = "text/html, */*";
     private String m_userAgent = DEFAULT_USER_AGENT;
@@ -81,8 +81,7 @@ public class ProcessorBean extends CocoonBean
     private HashMap m_empty = new HashMap();
     private CommandLineContext m_cliContext;
 
-    public void initialize() throws Exception
-    {
+    public void initialize() throws Exception {
         super.initialize();
 
         m_cliContext = new CommandLineContext( getContextURI() );
@@ -92,8 +91,7 @@ public class ProcessorBean extends CocoonBean
     /**
      * Allow subclasses to recursively precompile XSPs.
      */
-    protected void precompile()
-    {
+    protected void precompile() {
         recursivelyPrecompile( new File(getContextURI()), new File(getContextURI()) );
     }
 
@@ -102,35 +100,22 @@ public class ProcessorBean extends CocoonBean
      * @param contextDir a <code>File</code> value for the context directory
      * @param file a <code>File</code> value for a single XSP file or a directory to scan recursively
      */
-    private void recursivelyPrecompile( File contextDir, File file )
-    {
-        if ( file.isDirectory() )
-        {
+    private void recursivelyPrecompile( File contextDir, File file ) {
+        if ( file.isDirectory() ) {
             String entries[] = file.list();
-            for ( int i = 0; i < entries.length; i++ )
-            {
+            for ( int i = 0; i < entries.length; i++ ) {
                 recursivelyPrecompile( contextDir, new File( file, entries[i] ) );
             }
-        }
-        else if ( file.getName().toLowerCase().endsWith( ".xmap" ) )
-        {
-            try
-            {
+        } else if ( file.getName().toLowerCase().endsWith( ".xmap" ) ) {
+            try {
                 this.processXMAP( IOUtils.getContextFilePath( contextDir.getCanonicalPath(), file.getCanonicalPath() ) );
-            }
-            catch ( Exception e )
-            {
+            } catch ( Exception e ) {
                 //Ignore for now.
             }
-        }
-        else if ( file.getName().toLowerCase().endsWith( ".xsp" ) )
-        {
-            try
-            {
+        } else if ( file.getName().toLowerCase().endsWith( ".xsp" ) ) {
+            try {
                 this.processXSP( IOUtils.getContextFilePath( contextDir.getCanonicalPath(), file.getCanonicalPath() ) );
-            }
-            catch ( Exception e )
-            {
+            } catch ( Exception e ) {
                 //Ignore for now.
             }
         }
@@ -142,8 +127,7 @@ public class ProcessorBean extends CocoonBean
      * @param uri a <code>String</code> pointing to an xsp URI
      * @exception Exception if an error occurs
      */
-    protected void processXSP( String uri ) throws Exception
-    {
+    protected void processXSP( String uri ) throws Exception {
         String markupLanguage = "xsp";
         String programmingLanguage = "java";
         Environment env = new LinkSamplingEnvironment( "/", new File( getContextURI() ), m_attributes,
@@ -157,8 +141,7 @@ public class ProcessorBean extends CocoonBean
      * @param uri a <code>String</code> pointing to an xmap URI
      * @exception Exception if an error occurs
      */
-    protected void processXMAP( String uri ) throws Exception
-    {
+    protected void processXMAP( String uri ) throws Exception {
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
         Environment env = new LinkSamplingEnvironment( "/", new File(getContextURI()), m_attributes,
@@ -176,8 +159,7 @@ public class ProcessorBean extends CocoonBean
      * @exception Exception if an error occurs
      */
     protected Collection getLinks( String deparameterizedURI, Map parameters )
-            throws Exception
-    {
+            throws Exception {
 
         parameters.put( "user-agent", m_userAgent );
         parameters.put( "accept", m_accept );
@@ -206,8 +188,7 @@ public class ProcessorBean extends CocoonBean
             Map links,
             List gatheredLinks,
             OutputStream stream )
-            throws Exception
-    {
+            throws Exception {
 
         parameters.put( "user-agent", m_userAgent );
         parameters.put( "accept", m_accept );
@@ -222,28 +203,19 @@ public class ProcessorBean extends CocoonBean
 
         // if we get here, the page was created :-)
         int status = env.getStatus();
-        if ( !env.isModified() )
-        {
+        if ( !env.isModified() ) {
             status = -1;
         }
         return status;
     }
 
     /** Class <code>NullOutputStream</code> here. */
-    static class NullOutputStream
-            extends OutputStream
-    {
-        public void write( int b ) throws IOException
-        {
-        }
+    static class NullOutputStream extends OutputStream {
+        public void write( int b ) throws IOException {}
 
-        public void write( byte b[] ) throws IOException
-        {
-        }
+        public void write( byte b[] ) throws IOException {}
 
-        public void write( byte b[], int off, int len ) throws IOException
-        {
-        }
+        public void write( byte b[], int off, int len ) throws IOException {}
     }
 
     /**
@@ -255,8 +227,7 @@ public class ProcessorBean extends CocoonBean
      * @exception Exception if an error occurs
      */
     protected String getType( String deparameterizedURI, Map parameters )
-            throws Exception
-    {
+    throws Exception {
 
         parameters.put( "user-agent", m_userAgent );
         parameters.put( "accept", m_accept );
@@ -276,14 +247,10 @@ public class ProcessorBean extends CocoonBean
      * @return boolean true if no error were cast, false otherwise
      * @exception Exception if an error occurs, except RNFE
      */
-    private boolean processLenient( Environment env ) throws Exception
-    {
-        try
-        {
+    private boolean processLenient( Environment env ) throws Exception {
+        try {
             getRootProcessor().process( env );
-        }
-        catch ( ProcessingException pe )
-        {
+        } catch ( ProcessingException pe ) {
             return false;
         }
         return true;
