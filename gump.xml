@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.46 2003/04/21 11:19:43 stefano Exp $
+  CVS $Id: gump.xml,v 1.47 2003/04/22 11:40:05 stefano Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -157,6 +157,7 @@
     <jar name="blocks/batik-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+    <nag from="Gump" to="batik-dev@xml.apache.org"/>
   </project>
 
   <project name="cocoon-block-chaperon">
@@ -369,6 +370,7 @@
     <jar name="blocks/poi-block.jar"/>
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+    <nag from="Gump" to="poi-dev@jakarta.apache.org"/>
   </project>
 
   <project name="cocoon-block-naming">
