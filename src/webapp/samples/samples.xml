@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.14 2003/05/07 04:57:12 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.15 2003/05/08 08:19:16 crossley Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -28,11 +28,11 @@
     in different ways, but also to syndicate, aggregate or otherwise transform
     content provided by other web sites.
    </sample>
-   <sample name="Resource Catalog" href="catalog/">
+   <sample name="Catalog Entity Resolver" href="catalog/">
     XML is handy but also very complex. Cocoon integrates a number of 
-    facilities to help you during your journey thru XML-land. One of these
+    facilities to help you during your journey through XML-land. One of these
     is the centralized handling of resolving network resources 
-    (e.g. DTDs, symbols, character entity sets, images) to local copies thru
+    (e.g. DTDs, symbols, character entity sets, images) to local copies through
     the use of catalogs.
    </sample>
   </group>
