@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * accessed and kept until the page is completely displayed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XSPModuleHelper.java,v 1.3 2003/05/03 11:14:05 jefft Exp $
+ * @version CVS $Id: XSPModuleHelper.java,v 1.4 2003/05/17 06:02:41 jefft Exp $
  */
 public class XSPModuleHelper {
 
@@ -150,7 +150,7 @@ public class XSPModuleHelper {
             };
 
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Error accessing attribute '"+attr+"' from input module '"+name+"': "+e,e);
+            throw new CascadingRuntimeException("Error accessing attribute '"+attr+"' from input module '"+name+"'. "+e.getMessage(), e);
         }
 
         return value;
