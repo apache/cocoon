@@ -56,14 +56,16 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * Abstract base class enabling logging and supporting the intrepretation of 
+ * Abstract base class enabling logging and supporting the intrepretation of
  * common configuration settings on all specific implementations of
  * {@see org.apache.cocoon.woody.binding.JXPathBindingBase}.
- * 
+ *
  * Common supported configurations:
  * <ul>
  * <li>Attribute direction="load|save|both": {@see #getDirectionAttributes(Element)}</li>
  * </ul>
+ *
+ * @version CVS $Id: JXpathBindingBuilderBase.java,v 1.7 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public abstract class JXpathBindingBuilderBase implements LogEnabled {
 
@@ -109,10 +111,10 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
      * </ol>
      * <br>
      * <code>@lenient</code> can either be:
-     * <ol><li><code>'true'</code>: This binding will set the jxpath context to 
+     * <ol><li><code>'true'</code>: This binding will set the jxpath context to
      * be lenient towards the usage of inexisting paths on the back-end model.</li>
-     * <li><code>'false'</code>: This binding will set the jxpath context to be 
-     * strict and throwing exceptions for the usage of inexisting paths on the 
+     * <li><code>'false'</code>: This binding will set the jxpath context to be
+     * strict and throwing exceptions for the usage of inexisting paths on the
      * back-end model.</li>
      * <li><code>(unset)</code>: This binding will not change the leniency behaviour
      * on the jxpath this binding receives from his parent binding.</li>
@@ -126,18 +128,18 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
             //TODO: should we eventually remove this?
             //throw an error if people are still using the old-style @read-only or @readonly
             if (DomHelper.getAttributeAsBoolean(bindingElm, "readonly", false)) {
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm) 
+                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
                         + "\nThe usage of the attribute @readonly has been depricated in favour of @direction.");
             }
             if (DomHelper.getAttributeAsBoolean(bindingElm, "read-only", false)) {
-                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm) 
+                throw new BindingException("Error in binding file " + DomHelper.getLocation(bindingElm)
                         + "\nThe usage of the attribute @read-only has been depricated in favour of @direction.");
             }
-            
+
             String direction = DomHelper.getAttribute(bindingElm, "direction", "both");
-            
+
             String leniency = DomHelper.getAttribute(bindingElm, "lenient", null);
-            
+
             return new CommonAttributes(direction, leniency);
         } catch (BindingException e) {
             throw e;
@@ -145,19 +147,19 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
             throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
      }
-    
+
      /**
       * CommonAttributes is a simple helper class for holding the distinct data
-      * member fields indicating the activity of the sepearate load and save 
+      * member fields indicating the activity of the sepearate load and save
       * actions of a given binding.
       */
      static class CommonAttributes{
         final boolean loadEnabled;
         final boolean saveEnabled;
         final Boolean leniency;
-        
-        final static CommonAttributes DEFAULT = new CommonAttributes(true, true, null); 
-        
+
+        final static CommonAttributes DEFAULT = new CommonAttributes(true, true, null);
+
         CommonAttributes(String direction, String leniency){
             this(isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency));
         }
@@ -167,36 +169,36 @@ public abstract class JXpathBindingBuilderBase implements LogEnabled {
             this.saveEnabled = saveEnabled;
             this.leniency = leniency;
         }
-        
-        /** 
+
+        /**
          * Interpretes the value of the direction attribute into activity of the load action.
          * @param direction
          * @return true if direction is either set to "both" or "load"
          */
-        private static boolean isLoadEnabled(String direction) {            
+        private static boolean isLoadEnabled(String direction) {
             return "both".equals(direction) || "load".equals(direction);
         }
-        
-        /** 
+
+        /**
          * Interpretes the value of the direction attribute into activity of the save action.
          * @param direction value of the @direction attribute
          * @return true if direction is either set to "both" or "save"
          */
-        private static boolean isSaveEnabled(String direction) {            
+        private static boolean isSaveEnabled(String direction) {
             return "both".equals(direction) || "save".equals(direction);
-        }       
+        }
 
-        
+
         /**
-         * Interpretes the value of the lenient attribute into a Boolean object 
+         * Interpretes the value of the lenient attribute into a Boolean object
          * allowing three-state logic (true/false/unset)
          * @param leniency value of the @lenient attribute
-         * @return null if the leniency parameter is String, otherwise the 
+         * @return null if the leniency parameter is String, otherwise the
          */
         private static Boolean decideLeniency(String leniency) {
             if (leniency == null) return null;
             return new Boolean(leniency);
         }
-        
+
     }
 }

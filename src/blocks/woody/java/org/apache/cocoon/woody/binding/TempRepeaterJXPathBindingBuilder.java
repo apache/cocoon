@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
 /**
  * An experimental simple repeater binding that will replace
  * (i.e. delete then re-add all) its content.
- * Based on SimpleRepeater code. 
+ * Based on SimpleRepeater code.
  * <pre>
  * &lt;wb:temp-repeater
  *   id="contacts"
@@ -65,8 +65,8 @@ import org.w3c.dom.Element;
  * &lt;/wb:temp-repeater&gt;
  * </pre>
  *
- * CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
  * @author Timothy Larson
+ * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class TempRepeaterJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -76,8 +76,8 @@ public class TempRepeaterJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem);
+
             String repeaterId = DomHelper.getAttribute(bindingElem, "id");
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path");

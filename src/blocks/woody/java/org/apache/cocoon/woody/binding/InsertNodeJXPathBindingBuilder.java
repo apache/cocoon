@@ -69,6 +69,8 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  *           document --&gt;
  * &lt;/wb:insert-node&gt;
  * </code></pre>
+ *
+ * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.7 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class InsertNodeJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -82,8 +84,8 @@ public class InsertNodeJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+
             DocumentFragment domTemplate = null;
 
             String src = bindingElm.getAttribute("src");

@@ -64,8 +64,9 @@ import org.apache.commons.jxpath.Pointer;
  * <p>
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.6 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -90,7 +91,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jctx) {
         // Find the repeater and clear it
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
-        
+
         if (this.clearOnLoad) {
             repeater.removeRows();
         }
@@ -99,7 +100,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         Pointer ptr = jctx.getPointer(this.repeaterPath);
         if (ptr.getNode() != null) {
             // There are some nodes to load from
-            
+
             JXPathContext repeaterContext = jctx.getRelativeContext(ptr);
             // build a jxpath iterator for pointers
             Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
@@ -115,11 +116,11 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
                     thisRow = repeater.addRow();
                 }
                 rowNum++;
-     
+
                 // make a jxpath sub context on the iterated element
                 Pointer jxp = (Pointer) rowPointers.next();
                 JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
-    
+
                 this.rowBinding.loadFormFromModel(thisRow, rowContext);
             }
         }
@@ -138,7 +139,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 
         } else {
             // Repeater is not empty
-            
+
             // Move to repeater context and create the path if needed
             JXPathContext repeaterContext = jctx.getRelativeContext(jctx.createPath(this.repeaterPath));
 

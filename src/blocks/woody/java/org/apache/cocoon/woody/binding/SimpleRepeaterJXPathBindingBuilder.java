@@ -63,8 +63,9 @@ import org.w3c.dom.Element;
  *   &lt;<em>... child bindings ...</em>
  * &lt;/wb:simple-repeater&gt;
  * </pre>
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: SimpleRepeaterJXPathBindingBuilder.java,v 1.6 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class SimpleRepeaterJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -74,8 +75,8 @@ public class SimpleRepeaterJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem);
+
             String repeaterId = DomHelper.getAttribute(bindingElem, "id");
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
             String rowPath = DomHelper.getAttribute(bindingElem, "row-path");

@@ -54,9 +54,9 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * ClassJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link ClassJXPathBinding} out of the configuration in the 
+ * ClassJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link ClassJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:class id="<i>widget-id</i>"&gt;
@@ -65,8 +65,8 @@ import org.w3c.dom.Element;
  * &lt;/wb:class&gt;
  * </code></pre>
  *
- * CVS $Id: ClassJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
  * @author Timothy Larson
+ * @version CVS $Id: ClassJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class ClassJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
@@ -75,7 +75,7 @@ public class ClassJXPathBindingBuilder
             throws BindingException {
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 

@@ -54,16 +54,18 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * DeleteNodeJXPathBinding provides an implementation of a {@link Binding} 
+ * DeleteNodeJXPathBinding provides an implementation of a {@link Binding}
  * that deletes the current context-bean from the target
- * back-end model upon save. 
+ * back-end model upon save.
  * <p>
  * NOTES: <ol>
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
+ *
+ * @version CVS $Id: DeleteNodeJXPathBinding.java,v 1.4 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class DeleteNodeJXPathBinding extends JXPathBindingBase {
-    
+
     public DeleteNodeJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts) {
         super(commonAtts);
     }
@@ -72,13 +74,11 @@ public class DeleteNodeJXPathBinding extends JXPathBindingBase {
         // doesn't do a thing when loading.
     }
 
-
-    /** 
+    /**
      * Removes the current context-bean from the jxpath context.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) {
         // get rid of the contextbean
         jxpc.removePath(".");
     }
-
 }

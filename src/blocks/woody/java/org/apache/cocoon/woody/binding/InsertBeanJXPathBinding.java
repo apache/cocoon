@@ -59,13 +59,15 @@ import org.apache.commons.jxpath.Pointer;
 import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
- * InsertBeanJXPathBinding provides an implementation of a {@link Binding} 
+ * InsertBeanJXPathBinding provides an implementation of a {@link Binding}
  * that inserts a new instance of the specified bean (classname) into the target
- * back-end model upon save. 
+ * back-end model upon save.
  * <p>
  * NOTES: <ol>
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
+ *
+ * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
@@ -91,7 +93,7 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
     /**
      * Registers a JXPath Factory on the JXPath Context.
      * <p>
-     * The factory will insert a new instance of the specified bean (classname) 
+     * The factory will insert a new instance of the specified bean (classname)
      * inside this object into the target objectmodel.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
@@ -101,16 +103,16 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
                 try {
                     Object[] args = new Object[1];
                     Class[] argTypes = new Class[1];
-                    
+
                     // instantiate the new object
                     argTypes[0] = Class.forName(InsertBeanJXPathBinding.this.className);
                     args[0] = argTypes[0].newInstance();
                     // lookup the named method on the parent
-                    
+
                     Method addMethod =
                         parent.getClass().getMethod(InsertBeanJXPathBinding.this.addMethodName, argTypes);
                     // invoke this method with this new beast.
-                    
+
                     addMethod.invoke(parent, args);
 
                     if (getLogger().isDebugEnabled())

@@ -54,30 +54,32 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * SetAttributeJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link SetAttributeJXPathBinding} out of the configuration in the 
+ * SetAttributeJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link SetAttributeJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:set-attribute name="<i>attribute-name to set to</i>" 
+ * &lt;wb:set-attribute name="<i>attribute-name to set to</i>"
  *                      value="<i>attribute-value</i>"/&gt;
  * </code></pre>
+ *
+ * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class SetAttributeJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
 
- 
+
     /**
-     * Creates an instance of {@link SetAttributeJXPathBinding} according to 
-     * the attributes of the provided bindingElm. 
+     * Creates an instance of {@link SetAttributeJXPathBinding} according to
+     * the attributes of the provided bindingElm.
      */
     public JXPathBindingBase buildBinding(
         Element bindingElm,
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
-            
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
+
             String attName = DomHelper.getAttribute(bindingElm, "name");
             String attValue = DomHelper.getAttribute(bindingElm, "value");
 
@@ -91,5 +93,4 @@ public class SetAttributeJXPathBindingBuilder
             throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
-
 }

@@ -54,6 +54,7 @@ import org.apache.excalibur.source.Source;
 
 /**
  * BindingManager declares the factory method that produces actual Bindings.
+ * @version CVS $Id: BindingManager.java,v 1.4 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public interface BindingManager {
 
@@ -63,14 +64,13 @@ public interface BindingManager {
     String ROLE = BindingManager.class.getName();
 
     /**
-     * Constant matching the namespace used for the Binding config files. 
+     * Constant matching the namespace used for the Binding config files.
      */
     String NAMESPACE = "http://apache.org/cocoon/woody/binding/1.0";
 
     /**
      * Creates a binding from the XML config found at source parameter.
      */
-    Binding createBinding(Source bindingFile)
-        throws BindingException;
+    Binding createBinding(Source bindingFile) throws BindingException;
 
 }

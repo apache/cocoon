@@ -54,9 +54,9 @@ import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * CaseJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link CaseJXPathBinding} out of the configuration in the 
+ * CaseJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link CaseJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:case id="<i>widget-id</i>" path="<i>xpath-expression</i>"
@@ -65,16 +65,16 @@ import org.w3c.dom.Element;
  * &lt;/wb:case&gt;
  * </code></pre>
  *
- * CVS $Id: CaseJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
  * @author Timothy Larson
- */
+ * @version CVS $Id: CaseJXPathBindingBuilder.java,v 1.2 2004/01/11 20:51:15 vgritsenko Exp $
+s */
 public class CaseJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
             throws BindingException {
         try {
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);

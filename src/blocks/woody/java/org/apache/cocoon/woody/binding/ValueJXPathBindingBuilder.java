@@ -60,7 +60,7 @@ import java.util.Locale;
 
 /**
  * ValueJXPathBindingBuilder provides a helper class for the Factory
- * implemented in {@link JXPathBindingManager} that helps construct the 
+ * implemented in {@link JXPathBindingManager} that helps construct the
  * actual {@link ValueJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
@@ -71,9 +71,10 @@ import java.util.Locale;
  *   &lt;/wb:on-update&gt;
  * &lt;/wb:value&gt;
  * </code></pre>
+ *
+ * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.5 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
-
 
     /**
      * Creates an instance of {@link ValueJXPathBinding} based on the attributes
@@ -82,7 +83,7 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
@@ -104,7 +105,7 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
             }
 
             ValueJXPathBinding fieldBinding =
-                    new ValueJXPathBinding(commonAtts, 
+                    new ValueJXPathBinding(commonAtts,
                             widgetId, xpath, updateBindings, convertor, convertorLocale);
 
             return fieldBinding;

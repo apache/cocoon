@@ -55,16 +55,16 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * CaseJXPathBinding provides an implementation of a {@link Binding} 
- * that narrows the context towards provided childbindings. 
+ * CaseJXPathBinding provides an implementation of a {@link Binding}
+ * that narrows the context towards provided childbindings.
  * <p>
  * NOTES: <ol>
  * <li>This Binding assumes that the provided widget-id points to a
  * case of a union.</li>
  * </ol>
  *
- * CVS $Id: CaseJXPathBinding.java,v 1.3 2004/01/06 12:31:17 joerg Exp $
  * @author Timothy Larson
+ * @version CVS $Id: CaseJXPathBinding.java,v 1.4 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class CaseJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -87,12 +87,13 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
         Union unionWidget = (Union)frmModel;
         if (widgetId.equals(unionWidget.getValue())) {
+            // JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
             Binding[] subBindings = getChildBindings();
             if (subBindings != null) {
                 int size = subBindings.length;
@@ -108,12 +109,13 @@ public class CaseJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Union unionWidget = (Union)frmModel;
         if (widgetId.equals(unionWidget.getValue())) {
+            // JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
             Binding[] subBindings = getChildBindings();
             if (subBindings != null) {
                 int size = subBindings.length;

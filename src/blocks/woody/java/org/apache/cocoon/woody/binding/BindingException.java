@@ -54,6 +54,8 @@ import org.apache.avalon.framework.CascadingException;
 
 /**
  * This exception is thrown when something goes wrong with the binding.
+ *
+ * @version CVS $Id: BindingException.java,v 1.2 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class BindingException extends CascadingException {
     public BindingException(String message) {

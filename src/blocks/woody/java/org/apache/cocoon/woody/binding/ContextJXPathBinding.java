@@ -55,13 +55,15 @@ import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 
 /**
- * ContextJXPathBinding provides an implementation of a {@link Binding} 
- * that narrows the binding scope to some xpath-context on the target 
- * objectModel to load and save from. 
+ * ContextJXPathBinding provides an implementation of a {@link Binding}
+ * that narrows the binding scope to some xpath-context on the target
+ * objectModel to load and save from.
+ *
+ * @version CVS $Id: ContextJXPathBinding.java,v 1.7 2004/01/11 20:51:16 vgritsenko Exp $
  */
 public class ContextJXPathBinding extends ComposedJXPathBindingBase {
 
-    /** 
+    /**
      * the relative contextPath for the sub-bindings of this context
      */
     private final String xpath;
@@ -75,7 +77,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the ObjectModel wrapped in a jxpath 
+     * Actively performs the binding from the ObjectModel wrapped in a jxpath
      * context to the Woody-form.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
@@ -93,7 +95,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel 
+     * Actively performs the binding from the Woody-form to the ObjectModel
      * wrapped in a jxpath context.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {

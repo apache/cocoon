@@ -54,15 +54,15 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * ClassJXPathBinding provides an implementation of a {@link Binding} 
+ * ClassJXPathBinding provides an implementation of a {@link Binding}
  * that that allows the specification of a class of reusable bindings.
  * <p>
  * NOTES: <ol>
  * <li>This Binding uses the provided widget-id as the name for the class.</li>
  * </ol>
  *
- * CVS $Id: ClassJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
  * @author Timothy Larson
+ * @version CVS $Id: ClassJXPathBinding.java,v 1.2 2004/01/11 20:51:15 vgritsenko Exp $
  */
 public class ClassJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -88,7 +88,7 @@ public class ClassJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
@@ -97,7 +97,7 @@ public class ClassJXPathBinding extends ComposedJXPathBindingBase {
 
     /**
      * Narrows the scope on the form-model to the member widget-field, and
-     * narrows the scope on the object-model to the member xpath-context 
+     * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
