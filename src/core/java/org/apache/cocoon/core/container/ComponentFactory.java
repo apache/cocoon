@@ -40,6 +40,12 @@ public class ComponentFactory {
      */
     protected Parameters parameters;
     
+    protected final Class serviceClass;
+    protected final Method initMethod;
+    protected final Method destroyMethod;
+    protected final Method poolInMethod;
+    protected final Method poolOutMethod;
+
     /**
      * Construct a new component factory for the specified component.
      *
@@ -50,7 +56,8 @@ public class ComponentFactory {
      *
      */
     public ComponentFactory( final ComponentEnvironment environment,
-                             final ServiceInfo info) {
+                             final ServiceInfo info) 
+    throws Exception {
         this.environment = environment;
         this.serviceInfo = info;
         
@@ -63,8 +70,32 @@ public class ComponentFactory {
             }
         }
         this.environment.logger = actualLogger;
+        
+        // now get the meta data for the component
+        // FIXME - load the class
+        this.serviceClass = this.serviceInfo.getServiceClass();
+        if ( this.serviceInfo.getDestroyMethodName() != null ) {
+            this.destroyMethod = this.serviceClass.getMethod(this.serviceInfo.getDestroyMethodName(), null);
+        } else {
+            this.destroyMethod = null;
+        }
+        if ( this.serviceInfo.getInitMethodName() != null ) {
+            this.initMethod = this.serviceClass.getMethod(this.serviceInfo.getInitMethodName(), null);
+        } else {
+            this.initMethod = null;
+        }
+        if ( this.serviceInfo.getPoolInMethodName() != null ) {
+            this.poolInMethod = this.serviceClass.getMethod(this.serviceInfo.getPoolInMethodName(), null);
+        } else {
+            this.poolInMethod = null;
+        }
+        if ( this.serviceInfo.getPoolOutMethodName() != null ) {
+            this.poolOutMethod = this.serviceClass.getMethod(this.serviceInfo.getPoolOutMethodName(), null);
+        } else {
+            this.poolOutMethod = null;
+        }
     }
-
+    
     /**
      * Create a new instance
      */
@@ -91,9 +122,8 @@ public class ComponentFactory {
 
         ContainerUtil.initialize( component );
 
-        final Method method = this.serviceInfo.getInitMethod();
-        if ( method != null ) {
-            method.invoke(component, null);
+        if ( this.initMethod != null ) {
+            this.initMethod.invoke(component, null);
         }
 
         ContainerUtil.start( component );
@@ -118,9 +148,8 @@ public class ComponentFactory {
         ContainerUtil.stop( component );
         ContainerUtil.dispose( component );
 
-        final Method method = this.serviceInfo.getDestroyMethod();
-        if ( method != null ) {
-            method.invoke(component, null);
+        if ( this.destroyMethod != null ) {
+            this.destroyMethod.invoke(component, null);
         }
     }
 
@@ -129,9 +158,8 @@ public class ComponentFactory {
      */
     public void exitingPool( final Object component )
     throws Exception {
-        final Method method = this.serviceInfo.getPoolOutMethod();
-        if ( method != null ) {
-            method.invoke(component, null);
+        if ( this.poolOutMethod != null ) {
+            this.poolOutMethod.invoke(component, null);
         }         
     }
 
@@ -144,9 +172,8 @@ public class ComponentFactory {
         if( component instanceof Recyclable ) {
             ( (Recyclable)component ).recycle();
         }
-        final Method method = this.serviceInfo.getPoolInMethod();
-        if ( method != null ) {
-            method.invoke(component, null);
+        if ( this.poolInMethod != null ) {
+            this.poolInMethod.invoke(component, null);
         }         
     }
 }

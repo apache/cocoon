@@ -34,4 +34,5 @@ public class ComponentEnvironment {
     public Logger logger;
     public LoggerManager loggerManager;
     public ClassLoader classloader;
+    
 }

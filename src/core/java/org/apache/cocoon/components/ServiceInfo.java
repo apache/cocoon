@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components;
 
-import java.lang.reflect.Method;
-
 import org.apache.avalon.framework.configuration.Configuration;
 
 /**
@@ -37,10 +35,6 @@ public class ServiceInfo {
     private String poolOutMethodName;
     private Class serviceClass;
     private String serviceClassName;
-    private Method initMethod;
-    private Method destroyMethod;
-    private Method poolInMethod;
-    private Method poolOutMethod;
     private Configuration configuration;
     
     public ServiceInfo() {
@@ -115,46 +109,6 @@ public class ServiceInfo {
      */
     public void setPoolOutMethodName(String poolMethod) {
         this.poolOutMethodName = poolMethod;
-    }
-
-    /**
-     * @return Returns the destroyMethod.
-     */
-    public Method getDestroyMethod() throws Exception {
-        if ( this.destroyMethod == null && this.destroyMethodName != null ) {
-            this.destroyMethod = this.serviceClass.getMethod(this.destroyMethodName, null);
-        }
-        return destroyMethod;
-    }
-
-    /**
-     * @return Returns the initMethod.
-     */
-    public Method getInitMethod() throws Exception {
-        if ( this.initMethod == null && this.initMethodName != null ) {
-            this.initMethod = this.serviceClass.getMethod(this.initMethodName, null);
-        }
-        return initMethod;
-    }
-
-    /**
-     * @return Returns the poolInMethod.
-     */
-    public Method getPoolInMethod() throws Exception {
-        if ( this.poolInMethod == null && this.poolInMethodName != null ) {
-            this.poolInMethod = this.serviceClass.getMethod(this.poolInMethodName, null);
-        }
-        return poolInMethod;
-    }
-
-    /**
-     * @return Returns the poolInMethod.
-     */
-    public Method getPoolOutMethod() throws Exception {
-        if ( this.poolOutMethod == null && this.poolOutMethodName != null ) {
-            this.poolOutMethod = this.serviceClass.getMethod(this.poolOutMethodName, null);
-        }
-        return poolOutMethod;
     }
 
     /**
