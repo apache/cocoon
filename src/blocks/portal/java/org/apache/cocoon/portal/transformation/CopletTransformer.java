@@ -87,7 +87,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.12 2003/12/12 14:42:34 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.13 2003/12/12 15:53:19 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -239,10 +239,12 @@ extends AbstractCopletTransformer {
      */
     public void endTransformingElement(String uri, String name, String raw) 
     throws ProcessingException, IOException, SAXException {
-        if ( name.equals(LINK_ELEM) || name.equals(LINKS_ELEM)) {
-            String elem = (String)this.stack.pop();
-            if ( elem.length() > 0 ) {
-                this.sendEndElementEvent(elem);
+        if ( name.equals(LINK_ELEM) ) {
+            if ( !this.insideLinks ) {
+                String elem = (String)this.stack.pop();
+                if ( elem.length() > 0 ) {
+                    this.sendEndElementEvent(elem);
+                }
             }
         } else if ( name.equals(LINKS_ELEM) ) {
             this.insideLinks = false;

@@ -54,6 +54,18 @@
              </aspect>
          </aspects>
      </renderer>
+     <renderer name="rawtab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+         <aspects>
+             <aspect type="parameter">
+                 <parameter name="tag-name" value="tab-layout"/>
+             </aspect>
+             <aspect type="history"/>
+             <aspect type="tab-content">
+                 <parameter name="root-tag" value="false"/>
+                 <parameter name="store"    value="session"/>
+             </aspect>
+         </aspects>
+     </renderer>
      <renderer name="linktab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
              <aspect type="xslt">
@@ -136,6 +148,12 @@
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
             <renderers default="tab">
                 <renderer name="tab"/>
+            </renderers>
+        </layout>
+        <layout name="rawtab" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+            <renderers default="rawtab">
+                <renderer name="rawtab"/>
             </renderers>
         </layout>
         <layout name="linktab"
