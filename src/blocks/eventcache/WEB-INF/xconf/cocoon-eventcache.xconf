@@ -20,10 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-jms.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-xsp.xconf"/>
-
 	<component class="org.apache.cocoon.caching.impl.JMSEventMessageListener"
                role="org.apache.cocoon.caching.impl.JMSEventMessageListener" logger="core.jms">
        <parameter name="connection" value="local-topics"/>

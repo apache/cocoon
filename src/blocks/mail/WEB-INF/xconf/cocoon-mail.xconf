@@ -20,10 +20,6 @@
     | SVN $Id$
     +-->
 <components>
-  <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-asciiart.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-scratchpad.xconf"/>
-
     <!--+
         |  Component for simplified mail sending.
         +-->

@@ -20,7 +20,5 @@
     | SVN $Id: sitemap.xmap 123887 2005-01-02 15:12:01Z sylvain $
     +-->
 <components>
-  <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-batik.xconf"/>
-
+  <!-- Dummy config that other blocks can import -->
 </components>
