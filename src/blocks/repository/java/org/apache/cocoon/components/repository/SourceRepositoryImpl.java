@@ -79,6 +79,7 @@ import org.apache.excalibur.source.TraversableSource;
 public class SourceRepositoryImpl extends AbstractLogEnabled 
 implements Serviceable, ThreadSafe, SourceRepository {
     
+    private RepositoryInterceptor m_interceptor = new RepositoryInterceptorBase(){};
     private SourceResolver m_resolver;
     
     
@@ -89,9 +90,13 @@ implements Serviceable, ThreadSafe, SourceRepository {
     
     /**
      * @avalon.dependency type="SourceResolver"
+     * @avalon.dependency type="RepositoryInterceptor" optional="true"
      */
     public void service(ServiceManager manager) throws ServiceException {
         m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
+        if (manager.hasService(RepositoryInterceptor.ROLE)) {
+            m_interceptor = (RepositoryInterceptor) manager.lookup(RepositoryInterceptor.ROLE);
+        }
     }
     
     
@@ -144,8 +149,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
             }
             
             source = m_resolver.resolveURI(in);
+            m_interceptor.preStoreSource(destination);
             SourceUtil.copy(source,destination);
-            
+            m_interceptor.postStoreSource(destination);
             return status;
         }
         catch (IOException e) {
@@ -195,7 +201,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
                 return STATUS_CONFLICT;
             }
             
+            m_interceptor.preStoreSource(source);
             ((ModifiableTraversableSource) source).makeCollection();
+            m_interceptor.postStoreSource(source);
             return STATUS_CREATED;
         }
         catch (IOException e) {
@@ -277,7 +285,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
                 }
             }
         }
+        m_interceptor.preRemoveSource(source);
         ((ModifiableSource) source).delete();
+        m_interceptor.postRemoveSource(source);
         return STATUS_OK;
     }
     
@@ -395,7 +405,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
                 }
                 // TODO: copy properties
                 target = ((ModifiableTraversableSource) destination);
+                m_interceptor.preStoreSource(target);
                 target.makeCollection();
+                m_interceptor.postStoreSource(target);
                 if (recurse) {
                     Iterator children = origin.getChildren().iterator();
                     while (children.hasNext()) {
@@ -411,7 +423,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
         if (destination instanceof ModifiableSource) {
             // TODO: copy properties
-            SourceUtil.copy(source, destination);
+            m_interceptor.preStoreSource(destination);
+            SourceUtil.copy(source,destination);
+            m_interceptor.postStoreSource(destination);
         }
         else {
             final String message = "copy() is forbidden: " +
@@ -435,4 +449,5 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
         return null;
     }
+
 }
