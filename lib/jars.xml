@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.164 2004/02/07 00:22:38 joerg Exp $
+    | CVS $Id: jars.xml,v 1.165 2004/02/10 05:00:12 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -407,7 +407,7 @@
     <title>iText XML to PDF/HTML/RTF converter (Renderer)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
-    <lib>itext/lib/itext-1.01.jar</lib>
+    <lib>itext/lib/itext-1.02.jar</lib>
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
@@ -415,7 +415,7 @@
     <title>iText XML to PDF/HTML/RTF converter (XML APIs)</title>
     <description>iText reads XML documents and turns them into PDFs</description>
     <used-by>iText serializer</used-by>
-    <lib>itext/lib/itext-xml-1.01.jar</lib>
+    <lib>itext/lib/itext-xml-1.02.jar</lib>
     <homepage>http://www.lowagie.com/iText/</homepage>
   </file>
 
