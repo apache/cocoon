@@ -60,6 +60,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * with a location attribute that holds its Locator information.
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $Id:
  */
 public class LocationAugmentationPipe extends AbstractXMLPipe implements XMLPipe {
 
