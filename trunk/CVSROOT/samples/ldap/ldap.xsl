@@ -28,7 +28,7 @@
   </xsl:template>
 
  <xsl:template match="ldapsearch/searchresult">
-	<table cellspacing="0" bordercolor="#000000" bgcolor="#000000" border="1" width="100%" cellpadding="0" cellspacing="0">
+	<table bordercolor="#000000" bgcolor="#000000" border="1" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<th colspan="2" bgcolor="tan">
 				<xsl:value-of select="@ID"/>
