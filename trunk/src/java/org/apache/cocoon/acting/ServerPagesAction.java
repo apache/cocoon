@@ -104,14 +104,14 @@ import org.apache.excalibur.mpool.ObjectFactory;
  *
  * Example :
  * <pre>
- *   &lt;action type="xsp-action" src="myAction.xsp"&gt;
+ *   &lt;action type="serverpages" src="myAction.xsp"&gt;
  *     &lt;map:param name="output-attribute" value="xsp-action-result"/&gt;
  *     ...
  *   &lt;/action&gt;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.7 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.8 2003/10/31 11:30:20 vgritsenko Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"
