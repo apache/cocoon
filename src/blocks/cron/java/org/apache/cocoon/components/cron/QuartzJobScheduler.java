@@ -546,16 +546,9 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         } catch (final SchedulerException ignored) {
         }
 
-        initDataMap(jobDataMap, name, canRunConcurrently);
-        if (null != params) {
-            jobDataMap.put(DATA_MAP_PARAMETERS, params);
-        }
-        if (null != objects) {
-            jobDataMap.put(DATA_MAP_OBJECTMAP, objects);
-        }
-
-        final JobDetail detail = new JobDetail(name, DEFAULT_QUARTZ_JOB_GROUP, QuartzJobExecutor.class);
-        detail.setJobDataMap(jobDataMap);
+        initDataMap(jobDataMap, name, canRunConcurrently, params, objects);
+        
+        final JobDetail detail = createJobDetail(name, jobDataMap);
 
         if (getLogger().isInfoEnabled()) {
             getLogger().info("Adding CronJob '" + trigger.getFullName() + "'");
@@ -576,13 +569,26 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         }
     }
 
-    private JobDataMap initDataMap(JobDataMap jobDataMap, String jobName, boolean concurent) {
+    protected JobDataMap initDataMap(JobDataMap jobDataMap, String jobName, boolean concurent, 
+                                     Parameters params, Map objects) {
         jobDataMap.put(DATA_MAP_NAME, jobName);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
         jobDataMap.put(DATA_MAP_CONTEXT, this.context);
         jobDataMap.put(DATA_MAP_MANAGER, this.manager);
         jobDataMap.put(DATA_MAP_RUN_CONCURRENT, concurent? Boolean.TRUE: Boolean.FALSE);
+        if (null != params) {
+            jobDataMap.put(DATA_MAP_PARAMETERS, params);
+        }
+        if (null != objects) {
+            jobDataMap.put(DATA_MAP_OBJECTMAP, objects);
+        }
         return jobDataMap;
+    }
+    
+    protected JobDetail createJobDetail(String name, JobDataMap jobDataMap) {
+        final JobDetail detail = new JobDetail(name, DEFAULT_QUARTZ_JOB_GROUP, QuartzJobExecutor.class);
+        detail.setJobDataMap(jobDataMap);
+        return detail;
     }
 
     /**
@@ -762,14 +768,13 @@ public class QuartzJobScheduler extends AbstractLogEnabled
             if (job instanceof CronJob) {
                 JobDataMap jobDataMap = new JobDataMap();
                 jobDataMap.put(DATA_MAP_OBJECT, job);
-                initDataMap(jobDataMap, name, true);
+                initDataMap(jobDataMap, name, true, null, null);
 
-                JobDetail detail = new JobDetail(name, DEFAULT_QUARTZ_JOB_GROUP, QuartzJobExecutor.class);
-                detail.setJobDataMap(jobDataMap);
+                final JobDetail detail = createJobDetail(name, jobDataMap);
 
                 TriggerFiredBundle trigger = new TriggerFiredBundle(detail, null, null, false, null, null, null, null);
 
-                final QuartzJobExecutor executor = new QuartzJobExecutor();
+                final Job executor = createJobExecutor();
                 final JobExecutionContext context = new JobExecutionContext(this.scheduler, trigger, executor);
 
                 this.executor.execute(new Runnable() {
@@ -797,6 +802,10 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         return false;
     }
 
+    protected Job createJobExecutor() {
+        return new QuartzJobExecutor();
+    }
+    
     /**
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
