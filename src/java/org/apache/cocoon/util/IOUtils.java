@@ -41,7 +41,7 @@ import org.apache.log.Hierarchy;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: IOUtils.java,v 1.5 2004/04/18 23:06:11 ugo Exp $
+ * @version CVS $Id$
  */
 public class IOUtils {
 
@@ -55,6 +55,7 @@ public class IOUtils {
      * @param file The output file
      * @param string The string to be dumped
      * @exception IOException IO Error
+     * @deprecated To be removed in cocoon 2.3
      */
     public static void serializeString(File file, String string)
     throws IOException {
@@ -68,6 +69,7 @@ public class IOUtils {
      * @param string The string to be dumped
      * @param encoding The encoding for the output file or null for default platform encoding
      * @exception IOException IO Error
+     * @deprecated To be removed in cocoon 2.3
      */
     public static void serializeString(File file, String string, String encoding)
     throws IOException {
@@ -113,6 +115,7 @@ public class IOUtils {
      * @param file The output file
      * @param object The object to be serialized
      * @exception IOException IOError
+     * @deprecated To be removed in cocoon 2.3
      */
     public static void serializeObject(File file, Object object)
     throws IOException {
@@ -132,6 +135,7 @@ public class IOUtils {
      * @param file The input file
      * @return The deserialized object
      * @exception IOException IOError
+     * @deprecated To be removed in cocoon 2.3
      */
     public static Object deserializeObject(File file)
     throws IOException, ClassNotFoundException {
@@ -198,10 +202,7 @@ public class IOUtils {
     if ("".equals(filename)) {
         return "";
     }
-    if(File.separatorChar == '\\')
-        filename = filename.replace('/','\\');
-    else
-        filename = filename.replace('\\','/');
+    filename = (File.separatorChar == '\\') ? filename.replace('/','\\') : filename.replace('\\','/');
     String[] path = StringUtils.split(filename, File.separator);
     int start = (path[0].length() == 0) ? 1 : 0;
 
@@ -213,22 +214,21 @@ public class IOUtils {
       }
 
       if(path[i].equals("..")) {
-        int lio = buffer.length()-2;
-        while (lio>=0) {
-          if (buffer.substring(lio).startsWith(File.separator))
+        int lio;
+        for (lio = buffer.length() - 2; lio >= 0; lio--) {
+          if (buffer.substring(lio).startsWith(File.separator)) {
             break;
-
-          lio--;
         }
-
-        if (lio>=0)
+        }
+        if (lio >= 0) {
           buffer.setLength(lio);
-
+        }
       } else {
         char[] chars = path[i].toCharArray();
 
-        if (chars.length < 1 || !Character.isLetter(chars[0])) 
+        if (chars.length < 1 || !Character.isLetter(chars[0])) {
           buffer.append('_');
+        }
 
         for (int j = 0; j < chars.length; j++) {
           if (org.apache.cocoon.util.StringUtils.isAlphaNumeric(chars[j])) {
@@ -253,6 +253,7 @@ public class IOUtils {
    *
    * @param filename The filename
    * @return The path information
+   * @deprecated To be removed in cocoon 2.3
    */
   public static String pathComponent(String filename) {
     int i = filename.lastIndexOf(File.separator);
@@ -265,6 +266,7 @@ public class IOUtils {
    *
    * @param filename The filename
    * @return The filename sans path information
+   * @deprecated To be removed in cocoon 2.3
    */
   public static String fileComponent(String filename) {
     int i = filename.lastIndexOf(File.separator);
@@ -277,6 +279,7 @@ public class IOUtils {
    *
    * @param filename The filename
    * @return The filename sans extension
+   * @deprecated To be removed in cocoon 2.3
    */
   public static String baseName(String filename) {
     int i = filename.lastIndexOf('.');
@@ -363,6 +366,7 @@ public class IOUtils {
    *
    * @param object to convert
    * @return byte array from the object
+   * @deprecated To be removed in cocoon 2.3
    */
   public static byte[] objectToBytes(Object object) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -376,6 +380,7 @@ public class IOUtils {
    *
    * @param bytes array to convert
    * @return object
+   * @deprecated To be removed in cocoon 2.3
    */
   public static Object bytesToObject(byte[] bytes) throws IOException, ClassNotFoundException {
     ByteArrayInputStream bais = new ByteArrayInputStream(bytes);

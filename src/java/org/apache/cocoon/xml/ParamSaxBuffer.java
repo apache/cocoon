@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  * 
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.6 2004/05/06 10:09:03 bruno Exp $
+ * @version CVS $Id$
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -112,7 +112,7 @@ public class ParamSaxBuffer extends SaxBuffer {
             this.name = name;
         }
 
-        public void send(ContentHandler contentHandler) throws SAXException {
+        public void send(ContentHandler contentHandler) {
         }
 
         public void send(ContentHandler contentHandler, Map parameters) throws SAXException {

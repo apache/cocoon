@@ -20,6 +20,8 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
@@ -29,13 +31,13 @@ import javax.xml.transform.sax.TransformerHandler;
  * DOM Document from SAX events.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DOMBuilder.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DOMBuilder
 extends AbstractXMLPipe {
 
     /** The transformer factory shared by all instances */
-    protected static final SAXTransformerFactory factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
+    protected static final SAXTransformerFactory factory = (SAXTransformerFactory)TransformerFactory.newInstance();
 
     /** The listener */
     protected Listener listener;

@@ -95,6 +95,11 @@
        shorthand="store-janitor"
        default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"/>
 
+  <!--=========================================================================
+       Sitemap engine
+      =========================================================================-->
+
+  <!-- the sitemap engine -->
   <role name="org.apache.cocoon.Processor"
         shorthand="sitemap"
         default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
