@@ -62,7 +62,6 @@ import java.util.*;
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();
-    private SelectionList selectionList;
     private boolean arrayType = false;
     private DatatypeBuilder builder;
     private Convertor convertor;
@@ -80,16 +79,6 @@ public abstract class AbstractDatatype implements Datatype {
 
     public void addValidationRule(ValidationRule validationRule) {
         validationRules.add(validationRule);
-    }
-
-    public void setSelectionList(SelectionList selectionList) {
-        if (selectionList.getDatatype() != this)
-            throw new RuntimeException("Error in AbstractDatatype.setSelectionList: tried to assign a SelectionList that is not associated with this datatype.");
-        this.selectionList = selectionList;
-    }
-
-    public SelectionList getSelectionList() {
-        return selectionList;
     }
 
     public boolean isArrayType() {

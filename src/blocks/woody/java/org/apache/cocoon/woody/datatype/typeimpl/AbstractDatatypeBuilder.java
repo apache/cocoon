@@ -65,9 +65,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
 import java.io.IOException;
 
 /**
@@ -124,49 +121,6 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Servic
 
     public Convertor getPlainConvertor() {
         return plainConvertor;
-    }
-
-    protected Source resolve(String src) throws IOException, ServiceException {
-        SourceResolver resolver = null;
-        try {
-            resolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
-            return resolver.resolveURI(src);
-        } finally {
-            if (resolver != null)
-                serviceManager.release(resolver);
-        }
-    }
-
-    protected void buildSelectionList(Element datatypeElement, AbstractDatatype datatype) throws Exception {
-        Element selectionListElement = DomHelper.getChildElement(datatypeElement, Constants.WD_NS, "selection-list");
-        if (selectionListElement != null) {
-            SelectionList selectionList;
-            String src = selectionListElement.getAttribute("src");
-            if (src.length() > 0) {
-                boolean dynamic = DomHelper.getAttributeAsBoolean(selectionListElement, "dynamic", false);
-                if (!dynamic) {
-                    selectionListElement = readSelectionList(src);
-                    selectionList = SelectionListBuilder.build(selectionListElement, datatype);
-                } else {
-                    selectionList = new DynamicSelectionList(datatype, src, serviceManager);
-                }
-            } else {
-                // selection list is defined inline
-                selectionList = SelectionListBuilder.build(selectionListElement, datatype);
-            }
-            datatype.setSelectionList(selectionList);
-        }
-    }
-
-    private Element readSelectionList(String src) throws Exception {
-        Source source = resolve(src);
-        InputSource inputSource = new InputSource(source.getInputStream());
-        inputSource.setSystemId(source.getURI());
-        Document document = DomHelper.parse(inputSource);
-        Element selectionListElement = document.getDocumentElement();
-        if (!Constants.WD_NS.equals(selectionListElement.getNamespaceURI()) || !"selection-list".equals(selectionListElement.getLocalName()))
-            throw new Exception("Excepted a wd:selection-list element at " + DomHelper.getLocation(selectionListElement));
-        return selectionListElement;
     }
 
     protected void buildValidationRules(Element datatypeElement, AbstractDatatype datatype, DatatypeManager datatypeManager) throws Exception {

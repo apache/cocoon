@@ -179,7 +179,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 } else if (pipeContext.getAttributeName() != null) { // then see if an attribute-name was specified
                     contextWidget = (Form)pipeContext.getRequest().getAttribute(pipeContext.getAttributeName());
                     if (contextWidget == null)
-                        throw new SAXException("No form found in request attribute with name \"" + pipeContext.getAttributeName());
+                        throw new SAXException("No form found in request attribute with name \"" + pipeContext.getAttributeName() + "\"");
                 } else { // and then see if we got a form from the flow
                     formJXPath = "/" + WoodyTemplateTransformer.WOODY_FORM;
                     Object form = null;

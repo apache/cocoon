@@ -108,11 +108,6 @@ public interface Datatype {
     public String getDescriptiveName();
 
     /**
-     * Returns the selection list associated with this datatype, or null if it has none.
-     */
-    public SelectionList getSelectionList();
-
-    /**
      * Indicates wether this datatype represents an array type. This approach has been
      * chosen instead of creating a seperate ArrayDatatype interface (and corresponding
      * implementations), since almost all functionality is the same between the scalar

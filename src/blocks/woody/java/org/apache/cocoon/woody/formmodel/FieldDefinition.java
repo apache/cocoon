@@ -50,26 +50,15 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.datatype.Datatype;
-
 /**
  * The {@link WidgetDefinition} part of a Field widget, see {@link Field} for more information.
  */
-public class FieldDefinition extends AbstractWidgetDefinition {
-    private Datatype datatype;
+public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
     private boolean required;
 
     public Widget createInstance() {
         Field field = new Field(this);
         return field;
-    }
-
-    public Datatype getDatatype() {
-        return datatype;
-    }
-
-    public void setDatatype(Datatype datatype) {
-        this.datatype = datatype;
     }
 
     public boolean isRequired() {

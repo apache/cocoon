@@ -53,6 +53,8 @@ package org.apache.cocoon.woody.formmodel;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.datatype.SelectionList;
+import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -74,6 +76,7 @@ public class Field extends AbstractWidget {
     private Object value;
     private boolean conversionFailed;
     private ValidationError validationError;
+    private SelectionList selectionList;
 
     public Field(FieldDefinition fieldDefinition) {
         this.definition = fieldDefinition;
@@ -181,8 +184,10 @@ public class Field extends AbstractWidget {
         contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
 
         // the selection list, if any
-        if (definition.getDatatype().getSelectionList() != null) {
-            definition.getDatatype().getSelectionList().generateSaxFragment(contentHandler, locale);
+        if (selectionList != null) {
+            selectionList.generateSaxFragment(contentHandler, locale);
+        } else if (definition.getSelectionList() != null) {
+            definition.getSelectionList().generateSaxFragment(contentHandler, locale);
         }
 
         contentHandler.endElement(Constants.WI_NS, FIELD_EL, Constants.WI_PREFIX_COLON + FIELD_EL);
@@ -190,5 +195,15 @@ public class Field extends AbstractWidget {
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
         definition.generateLabel(contentHandler);
+    }
+
+    public void setSelectionList(SelectionList selectionList) {
+        if (selectionList != null && selectionList.getDatatype() != definition.getDatatype())
+            throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
+        this.selectionList = selectionList;
+    }
+
+    public Datatype getDatatype() {
+        return definition.getDatatype();
     }
 }
