@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.84 2001-07-05 04:34:51 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.85 2001-07-07 19:12:03 giacomo Exp $-->
 <!--
 
  ============================================================================
@@ -205,7 +205,7 @@
               super.compose(manager);
               if (_esql_selector == null) {
                 try {
-                  _esql_selector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+                  _esql_selector = (ComponentSelector) manager.lookup(org.apache.cocoon.Roles.DB_CONNECTION);
                 } catch (ComponentException cme) {
                   getLogger().error("Could not look up the datasource component", cme);
                 }
@@ -805,7 +805,7 @@
           org.apache.cocoon.components.parser.Parser newParser = null;
 
           try {
-              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Roles.PARSER);
+              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(Parser.ROLE);
 
               InputSource __is = new InputSource(
                       new StringReader(
