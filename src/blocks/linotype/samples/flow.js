@@ -135,7 +135,7 @@ function edit(id,type,subpage) {
                 repo.revertFrom(document,version);
             } else {
                 var output = repo.getOutputStream(document);
-                cocoon.processPipelineTo("/samples/linotype/action/save-" + type,{},output);
+                cocoon.processPipelineTo("/samples/blocks/linotype/action/save-" + type,{},output);
                 output.close();
                 repo.fomSave(cocoon, document);
                 if (action == "finish") break;
