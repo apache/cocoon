@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Default implementation of the refresher.
  * 
  * @since 2.1.1
- * @version CVS $Id: DelayRefresher.java,v 1.6 2004/04/25 20:01:36 haul Exp $
+ * @version CVS $Id: DelayRefresher.java,v 1.7 2004/05/26 01:31:06 joerg Exp $
  */
 public class DelayRefresher extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSafe, Refresher, CronJob {
@@ -267,8 +267,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 	}
 
 	/**
-	 * @param childs
-	 * @param i
+	 * @param conf
 	 * @throws ConfigurationException
 	 * @throws CascadingException
 	 */
@@ -331,7 +330,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 
     /**
 	 * @param writer
-	 * @param iter
+	 * @param c
 	 * @throws IOException
 	 */
 	private void writeRefreshJobConfiguration(Writer writer, final TargetConfiguration c) throws IOException {

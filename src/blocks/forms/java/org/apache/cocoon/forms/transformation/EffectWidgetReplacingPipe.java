@@ -58,7 +58,7 @@ import java.util.Map;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  *
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.13 2004/05/07 16:43:43 mpo Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.14 2004/05/26 01:31:06 joerg Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -66,7 +66,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * Form location attribute on <code>ft:form-template</code> element, containing
      * JXPath expression which should result in Form object.
      *
-     * @see FormsPipelineConfig#findForm
+     * @see FormsPipelineConfig#findForm(String)
      */
     private static final String LOCATION = "location";
 

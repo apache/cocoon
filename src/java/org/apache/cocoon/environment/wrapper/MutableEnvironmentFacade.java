@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.Environment;
 
 /**
  * Enviroment facade, whose delegate object can be changed. This class is required to handle internal redirects
- * in sitemap sources ("cocoon:"). This is because {@link org.apache.cocoon.components.source.SitemapSource} keeps
+ * in sitemap sources ("cocoon:"). This is because {@link org.apache.cocoon.components.source.impl.SitemapSource} keeps
  * the environment in which the internal request should be processed. But internal redirects create a new
  * processing environment and there's no way to change the one held by the <code>SitemapSource</code>. So the
  * processing of internal redirects actually changes the delegate of this class, transparently for the 
@@ -34,7 +34,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.10 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.11 2004/05/26 01:31:06 joerg Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 

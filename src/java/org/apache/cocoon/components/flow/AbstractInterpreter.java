@@ -47,7 +47,7 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.20 2004/05/04 11:54:35 cziegeler Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.21 2004/05/26 01:31:06 joerg Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Serviceable, Contextualizable, Interpreter,
@@ -130,7 +130,6 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      *
      * @param source the location of the script
      *
-     * @see org.apache.cocoon.components.source.SourceFactory
      * @see org.apache.cocoon.environment.Environment
      * @see org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper
      */

@@ -18,7 +18,6 @@ package org.apache.cocoon.components.container;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
@@ -41,7 +40,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.1 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.2 2004/05/26 01:31:06 joerg Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager {

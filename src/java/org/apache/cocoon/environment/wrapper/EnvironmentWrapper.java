@@ -38,7 +38,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.17 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.18 2004/05/26 01:31:06 joerg Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -91,12 +91,11 @@ public class EnvironmentWrapper
     /**
      * Constructor
      * @param env
-     * @param manager
      * @param uri
      * @param logger
      * @throws MalformedURLException
      */
-    public EnvironmentWrapper(Environment env, String uri,  Logger logger)  throws MalformedURLException {
+    public EnvironmentWrapper(Environment env, String uri,  Logger logger) throws MalformedURLException {
         super(env.getURI(), env.getView(), env.getAction());
 
         SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);

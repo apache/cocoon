@@ -64,7 +64,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.31 2004/05/25 14:24:01 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.32 2004/05/26 01:31:06 joerg Exp $
  */
 
 public class TreeProcessor
@@ -187,8 +187,6 @@ public class TreeProcessor
     /**
      * Create a new child of this processor (used for mounting submaps).
      *
-     * @param manager the component manager to be used by the child processor.
-     * @param language the language to be used by the child processor.
      * @return a new child processor.
      */
     public TreeProcessor createChildProcessor(String src, 

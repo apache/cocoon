@@ -29,7 +29,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.8 2004/05/25 07:28:23 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.9 2004/05/26 01:31:06 joerg Exp $
  */
 public interface Processor extends Component {
 
@@ -81,7 +81,7 @@ public interface Processor extends Component {
      * Process the given <code>Environment</code> to assemble
      * a <code>ProcessingPipeline</code>.
      * Don't forget to release the pipeline using
-     * {@link InternalPipelineDescription.release()}.
+     * {@link InternalPipelineDescription#release()}.
      * @since 2.2
      */
     InternalPipelineDescription buildPipeline(Environment environment)
