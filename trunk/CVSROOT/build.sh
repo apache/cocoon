@@ -15,8 +15,8 @@ fi
 ANT_HOME=./lib
 ANT=./lib/ant.jar
 JAVAC=$JAVA_HOME/lib/tools.jar
-XERCES=./lib/xerces_1_0_3.jar
-XALAN=./lib/xalan_1_0_1.jar
+XERCES=./lib/xerces_1_1_2.jar
+XALAN=./lib/xalan_1_1_D01.jar
 FOP=./lib/fop_0_12_1.jar
 SERVLETS=./lib/servlet_2_2.jar
 TURBINE=./lib/turbine-pool.jar

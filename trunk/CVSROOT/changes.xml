@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.93 2000-07-21 20:06:21 stefano Exp $
+  $Id: changes.xml,v 1.94 2000-07-21 23:36:47 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,7 +16,13 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="SM" type="fix" due-to="Jeremy Quinn" due-to-email="sharkbait@mac.com">
+  <action dev="SM" type="fixed">
+   Fixed problem with unresolved SystemID URIs that cause problems with latest Xerces.
+  </action>
+  <action dev="SM" type="update">
+   Updated latest Xerces and Xalan.
+  </action>
+  <action dev="SM" type="add" due-to="Jeremy Quinn" due-to-email="sharkbait@mac.com">
    Included FP form-handling taglib for XSP.
   </action>
   <action dev="SM" type="fix" due-to="Mark Washeim" due-to-email="esalon@canuck.com">
