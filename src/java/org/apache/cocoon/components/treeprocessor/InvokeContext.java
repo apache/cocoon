@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,28 +35,28 @@ import org.apache.cocoon.environment.Redirector;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
- * <p>
- * This class serves two purposes :
- * <ul><li>Avoid explicit enumeration of all needed parameters in
- *         {@link ProcessingNode#invoke(org.apache.cocoon.environment.Environment, InvokeContext)},
- *         thus allowing easier addition of new parameters,
- *     <li>Hold pipelines, and provide "just in time" lookup for them.
+ *
+ * <p>This class serves two purposes:
+ * <ul>
+ *   <li>Avoid explicit enumeration of all needed parameters in
+ *       {@link ProcessingNode#invoke(org.apache.cocoon.environment.Environment, InvokeContext)},
+ *       thus allowing easier addition of new parameters,</li>
+ *   <li>Hold pipelines, and provide "just in time" lookup for them.</li>
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.12 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
-
-public class InvokeContext 
-extends AbstractLogEnabled
-implements Serviceable, Disposable {
+public class InvokeContext extends AbstractLogEnabled
+                           implements Serviceable, Disposable {
 
     private List mapStack = new ArrayList();
     private HashMap nameToMap = new HashMap();
     private HashMap mapToName = new HashMap();
 
+    /** True if building pipeline only, not processing it. */
     private boolean isBuildingPipelineOnly;
 
     /** The current component manager, as set by the last call to compose() or recompose() */
@@ -70,7 +70,7 @@ implements Serviceable, Disposable {
 
     /** The parameters for the processing pipeline */
     protected Map processingPipelineParameters;
-    
+
     /** The object model used to resolve processingPipelineParameters */
     protected Map processingPipelineObjectModel;
 
@@ -85,7 +85,7 @@ implements Serviceable, Disposable {
     
     /** The redirector */
     protected Redirector redirector;
-    
+
     /** The Selector for the processing pipeline */
     protected ServiceSelector pipelineSelector;
     /**
@@ -97,7 +97,7 @@ implements Serviceable, Disposable {
     }
 
     /**
-     * Determines if the Pipeline been set for this context 
+     * Determines if the Pipeline been set for this context
      */
     public boolean pipelineIsSet() {
 	    return (this.processingPipeline != null);
@@ -114,9 +114,7 @@ implements Serviceable, Disposable {
      * Serviceable interface
      */
     public void service(ServiceManager manager) throws ServiceException {
-
         this.currentManager = manager;
-
         if (this.processingPipeline != null) {
             this.processingPipeline.setProcessorManager(manager);
         }
@@ -267,7 +265,6 @@ implements Serviceable, Disposable {
 
     }
 
-
     /**
      * Pop the topmost element of the current Map stack.
      */
@@ -277,28 +274,27 @@ implements Serviceable, Disposable {
         mapToName.remove(map);
         nameToMap.remove(name);
     }
-    
+
     /**
      * Set the redirector to be used by nodes that need it.
-     * 
+     *
      * @param redirector the redirector
      */
     public void setRedirector(Redirector redirector) {
         this.redirector = redirector;
     }
-    
+
     /**
      * Get the redirector to be used by nodes that need it.
-     * 
+     *
      * @return the redirector
      */
     public Redirector getRedirector() {
         return this.redirector;
     }
-    
+
     /**
      * Prepare this context for reuse
-     *
      */
     public final void reset() {
         this.mapStack.clear();
@@ -311,17 +307,15 @@ implements Serviceable, Disposable {
      * Release the pipelines, if any, if they were looked up by this context.
      */
     public void dispose() {
-        // Release pipelines, if any
         if (this.internalPipelineDescription == null && this.pipelinesManager != null) {
-            if ( this.pipelineSelector != null) {
+            if (this.pipelineSelector != null) {
                 this.pipelineSelector.release(this.processingPipeline);
                 this.processingPipeline = null;
-                this.pipelinesManager.release( this.pipelineSelector );
+                this.pipelinesManager.release(this.pipelineSelector);
                 this.pipelineSelector = null;
             }
             this.pipelinesManager = null;
             this.processingPipelineParameters = null;
         }
-
     }
 }
