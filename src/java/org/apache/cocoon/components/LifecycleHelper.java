@@ -79,40 +79,39 @@ import org.apache.avalon.excalibur.logger.LogKitManageable;
  * To be moved to Avalon ?
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LifecycleHelper.java,v 1.3 2003/07/24 10:30:52 bruno Exp $
+ * @version CVS $Id: LifecycleHelper.java,v 1.4 2003/07/28 18:26:01 cziegeler Exp $
  */
 
 // FIXME : need to handle also LogEnabled.
 
-public class LifecycleHelper
-{
+public class LifecycleHelper {
     /** The Logger for the component
      */
-    private Logger                  m_logger;
+    final private Logger m_logger;
 
     /** The Context for the component
      */
-    private Context                 m_context;
+    final private Context m_context;
 
     /** The component manager for this component.
      */
-    private ComponentManager        m_componentManager;
+    final private ComponentManager m_componentManager;
 
     /** The service manager for this component.
      */
-    private ServiceManager        m_serviceManager;
+    final private ServiceManager m_serviceManager;
 
     /** The configuration for this component.
      */
-    private Configuration           m_configuration;
+    final private Configuration m_configuration;
 
     /** The RoleManager for child ComponentSelectors
      */
-    private RoleManager             m_roles;
+    final private RoleManager m_roles;
 
     /** The LogKitManager for child ComponentSelectors
      */
-    private LogKitManager           m_logkit;
+    final private LogKitManager m_logkit;
 
     /**
      * Construct a new <code>LifecycleHelper</code> that can be used repeatedly to
@@ -127,34 +126,47 @@ public class LifecycleHelper
      * @param roles the <code>RoleManager</code> to pass to <code>DefaultComponentSelector</code>s.
      * @param configuration the <code>Configuration</code> object to pass to new instances.
      */
-    public LifecycleHelper( final Logger logger,
-            final Context context,
-            final ComponentManager componentManager,
-            final RoleManager roles,
-            final LogKitManager logkit,
-            final Configuration configuration )
-    {
+    public LifecycleHelper(final Logger logger,
+                            final Context context,
+                            final ComponentManager componentManager,
+                            final RoleManager roles,
+                            final LogKitManager logkit,
+                            final Configuration configuration) {
         m_logger = logger;
         m_context = context;
         m_componentManager = componentManager;
         m_roles = roles;
         m_logkit = logkit;
         m_configuration = configuration;
+        m_serviceManager = null;
     }
 
-    public LifecycleHelper( final Logger logger,
-            final Context context,
-            final ServiceManager serviceManager,
-            final RoleManager roles,
-            final LogKitManager logkit,
-            final Configuration configuration )
-    {
+    /**
+     * Construct a new <code>LifecycleHelper</code> that can be used repeatedly to
+     * setup several components. <b>Note</b> : if a parameter is <code>null</code>,
+     * the corresponding method isn't called (e.g. if <code>configuration</code> is
+     * <code>null</code>, <code>configure()</code> isn't called).
+     *
+     * @param logger the <code>Logger</code> to pass to <code>LogEnabled</code>s, unless there is
+     *        a <code>LogKitManager</code> and the configuration specifies a logger name.
+     * @param context the <code>Context</code> to pass to <code>Contexutalizable</code>s.
+     * @param serviceManager the service manager to pass to <code>Serviceable</code>s.
+     * @param roles the <code>RoleManager</code> to pass to <code>DefaultComponentSelector</code>s.
+     * @param configuration the <code>Configuration</code> object to pass to new instances.
+     */
+    public LifecycleHelper(final Logger logger,
+                            final Context context,
+                            final ServiceManager serviceManager,
+                            final RoleManager roles,
+                            final LogKitManager logkit,
+                            final Configuration configuration) {
         m_logger = logger;
         m_context = context;
         m_serviceManager = serviceManager;
         m_roles = roles;
         m_logkit = logkit;
         m_configuration = configuration;
+        m_componentManager = null;
     }
 
     /**
@@ -164,9 +176,7 @@ public class LifecycleHelper
      * @return the component passed in, to allow function chaining.
      * @throws Exception if something went wrong.
      */
-    public Object setupComponent(Object component)
-        throws Exception
-    {
+    public Object setupComponent(Object component) throws Exception {
         return setupComponent(component, true);
     }
 
@@ -180,173 +190,155 @@ public class LifecycleHelper
      * @return the component passed in, to allow function chaining.
      * @throws Exception if something went wrong.
      */
-    public Object setupComponent( Object component, boolean initializeAndStart )
-        throws Exception
-    {
-        return setupComponent( component,
-                m_logger,
-                m_context,
-                m_serviceManager,
-                m_componentManager,
-                m_roles,
-                m_logkit,
-                m_configuration,
-                initializeAndStart );
+    public Object setupComponent(Object component, boolean initializeAndStart)
+    throws Exception {
+        return setupComponent(
+            component,
+            m_logger,
+            m_context,
+            m_serviceManager,
+            m_componentManager,
+            m_roles,
+            m_logkit,
+            m_configuration,
+            initializeAndStart);
     }
 
     /**
      * Static equivalent to {@link #setupComponent(Object)}, to be used when there's only one
      * component to setup.
      */
-    public static Object setupComponent( final Object component,
-            final Logger logger,
-            final Context context,
-            final ComponentManager componentManager,
-            final RoleManager roles,
-            final LogKitManager logkit,
-            final Configuration configuration )
-        throws Exception
-    {
-        return setupComponent( component,
-                logger,
-                context,
-                componentManager,
-                roles,
-                logkit,
-                configuration,
-                true );
+    public static Object setupComponent(final Object component,
+                                         final Logger logger,
+                                         final Context context,
+                                         final ComponentManager componentManager,
+                                         final RoleManager roles,
+                                         final LogKitManager logkit,
+                                         final Configuration configuration)
+    throws Exception {
+        return setupComponent(
+            component,
+            logger,
+            context,
+            componentManager,
+            roles,
+            logkit,
+            configuration,
+            true);
     }
 
     /**
      * Alternative setupComponent method that takes a ServiceManager instead of a ComponentManger.
      */
-    public static Object setupComponent( final Object component,
-            final Logger logger,
-            final Context context,
-            final ServiceManager serviceManager,
-            final RoleManager roles,
-            final LogKitManager logkit,
-            final Configuration configuration )
-        throws Exception
-    {
-        return setupComponent( component,
-                logger,
-                context,
-                serviceManager,
-                null,
-                roles,
-                logkit,
-                configuration,
-                true );
+    public static Object setupComponent(final Object component,
+                                         final Logger logger,
+                                         final Context context,
+                                         final ServiceManager serviceManager,
+                                         final RoleManager roles,
+                                         final LogKitManager logkit,
+                                         final Configuration configuration)
+    throws Exception {
+        return setupComponent(
+            component,
+            logger,
+            context,
+            serviceManager,
+            null,
+            roles,
+            logkit,
+            configuration,
+            true);
     }
 
     /**
      * Static equivalent to {@link #setupComponent(Object, boolean)}, to be used when there's only one
      * component to setup.
      */
-    public static Object setupComponent( final Object component,
-            final Logger logger,
-            final Context context,
-            final ComponentManager componentManager,
-            final RoleManager roles,
-            final LogKitManager logkit,
-            final Configuration configuration,
-            final boolean initializeAndStart )
-        throws Exception
-    {
-        return setupComponent( component,
-                logger,
-                context,
-                null,
-                componentManager,
-                roles,
-                logkit,
-                configuration,
-                initializeAndStart);
+    public static Object setupComponent(final Object component,
+                                         final Logger logger,
+                                         final Context context,
+                                         final ComponentManager componentManager,
+                                         final RoleManager roles,
+                                         final LogKitManager logkit,
+                                         final Configuration configuration,
+                                         final boolean initializeAndStart)
+    throws Exception {
+        return setupComponent(
+            component,
+            logger,
+            context,
+            null,
+            componentManager,
+            roles,
+            logkit,
+            configuration,
+            initializeAndStart);
     }
 
-    static Object setupComponent( final Object component,
-            final Logger logger,
-            final Context context,
-            final ServiceManager serviceManager,
-            final ComponentManager componentManager,
-            final RoleManager roles,
-            final LogKitManager logkit,
-            final Configuration configuration,
-            final boolean initializeAndStart )
-        throws Exception
-    {
-        if( component instanceof LogEnabled )
-        {
+    static Object setupComponent(final Object component,
+                                 final Logger logger,
+                                 final Context context,
+                                 final ServiceManager serviceManager,
+                                 final ComponentManager componentManager,
+                                 final RoleManager roles,
+                                 final LogKitManager logkit,
+                                 final Configuration configuration,
+                                 final boolean initializeAndStart)
+    throws Exception {
+        if (component instanceof LogEnabled) {
             Logger usedLogger;
-            if( null == logkit )
-            {
+            if (null == logkit) {
                 usedLogger = logger;
-            }
-            else if( configuration == null )
-            {
+            } else if (configuration == null) {
                 usedLogger = logger;
-            }
-            else
-            {
-                final String loggerName = configuration.getAttribute( "logger", null );
-                if( null == loggerName )
-                {
+            } else {
+                final String loggerName =
+                    configuration.getAttribute("logger", null);
+                if (null == loggerName) {
                     // No logger attribute available, using standard logger
                     usedLogger = logger;
-                }
-                else
-                {
-                    usedLogger = new LogKitLogger(logkit.getLogger( loggerName ));
+                } else {
+                    usedLogger = new LogKitLogger(logkit.getLogger(loggerName));
                 }
             }
 
-            ((LogEnabled)component).enableLogging( usedLogger );
+            ((LogEnabled) component).enableLogging(usedLogger);
         }
 
-        if( null != context && component instanceof Contextualizable )
-        {
-            ((Contextualizable)component).contextualize( context );
+        if (null != context && component instanceof Contextualizable) {
+            ((Contextualizable) component).contextualize(context);
         }
 
-        if( null != serviceManager && component instanceof Serviceable )
-        {
-            ((Serviceable)component).service( serviceManager );
-        }
-        else if( null != componentManager && component instanceof Composable )
-        {
-            ((Composable)component).compose( componentManager );
+        if (null != serviceManager && component instanceof Serviceable) {
+            ((Serviceable) component).service(serviceManager);
+        } else if (
+            null != componentManager && component instanceof Composable) {
+            ((Composable) component).compose(componentManager);
         }
 
-        if( null != roles && component instanceof RoleManageable )
-        {
-            ((RoleManageable)component).setRoleManager( roles );
+        if (null != roles && component instanceof RoleManageable) {
+            ((RoleManageable) component).setRoleManager(roles);
         }
 
-        if( null != logkit && component instanceof LogKitManageable )
-        {
-            ((LogKitManageable)component).setLogKitManager( logkit );
+        if (null != logkit && component instanceof LogKitManageable) {
+            ((LogKitManageable) component).setLogKitManager(logkit);
         }
 
-        if( null != configuration && component instanceof Configurable )
-        {
-            ((Configurable)component).configure( configuration );
+        if (null != configuration && component instanceof Configurable) {
+            ((Configurable) component).configure(configuration);
         }
 
-        if( null != configuration && component instanceof Parameterizable )
-        {
-            ((Parameterizable)component).
-                parameterize( Parameters.fromConfiguration( configuration ) );
+        if (null != configuration && component instanceof Parameterizable) {
+            ((Parameterizable) component).parameterize(
+                Parameters.fromConfiguration(configuration));
         }
 
-        if( initializeAndStart && component instanceof Initializable )
-        {
-            ((Initializable)component).initialize();
+        if (initializeAndStart && component instanceof Initializable) {
+            ((Initializable) component).initialize();
         }
 
-        if( initializeAndStart && component instanceof Startable )
-        {
-            ((Startable)component).start();
+        if (initializeAndStart && component instanceof Startable) {
+            ((Startable) component).start();
         }
 
         return component;
@@ -356,25 +348,21 @@ public class LifecycleHelper
      * Decomission a component, by stopping (if it's <code>Startable</code>) and
      * disposing (if it's <code>Disposable</code>) a component.
      */
-    public static final void decommission( final Object component )
-        throws Exception
-    {
-        if( component instanceof Startable )
-        {
-            ((Startable)component).stop();
+    public static final void decommission(final Object component)
+    throws Exception {
+        if (component instanceof Startable) {
+            ((Startable) component).stop();
         }
 
-        dispose( component );
+        dispose(component);
     }
 
     /**
      * Dispose a component if it's <code>Disposable</code>. Otherwhise, do nothing.
      */
-    public static final void dispose( final Object component )
-    {
-        if ( component instanceof Disposable )
-        {
-            ((Disposable)component).dispose();
+    public static final void dispose(final Object component) {
+        if (component instanceof Disposable) {
+            ((Disposable) component).dispose();
         }
     }
 }
