@@ -28,11 +28,11 @@
   </map:readers> 
    
   <map:serializers default="html"> 
-   <map:serializer name="xml"       src="org.apache.cocoon.serialization.XMLSerializer"/> 
-   <map:serializer name="html"      src="org.apache.cocoon.serialization.HTMLSerializer"/> 
+   <map:serializer name="xml"       mime-type="text/xml"   src="org.apache.cocoon.serialization.XMLSerializer"/> 
+   <map:serializer name="html"      mime-type="text/html"  src="org.apache.cocoon.serialization.HTMLSerializer"/> 
    <!-- <map:serializer name="fo2pdf"    src="org.apache.cocoon.serialization.FOPSerializer"/> -->
-   <map:serializer name="svg2jpg"   src="org.apache.cocoon.serialization.SVGSerializer"/> 
-   <map:serializer name="image"     src="org.apache.cocoon.serialization.ImageSerializer"/> 
+   <map:serializer name="svg2jpg"   mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer"/> 
+   <map:serializer name="image"     mime-type="image/gif" src="org.apache.cocoon.serialization.ImageSerializer"/> 
   </map:serializers>
   
   <map:selectors default="browser">
