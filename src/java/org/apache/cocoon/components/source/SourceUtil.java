@@ -96,7 +96,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.10 2003/11/15 04:21:28 joerg Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.11 2003/12/18 21:09:47 vgritsenko Exp $
  */
 public final class SourceUtil {
 
@@ -155,12 +155,30 @@ public final class SourceUtil {
      * @deprecated Use the {@link #toSAX(ServiceManager, Source, String, ContentHandler)}
      *             method instead.
      */
-    static public void toSAX( ComponentManager manager, Source source,
-                                String mimeTypeHint,
-                                ContentHandler handler)
+    static public void toSAX(ComponentManager manager, Source source,
+                             String mimeTypeHint,
+                             ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if ( source instanceof XMLizable ) {
-            ((XMLizable)source).toSAX( handler );
+            try {
+                ((XMLizable)source).toSAX( handler );
+            } catch (SAXException e) {
+                // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
+                // See also FileGenerator.generate()
+                final Exception cause = e.getException();
+                if (cause != null) {
+                    if (cause instanceof ProcessingException) {
+                        throw (ProcessingException)cause;
+                    }
+                    if (cause instanceof IOException) {
+                        throw (IOException)cause;
+                    }
+                    if (cause instanceof SAXException) {
+                        throw (SAXException)cause;
+                    }
+                }
+                throw e;
+            }
         } else {
             String mimeType = source.getMimeType();
             if ( null == mimeType) mimeType = mimeTypeHint;
