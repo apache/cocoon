@@ -106,6 +106,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     public void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
         // Find the repeater
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
+        repeater.removeRows();
 
         // build a jxpath iterator for pointers
         JXPathContext repeaterContext = jxpc.getRelativeContext(jxpc.getPointer(this.repeaterPath));
