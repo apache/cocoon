@@ -2235,10 +2235,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     null, locator);
                     Expression currencyCode = 
                         compileExpr(attrs.getValue("currencyCode"),
-                                    null, locator);;
+                                    null, locator);
                     Expression currencySymbol = 
                         compileExpr(attrs.getValue("currencySymbol"),
-                                    null, locator);;          
+                                    null, locator);       
                     Expression isGroupingUsed =  
                         compileBoolean(attrs.getValue("isGroupingUsed"), 
                                        null, locator);
@@ -2281,7 +2281,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     null, locator);           
                     Expression value = 
                         compileExpr(attrs.getValue("value"),
-                                    null, locator);;
+                                    null, locator);
                     Expression type = 
                         compileExpr(attrs.getValue("type"),
                                     null, locator);
