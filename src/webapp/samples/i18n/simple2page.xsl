@@ -48,6 +48,21 @@
     <xsl:apply-templates select="menu"/>
   </xsl:template>
 
+  <xsl:template match="para">
+    <p>
+      <font color="navy">
+        <b>
+          <xsl:number format="0. "/>
+          <xsl:value-of select="@name"/>
+        </b>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="@title"/>
+      </font>
+      <br/>
+      <xsl:apply-templates select="text() | strong"/>
+    </p>
+  </xsl:template>
+
   <!-- Current (open) menu -->
   <xsl:template match="menu">
     <xsl:if test="@icon">
