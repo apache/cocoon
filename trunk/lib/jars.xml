@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.101 2003/09/25 07:37:05 antonio Exp $
+    | CVS $Id: jars.xml,v 1.102 2003/09/25 08:12:37 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -608,7 +608,7 @@
     <title>Castor</title>
     <description></description>
     <used-by>CastorTransformer and precept</used-by>
-    <lib>optional/castor-0.9.5-xml.jar</lib>
+    <lib>optional/castor-0.9.5.1-xml.jar</lib>
     <homepage>http://castor.exolab.org</homepage>
   </file>
 
