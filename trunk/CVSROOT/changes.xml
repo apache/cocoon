@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.185 2001-01-19 02:46:06 greenrd Exp $ 
+  $Id: changes.xml,v 1.186 2001-01-19 23:00:06 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -24,9 +24,6 @@
  </release>
 
  <release version="1.8.1" date="January 19 2001">
-  <action dev="RDG" type="fix">
-   The Cocoon 1.8 build accidentally ommitted certain optional classes such as XTTransformer. This is now fixed.
-  </action>
   <action dev="RDG" type="fix" due-to="Wayne Bayever" due-to-email="wbayever@yahoo.com">
    XSLT stylesheet caching now ignores query string, as it should.
   </action>
