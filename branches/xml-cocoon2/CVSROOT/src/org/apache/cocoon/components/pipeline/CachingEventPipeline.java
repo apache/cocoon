@@ -51,7 +51,7 @@ import org.xml.sax.EntityResolver;
  * The CachingEventPipeline
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:33 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 10:06:39 $
  */
 public class CachingEventPipeline extends AbstractEventPipeline {
 
@@ -112,23 +112,24 @@ public class CachingEventPipeline extends AbstractEventPipeline {
                     pipelineCacheKey.addKey(cck);
 
                     // now testing transformers
-                    Iterator itt = this.transformers.iterator();
                     Transformer trans;
                     ComponentCacheKey transCacheKey;
-                    int index = 0;
+                    int transformerIndex = 0;
+                    int transformerSize = this.transformers.size();
                     long transKey;
                     CacheValidity transValidity;
                     boolean testTrans = true;
 
-                    while (itt.hasNext() == true && testTrans == true) {
-                        trans = (Transformer)itt.next();
+                    while (transformerIndex < transformerSize
+                           && testTrans == true) {
+                        trans = (Transformer)this.transformers.get(transformerIndex);
                         if (trans instanceof Cacheable) {
                             transKey = ((Cacheable)trans).generateKey();
                             transValidity = ((Cacheable)trans).generateValidity();
                             if (transKey != 0 && transValidity != null) {
                                 transCacheKey = new ComponentCacheKey(
                                      ComponentCacheKey.ComponentType_Transformer,
-                                     (String)this.transformerRoles.get(index),
+                                     (String)this.transformerRoles.get(transformerIndex),
                                      transKey);
                                 pipelineCacheKey.addKey(transCacheKey);
                                 validityObjects.put(transCacheKey, transValidity);
@@ -138,12 +139,13 @@ public class CachingEventPipeline extends AbstractEventPipeline {
                         } else {
                             testTrans = false;
                         }
-                        index++;
+                        transformerIndex++;
                     }
 
                     // now we have the key to get the cached object
                     CachedObject cachedObject = (CachedObject)saxStore.get(pipelineCacheKey);
                     if (cachedObject != null) {
+                        getLogger().debug("Found cached content.");
                         Iterator validityIterator = validityObjects.keySet().iterator();
                         ComponentCacheKey validityKey;
                         boolean valid = true;
@@ -153,13 +155,11 @@ public class CachingEventPipeline extends AbstractEventPipeline {
                         }
                         if (valid == true) {
 
+                            getLogger().debug("Using valid cached content.");
                             // get all transformers which are not cacheable
-                            itt = this.transformers.iterator();
-                            while (itt.hasNext() == true) {
-                                trans = (Transformer)itt.next();
-                                if (trans instanceof Cacheable == false) {
-                                    this.notCacheableTransformers.add(trans);
-                                }
+                            while (transformerIndex < transformerSize) {
+                                this.notCacheableTransformers.add(this.transformers.get(transformerIndex));
+                                transformerIndex++;
                             }
 
                             XMLDeserializer deserializer = null;
@@ -182,12 +182,14 @@ public class CachingEventPipeline extends AbstractEventPipeline {
                                     this.manager.release((Component)deserializer);
                             }
                         } else {
+                            getLogger().debug("Cached content is invalid.");
                             // remove invalid cached object
                             saxStore.remove(pipelineCacheKey);
                             cachedObject = null;
                         }
                     }
                     if (cachedObject == null) {
+                        getLogger().debug("Caching content for further request.");
                         xmlSerializer = (XMLSerializer)this.manager.lookup(Roles.XML_SERIALIZER);
                     }
                 }
