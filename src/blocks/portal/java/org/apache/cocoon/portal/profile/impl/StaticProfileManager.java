@@ -304,30 +304,35 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void register(CopletInstanceData coplet) {
+        // nothing to do
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void unregister(CopletInstanceData coplet) {
+        // nothing to do
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
      */
     public void register(Layout layout) {
+        // nothing to do
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
      */
     public void unregister(Layout layout) {
+        // nothing to do
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
      */
     public void saveUserProfiles() {
+        // nothing to do
     }
 
     /* (non-Javadoc)
@@ -338,7 +343,6 @@ public class StaticProfileManager extends AbstractProfileManager implements Conf
         super.configure(configuration);
         Configuration child = configuration.getChild("profiles-path");
         this.profilesPath = child.getValue("cocoon:/profiles");
-        //this.profilesPath = "context://samples/simple-portal/profiles";
     }
         
     /* (non-Javadoc)

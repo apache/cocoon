@@ -23,11 +23,13 @@ import java.util.List;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 
 /**
  * The profile manager using the authentication framework
@@ -39,12 +41,17 @@ import org.apache.cocoon.portal.layout.Layout;
 public class GroupBasedProfileManager 
     extends AbstractProfileManager { 
 
-    protected UserProfile getUserProfile() {
+    protected static final String KEY_PREFIX = GroupBasedProfileManager.class.getName() + ':';
+    
+    protected UserProfile getUserProfile(String layoutKey) {
+        if ( layoutKey == null ) {
+            layoutKey = this.getDefaultLayoutKey();
+        }
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            return (UserProfile)service.getAttribute(GroupBasedProfileManager.class.getName());
+            return (UserProfile)service.getAttribute(KEY_PREFIX + layoutKey);
         } catch (ServiceException e) {
             // this should never happen
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
@@ -53,12 +60,14 @@ public class GroupBasedProfileManager
         }
     }
     
-    protected void removeUserProfile() {
+    protected void removeUserProfiles() {
+        // TODO: remove all profiles - we have to rememember all used layout keys
+        String layoutKey = this.getDefaultLayoutKey();
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            service.removeAttribute(GroupBasedProfileManager.class.getName());
+            service.removeAttribute(KEY_PREFIX + layoutKey);
         } catch (ServiceException e) {
             // this should never happen
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
@@ -81,7 +90,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#logout()
      */
     public void logout() {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         if ( profile != null ) {
             ServiceSelector adapterSelector = null;
             try {
@@ -104,7 +113,7 @@ public class GroupBasedProfileManager
             } finally {
                 this.manager.release(adapterSelector);
             }
-            this.removeUserProfile();
+            this.removeUserProfiles();
         }
         super.logout();
     }
@@ -113,7 +122,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
      */
     public CopletInstanceData getCopletInstanceData(String copletID) {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         if ( profile != null ) {
             return (CopletInstanceData)profile.getCopletInstanceDatas().get(copletID);
         }
@@ -124,7 +133,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletData(java.lang.String)
      */
     public CopletData getCopletData(String copletDataId) {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         if ( profile != null ) {
             return (CopletData)profile.getCopletDatas().get(copletDataId);
         }
@@ -135,7 +144,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
      */
     public List getCopletInstanceData(CopletData data) {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         final List coplets = new ArrayList();
         if ( profile != null ) {
             final Iterator iter = profile.getCopletInstanceDatas().values().iterator();
@@ -153,7 +162,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void register(CopletInstanceData coplet) {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         profile.getCopletInstanceDatas().put(coplet.getId(), coplet);
     }
     
@@ -161,7 +170,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void unregister(CopletInstanceData coplet) {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         profile.getCopletInstanceDatas().remove(coplet.getId());
     }
 
@@ -170,7 +179,7 @@ public class GroupBasedProfileManager
      */
     public void register(Layout layout) {
         if ( layout != null && layout.getId() != null ) {
-            final UserProfile profile = this.getUserProfile();    
+            final UserProfile profile = this.getUserProfile(null);    
             profile.getLayouts().put(layout.getId(), layout);
         }
     }
@@ -180,7 +189,7 @@ public class GroupBasedProfileManager
      */
     public void unregister(Layout layout) {
         if ( layout != null && layout.getId() != null ) {
-            final UserProfile profile = this.getUserProfile();
+            final UserProfile profile = this.getUserProfile(null);
             profile.getLayouts().remove(layout.getId());
         }
     }
@@ -201,7 +210,7 @@ public class GroupBasedProfileManager
             if ( null != l) {
                 return l;
             }
-            final UserProfile profile = this.getUserProfile();
+            final UserProfile profile = this.getUserProfile(layoutKey);
             return (Layout)profile.getLayouts().get(layoutID);
         } catch (Exception ce) {
             throw new CascadingRuntimeException("Exception during loading of profile.", ce);
@@ -214,7 +223,7 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDatas()
      */
     public Collection getCopletDatas() {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         if ( profile != null ) {
             return profile.getCopletDatas().values();
         }
@@ -225,11 +234,38 @@ public class GroupBasedProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceDatas()
      */
     public Collection getCopletInstanceDatas() {
-        final UserProfile profile = this.getUserProfile();
+        final UserProfile profile = this.getUserProfile(null);
         if ( profile != null ) {
             return profile.getCopletInstanceDatas().values();
         }
         return null;
     }
+
+    /**
+     * Return the user info about the current user.
+     * This implementation uses the authentication framework - if you
+     * want to use a different authentication method just overwrite this
+     * method.
+     */
+    protected UserInfo getUserInfo() {
+        AuthenticationManager authManager = null;
+        try {
+            authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
+            final UserInfo info = new UserInfo();
+            info.setUserName(authManager.getState().getHandler().getUserId());
+            try {
+                info.setGroup((String)authManager.getState().getHandler().getContext().getContextInfo().get("group"));
+            } catch (ProcessingException pe) {
+                // ignore this
+            }
+            return info;    
+        } catch (ServiceException ce) {
+            // ignore this here
+            return null;
+        } finally {
+            this.manager.release( authManager );
+        }
+    }
+        
     
 }
