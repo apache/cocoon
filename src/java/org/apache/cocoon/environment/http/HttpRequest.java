@@ -50,25 +50,31 @@
 */
 package org.apache.cocoon.environment.http;
 
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.components.request.RequestFactory;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.*;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 
 /**
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.1 2003/03/09 00:09:30 pier Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.2 2003/04/04 13:19:07 stefano Exp $
  */
 
 public final class HttpRequest implements Request {
@@ -87,25 +93,40 @@ public final class HttpRequest implements Request {
     
     /** The current session */
     private HttpSession session;
-
-    private final RequestFactory requestFactory;
-
     
     /**
      * Creates a HttpRequest based on a real HttpServletRequest object
      */
-    protected HttpRequest(HttpServletRequest req, HttpEnvironment env, RequestFactory requestFactory) {
+    protected HttpRequest(HttpServletRequest req, HttpEnvironment env) {
         super();
         this.req = req;
         this.env = env;
-        this.requestFactory = requestFactory;
+    }
+
+    public Object get(String name) {
+        // if the request has been wrapped then access its method
+        if (req instanceof MultipartHttpServletRequest) {
+            return ((MultipartHttpServletRequest) req).get(name);
+        } else {
+            String[] values = req.getParameterValues(name);
+            if (values == null) {
+                return null;
+            }
+            if (values.length == 1) {
+                return values[0];
+            }
+            if (values.length > 1) {
+                Vector vect = new Vector(values.length);
+                for (int i = 0; i < values.length; i++) {
+                    vect.add(values[i]);
+                }
+                return vect;
+            }
+        }
+        return null;
     }
 
     /* The HttpServletRequest interface methods */
-
-    public Object get(String name) {
-        return requestFactory.get(this.req, name);
-    }
 
     public String getAuthType() {
         return this.req.getAuthType();

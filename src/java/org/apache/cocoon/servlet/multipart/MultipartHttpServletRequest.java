@@ -48,68 +48,60 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request.multipart;
+package org.apache.cocoon.servlet.multipart;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Vector;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet request wrapper for multipart parser.
  *
- * @author Jeroen ter Voorde
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartRequestWrapper.java,v 1.1 2003/03/09 00:09:10 pier Exp $
+ * @author Stefano Mazzocchi
+ * @version CVS $Id: MultipartHttpServletRequest.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public class MultipartRequestWrapper
-        implements ServletRequest, HttpServletRequest {
+public class MultipartHttpServletRequest implements HttpServletRequest {
 
-    /** Field CONTENTHEADER           */
-    private final String CONTENTHEADER = "multipart/form-data";
-
-    /** Field request           */
+    /** The wrapped request */
     private HttpServletRequest request = null;
 
-    /** Field values           */
-    private MultipartParser values = null;
+    /** The submitted parts */
+    private Hashtable values = null;
 
     /**
-     * Constructor MultipartRequestWrapper
-     *
-     * @param request
-     * @param saveUploadedFilesToDisk
-     * @param uploadDirectory
-     * @param allowOverwrite
-     * @param silentlyRename
-     * @param maxUploadSize
-     *
-     * @throws IOException
-     * @throws MultipartException
+     * Create this wrapper around the given request and including the given 
+     * parts.
      */
-    public MultipartRequestWrapper(
-            HttpServletRequest request, boolean saveUploadedFilesToDisk, File uploadDirectory, boolean allowOverwrite, boolean silentlyRename, int maxUploadSize)
-            throws IOException, MultipartException {
-
+    public MultipartHttpServletRequest(HttpServletRequest request, Hashtable values) {
         this.request = request;
+        this.values = values;
+    }
 
-        String contentType = request.getContentType();
-
-        if ((contentType != null)
-                && (contentType.toLowerCase().indexOf(CONTENTHEADER) > -1)) {
-            values = new MultipartParser(request, saveUploadedFilesToDisk,
-                    uploadDirectory, allowOverwrite,
-                    silentlyRename, maxUploadSize);
+    /**
+     * Cleanup eventually uploaded parts that were saved on disk
+     * 
+     * @return a set containing the part names
+     */
+    public void cleanup() throws IOException {
+        Enumeration e = getParameterNames();
+        while (e.hasMoreElements()) {
+            Object o = e.nextElement();
+            if (o instanceof PartOnDisk) {
+                File file = ((PartOnDisk) o).getFile();
+                file.delete();
+            }
         }
     }
 
@@ -120,7 +112,6 @@ public class MultipartRequestWrapper
      *
      */
     public Object get(String name) {
-
         Object result = null;
 
         if (values != null) {
@@ -158,7 +149,6 @@ public class MultipartRequestWrapper
      *
      */
     public Enumeration getParameterNames() {
-
         if (values != null) {
             return values.keys();
         } else {
@@ -173,7 +163,6 @@ public class MultipartRequestWrapper
      *
      */
     public String getParameter(String name) {
-
         Object value = get(name);
         String result = null;
 
@@ -195,7 +184,6 @@ public class MultipartRequestWrapper
      *
      */
     public String[] getParameterValues(String name) {
-
         if (values != null) {
             Object value = get(name);
 
@@ -217,15 +205,7 @@ public class MultipartRequestWrapper
             return request.getParameterValues(name);
         }
     }
-
-    /**
-     * Method getRequest
-     *
-     */
-    public HttpServletRequest getRequest() {
-        return request;
-    }
-
+    
     /**
      * Method getAttribute
      *
@@ -603,30 +583,4 @@ public class MultipartRequestWrapper
         return request.isRequestedSessionIdFromURL();
     }
 
-    /**
-     * Method getParameterMap
-     *
-     */
-    public Map getParameterMap() {
-        // FIXME:
-        return null;
-    }
-
-    /**
-     * Method setCharacterEncoding
-     *
-     * @param s
-     */
-    public void setCharacterEncoding(String s) {
-        // FIXME:
-    }
-
-    /**
-     * Method getRequestURL
-     *
-     */
-    public StringBuffer getRequestURL() {
-        // FIXME:
-        return null;
-    }
 }

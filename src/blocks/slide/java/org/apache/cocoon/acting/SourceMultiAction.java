@@ -58,9 +58,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.request.multipart.FilePart;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.ModifiableTraversableSource;
 import org.apache.cocoon.components.source.RestrictableSource;
@@ -73,7 +71,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-
+import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -82,7 +80,7 @@ import org.apache.excalibur.source.SourceException;
  * Multiple actions for upload files, change properties and permissions.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceMultiAction.java,v 1.1 2003/03/09 00:06:16 pier Exp $
+ * @version CVS $Id: SourceMultiAction.java,v 1.2 2003/04/04 13:19:06 stefano Exp $
  */ 
 public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe {
 
@@ -119,27 +117,22 @@ public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe
 
         getLogger().info("upload source called by '"+principal+"' for '"+uri+"'");
 
-        if ((request.get(UPLOAD_FILE)!=null) && 
-            (request.get(UPLOAD_FILE) instanceof FilePart)) {
-            FilePart filepart = (FilePart)request.get(UPLOAD_FILE);
-
+        Object uploadedFile = request.get(UPLOAD_FILE);
+        
+        if (( uploadedFile != null) && (uploadedFile instanceof Part)) {
+            Part part = (Part) uploadedFile;
+            
             try {
-                if ((filename==null) || (filename.length()==0)) {
-                    filename = filepart.getFilePath();
-                    int index = filename.lastIndexOf("/");
-                    if (index>=0)
-                        filename = filename.substring(index+1);
-                    index = filename.lastIndexOf("\\");
-                    if (index>=0)
-                        filename = filename.substring(index+1); 
+                if ((filename == null) || (filename.length() == 0)) {
+                    filename = part.getFileName();
                 }
 
-                if ((uri==null) || (uri.length()==0))
+                if ((uri == null) || (uri.length() == 0))
                     uri = filename;
                 else if (uri.endsWith("/"))
-                    uri = uri+filename;
+                    uri = uri + filename;
                 else
-                    uri = uri+"/"+filename;
+                    uri = uri + "/" + filename;
 
                 Source source = resolver.resolveURI(uri);
 
@@ -154,7 +147,7 @@ public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe
                     byte[] buffer = new byte[8192];
                     int length = -1;
 
-                    InputStream in = filepart.getInputStream();
+                    InputStream in = part.getInputStream();
                     while ((length = in.read(buffer)) > -1) {
                         out.write(buffer, 0, length);
                         getLogger().debug("="+length);
@@ -162,9 +155,9 @@ public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe
                     in.close();
                     out.flush();
                     out.close();
-                } else
+                } else {
                     throw new ProcessingException("Source isn't writeable");
-
+                }
             } catch (SourceException se) {
                 if (getLogger().isDebugEnabled())
                     getLogger().debug("Exception occurs while storing the content", se);
