@@ -1,6 +1,6 @@
 <!-- === Distribution targets ============================================== -->
 
-  <target name="dist" depends="init, forrest" description="[admin] Builds the distribution">
+  <target name="dist" depends="init" description="[admin] Builds the distribution">
 
     <mkdir dir="${dist.root}"/>
     <mkdir dir="${dist}"/>
@@ -50,16 +50,30 @@
     <fixcrlf srcdir="${dist}" includes="**.sh" eol="lf"/>
     <fixcrlf srcdir="${dist}" includes="antRun" eol="lf"/>
     <fixcrlf srcdir="${dist}" includes="**.bat" eol="crlf"/>
-
+<!--
     <zip zipfile="${dist.target}/${dist.name}.zip" 
          basedir="${dist.root}" 
          includes="${dist.name}/**">
     </zip>
-
-    <tar tarfile="${dist.target}/${dist.name}.tar" 
+-->
+<!--    <tar tarfile="${dist.target}/${dist.name}.tar" 
          longfile="gnu"
          basedir="${dist.root}"
          includes="${dist.name}/**">
+    </tar> -->
+    <tar tarfile="${dist.target}/${dist.name}.tar" 
+         longfile="gnu">
+         <tarfileset dir="${dist.root}">
+             <include name="${dist.name}/**"/>
+             <exclude name="${dist.name}/cocoon.sh"/>
+             <exclude name="${dist.name}/build.sh"/>
+             <exclude name="${dist.name}/tools/bin/antRun"/>
+         </tarfileset>
+         <tarfileset dir="${dist.root}" mode="755">
+             <include name="${dist.name}/cocoon.sh"/>
+             <include name="${dist.name}/build.sh"/>
+             <include name="${dist.name}/tools/bin/antRun"/>
+         </tarfileset>
     </tar>
     <gzip zipfile="${dist.target}/${dist.name}.tar.gz" src="${dist.target}/${dist.name}.tar"/>
     <delete file="${dist.target}/${dist.name}.tar"/>
