@@ -89,6 +89,7 @@ public class CocoonBean
     private String m_instrumentConfigURI = m_contextURI + File.separator + "cocoon.instruments";
     private long m_threadTimeOut = 60l * 1000l;
     private ClassLoader m_parentClassLoader;
+    private boolean m_alreadyLoaded;
 
     public CocoonBean()
     {
@@ -96,6 +97,7 @@ public class CocoonBean
         m_parentClassLoader = Thread.currentThread().getContextClassLoader();
         m_initializationLogger = new NullLogger();
         m_contManager = null;
+        m_alreadyLoaded = false;
     }
 
     public Processor getRootProcessor()
@@ -274,6 +276,8 @@ public class CocoonBean
 
     private void forceLoadClasses()
     {
+        if ( m_alreadyLoaded ) return;
+
         m_initializationLogger.debug("Loading classes");
 
         Iterator it = m_classForceLoadList.iterator();
@@ -291,12 +295,15 @@ public class CocoonBean
                 m_initializationLogger.warn("Could not load class: " + className, e);
             }
         }
+
+        m_alreadyLoaded = true;
     }
 
     public void dispose()
     {
         m_initializationLogger.debug("Shutting down Cocoon");
         ContainerUtil.dispose( m_contManager );
+        m_contManager = null;
     }
 
     public void finalize() throws Throwable
