@@ -133,11 +133,7 @@ public class BetwixtTransformer
         this.refIds = "false".equals(refIds) || "no".equals(refIds);
     }
 
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters par) {
+    public void setup( SourceResolver resolver, Map objectModel, String src, Parameters par) {
         this.objectModel = objectModel;
     }
 
@@ -231,11 +227,12 @@ public class BetwixtTransformer
         try {
             if (this.beanWriter == null) {
                 this.beanWriter = new SAXBeanWriter(this.contentHandler);
-                synchronized (introspector) {
+
+                synchronized (BetwixtTransformer.class) {
                     if (introspector == null) {
                         introspector = this.beanWriter.getXMLIntrospector();
                         introspector.setLog(new LogKitLogger("betwixt"));
-                        /* The following is needed for EJB */
+                        // The following is needed for EJB
                         introspector.setClassNormalizer(new ClassNormalizer() {
                             public Class normalize(Class clazz) {
                                 if (Proxy.isProxyClass(clazz)
@@ -250,6 +247,7 @@ public class BetwixtTransformer
                         this.beanWriter.setXMLIntrospector(introspector);
                     }
                 }
+
                 beanWriter.getBindingConfiguration().setMapIDs(this.refIds);
             }
 
