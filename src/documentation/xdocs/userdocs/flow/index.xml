@@ -19,7 +19,7 @@
       machine (FSM). In this model, the Web application is composed of
       multiple states, but the application can be only in one state at
       a time. Any request received by the application transitions it
-      in a different state. During such a transition, the application
+      into a different state. During such a transition, the application
       may perform various side-effects, such as updating objects
       either in memory or in a database. Another important side-effect
       of such a transition is that a Web page is sent back to the

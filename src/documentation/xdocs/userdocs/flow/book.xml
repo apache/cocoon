@@ -3,7 +3,7 @@
 
 <book software="Apache Cocoon" 
       title="Apache Schecoon Documentation" 
-      copyright="@year@ The Apache Software Foundation">
+      copyright="1999-2003 The Apache Software Foundation">
 
   <menu label="Navigation">
     <menu-item label="Main" href="../../index.html"/>

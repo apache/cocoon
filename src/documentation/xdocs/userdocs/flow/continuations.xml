@@ -45,18 +45,18 @@ function calculator()
 
   try {
     if (operator == "plus")
-      sendPage("result.html", a + b);
+      sendPage("result.html", {result: a + b});
     else if (operator == "minus")
-      sendPage("result.html", a - b);
+      sendPage("result.html", {result: a - b});
     else if (operator == "multiply")
-      sendPage("result.html", a * b);
+      sendPage("result.html", {result: a * b});
     else if (operator == "divide")
-      sendPage("result.html", a / b);
+      sendPage("result.html", {result: a / b});
     else
-      sendResult("invalidOperator.html");
+      sendPage("invalidOperator.html", {operator: operator});
   }
-  catch (Exception ex) {
-    sendResult("error.html", "Operation failed: " + ex.toString();
+  catch (exception) {
+    sendPage("error.html", {message: "Operation failed: " + exception.toString()});
   }
 }
 ]]></source>
@@ -83,7 +83,7 @@ function calculator()
       maintain a thread alive until the user hits the link on the
       response page. This is clearly very expensive!</p>
 
-      <p>It would be very nice if we can capture the state of the
+      <p>It would be very nice if we could capture the state of the
       application, its stack of function calls, which includes local
       variables, the global variables and the program counter, and
       save them into an object. If this object would give us the
