@@ -69,7 +69,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.15 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.16 2004/01/27 05:50:08 tim Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -278,9 +278,11 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             if (this.insertRowBinding != null) {
                 Iterator rowIterator = rowsToInsert.iterator();
                 //register the factory!
-                this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
+                //this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
                 while (rowIterator.hasNext()) {
                     Repeater.RepeaterRow thisRow = (Repeater.RepeaterRow) rowIterator.next();
+                    // Perform the insert row binding.
+                    this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
                     // -->  create the path to let the context be created
                     Pointer newRowContextPointer = repeaterContext.createPath(this.rowPathForInsert + "[" + indexCount + "]");
                     JXPathContext newRowContext = repeaterContext.getRelativeContext(newRowContextPointer);
