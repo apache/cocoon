@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.51 2003/04/25 09:25:24 stephan Exp $
+  CVS $Id: gump.xml,v 1.52 2003/04/25 09:32:51 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -769,6 +769,8 @@
 
     <depend project="cocoon" inherit="all"/>
 
+    <work nested="build/cocoon-@@DATE@@/blocks/xmlform/dest"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/xmlform/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
