@@ -87,7 +87,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.15 2003/10/29 12:01:02 ugo Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.16 2003/10/31 10:30:15 sylvain Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -194,7 +194,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                                    Object obj, 
                                                    Object continuation) 
         throws Exception {
-        return forwardTo(uri, obj, (Continuation)unwrap(continuation)); 
+        return forwardTo(uri, unwrap(obj), (Continuation)unwrap(continuation)); 
     }
                                     
 
