@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.9 2004/04/25 20:02:27 haul Exp $
+ * @version CVS $Id$
  */
 public class EventLinkTransformer 
 extends AbstractCopletTransformer {
@@ -82,12 +82,12 @@ extends AbstractCopletTransformer {
     /**
      * The attribute defining the link inside an EVENT_ELEM tag.
      */
-    private String attributeName = null;
+    private String attributeName;
 
     /**
      * The element defining the link inside an EVENT_ELEM tag.
      */
-    private String elementName = null;
+    private String elementName;
     
     /**
      * Used to store elements' attributes between startTransformingElement and endTransformingElement. 
