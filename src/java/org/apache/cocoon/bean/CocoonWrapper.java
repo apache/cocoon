@@ -42,7 +42,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
@@ -52,10 +54,13 @@ import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
+import org.apache.cocoon.xml.ContentHandlerWrapper;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.SystemUtils;
 
 import org.apache.log.Hierarchy;
 import org.apache.log.Priority;
+import org.xml.sax.ContentHandler;
 
 /**
  * The Cocoon Wrapper simplifies usage of the Cocoon object. Allows to create,
