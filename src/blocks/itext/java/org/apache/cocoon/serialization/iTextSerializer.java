@@ -64,24 +64,66 @@ import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.SAXException;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.xml.SAXiTextHandler;
 
 /**
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: iTextSerializer.java,v 1.3 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: iTextSerializer.java,v 1.4 2003/05/20 19:22:49 tcurdt Exp $
  */
 final public class iTextSerializer extends AbstractSerializer implements Configurable, CacheableProcessingComponent {
 
+    private final static boolean LANDSCAPE = true;
+    private final static boolean PORTRAIT = false;
+
     private String mimetype = "application/pdf";
     private boolean setContentLength = true;
+    private Rectangle pageSize;
+    private boolean pageOrientation;
     private Document document = null;
+
+    private Rectangle getPageSize(final String s) throws ConfigurationException {
+        // TC: we could use reflection here instead
+        if ("letter".equalsIgnoreCase(s)) {
+            return PageSize.LETTER;
+        }
+        else if ("a4".equalsIgnoreCase(s)) {
+            return PageSize.A4;
+        }
+        else if ("a5".equalsIgnoreCase(s)) {
+            return PageSize.A5;
+        }
+        else {
+            throw new ConfigurationException("page size [" + String.valueOf(s) + "] is not yet recognized");
+        }
+    }
+
+    private boolean getOrientation(final String o) throws ConfigurationException {
+        if ("portrait".equalsIgnoreCase(o)) {
+            return PORTRAIT;
+        }
+        else if ("landscape".equalsIgnoreCase(o)) {
+            return LANDSCAPE;
+        }
+        else {
+            throw new ConfigurationException("orientation must be either portrait or landscape but is [" + String.valueOf(o) + "]");
+        }
+    }
 
     public void configure(Configuration conf) throws ConfigurationException {
         this.setContentLength = conf.getChild("set-content-length").getValueAsBoolean(true);
         this.mimetype = conf.getAttribute("mime-type");
+
+        this.pageSize = getPageSize(conf.getAttribute("page-size","A4"));
+        this.pageOrientation = getOrientation(conf.getAttribute("page-orientation","portrait"));
+
+        if (pageOrientation == LANDSCAPE) {
+            pageSize.rotate();
+        }
+
         getLogger().debug("iTextSerializer mime-type:" + mimetype);
-        this.document = new Document();
     }
 
     public String getMimeType() {
@@ -99,14 +141,19 @@ final public class iTextSerializer extends AbstractSerializer implements Configu
     }
 
     public void setOutputStream(OutputStream out) {
+        this.document = new Document(this.pageSize);
+
         try {
-        PdfWriter.getInstance(document, out);
+            PdfWriter.getInstance(document, out);
         }
         catch(Exception e) {
             getLogger().error("cannot create pdf writer instance",e);
             //TC: FIXME! shouldn't we throw an exception here? what kind?
         }
-        this.contentHandler = new SAXiTextHandler(document);
+
+        SAXiTextHandler handler = new SAXiTextHandler(document);
+        handler.setControlOpenClose(true);
+        this.contentHandler = handler;
     }
 
     public java.io.Serializable getKey() {
