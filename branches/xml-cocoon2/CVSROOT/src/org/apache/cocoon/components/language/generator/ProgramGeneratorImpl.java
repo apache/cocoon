@@ -50,7 +50,7 @@ import java.io.FileNotFoundException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 21:00:32 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-05-24 21:25:54 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
@@ -140,18 +140,21 @@ public class ProgramGeneratorImpl
   
       try {
         if (program == null) {
-          // FIXME: Why pass null as encoding?
+          /*
+	     FIXME: Passing null as encoding may result in invalid
+	     recompilation under certain circumstances!
+	  */
           program = programmingLanguage.load(
             normalizedName, this.repositoryName, null
           );
   
-	  // Instantiate program
-          programInstance = programmingLanguage.instantiate(program);
+          // Store loaded program in cache
+          this.cache.store(filename, program);
 	}
 
-        // Store loaded program in cache
-        this.cache.store(filename, program);
-      } catch (LanguageException e) {}
+	// Instantiate program
+        programInstance = programmingLanguage.instantiate(program);
+      } catch (LanguageException e) { }
       
       /*
          FIXME: It's the program (not the instance) that must

@@ -23,7 +23,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * and object program files
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-05-23 23:10:02 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-05-24 21:25:59 $
  */
 public abstract class CompiledProgrammingLanguage
   extends AbstractProgrammingLanguage
@@ -150,7 +150,8 @@ public abstract class CompiledProgrammingLanguage
 
     // Does object file exist? Load and return instance
     File objectFile = new File(
-      baseDirectory + File.separator + filename + this.getObjectExtension()
+      baseDirectory + File.separator +
+      filename + "." + this.getObjectExtension()
     );
 
     if (objectFile.exists() && objectFile.isFile() && objectFile.canRead()) {
