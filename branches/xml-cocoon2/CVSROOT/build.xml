@@ -196,11 +196,17 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
   <target name="compile" depends="prepare-src">
+    <copydir src="${build.src}" dest="${build.dest}">
+      <include name="**/Manifest.mf" />
+      <include name="**/*.xsl" />
+    </copydir>
+
     <javac srcdir="${build.src}"
            destdir="${build.dest}"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}">
+      <exclude name="**/*.html" />
       <exclude name="**/CocoonServlet*.java" unless="servlet.present" />
       <exclude name="**/SVGSerializer.java" unless="svg.present" />
       <exclude name="**/Javascript*" unless="rhino.present" />
@@ -225,8 +231,18 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <target name="webapp" depends="prepare">
     <mkdir dir="${build.war}"/>
+
     <copydir src="${conf.dir}" dest="${build.war}" filtering="on"/>
-    <copydir src="${samples.dir}" dest="${build.war}" filtering="on" excludes="README"/>
+
+    <copydir src="${samples.dir}" dest="${build.war}" filtering="on">
+      <exclude name="**/images/*"/>
+      <exclude name="README"/>
+    </copydir>
+
+    <copydir src="${samples.dir}" dest="${build.war}" filtering="off">
+      <include name="**/images/*"/>
+    </copydir>
+
     <jar jarfile="${build.dir}/${name}.war" 
          basedir="${build.war}"
          includes="**"/>
@@ -329,7 +345,7 @@ NOTE: the "site" target is only useful for site mantainers.
 
     <copydir src="." dest="${dist.dir}" includes="README, LICENSE, build.*, index.html" filtering="on"/>
 
-    <chmod perm="+x" src="${dist.dir}/build.sh"/>
+    <chmod perm="+x" file="${dist.dir}/build.sh"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.sh"  cr="remove"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.bat" cr="add"/>
   </target>
