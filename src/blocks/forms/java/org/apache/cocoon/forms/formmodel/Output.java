@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.8 2004/04/30 12:19:01 bruno Exp $
+ * @version $Id: Output.java,v 1.9 2004/05/07 13:42:09 mpo Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     
@@ -91,7 +91,7 @@ public class Output extends AbstractWidget implements DataWidget {
     public void setValue(Object object) {
         if (object != null && !definition.getDatatype().getTypeClass().isAssignableFrom(object.getClass())) {
             throw new RuntimeException("Tried to set value of output widget \""
-                                       + getFullyQualifiedId()
+                                       + getRequestParameterName()
                                        + "\" with an object of an incorrect type: "
                                        + "expected " + definition.getDatatype().getTypeClass()
                                        + ", received " + object.getClass() + ".");

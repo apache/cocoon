@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.9 2004/04/30 12:19:01 bruno Exp $
+ * @version $Id: BooleanField.java,v 1.10 2004/05/07 13:42:10 mpo Exp $
  */
 public class BooleanField extends AbstractWidget implements ValueChangedListenerEnabled {
     // FIXME(SW) : should the initial value be false or null ? This would allow
@@ -55,7 +55,7 @@ public class BooleanField extends AbstractWidget implements ValueChangedListener
 
     public void readFromRequest(FormContext formContext) {
         Object oldValue = value;
-        String param = formContext.getRequest().getParameter(getFullyQualifiedId());
+        String param = formContext.getRequest().getParameter(getRequestParameterName());
         if (param != null && param.equalsIgnoreCase("true"))
             value = Boolean.TRUE;
         else
@@ -109,7 +109,7 @@ public class BooleanField extends AbstractWidget implements ValueChangedListener
         }
         
         if (!(object instanceof Boolean)) {
-            throw new RuntimeException("Cannot set value of boolean field \"" + getFullyQualifiedId() + "\" to a non-Boolean value.");
+            throw new RuntimeException("Cannot set value of boolean field \"" + getRequestParameterName() + "\" to a non-Boolean value.");
         }
         
         Object oldValue = value;

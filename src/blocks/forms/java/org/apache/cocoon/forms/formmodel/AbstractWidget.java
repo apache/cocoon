@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.16 2004/05/01 00:05:44 joerg Exp $
+ * @version $Id: AbstractWidget.java,v 1.17 2004/05/07 13:42:09 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -104,7 +104,7 @@ public abstract class AbstractWidget implements Widget {
      * @throws IllegalStateException when the parent had already been set.
      */    
     public void setParent(Widget widget) {
-        if (this.parent != null) throw new IllegalStateException("The parent of widget " + getFullyQualifiedId() + " should only be set once.");
+        if (this.parent != null) throw new IllegalStateException("The parent of widget " + getRequestParameterName() + " should only be set once.");
         this.parent = widget;
     }
 
@@ -135,10 +135,10 @@ public abstract class AbstractWidget implements Widget {
 //        }
 //    }
 
-    public String getFullyQualifiedId() {
+    public String getRequestParameterName() {
         Widget myParent = getParent();
         if (myParent != null) {
-            String parentFullId = myParent.getFullyQualifiedId();
+            String parentFullId = myParent.getRequestParameterName();
             // the top level form returns an id == ""
             if (parentFullId.length() > 0) {
                 return parentFullId + "." + getId();
@@ -152,7 +152,7 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public void setValue(Object object) {
-        throw new RuntimeException("Cannot set the value of widget " + getFullyQualifiedId());
+        throw new RuntimeException("Cannot set the value of widget " + getRequestParameterName());
     }
 
     public boolean isRequired() {
@@ -166,7 +166,7 @@ public abstract class AbstractWidget implements Widget {
      * Concrete subclass widgets need to override when supporting event broadcasting.
      */
     public void broadcastEvent(WidgetEvent event) {
-        throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
+        throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
     }
     
     /**
@@ -265,7 +265,7 @@ public abstract class AbstractWidget implements Widget {
      * The XML attributes used in {@link #generateSaxFragment(ContentHandler, Locale)}
      * to be placed on the wrapping element for all the XML-instance-content of this Widget.
      * 
-     * This automatically adds @id={@link #getFullyQualifiedId()} to that element.
+     * This automatically adds @id={@link #getRequestParameterName()} to that element.
      * Concrete subclasses should call super.getXMLElementAttributes and possibly
      * add additional attributes.
      * 
@@ -280,7 +280,7 @@ public abstract class AbstractWidget implements Widget {
         // top-level widget-containers like forms will have their id set to ""
         // for those the @id should not be included.
         if (getId().length() != 0) {
-        	attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        	attrs.addCDATAAttribute("id", getRequestParameterName());
         }
         return attrs;
     }

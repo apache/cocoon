@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.10 2004/05/06 14:59:44 bruno Exp $
+ * @version $Id: MultiValueField.java,v 1.11 2004/05/07 13:42:09 mpo Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -64,7 +64,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     public void readFromRequest(FormContext formContext) {
-        enteredValues = formContext.getRequest().getParameterValues(getFullyQualifiedId());
+        enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
         validationError = null;
         values = null;
 
@@ -163,7 +163,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         } else if (value.getClass().isArray()) {
             setValues((Object[])value);
         } else {
-            throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + value.getClass().getName());
+            throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + value.getClass().getName());
         }
     }
 
@@ -171,7 +171,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         // check that all the objects in the array correspond to the datatype
         for (int i = 0; i < values.length; i++) {
             if (!definition.getDatatype().getTypeClass().isAssignableFrom(values[i].getClass()))
-                throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + values[i].getClass().getName());
+                throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + values[i].getClass().getName());
         }
         this.values = values;
     }

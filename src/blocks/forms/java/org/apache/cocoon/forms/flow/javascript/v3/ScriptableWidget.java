@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.1 2004/04/29 10:35:30 bruno Exp $
+ * @version $Id: ScriptableWidget.java,v 1.2 2004/05/07 13:42:11 mpo Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject implements ValueChangedListener, ActionListener, WidgetValidator {
@@ -458,8 +458,8 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
         return wrap(delegate.getForm().getSubmitWidget());
     }
 
-    public String jsFunction_getFullyQualifiedId() {
-        return delegate.getFullyQualifiedId();
+    public String jsFunction_getRequestParameterName() {
+        return delegate.getRequestParameterName();
     }
 
 //    public String jsFunction_getNamespace() {

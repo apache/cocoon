@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
- * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.4 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.5 2004/05/07 13:42:09 mpo Exp $
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -73,7 +73,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         // of the wrong type or null.)
         Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
         if (repeater == null) {
-            String fullId = frmModel.getFullyQualifiedId();
+            String fullId = frmModel.getRequestParameterName();
             if (fullId == null || fullId.length() == 0) {
                 fullId = "";
             } else {

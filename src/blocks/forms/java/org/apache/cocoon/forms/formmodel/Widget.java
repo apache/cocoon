@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.11 2004/04/30 12:22:40 bruno Exp $
+ * @version CVS $Id: Widget.java,v 1.12 2004/05/07 13:42:10 mpo Exp $
  */
 public interface Widget {
 
@@ -83,19 +83,11 @@ public interface Widget {
      */
     public Form getForm();
 
-//    /**
-//     * Gets the namespace of this widget. The combination of a widget's namespace
-//     * with its id (see {@link #getId()} gives the widget a form-wide unique name.
-//     * In practice, the namespace consists of the id's of the widget's parent widgets,
-//     * separated by dots.
-//     */
-//    public String getNamespace();
-
     /**
      * @return the id prefixed with the namespace, this name should be unique
      * accross all widgets on the form.
      */
-    public String getFullyQualifiedId();
+    public String getRequestParameterName();
 
     /**
      * Lets this widget read its data from a request. At this point the Widget

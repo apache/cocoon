@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.JXPathException;
  * (pointing to an attribute or text-node) to and from a specific CForms
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.5 2004/05/06 14:59:44 bruno Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.6 2004/05/07 13:42:09 mpo Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -134,7 +134,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
                 // if the value has been set to null and the underlying model is a bean, then
                 // JXPath will not be able to create a relative context
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("(Ignorable) problem binding field " + widget.getFullyQualifiedId(), e);
+                    getLogger().debug("(Ignorable) problem binding field " + widget.getRequestParameterName(), e);
                 }
             }
             if (subContext != null) {

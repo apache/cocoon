@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.8 2004/04/24 10:42:18 bruno Exp $
+ * @version $Id: ScriptableWidget.java,v 1.9 2004/05/07 13:42:11 mpo Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -467,8 +467,8 @@ public class ScriptableWidget extends ScriptableObject {
         return wrap(delegate.getForm().getSubmitWidget());
     }
 
-    public String jsFunction_getFullyQualifiedId() {
-        return delegate.getFullyQualifiedId();
+    public String jsFunction_getRequestParameterName() {
+        return delegate.getRequestParameterName();
     }
 
 //    public String jsFunction_getNamespace() {
