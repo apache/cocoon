@@ -14,15 +14,16 @@ import org.apache.xml.serialize.SerializerFactory;
 import org.apache.xml.serialize.Method;
 import org.apache.xml.serialize.OutputFormat;
 
+import org.apache.avalon.Poolable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-08 20:40:12 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-04 14:29:53 $
  */
 
-public class TextSerializer extends AbstractTextSerializer {
+public class TextSerializer extends AbstractTextSerializer implements Poolable {
 
     private SerializerFactory factory;
 
@@ -35,7 +36,7 @@ public class TextSerializer extends AbstractTextSerializer {
             super.setOutputStream(out);
             this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
         } catch (Exception e) {
-            log.error("TextSerializer", e);
+            log.error("TextSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());
         }
     }
