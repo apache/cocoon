@@ -179,10 +179,7 @@
   <target name="package-testcase" depends="compile-tests">
     <jar jarfile="${build}/${name}-testcase.jar" index="true">
       <fileset dir="${build.test}">
-        <include name="org/apache/cocoon/environment/mock/*"/>
-        <include name="org/apache/cocoon/components/source/SourceResolverAdapter*"/>
-        <include name="org/apache/cocoon/SitemapComponentTestCase*"/>
-        <include name="org/apache/cocoon/xml/WhitespaceFilter*"/>
+        <include name="org/apache/cocoon/*"/>
       </fileset>
     </jar>
     <!-- optionally add source files to the jar -->
