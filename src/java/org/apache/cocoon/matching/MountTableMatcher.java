@@ -72,7 +72,7 @@ import org.apache.excalibur.source.SourceValidity;
  * table, but not fail if it does not exist.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MountTableMatcher.java,v 1.7 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MountTableMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Parameterizable {
 
@@ -110,13 +110,16 @@ public class MountTableMatcher extends AbstractLogEnabled implements Matcher, Th
         if (values != null) {
             // Check validity
             SourceValidity oldValidity = (SourceValidity)values[1];
-            int valid = oldValidity.isValid();
-            if (valid == 1) {
+            
+            int valid = oldValidity != null ? oldValidity.isValid() : SourceValidity.INVALID;
+            
+            if (valid == SourceValidity.VALID) {
                 // Valid without needing the new validity
                 return (Map)values[0];
             }
             
-            if (valid == 0 && oldValidity.isValid(source.getValidity()) == 1) {
+            if (valid == SourceValidity.UNKNOWN &&
+                oldValidity.isValid(source.getValidity()) == SourceValidity.VALID) {
                 // Valid after comparing with the new validity
                 return (Map)values[0];
             }
