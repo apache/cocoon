@@ -52,7 +52,11 @@
 package org.apache.cocoon.woody.datatype;
 
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,20 +65,28 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.WrapperServiceManager;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.ResourceSource;
 import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Test case for Woody's DynamicSelectionList datatype.
- * @version CVS $Id: DynamicSelectionListTestCase.java,v 1.3 2003/10/23 22:08:13 ugo Exp $
+ * Test case for Woody's FlowModelSelectionList datatype.
+ * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.1 2003/10/23 22:08:13 ugo Exp $
  */
-public class DynamicSelectionListTestCase extends ExcaliburTestCase {
+public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
 
     protected ServiceManager serviceManager;
     protected DatatypeManager datatypeManager;
@@ -84,7 +96,7 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
      * Construct a new test case.
      * @param name The test case's name.
      */
-    public DynamicSelectionListTestCase(String name) {
+    public FlowJXPathSelectionListTestCase(String name) {
         super(name);
     }
 
@@ -112,24 +124,32 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
     
     /**
      * Test the generateSaxFragment method.
-     * @throws MalformedURLException
-     * @throws ParserConfigurationException
      */
     public void testGenerateSaxFragment() throws Exception {
-        DOMBuilder dest = new DOMBuilder();
-        ResourceSource source = 
-            new ResourceSource("resource://org/apache/cocoon/woody/datatype/DynamicSelectionListTestCase.source.xml");
-        Document sourceDoc = parser.parse(source.getInputStream());
-        Element datatypeElement = (Element) sourceDoc.getElementsByTagNameNS(Constants.WD_NS, "convertor").item(0);
+        List beans = new ArrayList(2);
+        beans.add(new TestBean("1", "One"));
+        beans.add(new TestBean("2", "Two"));
+        Map flowContextObject = new HashMap();
+        flowContextObject.put("beans", beans);
+        Request request = new MockRequest();
+        request.setAttribute(FlowHelper.CONTEXT_OBJECT, flowContextObject);
+        Map objectModel = new HashMap();
+        objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
+        Map contextObjectModel = new HashMap();
+        contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
+        Context context = new DefaultContext(contextObjectModel);
+        Source sampleSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCase.source.xml");
+        Document sample = parser.parse(sampleSource.getInputStream());
+        Element datatypeElement = (Element) sample.getElementsByTagNameNS(Constants.WD_NS, "datatype").item(0);
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
-        DynamicSelectionList list = 
-            new DynamicSelectionList(datatype, null, serviceManager);
-        list.generateSaxFragment(dest, Locale.ENGLISH, source);
-        ResourceSource expectedSource =
-            new ResourceSource("resource://org/apache/cocoon/woody/datatype/DynamicSelectionListTestCase.dest.xml");
+        FlowJXPathSelectionList list = new FlowJXPathSelectionList
+            (context, "beans", "key", "value", datatype);
+        DOMBuilder dest = new DOMBuilder();
+        list.generateSaxFragment(dest, Locale.ENGLISH);
+        Source expectedSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCase.dest.xml");
         Document expected = parser.parse(expectedSource.getInputStream());
-        assertEqual("Test if output is what is expected",
-                expected, dest.getDocument());
+        assertEqual("Test if generated list matches expected",
+            expected, dest.getDocument());
     }
 
     /**
@@ -166,6 +186,28 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
             out.write('\n');
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    public static class TestBean {
+        private String key;
+        private String value;
+
+        public TestBean(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+        
+        public String getKey() {
+            return key;
+        }
+        
+        public String getValue() {
+            return value;
+        }
+        
+        public String toString() {
+            return "{ " + key + " : " + value + " }";
         }
     }
 }
