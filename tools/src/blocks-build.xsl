@@ -84,25 +84,26 @@
     <macrodef name="block-compile">
         <attribute name="name"/>
         <attribute name="package"/>
+        <attribute name="dir"/>
         <sequential>
         <!-- Test if this block has special build -->
           <if>
-            <available file="${{blocks}}/@{{name}}/build.xml"/>
+            <available file="@{{dir}}/build.xml"/>
             <then>
               <ant inheritAll="true"
                    inheritRefs="false"
                    target="main"
-                   antfile="${{blocks}}/@{{name}}/build.xml">
-                <property name="block.dir" value="${{blocks}}/@{{name}}"/>
+                   antfile="@{{dir}}/build.xml">
+                <property name="block.dir" value="@{{dir}}"/>
               </ant>
             </then>
           </if>
           <!-- Test if this block has mocks -->
           <if>
-            <available type="dir" file="${{blocks}}/@{{name}}/mocks/"/>
+            <available type="dir" file="@{{dir}}/mocks/"/>
             <then>
               <mkdir dir="${{build.blocks}}/@{{name}}/mocks"/>
-              <javac srcdir="${{blocks}}/@{{name}}/mocks"
+              <javac srcdir="@{{dir}}/mocks"
                      destdir="${{build.blocks}}/@{{name}}/mocks"
                      debug="${{compiler.debug}}"
                      optimize="${{compiler.optimize}}"
@@ -123,11 +124,11 @@
       -->
       <!-- Currently, we have no JVM dependent sources
       <condition property="dependend.vm" value="${{target.vm}}">
-        <available file="${{blocks}}/@{{name}}/java${{target.vm}}"/>
+        <available file="@{{dir}}/java${{target.vm}}"/>
       </condition>
       <condition property="dependend.vm" value="">
         <not>
-          <available file="${{blocks}}/@{{name}}/java${{target.vm}}"/>
+          <available file="@{{dir}}/java${{target.vm}}"/>
         </not>
       </condition>
       -->
@@ -138,22 +139,22 @@
              target="${{target.vm}}"
              nowarn="${{compiler.nowarn}}"
              compiler="${{compiler}}">
-        <src path="${{blocks}}/@{{name}}/java"/>
+        <src path="@{{dir}}/java"/>
         <!-- Currently, we have no JVM dependent sources
-        <src path="${{blocks}}/@{{name}}/java${{dependend.vm}}"/>
+        <src path="@{{dir}}/java${{dependend.vm}}"/>
         -->
         <classpath refid="@{{name}}.classpath"/>
         <exclude name="**/samples/**/*.java"/>
       </javac>
 
       <copy filtering="on" todir="${{build.blocks}}/@{{name}}/dest">
-        <fileset dir="${{blocks}}/@{{name}}/java">
+        <fileset dir="@{{dir}}/java">
           <patternset refid="unprocessed.sources"/>
         </fileset>
       </copy>
 
       <copy filtering="off" todir="${{build.blocks}}/@{{name}}/dest">
-        <fileset dir="${{blocks}}/@{{name}}/java">
+        <fileset dir="@{{dir}}/java">
           <include name="**/Manifest.mf"/>
           <include name="META-INF/**"/>
         </fileset>
@@ -168,7 +169,7 @@
         <istrue value="${{include.sources-in-jars}}"/>
         <then>
           <jar jarfile="${{build.blocks}}/@{{name}}-block.jar" update="true">
-            <fileset dir="${{blocks}}/@{{name}}/java">
+            <fileset dir="@{{dir}}/java">
               <include name="**/*.java"/>
             </fileset>
           </jar>
@@ -179,7 +180,7 @@
         <istrue value="${{include.sources-jars}}"/>
         <then>
           <jar jarfile="${{build.blocks}}/@{{name}}-block.src.jar">
-            <fileset dir="${{blocks}}/@{{name}}/java">
+            <fileset dir="@{{dir}}/java">
               <include name="**/*.java"/>
             </fileset>
           </jar>
@@ -198,9 +199,9 @@
              target="${{target.vm}}"
              nowarn="${{compiler.nowarn}}"
              compiler="${{compiler}}">
-            <src path="${{blocks}}/@{{name}}/java"/>
+            <src path="@{{dir}}/java"/>
             <!-- Currently, we have no JVM dependent sources
-            <src path="${{blocks}}/@{{name}}/java${{dependend.vm}}"/>
+            <src path="@{{dir}}/java${{dependend.vm}}"/>
             -->
             <classpath refid="@{{name}}.classpath"/>
             <include name="**/samples/**/*.java"/>
@@ -212,23 +213,24 @@
 
    <macrodef name="block-patch">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
-          <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
-            <include name="@{{name}}/conf/*.xmap"/>
+          <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="@{{dir}}">
+            <include name="conf/*.xmap"/>
           </xpatch>
-          <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}" addcomments="true">
-            <include name="@{{name}}/conf/*.xconf"/>
+          <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="@{{dir}}" addcomments="true">
+            <include name="conf/*.xconf"/>
           </xpatch>
-          <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="${{blocks}}">
-            <include name="@{{name}}/conf/*.xlog"/>
+          <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="@{{dir}}">
+            <include name="conf/*.xlog"/>
           </xpatch>
-          <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
-            <include name="@{{name}}/conf/*.xweb"/>
+          <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="@{{dir}}">
+            <include name="conf/*.xweb"/>
           </xpatch>
 
           <!-- generate sitemap entries
           <sitemap-components sitemap="${{build.webapp}}/sitemap.xmap"
-                              source="${{blocks}}/@{{name}}/java"
+                              source="@{{dir}}/java"
                               block="@{{name}}">
             <xsl:if test="@status='unstable'">
               <xsl:attribute name="stable">false</xsl:attribute>
@@ -242,9 +244,9 @@
           <!-- generate sitemap components docs -->
           <!-- TODO - this is the wrong place for documentation, but currently blocks
                don't have own docs!
-            <mkdir dir="${{build.context}}/xdocs/userdocs"/>
+          <mkdir dir="${{build.context}}/xdocs/userdocs"/>
           <sitemap-components docDir="${{build.context}}/xdocs/userdocs"
-                              source="${{blocks}}/@{{name}}/java"
+                              source="@{{dir}}/java"
                               block="@{{name}}">
             <xsl:if test="@status='unstable'">
               <xsl:attribute name="stable">false</xsl:attribute>
@@ -259,35 +261,38 @@
 
     <macrodef name="block-roles">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
-            <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
-                <include name="@{{name}}/conf/*.xroles"/>
+            <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="@{{dir}}">
+                <include name="conf/*.xroles"/>
             </xpatch>
         </sequential>
     </macrodef>
 
     <macrodef name="block-patch-samples">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
-            <xpatch file="${{build.webapp}}/samples/sitemap.xmap" srcdir="${{blocks}}">
-                <include name="@{{name}}/conf/*.samplesxpipe"/>
+            <xpatch file="${{build.webapp}}/samples/sitemap.xmap" srcdir="@{{dir}}">
+                <include name="conf/*.samplesxpipe"/>
             </xpatch>
-            <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="${{blocks}}">
-                <include name="@{{name}}/conf/*.samplesxconf"/>
+            <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="@{{dir}}">
+                <include name="conf/*.samplesxconf"/>
             </xpatch>
         </sequential>
     </macrodef>
 
     <macrodef name="block-samples">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
           <!-- Test if this block has samples -->
           <if>
-            <available file="${{blocks}}/@{{name}}/samples/sitemap.xmap"/>
+            <available file="@{{dir}}/samples/sitemap.xmap"/>
             <then>
               <copy filtering="on" todir="${{build.webapp}}/samples/blocks/@{{name}}">
-                <fileset dir="${{blocks}}/@{{name}}/samples"/>
-                <fileset dir="${{blocks}}/@{{name}}/conf" includes="*.xsamples"/>
+                <fileset dir="@{{dir}}/samples"/>
+                <fileset dir="@{{dir}}/conf" includes="*.xsamples"/>
               </copy>
               <!-- copy sample classes -->
               <copy todir="${{build.webapp.classes}}" filtering="off">
@@ -300,17 +305,18 @@
 
     <macrodef name="block-lib">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
           <!-- if this block has a lib directory copy those too (deprecated) -->
           <if>
-            <available type="dir" file="${{blocks}}/@{{name}}/lib"/>
+            <available type="dir" file="@{{dir}}/lib"/>
             <then>
               <echo>
               NOTICE: the preferred method of including library dependencies in your block
               is by putting them in lib/optional and then declaring them in gump.xml.
               </echo>
               <copy filtering="off" todir="${{build.webapp.lib}}">
-                <fileset dir="${{blocks}}/@{{name}}/lib">
+                <fileset dir="@{{dir}}/lib">
                   <include name="*.jar"/>
                   <exclude name="servlet*.jar"/>
                 </fileset>
@@ -319,10 +325,10 @@
           </if>
           <!-- Test if this block has global WEB-INF files -->
           <if>
-            <available type="dir" file="${{blocks}}/@{{name}}/WEB-INF/"/>
+            <available type="dir" file="@{{dir}}/WEB-INF/"/>
             <then>
               <copy filtering="on" todir="${{build.webapp.webinf}}">
-                <fileset dir="${{blocks}}/@{{name}}/WEB-INF/">
+                <fileset dir="@{{dir}}/WEB-INF/">
                   <include name="**"/>
                 </fileset>
               </copy>
@@ -333,15 +339,16 @@
 
     <macrodef name="block-tests">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
           <!-- Test if this block has tests -->
           <if>
-            <available file="${{blocks}}/@{{name}}/test"/>
+            <available file="@{{dir}}/test"/>
             <then>
               <mkdir dir="${{build.blocks}}/@{{name}}/test"/>
 
               <copy todir="${{build.blocks}}/@{{name}}/test" filtering="on">
-                <fileset dir="${{blocks}}/@{{name}}/test" excludes="**/*.java"/>
+                <fileset dir="@{{dir}}/test" excludes="**/*.java"/>
               </copy>
 
               <javac destdir="${{build.blocks}}/@{{name}}/test"
@@ -351,7 +358,7 @@
                      target="${{target.vm}}"
                      nowarn="${{compiler.nowarn}}"
                      compiler="${{compiler}}">
-                <src path="${{blocks}}/@{{name}}/test"/>
+                <src path="@{{dir}}/test"/>
                 <classpath>
                   <path refid="@{{name}}.classpath"/>
                   <path refid="test.classpath"/>
@@ -387,13 +394,14 @@
 
     <macrodef name="block-prepare-anteater-tests">
         <attribute name="name"/>
+        <attribute name="dir"/>
         <sequential>
           <!-- Test if this block has Anteater tests -->
           <if>
-            <available file="${{blocks}}/@{{name}}/test/anteater"/>
+            <available file="@{{dir}}/test/anteater"/>
             <then>
               <copy todir="${{build.test}}/anteater">
-                <fileset dir="${{blocks}}/@{{name}}/test/anteater"/>
+                <fileset dir="@{{dir}}/test/anteater"/>
                 <mapper type="glob" from="*.xml" to="@{{name}}-*.xml"/>
               </copy>
             </then>
@@ -417,12 +425,12 @@
     <target name="unstable" depends="init">
         <condition property="unstable.blocks.present">
           <or>
-      <xsl:for-each select="$cocoon-blocks[@status='unstable']">
-        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
-      </xsl:for-each>
-        </or>
-      </condition>
+            <xsl:for-each select="$cocoon-blocks[@status='unstable']">
+              <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+              <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
+            </xsl:for-each>
+          </or>
+        </condition>
       <if>
         <istrue value="${{unstable.blocks.present}}"/>
         <then>
@@ -443,10 +451,10 @@
     <target name="excluded" depends="init">
       <condition property="excluded.blocks.present">
         <or>
-      <xsl:for-each select="$cocoon-blocks">
-        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <istrue value="${{internal.exclude.block.{$block-name}}}"/>
-      </xsl:for-each>
+          <xsl:for-each select="$cocoon-blocks">
+            <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+            <istrue value="${{internal.exclude.block.{$block-name}}}"/>
+          </xsl:for-each>
         </or>
       </condition>
       <if>
@@ -552,7 +560,7 @@
             <srcfiles dir="${{java}}" includes="**/*.java,**/package.html"/>
             <srcfiles dir="${{deprecated.src}}" includes="**/*.java,**/package.html"/>
             <xsl:for-each select="$cocoon-blocks">
-              <srcfiles dir="${{blocks}}/{substring-after(@name,'cocoon-block-')}/java" includes="**/*.java,**/package.html"/>
+              <srcfiles dir="{@dir}/java" includes="**/*.java,**/package.html"/>
             </xsl:for-each>
           </uptodate>
           <istrue value="${{internal.exclude.javadocs}}"/>
@@ -639,7 +647,7 @@
           <include name="**"/>
         </packageset>
         <xsl:for-each select="$cocoon-blocks">
-          <packageset dir="${{blocks}}/{substring-after(@name,'cocoon-block-')}/java">
+          <packageset dir="{@dir}/java">
             <include name="**"/>
           </packageset>
         </xsl:for-each>
@@ -676,7 +684,9 @@
           </xsl:for-each>
         </xsl:if>
       </xsl:attribute>
-      <block-compile name="{$block-name}" package="{translate(package/text(), '.', '/')}"/>
+      <block-compile name="{$block-name}" 
+                     package="{translate(package/text(), '.', '/')}"
+                     dir="{@dir}"/>
     </target>
 
     <target name="{@name}-patch" unless="internal.exclude.block.{$block-name}">
@@ -691,7 +701,7 @@
           </xsl:for-each>
         </xsl:if>
       </xsl:attribute>
-      <block-patch name="{$block-name}"/>
+      <block-patch name="{$block-name}" dir="{@dir}"/>
     </target>
                                                                                                                                                                                
     <target name="{@name}-roles" unless="internal.exclude.block.{$block-name}">
@@ -704,11 +714,11 @@
           </xsl:for-each>
         </xsl:attribute>
       </xsl:if>
-      <block-roles name="{$block-name}"/>
+      <block-roles name="{$block-name}" dir="{@dir}"/>
     </target>
 
     <target name="{@name}-patch-samples" unless="internal.exclude.block.{$block-name}">
-        <block-patch-samples name="{$block-name}"/>
+        <block-patch-samples name="{$block-name}" dir="{@dir}"/>
     </target>
 
     <target name="{@name}-samples" unless="internal.exclude.block.{$block-name}">
@@ -721,7 +731,7 @@
           </xsl:for-each>
         </xsl:attribute>
       </xsl:if>
-      <block-samples name="{$block-name}"/>
+      <block-samples name="{$block-name}" dir="{@dir}"/>
     </target>
 
     <target name="{@name}-lib" unless="internal.exclude.block.{$block-name}">
@@ -745,7 +755,7 @@
             </fileset>
           </copy>
       </xsl:if>
-      <block-lib name="{$block-name}"/>
+      <block-lib name="{$block-name}" dir="{@dir}"/>
     </target>
 
     <target name="{@name}-prepare" unless="internal.exclude.block.{$block-name}">
@@ -771,7 +781,7 @@
           </fileset>
         </xsl:if>
         <!-- include the block/lib directory (deprecated) -->
-        <fileset dir="${{blocks}}/{$block-name}">
+        <fileset dir="{@dir}">
           <include name="lib/*.jar"/>
         </fileset>
         <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
@@ -795,11 +805,11 @@
           </xsl:for-each>
         </xsl:if>
       </xsl:attribute>
-      <block-tests name="{$block-name}"/>
+      <block-tests name="{$block-name}" dir="{@dir}"/>
     </target>
 
     <target name="{@name}-prepare-anteater-tests" unless="internal.exclude.block.{$block-name}">
-        <block-prepare-anteater-tests name="{$block-name}"/>
+        <block-prepare-anteater-tests name="{$block-name}" dir="{@dir}"/>
     </target>
   </xsl:template>
 </xsl:stylesheet>
