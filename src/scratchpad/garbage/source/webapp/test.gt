@@ -1,0 +1,39 @@
+
+<html xmlns="html" test="{props/java.vm.version}">
+  <head>
+    <title>x{}yz {#{props/java.vm.version}}</title>
+  </head>
+
+<body>
+#$varA={"VARA"}
+
+<fromVar>#{$varA}</fromVar>
+#if {props/java.vm.version = "1.3.1_01-14"}
+  <div>#{$varA}/IF</div>
+  #$varB={"IF"}
+  #$varA={"C_IF"}
+  <div>#{$varA}/IF</div>
+#elif {props/java.vm.version = "1.4.1_01-14"}
+  <div>#{$varA}/ELIF</div>
+  #$varB={"ELIF"}
+  #$varA={"C_ELIF"}
+  <div>#{$varA}/ELIF</div>
+#else
+  <div>#{$varA}/ELSE</div>
+  #$varB={"ELSE"}
+  #$varA={"C_ELSE"}
+  <div>#{$varA}/ELSE</div>
+#end
+
+<ul>
+#foreach {props/*}
+  <li>#{position()}: #{.}</li>
+#end
+
+#{props[@name="*"]}
+</ul>
+
+</body>
+</html>
+#{article/body}
+<vnunet:
