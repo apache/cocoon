@@ -75,16 +75,13 @@ import org.xml.sax.SAXException;
  * It's actually a quick hack...
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RSSTransformer.java,v 1.2 2003/07/12 13:49:56 cziegeler Exp $
+ * @version CVS $Id: RSSTransformer.java,v 1.3 2003/07/12 14:21:06 cziegeler Exp $
  */
 public final class RSSTransformer
 extends AbstractSAXTransformer {
 
     /** The xmlizer for converting html to xml */
     protected XMLizer xmlizer;
-    
-    /** The xml serializer */
-    protected XMLSerializer serializer;
     
     /** The xml deserializer */
     protected XMLDeserializer deserializer;
@@ -112,20 +109,24 @@ extends AbstractSAXTransformer {
             final String text = this.endTextRecording();
             final String html = "<html><body>"+text+"</body></html>";
             
-            boolean parsed = false;            
+            Object parsed = null;            
+            XMLSerializer serializer = null; 
             try {
+                serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
                 InputStream inputStream = new ByteArrayInputStream(html.getBytes());
                 this.xmlizer.toSAX(inputStream,
                                     "text/html",
                                     null,
-                                    this.serializer);
+                                    serializer);
                 // if no exception occurs, everything is fine!
-                parsed = true;
+                parsed = serializer.getSAXFragment();
             } catch (Exception ignore) {
+            } finally {
+                this.manager.release( serializer );
             }
-            if ( parsed ) {
+            if ( parsed != null ) {
                 this.deserializer.setConsumer( this.filter );
-                this.deserializer.deserialize( this.serializer.getSAXFragment());
+                this.deserializer.deserialize( parsed );
             } else {
                 this.sendTextEvent(text);
             }
@@ -138,10 +139,8 @@ extends AbstractSAXTransformer {
      */
     public void recycle() {
         this.manager.release( (Component) this.xmlizer );
-        this.manager.release( this.serializer );
         this.manager.release( this.deserializer );
         this.xmlizer = null;
-        this.serializer = null;
         this.deserializer = null;
         this.filter = null;
         super.recycle();
@@ -158,7 +157,6 @@ extends AbstractSAXTransformer {
         super.setup(resolver, objectModel, src, par);
         try {
             this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
-            this.serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
             this.deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
         } catch (ComponentException ce) {
             throw new ProcessingException("Unable to lookup component.", ce);
