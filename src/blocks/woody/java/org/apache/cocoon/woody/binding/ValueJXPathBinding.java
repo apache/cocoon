@@ -152,10 +152,6 @@ public class ValueJXPathBinding extends JXPathBindingBase {
                     value = convertor.convertToString(value, convertorLocale, null);
                 }
 
-                // FIXME: Remove
-                // System.out.println("Set lenient to true (was: " + jxpc.isLenient() + ") for " + jxpc);
-                jxpc.setLenient(true);
-
                 Object oldValue = jxpc.getValue(this.xpath);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("value= " + value + "-- oldvalue=" + oldValue);
