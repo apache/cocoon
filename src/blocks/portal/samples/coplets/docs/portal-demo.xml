@@ -48,9 +48,15 @@
         <p>These samples only work if you follow these installation instructions:</p>
         <ul>
          <li>Get the jakarta pluto project and install it into Tomcat (Test Pluto now).</li>
-         <li>Install Cocoon as a web application in Tomcat and remove the Pluto webapp.</li>
+         <li>Install Cocoon as a web application in Tomcat and remove the Pluto webapp. Please note,
+             that it is currently not possible to start Cocoon directly from a war file; it has 
+             to be expanded.</li>
+         <li>Remove the pluto-*.jar and the portlet-api-*.jar from the Cocoon WEB-INF/lib directory.</li>
          <li>Start Tomcat and run the Cocoon portal demo. You should now see two portlets.</li>
         </ul>
+        <p>The current implementation searches for portlets in all directories that are next to
+         the Cocoon webapp directory. So, if you put Cocoon into the webapps directory of Tomcat,
+         you should put your portlets there as well.</p>
      </s1>
   </body>
 </document>
