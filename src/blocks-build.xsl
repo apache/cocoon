@@ -429,8 +429,7 @@ select="@project"/>-compile</xsl:for-each></xsl:attribute>
                 optimize="{string('${compiler.optimize}')}"
                 deprecation="{string('${compiler.deprecation}')}"
                 target="{string('${target.vm}')}"
-                nowarn="{string('${compiler.nowarn}')}"
-                compiler="{string('${compiler}')}">
+                nowarn="{string('${compiler.nowarn}')}">
             <classpath>
                <path refid="test.classpath"/>
                <path refid="{$block-name}.classpath"/>
