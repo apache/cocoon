@@ -13,7 +13,7 @@
  <xsl:template match="st:document">
   <document>
    <header>
-    <title>Wiki page</title>
+    <title><xsl:value-of select="st:section/st:title/st:textsequence"/></title>
    </header>
    <body>
     <xsl:apply-templates select="st:paragraphs/st:paragraph/st:*" mode="paragraph"/>  
@@ -37,8 +37,12 @@
 
  <xsl:template match="st:textsequence" mode="paragraph">
   <p>
-   <xsl:apply-templates select="st:textblock/st:*"/>
+   <xsl:apply-templates select="st:textblock/st:*|st:break"/>
   </p>
+ </xsl:template>
+
+ <xsl:template match="st:line" mode="paragraph">
+  <p>--------------------------------------------------------------------------------</p>
  </xsl:template>
 
  <xsl:template match="st:table" mode="paragraph"> 
@@ -72,7 +76,11 @@
  </xsl:template>
 
  <xsl:template match="st:text">
-  <xsl:value-of select="."/>
+  <xsl:value-of select="."/><xsl:text> </xsl:text>
+ </xsl:template>
+
+ <xsl:template match="st:break">
+  <br/>
  </xsl:template>
 
  <xsl:template match="st:link">
@@ -140,15 +148,15 @@
  </xsl:template>
 
  <xsl:template match="st:emblock">
-  <em><xsl:value-of select="st:text"/></em>
+  <em><xsl:value-of select="st:text"/></em><xsl:text> </xsl:text>
  </xsl:template>
 
  <xsl:template match="st:strongblock">
-  <strong><xsl:value-of select="st:text"/></strong>
+  <strong><xsl:value-of select="st:text"/></strong><xsl:text> </xsl:text>
  </xsl:template>
 
  <xsl:template match="st:codeblock">
-  <code><xsl:value-of select="st:text"/></code>
+  <code><xsl:value-of select="st:text"/></code><xsl:text> </xsl:text>
  </xsl:template>
 
  <xsl:template match="st:bulletedlist" mode="paragraph">
