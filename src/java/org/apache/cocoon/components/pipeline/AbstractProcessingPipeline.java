@@ -89,7 +89,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.13 2004/02/04 15:14:59 sylvain Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.14 2004/02/06 11:37:49 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -422,22 +422,27 @@ public abstract class AbstractProcessingPipeline
                     this.serializerParam
                 );
             }
-
-            String mimeType = this.serializer.getMimeType();
-            if (mimeType != null) {
-                // we have a mimeType from the component itself
-                environment.setContentType (mimeType);
-            } else if (serializerMimeType != null) {
-                // there was a mimeType specified in the sitemap pipeline
-                environment.setContentType (serializerMimeType);
-            } else if (this.sitemapSerializerMimeType != null) {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType (this.sitemapSerializerMimeType);
+            
+            if (this.lastConsumer == null) {
+                // internal processing: text/xml
+                environment.setContentType("text/xml");
             } else {
-                // No mimeType available
-                String message = "Unable to determine MIME type for " +
-                    environment.getURIPrefix() + "/" + environment.getURI();
-                throw new ProcessingException(message);
+                String mimeType = this.serializer.getMimeType();
+                if (mimeType != null) {
+                    // we have a mimeType from the component itself
+                    environment.setContentType (mimeType);
+                } else if (serializerMimeType != null) {
+                    // there was a mimeType specified in the sitemap pipeline
+                    environment.setContentType (serializerMimeType);
+                } else if (this.sitemapSerializerMimeType != null) {
+                    // use the mimeType specified in the sitemap component declaration
+                    environment.setContentType (this.sitemapSerializerMimeType);
+                } else {
+                    // No mimeType available
+                    String message = "Unable to determine MIME type for " +
+                        environment.getURIPrefix() + "/" + environment.getURI();
+                    throw new ProcessingException(message);
+                }
             }
         } catch (SAXException e) {
             throw new ProcessingException(
