@@ -15,16 +15,9 @@
  */
 package org.apache.cocoon.components.pipeline.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Date;
-
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ConnectionResetException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.caching.CachedResponse;
@@ -34,9 +27,16 @@ import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
+
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * This is the base class for all caching pipeline implementations
@@ -164,6 +164,7 @@ public abstract class AbstractCachingProcessingPipeline
     throws ProcessingException {
         if (this.toCacheKey == null && this.cachedResponse == null) {
             return super.processXMLPipeline(environment);
+
         } else if (this.cachedResponse != null
                 && this.completeResponseIsCached) {
 
@@ -179,29 +180,16 @@ public abstract class AbstractCachingProcessingPipeline
                     environment.setContentLength(this.cachedResponse.length);
                     outputStream.write(this.cachedResponse);
                 }
-            } catch (SocketException se) {
-                if (se.getMessage().indexOf("reset") > 0
-                        || se.getMessage().indexOf("aborted") > 0
-                        || se.getMessage().indexOf("connection abort") > 0) {
-                    throw new ConnectionResetException(
-                            "Connection reset by peer", se);
-                } else {
-                    throw new ProcessingException(
-                            "Failed to execute pipeline.", se);
-                }
             } catch (Exception e) {
-                if (e instanceof ProcessingException)
-                    throw (ProcessingException)e;
-                throw new ProcessingException("Error executing pipeline.", e);
+                handleException(e);
             }
         } else {
-
-            if (this.getLogger().isDebugEnabled() && this.toCacheKey != null) {
-                this.getLogger().debug(
-                        "processXMLPipeline: caching content for further" +
-                        " requests of '" + environment.getURI() +
-                        "' using key " + this.toCacheKey);
+            if (getLogger().isDebugEnabled() && this.toCacheKey != null) {
+                getLogger().debug("processXMLPipeline: caching content for further" +
+                                  " requests of '" + environment.getURI() +
+                                  "' using key " + this.toCacheKey);
             }
+
             try {
                 OutputStream os = null;
 
@@ -255,23 +243,15 @@ public abstract class AbstractCachingProcessingPipeline
                 // Now that we have processed the pipeline,
                 // we do the actual caching
                 //
-                this.cacheResults(environment,os);
+                cacheResults(environment,os);
 
-            } catch (SocketException se) {
-                if (se.getMessage().indexOf("reset") > 0
-                        || se.getMessage().indexOf("aborted") > 0
-                        || se.getMessage().indexOf("connection abort") > 0) {
-                    throw new ConnectionResetException("Connection reset by peer", se);
-                }
-
-                throw new ProcessingException("Failed to execute pipeline.", se);
-            } catch (ProcessingException e) {
-                throw e;
             } catch (Exception e) {
-                throw new ProcessingException("Failed to execute pipeline.", e);
+                handleException(e);
             }
+
             return true;
         }
+
         return true;
     }
 
@@ -749,7 +729,6 @@ public abstract class AbstractCachingProcessingPipeline
                     }
                 }
 
-
                 if (this.reader.shouldSetContentLength()) {
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     this.reader.setOutputStream(os);
@@ -776,18 +755,8 @@ public abstract class AbstractCachingProcessingPipeline
                     );
                 }
             }
-        } catch ( SocketException se ) {
-            if (se.getMessage().indexOf("reset") > 0
-                    || se.getMessage().indexOf("aborted") > 0
-                    || se.getMessage().indexOf("connection abort") > 0) {
-                throw new ConnectionResetException("Connection reset by peer", se);
-            } else {
-                throw new ProcessingException("Failed to execute pipeline.", se);
-            }
-        } catch ( ProcessingException e ) {
-            throw e;
-        } catch ( Exception e ) {
-            throw new ProcessingException("Failed to execute pipeline.", e);
+        } catch (Exception e) {
+            handleException(e);
         }
 
         return true;
@@ -810,7 +779,7 @@ public abstract class AbstractCachingProcessingPipeline
 
         } else {
             int vals = 0;
-    
+
             if ( null != this.toCacheKey
                  && !this.cacheCompleteResponse
                  && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
