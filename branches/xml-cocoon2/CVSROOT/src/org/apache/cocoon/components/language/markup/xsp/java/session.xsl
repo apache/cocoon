@@ -72,15 +72,23 @@
       </xsl:call-template>
     </xsl:variable>
 
+    <xsl:variable name="default">
+      <xsl:call-template name="value-for-default">
+      </xsl:call-template>
+    </xsl:variable>
+    
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
 	  <xsp:element name="session:attribute">
-	    <xsp:expr>XSPRequestHelper.getSessionAttribute(objectModel, String.valueOf(<xsl:copy-of select="$name"/>))</xsp:expr>
+	    <xsp:expr>XSPRequestHelper.getSessionAttribute(objectModel,
+		    String.valueOf(<xsl:copy-of select="$name"/>),
+		    String.valueOf(<xsl:copy-of select="$default"/>))</xsp:expr>
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'object'">
           <xsp:expr>XSPRequestHelper.getSessionAttribute(objectModel,
-            String.valueOf(<xsl:copy-of select="$name"/>)
+            String.valueOf(<xsl:copy-of select="$name"/>),
+            String.valueOf(<xsl:copy-of select="$default"/>)
           )</xsp:expr>
         </xsl:when>
       </xsl:choose>
@@ -352,6 +360,13 @@
     <xsl:choose>
       <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="$default"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="value-for-default">
+    <xsl:choose>
+      <xsl:when test="@default">"<xsl:value-of select="@default"/>"</xsl:when>
+      <xsl:otherwise>""</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
