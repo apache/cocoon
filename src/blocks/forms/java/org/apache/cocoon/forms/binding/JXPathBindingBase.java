@@ -64,6 +64,13 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     }
 
     /**
+     * Gets source location of this binding.
+     */
+    public String getLocation() {
+        return this.commonAtts.location;
+    }
+
+    /**
      * Sets parent binding.
      */
     public void setParent(Binding binding) {
@@ -93,8 +100,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
                 }
                 classes.put(id, classBinding);
             } else {
-                // TODO: Improve message to include source location.
-                throw new RuntimeException("Class \"" + id + "\" not found.");
+                throw new RuntimeException("Class \"" + id + "\" not found (" + getLocation() + ")");
             }
         }
         return classBinding;
@@ -124,7 +130,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             } else {
                 containerId = "container \"" + containerId + "\"";
             }
-            throw new RuntimeException(getClass().getName() + ": Widget \"" +
+            throw new RuntimeException(getClass().getName() + " (" + getLocation() + "): Widget \"" +
                     id + "\" does not exist in the " + containerId +
                     " (" + parent.getLocation() + ").");
         }
