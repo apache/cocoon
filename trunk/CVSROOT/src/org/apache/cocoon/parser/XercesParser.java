@@ -1,4 +1,4 @@
-/*-- $Id: XercesParser.java,v 1.9 2000-05-18 21:51:37 stefano Exp $ --
+/*-- $Id: XercesParser.java,v 1.10 2000-07-21 23:39:55 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
  * This class implements an XML parser using the Apache Xerces XML parser.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-05-18 21:51:37 $
+ * @version $Revision: 1.10 $ $Date: 2000-07-21 23:39:55 $
  */
 
 public class XercesParser extends AbstractParser implements Status {
@@ -81,10 +81,25 @@ public class XercesParser extends AbstractParser implements Status {
         parser.setFeature("http://apache.org/xml/features/dom/create-entity-ref-nodes", false);
         parser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", true);
         parser.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
-        parser.parse(input);
+        parser.parse(resolveSystemId(input));
         return parser.getDocument();
     }
 
+    /*
+     * Make sure the SystemID is fully resolved as the SAX2 spec recommends.
+     */
+    private InputSource resolveSystemId(InputSource input) {
+        String id = input.getSystemId();
+        if (id != null) {
+            id = id.replace('\\','/');
+            if ((id.indexOf("://") < 0) && (!id.startsWith("file:"))) {
+                id = "file:" + id;
+            }
+            input.setSystemId(id);
+        }
+        return input;
+    }
+    
     /**
      * Creates an empty DOM tree.
      */
