@@ -18,9 +18,6 @@ package org.apache.cocoon.environment.portlet;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.PermanentRedirector;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Session;
 
 import javax.portlet.PortletContext;
 
@@ -34,9 +31,9 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletEnvironment.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id: PortletEnvironment.java,v 1.4 2004/05/25 07:28:26 cziegeler Exp $
  */
-public class PortletEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
+public class PortletEnvironment extends AbstractEnvironment {
 
     /**
      * As portlets do not have a pathInfo in the request, we can simulate this by passing
@@ -91,12 +88,6 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
     private String contentType;
 
     /**
-     * Did we redirect?
-     */
-    private boolean hasRedirected;
-
-
-    /**
      * Constructs a PortletEnvironment object from a PortletRequest
      * and PortletResponse objects
      */
@@ -110,7 +101,7 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
                               String containerEncoding,
                               String defaultFormEncoding)
     throws MalformedURLException, IOException {
-        super(uri, null, root, null);
+        super(uri, null, null);
 
         String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
 
@@ -140,7 +131,7 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
                               String containerEncoding,
                               String defaultFormEncoding)
     throws MalformedURLException, IOException {
-        super(uri, null, root, null);
+        super(uri, null, null);
 
         String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
 
@@ -172,26 +163,7 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
     }
 
 
-    public void redirect(boolean sessionmode, String newURL) throws IOException {
-        this.hasRedirected = true;
-
-        // check if session mode shall be activated
-        if (sessionmode) {
-            if (getLogger().isDebugEnabled()) {
-                String s = request.getRequestedSessionId();
-                if (s != null) {
-                    getLogger().debug("Session ID in request = " + s +
-                                      (request.isRequestedSessionIdValid() ? " (valid)" : " (invalid)"));
-                }
-            }
-
-            // get session from request, or create new session
-            Session session = request.getSession(true);
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Session ID = " + session.getId());
-            }
-        }
-
+    public void redirect(String newURL, boolean global, boolean permanent) throws IOException {
         // redirect
         String redirect = newURL;
         if (getLogger().isDebugEnabled()) {
@@ -202,27 +174,9 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
     }
 
     /**
-     * In portlet environment this is the same as {@link #redirect(boolean, String)}
-     */
-    public void permanentRedirect(boolean sessionmode, String newURL) throws IOException {
-        redirect(sessionmode, newURL);
-    }
-
-    public boolean hasRedirected() {
-        return this.hasRedirected;
-    }
-
-    /**
      * Portlet environment does not support response status code.
      */
     public void setStatus(int statusCode) {
-    }
-
-    /**
-     * Portlet environment does not support response status code.
-     */
-    public void sendStatus(int sc) {
-        throw new AbstractMethodError("Not Implemented");
     }
 
     /**

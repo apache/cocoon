@@ -36,7 +36,7 @@
 
   <role name="org.apache.excalibur.source.SourceResolver"
         shorthand="source-resolver"
-        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+        default-class="org.apache.cocoon.components.source.CocoonSourceResolver"/>
 
   <!-- The entity resolver used by most parsers -->
   <role name="org.apache.excalibur.xml.EntityResolver"

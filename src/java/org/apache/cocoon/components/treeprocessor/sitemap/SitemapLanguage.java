@@ -29,7 +29,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.container.CocoonComponentManager;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
@@ -45,7 +45,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.10 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.11 2004/05/25 07:28:25 cziegeler Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {

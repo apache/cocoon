@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.7 2004/03/23 19:48:43 stephan Exp $
+ * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.8 2004/05/25 07:28:24 cziegeler Exp $
  */
 public class ProfilingNonCachingProcessingPipeline
   extends NonCachingProcessingPipeline implements Disposable {
@@ -183,7 +183,7 @@ public class ProfilingNonCachingProcessingPipeline
             // setup the generator
             long time = System.currentTimeMillis();
 
-            this.generator.setup(environment, environment.getObjectModel(),
+            this.generator.setup(this.processor.getSourceResolver(), environment.getObjectModel(),
                                  generatorSource, generatorParam);
             this.data.setSetupTime(0, System.currentTimeMillis()-time);
 
@@ -197,7 +197,7 @@ public class ProfilingNonCachingProcessingPipeline
                 Transformer trans = (Transformer) transformerItt.next();
 
                 time = System.currentTimeMillis();
-                trans.setup(environment, environment.getObjectModel(),
+                trans.setup(this.processor.getSourceResolver(), environment.getObjectModel(),
                             (String) transformerSourceItt.next(),
                             (Parameters) transformerParamItt.next());
                 this.data.setSetupTime(index++,
@@ -207,7 +207,7 @@ public class ProfilingNonCachingProcessingPipeline
             time = System.currentTimeMillis();
             if (this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
-                    environment,
+                        this.processor.getSourceResolver(),
                     environment.getObjectModel(),
                     serializerSource,
                     serializerParam

@@ -42,6 +42,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
@@ -61,7 +62,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.12 2004/03/10 12:58:09 stephan Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.13 2004/05/25 07:28:25 cziegeler Exp $
  */
 public class CocoonWrapper {
 
@@ -141,6 +142,7 @@ public class CocoonWrapper {
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
             appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, "ISO-8859-1");
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.context.toURL().toExternalForm());
             
             loadClasses(classList);
 

@@ -16,14 +16,17 @@
 package org.apache.cocoon.environment.commandline;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.AbstractEnvironment;
-import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -36,16 +39,14 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.6 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.7 2004/05/25 07:28:24 cziegeler Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment
-extends AbstractEnvironment
-implements Redirector {
+extends AbstractEnvironment {
 
     protected String contentType;
     protected int contentLength;
-    protected boolean hasRedirected = false;
     protected int statusCode;
 
     public AbstractCommandLineEnvironment(String uri,
@@ -54,7 +55,7 @@ implements Redirector {
                                           OutputStream stream,
                                           Logger log)
     throws MalformedURLException {
-        super(uri, view, context);
+        super(uri, view);
         this.enableLogging(log);
         this.outputStream = stream;
         this.statusCode = 0;
@@ -63,14 +64,8 @@ implements Redirector {
     /**
      * Redirect the client to a new URL
      */
-    public void redirect(boolean sessionmode, String newURL)
+    public void redirect(String newURL, boolean global, boolean permanent) 
     throws IOException {
-
-        this.hasRedirected = true;
-
-        if (sessionmode) {
-            CommandLineSession.getSession(true);
-        }
 
         // fix all urls created with request.getScheme()+... etc.
         if (newURL.startsWith("cli:/")) {
@@ -84,57 +79,58 @@ implements Redirector {
         }
 
         // FIXME: this is a hack for the links view
-        if (newURL.startsWith("cocoon:")
-            && this.getView() != null
-            && this.getView().equals(Constants.LINK_VIEW)) {
-
-            // as the internal cocoon protocol is used the last
-            // serializer is removed from it! And therefore
-            // the LinkSerializer is not used.
-            // so we create one without Avalon...
-            org.apache.cocoon.serialization.LinkSerializer ls =
-                new org.apache.cocoon.serialization.LinkSerializer();
-            ls.setOutputStream(this.outputStream);
-
-            Source redirectSource = null;
-            try {
-                redirectSource = this.resolveURI(newURL);
-                SourceUtil.parse( this.manager, redirectSource, ls);
-            } catch (SourceException se) {
-                throw new CascadingIOException("SourceException: " + se, se);
-            } catch (SAXException se) {
-                throw new CascadingIOException("SAXException: " + se, se);
-            } catch (ProcessingException pe) {
-                throw new CascadingIOException("ProcessingException: " + pe, pe);
-            } finally {
-                this.release( redirectSource );
-            }
-        } else {
-            Source redirectSource = null;
-            try {
-                redirectSource = this.resolveURI(newURL);
-                InputStream is = redirectSource.getInputStream();
-                byte[] buffer = new byte[8192];
-                int length = -1;
-
-                while ((length = is.read(buffer)) > -1) {
-                    this.outputStream.write(buffer, 0, length);
+        ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
+        SourceResolver resolver = null;
+        try {
+            resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+            if (newURL.startsWith("cocoon:")
+                && this.getView() != null
+                && this.getView().equals(Constants.LINK_VIEW)) {
+            
+                // as the internal cocoon protocol is used the last
+                // serializer is removed from it! And therefore
+                // the LinkSerializer is not used.
+                // so we create one without Avalon...
+                org.apache.cocoon.serialization.LinkSerializer ls =
+                    new org.apache.cocoon.serialization.LinkSerializer();
+                ls.setOutputStream(this.outputStream);
+    
+                Source redirectSource = null;
+                try {
+                    redirectSource = resolver.resolveURI(newURL);
+                    SourceUtil.parse( manager, redirectSource, ls);
+                } catch (SourceException se) {
+                    throw new CascadingIOException("SourceException: " + se, se);
+                } catch (SAXException se) {
+                    throw new CascadingIOException("SAXException: " + se, se);
+                } catch (ProcessingException pe) {
+                    throw new CascadingIOException("ProcessingException: " + pe, pe);
+                } finally {
+                    resolver.release( redirectSource );
                 }
-            } catch (SourceException se) {
-                throw new CascadingIOException("SourceException: " + se, se);
-            } finally {
-                this.release( redirectSource);
+                
+            } else {
+                Source redirectSource = null;
+                try {
+                    redirectSource = resolver.resolveURI(newURL);
+                    InputStream is = redirectSource.getInputStream();
+                    byte[] buffer = new byte[8192];
+                    int length = -1;
+    
+                    while ((length = is.read(buffer)) > -1) {
+                        this.outputStream.write(buffer, 0, length);
+                    }
+                } catch (SourceException se) {
+                    throw new CascadingIOException("SourceException: " + se, se);
+                } finally {
+                    resolver.release( redirectSource);
+                }
             }
+        } catch (ServiceException se) {
+            throw new CascadingIOException("Unable to get source resolver.", se);
+        } finally {
+            manager.release(resolver);
         }
-    }
-
-    public void sendStatus(int sc) {
-        setStatus(sc);
-        this.hasRedirected = true;
-    }
-
-    public boolean hasRedirected() {
-        return this.hasRedirected;
     }
 
     /**

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.util.JavaScriptHelper;
 import org.apache.commons.jxpath.JXPathContext;
@@ -29,7 +29,7 @@ import org.mozilla.javascript.Script;
 /**
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.13 2004/04/30 22:52:43 joerg Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.14 2004/05/25 07:28:26 cziegeler Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
@@ -57,7 +57,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     
             // FIXME: remove this ugly hack and get the request from the
             // Avalon context once binding builder are real components
-            Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+            Map objectModel = EnvironmentHelper.getCurrentEnvironment().getObjectModel();
 
             try {
                 Map values = new HashMap(3);
@@ -92,7 +92,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             try {
                 // FIXME: remove this ugly hack and get the request from the Avalon context once
                 // binding builder are real components
-                Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+                Map objectModel = EnvironmentHelper.getCurrentEnvironment().getObjectModel();
 
                 Map values = new HashMap();
                 values.put("widget", widget);

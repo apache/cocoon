@@ -46,17 +46,20 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.ComponentContext;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.container.CocoonComponentManager;
+import org.apache.cocoon.components.container.ComponentContext;
+import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.ClassUtils;
 
 import org.apache.excalibur.event.Queue;
@@ -79,7 +82,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.24 2004/05/08 02:19:24 joerg Exp $
+ * @version CVS $Id: Cocoon.java,v 1.25 2004/05/25 07:28:24 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -135,6 +138,12 @@ public class Cocoon
 
     /** The source resolver */
     protected SourceResolver sourceResolver;
+    
+    /** The environment helper */
+    protected EnvironmentHelper environmentHelper;
+
+    /** A service manager (wrapper) */
+    protected ServiceManager serviceManager;
     
     /** An optional Avalon Component that is called before and after processing all requests. */
     protected RequestListener requestListener; 
@@ -320,6 +329,13 @@ public class Cocoon
             this.componentManager.release(processor);
         }
 
+        this.serviceManager = new ComponentManagerWrapper(this.componentManager);
+        
+        this.environmentHelper = new EnvironmentHelper(
+                (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
+        ContainerUtil.enableLogging(this.environmentHelper, getLogger());
+        ContainerUtil.service(this.environmentHelper, this.serviceManager);
+
         this.sourceResolver = (SourceResolver)this.componentManager.lookup(SourceResolver.ROLE);
         
         if (this.componentManager.hasComponent(RequestListener.ROLE)){
@@ -487,9 +503,9 @@ public class Cocoon
         this.threads = null;
         
         if ( this.componentManager != null ) {
-        	if ( this.requestListener!=null ){
-        		this.componentManager.release(this.requestListener);
-        	}
+            if ( this.requestListener!=null ){
+                this.componentManager.release(this.requestListener);
+            }
             this.componentManager.release(this.threadSafeProcessor);
             this.threadSafeProcessor = null;
             
@@ -614,10 +630,8 @@ public class Cocoon
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
-        Object key = CocoonComponentManager.startProcessing(environment);
-        CocoonComponentManager.enterEnvironment(environment,
-                                                this.componentManager,
-                                                this);
+        environment.startingProcessing();
+        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
             if (getLogger().isDebugEnabled()) {
@@ -679,23 +693,21 @@ public class Cocoon
             environment.tryResetResponse();
             throw any;
         } finally {
-            CocoonComponentManager.leaveEnvironment();
-            CocoonComponentManager.endProcessing(environment, key);
+            EnvironmentHelper.leaveProcessor();
+            environment.finishingProcessing();
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
             
             // TODO (CZ): This is only for testing - remove it later on
-            CocoonComponentManager.checkEnvironment(getLogger());
+            EnvironmentHelper.checkEnvironment(getLogger());
         }
     }
 
-    /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
-    public ProcessingPipeline buildPipeline(Environment environment)
+    public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
         if (disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
@@ -749,6 +761,20 @@ public class Cocoon
         return activeRequestCount;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
+     */
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+        return this.environmentHelper;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getContext()
+     */
+    public String getContext() {
+        return this.environmentHelper.getContext();
+    }
+
     public ExcaliburComponentManager getComponentManager() {
         return this.componentManager;
     }

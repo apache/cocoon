@@ -22,9 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -39,7 +38,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.16 2004/05/24 11:15:40 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.17 2004/05/25 07:28:25 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -57,15 +56,6 @@ public class EnvironmentWrapper
     /** The request object */
     protected Request request;
 
-    /** The last context */
-    protected String lastContext;
-
-    /** The last prefix */
-    protected String lastPrefix;
-
-    /** The last uri */
-    protected String lastURI;
-
     /** The stream to output to */
     protected OutputStream outputStream;
     
@@ -80,22 +70,8 @@ public class EnvironmentWrapper
     public EnvironmentWrapper(Environment env,
                               String      requestURI,
                               String      queryString,
-                              Logger      logger)
-    throws MalformedURLException {
-        this(env, requestURI, queryString, logger, false);
-    }
-
-    /**
-     * Constructs an EnvironmentWrapper object from a Request
-     * and Response objects
-     */
-    public EnvironmentWrapper(Environment env,
-                              String      requestURI,
-                              String      queryString,
-                              Logger      logger,
-                              boolean     rawMode)
-    throws MalformedURLException {
-        this(env, requestURI, queryString, logger, null, rawMode);
+                              Logger      logger) {
+        this(env, requestURI, queryString, logger,  false, null);
     }
 
     /**
@@ -106,44 +82,40 @@ public class EnvironmentWrapper
                               String           requestURI,
                               String           queryString,
                               Logger           logger,
-                              ComponentManager manager,
-                              boolean          rawMode)
-    throws MalformedURLException {
-        this(env, requestURI, queryString, logger, null, rawMode,env.getView());
+                              boolean          rawMode,
+                              String           view) {
+        super(env.getURI(), view, env.getAction());
+        init(env, requestURI, queryString, logger, rawMode, view);
     }
     
     /**
-     * Constructs an EnvironmentWrapper object from a Request
-     * and Response objects
+     * Constructor
+     * @param env
+     * @param manager
+     * @param uri
+     * @param logger
+     * @throws MalformedURLException
      */
-    public EnvironmentWrapper(Environment      env,
-                              String           requestURI,
-                              String           queryString,
-                              Logger           logger,
-                              ComponentManager manager,
-                              boolean          rawMode,
-                              String           view)
-    throws MalformedURLException {
-        super(env.getURI(), view, env.getContext(), env.getAction());
-        init(env, requestURI, queryString, logger, manager, rawMode, view);
-    }
+    public EnvironmentWrapper(Environment env, String uri,  Logger logger)  throws MalformedURLException {
+        super(env.getURI(), env.getView(), env.getAction());
 
-    private void init(Environment      env,
-                              String           requestURI,
-                              String           queryString,
-                              Logger           logger,
-                              ComponentManager manager,
-                              boolean          rawMode,
-                              String           view)
-        throws MalformedURLException {
-//        super(env.getURI(), view, env.getContext(), env.getAction());
-        this.rootContext = env.getRootContext();
+        SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
+
+        this.init(env, info.requestURI, info.queryString, logger, info.rawMode, info.view);
+        this.setURI(info.prefix, info.uri);
+        
+    }
+    
+    private void init(Environment    env,
+                      String         requestURI,
+                      String         queryString,
+                      Logger         logger,
+                      boolean        rawMode,
+                      String         view){
 
         this.enableLogging(logger);
         this.environment = env;
         this.view = view;
-
-        this.prefix = new StringBuffer(env.getURIPrefix());
 
         // create new object model and replace the request object
         Map oldObjectModel = env.getObjectModel();
@@ -166,113 +138,15 @@ public class EnvironmentWrapper
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
     }
    
-    public EnvironmentWrapper(Environment env, ComponentManager manager, String uri,  Logger logger)  throws MalformedURLException {
-        super(env.getURI(), env.getView(), env.getContext(), env.getAction());
-
-        // FIXME(SW): code stolen from SitemapSource. Factorize somewhere...
-        boolean rawMode = false;
-
-        // remove the protocol
-        int position = uri.indexOf(':') + 1;
-        if (position != 0) {
-//            this.protocol = uri.substring(0, position-1);
-            // check for subprotocol
-            if (uri.startsWith("raw:", position)) {
-                position += 4;
-                rawMode = true;
-            }
-        } else {
-            throw new MalformedURLException("No protocol found for sitemap source in " + uri);
-        }
-
-        // does the uri point to this sitemap or to the root sitemap?
-        String prefix;
-        if (uri.startsWith("//", position)) {
-            position += 2;
-//            try {
-//                this.processor = (Processor)this.manager.lookup(Processor.ROLE);
-//            } catch (ComponentException e) {
-//                throw new MalformedURLException("Cannot get Processor instance");
-//            }
-            prefix = ""; // start at the root
-        } else if (uri.startsWith("/", position)) {
-            position ++;
-            prefix = null;
-//            this.processor = CocoonComponentManager.getCurrentProcessor();
-        } else {
-            throw new MalformedURLException("Malformed cocoon URI: " + uri);
-        }
-
-        // create the queryString (if available)
-        String queryString = null;
-        int queryStringPos = uri.indexOf('?', position);
-        if (queryStringPos != -1) {
-            queryString = uri.substring(queryStringPos + 1);
-            uri = uri.substring(position, queryStringPos);
-        } else if (position > 0) {
-            uri = uri.substring(position);
-        }
-
-        
-        // determine if the queryString specifies a cocoon-view
-        String view = null;
-        if (queryString != null) {
-            int index = queryString.indexOf(Constants.VIEW_PARAM);
-            if (index != -1 
-                && (index == 0 || queryString.charAt(index-1) == '&')
-                && queryString.length() > index + Constants.VIEW_PARAM.length() 
-                && queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
-                
-                String tmp = queryString.substring(index+Constants.VIEW_PARAM.length()+1);
-                index = tmp.indexOf('&');
-                if (index != -1) {
-                    view = tmp.substring(0,index);
-                } else {
-                    view = tmp;
-                }
-            } else {
-                view = env.getView();
-            }
-        } else {
-            view = env.getView();
-        }
-
-        // build the request uri which is relative to the context
-        String requestURI = (prefix == null ? env.getURIPrefix() + uri : uri);
-
-//        // create system ID
-//        this.systemId = queryString == null ?
-//            this.protocol + "://" + requestURI :
-//            this.protocol + "://" + requestURI + "?" + queryString;
-
-        this.init(env, requestURI, queryString, logger, manager, rawMode, view);
-        this.setURI(prefix, uri);
-        
-    }
-
     /**
      * Redirect the client to a new URL is not allowed
      */
-    public void redirect(boolean sessionmode, String newURL)
+    public void redirect(String newURL, boolean global, boolean permanent)
     throws IOException {
-        this.redirectURL = newURL;
-
-        // check if session mode shall be activated
-        if (sessionmode) {
-            // get session from request, or create new session
-            request.getSession(true);
-        }
-    }
-
-    /**
-     * Redirect in the first non-wrapped environment
-     */
-    public void globalRedirect(boolean sessionmode, String newURL)
-    throws IOException {
-        if (environment instanceof EnvironmentWrapper) {
-            ((EnvironmentWrapper)environment).globalRedirect(sessionmode, newURL);
+        if ( !global ) {
+            this.redirectURL = newURL;
         } else {
-            environment.redirect(sessionmode,newURL);
+            this.environment.redirect(newURL, global, permanent);
         }
     }
 
@@ -368,47 +242,6 @@ public class EnvironmentWrapper
     }
 
     /**
-     * Set a new URI for processing. If the prefix is null the
-     * new URI is inside the current context.
-     * If the prefix is not null the context is changed to the root
-     * context and the prefix is set.
-     */
-    public void setURI(String prefix, String uris) {
-        if(getLogger().isDebugEnabled()) {
-            getLogger().debug("Setting uri (prefix=" + prefix + ", uris=" + uris + ")");
-        }
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        if (prefix != null) {
-            setContext(getRootContext());
-            setURIPrefix(prefix);
-        }
-        this.uris = uris;
-        this.lastURI = uris;
-        this.lastContext = this.context;
-        this.lastPrefix = this.prefix.toString();
-    }
-
-    public void changeContext(String prefix, String context)
-    throws IOException {
-        super.changeContext(prefix, context);
-        this.lastContext = this.context;
-        this.lastPrefix  = this.prefix.toString();
-        this.lastURI     = this.uris;
-    }
-
-    /**
-     * Change the current context to the last one set by changeContext()
-     * and return last processor
-     */
-    public void changeToLastContext() {
-        this.setContext(this.lastContext);
-        this.setURIPrefix(this.lastPrefix);
-        this.uris = this.lastURI;
-    }
-
-    /**
      * Lookup an attribute in this instance, and if not found search it
      * in the wrapped environment.
      *
@@ -417,8 +250,7 @@ public class EnvironmentWrapper
      * @return an <code>Object</code>, the value of the attribute or
      * null if no such attribute was found.
      */
-    public Object getAttribute(String name)
-    {
+    public Object getAttribute(String name) {
         Object value = super.getAttribute(name);
         if (value == null)
             value = this.environment.getAttribute(name);
@@ -447,7 +279,7 @@ public class EnvironmentWrapper
     public void setInternalRedirect(boolean flag) {
         this.internalRedirect = flag;
         if ( flag ) {
-            ((RequestWrapper)this.request).setRequestURI(this.prefix.toString(), this.uris);
+            ((RequestWrapper)this.request).setRequestURI(this.prefix, this.uri);
         }
     }
 

@@ -28,12 +28,12 @@ import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.CommandLineRequest;
 import org.apache.cocoon.environment.commandline.CommandLineResponse;
@@ -44,7 +44,7 @@ import org.apache.cocoon.util.NullOutputStream;
  * for pipeline calls which are not externally triggered.
  * 
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: BackgroundEnvironment.java,v 1.4 2004/03/19 18:19:25 sylvain Exp $
+ * @version CVS $Id: BackgroundEnvironment.java,v 1.5 2004/05/25 07:28:26 cziegeler Exp $
  *
  * @since 2.1.4
  */
@@ -52,8 +52,8 @@ public class BackgroundEnvironment extends AbstractEnvironment {
 	
 	private ComponentManager manager;
 	
-	public BackgroundEnvironment(Logger logger, Context ctx, ServiceManager manager) throws MalformedURLException {
-		super("", null, new File(ctx.getRealPath("/")), null);
+	public BackgroundEnvironment(Logger logger, Context ctx, ServiceManager manager) {
+		super("", null, null);
 		
 		this.enableLogging(logger);
 		
@@ -96,9 +96,9 @@ public class BackgroundEnvironment extends AbstractEnvironment {
      * @throws MalformedURLException
      */
     public BackgroundEnvironment(String uri, String view, File context, OutputStream stream, Logger log) 
-        throws MalformedURLException {
+    {
             
-        super(uri, view, context);
+        super(uri, view);
         this.enableLogging(log);
         this.outputStream = stream;    
      
@@ -112,10 +112,10 @@ public class BackgroundEnvironment extends AbstractEnvironment {
 
     }
 
-    /**
-     * @see org.apache.cocoon.environment.AbstractEnvironment#redirect(boolean, java.lang.String)
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
      */
-    public void redirect(boolean sessionmode, String newURL) throws IOException {
+    public void redirect(String newURL, boolean global, boolean permanent) throws IOException {
         
     }
 
@@ -157,9 +157,6 @@ public class BackgroundEnvironment extends AbstractEnvironment {
 		public boolean process(Environment environment) throws Exception {
 			throw new UnsupportedOperationException();
 		}
-		public ProcessingPipeline buildPipeline(Environment environment) throws Exception {
-			throw new UnsupportedOperationException();
-		}
 
 		public Map getComponentConfigurations() {
 			throw new UnsupportedOperationException();
@@ -168,5 +165,18 @@ public class BackgroundEnvironment extends AbstractEnvironment {
 		public Processor getRootProcessor() {
 			throw new UnsupportedOperationException();
 		}
+       
+        public InternalPipelineDescription buildPipeline(Environment environment)
+        throws Exception {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getContext() {
+            throw new UnsupportedOperationException();
+        }
+
+        public SourceResolver getSourceResolver() {
+            throw new UnsupportedOperationException();
+        }
     }
 }

@@ -85,6 +85,11 @@
       <p>The deprecated <em>getOutputStream</em> method of the <em>Environment</em> 
       interface has been removed. Use the <em>getOutputStream(int)</em> method
       instead.</p>
+      <p>
+        In addition some methods of the Environment interface have been changed,
+        removed and added. The environment is now free from any dependencies
+        to the Cocoon core and it is easier to create own environments.
+      </p>
     </s2>
     <s2 title="Cocoon Source Resolver Interface">
       <p>The deprecated <em>resolve</em> method of the 
@@ -167,9 +172,19 @@
         <li><em>org.apache.cocoon.matching.helpers.WildcardURIMatcher</em> - org.apache.cocoon.matching.helpers.WildcardHelper</li>
         <li><em>org.apache.cocoon.selection.RequestSelector</em> - org.apache.cocoon.selection.RequestParameterSelector</li>
         <li><em>org.apache.cocoon.selection.SessionStateSelector</em> - org.apache.cocoon.selection.SessionAttributeSelector</li>
+        <li><em>org.apache.cocoon.sitemap.SitemapRedirector</em> - Removed</li>
+        <li><em>org.apache.cocoon.sitemap.XSLTFactoryLoader</em> - Removed</li>
         <li><em>org.apache.cocoon.transformation.CachingCIncludeTransformer</em> - org.apache.cocoon.transformation.CIncludeTransformer</li>
         <li><em>org.apache.cocoon.transformation.helpers.MirrorRecorder</em> - Different alternatives, e.g. ParamSaxBuffer</li>
       </ul>
+    </s2>
+    <s2 title="Request Lifecycle Components">
+      <p>
+        The deprecated class <em>org.apache.cocoon.components.RequestLifecycleComponent</em>
+        and the deprecated class <em>org.apache.cocoon.components.GlobalRequestLifecycleComponent</em>
+        have been removed. Use the <em>org.apache.cocoon.components.persistence.RequestDataStore</em>
+        component instead.
+      </p>
     </s2>
   </s1>
   <s1 title="Caching">

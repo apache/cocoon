@@ -26,10 +26,9 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.8 2004/05/24 11:15:40 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.9 2004/05/25 07:28:24 cziegeler Exp $
  */
-public interface Environment
-    extends SourceResolver {
+public interface Environment {
 
     /**
      * Get the URI to process. The prefix is stripped off.
@@ -42,14 +41,9 @@ public interface Environment
     String getURIPrefix();
 
     /**
-     * Get the Root Context
+     * Set the URI and the prefix to process.
      */
-    String getRootContext();
-
-    /**
-     * Get current context
-     */
-    String getContext();
+    void setURI(String prefix, String value);
 
     /**
      * Get the view to process
@@ -62,20 +56,10 @@ public interface Environment
     String getAction();
 
     /**
-     * Set the context. This is similar to changeContext()
-     * except that it is absolute.
-     */
-    void setContext(String prefix, String uri, String context);
-
-    /**
-     * Change the context from uriprefix to context
-     */
-    void changeContext(String uriprefix, String context) throws Exception;
-
-    /**
      * Redirect to the given URL
      */
-    void redirect(boolean sessionmode, String url) throws IOException;
+    void redirect(String url, boolean global, boolean permanent) 
+    throws IOException;
 
     /**
      * Set the content type of the generated resource

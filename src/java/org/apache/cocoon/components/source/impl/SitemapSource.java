@@ -23,18 +23,15 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Constants;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -54,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.18 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.19 2004/05/25 07:28:24 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -64,31 +61,22 @@ implements Source, XMLizable {
     private SourceValidity sourceValidity;
 
     /** The system id */
-    private String systemId;
+    private final String systemId;
 
     /** The system id used for caching */
     private String systemIdForCaching;
     
-    /** The uri */
-//    private String uri;
-
-    /** The current ComponentManager */
-    private ComponentManager manager;
+    /** The current ServiceManager */
+    private final ServiceManager manager;
 
     /** The processor */
-    private Processor processor;
+    private final Processor processor;
 
-    /** The pipeline processor */
-    private Processor pipelineProcessor;
+    /** The pipeline description */
+    private Processor.InternalPipelineDescription pipelineDescription;
 
     /** The environment */
-    private MutableEnvironmentFacade environment;
-
-    /** The prefix for the processing */
-//    private String prefix;
-
-    /** The <code>ProcessingPipeline</code> */
-    private ProcessingPipeline processingPipeline;
+    private final MutableEnvironmentFacade environment;
 
     /** The redirect <code>Source</code> */
     private Source redirectSource;
@@ -102,11 +90,11 @@ implements Source, XMLizable {
     /** Do I need a refresh ? */
     private boolean needsRefresh;
 
-    /** The unique key for this processing */
-    private Object processKey;
+    /** Is start processing on the environment called? */
+    private boolean processed;
     
     /** The used protocol */
-    private String protocol;
+    private final String protocol;
 
     /** SourceResolver (for the redirect source) */
     private SourceResolver sourceResolver;
@@ -116,13 +104,13 @@ implements Source, XMLizable {
     /**
      * Construct a new object
      */
-    public SitemapSource(ComponentManager manager,
-                          String           uri,
-                          Map              parameters,
-                          Logger           logger)
+    public SitemapSource(ServiceManager manager,
+                         String         uri,
+                         Map            parameters,
+                         Logger         logger)
     throws MalformedURLException {
 
-        Environment env = CocoonComponentManager.getCurrentEnvironment();
+        Environment env = EnvironmentHelper.getCurrentEnvironment();
         if ( env == null ) {
             throw new MalformedURLException("The cocoon protocol can not be used outside an environment.");
         }
@@ -130,84 +118,20 @@ implements Source, XMLizable {
         this.manager = manager;
         this.enableLogging(logger);
 
-        boolean rawMode = false;
-
-        // remove the protocol
-        int position = uri.indexOf(':') + 1;
-        if (position != 0) {
-            this.protocol = uri.substring(0, position-1);
-            // check for subprotocol
-            if (uri.startsWith("raw:", position)) {
-                position += 4;
-                rawMode = true;
-            }
-        } else {
-            throw new MalformedURLException("No protocol found for sitemap source in " + uri);
-        }
+        SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
+        this.protocol = info.protocol;
 
         // does the uri point to this sitemap or to the root sitemap?
-        String prefix;
-        if (uri.startsWith("//", position)) {
-            position += 2;
-            try {
-                this.processor = (Processor)this.manager.lookup(Processor.ROLE);
-            } catch (ComponentException e) {
-                throw new MalformedURLException("Cannot get Processor instance");
-            }
-            prefix = ""; // start at the root
-        } else if (uri.startsWith("/", position)) {
-            position ++;
-            prefix = null;
-            this.processor = CocoonComponentManager.getCurrentProcessor();
+        if (info.prefix.length() == 0) {
+            this.processor = EnvironmentHelper.getCurrentProcessor().getRootProcessor();
         } else {
-            throw new MalformedURLException("Malformed cocoon URI: " + uri);
+            this.processor = EnvironmentHelper.getCurrentProcessor();
         }
-
-        // create the queryString (if available)
-        String queryString = null;
-        int queryStringPos = uri.indexOf('?', position);
-        if (queryStringPos != -1) {
-            queryString = uri.substring(queryStringPos + 1);
-            uri = uri.substring(position, queryStringPos);
-        } else if (position > 0) {
-            uri = uri.substring(position);
-        }
-        
-        // determine if the queryString specifies a cocoon-view
-        String view = null;
-        if (queryString != null) {
-            int index = queryString.indexOf(Constants.VIEW_PARAM);
-            if (index != -1 
-                && (index == 0 || queryString.charAt(index-1) == '&')
-                && queryString.length() > index + Constants.VIEW_PARAM.length() 
-                && queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
-                
-                String tmp = queryString.substring(index+Constants.VIEW_PARAM.length()+1);
-                index = tmp.indexOf('&');
-                if (index != -1) {
-                    view = tmp.substring(0,index);
-                } else {
-                    view = tmp;
-                }
-            } else {
-                view = env.getView();
-            }
-        } else {
-            view = env.getView();
-        }
-
-        // build the request uri which is relative to the context
-        String requestURI = (prefix == null ? env.getURIPrefix() + uri : uri);
-
-        // create system ID
-        this.systemId = queryString == null ?
-            this.protocol + "://" + requestURI :
-            this.protocol + "://" + requestURI + "?" + queryString;
 
         // create environment...
-        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, requestURI, 
-                                                   queryString, logger, manager, rawMode, view);
-        wrapper.setURI(prefix, uri);
+        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info.requestURI, 
+                                                   info.queryString, logger, info.rawMode, info.view);
+        wrapper.setURI(info.prefix, info.uri);
         
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);
@@ -218,6 +142,8 @@ implements Source, XMLizable {
         } else {
             this.environment.getObjectModel().remove(ObjectModelHelper.PARENT_CONTEXT);
         }
+        
+        this.systemId = info.systemId;
         
         // initialize
         this.init();
@@ -268,13 +194,14 @@ implements Source, XMLizable {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
-            CocoonComponentManager.enterEnvironment(this.environment,
-                                                    this.manager,
-                                                    this.pipelineProcessor);
+            EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor, 
+                                            this.manager,
+                                            this.environment);
             try {
-                this.processingPipeline.process(this.environment);
+                
+                this.pipelineDescription.processingPipeline.process(this.environment);
             } finally {
-                CocoonComponentManager.leaveEnvironment();
+                EnvironmentHelper.leaveProcessor();
             }
             return new ByteArrayInputStream(os.toByteArray());
 
@@ -334,8 +261,8 @@ implements Source, XMLizable {
      * and content length.
      */
     public void refresh() {
-        reset();
-        init();
+        this.reset();
+        this.init();
     }
 
     /**
@@ -344,23 +271,23 @@ implements Source, XMLizable {
     protected void init() {
         this.systemIdForCaching = this.systemId;
         try {
-            this.processKey = CocoonComponentManager.startProcessing(this.environment);
-            this.processingPipeline = this.processor.buildPipeline(this.environment);
-            this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment); 
-            this.environment.changeToLastContext();
+            this.environment.startingProcessing();
+            this.processed = true;
+            this.pipelineDescription = this.processor.buildPipeline(this.environment);
+            this.environment.setURI(this.pipelineDescription.prefix, this.pipelineDescription.uri);
 
             String redirectURL = this.environment.getRedirectURL();
             if (redirectURL == null) {
 
-                CocoonComponentManager.enterEnvironment(this.environment,
-                                                        this.manager,
-                                                        this.pipelineProcessor);
+                EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
+                                                 this.manager,
+                                                 this.environment);
                 try {
-                    this.processingPipeline.prepareInternal(this.environment);
-                    this.sourceValidity = this.processingPipeline.getValidityForEventPipeline();
+                    this.pipelineDescription.processingPipeline.prepareInternal(this.environment);
+                    this.sourceValidity = this.pipelineDescription.processingPipeline.getValidityForEventPipeline();
+                    final String eventPipelineKey = this.pipelineDescription.processingPipeline.getKeyForEventPipeline();
                     this.mimeType = this.environment.getContentType();
                     
-                    final String eventPipelineKey = this.processingPipeline.getKeyForEventPipeline();
                     if (eventPipelineKey != null) {
                         StringBuffer buffer = new StringBuffer(this.systemId);
                         if (this.systemId.indexOf('?') == -1) {
@@ -375,7 +302,7 @@ implements Source, XMLizable {
                         this.systemIdForCaching = this.systemId; 
                     }
                 } finally {
-                    CocoonComponentManager.leaveEnvironment();
+                    EnvironmentHelper.leaveProcessor();
                 }
             } else {
                 if (redirectURL.indexOf(":") == -1) {
@@ -403,10 +330,10 @@ implements Source, XMLizable {
      * Stream content to the content handler
      */
     public void toSAX(ContentHandler contentHandler)
-        throws SAXException
+    throws SAXException
     {
         if (this.needsRefresh) {
-            refresh();
+            this.refresh();
         }
         if (this.exception != null) {
             throw this.exception;
@@ -425,14 +352,14 @@ implements Source, XMLizable {
 	            }
                 // We have to add an environment changer
                 // for clean environment stack handling.
-                CocoonComponentManager.enterEnvironment(this.environment,
-                                                        this.manager,
-                                                        this.pipelineProcessor);
+                EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
+                                                 this.manager,
+                                                 this.environment);
                 try {
-                    this.processingPipeline.process(this.environment,
-                                       CocoonComponentManager.createEnvironmentAwareConsumer(consumer)); 
+                    this.pipelineDescription.processingPipeline.process(this.environment,
+                                 EnvironmentHelper.createEnvironmentAwareConsumer(consumer)); 
                 } finally {
-                    CocoonComponentManager.leaveEnvironment();
+                    EnvironmentHelper.leaveProcessor();
                 }
             }
         } catch (SAXException e) {
@@ -450,14 +377,14 @@ implements Source, XMLizable {
      * Reset everything
      */
     private void reset() {
-        if (this.processingPipeline != null) {
-            this.processingPipeline.release();
+        if (this.pipelineDescription != null) {
+            this.pipelineDescription.release();
+            this.pipelineDescription = null;
         }
-        if (this.processKey != null) {
-            CocoonComponentManager.endProcessing(this.environment, this.processKey);
-            this.processKey = null;
+        if ( this.processed ) {
+            this.processed = false;
+            this.environment.finishingProcessing();
         }
-        this.processingPipeline = null;
         this.sourceValidity = null;
         if (this.redirectSource != null) {
             this.sourceResolver.release(this.redirectSource);
@@ -467,16 +394,16 @@ implements Source, XMLizable {
         this.redirectValidity = null;
         this.exception = null;
         this.needsRefresh = true;
-        this.pipelineProcessor = null;
     }
 
     /**
      * Recyclable
      */
     public void recycle() {
-        reset();
-        if (this.sourceResolver != null) {
-            this.manager.release(this.sourceResolver);
+        this.reset();
+        if ( this.sourceResolver != null ) {
+            this.manager.release( this.sourceResolver );
+            this.sourceResolver = null;
         }
     }
 
@@ -506,4 +433,5 @@ implements Source, XMLizable {
     public Iterator getParameterNames() {
         return java.util.Collections.EMPTY_LIST.iterator();
     }
+
 }
