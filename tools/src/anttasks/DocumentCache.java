@@ -125,7 +125,7 @@ public final class DocumentCache {
         Properties props = new Properties();
         if (null != doctype) {
             if (null != doctype.getPublicId()) {
-                props.put(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());  
+                props.put(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
             }
             if (null != doctype.getSystemId()) {
                 props.put(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
