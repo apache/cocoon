@@ -73,6 +73,8 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -106,14 +108,11 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: LexicalTransformer.java,v 1.3 2003/04/01 16:33:49 stephan Exp $
  */
 public class LexicalTransformer extends LexicalProcessorAdapter
   implements Transformer, LogEnabled, Composable, Recyclable, Disposable,
-             CacheableProcessingComponent {
-
-    /** Namespace for the SAX events. */
-/*    public final static String NS = "http://apache.org/cocoon/lexemes/1.0";*/
+             Parameterizable, CacheableProcessingComponent {
 
     private XMLConsumer consumer = null;
 
@@ -126,6 +125,7 @@ public class LexicalTransformer extends LexicalProcessorAdapter
 
     private LexicalAutomaton automaton = null;
     private LexicalHandlerAdapter adapter = new LexicalHandlerAdapter(true);
+    private boolean recovery = false;
 
     /**
      * Provide component with a logger.
@@ -148,6 +148,17 @@ public class LexicalTransformer extends LexicalProcessorAdapter
     }
 
     /**
+     * Provide component with parameters.
+     *
+     * @param parameters the parameters
+     * @throws ParameterException if parameters are invalid
+     */
+    public void parameterize(Parameters parameters) throws ParameterException {
+
+        recovery = parameters.getParameterAsBoolean("recovery", false);
+    }
+
+    /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
      *
      * @param consumer
@@ -159,7 +170,6 @@ public class LexicalTransformer extends LexicalProcessorAdapter
         setLexicalHandler(consumer);
 
         adapter.setContentHandler(consumer);
-//        adapter.setNamespace(NS);
     }
 
     /**
@@ -234,6 +244,7 @@ public class LexicalTransformer extends LexicalProcessorAdapter
 
                 processor.setLexicalHandler(this.adapter);
                 processor.setLogger(this.logger);
+                processor.setRecovery(recovery);
                 setLexicalProcessor(processor);
             }
 

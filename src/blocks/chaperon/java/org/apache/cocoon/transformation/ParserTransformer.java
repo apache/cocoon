@@ -110,7 +110,7 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: ParserTransformer.java,v 1.3 2003/04/01 16:33:49 stephan Exp $
  */
 public class ParserTransformer extends ParserProcessorAdapter
   implements Transformer, LogEnabled, Composable, Parameterizable,
@@ -127,7 +127,7 @@ public class ParserTransformer extends ParserProcessorAdapter
 
     private ParserAutomaton automaton = null;
     private ParserHandlerAdapter adapter = new ParserHandlerAdapter(true);
-    private boolean ignoring = false;
+    private boolean recovery = false;
 
     /**
      * Provide component with a logger.
@@ -160,7 +160,7 @@ public class ParserTransformer extends ParserProcessorAdapter
 
         adapter.setFlatten(parameters.getParameterAsBoolean("flatten",
             false));
-        ignoring = parameters.getParameterAsBoolean("ignoring", false);
+        recovery = parameters.getParameterAsBoolean("recovery", false);
     }
 
     /**
@@ -247,7 +247,7 @@ public class ParserTransformer extends ParserProcessorAdapter
 
                 processor.setParserHandler(this.adapter);
                 processor.setLogger(this.logger);
-                processor.setIgnoreUnexpectedLexemes(ignoring);
+                processor.setRecovery(recovery);
                 setParserProcessor(processor);
             }
 
