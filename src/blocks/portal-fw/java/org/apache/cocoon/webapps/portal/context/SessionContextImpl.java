@@ -42,12 +42,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
-/**
  *  The portal context
  *
  *  This context allows access to various parts of a portal profile.
@@ -66,7 +60,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.10 2004/05/26 08:39:49 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class SessionContextImpl
 implements SessionContext {

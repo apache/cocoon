@@ -29,7 +29,7 @@ import java.io.OutputStream;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletEnvironment.java,v 1.6 2004/06/18 16:45:57 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class PortletEnvironment extends AbstractEnvironment {
 
@@ -260,7 +260,6 @@ public class PortletEnvironment extends AbstractEnvironment {
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream(int)}.
      */
     public OutputStream getOutputStream(final int bufferSize) throws IOException {
         if (this.outputStream == null) {
