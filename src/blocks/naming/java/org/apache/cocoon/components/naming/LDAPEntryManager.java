@@ -274,16 +274,14 @@ public class LDAPEntryManager
 	*/
 	private Attributes map2Attributes (Map map) {
 		Attributes attrs = new BasicAttributes (false);
-		Iterator keys = map.keySet ().iterator ();
-		while (keys.hasNext ()) {
-			String key = (String)keys.next ();
-			Iterator vals = ((List)map.get (key)).iterator ();
-			Attribute attr = new BasicAttribute (key);
-			while (vals.hasNext ()) {
-				attr.add(vals.next());
-			}
-			attrs.put (attr);
-		}
+        for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry me = (Map.Entry)i.next();
+            String key = (String)me.getKey();
+            Attribute attr = new BasicAttribute(key);
+            for (Iterator vals = ((List)me.getValue()).iterator(); vals.hasNext(); ) {
+                attr.add(vals.next());
+            }
+        }
 		return attrs;
 	}
 

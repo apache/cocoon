@@ -228,13 +228,12 @@ implements Recomposable, Disposable {
                 }
                 sb.append("\n");
 
-                Iterator keys = map.keySet().iterator();
-                while (keys.hasNext()) {
-                    Object key = keys.next();
+                for (Iterator iter = map.entrySet().iterator(); iter.hasNext(); ) {
+                    Map.Entry me = (Map.Entry)iter.next();
+                    Object key = me.getKey();
                     sb.append("PARAM: '").append(path).append(key).append("' ");
-                    sb.append("VALUE: '").append(map.get(key)).append("'\n");
+                    sb.append("VALUE: '").append(me.getValue()).append("'\n");
                 }
-
                 path = "../" + path;
             }
 

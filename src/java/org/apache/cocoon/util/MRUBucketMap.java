@@ -310,12 +310,9 @@ public final class MRUBucketMap implements Map
      */
     public void putAll( Map other )
     {
-        Iterator i = other.keySet().iterator();
-
-        while( i.hasNext() )
-        {
-            Object key = i.next();
-            put( key, other.get( key ) );
+        for (Iterator i = other.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry me = (Map.Entry)i.next();
+            put(me.getKey(), me.getValue());
         }
     }
 

@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionValidatorAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SessionValidatorAction extends AbstractValidatorAction implements ThreadSafe {
 
@@ -62,9 +62,9 @@ public class SessionValidatorAction extends AbstractValidatorAction implements T
     protected Map setResult(Map objectModel, Map actionMap, Map resultMap, boolean allOK) {
         if (allOK){
             Session session = ObjectModelHelper.getRequest(objectModel).getSession();
-            for (Iterator i = actionMap.keySet().iterator(); i.hasNext(); ){
-                String name = (String) i.next();
-                session.setAttribute(name, actionMap.get(name));
+            for (Iterator i = actionMap.entrySet().iterator(); i.hasNext(); ) {
+                Map.Entry me = (Map.Entry)i.next();
+                session.setAttribute((String)me.getKey(), me.getValue());
             }
         }
         return super.setResult(objectModel, actionMap, resultMap, allOK);
