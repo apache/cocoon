@@ -52,14 +52,12 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * Border style codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: BorderStyle.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class BorderStyle
 {
     public static final int BORDER_STYLE_NONE                = 0;    

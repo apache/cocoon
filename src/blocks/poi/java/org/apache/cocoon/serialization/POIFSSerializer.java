@@ -71,11 +71,10 @@ import org.xml.sax.SAXException;
  *    </li>
  *  </ul>
  *
- *
- *@author   Marc Johnson (marc_johnson27591@hotmail.com)
- *@author   Nicola Ken Barozzi (nicolaken@apache.org) 
+ * @author   Marc Johnson (marc_johnson27591@hotmail.com)
+ * @author   Nicola Ken Barozzi (nicolaken@apache.org)
+ * @version CVS $Id: POIFSSerializer.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public abstract class POIFSSerializer
       extends ElementProcessorSerializer
 {

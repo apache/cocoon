@@ -56,8 +56,9 @@ import javax.mail.internet.MimePart;
 /**
  *  A simple MimePart preference selecting algorithm
  *
- *@author     Bernhard Huber
- *@created    26. Oktober 2002
+ * @author Bernhard Huber
+ * @since 26. Oktober 2002
+ * @version CVS $Id: MailCtPref.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MailCtPref implements ContentTypePreference {
 

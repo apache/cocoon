@@ -74,8 +74,8 @@ import java.io.IOException;
  * no overrides will be a no-op ElementProcessor.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: BaseElementProcessor.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public abstract class BaseElementProcessor extends AbstractLogEnabled
      implements POIFSElementProcessor
 {

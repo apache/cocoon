@@ -57,8 +57,8 @@ import java.io.IOException;
  * knows how to check the results against certain criteria
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: BooleanConverter.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public class BooleanConverter
 {
     private static final String        _true_values[]  =

@@ -61,8 +61,8 @@ import org.apache.cocoon.components.elementprocessor.impl.AbstractElementProcess
  * objects.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: HSSFElementProcessorFactory.java,v 1.2 2003/03/11 19:05:00 vgritsenko Exp $
  */
-
 public class HSSFElementProcessorFactory
     extends AbstractElementProcessorFactory
 {

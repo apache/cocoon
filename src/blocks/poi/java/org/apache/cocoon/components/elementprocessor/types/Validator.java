@@ -59,8 +59,8 @@ import java.io.IOException;
  * restrictive rules to the number that the NumericConverter obtained.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: Validator.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public interface Validator
 {
 

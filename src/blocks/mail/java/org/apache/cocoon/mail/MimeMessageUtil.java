@@ -58,8 +58,9 @@ import java.io.*;
 /**
  *  Description of the Class
  *
- *@author     Bernhard Huber
- *@created    26. Oktober 2002
+ * @author Bernhard Huber
+ * @since 26. Oktober 2002
+ * @version CVS $Id: MimeMessageUtil.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MimeMessageUtil {
     /**

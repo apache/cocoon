@@ -60,8 +60,8 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
  * Cell type codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: CellType.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class CellType
 {
     public static final int CELL_TYPE_EMPTY     = 10;

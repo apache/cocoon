@@ -67,8 +67,8 @@ import org.apache.cocoon.components.elementprocessor.types.Validator;
  * This element has several attributes and may contain other elements.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EPCell.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPCell
 extends BaseElementProcessor implements LocaleAware {
     private Cell                   _cell;

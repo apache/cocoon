@@ -55,8 +55,8 @@ package org.apache.cocoon.components.elementprocessor.types;
  * shields the consumer from the data's XML origins.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: Attribute.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public class Attribute
 {
     private String _name;

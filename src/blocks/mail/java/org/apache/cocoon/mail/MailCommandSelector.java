@@ -71,16 +71,16 @@ usage:
     
     <map:otherwise>
     </map:otherwise>
-  
-    
+
     <map:when test="command-defined">
     <map:when test="command-undefined">
     
     <map:when test="
-    
 */
+
 /**
  * @deprecated use RequestAttributeSelector, RequestParameterSelector, or ParameterSelector instead.
+ * @version CVS $Id: MailCommandSelector.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MailCommandSelector extends AbstractSwitchSelector {
   

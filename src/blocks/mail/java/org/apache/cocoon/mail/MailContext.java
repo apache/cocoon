@@ -65,11 +65,11 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.cocoon.environment.Request;
 
 /**
- *  Encapsulation of context info of this webmail application
+ * Encapsulation of context info of this webmail application
  *
- *@author     Bernhard Huber
- *@created    29. Dezember 2002
- *@version    CVS Version: $Id: MailContext.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+ * @author Bernhard Huber
+ * @since 29 December 2002
+ * @version CVS $Id: MailContext.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MailContext extends DefaultContext implements LogEnabled {
     /**

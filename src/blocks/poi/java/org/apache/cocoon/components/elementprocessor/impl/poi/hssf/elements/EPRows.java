@@ -62,8 +62,6 @@
  */
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
@@ -78,8 +76,8 @@ import java.io.IOException;
  * element
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EPRows.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPRows
     extends BaseElementProcessor
 {

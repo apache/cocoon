@@ -61,9 +61,9 @@ import org.apache.avalon.framework.context.Context;
  *    resources in case of valueUnbound - ie. session removal.
  *  </p> 
  *
- *@author     Bernhard Huber
- *@created    02. Jänner 2003
- *@version    CVS Version: $Id: MailContextHttpSession.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+ * @author Bernhard Huber
+ * @since 02 January 2003
+ * @version CVS $Id: MailContextHttpSession.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MailContextHttpSession extends MailContext implements HttpSessionBindingListener {
 

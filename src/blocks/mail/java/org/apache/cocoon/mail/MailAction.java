@@ -88,12 +88,11 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *  and puts the MailContext object into the session attributes.
  * </p>
  *
- *@see MailContext
+ * @see MailContext
  *
- *@author     Bernhard Huber
- *@created    16. Dezember 2002
- *@version    CVS $Id: MailAction.java,v 1.1 2003/03/09 00:04:33 pier Exp $
- *@since      2.1
+ * @author Bernhard Huber
+ * @version CVS $Id: MailAction.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @since Cocoon 2.1, 16 December 2002
  */
 public class MailAction extends ComposerAction implements ThreadSafe {
 

@@ -82,9 +82,9 @@ import org.xml.sax.SAXException;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
+ * @version CVS $Id: ElementProcessorSerializer.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
-public abstract class ElementProcessorSerializer 
+public abstract class ElementProcessorSerializer
     extends AbstractLogEnabled implements Serializer, Composable
 {
     private static final boolean _should_set_content_length = false;

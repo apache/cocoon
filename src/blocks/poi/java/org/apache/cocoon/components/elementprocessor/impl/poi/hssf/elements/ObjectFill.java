@@ -52,14 +52,12 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * ObjectFill codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: ObjectFill.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class ObjectFill
 {
     public static final int OBJECT_FILL_LINE  = 1;

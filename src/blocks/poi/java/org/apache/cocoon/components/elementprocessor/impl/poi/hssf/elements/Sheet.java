@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,6 +72,7 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
+ * @version CVS $Id: Sheet.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
 
 // package scope

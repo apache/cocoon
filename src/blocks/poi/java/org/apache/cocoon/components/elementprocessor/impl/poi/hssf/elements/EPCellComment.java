@@ -69,8 +69,8 @@ import java.io.IOException;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EPCellComment.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPCellComment
     extends BaseElementProcessor
 {

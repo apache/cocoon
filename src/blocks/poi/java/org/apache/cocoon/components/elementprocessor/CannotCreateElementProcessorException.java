@@ -50,58 +50,56 @@
 */
 package org.apache.cocoon.components.elementprocessor;
 
-
+/**
+ * Exception to be thrown when an ElementProcessor cannot be created.
+ *
+ * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: CannotCreateElementProcessorException.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
+ */
+public class CannotCreateElementProcessorException
+        extends Exception
+{
+    private String _element_name;
+    private String _reason;
 
     /**
-     * Exception to be thrown when an ElementProcessor cannot be created.
+     * Constructor
      *
-     * @author Marc Johnson (marc_johnson27591@hotmail.com)
+     * @param reason a simple explanation why the specified
+     *               ElementProcessor could not be created.
      */
 
-    public class CannotCreateElementProcessorException
-        extends Exception
+    public CannotCreateElementProcessorException(final String reason)
     {
-        private String _element_name;
-        private String _reason;
+        _element_name = null;
+        _reason       = (reason == null) ? ""
+                : reason;
+    }
 
-        /**
-         * Constructor
-         *
-         * @param reason a simple explanation why the specified
-         *               ElementProcessor could not be created.
-         */
+    public void setElementName(final String name)
+    {
+        _element_name = name;
+    }
 
-        public CannotCreateElementProcessorException(final String reason)
+    /**
+     * override of Throwable's getMessage; allows us to format it
+     * with the element name
+     *
+     * @return a succinct but useful message describing the
+     *         problem and which element name we couldn't handle.
+     */
+
+    public String getMessage()
+    {
+        StringBuffer buffer = new StringBuffer();
+
+        buffer.append("Could not create ElementProcessor for element ");
+        buffer.append(_element_name);
+        buffer.append(" ");
+        if (_reason.length() != 0)
         {
-            _element_name = null;
-            _reason       = (reason == null) ? ""
-                                             : reason;
+            buffer.append("(").append(_reason).append(")");
         }
-
-        public void setElementName(final String name)
-        {
-            _element_name = name;
-        }
-
-        /**
-         * override of Throwable's getMessage; allows us to format it
-         * with the element name
-         *
-         * @return a succinct but useful message describing the
-         *         problem and which element name we couldn't handle.
-         */
-
-        public String getMessage()
-        {
-            StringBuffer buffer = new StringBuffer();
-
-            buffer.append("Could not create ElementProcessor for element ");
-            buffer.append(_element_name);
-            buffer.append(" ");
-            if (_reason.length() != 0)
-            {
-                buffer.append("(").append(_reason).append(")");
-            }
-            return buffer.toString();
-        }
-    }   // end public class CannotCreateElementProcessorExcepti
+        return buffer.toString();
+    }
+}   // end public class CannotCreateElementProcessorException

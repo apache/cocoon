@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 
 import java.io.IOException;
@@ -70,8 +68,8 @@ import java.io.IOException;
  * mature yet.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: Offsets.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class Offsets
 {
     private static final int _component_count = 4;

@@ -65,9 +65,9 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *   a command instance are the tasks of this class.
  * </p>
  *
- *@author     Bernhard Huber
- *@created    28. Dezember 2002
- *@version    CVS Version: $Id: MailCommandBuilder.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+ * @author Bernhard Huber
+ * @since 28. Dezember 2002
+ * @version CVS $Id: MailCommandBuilder.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MailCommandBuilder extends AbstractLogEnabled {
 

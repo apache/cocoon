@@ -61,10 +61,10 @@ import org.apache.cocoon.components.elementprocessor.impl.poi.hssf.HSSFElementPr
 /**
  *  Serializer to produce an HSSF stream.
  *
- *@author   Marc Johnson (marc_johnson27591@hotmail.com)
- *@author   Nicola Ken Barozzi (nicolaken@apache.org) 
+ * @author   Marc Johnson (marc_johnson27591@hotmail.com)
+ * @author   Nicola Ken Barozzi (nicolaken@apache.org)
+ * @version CVS $Id: HSSFSerializer.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public class HSSFSerializer
       extends POIFSSerializer implements Initializable, Configurable
 {

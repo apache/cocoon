@@ -57,8 +57,8 @@ package org.apache.cocoon.components.elementprocessor;
  * handle specific XML elements and their content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: ElementProcessorFactory.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
  */
-
 public interface ElementProcessorFactory
                     extends org.apache.avalon.framework.component.Component
 {

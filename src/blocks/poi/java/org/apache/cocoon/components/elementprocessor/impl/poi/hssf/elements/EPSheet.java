@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
@@ -80,8 +78,8 @@ import java.io.IOException;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com) 
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
+ * @version CVS $Id: EPSheet.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPSheet
     extends BaseElementProcessor
 {

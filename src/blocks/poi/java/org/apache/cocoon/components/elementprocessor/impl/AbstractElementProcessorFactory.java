@@ -67,8 +67,8 @@ import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
  * handle specific XML elements and their content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: AbstractElementProcessorFactory.java,v 1.2 2003/03/11 19:05:00 vgritsenko Exp $
  */
-
 public abstract class AbstractElementProcessorFactory
      extends AbstractLogEnabled implements ElementProcessorFactory, Component
 {

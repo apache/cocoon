@@ -57,9 +57,9 @@ import javax.mail.MessagingException;
 /**
  *  Execute a list of commands.
  *
- *@author     Bernhard Huber
- *@created    23. Oktober 2002
- *@version    CVS Version: $Id: MailCommands.java,v 1.1 2003/03/09 00:04:35 pier Exp $
+ * @author Bernhard Huber
+ * @since 23. Oktober 2002
+ * @version CVS $Id: MailCommands.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
  */
 public class MailCommands extends AbstractMailCommand {
 

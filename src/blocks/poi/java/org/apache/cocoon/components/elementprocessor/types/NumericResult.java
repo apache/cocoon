@@ -60,8 +60,8 @@ import java.io.IOException;
  * numeric converter
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: NumericResult.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public class NumericResult
 {
     private Number      _value;

@@ -59,8 +59,8 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  * extension of ElementProcessor for POIFSSerializers
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: POIFSElementProcessor.java,v 1.2 2003/03/11 19:05:00 vgritsenko Exp $
  */
-
 public interface POIFSElementProcessor extends ElementProcessor
 {
 
@@ -69,6 +69,5 @@ public interface POIFSElementProcessor extends ElementProcessor
      *
      * @param fs the POIFSFileSystem instance
      */
-
     public void setFilesystem(POIFSFileSystem fs);
 }

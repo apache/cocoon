@@ -70,8 +70,8 @@ import java.io.IOException;
  * This element has several attributes and has no content
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EPColInfo.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPColInfo
     extends BaseElementProcessor
 {
