@@ -49,7 +49,7 @@ public final class PortletSession implements Session {
      * Construct a new session from an PortletSession
      */
     public PortletSession(javax.portlet.PortletSession session, int scope) {
-        this.scope = scope; 
+        this.scope = scope;
         this.session = session;
     }
 

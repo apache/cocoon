@@ -31,7 +31,7 @@ import org.apache.cocoon.portal.layout.SkinDescription;
 /**
  * This input module provides information about the current selected skin
  * 
- * @version CVS $Id: SkinModule.java,v 1.4 2005/01/07 10:21:46 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class SkinModule 
 extends AbstractModule
@@ -90,9 +90,9 @@ implements Disposable {
             // use the global module
             if ( skinName == null ) {
                 skinName = (String)this.globalModule.getAttribute("skin", modeConf, objectModel);
-            if ( skinName == null ) {
-                skinName = "common";
-            }
+                if ( skinName == null ) {
+                    skinName = "common";
+                }
             }
             
             // find the correct skin
@@ -117,8 +117,8 @@ implements Disposable {
                         SkinDescription selected = (SkinDescription) it.next();
                         if(selected.getName().equals(selectedSkinName)) {
                             return selected.getBasePath() + "/"  + selected.getThumbnailPath(); 
-                }
-            }
+                        }
+                    }
                 }
             }
             return null;

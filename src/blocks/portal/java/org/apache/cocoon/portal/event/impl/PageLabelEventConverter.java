@@ -126,8 +126,8 @@ public class PageLabelEventConverter extends AbstractLogEnabled
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.EventConverter#isMarshallEvents()
-     */
+    * @see org.apache.cocoon.portal.event.EventConverter#isMarshallEvents()
+    */
     public boolean isMarshallEvents() {
         return this.labelManager.isMarshallEvents();
     }

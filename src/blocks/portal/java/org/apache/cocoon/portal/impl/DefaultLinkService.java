@@ -113,10 +113,10 @@ public class DefaultLinkService
     public boolean isSecure() {
         return ContextHelper.getRequest(this.context).isSecure();
     }
-        
+
     /* (non-Javadoc)
-    * @see org.apache.cocoon.portal.LinkService#encodeURL(String url).
-    */
+     * @see org.apache.cocoon.portal.LinkService#encodeURL(String url).
+     */
     public String encodeURL(String url) {
         return ContextHelper.getResponse(this.context).encodeURL(url);
     }

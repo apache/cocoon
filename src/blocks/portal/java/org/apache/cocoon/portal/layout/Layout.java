@@ -45,7 +45,7 @@ public interface Layout
     Item getParent();
 
     void setParent(Item item);
-    
+
     /**
      * Make a copy of this layout object and of all it's children.
      * This includes copies of items and copletinstancedatas.

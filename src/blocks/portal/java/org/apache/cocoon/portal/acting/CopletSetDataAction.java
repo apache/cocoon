@@ -49,7 +49,7 @@ extends ServiceableAction {
         try {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-            
+
             // determine coplet id
             String copletId = null;            
             Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);

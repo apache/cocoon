@@ -170,7 +170,7 @@ public class DefaultLayoutFactory
         desc.setClassName(layoutConf.getAttribute("class"));        
         desc.setCreateId(layoutConf.getAttributeAsBoolean("create-id", false));
         desc.setItemClassName(layoutConf.getAttribute("item-class", null));
-        
+
         // the renderers
         final String defaultRenderer = layoutConf.getChild("renderers").getAttribute("default");
         desc.setDefaultRendererName(defaultRenderer); 

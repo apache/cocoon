@@ -59,7 +59,7 @@ public abstract class AbstractAspectalizable
     	if (this.aspectDataHandler == null) {
 	    	return this.persistentDatas;
     	}
-		return this.aspectDataHandler.getPersistentAspectDatas(this);
+        return this.aspectDataHandler.getPersistentAspectDatas(this);
     }
 
     /**

@@ -59,7 +59,7 @@ public class DefaultVariableResolverFactory
     throws PatternException {
         if ( this.needsResolve( expression ) ) {
             return new PreparedVariableResolver( expression, this.manager, this.context);
-        } 
+        }
         return new NOPVariableResolver( expression );
     }
 

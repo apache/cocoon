@@ -457,6 +457,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="CZ" type="add" fixes-bug="33287" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
+     Portal Block: Add portal tools framework contribution.
+   </action>
    <action dev="CZ" type="add">
      Build system: External blocks can be built together with Cocoon.
    </action>
