@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.7 2000-01-27 04:03:21 balld Exp $ -- 
+/*-- $Id: Utils.java,v 1.8 2000-01-27 11:50:12 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-01-27 04:03:21 $
+ * @version $Revision: 1.8 $ $Date: 2000-01-27 11:50:12 $
  */
 
 public final class Utils {
@@ -252,14 +252,13 @@ public final class Utils {
         }
     }
 
-	/**
-	 * Returns the stack trace as a string
-	 */
-	public static final String getStackTraceAsString(Throwable e) {
-		CharArrayWriter chars = new CharArrayWriter();
-		PrintWriter writer = new PrintWriter(chars,true);
-		e.printStackTrace(writer);
-		return chars.toString();
-	}
-
+    /*
+     * Returns the stack trace as a string
+     */
+    public static final String getStackTraceAsString(Throwable e) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(bytes, true);
+        e.printStackTrace(writer);
+        return bytes.toString();
+    }
 }
