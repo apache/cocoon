@@ -19,8 +19,8 @@
   <xsl:template match="body">
     <body>
       <h1><xsl:value-of select="header/title"/></h1>
-      <p>Comment from stylesheet: No special handling was done for the
-        &lt;source&gt; elements. Note the long right-left scrollbar.
+      <p>Comment from stylesheet: sequences of two consecutive spaces are replaced by a non-breaking space and a space.
+      This keeps indentation while allowing word wrapping.
       </p>
       <xsl:apply-templates/>
     </body>
