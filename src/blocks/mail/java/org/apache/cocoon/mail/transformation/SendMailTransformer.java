@@ -539,7 +539,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             String mailBody = new String(byteArr);
             messageBodyPart.setContent(mailBody, this.bodyMimeType);
         } else {
-            messageBodyPart.setContent(this.body.toString(), this.bodyMimeType);
+            messageBodyPart.setContent(this.body, this.bodyMimeType);
         }
 
         Multipart multipart = new MimeMultipart();
