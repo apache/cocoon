@@ -1467,7 +1467,7 @@
     <description>
       A simple, fast and thread safe cache for Java
     </description>
-    <jar name="lib/optional/ehcache-1.0.jar"/>
+    <jar name="lib/optional/ehcache-1.1.jar"/>
   </project>
 
   <project name="asm">
