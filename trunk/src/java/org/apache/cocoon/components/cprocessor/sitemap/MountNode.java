@@ -75,7 +75,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.4 2004/01/05 10:53:35 cziegeler Exp $
+ * @version CVS $Id: MountNode.java,v 1.5 2004/01/05 11:28:24 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -131,8 +131,8 @@ implements ProcessingNode, Contextualizable, Disposable {
 
         TreeProcessor processor = this.getProcessor(resolvedSource, resolvedPrefix);
 
-        String oldPrefix = env.getURIPrefix();
-        String oldURI    = env.getURI();
+        final String oldPrefix = env.getURIPrefix();
+        final String oldURI    = env.getURI();
         try {
             processor.getEnvironmentHelper().changeContext(env);
 
@@ -151,7 +151,7 @@ implements ProcessingNode, Contextualizable, Disposable {
             }
         } finally {
             // Restore context
-            processor.getEnvironmentHelper().resetContext(env);
+            env.setURI(oldPrefix, oldURI);
 
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2

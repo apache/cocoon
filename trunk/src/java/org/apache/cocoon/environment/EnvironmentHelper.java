@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.13 2004/01/05 10:53:35 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.14 2004/01/05 11:28:24 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -191,7 +191,6 @@ implements SourceResolver, Serviceable, Disposable {
     
     /**
      * Change the context of the environment.
-     * Call {@link #resetContext(Environment) to undo the change
      * @param env The environment to change
      * @throws ProcessingException
      */
@@ -211,20 +210,6 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
     
-    /**
-     * Reset the context of the environment. Use this together 
-     * with {@link #changeContext(environment)}
-     * @param env The environment to change
-     * @throws ProcessingException
-     */
-    public void resetContext(Environment env) 
-    throws ProcessingException {
-        if (this.lastPrefix != null ) {
-            // FIXME - This is not correct!
-            env.setURI("", this.lastPrefix + env.getURI());
-        }
-    }
-
     /**
      * Set the context of the environment.
      * @param env The environment to change
