@@ -107,7 +107,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.2 2003/09/08 22:56:34 reinhard Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.3 2003/09/12 14:47:27 reinhard Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -257,7 +257,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         // (RPO) added by interception layer    
         isInterceptionEnabled = 
             config.getChild( "enable-interception" ).getValueAsBoolean( true );
-            stopExecutionFunctionsConf = 
+        stopExecutionFunctionsConf = 
             config.getChild( "cont-creating-functions" );
         copyResultScript = 
            config.getChild( "copy-result-script" ).getValueAsBoolean( false );
