@@ -20,6 +20,8 @@
     in order to test caching of the whole pipeline, up to PDF
 
     @author bdelacretaz@codeconsult.ch
+
+    CVS $Id:
 -->
 
 <xsl:stylesheet
@@ -166,6 +168,5 @@
             <xsl:apply-templates/>
         </fo:inline>
     </xsl:template>
-
 
 </xsl:stylesheet>
