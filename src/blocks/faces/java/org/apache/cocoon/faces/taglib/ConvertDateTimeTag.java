@@ -72,9 +72,12 @@ public class ConvertDateTimeTag extends ConverterTag {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
         DateTimeConverter converter = (DateTimeConverter) super.createConverter();
 
-        converter.setDateStyle((String) tag.evaluate(dateStyle));
         converter.setPattern((String) tag.evaluate(pattern));
-        converter.setTimeStyle((String) tag.evaluate(timeStyle));
+
+        String ds = dateStyle == null? "default": (String) tag.evaluate(dateStyle);
+        String ts = timeStyle == null? "default": (String) tag.evaluate(timeStyle);
+        converter.setDateStyle(ds);
+        converter.setTimeStyle(ts);
 
         String t = null;
         if (type != null) {
