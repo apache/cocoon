@@ -24,6 +24,8 @@ LOCALCLASSPATH=$ANT:$JAVAC:$XERCES:$XALAN:$FOP:$SERVLETS:$CLASSPATH
 echo
 echo Building with classpath $LOCALCLASSPATH
 
+chmod +755 $ANT_HOME/bin/antRun
+
 echo
 echo Starting Ant...
 
