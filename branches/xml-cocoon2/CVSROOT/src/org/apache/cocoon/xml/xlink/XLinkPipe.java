@@ -12,7 +12,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.cocoon.xml.XMLConsumerBridge;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 
 /**
  * This class implements a SAX consumer wrapper that transforms the
@@ -24,10 +24,10 @@ import org.apache.cocoon.xml.XMLConsumerBridge;
  * NOTE: this is based on XLink W3C Candidate Recommendation 3 July 2000
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-25 14:48:19 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 14:31:10 $
  */
  
-public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements XLinkHandler {
+public abstract class XLinkPipe extends AbstractXMLPipe implements XLinkHandler {
 
 	public static final String XLINK_NAMESPACE_URI = "http://www.w3.org/1999/xlink";
 	public static final String XLINK_TYPE          = "type";
@@ -71,7 +71,7 @@ public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements X
 		        String title   = attr.getValue(XLINK_NAMESPACE_URI, XLINK_TITLE);
 		        String show    = attr.getValue(XLINK_NAMESPACE_URI, XLINK_SHOW);
 		        String actuate = attr.getValue(XLINK_NAMESPACE_URI, XLINK_ACTUATE);
-		        this.simpleLink(href, role, arcrole, title, show, actuate, uri, name, raw, attr);
+		        simpleLink(href, role, arcrole, title, show, actuate, uri, name, raw, attr);
 		    } else if (type.equals(XLINK_TYPE_EXTENDED)) {
 		        if (this.extendedLinkElementName != null) {
 		            throw new SAXException("An XLink extended link cannot include another 'extended' element");
@@ -84,7 +84,7 @@ public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements X
 		        String title   = attr.getValue(XLINK_NAMESPACE_URI, XLINK_TITLE);
 		        this.extendedLinkElementName = name;
 		        this.extendedLinkElementURI = uri;
-		        this.startExtendedLink(role, title, uri, name, raw, attr);
+		        startExtendedLink(role, title, uri, name, raw, attr);
 		    } else if (type.equals(XLINK_TYPE_LOCATOR)) {
                 if (this.extendedLinkElementName == null) {
 		            throw new SAXException("An XLink locator must be included into an 'extended' element");
@@ -99,7 +99,7 @@ public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements X
 		        String label   = attr.getValue(XLINK_NAMESPACE_URI, XLINK_LABEL);
 		        this.linkLocatorElementName = name;
 		        this.linkLocatorElementURI = uri;
-		        this.startLocator(href, role, title, label, uri, name, raw, attr);
+		        startLocator(href, role, title, label, uri, name, raw, attr);
 		    } else if (type.equals(XLINK_TYPE_ARC)) {
                 if (this.extendedLinkElementName == null) {
 		            throw new SAXException("An XLink arc must be included into an 'extended' element");
@@ -116,7 +116,7 @@ public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements X
 		        String to      = attr.getValue(XLINK_NAMESPACE_URI, XLINK_TO);
 		        this.linkArcElementName = name;
 		        this.linkArcElementURI = uri;
-		        this.startArc(arcrole, title, show, actuate, from, to, uri, name, raw, attr);
+		        startArc(arcrole, title, show, actuate, from, to, uri, name, raw, attr);
 		    } else if (type.equals(XLINK_TYPE_RESOURCE)) {
                 if (this.extendedLinkElementName == null) {
 		            throw new SAXException("An XLink resource must be included into an 'extended' element");
@@ -124,14 +124,14 @@ public abstract class XLinkConsumerBridge extends XMLConsumerBridge implements X
 		        String role    = attr.getValue(XLINK_NAMESPACE_URI, XLINK_ROLE);
 		        String title   = attr.getValue(XLINK_NAMESPACE_URI, XLINK_TITLE);
 		        String label   = attr.getValue(XLINK_NAMESPACE_URI, XLINK_LABEL);
-		        this.linkResource(role, title, label, uri, name, raw, attr);
+		        linkResource(role, title, label, uri, name, raw, attr);
 		    } else if (type.equals(XLINK_TYPE_TITLE)) {
                 if ((this.extendedLinkElementName == null) 
                   && (this.linkLocatorElementName == null) 
                   && (this.linkArcElementName == null)) {
 		            throw new SAXException("An XLink title must be included into an 'extended', 'locator' or 'arc' element");
 		        }
-		        this.linkTitle(uri, name, raw, attr);
+		        linkTitle(uri, name, raw, attr);
 		    } else {
                 super.startElement(uri, name, raw, attr);
             }
