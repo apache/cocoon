@@ -243,7 +243,8 @@
    <action dev="JH" type="add" fixes-bug="29715" due-to="Nuno Santos" due-to-email="nsantos@electroplus.pt">
      Forms block: added possibility to add a SelectionList based on Java.
    </action>
-   <action dev="AG" type="update">
+   <action dev="AG" type="fix" fixes-bug="28680" due-to="David Crossley" due-to-email="crossley@apache.org">
+     HTML serialization has no space between publicId and systemId.
      Updated xalan to 2.6.1-dev-20041008T0304
    </action>
    <action dev="VG" type="add">
