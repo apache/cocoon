@@ -15,56 +15,71 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--+
+    | $Id$
+    +-->
 <samples name="Error Handling Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <group name="Back">
-   <sample name="Back" href="../">
-    Back to the samples home page.
-   </sample>
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
   </group>
 
   <group name="Cocoon Exceptions">
-   <note>Choose what exception you want to generate...</note>
-   <sample name="SAXParseException" href="exception/generror">
-    Attempt to read invalid XML file.
-   </sample>
-   <sample name="ValidationException" href="exception/exception?exception=validation">
-    Generate ValidationException.
-   </sample>
-   <sample name="ResourceNotFoundException" href="exception/exception?exception=resourceNotFound">
-    Generate ResourceNotFoundException.
-   </sample>
-  </group>
-
-  <group name="Application Exceptions">
-   <sample name="ApplicationException (1)" href="exception/exception?exception=application&amp;code=1">
-    Generate ApplicationException with error code 1.
-   </sample>
-   <sample name="ApplicationException (2)" href="exception/exception?exception=application&amp;code=2">
-    Generate ApplicationException with error code 2.
-   </sample>
-   <sample name="ApplicationException (3)" href="exception/exception?exception=application&amp;code=3">
-    Generate ApplicationException with error code 3.
-   </sample>
+    <note>Demonstrates common Cocoon exceptions and default error handling.</note>
+    <sample name="SAXParseException" href="exception/generror">
+      Attempt to read invalid XML file.
+    </sample>
+    <sample name="ResourceNotFoundException" href="not-exists">
+      Attempt to read non existent file.
+    </sample>
+    <sample name="ProcessingException" href="processing">
+      General processing error.
+    </sample>
+    <sample name="SAXException" href="sax">
+      SAX processing error.
+    </sample>
+    <sample name="Wrapped ProcessingException" href="saxWrapped">
+      General processing error wrapped in SAX exception.
+    </sample>
   </group>
 
   <group name="Java Exceptions">
-   <sample name="NullPointerException" href="exception/exception?exception=nullPointer">
-    Generate RuntimeException.
-   </sample>
-   <note>
-     Since Cocoon does not process java.lang.Error (and derived objects),
-     behavior of this sample will depend on behavior of servlet engine.
-     In case of Jetty and Tomcat, they will show empty page and print
-     Error's stacktrace to the console.
-   </note>
-   <sample name="Error" href="exception/exception?exception=error">
-    Generate Error.
-   </sample>
-   <sample name="No Exception" href="exception/exception">
-    Normal behaviour.
-   </sample>
+    <note>Demonstrates common Java exceptions and default error handling.</note>
+    <sample name="NullPointerException" href="nullPointer">
+      Generate NullPointerException.
+    </sample>
+    <sample name="IOException" href="io">
+      Generate IOException.
+    </sample>
+    <note>
+      Since Cocoon does not process java.lang.Error (and derived objects),
+      behavior of this sample will depend on behavior of servlet engine.
+      In case of Jetty and Tomcat, they will show empty page and print
+      Error's stacktrace to the console.
+    </note>
+    <sample name="Error" href="exception/error">
+      Generate Error.
+    </sample>
+  </group>
+
+  <group name="Custom Exception Handling">
+    <note>Demonstrates custom error handling of Cocoon and Application exceptions.</note>
+    <sample name="ResourceNotFoundException" href="exception/notFound">
+      Generate ResourceNotFoundException.
+    </sample>
+    <sample name="ValidationException" href="exception/validation">
+      Generate ValidationException.
+    </sample>
+    <sample name="ApplicationException (1)" href="exception/application?code=1">
+      Generate ApplicationException with error code 1.
+    </sample>
+    <sample name="ApplicationException (2)" href="exception/application?code=2">
+      Generate ApplicationException with error code 2.
+    </sample>
+    <sample name="ApplicationException (3)" href="exception/application?code=3">
+      Generate ApplicationException with error code 3.
+    </sample>
   </group>
 </samples>

@@ -1,72 +1,66 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.samples.errorhandling;
 
-import java.io.IOException;
+import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.AbstractGenerator;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import java.io.IOException;
+import java.util.Map;
+
 /**
- * Exception generator.
+ * Exception generator. Throws different kinds of exception depending on
+ * value of src attribute.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ExceptionGenerator.java,v 1.5 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version $Id$
  */
 public class ExceptionGenerator extends AbstractGenerator {
 
-    /** Name of request parameters. */
-    public static final String PAR_EXCEPTION = "exception";
+    private String exception;
+    private int code;
 
-    public static final String PAR_CODE = "code";
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
+    throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, parameters);
+
+        this.exception = parameters.getParameter("exception", super.source);
+        this.code = Integer.parseInt(parameters.getParameter("code", "0"));
+
+        // Throw exception in the setup phase?
+        if (parameters.getParameterAsBoolean("setup", false)) {
+            ExceptionAction.exception(this.exception, this.code);
+        }
+    }
 
     /**
      * Overridden from superclass.
      */
     public void generate()
-      throws IOException, SAXException, ProcessingException {
-        Request request = ObjectModelHelper.getRequest(this.objectModel);
-        String exception = request.getParameter(PAR_EXCEPTION);
-        String text = null;
-
-        if (exception==null) {
-            text = "No exception occured.";
-        } else if (exception.equals("validation")) {
-            throw new ProcessingException(new ValidationException());
-        } else if (exception.equals("application")) {
-            throw new ProcessingException(new ApplicationException(Integer.parseInt(request.getParameter(PAR_CODE))));
-        } else if (exception.equals("resourceNotFound")) {
-            throw new ProcessingException(new ResourceNotFoundException(""));
-        } else if (exception.equals("nullPointer")) {
-            throw new NullPointerException();
-        } else if (exception.equals("error")) {
-            throw new Error("Error");
-        } else {
-            text = "Unknown exception requested.";
-        }
-
+    throws ProcessingException , SAXException, IOException {
+        String text = ExceptionAction.exception(this.exception, this.code);
         Attributes noAttrs = new AttributesImpl();
-
         this.contentHandler.startDocument();
         this.contentHandler.startElement("", "html", "html", noAttrs);
         this.contentHandler.startElement("", "body", "body", noAttrs);
