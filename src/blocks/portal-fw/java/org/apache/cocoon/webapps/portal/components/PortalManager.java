@@ -72,7 +72,6 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.portal.PortalConstants;
-import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.MediaManager;
 import org.apache.cocoon.webapps.session.components.AbstractSessionComponent;
 import org.apache.cocoon.webapps.session.context.SessionContext;
@@ -85,17 +84,22 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.store.Store;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
 
 /**
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.8 2003/07/30 10:25:37 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.9 2003/08/07 17:13:39 joerg Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -199,7 +203,6 @@ extends AbstractSessionComponent {
     public void compose(ComponentManager manager)
     throws ComponentException {
         super.compose( manager );
-        ContextManager contextManager = (ContextManager)manager.lookup(ContextManager.ROLE);
     }
     
     /**

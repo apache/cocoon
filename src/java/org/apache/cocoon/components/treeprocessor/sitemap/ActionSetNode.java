@@ -59,13 +59,11 @@ import org.apache.cocoon.components.treeprocessor.NamedProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNode.java,v 1.2 2003/08/07 08:42:20 sylvain Exp $
+ * @version CVS $Id: ActionSetNode.java,v 1.3 2003/08/07 17:13:39 joerg Exp $
  */
 
 public class ActionSetNode extends SimpleSelectorProcessingNode
@@ -101,11 +99,6 @@ public class ActionSetNode extends SimpleSelectorProcessingNode
      * these actions.
      */
     public final Map call(Environment env, InvokeContext context, Parameters params) throws Exception {
-
-        // Prepare data needed by the actions
-        Map            objectModel    = env.getObjectModel();
-        Redirector     redirector     = PipelinesNode.getRedirector(env);
-        SourceResolver resolver       = getSourceResolver(objectModel);
 
         String cocoonAction = env.getAction();
 

@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -62,7 +59,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNodeBuilder.java,v 1.3 2003/08/07 11:08:06 cziegeler Exp $
+ * @version CVS $Id: ActionSetNodeBuilder.java,v 1.4 2003/08/07 17:13:39 joerg Exp $
  */
 
 public class ActionSetNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
@@ -74,10 +71,6 @@ public class ActionSetNodeBuilder extends AbstractParentProcessingNodeBuilder im
 
         String actionSetName = config.getAttribute("name");
 
-        // Lists of action types and nodes for each map:act
-        List actionNames  = new ArrayList();
-        List actionNodes = new ArrayList();
-        
         Configuration[] childrenConfig = config.getChildren();
         // Inform other builders that we're in an action-set
         this.treeBuilder.setAttribute(IN_ACTION_SET, Boolean.TRUE);
