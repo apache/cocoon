@@ -118,6 +118,10 @@
       	<exclude name="*.xwelcome"/>
       </fileset>
     </copy>
+    <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
+    overwrite it with the old Cocoon-specific sitemap here -->
+    <move file="${documentation}/sitemap-localdocs.xmap"
+      tofile="${build.webapp.docs}/sitemap.xmap"/>
 
     <copy todir="${build.webapp.docs}" filtering="off">
       <fileset dir="${documentation}">
