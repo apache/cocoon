@@ -51,7 +51,6 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -61,7 +60,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataManager.java,v 1.2 2003/05/20 14:32:35 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataManager.java,v 1.3 2003/05/26 14:29:53 cziegeler Exp $
  */
 public class CopletInstanceDataManager {
 	
@@ -89,17 +88,5 @@ public class CopletInstanceDataManager {
 	 */
 	public void putCopletInstanceData(CopletInstanceData data) {
 		this.copletInstanceData.put(data.getId(), data);
-	}
-	
-	/**
-	 * Updates the references to the coplet data to the ones stored in the manager.
-	 */
-	public void update(CopletDataManager manager) {
-		Iterator iterator = this.copletInstanceData.values().iterator();
-		CopletInstanceData data;
-		while (iterator.hasNext()) {
-			data = (CopletInstanceData)iterator.next();
-			data.setCopletData(manager.getCopletData(data.getCopletData().getId()));
-		}
 	}
 }

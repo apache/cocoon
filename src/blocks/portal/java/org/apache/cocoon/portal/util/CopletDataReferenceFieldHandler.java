@@ -48,57 +48,50 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+package org.apache.cocoon.portal.util;
 
 import org.apache.cocoon.portal.coplet.CopletData;
-import org.exolab.castor.mapping.FieldHandler;
-import org.exolab.castor.mapping.MapItem;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 
 /**
- * Field handler for attributes of a CopletData object.
+ * Field handler for external CopletData references.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AttributesFieldHandler.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class AttributesFieldHandler
-implements FieldHandler
-{
+public class CopletDataReferenceFieldHandler 
+extends ReferenceFieldHandler {
+
 	public void checkValidity(Object object)
 	{
 	}
 
 	public Object getValue(Object object) 
 	{
-		HashMap map = new HashMap();
-		Iterator iterator = ((CopletData)object).getAttributes().entrySet().iterator();
-		Map.Entry entry;
-		Object key;
-		while (iterator.hasNext()) {
-			entry = (Map.Entry)iterator.next();
-			key = entry.getKey();
-			map.put(key, new MapItem(key, entry.getValue()));
+		CopletData copletData = ((CopletInstanceData)object).getCopletData();
+		if (copletData != null) {
+			return copletData.getId();
+		} else {
+			return null;
 		}
-		return map;
 	}
 
 	public Object newInstance(Object parent)
 	{
-		return new MapItem();
+		return new CopletData();
 	}
 
 	public void resetValue(Object object)
 	{
-		((CopletData)object).getAttributes().clear();
+		((CopletInstanceData)object).setCopletData(null);
 	}
 
 	public void setValue(Object object, Object value)
 	{
-		MapItem item = (MapItem)value;
-		((CopletData)object).setAttribute((String)item.getKey(), item.getValue());
+		CopletData copletData = (CopletData)getObjectMap().get(value);
+		if (copletData == null)
+			throw new IllegalArgumentException("Referenced Coplet Data "+value+" does not exist.");
+		((CopletInstanceData)object).setCopletData(copletData);
 	}
 }

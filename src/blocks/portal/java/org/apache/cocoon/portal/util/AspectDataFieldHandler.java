@@ -48,48 +48,62 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.util;
 
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.cocoon.portal.aspect.Aspectalizable;
+import org.exolab.castor.mapping.FieldHandler;
 
 /**
- * Field handler for external CopletData references.
+ * Field handler for aspects of an Aspectizable object.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
+ * @version CVS $Id: AspectDataFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class CopletDataReferenceFieldHandler 
-extends ReferenceFieldHandler {
-
+public class AspectDataFieldHandler
+implements FieldHandler
+{
 	public void checkValidity(Object object)
 	{
 	}
 
 	public Object getValue(Object object) 
 	{
-		CopletData copletData = ((CopletInstanceData)object).getCopletData();
-		if (copletData != null) {
-			return copletData.getId();
-		} else {
-			return null;
+		HashMap map = new HashMap();
+		Iterator iterator;
+
+		Map data = ((Aspectalizable) object).getPersistentAspectData();
+		if (data == null)
+			return map;
+
+		iterator = data.entrySet().iterator();
+		Map.Entry entry;
+		Object key;
+		while (iterator.hasNext()) {
+			entry = (Map.Entry)iterator.next();
+			key = entry.getKey();
+			map.put(key, new MapItem(key, entry.getValue()));
 		}
+		return map;
 	}
 
 	public Object newInstance(Object parent)
 	{
-		return new CopletData();
+		return new MapItem();
 	}
 
 	public void resetValue(Object object)
 	{
-		((CopletInstanceData)object).setCopletData(null);
+		// impossible
 	}
 
 	public void setValue(Object object, Object value)
 	{
-		CopletData copletData = (CopletData)getObjectMap().get(value);
-		((CopletInstanceData)object).setCopletData(copletData);
+		MapItem item = (MapItem)value;
+		((Aspectalizable)object).addPersistentAspectData((String)item.getKey(), item.getValue());
 	}
 }
