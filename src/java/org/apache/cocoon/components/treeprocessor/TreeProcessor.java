@@ -276,9 +276,9 @@ public class TreeProcessor extends AbstractLogEnabled
     /**
      * Set the sitemap component configurations
      */
-    public void setComponentConfigurations(Configuration componentConfigurations) {
-        this.concreteProcessor.setComponentConfigurations(componentConfigurations);
-    }
+//    public void setComponentConfigurations(Configuration componentConfigurations) {
+//        this.concreteProcessor.setComponentConfigurations(componentConfigurations);
+//    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
