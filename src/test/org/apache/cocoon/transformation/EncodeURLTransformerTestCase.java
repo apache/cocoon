@@ -22,7 +22,7 @@ import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.components.container.ComponentManagerWrapper;
+import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRequest;
@@ -35,7 +35,7 @@ import org.w3c.dom.Document;
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: EncodeURLTransformerTestCase.java,v 1.1 2004/07/04 18:01:39 huber Exp $
+ * @version CVS $Id$
  */
 public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
     
@@ -84,7 +84,7 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
         
         Document inputDocument = load(input);
         Document resultDocument = load(result);
@@ -127,7 +127,7 @@ public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new ComponentManagerWrapper(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
         
         Document inputDocument = load(input);
         Document resultDocument = load(result);

@@ -21,9 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
-import org.apache.avalon.excalibur.component.RoleManageable;
-import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -38,8 +35,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.WrapperServiceSelector;
-import org.apache.cocoon.components.ExtendedComponentSelector;
+import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
@@ -56,7 +52,7 @@ import org.apache.excalibur.source.SourceResolver;
 public class DefaultTreeBuilder
         extends AbstractLogEnabled
         implements TreeBuilder, Contextualizable, Serviceable,
-                   RoleManageable, Initializable, Recyclable, Disposable {
+                   Initializable, Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
 
@@ -73,12 +69,6 @@ public class DefaultTreeBuilder
      * by Cocoon in service()
      */
     protected ServiceManager ownManager;
-
-    /**
-     * The parent role manager, set using <code>setRoleManager</code> (implementation of
-     * <code>RoleManageable</code>).
-     */
-    protected RoleManager ownRoleManager;
 
     // -------------------------------------
     
@@ -158,7 +148,7 @@ public class DefaultTreeBuilder
         }
         
         // Create the NodeBuilder selector.
-        ExcaliburComponentSelector selector = new ExtendedComponentSelector() {
+        CocoonServiceSelector selector = new CocoonServiceSelector() {
             protected String getComponentInstanceName() {
                 return "node";
             }
@@ -177,19 +167,12 @@ public class DefaultTreeBuilder
             true
         );
 
-        this.builderSelector = new WrapperServiceSelector("BuilderSelector", selector);
+        this.builderSelector = selector;
         
     }
 
     public void setParentProcessorManager(ServiceManager manager) {
         this.parentProcessorManager = manager;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
-     */
-    public void setRoleManager(RoleManager rm) {
-        this.ownRoleManager = rm;
     }
 
     /* (non-Javadoc)

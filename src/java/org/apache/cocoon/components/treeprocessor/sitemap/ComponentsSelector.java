@@ -18,16 +18,14 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.generation.GeneratorFactory;
 import org.apache.cocoon.matching.Matcher;
@@ -41,11 +39,9 @@ import org.apache.cocoon.transformation.TransformerFactory;
 /**
  * Component selector for sitemap components.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @version CVS $Id$
  */
-public class ComponentsSelector extends ExtendedComponentSelector {
+public class ComponentsSelector extends CocoonServiceSelector {
 
     public static final int UNKNOWN     = -1;
     public static final int GENERATOR   = 0;
@@ -124,7 +120,7 @@ public class ComponentsSelector extends ExtendedComponentSelector {
     /**
      * Add a component in this selector.
      */
-    public void addComponent(Object hint, Class clazz, Configuration config) throws ComponentException {
+    public void addComponent(Object hint, Class clazz, Configuration config) throws ServiceException {
         super.addComponent(hint, clazz, config);
 
         // Add to known hints. This is needed as we cannot call isSelectable() if initialize()
@@ -174,7 +170,7 @@ public class ComponentsSelector extends ExtendedComponentSelector {
             // Don't keep known hints (they're no more needed)
             this.knownHints = null;
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Cannot setup default components", e);
+            throw new RuntimeException("Cannot setup default components", e);
         }
     }
 
@@ -183,9 +179,9 @@ public class ComponentsSelector extends ExtendedComponentSelector {
      * since it requires to be initialized, and we want to add components, and this must
      * be done before initialization.
      */
-    private void ensureExists(Object hint, Class clazz, Configuration config) throws ComponentException {
+    private void ensureExists(Object hint, Class clazz, Configuration config) throws ServiceException {
         if (!this.knownHints.contains(hint)) {
-            if (this.parentSelector == null || !this.parentSelector.hasComponent(hint)) {
+            if (this.parentSelector == null || !this.parentSelector.isSelectable(hint)) {
                 addComponent(hint, clazz, config);
             }
         }
@@ -195,8 +191,8 @@ public class ComponentsSelector extends ExtendedComponentSelector {
      * Override parent to implement support for {@link GeneratorFactory},
      * {@link TransformerFactory}, and {@link SerializerFactory}.
      */
-    public Component select(Object hint) throws ComponentException {
-        final Component component = super.select(hint);
+    public Object select(Object hint) throws ServiceException {
+        final Object component = super.select(hint);
 
         switch (this.roleId) {
             case GENERATOR:
@@ -223,7 +219,7 @@ public class ComponentsSelector extends ExtendedComponentSelector {
      * Override parent to implement support for {@link GeneratorFactory},
      * {@link TransformerFactory}, and {@link SerializerFactory}.
      */
-    public void release(Component component) {
+    public void release(Object component) {
 
         // If component is an Instance returned by Factory, get the Factory.
         switch (this.roleId) {

@@ -1376,12 +1376,10 @@ public class CocoonServlet extends HttpServlet {
             ContainerUtil.enableLogging(c, getCocoonLogger());
             c.setLoggerManager(getLoggerManager());
             ContainerUtil.contextualize(c, this.appContext);
+            // TODO - ServiceManager
             final ComponentManager parent = this.getParentComponentManager();
             if (parent != null) {
                 ContainerUtil.compose(c, parent);
-            }
-            if (this.enableInstrumentation) {
-                c.setInstrumentManager(getInstrumentManager());
             }
             ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();

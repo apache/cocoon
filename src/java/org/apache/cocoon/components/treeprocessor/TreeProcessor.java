@@ -47,7 +47,6 @@ import org.apache.regexp.RE;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-
 public class TreeProcessor
     extends AbstractLogEnabled
     implements ThreadSafe,
@@ -147,10 +146,16 @@ public class TreeProcessor
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.parentServiceManager = manager;
         this.resolver = (SourceResolver)this.parentServiceManager.lookup(SourceResolver.ROLE);

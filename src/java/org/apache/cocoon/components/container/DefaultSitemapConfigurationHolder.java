@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
+import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
