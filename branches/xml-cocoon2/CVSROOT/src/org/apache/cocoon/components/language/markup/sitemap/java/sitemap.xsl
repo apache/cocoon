@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.33 $ $Date: 2000-09-08 18:08:51 $
+ * @version CVS $Revision: 1.1.2.34 $ $Date: 2000-09-10 10:09:15 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -348,6 +348,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
     if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", objectModel)) != null) {
       listOfLists.add (list);
       <xsl:apply-templates/>
+      listOfLists.remove (list);
     }
   </xsl:template> <!-- match="map:match" -->
 
