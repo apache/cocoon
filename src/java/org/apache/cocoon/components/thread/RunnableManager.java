@@ -152,4 +152,11 @@ public interface RunnableManager
                   Runnable command,
                   long delay,
                   long interval );
+
+    /**
+     * Remove a {@link Runnable} from the execution stack
+     *
+     * @param command The command to be removed
+     */
+    void remove( Runnable command );
 }
