@@ -81,7 +81,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.3 2003/03/12 15:36:19 cziegeler Exp $
+ * @version CVS $Id: SimpleSessionContext.java,v 1.4 2003/05/01 09:37:30 cziegeler Exp $
 */
 public final class SimpleSessionContext
 implements SessionContext {
@@ -357,10 +357,6 @@ implements SessionContext {
      */
     public synchronized void setNode(String path, Node node)
     throws ProcessingException {
-        if (path != null && path.equals("/") == true) {
-            throw new ProcessingException("Not a valid path for setNode(): " + path);
-        }
-
         path = this.createPath(path);
         Node removeNode = DOMUtil.selectSingleNode(data, path);
         removeNode.getParentNode().replaceChild(data.importNode(node, true), removeNode);
