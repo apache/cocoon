@@ -4,7 +4,6 @@
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:dir="http://apache.org/cocoon/directory/2.0"
  exclude-result-prefixes="dir">
->
  
   <xsl:param name="prefix"/>
   
