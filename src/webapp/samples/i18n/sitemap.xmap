@@ -87,7 +87,7 @@
         <map:part src="cocoon:/menu/{../0}"/>
         <map:part src="cocoon:/content/{../0}" label="content"/>
       </map:aggregate>
-      <map:transform type="xalan" src="simple2page.xsl">
+      <map:transform src="simple2page.xsl">
         <map:parameter name="page" value="{../0}"/>
         <map:parameter name="locale" value="{../../locale}"/>
       </map:transform>

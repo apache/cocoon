@@ -19,7 +19,7 @@
 
  <map:components>
 
-  <map:transformers default="xalan">
+  <map:transformers default="xslt">
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="other">
         <catalogue id="other" name="OtherMessages" location="context://samples/blocks/forms/messages"/>
