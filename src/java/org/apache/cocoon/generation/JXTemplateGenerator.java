@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.16 2003/10/24 14:12:18 sylvain Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.17 2003/11/06 20:23:04 cziegeler Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -795,8 +795,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
 
-    final static String NS = 
-        "http://apache.org/cocoon/templates/jx/1.0";
+    /** The namespace used by this generator */
+    public final static String NS = "http://apache.org/cocoon/templates/jx/1.0";
 
     final static String TEMPLATE = "template";
     final static String FOR_EACH = "forEach";
@@ -875,8 +875,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         return new Expression(inStr, null);
     }
-    // Compile an integer expression (returns either a Compiled Expression
-    // or an Integer literal)
+    
+    /*
+     * Compile an integer expression (returns either a Compiled Expression
+     * or an Integer literal)
+     */
     private static Expression compileInt(String val, String msg, Locator location) 
         throws SAXException {
         Expression res = compileExpr(val, msg, location);
@@ -2103,7 +2106,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
 
         StartDocument getStartEvent() {
-            return startEvent;
+            return this.startEvent;
         }
 
         private void addEvent(Event ev) throws SAXException {
@@ -2589,6 +2592,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return globalJexlContext;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public void recycle() {
         if ( this.resolver != null) {
             this.resolver.release(this.inputSource);            
@@ -2601,9 +2607,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         super.recycle();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel,
                       String src, Parameters parameters)
-        throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
         if (src != null) {
@@ -2612,7 +2621,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } catch (SourceException se) {
                 throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
-            String uri = inputSource.getURI();
+            final String uri = inputSource.getURI();
             synchronized (cache) {
                 StartDocument startEvent = (StartDocument)cache.get(uri);
                 if (startEvent != null) {
@@ -2726,9 +2735,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.generation.Generator#generate()
+     */
     public void generate() 
-        throws IOException, SAXException, ProcessingException {
-        final String cacheKey = inputSource.getURI();
+    throws IOException, SAXException, ProcessingException {
+        final String cacheKey = this.inputSource.getURI();
         
         StartDocument startEvent;
         synchronized (cache) {
@@ -2738,7 +2750,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             Parser parser = new Parser();
             SourceUtil.parse(this.manager, this.inputSource, parser);
             startEvent = parser.getStartEvent();
-            startEvent.compileTime = inputSource.getValidity();
+            startEvent.compileTime = this.inputSource.getValidity();
             synchronized (cache) {
                 cache.put(cacheKey, startEvent);
             }
