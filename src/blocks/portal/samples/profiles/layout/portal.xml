@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tab-layout renderer-name="tab" static="true">
+    <named-item name="News">
+        <column-layout renderer-name="column">
+            <item>
+                <parameter name="width" value="350" />
+                <row-layout renderer-name="row" static="true">
+                    <item>
+		                <coplet-layout renderer-name="window" static="true">
+		                    <id>cocoon://samples/portal/news/newsweek.rss</id>
+		                    <parameter name="title" value="Newsweek" />
+		                </coplet-layout>
+                    </item>
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/NYTBusiness.rss</id>
+		                    <parameter name="title" value="NYT Business" />
+		                </coplet-layout>
+                    </item>
+                </row-layout>
+            </item>
+            <item>
+                <row-layout renderer-name="row" static="false">
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/BBCNews.rss</id>
+		                    <parameter name="title" value="BBC News" />
+		                </coplet-layout>
+                    </item>
+                    <item>
+                        <column-layout renderer-name="column">
+                            <item>
+                                <frame-layout renderer-name="frame">
+                                    <id>a</id>
+                                    <source>cocoon://samples/portal/news/NYTSport.rss</source>
+                                </frame-layout>
+                            </item>
+                            <item>
+                                <coplet-layout renderer-name="window">
+				                    <id>cocoon://samples/portal/news/CNET_news.rss</id>
+				                    <parameter name="title" value="CNET News" />
+                                </coplet-layout>
+                            </item>
+                        </column-layout>
+		            </item>
+                    <item>
+                        <column-layout renderer-name="column">
+                            <item>
+                                <coplet-layout renderer-name="window">
+				                    <id>cocoon://samples/portal/news/CNET_business.rss</id>
+				                    <parameter name="title" value="CNET Business News" />
+                                </coplet-layout>
+                            </item>
+                            <item>
+                                <parameter name="bgcolor" value="grey" />
+                                <frame-layout renderer-name="frame">
+                                    <id>b</id>
+                                    <source>cocoon://samples/portal/news/CNNEurope.rss</source>
+                                </frame-layout>
+                            </item>
+                        </column-layout>
+                    </item>
+                </row-layout>
+            </item>
+            <item>
+                <row-layout renderer-name="row" static="false">
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/CSTNews.rss</id>
+		                    <parameter name="title" value="Chicago Sunday Times" />
+		                </coplet-layout>
+                    </item>
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/CNNEurope.rss</id>
+		                    <parameter name="title" value="CNN Europe" />
+		                </coplet-layout>
+                    </item>
+                </row-layout>
+            </item>
+        </column-layout>
+    </named-item>
+    <named-item name="Weblogs">
+        <column-layout renderer-name="column">
+            <item>
+                <row-layout renderer-name="row">
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/ML_weblog.rss</id>
+		                    <parameter name="title" value="ML's Weblog" />
+		                    <parameter name="bgcolor" value="#ffff00" />
+		                </coplet-layout>
+                    </item>
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/CZ_weblog.rss</id>
+		                    <parameter name="title" value="CZ's Weblog" />
+		                    <parameter name="bgcolor" value="#ffff00" />
+		                </coplet-layout>
+                    </item>
+                </row-layout>
+            </item>
+            <item>
+                <row-layout renderer-name="row">
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/weblog.rss</id>
+		                    <parameter name="title" value="Another Weblog" />
+		                    <parameter name="bgcolor" value="#ffff00" />
+		                </coplet-layout>
+                    </item>
+                </row-layout>
+            </item>
+        </column-layout>
+    </named-item>
+    <named-item name="Cocoon">
+        <row-layout renderer-name="row">
+            <item>
+                <column-layout renderer-name="column">
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/introduction.html</id>
+		                    <parameter name="title" value="Cocoon Introduction" />
+		                </coplet-layout>
+                    </item>
+                    <item>
+		                <coplet-layout renderer-name="window">
+		                    <id>cocoon://samples/portal/news/overview.html</id>
+		                    <parameter name="title" value="Cocoon Overview" />
+		                </coplet-layout>
+                    </item>
+	            </column-layout>
+            </item>
+        </row-layout>
+    </named-item>
+</tab-layout>
