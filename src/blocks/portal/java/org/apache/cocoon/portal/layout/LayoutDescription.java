@@ -19,14 +19,12 @@ import java.util.Iterator;
 
 import org.apache.cocoon.portal.factory.ProducibleDescription;
 
-
-
 /**
  * A configured layout
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LayoutDescription.java,v 1.4 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface LayoutDescription
     extends ProducibleDescription  {
@@ -40,4 +38,9 @@ public interface LayoutDescription
      * @return the names of all allowed renderers
      */
     Iterator getRendererNames();
+    
+    /**
+     * @return The class name of the item
+     */
+    String getItemClassName();
 }
