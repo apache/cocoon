@@ -30,14 +30,11 @@
 
   <property environment="env"/>
   <property name="forrest.home" value="${env.FORREST_HOME}"/>
-  <!-- forrest-0.6
-  -->
-  <import file="${env.FORREST_HOME}/forrest.build.xml"/>
-  <!-- forrest-0.7-dev
-  <import file="${env.FORREST_HOME}/main/forrest.build.xml"/>
-  -->
+  <!-- forrest_06_branch -->
+  <import file="${env.FORREST_HOME}/forrest.build.xml" optional="true"/>
 
-  <target name="do-forrest" depends="site, prepare-extra-docs, prepare, prepare-docs, validate-jars, javadocs" unless="exclude.documentation" description="Generates static HTML documentation">
+  <target name="do-forrest" depends="prepare-extra-docs, prepare, prepare-docs, validate-jars, javadocs" unless="exclude.documentation" description="Generates static HTML documentation">
+    <antcall target="site"/>
   </target>
 
   <!-- Add some other specific documents -->
