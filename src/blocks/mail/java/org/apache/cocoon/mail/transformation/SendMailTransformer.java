@@ -18,11 +18,12 @@ package org.apache.cocoon.mail.transformation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -41,7 +42,6 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
@@ -170,7 +170,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.13 2004/07/22 15:12:44 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.14 2004/07/22 15:29:46 cziegeler Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
@@ -219,11 +219,11 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     /*
      * communication parameters, which will be used to send mails
      */
-    protected Vector               toAddresses;
-    protected Vector               defaultToAddresses;
-    protected Vector               attachments;
-    protected StringBuffer         subject;
-    protected StringBuffer         body;
+    protected List                 toAddresses;
+    protected List                 defaultToAddresses;
+    protected List                 attachments;
+    protected String               subject;
+    protected String               body;
     protected String               bodyURI;
     protected String               mailHost;
     protected String               fromAddress;
@@ -260,137 +260,118 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                       Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
+        
         this.mailHost    = par.getParameter(PARAM_SMTPHOST, this.defaultSmtpHost);
         this.fromAddress = par.getParameter(PARAM_FROM, this.defaultFromAddress);
         this.port        = this.request.getServerPort();
         this.contextPath = this.request.getContextPath();
         this.sendPartial = par.getParameterAsBoolean(PARAM_SENDPARTIAL, true);
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if ( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("overwritten by Transformer-Parameters in Pipeline");
             this.getLogger().debug("overwritten Parameters=" + mailHost + ":" +
                                    fromAddress);
         }
 
-        this.attachments = new Vector();
-        this.defaultToAddresses = new Vector();
+        this.attachments = new ArrayList();
+        this.defaultToAddresses = new ArrayList();
         appendToAddress(this.defaultToAddresses, par.getParameter(PARAM_TO, ""));
         
-    	try {
-    	    this.subject = new StringBuffer(par.getParameter(PARAM_SUBJECT));
-    	} catch (ParameterException pe) {
-    	    this.getLogger().debug("Parameter <subject> not set."); 
-    	} try {
-    	    this.body    = new StringBuffer(par.getParameter(PARAM_BODY));
-    	} catch (ParameterException pe) {
-    	    this.getLogger().debug("Parameter <body> not set."); 
-    	}				    
+  	    this.subject = par.getParameter(PARAM_SUBJECT, null);
+   	    this.body = par.getParameter(PARAM_BODY, null);
     }
 
-    /**
-     * overwritten method of AbstractSAXTransformer
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startTransformingElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     public void startTransformingElement(String uri, String name, String raw,
                                          Attributes attr)
                                   throws SAXException {
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN startElement uri=" + uri + ", name=" +
-                                   name + ", raw=" + raw + ", attr=" + attr);
-        }
-
-        if (name.equals(ELEMENT_SENDMAIL) == true) {
+        if (name.equals(ELEMENT_SENDMAIL)) {
             // Clean from possible previous usage
-            this.toAddresses = new Vector(this.defaultToAddresses);
+            this.toAddresses = new ArrayList(this.defaultToAddresses);
             this.attachments.clear();
-        } else if (name.equals(ELEMENT_SMTPHOST) == true) {
+        } else if (name.equals(ELEMENT_SMTPHOST)) {
             this.startTextRecording();
             this.mode = MODE_SMTPHOST;
-        } else if (name.equals(ELEMENT_MAILFROM) == true) {
+        } else if (name.equals(ELEMENT_MAILFROM)) {
             //this.fromAddress = attr.getValue(ELEMENT_MAILFROM);
             this.startTextRecording();
             this.mode = MODE_FROM;
-        } else if (name.equals(ELEMENT_MAILTO) == true) {
+        } else if (name.equals(ELEMENT_MAILTO)) {
             this.startTextRecording();
             this.mode = MODE_TO;
-        } else if (name.equals(ELEMENT_MAILSUBJECT) == true) {
+        } else if (name.equals(ELEMENT_MAILSUBJECT)) {
             this.startTextRecording();
             this.mode = MODE_SUBJECT;
-        } else if (name.equals(ELEMENT_MAILBODY) == true) {
+        } else if (name.equals(ELEMENT_MAILBODY)) {
             String strBody = attr.getValue("src");
 
             if (strBody != null) {
-                this.bodyURI = new String(strBody);
+                this.bodyURI = strBody;
             }
 
             this.startTextRecording();
             this.mode = MODE_BODY;
-        } else if (name.equals(ELEMENT_ATTACHMENT) == true) {
+        } else if (name.equals(ELEMENT_ATTACHMENT)) {
             this.attachmentDescriptor = new AttachmentDescriptor(attr.getValue("name"),
                                                                  attr.getValue("mime-type"),
                                                                  attr.getValue("src"),
                                                                  attr.getValue("url"));
             this.mode = MODE_ATTACHMENT;
-        } else if (name.equals(ELEMENT_ATTACHMENT_CONTENT) == true) {
+        } else if (name.equals(ELEMENT_ATTACHMENT_CONTENT)) {
             this.startSerializedXMLRecording(new Properties());
             this.mode = MODE_ATTACHMENT_CONTENT;
         } else {
             throw new SAXException("Unknown element " + name);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END startElement");
-        }
     }
 
-    /**
-     * overwritten method of AbstractSAXTransformer
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#endTransformingElement(java.lang.String, java.lang.String, java.lang.String)
      */
     public void endTransformingElement(String uri, String name, String raw)
-                                throws SAXException, ProcessingException {
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN endTransformingElement uri=" + uri +
-                                   ", name=" + name + ", raw=" + raw);
-        }
-
-        if (name.equals(ELEMENT_SENDMAIL) == true) {
-            if (this.getLogger().isInfoEnabled() == true) {
+    throws SAXException, ProcessingException {
+        if (name.equals(ELEMENT_SENDMAIL)) {
+            if (this.getLogger().isInfoEnabled()) {
                 this.getLogger().info("Mail contents- Subject: " +
                                       this.subject + "\n" + "Body: " +
                                       this.body);
             }
 
-            sendMail();
-        } else if (name.equals(ELEMENT_SMTPHOST) == true) {
+            this.sendMail();
+        } else if (name.equals(ELEMENT_SMTPHOST) ) {
             this.mailHost = this.endTextRecording();
             this.mode     = MODE_NONE;
-        } else if (name.equals(ELEMENT_MAILFROM) == true) {
+        } else if (name.equals(ELEMENT_MAILFROM)) {
             this.fromAddress = this.endTextRecording();
             this.mode        = MODE_NONE;
-        } else if (name.equals(ELEMENT_MAILTO) == true) {
+        } else if (name.equals(ELEMENT_MAILTO)) {
             this.toAddresses.add(this.endTextRecording());
             this.mode = MODE_NONE;
-        } else if (name.equals(ELEMENT_MAILSUBJECT) == true) {
+        } else if (name.equals(ELEMENT_MAILSUBJECT)) {
             String strSubject = this.endTextRecording();
 
             if (strSubject != null) {
-                this.subject = new StringBuffer(strSubject);
+                this.subject = strSubject;
             } else {
                 this.getLogger().debug("Mail-Subject not available");
             }
 
             this.mode = MODE_NONE;
-        } else if (name.equals(ELEMENT_ATTACHMENT) == true) {
+        } else if (name.equals(ELEMENT_ATTACHMENT)) {
             this.attachments.add(this.attachmentDescriptor.copy());
             this.attachmentDescriptor = null;
             this.mode                 = MODE_NONE;
-        } else if (name.equals(ELEMENT_ATTACHMENT_CONTENT) == true) {
-            this.attachmentDescriptor.setContent(new StringBuffer(this.endSerializedXMLRecording()));
+        } else if (name.equals(ELEMENT_ATTACHMENT_CONTENT)) {
+            this.attachmentDescriptor.setContent(this.endSerializedXMLRecording());
             this.mode = MODE_NONE;
-        } else if (name.equals(ELEMENT_MAILBODY) == true) {
+        } else if (name.equals(ELEMENT_MAILBODY)) {
             String strB = null;
 
             try {
-                strB = new String(this.endTextRecording());
+                strB = this.endTextRecording();
             } catch (Exception e) {
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug("No Body as String in config-file available");
@@ -398,20 +379,16 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             }
 
             if (strB != null) {
-                this.body = new StringBuffer(strB);
+                this.body = strB;
             }
 
             this.mode = MODE_NONE;
         } else {
             throw new SAXException("Unknown element " + name);
         }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END endElement");
-        }
     }
 
-    private static void appendToAddress(Vector addresses, String s) {
+    private static void appendToAddress(List addresses, String s) {
         StringTokenizer t = new StringTokenizer(s.trim(), ";");
 
         while (t.hasMoreElements()) {
@@ -437,7 +414,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 return;
             }
 
-            if ((this.body == null) && (this.bodyURI == null)) {
+            if (this.body == null && this.bodyURI == null) {
 		        this.ignoreHooksCount++;
                 super.sendStartElementEventNS(ELEMENT_ERROR);
                 super.sendTextEvent("Mailbody not available - sending mail aborted");
@@ -457,14 +434,14 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 	        this.ignoreHooksCount++;
             super.sendStartElementEventNS(ELEMENT_RESULT);
 
-            if (this.sendPartial == true) {
+            if (this.sendPartial) {
                 for (int i = 0; i < this.toAddresses.size(); i++) {
-                    Vector v = new Vector(1);
-                    v.add(this.toAddresses.elementAt(i));
-                    sendMail(v, trans);
+                    List v = new ArrayList(1);
+                    v.add(this.toAddresses.get(i));
+                    this.sendMail(v, trans);
                 }
             } else {
-                sendMail(this.toAddresses, trans);
+                this.sendMail(this.toAddresses, trans);
             }
 
             trans.close();
@@ -480,12 +457,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
      * @link http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html
      * @throws Exception
      */
-    private void sendMail(Vector newAddresses, Transport trans)
-                   throws Exception {
+    private void sendMail(List newAddresses, Transport trans)
+    throws Exception {
         AddressHandler[] iA = new AddressHandler[newAddresses.size()];
 
         for (int i = 0; i < newAddresses.size(); i++) {
-            InternetAddress inA = new InternetAddress((String) newAddresses.elementAt(i));
+            InternetAddress inA = new InternetAddress((String) newAddresses.get(i));
             iA[i] = new AddressHandler(inA);
         }
 
@@ -536,7 +513,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
         //sm.setAllow8bitMIME(true);
         sm.setFrom(new InternetAddress(this.fromAddress));
-        sm.setSubject(this.subject.toString());
+        sm.setSubject(this.subject);
 
         // process mail-body 					
         BodyPart messageBodyPart = new MimeBodyPart();
@@ -552,17 +529,17 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             String mailBody = new String(byteArr);
             messageBodyPart.setContent(mailBody, "text/html");
         } else {
-            messageBodyPart.setContent(this.body.toString(), "text/html");
+            messageBodyPart.setContent(this.body, "text/html");
         }
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
 
         // process attachments				
-        Enumeration enumAtt = this.attachments.elements();
+        Iterator iterAtt = this.attachments.iterator();
 
-        while (enumAtt.hasMoreElements()) {
-            AttachmentDescriptor aD = (AttachmentDescriptor) enumAtt.nextElement();
+        while (iterAtt.hasNext()) {
+            AttachmentDescriptor aD = (AttachmentDescriptor) iterAtt.next();
             messageBodyPart = new MimeBodyPart();
 
             if (!aD.isTextContent()) {
@@ -572,7 +549,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 if (aD.isURLSource()) {
                     inputSource = resolver.resolveURI(aD.strAttrSrc);
 
-                    String iSS = new String(inputSource.getURI());
+                    String iSS = inputSource.getURI();
 
                     if (iSS.startsWith("cocoon:")) {
                         iSS = iSS.substring(7, iSS.length());
@@ -584,7 +561,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                             iSS = "http://localhost:" + this.port + iSS;
                         }
 
-                        if (this.getLogger().isDebugEnabled() == true) {
+                        if (this.getLogger().isDebugEnabled()) {
                             this.getLogger().debug("cocoon-URI changed to " +
                                                    iSS);
                         }
@@ -601,7 +578,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                     messageBodyPart.setDataHandler(new DataHandler(dataSource));
                 }
             } else {
-                messageBodyPart.setContent(aD.strBufContent.toString(),
+                messageBodyPart.setContent(aD.strContent,
                                            aD.strAttrMimeType);
             }
 
@@ -692,12 +669,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 	    super.recycle();
 	}
 	
-    class AttachmentDescriptor {
+    static class AttachmentDescriptor {
         String       strAttrName;
         String       strAttrMimeType;
         String       strAttrSrc;
         String       strAttrFile;
-        StringBuffer strBufContent;
+        String       strContent;
 
         protected AttachmentDescriptor(String newAttrName,
                                        String newAttrMimeType,
@@ -708,8 +685,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             this.strAttrFile     = newAttrFile;
         }
 
-        protected void setContent(StringBuffer newContent) {
-            this.strBufContent = newContent;
+        protected void setContent(String newContent) {
+            this.strContent = newContent;
         }
 
         protected AttachmentDescriptor copy() {
@@ -717,25 +694,25 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                                                                this.strAttrMimeType,
                                                                this.strAttrSrc,
                                                                this.strAttrFile);
-            aD.setContent(this.strBufContent);
+            aD.setContent(this.strContent);
 
             return aD;
         }
 
         protected boolean isURLSource() {
-            return (this.strAttrSrc != null) ? true : false;
+            return (this.strAttrSrc != null);
         }
 
         protected boolean isFileSource() {
-            return (this.strAttrFile != null) ? true : false;
+            return (this.strAttrFile != null);
         }
 
         protected boolean isTextContent() {
-            return (this.strBufContent != null) ? true : false;
+            return (this.strContent != null);
         }
     }
 
-    class AddressHandler {
+    static class AddressHandler {
         private InternetAddress address;
         private String          sendMailResult;
 
