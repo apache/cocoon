@@ -131,22 +131,18 @@
 
     <target name="cocoon:core-container" depends="cocoon:before-container">
         <ant antfile="${cocoon.rep.container.dir}/container-build.xml"
-            target="cocoon:create-${cocoon.container.version}" inheritall="true"/>
+            target="cocoon:create" inheritall="true"/>
     </target>
 
 	<!-- TODO: run and stop have to support *nix -->
     <target name="cocoon:core-run" depends="cocoon:before-run">
-        <exec executable="${cocoon.build.container.dir}/${cocoon.container.run.win}" spawn="true">
-          <env key="CATALINA_HOME" value="${cocoon.build.container.dir}"/>
-          <arg value="start"/>
-        </exec>
+        <ant antfile="${cocoon.rep.container.dir}/container-build.xml"
+            target="cocoon:run" inheritall="true"/>      
     </target>
 
     <target name="cocoon:core-stop" depends="cocoon:init, cocoon:before-stop">
-        <exec executable="${cocoon.build.container.dir}/${cocoon.container.stop.win}" spawn="true">
-          <env key="CATALINA_HOME" value="${cocoon.build.container.dir}"/>
-          <arg value="start"/>
-        </exec>
+        <ant antfile="${cocoon.rep.container.dir}/container-build.xml"
+            target="cocoon:stop" inheritall="true"/>
     </target>
 
     <target name="cocoon:core-compile" depends="cocoon:before-compile">
