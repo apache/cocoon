@@ -13,7 +13,7 @@
 	<class name="org.apache.cocoon.portal.coplet.CopletInstanceData">
 		<map-to xml="coplet-instance-data" />
 
-		<field name="copletId" type="java.lang.String">
+		<field name="id" type="java.lang.String">
 			<bind-xml name="id" node="attribute" />
 		</field>
 

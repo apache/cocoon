@@ -63,14 +63,14 @@ import org.exolab.castor.mapping.MapItem;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.2 2003/05/19 09:14:07 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.3 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class CopletData 
 //extending MapItem used for Castor map workaround 
 extends MapItem 
 implements DeltaApplicable {
 
-    protected String name;
+    protected String id;
 
     protected String title;
 
@@ -90,12 +90,12 @@ implements DeltaApplicable {
 		this.setValue(this);
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(String name) {
+        this.id = name;
 
 		// used for Castor map workaround
 		this.setKey(name);

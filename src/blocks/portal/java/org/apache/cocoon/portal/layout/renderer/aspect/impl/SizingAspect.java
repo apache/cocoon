@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: SizingAspect.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class SizingAspect extends AbstractAspect {
 
@@ -83,9 +83,9 @@ public class SizingAspect extends AbstractAspect {
         
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
 
-        SizeableStatus sizeable = (SizeableStatus) this.getStatus(SizeableStatus.class, ProfileManager.SESSION_STATUS, cid.getCopletData().getName());
+        SizeableStatus sizeable = (SizeableStatus) this.getStatus(SizeableStatus.class, ProfileManager.SESSION_STATUS, cid.getCopletData().getId());
         if ( sizeable != null ) {
-            SizingStatus sizingstatus = (SizingStatus)this.getStatus(SizingStatus.class, ProfileManager.SESSION_STATUS, cid.getCopletId());
+            SizingStatus sizingstatus = (SizingStatus)this.getStatus(SizingStatus.class, ProfileManager.SESSION_STATUS, cid.getId());
             int status = (sizingstatus == null ? SizingStatus.STATUS_MAXIMIZED : sizingstatus.getStatus());
 
             SizingStatusEvent event;    

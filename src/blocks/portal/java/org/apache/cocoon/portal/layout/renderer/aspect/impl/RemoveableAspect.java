@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RemoveableAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: RemoveableAspect.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class RemoveableAspect extends AbstractAspect {
 
@@ -85,7 +85,7 @@ public class RemoveableAspect extends AbstractAspect {
         if (cid.getCopletData().isRemovable()) {
         } 
 
-        MandatoryStatus mandatory = (MandatoryStatus) this.getStatus(MandatoryStatus.class, ProfileManager.SESSION_STATUS, cid.getCopletData().getName());
+        MandatoryStatus mandatory = (MandatoryStatus) this.getStatus(MandatoryStatus.class, ProfileManager.SESSION_STATUS, cid.getCopletData().getId());
         if ( mandatory == null || !mandatory.isMandatory()) {
             LayoutRemoveEvent lre = new LayoutRemoveEvent(layout, 0);
             XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));

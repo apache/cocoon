@@ -85,7 +85,7 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.3 2003/05/19 12:51:00 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.4 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
@@ -548,7 +548,7 @@ public class SimpleProfileManager
 			CopletLayout copletLayout = (CopletLayout)layout;
 
 			if (manager != null) {
-				String copletId = copletLayout.getCopletInstanceData().getCopletId();
+				String copletId = copletLayout.getCopletInstanceData().getId();
 				copletLayout.setCopletInstanceData(manager.getCopletInstanceData(copletId)); 
 			}
 
@@ -557,10 +557,10 @@ public class SimpleProfileManager
                 throw new ProcessingException("Layout " + copletLayout.getId() + " has no coplet instance data.");
             } else {
                 if ( copletLayout.getCopletInstanceData().getCopletData() == null ) {
-                    throw new ProcessingException("CopletInstanceData " + copletLayout.getCopletInstanceData().getCopletId() + " has no coplet data.");
+                    throw new ProcessingException("CopletInstanceData " + copletLayout.getCopletInstanceData().getId() + " has no coplet data.");
                 }
             }
-            this.setAspectStatus(ProfileManager.SESSION_STATUS, copletLayout.getCopletInstanceData().getCopletData().getName(), new SizeableStatus());
+            this.setAspectStatus(ProfileManager.SESSION_STATUS, copletLayout.getCopletInstanceData().getCopletData().getId(), new SizeableStatus());
         }
         layout.setParent(item);
     }

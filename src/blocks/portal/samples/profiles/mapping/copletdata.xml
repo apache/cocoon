@@ -13,8 +13,8 @@
 	<class name="org.apache.cocoon.portal.coplet.CopletData">
 		<map-to xml="coplet-data" />
 
-		<field name="name" type="java.lang.String">
-			<bind-xml name="name" node="attribute" />
+		<field name="id" type="java.lang.String">
+			<bind-xml name="id" node="attribute" />
 		</field>
 
 		<field name="title" type="java.lang.String">

@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataManager.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataManager.java,v 1.2 2003/05/20 14:32:35 cziegeler Exp $
  */
 public class CopletInstanceDataManager {
 	
@@ -88,7 +88,7 @@ public class CopletInstanceDataManager {
 	 * Puts the specified coplet instance data to the manager.
 	 */
 	public void putCopletInstanceData(CopletInstanceData data) {
-		this.copletInstanceData.put(data.getCopletId(), data);
+		this.copletInstanceData.put(data.getId(), data);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class CopletInstanceDataManager {
 		CopletInstanceData data;
 		while (iterator.hasNext()) {
 			data = (CopletInstanceData)iterator.next();
-			data.setCopletData(manager.getCopletData(data.getCopletData().getName()));
+			data.setCopletData(manager.getCopletData(data.getCopletData().getId()));
 		}
 	}
 }

@@ -62,7 +62,7 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletDataManager.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletDataManager.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class CopletDataManager 
 implements DeltaApplicable {
@@ -90,7 +90,7 @@ implements DeltaApplicable {
 	 * Puts the specified coplet data to the manager.
 	 */
 	public void putCopletData(CopletData data) {
-		this.copletData.put(data.getName(), data);
+		this.copletData.put(data.getId(), data);
 	}
 	
 	/**
@@ -104,7 +104,7 @@ implements DeltaApplicable {
 		CopletData data, delta;
 		while (iterator.hasNext()) {
 			delta = (CopletData)iterator.next();
-			data = this.getCopletData(delta.getName());
+			data = this.getCopletData(delta.getId());
 			if (data == null) {
 				this.putCopletData(delta);
 			} else {
@@ -123,7 +123,7 @@ implements DeltaApplicable {
 		CopletData data;
 		while (iterator.hasNext()) {
 			data = (CopletData)iterator.next();
-			data.setCopletBaseData(manager.getCopletBaseData(data.getCopletBaseData().getName()));
+			data.setCopletBaseData(manager.getCopletBaseData(data.getCopletBaseData().getId()));
 		}
 	}
 }

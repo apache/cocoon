@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coplets>
-   <coplet-data name="Newsweek">
+   <coplet-data id="Newsweek">
       <title>Newsweek</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -11,7 +11,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="NYTBusiness">
+   <coplet-data id="NYTBusiness">
       <title>NYT Business</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -22,7 +22,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="BBCNews">
+   <coplet-data id="BBCNews">
       <title>BBC News</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -33,7 +33,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="CNET News">
+   <coplet-data id="CNET News">
       <title>CNET News</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -44,7 +44,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="CNET Business">
+   <coplet-data id="CNET Business">
       <title>CNET Business News</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -55,7 +55,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="CSTNews">
+   <coplet-data id="CSTNews">
       <title>Chicago Sunday Times</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -66,7 +66,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="CNNEurope">
+   <coplet-data id="CNNEurope">
       <title>CNN Europe</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -77,7 +77,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="ML Weblog">
+   <coplet-data id="ML Weblog">
       <title>ML's Weblog</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -88,7 +88,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="CZ Weblog">
+   <coplet-data id="CZ Weblog">
       <title>CZ's Weblog</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -99,7 +99,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="Weblog">
+   <coplet-data id="Weblog">
       <title>Another Weblog</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -110,7 +110,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="Introduction">
+   <coplet-data id="Introduction">
       <title>Cocoon Introduction</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>
@@ -121,7 +121,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data name="Overview">
+   <coplet-data id="Overview">
       <title>Cocoon Overview</title>
       <maxpageable>true</maxpageable>
       <removable>true</removable>

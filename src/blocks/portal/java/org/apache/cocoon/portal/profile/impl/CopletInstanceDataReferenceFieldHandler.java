@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataReferenceFieldHandler.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataReferenceFieldHandler.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class CopletInstanceDataReferenceFieldHandler
 extends ReferenceFieldHandler {
@@ -69,7 +69,7 @@ extends ReferenceFieldHandler {
 	public Object getValue(Object object) {
 		CopletInstanceData copletInstanceData = ((CopletLayout)object).getCopletInstanceData();
 		if (copletInstanceData != null) {
-			return copletInstanceData.getCopletId();
+			return copletInstanceData.getId();
 		} else {
 			return null;
 		}

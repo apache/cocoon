@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.coplet.CopletBaseData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataManager.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataManager.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class CopletBaseDataManager {
 
@@ -87,6 +87,6 @@ public class CopletBaseDataManager {
 	 * Puts the specified coplet base data to the manager.
 	 */
 	public void putCopletBaseData(CopletBaseData data) {
-		this.copletBaseData.put(data.getName(), data);
+		this.copletBaseData.put(data.getId(), data);
 	}
 }

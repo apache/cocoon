@@ -59,7 +59,7 @@ import org.apache.cocoon.portal.coplet.CopletData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
  */
 public class CopletBaseDataReferenceFieldHandler 
 extends ReferenceFieldHandler {
@@ -72,7 +72,7 @@ extends ReferenceFieldHandler {
 	{
 		CopletBaseData copletBaseData = ((CopletData)object).getCopletBaseData();
 		if (copletBaseData != null) {
-			return copletBaseData.getName();
+			return copletBaseData.getId();
 		} else {
 			return null;
 		}
