@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-23 19:38:10 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-25 23:01:17 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -228,7 +228,155 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="value-for-as">
+<xsl:template match="xsp-request:get-remote-address">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getRemoteAddr(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getRemoteAddr(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-remote-user">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getRemoteUser(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getRemoteUser(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-server-name">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getServerName(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getServerName(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-method">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getMethod(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getMethod(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-query-string">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getQueryString(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getQueryString(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp-request:get-protocol">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getProtocol(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getProtocol(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>  
+	
+	
+  <xsl:template match="xsp-request:get-remote-host">
+    <xsl:variable name="as">
+      <xsl:call-template name="value-for-as">
+        <xsl:with-param name="default" select="'string'"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$as = 'string'">
+        <xsp:expr>
+          (XSPRequestHelper.getRemoteHost(objectModel))
+        </xsp:expr>
+      </xsl:when>
+      <xsl:when test="$as = 'xml'">
+        <xsp:logic>
+          XSPRequestHelper.getRemoteHost(objectModel, this.contentHandler);
+        </xsp:logic>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+  
+   <xsl:template name="value-for-as">
     <xsl:param name="default"/>
     <xsl:choose>
       <xsl:when test="@as"><xsl:value-of select="@as"/></xsl:when>
@@ -256,10 +404,11 @@
       <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
+  
   <xsl:template match="@*|*|text()|processing-instruction()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
-    </xsl:copy>
-  </xsl:template>
-</xsl:stylesheet>
+      <xsl:copy>
+        <xsl:apply-templates select="@*|*|text()|processing-instruction()"/>
+      </xsl:copy>
+    </xsl:template>
+
+  </xsl:stylesheet>
