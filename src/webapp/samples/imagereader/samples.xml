@@ -15,21 +15,53 @@
   limitations under the License.
 -->
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
- 
- <group name="Main examples page.">
-  <sample name="Back" href="..">to Cocoon examples main page</sample>
- </group>
 
-  <group name="ImageReader">
-    <sample href="image-0" name="Image">
-      Image of original size
-    </sample>
-    <sample href="image-250" name="Image 250x250">
-      Image scaled up to the size 250 x 250
-    </sample>
-    <sample href="image-50" name="Image 50x50">
-      Image scaled down to the size 50 x 50
-    </sample> 
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
   </group>
 
+  <group name="The Original">
+    <sample href="image" name="Image">
+      Image of original size and color.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Size Scaling">
+    <sample href="image-size-50" name="Image 50x50">
+      Image scaled down to the size 50 x 50.
+    </sample> 
+    <sample href="image-size-250" name="Image 250x250">
+      Image scaled up to the size 250 x 250.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Grayscaling">
+    <sample href="image-grayscale" name="Image grayscaled.">
+      The image in gray.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Color Scaling">
+    <sample href="image-color-scale-2-1-1" name="Image tinted red.">
+      The values for the color red are duplicated.
+    </sample>
+    <sample href="image-color-scale-1-2-1" name="Image tinted green.">
+      The values for the color green are duplicated.
+    </sample>
+    <sample href="image-color-scale-1-1-2" name="Image tinted blue.">
+      The values for the color blue are duplicated.
+    </sample>
+  </group>
+
+  <group name="ImageReader - Color Offset">
+    <sample href="image-color-offset-50-0-0" name="Image tinted red.">
+      The values for the color red are incremented by 50.
+    </sample>
+    <sample href="image-color-offset-0-50-0" name="Image tinted green.">
+      The values for the color green are incremented by 50.
+    </sample>
+    <sample href="image-color-offset-0-0-50" name="Image tinted blue.">
+      The values for the color blue are incremented by 50.
+    </sample>
+  </group>
 </samples>
