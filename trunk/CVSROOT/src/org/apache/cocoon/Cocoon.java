@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.5 1999-12-12 11:12:36 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.6 1999-12-14 23:47:44 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-12 11:12:36 $
+ * @version $Revision: 1.6 $ $Date: 1999-12-14 23:47:44 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -114,6 +114,9 @@ public class Cocoon extends HttpServlet implements Defaults {
             showStatus = ((String) confs.get(SHOW_STATUS, "false")).toLowerCase().equals("true");
             statusURL = (String) confs.get(STATUS_URL, STATUS_URL_DEFAULT);
             errorsInternally = ((String) confs.get(ERROR_INTERNALLY, "false")).toLowerCase().equals("true");
+
+            // Put the servlet context
+    	    confs.put("servletContext", this.getServletConfig().getServletContext());
 
             // create the engine
             engine = new Engine(confs);

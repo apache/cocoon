@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.4 1999-11-30 16:30:03 stefano Exp $ -- 
+/*-- $Id: Engine.java,v 1.5 1999-12-14 23:47:44 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,6 +59,7 @@ import javax.servlet.http.*;
 import org.apache.cocoon.cache.*;
 import org.apache.cocoon.store.*;
 import org.apache.cocoon.parser.*;
+import org.apache.cocoon.transformer.*;
 import org.apache.cocoon.producer.*;
 import org.apache.cocoon.formatter.*;
 import org.apache.cocoon.processor.*;
@@ -71,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:03 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-14 23:47:44 $
  */
 
 public class Engine implements Defaults {
@@ -87,13 +88,19 @@ public class Engine implements Defaults {
     Manager manager;
     Browsers browsers;
     Parser parser;
+    Transformer transformer;
     Cache cache;
     Store store;
+    
+    ServletContext servletContext;
 
     /**
      * This method initializes the engine.
      */
     public Engine(Configurations configurations) throws Exception {
+
+		// stores servlet config
+        servletContext = (ServletContext) configurations.get("servletContext");
 
 		// stores the configuration instance
         this.configurations = configurations;
@@ -106,6 +113,10 @@ public class Engine implements Defaults {
         // Create the parser and register it
         parser = (Parser) manager.create((String) configurations.get(PARSER_PROP, PARSER_DEFAULT), configurations.getConfigurations(PARSER_PROP));
         manager.setRole("parser", parser);
+
+        // Create the transformer and register it
+        transformer = (Transformer) manager.create((String) configurations.get(TRANSFORMER_PROP, TRANSFORMER_DEFAULT), configurations.getConfigurations(TRANSFORMER_PROP));
+        manager.setRole("transformer", transformer);
 
         // Create the store and register it
         store = (Store) manager.create((String) configurations.get(STORE_PROP, STORE_DEFAULT), configurations.getConfigurations(STORE_PROP));
@@ -126,8 +137,9 @@ public class Engine implements Defaults {
         manager.setRole("producers", producers);
 
         // Create the processor factory and register it
-        processors = (ProcessorFactory) manager.create("org.apache.cocoon.processor.ProcessorFactory", 
-            configurations.getConfigurations(PROCESSOR_PROP));
+        Configurations processorConf = configurations.getConfigurations(PROCESSOR_PROP);
+        processorConf.put("servletContext", servletContext);
+        processors = (ProcessorFactory) manager.create("org.apache.cocoon.processor.ProcessorFactory", processorConf);
         manager.setRole("processors", processors);
 
         // Create the formatter factory and register it
@@ -200,6 +212,7 @@ public class Engine implements Defaults {
             environment.put("path", producer.getPath(request));
             environment.put("browser", browsers.map(agent));
             environment.put("request", request);
+            environment.put("response", response);
 
             // process the document through the document processors
             while (true) {
