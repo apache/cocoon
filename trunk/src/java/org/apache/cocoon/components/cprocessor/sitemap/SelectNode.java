@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -71,14 +72,14 @@ import org.apache.cocoon.sitemap.PatternException;
  * 
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SelectNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: SelectNode.java,v 1.2 2004/01/26 15:44:59 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=select-node
  */
-public class SelectNode extends AbstractParentProcessingNode {
+public class SelectNode extends AbstractParentProcessingNode implements Initializable {
     
     private String m_type;
     private VariableResolver[] m_tests;
@@ -104,7 +105,7 @@ public class SelectNode extends AbstractParentProcessingNode {
             String test = children[i].getAttribute("test");
             try {
                 tests.add(VariableResolverFactory.getResolver(test, super.m_manager));
-                nodes.add(super.getChildNodesList(children[i]));
+                nodes.add(super.getChildNodes(children[i]));
             }
             // TODO: better error reporting
             catch (PatternException e) {
@@ -112,7 +113,7 @@ public class SelectNode extends AbstractParentProcessingNode {
             }
         }
         m_tests = (VariableResolver[]) tests.toArray(new VariableResolver[tests.size()]);
-        m_whenNodes = (ProcessingNode[][])nodes.toArray(new ProcessingNode[tests.size()][0]);
+        m_whenNodes = (ProcessingNode[][]) nodes.toArray(new ProcessingNode[tests.size()][0]);
         
         // <otherwise> clause
         nodes = getChildNodesList(config.getChild("otherwise"));

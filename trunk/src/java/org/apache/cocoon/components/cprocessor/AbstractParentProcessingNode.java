@@ -63,7 +63,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: AbstractParentProcessingNode.java,v 1.2 2004/01/26 15:44:59 unico Exp $
  */
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
     
@@ -144,6 +144,11 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
         }
 
         return result;
+    }
+    
+    protected final ProcessingNode[] getChildNodes(Configuration config) throws ConfigurationException {
+        List children = getChildNodesList(config);
+        return (ProcessingNode[]) children.toArray(new ProcessingNode[children.size()]);
     }
     
     /**
