@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<!-- Written by James Birchfield "jmbirchfield@proteus-technologies.com" -->
+
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
 
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
@@ -10,72 +12,67 @@
       LDAP Search Results
      </title>
     </head>
-    <body bgcolor="#ffffff">
-     <xsl:apply-templates/>
+    <body bgcolor="#404040">
+			<center>
+		<h1><font color="cornsilk">LDAP Search Results</font></h1>
+			<table width="80%" bgcolor="#000000" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<xsl:apply-templates/>
+					</td>
+				</tr>
+			</table>
+		</center>
     </body>
    </html>
   </xsl:template>
 
- <xsl:template match="searchresult">
-	<table cellspacing="0" cellpadding="6">
-     <xsl:apply-templates select="cn"/>
-     <xsl:apply-templates select="currentorganization"/>
-     <xsl:apply-templates select="mail"/>
-     <xsl:apply-templates select="telephonenumber"/>
-     <xsl:apply-templates select="securephonenumber"/>
+ <xsl:template match="ldapsearch/searchresult">
+	<table cellspacing="0" bordercolor="#000000" bgcolor="#000000" border="1" width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<th colspan="2" bgcolor="tan">
+				<xsl:value-of select="@ID"/>
+			</th>
+		</tr>
+		<tr>
+			<th width="20%" align="left" bgcolor="#a0a0a0">
+				<xsl:text>p. </xsl:text><xsl:value-of select="telephonenumber"/><br/>
+				<xsl:text>f. </xsl:text><xsl:value-of select="facsimiletelephonenumber"/><br/>
+			</th>
+			<td bgcolor="#ffffff" width="80%">
+				<table border="0">
+					<tr>
+						<td>
+							<xsl:value-of select="sn"/> <xsl:text>, </xsl:text> <xsl:value-of select="givenname"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="ou"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<xsl:value-of select="title"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" bgcolor="#d0d0d0">
+				<xsl:text>E-mail address: </xsl:text>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>mailto:</xsl:text><xsl:value-of select="mail"/>
+						</xsl:attribute>
+						<xsl:value-of select="mail"/>
+					</a>
+			</td>
+		</tr>
 	</table>
 	<p/>
   </xsl:template>
-
- <xsl:template match="cn">
-	<tr>
-	 <th bgcolor="tan" align="right">Common Name</th>
-	 <td>
-      <xsl:apply-templates/>
-	 </td>
-	</tr>
-  </xsl:template>
-
- <xsl:template match="currentorganization">
-	<tr>
-	 <th bgcolor="tan" align="right">Org</th>
-	 <td>
-      <xsl:apply-templates/>
-	 </td>
-	</tr>
-  </xsl:template>
-
- <xsl:template match="telephonenumber">
-	<tr>
-	 <th bgcolor="tan" align="right">Unsecure #</th>
-	 <td>
-      <xsl:apply-templates/>
-	 </td>
-	</tr>
-  </xsl:template>
-
- <xsl:template match="securephonenumber">
-	<tr>
-	 <th bgcolor="tan" align="right">Secure #</th>
-	 <td>
-      <xsl:apply-templates/>
-	 </td>
-	</tr>
-  </xsl:template>
-
- <xsl:template match="mail">
-	<tr>
-	 <th bgcolor="tan" align="right">E-mail</th>
-	 <td>
-      <a>
-	   <xsl:attribute name="href">
-        mailto:<xsl:apply-templates/>
-	   </xsl:attribute>
-       <xsl:apply-templates/>
-	  </a>
-	 </td>
-	</tr>
-  </xsl:template>
-
+ 
 </xsl:stylesheet>
 
