@@ -36,7 +36,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This is used in the Event based cache example. 
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version CVS $Id: CacheEventAction.java,v 1.5 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id: CacheEventAction.java,v 1.6 2004/03/29 12:31:25 cziegeler Exp $
  */
 public class CacheEventAction extends ServiceableAction implements ThreadSafe {
 
@@ -50,19 +50,24 @@ public class CacheEventAction extends ServiceableAction implements ThreadSafe {
                     String src,
                     Parameters par
     ) throws Exception {
-        Cache cache = (Cache)this.manager.lookup(Cache.ROLE + "/EventAware");
-        if (cache instanceof EventAwareCacheImpl) {
-            String eventName = par.getParameter("event");
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Configured for cache event named: " + eventName);
+        final String cacheRole = par.getParameter("cache-role", Cache.ROLE + "/EventAware");
+        Cache cache = (Cache)this.manager.lookup(cacheRole);
+        try {
+            // FIXME - This cast might not work with every container!
+            if (cache instanceof EventAwareCacheImpl) {
+                String eventName = par.getParameter("event");
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Configured for cache event named: " + eventName);
+                }
+                if (eventName == null || "".equals(eventName)) {
+                    return null;
+                }
+                ((EventAwareCacheImpl)cache).processEvent(
+                                                    new NamedEvent(eventName));
             }
-            if (eventName == null || "".equals(eventName)) {
-                return null;
-            }
-            ((EventAwareCacheImpl)cache).processEvent(
-                                                new NamedEvent(eventName));
+        } finally {
+            this.manager.release(cache);
         }
-        this.manager.release(cache);
         return EMPTY_MAP;
     }
 }

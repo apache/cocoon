@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -29,6 +27,7 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.caching.validity.Event;
@@ -100,7 +99,7 @@ implements Configurable, CacheableProcessingComponent {
     
     // ---------------------------------------------------- member variables
     
-    private ComponentSelector m_generatorSelector;
+    private ServiceSelector m_generatorSelector;
     private Generator m_delegate;
     private Serializable m_key;
     private Event m_event;
@@ -108,14 +107,18 @@ implements Configurable, CacheableProcessingComponent {
     private Map m_types = new HashMap();
     
     
-    // ---------------------------------------------------- lifecycle methods
-    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager)  throws ServiceException {
         super.service(manager);
-        m_generatorSelector = (ComponentSelector) 
+        m_generatorSelector = (ServiceSelector) 
             manager.lookup(Generator.ROLE + "Selector");
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         Configuration[] factories = configuration.getChildren(FACTORY_CONF);
         for (int i = 0; i < factories.length; i++) {
@@ -139,9 +142,12 @@ implements Configurable, CacheableProcessingComponent {
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src,
                       Parameters par)
-        throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
 
         // delegate
         String delegate = par.getParameter(DELEGATE_PARAM, null);
@@ -152,7 +158,7 @@ implements Configurable, CacheableProcessingComponent {
         }
         try {
             m_delegate = (Generator) m_generatorSelector.select(delegate);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             final String message =
                 "Transformer '" + delegate + "' could not be found.";
             throw new ProcessingException(message); 
@@ -176,14 +182,23 @@ implements Configurable, CacheableProcessingComponent {
         m_key = SourceUtil.appendParameters(src,par);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.xml.XMLProducer#setConsumer(org.apache.cocoon.xml.XMLConsumer)
+     */
     public void setConsumer(XMLConsumer consumer) {
         m_delegate.setConsumer(consumer);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.generation.Generator#generate()
+     */
     public void generate() throws IOException, SAXException, ProcessingException {
         m_delegate.generate();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public void recycle() {
         if ( m_delegate != null ) {
             m_generatorSelector.release(m_delegate);
@@ -195,14 +210,28 @@ implements Configurable, CacheableProcessingComponent {
     }
 
     
-    // ---------------------------------------------------- caching strategy
-    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+     */
     public Serializable getKey() {
         return m_key;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
+     */
     public SourceValidity getValidity() {
         return new EventValidity(m_event);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(m_generatorSelector);
+            m_generatorSelector = null;
+        }
+        super.dispose();
+    }
 }
