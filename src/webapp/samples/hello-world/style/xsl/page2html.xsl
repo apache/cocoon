@@ -15,9 +15,10 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: page2html.xsl,v 1.4 2004/03/06 02:25:32 antonio Exp $ -->
+<!-- CVS $Id: page2html.xsl,v 1.5 2004/06/09 22:02:38 joerg Exp $ -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                              xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:template match="page">
    <html>
