@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.18 2003/12/11 18:23:08 sylvain Exp $
+:: $Id: cocoon.bat,v 1.19 2004/02/04 17:59:44 sylvain Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -78,6 +78,10 @@ echo cocoon.bat: using %JETTY_WEBAPP% as the webapp directory
 if not "%JAVA_DEBUG_PORT%" == "" goto gotDebugPort
 set JAVA_DEBUG_PORT=8000
 :gotDebugPort
+
+:: ----- Ensure desktop.ini is activated ---------------------------------------
+
+attrib +s %COCOON_HOME%
 
 :: ----- Set Up The Classpath --------------------------------------------------
 
