@@ -9,147 +9,68 @@ package org.apache.cocoon.generation;
 
 import java.io.*;
 import java.util.*;
-import java.net.*;
 
 import javax.servlet.*;
+import javax.servlet.http.*;
 
 import net.php.servlet;
-import net.php.reflect;
 
-import org.apache.cocoon.Response;
-import org.apache.cocoon.Request;
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.ProcessingException;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * Allows PHP to be used as a generator.  Builds upon the PHP servlet
- * functionallity.  Taking a step back, the PHP functionality needs to
- * be restructured so that faking out all this servlet infrastructure
- * is not required in order to simply get a response produced from a
- * request...
+ * functionallity - overrides the output method in order to pipe the
+ * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-27 21:49:00 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-30 04:54:09 $
  */
 public class PhpGenerator extends ComposerGenerator {
 
     /**
-     * Stub implementation of Servlet Context
-     */
-    class Context implements ServletContext {
-        Vector v = new Vector();
-        public ServletContext getContext(String uripath) { return null; }
-        public int getMajorVersion() { return 0; }
-        public int getMinorVersion() { return 0; }
-        public String getMimeType(String file) { return ""; }
-        public java.net.URL getResource(String path) { return null; }
-        public InputStream getResourceAsStream(String path) { return null; }
-        public RequestDispatcher getRequestDispatcher(String path) 
-               { return null; }
-        public RequestDispatcher getNamedDispatcher(String name) 
-               { return null; }
-        public void log(String msg) {}
-        public void log(String message, Throwable throwable) {}
-        public String getRealPath(String path) { return ""; }
-        public String getServerInfo() { return "Cocoon PhpGenerator"; }
-        public String getInitParameter(String name) { return ""; }
-        public Enumeration getInitParameterNames() { return v.elements(); }
-        public Object getAttribute(String name) { return null; }
-        public Enumeration getAttributeNames() { return v.elements(); }
-        public void setAttribute(String name, Object object) {};
-        public void removeAttribute(String name) {};
-
-        /**
-         * @deprecated
-         */
-        public Servlet getServlet(String name) { return null; };
-        /**
-         * @deprecated
-         */
-        public Enumeration getServlets() { return v.elements(); }
-        /**
-         * @deprecated
-         */
-        public Enumeration getServletNames() { return v.elements(); }
-        /**
-         * @deprecated
-         */
-        public void log(Exception exception, String msg) {}
-    }
-
-    /**
      * Stub implementation of Servlet Config
      */
-    class Config implements ServletConfig {
-        Context c = new Context();
+    class config implements ServletConfig {
+        ServletContext c;
+        public config(ServletContext c) {this.c = c; }
+
         public String getServletName() { return "PhpGenerator"; }
-        public Enumeration getInitParameterNames() 
+        public Enumeration getInitParameterNames()
                { return c.getInitParameterNames(); }
         public ServletContext getServletContext() { return c; }
         public String getInitParameter(String name) { return null; }
     }
 
     /**
-     * Subclass the PHP servlet implementation, replacing calls to the
-     * javax.servlet objects like request and response with the cocoon
-     * equivalents.
+     * Subclass the PHP servlet implementation, overriding the method
+     * that produces the output.
      */
     public class PhpServlet extends net.php.servlet implements Runnable {
 
-        Request request;
-        Response response;
+        String input;
         OutputStream output;
-        String source;
+        HttpServletRequest request;
+        HttpServletResponse response;
+        ServletException exception = null;
 
-        /******************************************************************/
-        /*                       php sapi callbacks                       */ 
-        /******************************************************************/
-
-        public String readPost(int bytes) {
-            String result;
-
-            Enumeration e = request.getParameterNames();
-            result="";
-            String concat="";
-            while (e.hasMoreElements()) {
-                String name = (String)e.nextElement();
-                String value = request.getParameter(name);
-                result+=concat+name+"="+URLEncoder.encode(value);
-                concat="&";
-            }
-
-            return result; 
+        public void setInput(String input) {
+            this.input = input;
         }
 
-        public String readCookies() {
-            reflect.setResult(define("request"), request);
-            reflect.setResult(define("response"), response);
-            reflect.setResult(define("PHP_SELF"), request.getUri());
-            return request.getHeader("cookie");
+        public void setOutput(OutputStream output) {
+            this.output = output;
         }
 
-        public void header(String data) {
+        public void setRequest(HttpServletRequest request) {
+            this.request = request;
+        }
 
-            try {
-                if (data.startsWith("Content-type: ")) {
-                    response.setContentType(data.substring(data.indexOf(" ")+0));
-                } else {
-                    int colon = data.indexOf(": ");
-                    if (colon > 0) {
-                        response.setHeader(data.substring(0,colon), 
-                                           data.substring(colon+2) );
-                    } else {
-                        output.write((data+"\n").getBytes());
-                    }
-                }
-            } catch (IOException e) {
-                  e.printStackTrace(System.err);
-            }
-
+        public void setResponse(HttpServletResponse response) {
+            this.response = response;
         }
 
         public void write(String data) {
@@ -161,24 +82,15 @@ public class PhpGenerator extends ComposerGenerator {
         }
 
         /******************************************************************/
-        /*                        servlet interface                       */ 
-        /******************************************************************/
-
-        public void service(Request request, Response response, 
-                            OutputStream output, String source)
-        {
-            this.request=request;
-            this.response=response;
-            this.output=output;
-            this.source=source;
-        }
-
-        /******************************************************************/
         /*                       runnable interface                       */ 
         /******************************************************************/
 
         public void run() {
-            send("GET", null, request.getUri(), source, null, -1, null, false);
+            try {
+                service(request, response, input);
+            } catch (ServletException e) {
+                this.exception = e;
+            }
 
             try {
                 output.close();
@@ -193,28 +105,32 @@ public class PhpGenerator extends ComposerGenerator {
      * Generate XML data from PHP.
      */
     public void generate() throws IOException, SAXException {
-        Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
-        Parser parser=(Parser)this.manager.getComponent("parser");
-        parser.setContentHandler(this.contentHandler);
-        parser.setLexicalHandler(this.lexicalHandler);
-        
+
         // ensure that we are serving a file...
-        String systemId = environment.resolveEntity(this.source).getSystemId();
+        InputSource inputSource = environment.resolveEntity(null, this.source);
+        String systemId = inputSource.getSystemId();
         if (!systemId.startsWith("file:/"))
             throw new IOException("protocol not supported: " + systemId);
 
         try {
+            HttpEnvironment env = (HttpEnvironment) environment;
+
             // construct both ends of the pipe
             PipedInputStream input = new PipedInputStream();
-            PipedOutputStream output = new PipedOutputStream(input);
         
             // start PHP producing results into the pipe
             PhpServlet php = new PhpServlet();
-            php.init(new Config());
-            php.service(request, response, output, systemId.substring(6));
+            php.init(new config(env.getContext()));
+            php.setInput(systemId);
+            php.setOutput(new PipedOutputStream(input));
+            php.setRequest(env.getRequest());
+            php.setResponse(env.getResponse());
             new Thread(php).start();
 
             // pipe the results into the parser
+            Parser parser=(Parser)this.manager.getComponent("parser");
+            parser.setContentHandler(this.contentHandler);
+            parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(new InputSource(input));
 
             // clean up
