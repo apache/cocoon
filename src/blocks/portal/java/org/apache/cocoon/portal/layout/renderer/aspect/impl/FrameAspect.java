@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameAspect.java,v 1.8 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class FrameAspect extends AbstractCIncludeAspect {
 
@@ -70,7 +70,7 @@ public class FrameAspect extends AbstractCIncludeAspect {
         this.createCInclude(source, handler);
     }
 
-    protected class PreparedConfiguration {
+    protected static class PreparedConfiguration {
         public String aspectName;
         public String store;
         

@@ -14,10 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<basket:upload-form method="POST" enctype="multipart/form-data"  xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
-Upload Test
-<basket:upload-item type="file" name="doc"/><br/>
-<input type="submit"/>
-<br/>
-This sample does only work, if you enabled uploads for Cocoon!
-</basket:upload-form>
+<p>
+  Enter some text:<br/>
+<form method="POST" action="copletwithinput.eval.flow">
+  <textarea name="text" cols="30" rows="7">${parameters.getParameter('value')}</textarea>&#160;
+  <input type="submit" name="save" value="Save"/>
+  <input type="submit" name="content" value="Add the content and goto basket"/>
+  <input type="submit" name="link" value="Add the link and goto basket"/>
+</form>
+<jx:if test="#{isBasketFull}" xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+<br/><b>You have reached the allowed quota for your basket.</b>
+</jx:if>
+</p>

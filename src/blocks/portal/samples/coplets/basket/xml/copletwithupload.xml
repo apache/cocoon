@@ -14,8 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<p xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
-This is a sample for the basket portlet.<br/>
-<basket:add-item href="context://samples/blocks/portal/coplets/basket/sample.xml" content="true">Add the content</basket:add-item>&#160;
-<basket:add-item href="context://samples/blocks/portal/coplets/basket/sample.xml">Add the link</basket:add-item>
-</p>
+<basket:upload-form method="POST" enctype="multipart/form-data"  xmlns:basket="http://apache.org/cocoon/portal/basket/1.0">
+Upload Test
+  <basket:upload-item type="file" name="doc"/><br/>
+  <input type="submit"/>
+<jx:if test="#{isBasketFull}" xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+<br/><b>You have reached the allowed quota for your basket.</b>
+</jx:if>
+<br/>
+This sample does only work, if you enabled uploads for Cocoon!
+</basket:upload-form>

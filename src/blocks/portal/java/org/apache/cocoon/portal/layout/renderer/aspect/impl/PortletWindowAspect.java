@@ -204,7 +204,7 @@ implements Contextualizable {
         }
     }
 
-    protected class PreparedConfiguration {
+    protected static class PreparedConfiguration {
         public String tagName;
         public boolean rootTag;
         

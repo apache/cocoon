@@ -220,20 +220,32 @@
     <!-- This is the basket demo. Usually you would only have the user
     tab for users and the admin tab for the admin and not both at
     the same time (But this is a demo...) -->
-    <composite-layout name="tab">
-      <named-item name="User">
-
+    <composite-layout name="tab" id="baskettab">
+      <named-item name="List">
         <composite-layout name="row">
           <item>
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>BasketSample</coplet-instance-data>
+                  <coplet-instance-data>basket-sample-8</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </named-item>
+      <named-item name="Input">
+        <composite-layout name="row">
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-1</coplet-instance-data>
                 </coplet-layout>
               </item>
               <item>
                 <coplet-layout name="coplet" >
-                  <coplet-instance-data>BasketUploadSample</coplet-instance-data>
+                  <coplet-instance-data>basket-sample-2</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -242,14 +254,80 @@
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>Basket</coplet-instance-data>
+                  <coplet-instance-data>basket-sample-3</coplet-instance-data>
                 </coplet-layout>
               </item>
               <item>
-                <coplet-layout name="coplet" id="basket-content">
-                  <coplet-instance-data>BasketContent</coplet-instance-data>
+                <coplet-layout name="coplet" >
+                  <coplet-instance-data>basket-sample-4</coplet-instance-data>
                 </coplet-layout>
               </item>
+            </composite-layout>
+          </item>
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-5</coplet-instance-data>
+                </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-6</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </named-item>
+      <named-item name="Content">
+        <composite-layout name="row">
+          <item>
+            <composite-layout name="tab">
+              <named-item name="All">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Document">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-document</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Request">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-request</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Result">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-result</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Notepad">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-notepad</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Folder">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-folder</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+            </composite-layout>
+          </item>
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet" id="basket-content">
+                  <coplet-instance-data>basket-content</coplet-instance-data>
+                </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-7</coplet-instance-data>
+                </coplet-layout>
+              </item>         
             </composite-layout>
           </item>
         </composite-layout>
@@ -268,7 +346,7 @@
           </item>
           <item>
             <coplet-layout name="coplet" id="basket-content-admin">
-              <coplet-instance-data>BasketContent</coplet-instance-data>
+              <coplet-instance-data>basket-content</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>

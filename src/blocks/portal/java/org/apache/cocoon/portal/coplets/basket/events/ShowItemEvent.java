@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,43 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplets.basket;
+package org.apache.cocoon.portal.coplets.basket.events;
 
+import org.apache.cocoon.portal.coplets.basket.ContentStore;
 import org.apache.cocoon.portal.layout.Layout;
 
-
 /**
- * Show one item of the basket
+ * Show one item of a content store
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: ShowItemEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id: ShowItemEvent.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public class ShowItemEvent extends BasketEvent {
+public class ShowItemEvent extends ContentStoreEvent {
     
     /** The item to show */
-    protected Object item;
+    protected final Object item;
     
     /** The layout object to use */
-    protected Layout layout;
+    protected final Layout layout;
     
     /** The id of the coplet data used to display the content */
-    protected String copletData;
+    protected final String copletData;
     
     /**
      * Constructor
+     * @param store      The content store
      * @param item       The item to show
      * @param layout     The layout object where the item is displayed
      * @param copletData The coplet data id of a content coplet
      */
-    public ShowItemEvent(Object item, Layout layout, String copletData) {        
+    public ShowItemEvent(ContentStore store, Object item, Layout layout, String copletData) {
+        super(store);
         this.item = item;
         this.layout = layout;
         this.copletData = copletData;
     }
     
     /**
-     * Return the basket id
+     * Return item
      */
     public Object getItem() {
         return this.item;

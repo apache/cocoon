@@ -90,10 +90,10 @@ public class TestPortlet implements Portlet  {
         writer.write("<p>Portlet Preferences:</p>");
         PortletPreferences prefs = req.getPreferences();
         Map map = prefs.getMap();
-        Iterator iter = map.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = (String)iter.next();
-            String[] values = (String [])map.get(key);
+        for (Iterator iter = map.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry me = (Map.Entry)iter.next();
+            String key = (String)me.getKey();
+            String[] values = (String [])me.getValue();
             if (values.length == 1) {
                 writer.write("    Key: " + key + " Value: " + values[0] + "<br />");
             } else if (values.length > 1) {

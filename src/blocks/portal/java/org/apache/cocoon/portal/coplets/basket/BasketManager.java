@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package org.apache.cocoon.portal.coplets.basket;
 import java.util.List;
 
 /**
- * This is the manager for baskets.
- * You can retrieve the current basket for the user from this manager.
+ * This is the manager for content-stores: baskets, briefcases and folders
+ * You can retrieve the current basket, briefcase or folder for the user 
+ * from this manager.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: BasketManager.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface BasketManager {
     
@@ -31,10 +30,16 @@ public interface BasketManager {
     String ROLE = BasketManager.class.getName();
     
     /** This key is used to store the current basket in the session */
-    String BASKET_KEY = BasketManager.class.getName();
+    String BASKET_KEY = BasketManager.class.getName() + "/Basket";
 
-    /** This key is used to store all baskets in the session */
-    String ALL_BASKETS_KEY = BasketManager.class.getName() + "/All";
+    /** This key is used to store the current briefcase in the session */
+    String BRIEFCASE_KEY = BasketManager.class.getName() + "/Briefcase";
+
+    /** This key is used to store the current folder in the session */
+    String FOLDER_KEY = BasketManager.class.getName() + "/Folder";
+
+    /** This key is used to store all briefcases in the session (of the admin) */
+    String ALL_BRIEFCASES_KEY = BasketManager.class.getName() + "/All";
 
     /**
      * Return the basket of the current user
@@ -42,18 +47,62 @@ public interface BasketManager {
     Basket getBasket();
    
     /**
-     * Return all baskets. 
-     * This is a list of BasketDescription objects
+     * Return the briefcase of the current user
      */
-    List getBaskets();
+    Briefcase getBriefcase();
 
     /**
-     * This class describes a basket
+     * Return the folder of the current user
      */
-    public class BasketDescription {
-        /** The id */
-        public String id;
-        /** The size of the basket */
-        public int    size;
+    Folder getFolder();
+
+    /**
+     * Return all briefcases. 
+     * This is a list of {@link ContentStoreDescription} objects.
+     */
+    List getBriefcaseDescriptions();
+
+    /** 
+     * An action info consists of a name and a url
+     */
+    public static class ActionInfo {
+        public final String name;
+        public final String url;
+        
+        public ActionInfo(String n, String u) {
+            this.name = n;
+            this.url = u;
+        }
     }
+
+    /**
+     * Return all configured actions for a basket - this is a list of 
+     * {@link #ActionInfo}s.
+     */
+    List getBasketActions();
+
+    /**
+     * Get the info
+     */
+    ActionInfo getBasketAction(String name);
+    
+    /**
+     * Return all configured actions for a briefcase - this is a list of 
+     * {@link #ActionInfo}s.
+     */
+    List getBriefcaseActions();
+
+    /**
+     * Get the info
+     */
+    ActionInfo getBriefcaseAction(String name);
+
+    void addBatch(ContentItem item,
+                  int         frequencyInDays,
+                  ActionInfo  action);
+    
+    /**
+     * Update/save the content store
+     */
+    void update(ContentStore store);
 }

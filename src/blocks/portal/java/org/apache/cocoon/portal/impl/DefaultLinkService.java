@@ -53,7 +53,7 @@ public class DefaultLinkService
     /**
      * Helper class containing the information about the request uri
      */
-    class Info {
+    static class Info {
         StringBuffer  linkBase = new StringBuffer();
         boolean       hasParameters = false;
         ArrayList     comparableEvents = new ArrayList(5);

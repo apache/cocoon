@@ -63,7 +63,7 @@ public class PortletActionProviderImpl implements PortletActionProvider {
         if ( state != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
             WindowState ws = (WindowState) cid.getTemporaryAttribute("window-state");
-            if ( (ws == null && !state.equals(PortletMode.VIEW)) 
+            if ( (ws == null && !state.equals(WindowState.NORMAL))
                 || (ws != null && !ws.equals(state)) ) {
                 if ( ws != null ) {
                     cid.setTemporaryAttribute("previous-window-state", ws);

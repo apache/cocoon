@@ -344,10 +344,7 @@ public class ProxyTransformer
                     SESSIONTOKEN,
                     sessionToken);
             }
-
-            if (newURI != null) {
-                newURI = resolveURI(newURI, documentBase);
-            }
+            newURI = resolveURI(newURI, documentBase);
             return newURI;
         }
         return null;
@@ -411,10 +408,7 @@ public class ProxyTransformer
                             SESSIONTOKEN,
                             sessionToken);
                     }
-
-                    if (newURI != null) {
-                        newURI = resolveURI(newURI, documentBase);
-                    }
+                    newURI = resolveURI(newURI, documentBase);
                     return newURI;
                 }
             }
