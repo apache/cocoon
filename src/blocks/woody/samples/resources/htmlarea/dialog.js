@@ -1,3 +1,18 @@
+/*
+* Copyright 1999-2004 The Apache Software Foundation
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 // htmlArea v3.0 - Copyright (c) 2003-2004 interactivetools.com, inc.
 // This copyright notice MUST stay intact for use (see license.txt).
 //
@@ -9,7 +24,7 @@
 // Version 3.0 developed by Mihai Bazon.
 //   http://dynarch.com/mishoo
 //
-// $Id: dialog.js,v 1.1 2004/02/06 10:10:07 ugo Exp $
+// $Id: dialog.js,v 1.2 2004/03/06 02:26:06 antonio Exp $
 
 // Though "Dialog" looks like an object, it isn't really an object.  Instead
 // it's just namespace for protecting global symbols.
