@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.232 2004/06/29 12:47:10 sylvain Exp $
+    | CVS $Id: jars.xml,v 1.233 2004/07/01 07:29:06 bruno Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -898,7 +898,7 @@
       An expression language interpreter.
     </description>
     <used-by>Cocoon Forms block</used-by>
-    <lib>optional/xreporter-expression-20030725.jar</lib>
+    <lib>optional/xreporter-expression-20040701.jar</lib>
     <homepage>http://xreporter.cocoondev.org</homepage>
   </file>
 
