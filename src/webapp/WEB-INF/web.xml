@@ -242,7 +242,10 @@
       time to the end of each response. Value 'hide' adds processing time as an
       HTML comment. By default, processing time is not added (corresponds to
       value 'no').
-
+      NOTE: If you use this feature, Cocoon might generated a wrong content
+      length header in the response. This is due to the internal processing
+      of Readers and the Caching. So, this might be the reason if you get
+      a warning about a wrong content length.
     <init-param>
       <param-name>show-time</param-name>
       <param-value>hide</param-value>
