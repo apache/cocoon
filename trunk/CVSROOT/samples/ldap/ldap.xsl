@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<xsl:stylesheet xsl:version="1.0"  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
 
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
@@ -26,7 +26,7 @@
 	</table>
 	<p/>
   </xsl:template>
- 
+
  <xsl:template match="cn">
 	<tr>
 	 <th bgcolor="tan" align="right">Common Name</th>
@@ -76,6 +76,6 @@
 	 </td>
 	</tr>
   </xsl:template>
- 
+
 </xsl:stylesheet>
 

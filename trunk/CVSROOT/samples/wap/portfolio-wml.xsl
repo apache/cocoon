@@ -2,7 +2,7 @@
 
 <!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xsl:version="1.0"  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
  <xsl:template match="portfolio">
   <xsl:processing-instruction name="cocoon-format">type="text/wml"</xsl:processing-instruction>
@@ -32,8 +32,8 @@
       All rights reserved.
      </small>
     </p>
-   </card>   
-   
+   </card>
+
    <card id="value" title="Portfolio Value">
     <p>
      Total value: <b>$$<xsl:value-of select="total"/></b><br/>
@@ -42,26 +42,26 @@
      <small>(<b><xsl:value-of select="variations/month/@rate"/><xsl:value-of select="variations/month"/>&#x25;</b> from last month)</small><br/>
      <small>(<b><xsl:value-of select="variations/ever/@rate"/><xsl:value-of select="variations/ever"/>&#x25;</b> ever)</small><br/>
     </p>
-	<do type="prev" label="Back"> 
-	 <prev/> 
-	</do> 
+	<do type="prev" label="Back">
+	 <prev/>
+	</do>
    </card>
-   
+
    <card id="stocks" title="Your Current Stocks">
     <p align="center">
      <xsl:for-each select="stocks">
       <a href="#{@company}"><xsl:value-of select="@company"/></a><br/>
      </xsl:for-each>
     </p>
-	<do type="prev" label="Back"> 
-	 <prev/> 
-	</do> 
+	<do type="prev" label="Back">
+	 <prev/>
+	</do>
    </card>
-   
+
    <xsl:apply-templates select="stocks"/>
   </wml>
  </xsl:template>
- 
+
  <xsl:template match="stocks">
   <card id="{@company}" title="{@company}">
    <p>
@@ -73,9 +73,9 @@
    	<small>(<b><xsl:value-of select="variations/month/@rate"/><xsl:value-of select="variations/month"/>&#x25;</b> from last month)</small><br/>
    	<small>(<b><xsl:value-of select="variations/ever/@rate"/><xsl:value-of select="variations/ever"/>&#x25;</b> ever)</small><br/>
    </p>
-   <do type="prev" label="Back"> 
-	<prev/> 
-   </do> 
+   <do type="prev" label="Back">
+	<prev/>
+   </do>
   </card>
  </xsl:template>
 </xsl:stylesheet>

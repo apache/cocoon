@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
+<xsl:stylesheet xsl:version="1.0"  xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
 
 	<xsl:template match="page">
 		<xsl:processing-instruction name="cocoon-format">type="model/vrml"</xsl:processing-instruction>
-		
-		<!-- due to a DOM limitation, you must wrap your generated VRML 
+
+		<!-- due to a DOM limitation, you must wrap your generated VRML
 		     with a fake tag, here uses <vrml>, that is stripped out by the
 		     VRML formatter -->
-		     
+
 		<vrml><xsl:text>#VRML V2.0 utf8</xsl:text>
 			<xsl:apply-templates select="content"/>
 		</vrml>
@@ -34,7 +34,7 @@
 							justify "MIDDLE"
 						}
 					}
-				}    
+				}
 			}
 		</xsl:text>
 </xsl:template>

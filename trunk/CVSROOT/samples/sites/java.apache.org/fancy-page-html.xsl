@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: fancy-page-html.xsl,v 1.3 1999-12-03 23:49:15 stefano Exp $ -->
+<!-- Version: $Id: fancy-page-html.xsl,v 1.4 2000-02-27 23:07:15 stefano Exp $ -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xsl:version="1.0"  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
@@ -14,7 +14,7 @@
      <meta name="Version" content="{version}"/>
      <title><xsl:value-of select="title"/></title>
     </head>
-    
+
     <body bgcolor="#ffffff">
     <center>
      <table border="0" width="100%" bgcolor="#000000" cellspacing="0" cellpadding="0">
@@ -56,7 +56,7 @@
     </body>
    </html>
   </xsl:template>
-  
+
   <xsl:template match="newscolumn">
    <table border="0" width="100%" bgcolor="#000000" cellspacing="0" cellpadding="0">
     <tr>
@@ -73,7 +73,7 @@
     </tr>
    </table>
   </xsl:template>
-  
+
   <xsl:template match="news">
    <tr>
     <td bgcolor="#E0E0E0">
@@ -90,7 +90,7 @@
     </td>
    </tr>
   </xsl:template>
-  
+
   <xsl:template match="statuscolumn">
    <table border="0" width="100%" bgcolor="#000000" cellspacing="0" cellpadding="0">
     <tr>
@@ -118,7 +118,7 @@
    </tr>
    <xsl:apply-templates select="release"/>
   </xsl:template>
-  
+
   <xsl:template match="release">
    <tr>
     <td bgcolor="#FFFFFF" align="center" rowspan="2">
@@ -134,5 +134,5 @@
     </td>
    </tr>
   </xsl:template>
-  
+
 </xsl:stylesheet>
