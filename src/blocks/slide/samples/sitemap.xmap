@@ -131,7 +131,6 @@
        <map:aggregate element="document" label="content">
          <map:part src="cocoon:/screens/permissions/{1}" />
          <map:part src="cocoon:/screens/privileges/{1}" />
-         <map:part src="cocoon:/screens/groups/{1}" />
          <map:part src="cocoon:/screens/users/{1}" />
          <map:part src="cocoon:/screens/roles/{1}" />
          <map:part src="cocoon:/description/{1}" />
@@ -141,7 +140,6 @@
          <map:parameter name="path" value="{1}" />
          <map:parameter name="userspath" value="{slide-config:/userspath}" />
          <map:parameter name="rolespath" value="{slide-config:/rolespath}" />
-         <map:parameter name="groupspath" value="{slide-config:/groupspath}" />
          <map:parameter name="actionspath" value="{slide-config:/actionspath}" />
        </map:transform>
        <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
@@ -181,6 +179,11 @@
          <map:parameter name="contextPath" value="{request:contextPath}"/>
        </map:transform>
        <map:serialize type="html"/>
+     </map:match>
+     
+     <!-- catch unmatched sendpage -->
+     <map:match pattern="**">
+       <map:read src="none" status-code="404" />
      </map:match>
      
    </map:pipeline>
