@@ -1,0 +1,124 @@
+/*-- $Id: JavaInstance.java,v 1.4 2000-02-13 18:29:27 stefano Exp $ -- 
+
+ ============================================================================
+                   The Apache Software License, Version 1.1
+ ============================================================================
+ 
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without modifica-
+ tion, are permitted provided that the following conditions are met:
+ 
+ 1. Redistributions of  source code must  retain the above copyright  notice,
+    this list of conditions and the following disclaimer.
+ 
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+ 
+ 3. The end-user documentation included with the redistribution, if any, must
+    include  the following  acknowledgment:  "This product includes  software
+    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
+    Alternately, this  acknowledgment may  appear in the software itself,  if
+    and wherever such third-party acknowledgments normally appear.
+ 
+ 4. The names "Cocoon" and  "Apache Software Foundation"  must not be used to
+    endorse  or promote  products derived  from this  software without  prior
+    written permission. For written permission, please contact
+    apache@apache.org.
+ 
+ 5. Products  derived from this software may not  be called "Apache", nor may
+    "Apache" appear  in their name,  without prior written permission  of the
+    Apache Software Foundation.
+ 
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
+ APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+ DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
+ ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
+ (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ This software  consists of voluntary contributions made  by many individuals
+ on  behalf of the Apache Software  Foundation and was  originally created by
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
+ Software Foundation, please see <http://www.apache.org/>.
+ 
+ */
+package org.apache.cocoon.interpreter.java;
+
+import java.util.*;
+import org.w3c.dom.*;
+import java.lang.reflect.*;
+import org.apache.cocoon.interpreter.*;
+
+/**
+ * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
+ * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:27 $
+ */
+
+public class JavaInstance implements Instance {
+  private Object instance;
+  private Hashtable methods;
+
+  public JavaInstance(Object theInstance, Hashtable theMethods) throws LanguageException {
+    this.instance = theInstance;
+    this.methods = theMethods;
+  }
+
+  public Object getInstance() {
+    return this.instance;
+  }
+
+  public Node invoke(String methodName, Dictionary parameters, Node source) throws LanguageException {
+    Method method = (Method) this.methods.get(methodName);
+
+    if (method == null) {
+      throw new LanguageException("No such method: " + methodName);
+    }
+
+    try {
+      Class[] parameterTypes = method.getParameterTypes();
+      Object[] args = new Object[parameterTypes.length];
+
+      for (int i = 0; i < args.length; i++) {
+        if (parameterTypes[i] == Node.class) {
+	      args[i] = source;
+	    } else if (parameterTypes[i] == Dictionary.class) {
+	      args[i] = parameters;
+	    } else {
+	      args[i] = null;
+	    }
+      }
+
+      return toNode(method.invoke(this.instance, args), source.getOwnerDocument());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new LanguageException(e.getClass().getName() + ": " + e.getMessage());
+    }
+  }
+
+  public void destroy() { }
+
+  private static Node toNode(Object object, Document document) {
+    if (object == null || object instanceof Void) {
+      return null;
+    } else if (object instanceof Node) {
+      return (Node) object;
+    } else if (object.getClass().isArray()) {
+      Object[] elements = (Object[]) object;
+      DocumentFragment fragment = document.createDocumentFragment();
+
+      for (int i = 0; i < elements.length; i++) {
+        fragment.appendChild(toNode(elements[i], document));
+      }
+
+      return fragment;
+    } else {
+      return document.createTextNode(object.toString());
+    }
+  }
+}

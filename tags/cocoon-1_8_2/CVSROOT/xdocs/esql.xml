@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document><header><title>ESQL Taglib</title>
+<authors>
+<person name="Donald A. Ball Jr." email="balld@webslingerz.com"/>
+<person name="Robin Green" email="greenrd@hotmail.com"/>
+</authors></header><body>
+
+	<s1 title="Description">
+
+    <p>The ESQL logicsheet is an 
+XSP logicsheet that performs sql queries and serializes their 
+results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.
+</p>
+
+    <p>It has a number of important advantages over the old (deprecated) SQL logicsheet and SQL processor.
+     For example, it allows you to mix esql with other logicsheets 
+     (although, if you make your own logicsheet which uses esql, due to a current 
+      <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28">bug in Cocoon 1</link>, you 
+      must declare the esql namespace in the source xml file as well as the logicsheet). It also
+     supports prepared statements (which gives you automatic parameter escaping) - and even multiple encodings
+     in a single query!</p>
+
+    <p>The name was chosen merely to emphasise the fact that this is an extended version of the old sql logicsheet -
+       esql still uses standard SQL syntax. In fact, it is just a conversion wrapper around your JDBC database
+       driver, so it supports no more and no less SQL syntax than your JDBC driver supports.
+    </p>
+	</s1>
+
+        <s1 title="Important Note For Upgraders">
+          <p>The version of ESQL included in Cocoon 1.8.1 and above is <strong>incompatible</strong> with the 
+          experimental earlier versions. This means you will need to modify all files which call esql.
+          However, we hope now that the esql namespace is going to be <em>reasonably</em> stable.</p>
+        </s1>
+
+	<s1 title="Installation">
+		<p>Check your cocoon.properties for this line and add it if it's not already there:</p>
+		<source>processor.xsp.logicsheet.esql.java = 
+  resource://org/apache/cocoon/processor/xsp/library/sql/esql.xsl</source>
+  		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
+        <p>If you are going to use connection pools, then make sure that you have followed the 
+           <link href="connection-pool.html">installation</link> steps for the connection pools.</p>
+	</s1>
+
+	<s1 title="Configuration">
+		<p>Map the</p>
+		<source>http://apache.org/cocoon/SQL/v2</source>
+		<p>namespace to the esql prefix. Elements in the esql taglib namespace will be interpreted as input to 
+the esql taglib and will be stripped from the output.</p>
+		<p>This is typically done like this:</p>
+		<source><![CDATA[
+<xsp:page
+	language="java"
+	xmlns:esql="http://apache.org/1999/SQL/v2"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+
+	. . .
+
+</xsp:page>
+]]></source>
+
+           <note>Carefully note the difference in URLs (one has www.apache.org, the other has just apache.org).
+           This change was made to be more future-proof and consistent.</note>
+	</s1>
+	<s1 title="Usage and Examples">
+          <p>At the moment documentation on esql is quite thin on the ground - however, it should be enough to get
+          you started.
+          In the <code>samples/sql</code> directory you will find <code>esql.xml</code>, which is an example
+          of two esql queries, demonstrating "nested" queries and dynamic prepared statements. However, much more
+          comprehensive is the <strong>schema</strong> in <code>esql.xsd</code> which is a formal specification,
+          written in the W3C standard language XML Schema, of every single esql element and attribute.
+          It is fairly human-readable and includes comments for the purpose of each tag.</p>
+
+          <p>The ultimate reference, is of course the source code, which is an XSLT logicsheet contained in the
+          file <code>src/org/apache/cocoon/processor/xsp/library/sql/esql.xsl</code></p>
+
+          <p>Of course, we would be very grateful for any improvements on this documentation
+            or further examples - please send them to
+           <link href="mailto:cocoon-users@xml.apache.org">cocoon-users@xml.apache.org</link>!</p>
+	</s1>
+
+</body></document>

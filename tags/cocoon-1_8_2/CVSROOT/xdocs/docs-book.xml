@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<book software="Cocoon" title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
+  <page id="index" label="Index" source="index.xml"/>
+  <page id="license" label="License" source="license.xml"/>
+<separator/>
+  <page id="install" label="Install" source="installing.xml"/>
+<!-- too out of date
+  <page id="install-case-solaris" label="Solaris8 Example" source="installation-case-solaris-8.xml"/>
+  <page id="install-case-windows" label="Win2k Example" source="installation-case-windows-2000.xml"/>
+-->
+<separator/>
+  <page id="technologies" label="Technologies" source="technologies.xml"/>
+  <page id="infrastructure" label="Infrastructure" source="infrastructure.xml"/>
+  <page id="guide" label="User Guide" source="guide.xml"/>
+  <page id="dynamic" label="Dynamic XML" source="dynamic.xml"/>
+  <page id="caching" label="Caching" source="caching.xml"/>
+  <page id="how-it-works" label="How it works" source="how-it-works.xml"/>
+  <external label="XML Links" href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/"/>
+<separator/>
+  <page id="xsp" label="XSP Processor" source="xspprocessor.xml"/>
+  <spec id="wd-xsp" label="XSP WD" source="WD-xsp.xml"/>
+  <page id="xmlfragment" label="XMLFragments" source="xmlfragment.xml"/>
+  <page id="esql" label="ESQL Taglib" source="esql.xml"/>
+  <page id="connection-pool" label="SQL Conn Pool" source="connection-pool.xml"/>
+  <page id="fp" label="FP Taglib" source="fptaglib.xml"/>
+  <page id="ldap" label="LDAP Processor" source="ldapprocessor.xml"/>
+<separator/>
+  <page id="dcp" label="DCP Processor" source="dcpprocessor.xml"/>
+  <page id="sql" label="SQL Processor" source="sqlprocessor.xml"/>
+  <page id="sqltaglib" label="SQL Taglib" source="sqltaglib.xml"/>
+<separator/>
+  <page id="contrib" label="Contributing" source="contrib.xml"/>
+  <external label="3rd Party" href="http://xml.apache.org/cocoon/3rdparty.xml"/>
+  <external label="Patch Queue" href="http://xml.apache.org/cocoon/patches.xml"/>
+<separator/>
+  <external label="Javadocs" href="./api/index.html"/>
+<separator/>
+  <page id="cocoon2" label="Cocoon 2" source="cocoon2.xml"/>
+<separator/>
+  <faqs id="faqs" label="FAQ" source="faq.xml"/>
+  <changes id="changes" label="Changes" source="changes.xml"/>
+  <todo id="todo" label="Todo" source="todo.xml"/>
+<separator/>
+  <page id="livesites" label="Live Sites" source="livesites.xml"/>
+  <external label="Cocoon Hosting" href="http://xml.apache.org/cocoon/hosting.html"/>
+<separator/>
+  <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/"/>
+  <external label="Code Repository" href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/"/>
+  <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
+  <page id="mail-lists" label="Mail Lists" source="mail-lists.xml"/>
+  <page id="mail-archives" label="Mail Archives" source="mail-archives.xml"/>
+</book>

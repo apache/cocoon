@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="poem.xsl" type="text/xsl"?>
+<?cocoon-process type="xinclude"?>
+<?cocoon-process type="xslt"?>
+
+<!--
+     This file is provided to illustrate XInclude using XPointer.
+     The second stanza of this poem is included in xinclude_poem.xml.
+
+     This also works by itself as an xslt example, but that's 
+     just for completeness.
+  -->
+
+<poem xmlns:xinclude="http://www.w3.org/1999/XML/xinclude" title="A Poem">
+
+  <stanza id="1">
+    <line>there was a little girl</line>
+	  <line>who had a little curl</line>
+	  <line>right in the middle of her forehead</line>
+  </stanza>
+
+  <stanza id="2">
+    <line>and when she was good</line>
+    <line>she was very very good</line>
+    <line><whatever xinclude:href="line6.txt" xinclude:parse="text" /></line>
+  </stanza>
+
+</poem>

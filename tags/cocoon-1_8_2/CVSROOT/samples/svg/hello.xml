@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?cocoon-process type="xsp"?>
+<?xml-stylesheet href="page-svg.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:util="http://www.apache.org/1999/XSP/Util"
+>
+ <page>
+  <title>Hello</title>
+  <content>
+   <p>My first Cocoon SVG</p>
+   <p>You have seen this image <util:counter/> times!</p>
+  </content>
+ </page>
+</xsp:page>

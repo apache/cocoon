@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="xinclude_poem.xsl" type="text/xsl"?>
+<?cocoon-process type="xinclude"?>
+<?cocoon-process type="xslt"?>
+
+<!--
+     This file illustrates the xinclude filter, including 
+     parse="text", parse="xml" and a href containing an XPointer
+     expression.  The bit included by the xpointer include itself 
+     contains an include.
+
+     This document is also processed a second time (as evidenced 
+     by the cocoon PIs above) using xslt to produce nice output, 
+     which isn't strictly necessary for the example, but it's nice 
+     to get something to see in your browser when you hit xinclude_poem.xml.
+  -->
+
+<poem xmlns:xinclude="http://www.w3.org/1999/XML/xinclude" title="A Poem">
+
+  <stanza>
+    <line><whatever xinclude:href="line1.txt" xinclude:parse="text" /></line>
+	  <whatever xinclude:href="line2.xml" xinclude:parse="xml" />
+	  <line>right in the middle of her forehead</line>
+  </stanza>
+
+  <include xinclude:parse="xml" 
+           xinclude:href="poem.xml#xpointer(//stanza[@id='2'])" />
+
+</poem>

@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Cocoon</title>
+  <subtitle>XML Publishing Framework</subtitle>
+  <authors>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="What is it?">
+
+  <p>
+   <img src="images/cocoon.jpg" alt="Cocoon"/> Cocoon is a 100% pure
+   Java publishing framework that relies on new W3C
+   technologies (such as DOM, XML, and XSL) to provide web content.
+  </p>
+
+  <p>
+   The Cocoon project aims to change the way web information is created,
+   rendered and served. The new Cocoon paradigm is based on the fact that
+   document content, style and logic are often created by different individuals 
+   or working groups. Cocoon aims for a complete separation of the three layers, 
+   allowing the three layers to be independently designed, created and managed, 
+   reducing management overhead, increasing work reuse and reducing time to market.
+  </p>
+
+  <p>
+   The <connect href="technologies.xml">Introduction to Cocoon
+   Technologies</connect> white paper provides a clear, introductory-level overview.
+  </p>
+ </s1>
+
+ <s1 title="What does it do?">
+  <p>
+   Web content generation is mostly based on HTML, but HTML doesn't separate
+   the information from its presentation, mixing formatting tags, descriptive tags and
+   programmable logic (both on server side and client side). Cocoon 
+   offers a different way of working,
+   allowing content, logic and style to be separated out into different XML files,
+   and uses XSL transformation capabilities to merge them.
+  </p>
+ </s1>
+
+ <s1 title="What does it change for me?">
+  <p>
+   Even if the most common use of Cocoon is the automatic creation of HTML
+   through the processing of statically or dynamically generated XML files, Cocoon is also
+   able to perform more sophisticated formatting, such as XSL:FO rendering
+   to PDF files,
+   client-dependent transformations such as WML formatting for WAP-enabled
+   devices, or direct XML serving to XML and XSL aware clients.
+  </p>
+
+  <p>
+   The Cocoon model allows web sites to be highly structured and
+   well-designed, reducing duplication efforts and site management costs by
+   allowing different presentations of the same data depending on the requesting
+   client (HTML clients, PDF clients, WML clients)
+   and separating out different <em>contexts</em> with
+   different requirements, skills and capacities. Cocoon allows better human
+   resource management by giving each individual their job and reducing to a
+   minimum the cross-talks between different working contexts.
+  </p>
+
+  <p>
+   To do this, the Cocoon model divides the development of web content into three
+   separate levels:
+  </p>
+
+  <dl>
+    <dt>XML creation</dt>
+    <dd>The XML file is created by the <em>content owners</em>. They do not
+     require specific knowledge on how the XML content is further processed -
+     they only need to know about the particular chosen "DTD" or tagset 
+     for their stage in the process. (As one would expect from a fully generic
+     XML framework, DTDs are not required in Cocoon, but can be used and 
+     validated against).
+     This layer is always performed by humans directly,
+     through normal text editors or XML-aware tools/editors.</dd>
+    <dt>XML processing</dt>
+    <dd>The requested XML file is processed and the logic contained in its
+     logicsheet(s) is applied. Unlike other dynamic content generators, the logic
+     is separated from the content file.</dd>
+    <dt>XSL rendering</dt>
+    <dd>The created document is then rendered by applying an XSL
+     stylesheet to it and formatting it to the specified resource type
+     (HTML, PDF, XML, WML, XHTML, etc.)</dd>
+  </dl>
+ </s1>
+
+ <s1 title="Are there any known problems?">
+  <p>
+   The biggest known problem in this framework is the lack of XML/XSL
+   expertise - both being relatively new formats. We do believe, though, that this publishing
+   framework will be a winner in web sites of medium to high complexity and will lead the
+   transition from an HTML-oriented to a XML-oriented web publishing model,
+   whilst still allowing the
+   use of existing client technologies as well as supporting new types of clients
+   (such as WAP-aware ultra thin clients like cell phones or PDAs).
+  </p>
+  <p>
+   Even if considered heavy and over-hyped, the XML/XSL pair will do
+   magic once it receives the widespread public knowledge it deserves. This project
+   intends to be a small step in that direction - helping people to learn this
+   technology and to focus on what they need, with examples, tutorial and source code
+   and a real-life system carefully designed with portability, modularity and
+   real-life usage in mind.
+  </p>
+  <p>
+   The main concern remains processing complexity: the kind of operations required
+   to process the document layers are complex and not designed for real-time
+   operation on the server side. For this reason, Cocoon is designed to be a page compiler
+   for dynamic pages,
+   trying to hardcode, whenever possible, those layers in precompiled binary
+   code coupled with an adaptive and memory-wise cache system for both static and
+   dynamic pages. A key development goal is performance
+   improvement of both processing subsystems as well as the creation and testing
+   of special cache systems.
+  </p>
+  <note>
+   Cocoon can <strong>not</strong> be employed to do general-purpose HTML transformations, unless
+   all the HTML involved is well-formed XHTML (i.e. XML).
+  </note>
+ </s1>
+
+ <s1 title="Are there books that cover this stuff?">
+  <p>
+   Yes, even though XML publishing is a brand new area, the incredible acceptance
+   of these technologies urged editors to provide books that covered the subject.
+   While many books that cover XML exist, one of them, "Java and XML",
+   dedicates an entire chapter
+   to XML publishing frameworks and Cocoon in particular, and that chapter
+   was made available free of charge
+   <link href="http://www.oreilly.com/catalog/javaxml/chapter/ch09.html">here</link>.
+   Our grateful thanks go to both O'Reilly and Brett McLaughlin for this.
+  </p>
+ </s1>
+
+ <s1 title="Where do I get it?">
+  <p>
+   The official distribution site is <link href="http://xml.apache.org/cocoon/dist/">here</link>.
+  </p>
+  <note>
+   Since Cocoon requires many different packages to work (Xerces, Xalan, FOP, etc...)
+   but sometimes there are small incompatibilities between them that make the
+   installation harder, we decided to help you by placing all the required
+   binary libraries inside the Cocoon distribution. So, after you have
+   downloaded the latest Cocoon distribution, you don't need anything else to get
+   started (unless you want to use optional components such as the LDAP processor).
+  </note>
+  <p>
+   But, if you want, you can find unofficial RPM packages <link href="http://grapeape.codingapes.com/xml.xml">here</link>
+   (which may not always be up-to-date).
+  </p>
+ </s1>
+
+ <s1 title="How can I Contribute?">
+  <p>
+   The Cocoon Project is an Open Source volunteer project under the auspices of the
+   <link href="http://www.apache.org/">Apache Software Foundation (ASF)</link>,
+   and, in harmony with the Apache webserver itself, it is released under
+   a very open license.
+   This means there are 
+   <connect href="contrib.xml">lots of ways to contribute to the project...</connect>
+  </p>
+ </s1>
+ </body>
+</document>

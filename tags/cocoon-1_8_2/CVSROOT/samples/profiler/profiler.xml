@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="profiler.xsl"?>
+<?cocoon-process type="xsp"?>
+<?cocoon-process type="xslt"?>
+
+<xsp:page language="java" xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+
+  <xsp:structure>
+    <xsp:include>org.apache.cocoon.Profiler</xsp:include>
+  </xsp:structure>
+
+  <xsp:logic>
+
+    private Profiler profiler;
+
+    public void init (Director director) {
+      super.init (director);
+      profiler = (Profiler) director.getActor ("profiler");
+    }
+  </xsp:logic>
+
+  <profile>
+    <xsp:logic>
+      if (profiler == null) {
+        throw new RuntimeException
+          ("Profiling has not been enabled in this instance of Apache Cocoon. \n" +
+           "It can be enabled in the cocoon.properties file.");
+      }
+    </xsp:logic>
+    <xsp:expr>profiler.getProfileTable (document)</xsp:expr>
+  </profile>
+</xsp:page>

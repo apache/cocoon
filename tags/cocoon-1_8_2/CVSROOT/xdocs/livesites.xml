@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Live Sites powered by Cocoon</title>
+  <authors>
+   <person name="Donald Ball" email="balld@webslingerZ.com"/>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+ 
+ <body>
+  <s1 title="Live Sites powered by Cocoon">
+   <p>
+    Here is a list of web sites that are proudly powered by Cocoon 
+    (in chronological order):
+   </p>
+   
+   <ul>
+    <li><link href="http://www.zen.co.za/">http://www.zen.co.za</link></li>
+    <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za</link></li>
+    <li><link href="http://www.mtnartinst.com/">http://www.mtnartinst.com</link></li>
+    <li><link href="http://www.north-wood.co.uk/">http://www.north-wood.co.uk</link></li>
+    <li><link href="http://www.eurofootball.com/">http://www.eurofootball.com</link></li>
+    <li><link href="http://www.caida.org/">http://www.caida.org</link></li>
+    <li><link href="http://grapeape.codingapes.com/">http://grapeape.codingapes.com</link></li>
+    <li><link href="http://www.xmls.com/">http://www.xmls.com</link></li>
+    <li><link href="http://www.xmltimes.com/">http://www.xmltimes.com</link></li>
+    <li><link href="http://www.nakapeida.com/">http://www.nakapeida.com</link></li>
+    <li><link href="http://www.myerealtor.com/">http://www.myerealtor.com</link></li>
+    <li><link href="http://politics.smallworld.com/">http://politics.smallworld.com</link></li>
+    <li><link href="http://www.methodsystems.com/">http://www.methodsystems.com</link></li>
+    <li><link href="http://www.intelinet.com.br/">http://www.intelinet.com.br</link></li>
+    <li><link href="http://www.linuxtv.org/">http://www.linuxtv.org</link></li>
+    <li><link href="http://www.derecho.com/">http://www.derecho.com</link></li>
+    <li><link href="http://www.law.unc.edu/">http://www.law.unc.edu</link></li>
+    <li><link href="http://www.cwinsurance.com/">http://www.cwinsurance.com</link></li>
+    <li><link href="http://sunshine.sundn.de/">http://sunshine.sundn.de</link></li>
+    <li><link href="http://www.stoneseeker.com/">http://www.stoneseeker.com</link></li>
+    <li><link href="http://www.infoplanning.com/">http://www.infoplanning.com</link></li>
+    <li><link href="http://www.visolve.com/xbeta/">http://www.visolve.com/xbeta</link></li>
+    <li><link href="http://www.dfki.de/ruleml/">http://www.dfki.de/ruleml</link></li>
+    <li><link href="http://www.lisletech.com/">http://www.lisletech.com</link></li>
+    <li><link href="http://www.duty-rota.com/">http://www.duty-rota.com</link></li>
+    <li><link href="http://trainnet.sony.it/">http://trainnet.sony.it</link></li>
+    <li><link href="http://www.gtsuae.com/">http://www.gtsuae.com</link></li>
+    <li><link href="http://www.worlddent.com/">http://www.worlddent.com</link></li>
+    <li><link href="http://www.worldcardiacnews.com/">http://www.worldcardiacnews.com</link></li>
+    <li><link href="http://www.reponsenet.com/">http://www.reponsenet.com</link></li>
+    <li><link href="http://www.efb2.com/">http://www.efb2.com</link></li>
+    <li><link href="http://www.smb-tec.com:7070/">Prowler Demo</link></li>
+    <li><link href="http://www.kompetenznetz-paed-onkologie.de/">http://www.kompetenznetz-paed-onkologie.de
+     </link></li>
+    <li><link href="http://sourcepole.com/">http://sourcepole.com</link></li>
+    <li><link href="http://www.mynet.com/">http://www.mynet.com</link></li>
+    <li><link href="http://www.aromax.hu/">http://www.aromax.hu</link></li>
+    <li><link href="http://www.rationalizer.com/">http://www.rationalizer.com</link></li>
+    <li><link 
+href="http://opensource.yourdecor.on.ca/faq1/index.html">Open Source FAQ application</link></li>
+    <li><link href="http://www.powderhausen.com/">http://www.powderhausen.com</link></li>
+    <li><link href="http://www.snow-news.com/">http://www.snow-news.com</link></li>
+    <li><link href="http://www.earthtrip.com/">http://www.earthtrip.com</link></li>
+    <!--<li><link href="http://www.weather-index.co.uk/">http://www.weather-index.co.uk</link></li> not up yet-->
+<!--<li><link href=""></link></li>-->
+   </ul>
+
+   <p>
+    If you don't find your site here, make sure you 
+    <link href="mailto:cocoon-users@xml.apache.org">tell us</link> (and confirm that you want
+    to be listed publicly on this list). We would like to see this list grow bigger 
+    every day :-)
+   </p>
+  </s1>
+ </body>
+</document>
