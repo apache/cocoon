@@ -77,12 +77,14 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.mozilla.javascript.*;
 import org.apache.velocity.util.introspection.*;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.BufferedReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,7 +149,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.2 2003/03/27 19:54:09 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.3 2003/04/06 03:04:27 coliver Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -812,6 +814,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
         }
 
         SAXParser parser = null;
+        StringWriter w = new StringWriter();
         try {
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
             if (getLogger().isDebugEnabled()) {
@@ -819,15 +822,47 @@ public class FlowVelocityGenerator extends ComposerGenerator
             }
 
             /* lets render a template */
-            StringWriter w = new StringWriter();
             this.tmplEngine.mergeTemplate(super.source, velocityContext, w);
 
             InputSource xmlInput =
                     new InputSource(new StringReader(w.toString()));
+            xmlInput.setSystemId(super.source);
             parser.parse(xmlInput, this.xmlConsumer);
         } catch (IOException e) {
             getLogger().warn("VelocityGenerator.generate()", e);
             throw new ResourceNotFoundException("Could not get Resource for VelocityGenerator", e);
+        } catch (SAXParseException e) {
+            int line = e.getLineNumber();
+            int column = e.getColumnNumber();
+            if (line <= 0) {
+                line = Integer.MAX_VALUE;
+            }
+            BufferedReader reader = 
+                new BufferedReader(new StringReader(w.toString()));
+            String message = e.getMessage() +" In generated document:\n";
+            for (int i = 0; i < line; i++) {
+                String lineStr = reader.readLine();
+                if (lineStr == null) {
+                    break;
+                }
+                message += lineStr + "\n";
+            }
+            String columnIndicator = "";
+            if (column > 0) {
+                for (int i = 1; i < column; i++) {
+                    columnIndicator += " ";
+                }
+                columnIndicator += "^" + "\n";
+                message += columnIndicator;
+            }
+            SAXException pe = new SAXParseException(message, 
+                                                    e.getPublicId(),
+                                                    "(Document generated from template "+e.getSystemId() + ")",
+                                                    e.getLineNumber(),
+                                                    e.getColumnNumber(),
+                                                    null);
+            getLogger().error("VelocityGenerator.generate()", pe);
+            throw pe;
         } catch (SAXException e) {
             getLogger().error("VelocityGenerator.generate()", e);
             throw e;
