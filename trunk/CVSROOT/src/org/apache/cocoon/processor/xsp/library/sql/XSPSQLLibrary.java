@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.1 $ $Date: 2000-03-15 01:02:47 $
+ * @version $Revision: 1.2 $ $Date: 2000-04-24 20:39:25 $
  */
 
 public class XSPSQLLibrary {
@@ -150,13 +150,15 @@ public class XSPSQLLibrary {
         if (!max_rows_attribute.equals("")) {
             results_element.setAttribute(max_rows_attribute,""+max_rows);
         }
-        if (!update_rows_attribute.equals("")) {
-            int update_rows = st.executeUpdate(query);
+        if (!st.execute(query)) {
+	    	/** this returns the number of rows we updated, or -1 on error **/
+            int update_rows = st.getUpdateCount();
             if (results_element != null) {
                 results_element.setAttribute(update_rows_attribute,""+update_rows);
             }
         } else {
-            rs = st.executeQuery(query);
+	    	/** and this is where we return the rowset instead. **/
+            rs = st.getResultSet();
             ResultSetMetaData md = rs.getMetaData();
 			if (tag_case.equals("")) {
 				tag_case = "preserve";
