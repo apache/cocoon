@@ -68,7 +68,6 @@
              value="/"/>
 
     <xslt in="${lib}/jars.xml" out="${build.temp}/jars.xml"
-          processor="trax"
           style="${tools}/src/check-jars.xsl">
       <param name="stylesheet-path" expression="${tools}/src"/>
       <param name="current-jars-path" expression="${build.temp}"/>
