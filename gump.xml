@@ -82,7 +82,7 @@
     <depend project="jing"/>
     <depend project="pizza"/>
     <depend project="junit"/>
-    <depend project="eclipse-jtd"/>
+    <depend project="eclipse" id="jdtcore"/>
 
     <depend project="xmlunit"/><!-- used by the testcases -->
     <depend project="qdox"/>   <!-- used by ant tasks -->
@@ -1278,15 +1278,6 @@
     <jar name="itext-xml-1.02.jar"/>
   </project>
 
-  <project name="eclipse-jtd">
-    <url href="http://www.eclipse.org/"/>
-    <description>
-      Java Development Tools from the Eclipse IDE Project
-    </description>
-    <home nested="lib/optional"/>
-    <jar name="jdtcore-3.0.1.jar"/>
-  </project>
-
   <project name="xreporter-expression">
     <url href="http://xreporter.cocoondev.org"/>
     <description>
@@ -1294,16 +1285,6 @@
     </description>
     <home nested="lib/optional"/>
     <jar name="xreporter-expression-20040701.jar"/>
-  </project>
-
-  <project name="qdox">
-    <url href="http://qdox.codehaus.org/"/>
-    <description>
-      Small footprint parser for extracting class/interface/method
-      definitions from java source files.
-    </description>
-    <home nested="src/blocks/qdox/lib"/>
-    <jar name="qdox-1.5.jar"/>
   </project>
 
   <project name="joost">
@@ -1325,12 +1306,4 @@
     <jar name="lib/core/javacImpl-0.9.jar" id="impl"/>
   </project>
 
-  <project name="ehcache">
-    <url href="http://ehcache.sourceforge.net"/>
-    <description>
-      A simple, fast and thread safe cache for Java
-    </description>
-    <home nested="src/blocks/scratchpad/lib"/>
-    <jar name="ehcache-0.9.jar"/>
-  </project>
 </module>
