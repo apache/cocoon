@@ -59,7 +59,7 @@
 <xsl:stylesheet
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
- xmlns:mail="http://apache.org/cocoon/contrib/mail/v1"
+ xmlns:mail="http://apache.org/cocoon/mail/v1"
  version="1.0"
 >
 
@@ -71,8 +71,11 @@
    <xsp:include>javax.mail.Store</xsp:include>
    <xsp:include>javax.mail.Folder</xsp:include>
    <xsp:include>javax.mail.Message</xsp:include>
-   <xsp:include>javax.mail.internet.MimeMessage</xsp:include>
    <xsp:include>javax.mail.Address</xsp:include>
+   <xsp:include>javax.mail.Part</xsp:include>
+   <xsp:include>javax.mail.Multipart</xsp:include>
+   <xsp:include>javax.mail.internet.MimeMessage</xsp:include>
+   <xsp:include>javax.mail.internet.MimePart</xsp:include>
   </xsp:structure>
   <xsl:apply-templates/>
   <xsp:logic>
@@ -89,16 +92,18 @@
    <xsp:content><xsp:expr>(String)part.getContent()</xsp:expr></xsp:content>
   } else if (part.isMimeType("message/rfc822")) {
    <xsp:content><rfc822><xsp:logic>
-   _mail_process_content(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,(Part)part.getContent());
+   _mail_process_content(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,(MimePart)part.getContent());
    </xsp:logic></rfc822></xsp:content>
   } else if (part.isMimeType("multipart/*")) {
    Multipart multipart = (Multipart)part.getContent();
    int count = multipart.getCount();
    for (int i=0; i&lt;count; i++) {
     <xsp:content><part><xsp:logic>
-    _mail_process_content(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,multipart.getBodyPart(i));
+    _mail_process_content(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,(MimePart)multipart.getBodyPart(i));
     </xsp:logic></part></xsp:content>
    }
+  }
+    }
   </xsp:logic>
  </xsl:copy>
 </xsl:template>
@@ -196,13 +201,13 @@
  <xsp:logic>
   {
    String _mail_type = "<xsl:value-of select="@type"/>";
-   RecipientType _mail_recipient_type = null;
+   Message.RecipientType _mail_recipient_type = null;
    if ("TO".equals(_mail_type)) {
-    _mail_recipient_Type = RecipientType.TO;
+    _mail_recipient_type = Message.RecipientType.TO;
    } else if ("CC".equals(_mail_type)) {
-    _mail_recipient_Type = RecipientType.CC;
+    _mail_recipient_type = Message.RecipientType.CC;
    } else if ("BCC".equals(_mail_type)) {
-    _mail_recipient_Type = RecipientType.BCC;
+    _mail_recipient_type = Message.RecipientType.BCC;
    }
    Address _mail_to[];
    if (null == _mail_recipient_type) {
