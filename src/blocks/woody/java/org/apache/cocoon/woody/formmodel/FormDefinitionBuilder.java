@@ -74,6 +74,8 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
             formDefinition.addWidgetDefinition(widgetDefinition);
         }
 
+        formDefinition.resolve();
+
         return formDefinition;
     }
 }
