@@ -107,12 +107,11 @@
    favorite WAP browser/cell-phone/PDA.
   </sample>
 
-  <sample name="VoiceML" url="vml/hello-page.xml">
+  <sample name="VoxML" url="vml/hello-page.xml">
    This page has the same exact source file as the hello world example, but
-   the stylesheet formats it using the VoiceML language. You page has been tested
-   with the Motorola VoiceML SDK which you get for free from 
-   <a href="http://www.motorola.com">Motorola</a>, but should work with any
-   other VoiceML browser.
+   the stylesheet formats it using the VoxML language. You page has been tested
+   with the Motorola VoxML SDK which you get for free from 
+   <a href="http://www.motorola.com">Motorola</a>.
   </sample>
  </group>
 </samples>
