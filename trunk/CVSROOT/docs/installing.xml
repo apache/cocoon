@@ -62,7 +62,7 @@
     <tr>
      <td>Sun ProjectX</td>
      <td>TR2</td>
-     <td><link href="http://java.sun.com/xml/">java.sun.com</link></td>
+     <td><link href="http://developer.java.sun.com/developer/products/xml/">java.sun.com</link></td>
     </tr>
     <tr>
      <td colspan="3">Cocoon comes preconfigured for Xerces</td>
@@ -161,6 +161,88 @@
    servlet systems.
   </p>
   
+  <s2 title="General considerations">
+   <p>
+    There are some general considerations that apply to all systems.
+   </p>
+   
+   <p>
+    Since there is no portable way, in a Java platform, to tell how much memory an object
+    is using, the memory cache works in a rather cumbersome manner:  you set up
+    a lower limit that the cache must always leave free for the JVM operation. 
+    This means, that if the memory limit is 200Kb, Cocoon uses all your JVM
+    heap size to store pages in memory and makes sure that 200Kb are available
+    for other operations.
+   </p>
+   
+   <p>
+    This does not impact the JVM operation, if enough memory is left for the
+    normal operation. You must be aware of the fact that leaving Cocoon with
+    too little memory for operation does impact peformance since the JVM
+    garbage collector has to do more work to keep up with execution and 
+    memory cleanup. Sometimes, you may even end up having OutOfMemoryExceptions
+    if your limit is lower than the memory required for the operation.
+   </p>
+   
+   <p>
+    A good way to control your memory is to setup your JVM with a fixed
+    heap limit and to give it enough memory to start. This is done by using
+    command line parameters for your java interpreter such as:
+   </p>
+   
+   <ul>
+    <li>Startup heap size:
+     <ul>
+      <li>java 1.1 - <code>-ms[size]</code>
+      <li>java 1.2 - <code>-Xms[size]</code>
+     </ul>
+    </li>
+    <li>Maximum heap size:
+     <ul>
+      <li>java 1.1 - <code>-mx[size]</code>
+      <li>java 1.2 - <code>-Xmx[size]</code>
+     </ul>
+    </li>
+   </ul>
+     
+   <p>
+    A well balanced system should have something like 8Mb start heap, 2Mb
+    Cocoon memory limit and 64Mb or greater max heap, but these depend heavily
+    on your system load/configuration to be generally meaningful.
+   </p>
+   
+   <p>
+    To change the cocoon object store memory limit open you should change the
+    following property in the <code>cocoon.properties</code> file.
+   </p>
+   
+<source>store.memory = 200000</source>   
+    
+   <p>
+    Another important part of Cocoon is the page compiler used inside the
+    XSP processor which store the generated/compiled pages on file system. 
+    The default directory is <code>./repository</code> which is usually relative
+    to the web server or servlet engine working directory.
+   </p>
+   
+   <p>
+    If you experience
+    troubles (such as not having reading/writing permissions) or you want to 
+    locate this directory somewhere else, you have to change the
+   </p>
+   
+<source>processor.xsp.repository = ./repository</store>
+
+   <p>
+    property in the cocoon configuration file.
+   </p>
+   
+   <p><strong>Warning:</strong>
+    Since this directory may contain security sensible information, make sure 
+    you deny access (even read-only) to untrusted users.
+   </p>
+  </s2>
+  
   <s2 title="Installing Cocoon on Apache JServ">
    <p>
     Apache JServ has one configuration file for the whole engine (normally called
@@ -238,11 +320,20 @@ wrapper.classpath=/usr/local/java/lib/jndi.jar
     and <em>/servlet/</em> is the mount point of your servlet zone (and the
     above is the standard name for servlet mapping for Apache JServ).
    </p>
-   
+
+   <p>
+    At this point, you should check if your system matches the global 
+    considerations about Cocoon properties. Usually, you might want to give
+    the installation a try as it is and then read again that section if
+    something goes wrong. Most installations don't need any changes to
+    be operational.
+   </p>
+       
    <p>
     Everything should be configured fine. Restart both Apache and Apache JServ
     and try accessing the samples contained in the distribution to see
-    Cocoon in action.
+    Cocoon in action or the <code>/Cocoon.xml</code> page for Cocoon internal
+    status.
    </p>
    
    <p>
@@ -331,12 +422,21 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
      don't need to care about that at this point.
     </p>
 
-    <p>
-     Everything should be configured fine. Restart Tomcat
-     and try accessing the samples contained in the distribution to see
-     Cocoon in action.
-    </p>
-    
+   <p>
+    At this point, you should check if your system matches the global 
+    considerations about Cocoon properties. Usually, you might want to give
+    the installation a try as it is and then read again that section if
+    something goes wrong. Most installations don't need any changes to
+    be operational.
+   </p>
+
+   <p>
+    Everything should be configured fine. Restart both Apache and Tomcat
+    and try accessing the samples contained in the distribution to see
+    Cocoon in action or the <code>/Cocoon.xml</code> page for Cocoon internal
+    status.
+   </p>
+       
     <note><strong>
      Tomcat 3.0 has a bug that prevents Cocoon operation. In order to make
      Cocoon work under Tomcat you need to download a newer version or, if 
@@ -367,11 +467,22 @@ ApJServAction .xml2 /zone2/org.apache.cocoon.Cocoon</source>
     making sure that you replaced <em>[path-to-cocoon]</em> with the actual
     path in your system.
    </p>
+
    <p>
-    At this point your system is configured. Access the "/Cocoon.xml" page
-    with your browser to see the Cocoon status screen that will tell you
-    that Cocoon is up and running.
+    At this point, you should check if your system matches the global 
+    considerations about Cocoon properties. Usually, you might want to give
+    the installation a try as it is and then read again that section if
+    something goes wrong. Most installations don't need any changes to
+    be operational.
    </p>
+   
+   <p>
+    Everything should be configured fine. Restart Weblogic
+    and try accessing the samples contained in the distribution to see
+    Cocoon in action or the <code>/Cocoon.xml</code> page for Cocoon internal
+    status.
+   </p>
+      
   </s2>
   
   <s2 title="Installing Cocoon on other platforms">
