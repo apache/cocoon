@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.6 2004/03/19 14:16:54 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -3912,13 +3912,13 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         DocumentFragment profile = (DocumentFragment)theProfile.get(PortalConstants.PROFILE_PROFILE);
                         Node[]           miscNodes = (Node[])theProfile.get(PortalConstants.PROFILE_MISC_POINTER);
                         Element          columns = (Element)miscNodes[PortalConstants.PROFILE_MISC_COLUMNS_NODE];
-                        Enumeration      enum = request.getParameterNames();
+                        Enumeration      enumeration = request.getParameterNames();
                         String           current;
                         boolean          saveProfile = false;
 
                         // first iteration: all changing commands
-                        while (enum.hasMoreElements()) {
-                            current = (String)enum.nextElement();
+                        while (enumeration.hasMoreElements()) {
+                            current = (String)enumeration.nextElement();
                             if (current.startsWith(PortalManagerImpl.REQ_PARAMETER_CONF)) {
                                 int pos1, pos2;
                                 pos1 = current.indexOf('.');
@@ -3946,10 +3946,10 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
 
                         // second: all new
                         boolean     calculate = false;
-                        enum = request.getParameterNames();
-                        while (enum.hasMoreElements()) {
+                        enumeration = request.getParameterNames();
+                        while (enumeration.hasMoreElements()) {
 
-                            current = (String)enum.nextElement();
+                            current = (String)enumeration.nextElement();
                             if (current.startsWith(PortalManagerImpl.REQ_PARAMETER_CONF)) {
                                 int pos1, pos2;
                                 pos1 = current.indexOf('.');
