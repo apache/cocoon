@@ -61,9 +61,10 @@ import org.apache.avalon.framework.component.Composable;
  * Basically a copy of {@link ComposerAction} that inherits from
  * {@link AbstractConfigurableAction}.
  *
+ * @deprecated Use the ConfigurableServiceableAction instead
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: ConfigurableComposerAction.java,v 1.1 2003/03/09 00:08:38 pier Exp $
+ * @version CVS $Id: ConfigurableComposerAction.java,v 1.2 2003/10/15 17:37:56 cziegeler Exp $
  */
 public abstract class ConfigurableComposerAction extends AbstractConfigurableAction implements Composable {
 
