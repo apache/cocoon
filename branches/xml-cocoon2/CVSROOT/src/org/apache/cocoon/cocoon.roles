@@ -40,7 +40,7 @@
        shorthand="classloader"
        default-class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
 
- <role name="org.apache.avalon.util.pool.PoolController"
+ <role name="org.apache.excalibur.pool.PoolController"
        shorthand="pool-controller"
        default-class="org.apache.avalon.component.DefaultComponentPoolController"/>
 
@@ -51,11 +51,11 @@
  <role name="org.apache.cocoon.components.image.ImageEncoderSelector"
        shorthand="image-encoder"/>
 
- <role name="org.apache.avalon.util.datasource.DataSourceComponentSelector"
+ <role name="org.apache.excalibur.datasource.DataSourceComponentSelector"
        shorthand="datasources"
        default-class="org.apache.avalon.component.DefaultComponentSelector">
-    <hint shorthand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
-    <hint shorthand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
+    <hint shorthand="jdbc" class="org.apache.excalibur.datasource.JdbcDataSource"/>
+    <hint shorthand="j2ee" class="org.apache.exvalibur.datasource.J2eeDataSource"/>
 </role>
 
  <role name="org.apache.cocoon.components.url.URLFactory"
