@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.25 2003/08/16 13:43:36 haul Exp $ -->
+<!--+
+    | Main samples page
+    |
+    | CVS $Id: samples.xml,v 1.26 2003/09/07 06:16:41 vgritsenko Exp $
+    +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -47,6 +51,13 @@
     </sample>
   </group>  
 
+  <group name="Cocoon Forms Processing">
+    <sample href="simpleform/" name="Simple Forms">
+      These examples show a simple way to work with HTML forms. More powerful
+      form solutions can be found in the blocks section. 
+    </sample>
+  </group>  
+
   <group name="More Core Samples">
     <sample href="modules/" name="The Power of Sitemap: Input Modules">
       This example shows the usage of Input Modules in sitemap attribute expressions.
@@ -54,30 +65,22 @@
     <sample href="sources/" name="The Power of Sitemap: Sources">
       This example shows the usage of sources in the sitemap.
     </sample>    
-    <sample href="xsp/" name="Extensible Server Pages">
-      Extensible Server Pages.
-    </sample>   
-    <sample href="simpleform/" name="Simple Forms">
-      These examples show a simple way to work with HTML forms. More powerful
-      form solutions can be found in the blocks section. 
+    <sample href="errorhandling/" name="Error Handling">
+      An example page producing exceptions and handling them. Demonstrates the 
+      handler hierarchy and the exception selectors.
     </sample>
-    <sample href="imagereader/" name="Image Reader">
-      Examples of ImageReader component usage
-    </sample> 
-    <sample href="paginator/" name="Paginator">
-      Examples of Paginator transformer usage
+    <sample href="xsp/" name="Extensible Server Pages">
+      Extensible Server Pages, or XSP.
+    </sample>   
+    <sample href="components" name="Components">
+      Samples of different components included with the core
     </sample> 
     <sample href="soap/" name="SOAP">
       Cocoon ships with facilities for immediate connection to SOAP resources.
       These examples show you how to connect to any web service with a few
-      lines of XML markup.
+      lines of XML markup using SOAP XSP Logicsheet. See also axis block that
+      integrates Axis into Cocoon. 
     </sample> 
-    <note>
-      There is also an Axis block available that integrates Axis into Cocoon.
-    </note>   
-    <sample href="stream/order" name="B2B: Order Page" xlink:role="dynamic">
-      An example of B2B processing.
-    </sample>   
   </group>
   
   <group name="Block Samples">
@@ -94,17 +97,10 @@
       information on the cache and the object stores.
     </sample>
     <sample name="Clear Cache" href="clearcache.html">
-      Empties the Cocoon cache.
+      Empties the Cocoon in-memory cache.
     </sample>
-    <sample name="Clear Persistent Store" href="clearpersistentstore.html">
+    <sample name="Clear Store" href="clearpersistentstore.html">
       Empties the Cocoon persistent store.
-    </sample>
-    <sample name="Request Page" href="request.html">
-      This example shows the usage of the RequestGenerator.
-    </sample>
-    <sample name="Error handling" href="errorhandling/">
-      An example page producing exceptions and handling them. Demonstrates the 
-      handler hierarchy and the exception selectors.
     </sample>
     <sample name="Link Status" href="linkstatus">
       Verify that there are no broken hyperlinks in the local Cocoon
@@ -115,5 +111,4 @@
       you built the web application
     </sample>
   </group>
-
 </samples>
