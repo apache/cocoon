@@ -96,7 +96,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.4 2003/09/24 22:00:34 cziegeler Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.5 2003/10/24 08:49:49 cziegeler Exp $
  */
 public class CocoonTask extends Task {
 
@@ -140,7 +140,7 @@ public class CocoonTask extends Task {
 
     private String acceptHeader;
     private String agentHeader;
-    private Boolean preCompileOnly;
+    //private Boolean preCompileOnly;
     private Boolean followLinks;
 
     /**
@@ -166,7 +166,7 @@ public class CocoonTask extends Task {
         this.logger = "cocoon";
         this.acceptHeader = DEFAULT_ACCEPT;
         this.agentHeader = DEFAULT_USER_AGENT;
-        this.preCompileOnly = new Boolean(false);
+        //this.preCompileOnly = new Boolean(false);
         this.followLinks = new Boolean(true);
         this.targets = new ArrayList();
     }
@@ -228,7 +228,7 @@ public class CocoonTask extends Task {
      * @param  preCompileOnly  The new precompileOnly value
      */
     public void setPrecompileOnly(boolean preCompileOnly) {
-        this.preCompileOnly = new Boolean(preCompileOnly);
+        //this.preCompileOnly = new Boolean(preCompileOnly);
     }
 
 

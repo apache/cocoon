@@ -62,6 +62,7 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
@@ -137,7 +138,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * </code></pre>
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: DateSelector.java,v 1.2 2003/09/05 07:04:35 cziegeler Exp $
+ * @version CVS $Id: DateSelector.java,v 1.3 2003/10/24 08:49:49 cziegeler Exp $
  */
 public class DateSelector extends AbstractSwitchSelector
 implements Configurable, ThreadSafe {
@@ -264,7 +265,7 @@ implements Configurable, ThreadSafe {
         configure( config, AFTER_ELEMENT, map );
         
         // 2 create SelectorContext
-        DateSelectorContext csc = new DateSelectorContext();
+        DateSelectorContext csc = new DateSelectorContext(this.getLogger());
         // 3 precalculate result of comparing current date, and configuration map        
         csc.setup( map );
         
@@ -368,10 +369,12 @@ implements Configurable, ThreadSafe {
     private class DateSelectorContext {
         Date now;
         HashSet set;
+        Logger logger;
         
-        public DateSelectorContext() {
+        public DateSelectorContext(Logger logger) {
             now = new Date();
             set = new HashSet();
+            this.logger = logger;
         }
         
         public void setup( final Map map ) {
@@ -381,15 +384,15 @@ implements Configurable, ThreadSafe {
                 final String name = (String)entry.getKey();
                 final DateComparator dc = (DateComparator)entry.getValue();
                 
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug(
                     "Compare name " + name + " having date " + String.valueOf( dc.getDate() ) + " to " +
                     String.valueOf( now ) );
                 }
                 // only store name in set iff comparison is true
                 if (dc.compareTo( now )) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug(
+                    if (this.logger.isDebugEnabled()) {
+                        this.logger.debug(
                         "Storing name " + String.valueOf( name ) + " as it yielded true " );
                     }
                     this.set.add( name );
