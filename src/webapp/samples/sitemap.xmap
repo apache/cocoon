@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- CVS $Id: sitemap.xmap,v 1.6 2003/03/17 00:47:43 vgritsenko Exp $ -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Components ================================ -->

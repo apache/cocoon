@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 
+<!--
+  Release Announcement Template
+  CVS $Id: announcement.xml,v 1.2 2003/03/17 00:47:42 vgritsenko Exp $
+-->
+
 <announcement site="http://cocoon.apache.org">
   <project>Apache Cocoon @version@</project>
   <abstract>

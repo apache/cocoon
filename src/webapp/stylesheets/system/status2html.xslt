@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
-<!-- Author: Nicola Ken Barozzi "barozzi@nicolaken.com" -->
+
+<!-- 
+  Author: Nicola Ken Barozzi "barozzi@nicolaken.com" 
+  CVS $Id: status2html.xslt,v 1.2 2003/03/17 00:47:43 vgritsenko Exp $
+-->
+
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:status="http://apache.org/cocoon/status/2.0">
