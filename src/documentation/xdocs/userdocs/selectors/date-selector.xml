@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: date-selector.xml,v 1.7 2004/05/08 08:57:58 crossley Exp $ 
+  <![CDATA[ CVS Version: $Id$ 
   ]]>
 -->
 <document>
@@ -78,7 +78,7 @@
     <map:read src="resources/{2}-night.css" mime-type="text/css>
   </map:when>
   <map:when test="morning">
-    <!-- do something for night publishing -->
+    <!-- do something for morning publishing -->
     <map:read src="resources/{2}-morning.css" mime-type="text/css>
   </map:when>
   ...
