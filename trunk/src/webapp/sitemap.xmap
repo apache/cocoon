@@ -464,9 +464,10 @@
         | of the error found and jump down here where you can futher
         | manipulate the error screen.
         +-->
-    <!--map:handle-errors>
-      TODO (SM): write a meaningful error handler
-    </map:handle-errors-->
+    <map:handle-errors>
+      <map:transform src="stylesheets/system/error2html.xslt"/>
+      <map:serialize/>
+    </map:handle-errors>
 
   </map:pipeline>
 
