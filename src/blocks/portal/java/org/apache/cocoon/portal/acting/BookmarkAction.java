@@ -42,6 +42,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.acting.helpers.CopletMapping;
+import org.apache.cocoon.portal.acting.helpers.FullScreenMapping;
 import org.apache.cocoon.portal.acting.helpers.LayoutMapping;
 import org.apache.cocoon.portal.acting.helpers.Mapping;
 import org.apache.excalibur.source.Source;
@@ -57,6 +58,10 @@ import org.xml.sax.SAXException;
  *     <targetid>tagetId</targetid>
  *     <targettype>layout|coplet</targettype>
  *     <path/>
+ *   </event>
+ *   <event type="fullscreen" id="ID">
+ *     <targetid>copletId</targetid>
+ *     <layoutid>layoutId</layoutid>
  *   </event>
  * </events>
  * </bookmarks>
@@ -110,27 +115,38 @@ implements ThreadSafe, Parameterizable {
                 try {
                     final String type = events[i].getAttribute("type");
                     final String id = events[i].getAttribute("id");
-                    if ( !"jxpath".equals(type) ) {
-                        throw new ParameterException("Unknown event type for event " + id + ": " + type);
-                    }
-                    if ( this.eventMap.containsKey(id)) {
-                        throw new ParameterException("The id for the event " + id + " is not unique.");
-                    }
-                    final String targetType = events[i].getChild("targettype").getValue();
-                    final String targetId = events[i].getChild("targetid").getValue();
-                    final String path = events[i].getChild("path").getValue();
-                    if ( "layout".equals(targetType) ) {
-                        LayoutMapping mapping = new LayoutMapping();
-                        mapping.layoutId = targetId;
-                        mapping.path = path;
-                        this.eventMap.put(id, mapping);
-                    } else if ( "coplet".equals(targetType) ) {
-                        CopletMapping mapping = new CopletMapping();
+                    if ( "jxpath".equals(type) ) {
+                        if ( this.eventMap.containsKey(id)) {
+                            throw new ParameterException("The id for the event " + id + " is not unique.");
+                        }
+                        final String targetType = events[i].getChild("targettype").getValue();
+                        final String targetId = events[i].getChild("targetid").getValue();
+                        final String path = events[i].getChild("path").getValue();
+                        if ( "layout".equals(targetType) ) {
+                            LayoutMapping mapping = new LayoutMapping();
+                            mapping.layoutId = targetId;
+                            mapping.path = path;
+                            this.eventMap.put(id, mapping);
+                        } else if ( "coplet".equals(targetType) ) {
+                            CopletMapping mapping = new CopletMapping();
+                            mapping.copletId = targetId;
+                            mapping.path = path;  
+                            this.eventMap.put(id, mapping);
+                        } else {
+                            throw new ParameterException("Unknown target type " + targetType);
+                        }
+                    } else if ( "fullscreen".equals(type) ) {
+                        if ( this.eventMap.containsKey(id)) {
+                            throw new ParameterException("The id for the event " + id + " is not unique.");
+                        }
+                        final String targetId = events[i].getChild("targetid").getValue();
+                        final String layoutId = events[i].getChild("layoutid").getValue();
+                        FullScreenMapping mapping = new FullScreenMapping();
                         mapping.copletId = targetId;
-                        mapping.path = path;  
-                        this.eventMap.put(id, mapping);
+                        mapping.layoutId = layoutId;
+                        this.eventMap.put(id, mapping);                        
                     } else {
-                       throw new ParameterException("Unknown target type " + targetType);
+                        throw new ParameterException("Unknown event type for event " + id + ": " + type);                        
                     }
                 } catch (ConfigurationException ce) {
                     throw new ParameterException("Configuration exception" ,ce);
