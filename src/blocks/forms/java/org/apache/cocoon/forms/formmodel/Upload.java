@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
+ * @version CVS $Id: Upload.java,v 1.8 2004/04/28 16:34:12 bruno Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -113,7 +113,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
             }
         }
         
-        return validationError == null ? super.validate(formContext) : false;
+        return validationError == null ? super.validate() : false;
     }
 
     /**

@@ -24,7 +24,7 @@ import org.apache.cocoon.forms.FormContext;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.8 2004/04/23 13:02:31 mpo Exp $
+ * @version $Id: Union.java,v 1.9 2004/04/28 16:34:12 bruno Exp $
  */
 public class Union extends AbstractContainerWidget {
     
@@ -95,7 +95,7 @@ public class Union extends AbstractContainerWidget {
         String value = (String)getValue();
         if (value != null && !value.equals(""))
             if ((widget = getWidget(value)) != null)
-                valid = valid & widget.validate(formContext);
+                valid = valid & widget.validate();
         return valid;
     }
 

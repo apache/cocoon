@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * @version $Id: AbstractContainerWidget.java,v 1.8 2004/04/22 08:05:27 mpo Exp $
+ * @version $Id: AbstractContainerWidget.java,v 1.9 2004/04/28 16:34:12 bruno Exp $
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     
@@ -86,12 +86,12 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * @return <code>true</code> only if all contained widgets are valid and the 
      *         extra validation rules on this containment level are ok.
      */
-    public boolean validate(FormContext formContext) {
+    public boolean validate() {
         // Validate self only if child widgets are valid
         //TODO: check if we should not change this to still validating kids first 
         // BUT also validating the top level
-        if (widgets.validate(formContext)) {
-            return super.validate(formContext);
+        if (widgets.validate()) {
+            return super.validate();
         } else {
             return false;
         }

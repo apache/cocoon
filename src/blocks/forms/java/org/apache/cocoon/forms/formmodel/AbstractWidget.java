@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.13 2004/04/23 23:34:56 joerg Exp $
+ * @version $Id: AbstractWidget.java,v 1.14 2004/04/28 16:34:12 bruno Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -197,9 +197,9 @@ public abstract class AbstractWidget implements Widget {
     }
     
     
-    public boolean validate(FormContext context) {
+    public boolean validate() {
         // Test validators from the widget definition
-        if (!getDefinition().validate(this, context)) {
+        if (!getDefinition().validate(this)) {
             // Failed
             return false;
         } else {
@@ -212,7 +212,7 @@ public abstract class AbstractWidget implements Widget {
                 Iterator iter = this.validators.iterator();
                 while(iter.hasNext()) {
                     WidgetValidator validator = (WidgetValidator)iter.next();
-                    if (!validator.validate(this, context)) {
+                    if (!validator.validate(this)) {
                         return false;
                     }
                 }
