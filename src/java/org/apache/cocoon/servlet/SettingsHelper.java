@@ -15,9 +15,12 @@
  */
 package org.apache.cocoon.servlet;
 
+import java.util.StringTokenizer;
+
 import javax.servlet.ServletConfig;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * This helper class initializes the {@link Settings} object from the servlet
@@ -49,6 +52,66 @@ public class SettingsHelper {
             s.setLog4jConfiguration("context:/" + value);
         }
         
+        s.setClassloaderClassName(config.getInitParameter("classloader-class"));
+        s.setInitClassloader(getInitParameterAsBoolean(config, "init-classloader", false));
+        s.setForceProperties(getInitParameterAsArray(config, "force-property"));
+        s.setConfiguration(config.getInitParameter("configurations"));
+        s.setInitClassloader(getInitParameterAsBoolean(config, "allow-reload", false));
+        s.setLoadClasses(getInitParameterAsArray(config, "load-class"));
+        s.setEnableUploads(getInitParameterAsBoolean(config, "init-classloader", false));
+        s.setUploadDirectory(config.getInitParameter("upload-directory"));
+        s.setAutosaveUploads(getInitParameterAsBoolean(config, "autosave-uploads", true));
+        s.setOverwriteUploads(config.getInitParameter("overwrite-uploads"));
+        s.setMaxUploadSize(getInitParameterAsInteger(config, "upload-max-size", 10000000));
+        s.setCacheDirectory(config.getInitParameter("cache-directory"));
+        s.setWorkDirectory(config.getInitParameter("work-directory"));
+        s.setParentServiceManagerClassName(config.getInitParameter("parent-service-manager"));
+        s.setShowTime(getInitParameterAsBoolean(config, "show-time", false));
+        s.setManageExceptions(getInitParameterAsBoolean(config, "manage-exceptions", true));
+        s.setFormEncoding(config.getInitParameter("form-encoding"));
+        
+        // TODO extra classpath
+        
         return s;
     }
+    
+    /** Convenience method to access boolean servlet parameters */
+    protected static boolean getInitParameterAsBoolean(ServletConfig config, String name, boolean defaultValue) {
+        String value = config.getInitParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return BooleanUtils.toBoolean(value);
+    }
+
+    protected static int getInitParameterAsInteger(ServletConfig config, String name, int defaultValue) {
+        String value = config.getInitParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        return Integer.parseInt(value);
+    }
+    
+    protected static String[] getInitParameterAsArray(ServletConfig config, String name) {
+        final String param = config.getInitParameter(name);
+        if ( param == null ) {
+            return null;
+        }
+        StringTokenizer tokenizer = new StringTokenizer(param, " \t\r\n\f;,", false);
+        String[] array = null;    
+        while (tokenizer.hasMoreTokens()) {
+            final String value = tokenizer.nextToken().trim();
+            if ( array == null ) {
+                array = new String[1];
+            } else {
+                String[] ca = new String[array.length+1];
+                System.arraycopy(array, 0, ca, 0, array.length);
+                array = ca;
+            }
+            array[array.length-1] = value;
+        }
+        return array;
+    }
+    
 }
