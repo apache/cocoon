@@ -110,6 +110,14 @@
      <p><code>timeToLive</code> is the time to live in milliseconds for the continuation created.</p>
      <p>The return value is the <link href="#WebContinuation">continuation</link> object.</p>
     </s3>
+    <s3 title = "sendStatus"><anchor id="sendStatus"/>
+    <p>
+    <em>Function</em> <code>sendStatus([Number] sc)</code>
+    </p>
+     <p>
+     Sends an empty response with the provided HTTP status code.
+     </p>
+    </s3>
     <s3 title="processPipelineTo">
     <p>
     <em>Function</em> <code>processPipelineTo([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
@@ -378,6 +386,12 @@
     <p><em>Function</em> <code>addHeader([String] name, [String] value)</code></p>
     <p>
       Creates a new header in the current response with the specified <code>name</code> and <code>value</code>.
+    </p>
+    </s3>
+    <s3 title="setStatus">
+    <p><em>Function</em> <code>setStatus([Number] sc)</code></p>
+    <p>
+      Sets the status code for this response.
     </p>
     </s3>
     </s2>
