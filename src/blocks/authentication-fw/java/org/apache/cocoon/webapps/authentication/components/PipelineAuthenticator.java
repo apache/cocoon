@@ -48,8 +48,8 @@ import org.xml.sax.SAXException;
  * @version CVS $Id$
 */
 public class PipelineAuthenticator
-    extends AbstractLogEnabled
-    implements Serviceable, ThreadSafe, Disposable, Authenticator {
+        extends AbstractLogEnabled
+        implements Serviceable, ThreadSafe, Disposable, Authenticator {
 
     /** The service manager */
     protected ServiceManager manager;
@@ -149,7 +149,7 @@ public class PipelineAuthenticator
                 throw SourceUtil.handle(se);
             } catch (IOException e) {
                 throw new ProcessingException(e);
-			} finally {
+            } finally {
                 this.resolver.release(source);
             }
         } catch (ProcessingException local) {
@@ -256,24 +256,24 @@ public class PipelineAuthenticator
     }
 
 
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
-	 */
-	public void service(ServiceManager manager) throws ServiceException {
-		this.manager = manager;
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
-	 */
-	public void dispose() {
-		if ( this.manager != null ){
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ){
             this.manager.release( this.resolver );
             this.manager = null;
             this.resolver = null;
-		}
-	}
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.webapps.authentication.components.Authenticator#logout(UserHandler)
