@@ -143,6 +143,9 @@
       <!-- http://xml.apache.org/forrest/sitemap-ref.html#source_pipelines -->
 
       <!-- COCOON SPECIFIC -->
+      <map:match pattern="apidocs/**">
+        <map:read src="../../javadocs/{1}"/>
+      </map:match>
       <map:match pattern="changes.xml">
         <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
       </map:match>

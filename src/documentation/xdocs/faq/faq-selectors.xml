@@ -30,7 +30,7 @@ In the sitemap file, each selector has a unique name which is mapped to a java c
 
  <answer>
   <p>
-Both matchers and selectors can be used to determine the flow, order, and components involved in request processing. Their differences include the complexity of the decisions they can make about processing as well as the values they return to the sitemap. For a more detailed discussion of their similarities and differences, see <link href="../userdocs/concepts/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>.
+Both matchers and selectors can be used to determine the flow, order, and components involved in request processing. Their differences include the complexity of the decisions they can make about processing as well as the values they return to the sitemap. For a more detailed discussion of their similarities and differences, see <link href="../userdocs/user/advanced/matchers_selectors.html">Using and Implementing Matchers and Selectors</link>.
   </p>
 
 </answer>
