@@ -520,6 +520,12 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    <td>Apache JServ 1.1</td>
    <td>Sun JDK 1.2.2</td>
   </tr>
+  <tr>
+   <td>Windows NT 4.0 Sp6a</td>
+   <tdApache 1.3.11></td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
   </table>
 
   <p>
