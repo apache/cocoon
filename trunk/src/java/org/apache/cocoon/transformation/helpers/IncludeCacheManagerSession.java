@@ -74,7 +74,7 @@ import org.apache.excalibur.source.SourceValidity;
  * - expires (long/0) : The lifetime of the cached content
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: IncludeCacheManagerSession.java,v 1.2 2003/03/11 16:33:37 vgritsenko Exp $
+ *  @version CVS $Id: IncludeCacheManagerSession.java,v 1.3 2003/03/12 15:08:04 cziegeler Exp $
  *  @since   2.1
  */
 public final class IncludeCacheManagerSession {
@@ -125,7 +125,7 @@ public final class IncludeCacheManagerSession {
     }
 
     /**
-     * @see IncludeCacheManagerSession#expires
+     * Get the expiration information
      */
     public long getExpires() {
         return this.expires;
