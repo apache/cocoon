@@ -92,7 +92,7 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.4 2003/12/12 09:41:33 huber Exp $
+ * @version CVS $Id: ImageReader.java,v 1.5 2004/02/24 12:44:56 upayavira Exp $
  */
 final public class ImageReader extends ResourceReader {
 
@@ -147,7 +147,7 @@ final public class ImageReader extends ResourceReader {
         }
 
         if (!enlarge) {
-            if ((nw > ow && nh <= 0) || (oh > nh && nw <=0)) {
+            if ((nw > ow && nh <= 0) || (nh > oh && nw <=0)) {
                 wm = 1.0d;
                 hm = 1.0d;
             } else if (nw > ow) {
