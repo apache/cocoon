@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<message>This is a message</message>
+	<message>This is another message
+		<message>and a third one</message>
+	</message>
+</root>
