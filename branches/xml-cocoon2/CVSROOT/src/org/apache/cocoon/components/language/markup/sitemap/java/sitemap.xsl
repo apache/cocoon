@@ -2,7 +2,7 @@
 <!-- Sitemap Core logicsheet for the Java language -->
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-08-16 05:08:14 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2000-08-21 17:39:36 $
 -->
 
 <xsl:stylesheet 
@@ -41,6 +41,7 @@
     import org.apache.cocoon.ProcessingException;
     import org.apache.cocoon.environment.Environment;
     import org.apache.cocoon.generation.Generator;
+    import org.apache.cocoon.generation.ErrorGenerator;
     import org.apache.cocoon.matching.Matcher;
     import org.apache.cocoon.reading.Reader;
     import org.apache.cocoon.selection.Selector;
@@ -49,7 +50,6 @@
     import org.apache.cocoon.sitemap.ResourcePipeline;
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.SitemapManager;
-    import org.apache.cocoon.sitemap.ErrorGenerator;
     import org.apache.cocoon.transformation.Transformer;
 
     import org.xml.sax.SAXException;
@@ -163,7 +163,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       Configuration cconf2 = confBuilder.getConfiguration();
       generator_config_error_handler = cconf2;
       generator_error_handler =
-        (Generator) load_component ("org.apache.cocoon.sitemap.ErrorGenerator", cconf2);
+        (Generator) load_component ("org.apache.cocoon.generation.ErrorGenerator", cconf2);
 
       /* Configure generators */
       <xsl:call-template name="config-components">
