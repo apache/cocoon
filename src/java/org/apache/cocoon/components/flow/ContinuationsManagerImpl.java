@@ -75,7 +75,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.6 2003/06/19 07:27:47 crossley Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.7 2003/08/26 09:05:15 mpo Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
@@ -143,10 +143,11 @@ public class ContinuationsManagerImpl
 
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
-                                                 int timeToLive) {
+                                                 int timeToLive, 
+                                                 ContinuationsDisposer disposer) {
         int ttl = (timeToLive == 0 ? defaultTimeToLive : timeToLive);
 
-        WebContinuation wk = generateContinuation(kont, parent, ttl);
+        WebContinuation wk = generateContinuation(kont, parent, ttl, disposer);
         wk.enableLogging(getLogger());
 
         if (parent == null) {
@@ -198,6 +199,12 @@ public class ContinuationsManagerImpl
         for (int i = 0; i < size; i++) {
             _invalidate((WebContinuation) children.get(i));
         }
+        
+        // Call specific possible implementation-specific clean-up on this continuation.
+        ContinuationsDisposer disposer = wk.getDisposer();
+        if (disposer != null) {
+          disposer.disposeContinuation(wk);
+        }
     }
 
     public WebContinuation lookupWebContinuation(String id) {
@@ -217,9 +224,15 @@ public class ContinuationsManagerImpl
      * @param kont an <code>Object</code> value representing continuation
      * @param parent value representing parent <code>WebContinuation</code>
      * @param ttl <code>WebContinuation</code> time to live
+     * @param disposer <code>ContinuationsDisposer</code> instance to use for
+     * cleanup of the continuation.
      * @return the generated <code>WebContinuation</code> with unique identifier
      */
-    private WebContinuation generateContinuation(Object kont, WebContinuation parent, int ttl) {
+    private WebContinuation generateContinuation( Object kont, 
+                                                  WebContinuation parent,
+                                                  int ttl, 
+                                                  ContinuationsDisposer disposer) {
+
         char[] result = new char[bytes.length * 2];
         WebContinuation wk = null;
 
@@ -235,7 +248,7 @@ public class ContinuationsManagerImpl
             String id = new String(result);
             synchronized (idToWebCont) {
                 if (!idToWebCont.containsKey(id)) {
-                    wk = new WebContinuation(id, kont, parent, ttl);
+                    wk = new WebContinuation(id, kont, parent, ttl, disposer);
                     idToWebCont.put(id, wk);
                     break;
                 }
