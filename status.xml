@@ -34,7 +34,7 @@
 	version CDATA #REQUIRED
 	date CDATA #REQUIRED
 >
-<!ELEMENT action (#PCDATA | link | br | code | ul)*>
+<!ELEMENT action (#PCDATA | link | br | code | ul | strong)*>
 <!ATTLIST action
 	context (build | code | docs) #IMPLIED
 	assigned-to CDATA #IMPLIED
@@ -46,6 +46,7 @@
 >
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT br EMPTY>
+<!ELEMENT strong (#PCDATA)>
 <!ELEMENT link (#PCDATA)>
 <!ATTLIST link
 	href CDATA #REQUIRED
