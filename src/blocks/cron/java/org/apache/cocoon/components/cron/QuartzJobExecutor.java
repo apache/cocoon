@@ -98,6 +98,7 @@ public class QuartzJobExecutor implements Job {
         Object key = CocoonComponentManager.startProcessing(env);
         CocoonComponentManager.enterEnvironment(env, new WrapperComponentManager(manager), processor);
         boolean release = false;
+        boolean dispose = false;
         try {
             jobrole = (String)data.get(QuartzJobScheduler.DATA_MAP_ROLE);
 
@@ -106,6 +107,7 @@ public class QuartzJobExecutor implements Job {
                 ContainerUtil.enableLogging(job, logger);
                 ContainerUtil.contextualize(job, appContext);
                 ContainerUtil.service(job, manager);
+                dispose = true;
             } else {
                 job = manager.lookup(jobrole);
                 release = true;
@@ -140,13 +142,15 @@ public class QuartzJobExecutor implements Job {
             CocoonComponentManager.leaveEnvironment();
             CocoonComponentManager.endProcessing(env, key);
 
-            if (release) {
-                manager.release(job);
+            if (manager != null) {
+                manager.release(processor);
+                if (release) {
+                    manager.release(job);
+                }
             }
-            else {
+            if (dispose) {
             	ContainerUtil.dispose(job);
             }
-            manager.release(processor);
         }
     }
 }
