@@ -659,6 +659,9 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
  to adjust the paths to make this work for your config.</p>
     <p><strong>WARNING! This script will wipe out any user set command line arguments to the
      default Application server.</strong></p>
+    <p><strong>WARNING! Do NOT add servlet_2_2.jar (from the Cocoon distribution) to the CLASSPATH.
+     This is only provided for the purposes of rebuilding Cocoon, and because WebSphere uses
+     non-standard Servlet API calls, this jar may cause WebSphere to fail.</strong></p>
 
    <source><![CDATA[
 # usage: wscp -f ws.tcl
