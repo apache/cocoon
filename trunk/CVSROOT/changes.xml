@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.193 2001-01-23 18:40:59 greenrd Exp $ 
+  $Id: changes.xml,v 1.194 2001-01-23 18:53:36 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,13 +18,16 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Werner Guttmann" due-to-email="werner.guttmann@msdw.com">
+   Fixed syntax errors in &lt;request:is-user-in-role&gt;
+  </action>
   <action dev="RDG" type="fix">
    response.sendRedirect no longer throws an Exception; processing is instead stopped inside the Cocoon
    Engine for that request, after this processor/producer returns. This is needed to fix a redirect problem
    with Tomcat (see below).
   </action>
   <action dev="RDG" type="fix" due-to="Steffen Stundzig" due-to-email="steffen@smb-tec.com">
-   Fixed &lt;response:contains-header&gt;.
+   Fixed undeclared var in &lt;response:contains-header&gt;.
   </action>
   <action dev="RDG" type="add">
    Added notes on each jar, with details of which are required, to Installing documentation.

@@ -979,13 +979,13 @@
         <xsl:when test="$as = 'string'">
           String.valueOf(
             request.isUserInRole(
-              String.valueOf(<xsl:copy-of select="$role"/>),
+              String.valueOf(<xsl:copy-of select="$role"/>)
             )
           )
         </xsl:when>
         <xsl:when test="$as = 'boolean'">
           request.isUserInRole(
-            String.valueOf(<xsl:copy-of select="$role"/>),
+            String.valueOf(<xsl:copy-of select="$role"/>)
           )
         </xsl:when>
       </xsl:choose>
