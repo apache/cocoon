@@ -28,15 +28,15 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-10 19:57:45 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-16 00:20:21 $
  */
-public abstract class AbstractSitemap
-         implements Sitemap {
+public abstract class AbstractSitemap implements Sitemap {
+    
     /** The component manager instance */
-    protected ComponentManager manager=null;
+    protected ComponentManager manager = null;
 
     /** The sitemap manager instance */
-    protected SitemapManager sitemapManager=null;
+    protected SitemapManager sitemapManager = null;
 
     /** The creation date */
     protected static long dateCreated = -1L;
@@ -46,7 +46,7 @@ public abstract class AbstractSitemap
      * <code>Composer</code>.
      */
     public void setComponentManager(ComponentManager manager) {
-        this.manager=manager;
+        this.manager = manager;
     }
 
     /**
@@ -56,10 +56,7 @@ public abstract class AbstractSitemap
      * since it was created
      */
     public final boolean modifiedSince(long date) {
-        if (dateCreated < date) {
-            return true;
-        }
-        return false;
+        return (dateCreated < date);
     }
 
     /**
