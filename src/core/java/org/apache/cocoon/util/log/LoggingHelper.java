@@ -48,7 +48,7 @@ import org.apache.log.util.DefaultErrorHandler;
 import org.apache.log4j.LogManager;
 
 /**
-*
+* TODO Delete this class as soon as the CoreUtil is used
 * @version SVN $Id$
 */
 public class LoggingHelper {
