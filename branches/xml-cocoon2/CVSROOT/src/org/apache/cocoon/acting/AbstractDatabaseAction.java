@@ -139,7 +139,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 22:22:07 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-26 22:53:39 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
@@ -231,7 +231,8 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
      */
     protected final DataSourceComponent getDataSource(Configuration conf) throws ComponentManagerException {
         Configuration dsn = conf.getChild("connection");
-        return (DataSourceComponent) this.dbselector.select(dsn.getValue(null));
+
+        return (DataSourceComponent) this.dbselector.select(dsn.getValue(""));
     }
 
     /**
