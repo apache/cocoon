@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <!--+
     |  This is the Apache Cocoon command line configuration file. 
     |  Here you give the command line interface details of where
@@ -33,7 +34,7 @@
     |        that you use the command line parameters to configure 
     |        the CLI.</note>
     |
-    | CVS: $Id: cli.xconf,v 1.9 2003/11/10 06:32:42 crossley Exp $
+    | CVS: $Id: cli.xconf,v 1.10 2003/11/10 08:10:55 crossley Exp $
     +-->
     
 <cocoon verbose="true"  
@@ -49,7 +50,7 @@
        |
        |  The work directory is used by Cocoon to store temporary
        |  files and cache files.
-       |  
+       |
        |  The destination directory is where generated pages will
        |  be written (assuming the 'simple' mapper is used, see 
        |  below)
@@ -62,7 +63,7 @@
    <!--+
        |  A checksum file can be used to store checksums for pages
        |  as they are generated. When the site is next generated, 
-       |  files will not be written if their checksum has not changes.
+       |  files will not be written if their checksum has not changed.
        |  This means that it will be easier to detect which files 
        |  need to be uploaded to a server, using the timestamp.
        +-->
@@ -76,13 +77,13 @@
        |     <broken-links type="xml" report="filename"/>
        |   Ignore broken links (default):
        |     <broken-links type="none"/>
-       |     
+       |
        |   Two attributes to this node specify whether a page should
        |   be generated when an error has occured. 'generate' specifies 
        |   whether a page should be generated (default: true) and
        |   extension specifies an extension that should be appended
        |   to the generated page's filename (default: none)
-       |   
+       |
        |   Using this, a quick scan through the destination directory
        |   will show broken links, by their filename extension.
        +-->
@@ -200,8 +201,10 @@
        |  from the source page's URI. There are three ways that a generated
        |  file URI can be created: append, replace and insert.
        |
-       |  APPEND: append the generated page's URI to the end of the 
-       |  source URI:
+       |  The "type" attribute specifies one of (append|replace|insert):
+       |
+       |  append:
+       |  Append the generated page's URI to the end of the source URI:
        |
        |   <uri type="append" src-prefix="documents/" src="index.html"
        |   dest="build/dest/"/>
@@ -210,7 +213,8 @@
        |   (1) the "documents/index.html" page is generated
        |   (2) the file will be written to "build/dest/documents/index.html"
        |
-       |  REPLACE: Completely ignore the generated page's URI - just 
+       |  replace:
+       |  Completely ignore the generated page's URI - just 
        |  use the destination URI:
        |
        |   <uri type="replace" src-prefix="documents/" src="index.html" 
@@ -222,7 +226,8 @@
        |   (3) this works only for "single" pages - and not when links
        |       are followed
        |
-       |  INSERT: Insert generated page's URI into the destination 
+       |  insert:
+       |  Insert generated page's URI into the destination 
        |  URI at the point marked with a * (example uses fictional 
        |  zip protocol)
        |
@@ -230,7 +235,7 @@
        |   dest="zip://*.zip/page.html"/>
        |
        |  This means that 
-       |    
+       |   (1)
        |
        |  In any of these scenarios, if the dest attribute is omitted,
        |  the value provided globally using the <dest-dir> node will 
