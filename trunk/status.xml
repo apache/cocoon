@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.68 2003/06/29 08:40:39 crossley Exp $:-->
+<!-- CVS $Id: status.xml,v 1.69 2003/07/01 05:31:51 crossley Exp $:-->
 <status>
 
   <developers>
@@ -182,7 +182,7 @@
 
   <changes>
 
- <release version="@version@" date="@date">
+ <release version="@version@" date="@date@">
   <action dev="JH" type="fix" fixes-bug="19104" due-to="Johan Stuyts" due-to-email="johan@hippo.nl">
     Fixed SchematronValidator.evalRule() in xmlforms block: create a relative context instead of an absolute one.
     This allows to refer to another form field by using relative paths (../password) instead of choosing a common root.
