@@ -62,17 +62,12 @@ import org.apache.cocoon.portal.factory.impl.AbstractProducible;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.6 2003/06/13 14:15:04 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceData.java,v 1.7 2003/06/17 20:10:39 cziegeler Exp $
  */
 public final class CopletInstanceData 
     extends AbstractProducible {
 
-	public final static int STATUS_MINIMIZED = 0;
-	public final static int STATUS_MAXIMIZED = 1;
-
-	private CopletData copletData;
-
-	protected int status = STATUS_MAXIMIZED;
+	protected CopletData copletData;
 
     protected Map attributes = new HashMap();
 
@@ -95,22 +90,6 @@ public final class CopletInstanceData
 	 */
 	public void setCopletData(CopletData copletData) {
 		this.copletData = copletData;
-	}
-
-	/**
-	 * Returns the status.
-	 * @return int
-	 */
-	public int getStatus() {
-		return status;
-	}
-
-	/**
-	 * Sets the status.
-	 * @param status The status to set
-	 */
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
     public Object getAttribute(String key) {

@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: WindowAspect.java,v 1.3 2003/06/15 16:56:08 cziegeler Exp $
+ * @version CVS $Id: WindowAspect.java,v 1.4 2003/06/17 20:10:39 cziegeler Exp $
  */
 public final class WindowAspect extends AbstractAspect {
 
@@ -93,9 +93,7 @@ public final class WindowAspect extends AbstractAspect {
 			attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
 		}
         XMLUtils.startElement(contenthandler, config.tagName, attributes);
-        int status = copletInstanceData.getStatus();
         XMLUtils.createElement(contenthandler, "title", copletInstanceData.getCopletData().getTitle());
-        XMLUtils.createElement(contenthandler, "status", "" + status);
 
         context.invokeNext( layout, service, contenthandler );
 
