@@ -13,8 +13,10 @@ set XERCES=.\lib\xerces_1_0_3.jar
 set XALAN=.\lib\xalan_1_0_1.jar
 set FOP=.\lib\fop_0_12_1.jar
 set SVG=.\lib\svgv_0_8.jar
+set JS=./lib/js.jar
+set JSTYLE=./lib/jstyle.jar
 set SERVLETS=.\lib\servlet_2_2.jar
-set LOCALCLASSPATH=%ANT%;%JAVAC%;%XERCES%;%XALAN%;%FOP%;%SVG%;%SERVLETS%;%CLASSPATH%
+set LOCALCLASSPATH=%ANT%;%JAVAC%;%XERCES%;%XALAN%;%FOP%;%SVG%;%JS%;%JSTYLE%;%SERVLETS%;%CLASSPATH%
 
 echo.
 echo Building with classpath %LOCALCLASSPATH%

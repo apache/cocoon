@@ -19,8 +19,10 @@ XERCES=./lib/xerces_1_0_3.jar
 XALAN=./lib/xalan_1_0_1.jar
 FOP=./lib/fop_0_12_1.jar
 SVG=./lib/svgv_0_8.jar
+JS=./lib/js.jar
+JSTYLE=./lib/jstyle.jar
 SERVLETS=./lib/servlet_2_2.jar
-LOCALCLASSPATH=$ANT:$JAVAC:$XERCES:$XALAN:$FOP:$SVG:$SERVLETS:$CLASSPATH
+LOCALCLASSPATH=$ANT:$JAVAC:$XERCES:$XALAN:$FOP:$SVG:$JS:$JSTYLE:$SERVLETS:$CLASSPATH
 
 echo
 echo Building with classpath $LOCALCLASSPATH
