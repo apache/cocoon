@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <!--+
     |  This is the Apache Cocoon command line configuration file. 
     |  Here you give the command line interface details of where
@@ -23,6 +24,8 @@
     |                        and adjust filename and links extensions
     |                        to match the mime type 
     |                        (e.g. text/html->.html)
+    |
+    | CVS: $Id: cli.xconf,v 1.3 2003/06/07 23:13:35 vgritsenko Exp $
     +-->
     
 <cocoon verbose="true"  
@@ -89,14 +92,12 @@
        | Specifies the filename to be appended to URIs that
        | refer to a directory (i.e. end with a forward slash).
        +-->
-       
    <default-filename>index.html</default-filename>
 
    <!--+
        |  Specifies a user agent string to the sitemap when
        |  generating the site.
        +-->
-   
    <!--
    <user-agent>xxx</user-agent>
    -->
@@ -105,7 +106,6 @@
        |  Specifies an accept string to the sitemap when generating
        |  the site.
        +-->
-       
    <accept>*/*</accept>
    
    <!--+
@@ -144,7 +144,6 @@
        |  File containing URIs (plain text, one per
        |  line).
        +-->
-  
    <!--
    <uri-file></uri-file>
    -->
