@@ -4,15 +4,1056 @@
 
 <document>
  <header>
-  <title>DCPProcessor User Guide</title>
-  <authors>
-   <person name="Ricardo Rocha" email="ricardo@apache.org"/>
-  </authors>
+ <title>DCPProcessor User Guide</title>
+ <version>12141999</version>
+ <authors>
+  <person name="Ricardo Rocha" email="ricardo@apache.org"/>
+ </authors>
  </header>
-
+ 
  <body>
-  <s1 title="Introduction">
-   <p>Yet to be XML-ized!</p>
+ <s1 title="Introduction">
+  <p>
+   In addition to static content (that is, hand-written documents produced
+   by web authors), web publishing also requires <em>dynamic content
+   generation</em>.  In dynamic content generation, XML documents or
+   fragments are programmatically produced at request time.
+  </p>
+
+  <p>
+   In this context, content is the result of a computation based on request
+   parameters and, frequently, on access to external data sources such as
+   databases or remote server processes. This distinction in content origin
+   justifies the extension of the &quot;traditional&quot; regions of web
+   publishing (content and presentation) to also encompass that of
+   <em>logic</em>.
+  </p>
+ </s1>
+  
+  <s1 title="Origins">
+   <p>
+    The Cocoon community has long recognized the need for dynamic content
+    generation capabilities. In response to this requirement, the Cocoon
+    project has proposed
+    <link href="http://xml.apache.org/cocoon/xsp.html">XSP</link>
+    (<em>eXtensible Server Pages</em>). XSP defines a new XML DTD and
+    namespace that addresses a complete region of web publishing, that of
+    logic-based, dynamic content generation. XSP is a key component of future
+    Cocoon versions and currently in development.
+   </p>
+
+   <p>
+    DCP (<em>Dynamic Content Processor</em>), on the other hand, aims at
+    providing easy-to-use dynamic content generation capabilities in the
+    context of the current version of Cocoon. DCP is also a testbed for
+    implementation-related issues in the upcoming development of XSP.
+    These issues include aspects such as multiple language support,
+    automatic code reloading and code reuse.
+   </p>
   </s1>
- </body>
+ 
+  <s1 title="Goals">
+   <p>
+    DCP has been designed to provide dynamic content generation capabilities
+    to Cocoon with the following goals in mind:
+   </p>
+ 
+   <ul> 
+    <li>
+     Minimal changes to the current architecture.
+    </li>
+    <li>
+     Maximal ease of use for authors and developers.
+    </li>
+    <li>
+     Avoiding XSP implementation complexities while still providing a useful
+     facility for dynamic content generation.
+    </li>
+   </ul> 
+ 
+   <p>
+    In order to maximize ease of use, the following early decisions were made
+    for DCP:
+   </p>
+ 
+   <ul> 
+    <li>
+     Other than the source XML document itself, no external documents should
+     be required to map inline dynamic content generation directives to
+     external programs.
+    </li>
+    <li>
+     External programs should be as easy to write as possible. In addition to
+     Java, it should be possible to also write external programs in
+     easy-to-use scripting languages.
+    </li>
+   </ul> 
+ 
+   <p>
+    By restricting the use of external documents (such as XSP libraries)
+    to specify how to map content generation directives to external programs,
+    the obvious choice was the use of processing instructions (e.g.
+    <em>&lt;?dcp-object?&gt;</em>, <em>&lt;?dcp-content?&gt;</em>).
+   </p>
+ 
+   <p>
+    This decision results in a number of limitations when compared to the more
+    general mechanism of transforming DOM <em>elements</em> (as opposed to
+    processing instructions).
+   </p>
+ 
+   <p>
+    One such limitation is that passing [static] parameters to external
+    programs is limited to the single-valued pseudo-attributes used in
+    processing instructions.  Closer inspection reveals, however, that
+    this mechanism is appropriate for a large number of dynamic content
+    generation requirements.
+   </p>
+ 
+   <p>
+    Keeping external program writing simple means not requiring programmers
+    to learn a new API or to follow restrictive coding conventions. The
+    ability to write programs in easy-to-use scripting languages also
+    contributes to simplifying development. This is particularly appealing,
+    for instance, to web authors already familiar with Javascript, which
+    is currently supported.
+   </p>
+ 
+   <p>
+    Jean-Marc Lugrin's
+    (<link href="http://home.worldcom.ch/jmlugrin/fesi/index.html">Fesi</link>)
+    (<em>Free EcmaScript Interpreter</em>) is used to provide support for
+    Javascript.
+   </p>
+  </s1>
+
+  <s1 title="Relationship with Existing Technologies">
+   <p>
+    DCP (and XSP, for that matter) differs from existing dynamic web content
+    generation technologies in that it deals with DOM trees rather than with
+    the textual representation of HTML documents.
+   </p>
+ 
+   <p>
+    Such technologies, however, have had a strong influence in DCP's design
+    both because they pioneered programmatic web content generation and
+    because DCP (and, again, XSP) aims at overcoming their limitations in
+    the realm of XML-based document processing.
+   </p>
+ 
+   <p>
+    <link href="http://www.javasoft.com/products/jsp/index.html">JSP</link>,
+    in particular, is a widely used standard in the Java environment. Other
+    comparable technologies are Microsoft's
+    <link href="http://www.microsoft.com/ntserver/web/deployment/planguide/WebAppDev.asp">
+     ASP
+    </link>,
+    <link href="http://www.coldfusion.com/">
+     Cold Fusion
+    </link>,
+    Sun's [deprecated]
+    <link href="http://www.sun.com/software/jwebserver/features/index.html#dsp">
+     Page Compilation
+    </link>,
+    <link href="http://www.webmacro.org/">
+     Webmacro
+    </link>
+    and
+    <link href="http://www.bitmechanic.com/projects/gsp">
+     GSP
+    </link>.
+   </p>
+ 
+   <p>
+    These technologies share three common characteristics:
+   </p>
+ 
+   <ul> 
+    <li>
+     <strong>Text-based</strong>.
+     Not being XML-aware, these technologies deal with textual streams,
+     rather than with DOM trees or SAX events.
+    </li>
+    <li>
+     <strong>Html-oriented</strong>.
+     Generation capabilities have been designed with HTML in mind and
+     do not lend themselves easily to produce XML.
+    </li>
+    <li>
+     <strong>No separation of logic and content</strong>.
+     Probably their most problematic area; these technologies mix content and
+     program logic in the same document. This impairs labor division in web
+     publishing.
+    </li>
+   </ul> 
+ 
+   <p>
+    DCP and XSP, on the other hand, aim at a complete separation of logic
+    and content.
+   </p>
+ 
+   <p>
+    In DCP, web authors specify dynamic content insertion using a simple,
+    standard XML syntax while programmers concentrate on content generation
+    without being concerned by context or presentation issues.
+   </p>
+ 
+   <p>
+    Finally, the difference between DCP and XSP is that while DCP is
+    interpreted and executed at runtime, XSP page are compiled and executed
+    directly as document producers. This allows better separation of content
+    and logic (since the XSP pages can be processed like regular document at
+    first) and increased performance (since no interpretation is required and
+    compiled pages are cached).
+   </p>
+  </s1>
+ 
+  <s1 title="A Simple Javascript Example">
+   <p>
+      Consider the following dynamic Cocoon XML document
+      (<link href="http://www.plenix.com/dcp/ecmascript/sample.xml?country=Canada&amp;language=English&amp;language=French">sample.xml</link>):
+   </p>
+
+   <figure src="images/dcp-fig-1.gif" alt="Ecmascript Example" height="303" width="526"/>
+
+   <p>
+     In this example, portions shown in red are to be dynamically generated
+     every time the document is requested.
+   </p>
+
+   <p>
+     For this to be achieved, three separate components must be written:
+   </p>
+
+   <ul> 
+    <li>
+      A <em>source XML file</em> containing the static portions of the document
+      and some dynamic content insertion directives.
+    </li>
+    <li>
+      A <em>DCP script</em> containing DOM node-generation functions. This
+      script can be used by many different XML documents.
+    </li>
+    <li>
+      An <em>XSL stylesheet</em> containing transformation rules to generate
+      HTML from the (expanded) XML document. Again, this stylesheet can be
+      used by many different XML documents.
+    </li>
+  </ul> 
+
+  <p>
+    The following processing instructions are recognized:
+  </p>
+
+  <ul> 
+   <li>
+    <code>
+      &lt;?dcp-object name="objectName" [language="languageName"] code="codeLocation"?&gt;
+    </code>
+    <br/><br/>
+
+     This instruction declares an external program (or DCP script) that
+     contains node-generation methods. These methods will be invoked during
+     document processing as dictated by the appearance of subsequent
+     <code>&lt;?dcp-content?&gt;</code> directives (explained below). 
+    <br/><br/>
+    
+     <ul>
+      <li>
+       Attribute <em>name</em> specifies an author-defined objectName that will
+       be used to qualify method names in the DCP script. This name must be
+       unique within the document. 
+      </li>
+    
+      <li>
+       Attribute <em>language</em> specifies the programming language in which
+       the DCP script is written. Currently supported values for this attribute
+       are <em>java</em> and <em>javascript</em> (also referred to as
+       <em>ecmascript</em>). This attribute is optional; its default value
+       is <em>java</em>. Other languages may be added in the future.
+       It is valid for the same XML document to use multiple DCP scripts
+       written in different languages. 
+      </li>
+    
+      <li>
+       Attribute <em>code</em> specifies the actual DCP script location.
+       Interpretation of this mandatory attribute is language-dependent.
+       For Java, it is a fully qualified class name. For Javascript, it is
+       a script filename relative to the path of the invoking XML document.
+       The same code can be specified multiple times in a given document,
+       provided a different <em>objectName</em> is used in each case. 
+      </li>
+     </ul>
+   </li>
+
+   <li>
+     <code>
+       &lt;?dcp-content method="object.method" [param1="value" param2="value" ...] ?&gt;
+     </code>
+    <br/><br/>
+
+     This instruction requests the substitution of its corresponding node by
+     the return value of a named method defined in a DCP script. 
+    <br/><br/>
+    
+     Single-valued, named parameters can be passed to node-generation methods
+     by specifying additional attributes in the
+     <code>&lt;?dcp-content?&gt;</code>
+     processing instruction. These attributes are made available to the
+     method through a <code>Dictionary</code> argument. 
+    <br/><br/>
+    
+     Attribute <em>method</em> defines what method to invoke on a given
+     object. The object <em>name</em> must have been associated with a DCP
+     script by means of a previous <code>&lt;?dcp-object?&gt;</code>
+     processing instruction.  Node-generation methods must be
+     <code>public</code> and conform to the following signature: 
+    <br/><br/>
+
+    <code>
+     methodName(
+          [java.util.Dictionary parameters],
+          [org.w3c.Node source]
+      )
+    </code>
+    <br/><br/>
+
+     where the [optional] function arguments are: 
+    <br/><br/>
+    
+    <ul> 
+     <li>
+      <code>parameters</code>.
+      A dictionary containing any optional named parameters specified as
+      additional attributes to the <code>&lt;?dcp-content?&gt;</code>
+      processing instruction. 
+     </li>
+     <li>
+      <code>source</code>.
+      The processing instruction node corresponding to the
+      <code>&lt;?dcp-content?&gt;</code> directive itself. This is useful
+      for methods that need access to siblings or ancestors in the DOM tree. 
+     </li>
+    </ul> 
+    <br/><br/>
+
+     Methods can return any type of value, including primitive types,
+     <code>void</code> and <code>null</code>. <code>Void</code> and
+     <code>null</code> are understood as a request to remove the
+     corresponding node. Returned values that are instances of
+     <code>org.w3c.Node</code> are simply inserted into the corresponding
+     DOM tree position. Primitive types and regular objects are wrapped
+     as strings in <code>org.w3c.Text</code> nodes. Arrays are wrapped
+     as <code>org.w3c.DocumentFragment</code>'s containing as many children
+     as elements in the array; each element is recursively wrapped according
+     to the above rules. 
+   </li>
+
+   <li>
+    <code>
+     &lt;?dcp-var name1="value1" [name2="value2" ...]?&gt;
+    </code>
+    <br/><br/>
+
+     This instruction declares one or more global variables that will be
+     passed in each subsequent method invocation as if explicitly specified
+     as parameters. 
+    <br/><br/>
+      
+     This mechanism is basically a convenience shorthand to avoid cluttering
+     <code>&lt;?dcp-content?&gt;</code> instructions with too long parameter
+     lists. 
+    <br/><br/>
+      
+     Declared variables are global to all subsequent method invocations.
+     For a method to use a given global variable as a parameter, it must
+     have been previously declared in the same document. 
+    <br/><br/>
+   </li>
+  </ul> 
+
+  <p>
+   That said, the source XML document for the above example would be: 
+  </p>
+
+  <figure src="images/dcp-fig-2.gif" alt="Ecmascript Example Source" height="416" width="573"/>
+
+   <p>
+    In this document: 
+   </p>
+
+   <ul> 
+    <li>
+       The processing instruction:
+       <br/><br/>
+       <code>
+        &lt;?dcp-object name="util" language="javascript" code="test.es"?&gt;
+       </code>
+       <br/><br/>
+       declares the existence of an external Javascript program contained in
+       a file called <em>test.es</em>.
+       <br/><br/>
+
+       Subsequent references to file <em>test.es</em> will use the alias
+       <em>util</em>.
+    </li>
+
+    <li>
+      The processing instruction:
+      <br/><br/>
+      <code>
+       &lt;?dcp-content method="util.getSystemDate" format="MM/dd/yyyy"?&gt;
+      </code>
+      <br/><br/>
+      specifies that function <em>getSystemDate</em> (contained in file
+      <em>test.es</em>) must be called and its return value substituted in
+      the document position where the <code>&lt;?dcp-content?&gt;</code>
+      directive originally appeared. 
+      <br/><br/>
+
+      Furthermore, when this function is called, it is passed a parameter
+      of name <em>format</em> and value <em>MM/dd/yyyy</em>.
+    </li>
+   </ul> 
+
+   <p>
+    The initial portion of the script file <em>test.es</em> contains: 
+   </p>
+
+   <source>
+    var count = 0;
+  
+    /* Node Generation Functions */
+    function getCount() {
+      /* To reference variables as static, prepend "global." */
+      return formatCount(++global.count);
+    }
+
+    function getSystemDate(parameters) {
+     var now = new Date();
+     var format = parameters.get("format");
+  
+     if (format != null) {
+      return formatDate(now, format);
+     }
+  
+     return now;
+    }
+   </source>
+
+   <p>
+    DCP automatically reloads Javascript script files whenever they change on
+    disk. 
+   </p>
+
+   <p>
+    When a global variable must be treated as static, references to it must be
+    qualified by the <em>global</em> modifier. This is convenient when the
+    programmer wants the variable to retain its value across requests. 
+   </p>
+
+   <p>
+    For functions returning simple object values, DCP takes care of wrapping
+    the returned value as an <code>org.w3c.dom.Text</code> node containing
+    the <code>toString()</code> form of the object. When a function returns
+    <code>null</code>, the corresponding node is removed from the DOM tree. 
+   </p>
+
+   <p>
+    Of course, returned values can be instances of a DOM <code>Node</code>
+    type. This is illustrated by the function <code>getParameters</code>
+    below: 
+   </p>
+
+   <source>
+    function getParameters() {
+     var parameterNames = request.getParameterNames();
+  
+     if (!parameterNames.hasMoreElements()) {
+      return null;
+     }
+  
+     var parameterList = createElement("parameters");
+  
+     while (parameterNames.hasMoreElements()) {
+      var parameterName = parameterNames.nextElement();
+  
+      var parameterElement = createElement("parameter");
+      parameterElement.setAttribute("name", parameterName);
+  
+      var parameterValues = request.getParameterValues(parameterName);
+  
+      for (var i = 0; i &lt; parameterValues.length; i++) {
+       var valueElement = createElement("parameter-value");
+       valueElement.appendChild(createTextNode(parameterValues[i]));
+       parameterElement.appendChild(valueElement);
+      }
+  
+      parameterList.appendChild(parameterElement);
+     }
+  
+     return parameterList;
+    }
+   </source>
+
+   <p>
+    Thus, if our example processes the request: 
+   </p>
+
+   <source>
+    sample.xml?me=Tarzan&amp;you=Jane&amp;you=Cheetah 
+   </source>
+
+   <p>
+    the above function would generate a DOM subtree equivalent to the
+    following XML fragment: 
+   </p>
+
+   <source>
+    &lt;parameters&gt;
+  
+      &lt;parameter name="me"&gt;
+        &lt;parameter-value&gt;Tarzan&lt;/parameter-value&gt;
+      &lt;/parameter&gt;
+  
+      &lt;parameter name="you"&gt;
+        &lt;parameter-value&gt;Jane&lt;/parameter-value&gt;
+        &lt;parameter-value&gt;Cheetah&lt;/parameter-value&gt;
+      &lt;/parameter&gt;
+  
+    &lt;/parameters&gt;  
+   </source>
+
+   <p>
+    The general signature for a dynamic content generation Javascript function
+    is: 
+   </p>
+
+   <source>
+    function functionName(parameters, source) 
+   </source>
+
+   <p>
+    where: 
+   </p>
+
+   <ul> 
+    <li>
+     <code>parameters</code> is an instance of
+     <code>java.util.Dictionary</code> containing user-supplied parameters
+     specified as <code>&lt;?dcp-content?&gt;</code> pseudo-attributes.
+     Example: parameter <code>format</code> in function
+     <code>getSystemDate</code>.
+    </li>
+    <li>
+     <code>source</code> is an instance of
+     <code>org.w3c.dom.ProcessingInstruction</code>
+     corresponding to the actual <code>&lt;?dcp-content?&gt;</code>
+     processing instruction.  This node is useful for performing
+     context-dependent processing such as examining sibling or parent
+     DOM nodes. 
+    </li>
+   </ul> 
+
+   <p>
+    Note: Programmers may omit any or all of these arguments if they are
+    not actually needed by the task at hand. 
+   </p>
+
+   <p>
+    The following objects are always made available to external Javascript
+    programs as global variables: 
+   </p>
+
+   <ul> 
+    <li>
+     <code>javax.servlet.http.HttpServletRequest request</code>
+    </li>
+    <li>
+     <code>org.w3c.dom.Document document</code>
+    </li>
+   </ul> 
+
+   <p>
+    The following convenience functions are made accessible by DCP to external
+    Javascript programs: 
+   </p>
+
+   <ul> 
+    <li>
+      DOM factory functions are provided by DCP for easy construction of DOM
+      nodes: <code>createTextNode(data)</code>,
+      <code>createElement(tagName)</code>, etc. 
+
+       In general, all DOM factory methods defined for interface
+       <code>org.w3c.dom.Document</code> are available as global
+       Javascript functions. 
+    </li>
+
+    <li>
+      Formatting functions for numbers and dates: 
+      <ul> 
+       <li>
+        <code>function formatCount(number)</code>,
+       </li>
+       <li>
+        <code>function formatCurrency(number)</code>,
+       </li>
+       <li>
+        <code>function formatPercentage(number)</code> and 
+       </li>
+       <li>
+        <code>function formatDate(date, format)</code>. Date format
+        strings conform to the syntax defined by class
+        <code>java.text.DateFormat</code>.
+       </li>
+      </ul> 
+    </li>
+
+    <li>
+     A JDBC access function function
+
+      <code>sqlRowSet(connectionName, selectStatement)</code>,
+
+       that returns an array of Javascript objects whose member names are
+       given by the lowercase form of each <em>SELECT</em> column label.
+       The array contains as many elements as rows are returned by the
+       <em>SELECT</em> statement. 
+
+      Parameters to this function are: 
+
+     <ul> 
+      <li>
+       <code>connectionName</code>.
+       A connection pool name as specified by Gefion Software's
+       <link href="http://www.webdevelopersjournal.com/columns/connection_pool.html">
+        <code>DBConnectionManager</code>
+       </link>
+       in the resource file
+       <code>db.properties</code> (see below).
+      </li>
+
+      <li>
+       <code>selectStatement</code>.
+       A SQL <em>SELECT</em> statement for the database manager in use. 
+      </li>
+     </ul> 
+    </li>
+   </ul>
+
+   <p>
+    Using the Oracle demo connection in file <em>db.properties</em>
+   </p>
+   
+   <source>
+  logfile=/tmp/dbcm.log
+  drivers=postgresql.Driver oracle.jdbc.driver.OracleDriver
+
+  dictionary.url= jdbc:postgresql:translator
+  dictionary.maxconn=8
+  dictionary.user=clark
+  dictionary.password=kent
+
+  demo.url=jdbc:oracle:thin:@localhost:1521:orcl
+  demo.maxconn=4
+  demo.user=scott
+  demo.password=tiger
+  </source>
+   
+   <p>
+    a sample Javascript user function would look like: 
+   </p>
+
+   <source>
+    var selectStatement =
+     "SELECT   EMPNO, " +
+     "         ENAME, " +
+     "         SAL + NVL(COMM, 0) AS INCOME " +
+     "FROM     EMP " +
+     "ORDER BY EMPNO";
+
+    var emps = sqlRowSet("demo", selectStatement);
+
+    for (var i = 0; i &lt; emps.length; i++) {
+     addEmp(emps[i].empno, emps[i].ename, emps[i].income)
+    }
+   </source>
+
+   <p>
+    Finally, it is possible, in general, to: 
+   </p>
+
+   <ul> 
+    <li>
+     Declare multiple external programs in the same XML document. 
+     <br/><br/>
+
+     <code>
+       &lt;?dcp-object name="emp" language="javascript" code="emp.es"?&gt;
+     </code>
+     <br/>
+     <code>
+       &lt;?dcp-object name="dept" language="javascript" code="dept.es"?&gt;
+     </code>
+     <br/>
+    </li>
+    <li>
+     Declare the same external program multiple times in the same XML
+     document, provided different names are used for each declaration. 
+     <br/><br/>
+
+     <code>
+      &lt;?dcp-object name="emp" language="ecmascript" code="emp.es"?&gt;
+     </code>
+     <br/>
+     <code>
+      &lt;?dcp-object name="boss" language="ecmascript" code="emp.es"?&gt;
+     </code>
+     <br/>
+    </li>
+    <li>
+     Mix external programs written in different languages in the same XML
+     document. 
+     <br/><br/>
+
+     <code>
+      &lt;?dcp-object name="emp" language="ecmascript" code="emp.es"?&gt;
+     </code>
+     <br/>
+     <code>
+      &lt;?dcp-object name="dept" language="java" code="payroll.Department"?&gt;
+     </code>
+     <br/>
+    </li>
+   </ul> 
+  </s1>
+
+
+  <s1 title="Java DCP Programming">
+   <p>
+    For the Java language, the attribute <code>code</code> in the declaration 
+   </p>
+
+   <source>
+    &lt;?dcp-object name="util" language="java" code="payroll.Employee"?&gt;
+   </source>
+
+   <p>
+    is interpreted as a class name. Such class must be accessible through
+    the servlet engine's classpath setting. 
+   </p>
+
+   <p>
+    Node-generation methods in Java conform to the following signature: 
+   </p>
+
+   <source>
+    public methodName(
+     [java.util.Dictionary parameters],
+     [org.w3c.dom.Node source]
+    )
+   </source>
+
+   <p>
+    Like in Javascript, these arguments are optional. The return type can be
+    of any Java type including <code>void</code>.
+   </p>
+
+   <p>
+     Java classes used as DCP objects need not implement/extend any particular
+     interface or class. In the Cocoon environment, however, it is strongly
+     recommended to extend class: 
+   </p>
+
+   <source>
+    org.apache.cocoon.processor.dcp.java.ServletDCPProcessor. 
+   </source>
+
+   <p>
+     This class provides the following convenience services: 
+   </p>
+
+   <ul>
+    <li>
+     Direct access to the servlet <em>request</em> object 
+    </li>
+    <li>
+     Direct access to the document being processed 
+    </li>
+    <li>
+      Factory methods to create all types of DOM nodes (elements, text nodes,
+      document fragments, processing instructions, etc) 
+    </li>
+   </ul>
+
+   <p>
+    If developers choose not to extend this convenience class, the following
+    requeriments must be honored: 
+   </p>
+
+   <ul>
+    <li>
+     The class must have an empty constructor 
+    </li>
+    <li>
+     The class must have at least one method that conforms to the above
+     signature. 
+    </li>
+   </ul>
+
+   <p>
+    In absence of a non-empty constructor, if the class does require
+    initialization it can implement: 
+   </p>
+
+   <source>
+    org.cocoon.framework.Configurable. 
+   </source>
+
+   <p>
+    In this case, the DCP processor will invoke the class' init method
+    immediately after instantiation. The configuration values passed in
+    this case are: 
+   </p>
+
+   <ul>
+    <li>
+     The document being processed 
+    </li>
+    <li>
+     The parameters passed to the processor by the invoking environment 
+    </li>
+   </ul>
+
+   <p>
+    For the Cocoon environment, parameters contain: 
+   </p>
+
+   <ul>
+    <li>
+     The <code>javax.servlet.http.HttpServletRequest request</code> object
+     corresponding to the current web server's request. 
+    </li>
+    <li>
+     The <code>java.lang.String path</code> associated with the current source
+     XML document. 
+    </li>
+    <li>
+     The <code>java.lang.String browser</code> associated with the current
+     request's <em>User-Agent</em> HTTP header. 
+    </li>
+   </ul>
+
+   <p>
+    Based on the above, for our tutorial example, the corresponding Java
+    class would be: 
+   </p>
+
+   <source>
+    import java.util.*;
+    import java.text.*;
+    import org.w3c.dom.*;
+    import javax.servlet.http.*;
+    import org.apache.cocoon.processor.dcp.java.ServletDCPProcessor;
+    
+    public class Util extends ServletDCPProcessor {
+      private static int count = 0;
+    
+      public synchronized int getCount() {
+        return ++count;
+      } 
+    
+      public String getSystemDate(Dictionary parameters) {
+        Date now = new Date();
+        String formattedDate = now.toString();
+        String format = (String) parameters.get("format");
+    
+        if (format != null) {
+          try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+            formattedDate = dateFormat.format(now);
+          } catch (Exception e) { } // Bad format, ignore and return default
+        }
+    
+        return formattedDate;
+      }
+    
+      public Element getRequestParameters() {
+        Enumeration e = this.request.getParameterNames();
+    
+        if (!e.hasMoreElements()) { // No parameters given, remove node from document 
+          return null;
+        }
+    
+        Element parameterList = createElement("parameters");
+    
+        int count;
+        Element parameterValue;
+        Element parameterElement;
+        for (count = 0; e.hasMoreElements(); count++) {
+          String name = (String) e.nextElement();
+          String[] values = this.request.getParameterValues(name);
+    
+          parameterElement = createElement("parameter");
+          parameterElement.setAttribute("name", name);
+    
+          for (int i = 0; i &lt; values.length; i++) {
+            parameterValue = createElement("parameter-value");
+            parameterValue.appendChild(createTextNode(values[i]));
+    
+            parameterElement.appendChild(parameterValue);
+          }
+    
+          parameterList.appendChild(parameterElement);
+        }
+    
+        return parameterList;
+      }
+    }
+   </source>
+  </s1>
+
+  <s1 title="Known Problems">
+   <ul>
+    <li>
+     <strong>Restricted Static Parameter Passing</strong>.
+     Due to the use of processing instructions as a means of inserting
+     dynamic content in XML documents (as opposed to DOM elements),
+     structured parameter passing can become too complex. 
+     <br/><br/>
+
+     Consider the case when an employee list must be dynamically generated.
+     Using elements to pass parameters to node-generation methods would allow
+     for complex forms.
+     <br/><br/>
+
+     <!--
+     <source>
+      &lt;employee-listing&gt;
+        &lt;database-connection&gt;
+          &lt;jdbc-driver&gt;oracle.jdbc.driver.OracleDriver&lt;/jdbc-driver&gt;
+          &lt;connect-url&gt;jdbc:oracle:thin:@localhost:1521:orcl&lt;/connect-url&gt;
+          &lt;user-name&gt; &lt;request-parameter name="user"/&gt; &lt;/user-name&gt;
+          &lt;password&gt; &lt;request-parameter name="password"/&gt; &lt;/password&gt;
+        &lt;/database-connection&gt;
+        &lt;selection-criteria&gt;
+          &lt;department-list&gt;
+            &lt;deptno&gt;10&lt;/deptno&gt;
+            &lt;deptno&gt;30&lt;/deptno&gt;
+          &lt;/department-list&gt;
+        &lt;/selection-criteria&gt;
+      &lt;/employee-listing&gt;
+     </source>
+         
+     An equivalent &lt;?dcp-content?&gt; parameter list, while possible, would
+     be too long and, certainly, hard to read. 
+     -->
+
+     Other nested, multivalued parameter forms simply cannot be expressed by
+     means of single-valued processing instruction pseudo-attributes. 
+     <br/><br/>
+
+     A workaround for this is the traditional HTML idiom of using hidden
+     fields in HTTP forms to pass static parameters. 
+     <br/><br/>
+
+     Important to note, XSP uses elements (instead of processing instructions)
+     to specify dynamic content substitution. 
+    </li>
+
+    <li>
+     <strong>Javascript Performance</strong>.
+     While the current Javascript DCP performance is acceptable for small
+     and medium-sized applications with light traffic, its response time is
+     perceivably slower than that of Java. 
+     <br/><br/>
+
+     This is a natural consequence of Javascript being interpreted by Java
+     (itself interpreted by the underlying VM). As such, this restriction
+     may also apply to other scripting languages such as WebL. 
+     <br/><br/>
+
+     An alternative would be the use of Netscape's
+     <link href="http://www.mozilla.org/rhino/">Rhino</link>
+     (which supports compilation to class files),
+     but this may create incompatibilities with existing programs
+     that depend on FESI features.
+     <br/><br/>
+
+     In the meantime, some Fesi-based workarounds are in place, most
+     notably evaluator pooling, a technique based on dynamically cloning
+     script evaluators when multiple, concurrent requests use the same
+     Javascript external program. 
+    </li>
+
+    <li>
+     <strong>No Java Class Reloading</strong>.
+     While Javascript files are automatically reloaded when they change on
+     disk, currently there is no provision for automatic Java class reloading.
+     <br/><br/>
+
+     Implementing this feature requires a specialized class loader. Note that
+     servlet engine-provided class reloading does not apply to DCP because
+     external Java programs are not servlets but, rather, regular classes
+     dynamically instantiated by the DCP driver instead of by the underlying
+     servlet engine. 
+     <br/><br/>
+
+     The latter is also true if the user-supplied class extends DCP's
+     convenience class
+     <code>org.apache.cocoon.processor.dcp.java.ServletDCPProcessor</code>.
+    </li>
+   </ul>
+  </s1>
+
+  <s1 title="Additional Examples">
+   <p>
+    In addition to the examples presented in this document, there is a more
+    complex application written entirely in Cocoon using Java DCP: the
+    <link href="http://www.plenix.com/translator/">
+      Cocoon Multilingual Dictionary
+    </link>.
+   </p>
+
+   <p>
+    This application lets users lookup terms and their translations in a
+    number of European languages using Esperanto as the intermediate language.
+    The entire example (source code and data, ~750K) can be downloaded from
+    the above location. 
+   </p>
+  </s1>
+
+  <s1 title="Future Directions">
+    <p>
+      DCP will be deprecated in favor of
+      <link href="http://xml.apache.org/cocoon/xsp.html">XSP</link>.
+      Therefore, development is currently limited to bug fixes.
+    </p>
+  </s1>
+
+  <s1 title="Acknowledgments">
+   <p>
+    The following people have contributed to the definition of DCP:
+   </p>
+
+   <ul>
+    <li>
+     Assaf Arkin, &lt;arkin@trendline.co.il&gt; 
+    </li>
+    <li>
+     Brett Knights, &lt;bknights@uniserve.com&gt; 
+    </li>
+    <li>
+     Donald Ball, &lt;balld@apache.org&gt; 
+    </li>
+    <li>
+     Keith Visco, &lt;kvisco@ziplink.net&gt; 
+    </li>
+    <li>
+     Stefano Mazzocchi, &lt;stefano@apache.org&gt; 
+    </li>
+   </ul>
+  </s1>
+
+</body>
 </document>
