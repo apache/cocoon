@@ -110,11 +110,8 @@ public class AvalonProvider extends RPCProvider
      * @return an object that implements the service
      * @exception Exception if an error occurs
      */
-    protected Object makeNewServiceObject(
-        MessageContext msgContext, String role
-    )
-        throws Exception
-    {
+    protected Object makeNewServiceObject(MessageContext msgContext, String role)
+    throws Exception {
         ComponentManager manager =
             (ComponentManager) msgContext.getProperty(COMPONENT_MANAGER);
 
@@ -134,8 +131,7 @@ public class AvalonProvider extends RPCProvider
      * @exception Exception if an error occurs
      */
     private Object decorate(final Component object, final ComponentManager manager)
-        throws Exception
-    {
+    throws Exception {
         // obtain a list of all interfaces this object implements
         Class[] interfaces = object.getClass().getInterfaces();
 
@@ -160,8 +156,7 @@ public class AvalonProvider extends RPCProvider
      * Return the option in the configuration that contains the service class
      * name. In the Avalon case, it is the ROLE name to lookup.
      */
-    protected String getServiceClassNameOptionName()
-    {
+    protected String getServiceClassNameOptionName() {
         return ROLE;
     }
 
@@ -175,29 +170,21 @@ public class AvalonProvider extends RPCProvider
      * @exception AxisFault if an error occurs
      */
     protected Class getServiceClass(
-        String role, SOAPService service, MessageContext msgContext
-    )
-        throws AxisFault
-    {
+        String role, SOAPService service, MessageContext msgContext)
+    throws AxisFault {
         // Assuming ExcaliburComponentManager semantics the ROLE name is
         // actually the class name, potentially with a variant following
         // the class name with a '/' separator
 
-        try
-        {
+        try {
             int i;
 
             if ((i = role.indexOf('/')) != -1)
             {
                 return Class.forName(role.substring(0, i));
             }
-            else
-            {
-                return Class.forName(role);
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
+            return Class.forName(role);
+        } catch (ClassNotFoundException e) {
             throw new AxisFault("Couldn't create class object for role " + role, e);
         }
     }
@@ -234,8 +221,8 @@ public class AvalonProvider extends RPCProvider
      *  on the scope of the service (ie. Request, Session & Application).
      * </p>
      */
-    final static class Handler implements InvocationHandler
-    {
+    final static class Handler implements InvocationHandler {
+        
         // Constants describing the ServiceLifecycle.destroy method
         private final static String SL_DESTROY = "destroy";
         private final Class  SL_CLASS = ServiceLifecycle.class;
@@ -250,8 +237,7 @@ public class AvalonProvider extends RPCProvider
          * @param object a <code>Component</code> instance
          * @param manager a <code>ComponentManager</code> instance
          */
-        public Handler(final Component object, final ComponentManager manager)
-        {
+        public Handler(final Component object, final ComponentManager manager) {
             m_object = object;
             m_manager = manager;
         }
@@ -274,22 +260,17 @@ public class AvalonProvider extends RPCProvider
          * @exception Throwable if an error occurs
          */
         public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable
-        {
+        throws Throwable {
             // if ServiceLifecycle.destroy() called, return to CM
-            if (method.getDeclaringClass().equals(SL_CLASS))
-            {
-                if (method.getName().equals(SL_DESTROY))
-                {
+            if (method.getDeclaringClass().equals(SL_CLASS)) {
+                if (method.getName().equals(SL_DESTROY)) {
                     m_manager.release(m_object);
                 }
 
                 return null;
             }
-            else // otherwise pass call to the real object
-            {
-                return method.invoke(m_object, args);
-            }
+            // otherwise pass call to the real object
+            return method.invoke(m_object, args);
         }
     }
 }
