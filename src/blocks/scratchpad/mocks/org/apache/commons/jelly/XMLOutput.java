@@ -50,24 +50,26 @@
 package org.apache.commons.jelly;
 
 import java.io.IOException;
-import java.io.Writer;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: XMLOutput.java,v 1.1 2003/09/04 12:42:44 cziegeler Exp $
+ * @version CVS $Id: XMLOutput.java,v 1.2 2003/12/23 10:27:04 cziegeler Exp $
  */
 public class XMLOutput {
 
     public XMLOutput() {
     }
 
-    public void flush() throws IOException {
+    public XMLOutput(ContentHandler contentHandler,
+                     LexicalHandler lexicalHandler) {        
     }
-
-    public static XMLOutput createXMLOutput(Writer writer) {
-        return null;
+        
+    public void flush() throws IOException {
     }
 
 }

@@ -51,8 +51,6 @@
 package org.apache.cocoon.generation;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -65,8 +63,6 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.XMLOutput;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -109,7 +105,6 @@ public class JellyGenerator extends ServiceableGenerator
      * Generate XML data from Jelly script.
      */
     public void generate() throws IOException, SAXException, ProcessingException {
-        SAXParser parser = null;
         Source scriptSource = null;
         try {
             
@@ -119,28 +114,20 @@ public class JellyGenerator extends ServiceableGenerator
             this.updateContext();
 
             // Execute Jelly script
-            StringWriter output = new StringWriter();
-            XMLOutput xmlOutput = XMLOutput.createXMLOutput(output);
+            XMLOutput xmlOutput = new XMLOutput(this.contentHandler, this.lexicalHandler);
             
             scriptSource = this.resolver.resolveURI(this.source);
             this.jellyContext.runScript(scriptSource.getURI(), xmlOutput);
             xmlOutput.flush();
             
-            InputSource inputSource = new InputSource(new StringReader(output.toString()));
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
-            parser.parse(inputSource, super.xmlConsumer);
         } catch (IOException e) {
             getLogger().error("JellyGenerator.generate()", e);
             throw new ResourceNotFoundException("JellyGenerator could not find resource", e);
-        } catch (SAXException e) {
-            getLogger().error("JellyGenerator.generate()", e);
-            throw (e);
         } catch (Exception e) {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in JellyGenerator.generate()", e);
         } finally {
             this.resolver.release( scriptSource );
-            this.manager.release(parser);
         }
     }
 
