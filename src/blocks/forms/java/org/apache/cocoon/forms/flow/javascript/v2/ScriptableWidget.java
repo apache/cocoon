@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.10 2004/05/07 16:43:43 mpo Exp $
+ * @version $Id: ScriptableWidget.java,v 1.11 2004/05/08 12:51:29 bruno Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -127,8 +127,8 @@ public class ScriptableWidget extends ScriptableObject {
     }
 
     public boolean has(String id, Scriptable start) {
-        if (delegate != null) {
-            Widget sub = delegate.lookupWidget(id);
+        if (delegate != null && delegate instanceof ContainerWidget) {
+            Widget sub = ((ContainerWidget)delegate).getChild(id);
             if (sub != null) {
                 return true;
             }
@@ -156,8 +156,8 @@ public class ScriptableWidget extends ScriptableObject {
         if (result != NOT_FOUND) {
             return result;
         }
-        if (delegate != null ) {
-            Widget sub = delegate.lookupWidget(id);
+        if (delegate != null && delegate instanceof ContainerWidget) {
+            Widget sub = ((ContainerWidget)delegate).getChild(id);
             if (sub != null) {
                 return wrap(sub);
             }
@@ -494,6 +494,13 @@ public class ScriptableWidget extends ScriptableObject {
             return delegate.equals(otherWidget.delegate);
         }
         return false;
+    }
+
+    public ScriptableWidget jsFunction_getChild(String id) {
+        Widget sub = null;
+        if (delegate instanceof ContainerWidget)
+            sub = ((ContainerWidget)delegate).getChild(id);
+        return wrap(sub);
     }
 
     public ScriptableWidget jsFunction_lookupWidget(String id) {
