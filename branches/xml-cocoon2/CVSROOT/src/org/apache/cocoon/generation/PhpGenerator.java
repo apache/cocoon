@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-22 17:10:34 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-03 20:14:47 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 
@@ -78,7 +78,7 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             try {
                 output.write(data.getBytes());
             } catch (IOException e) {
-                log.debug("PhpGenerator.write()", e);
+                getLogger().debug("PhpGenerator.write()", e);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -91,14 +91,14 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             try {
                 service(request, response, input);
             } catch (ServletException e) {
-                log.error("PhpGenerator.run()", e);
+                getLogger().error("PhpGenerator.run()", e);
                 this.exception = e;
             }
 
             try {
                 output.close();
             } catch (IOException e) {
-                log.error("PhpGenerator.run():SHOULD NEVER HAPPEN", e);
+                getLogger().error("PhpGenerator.run():SHOULD NEVER HAPPEN", e);
                 // should never happen
             }
         }
@@ -138,13 +138,13 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             // clean up
             php.destroy();
         } catch (SAXException e) {
-            log.debug("PhpGenerator.generate()", e);
+            getLogger().debug("PhpGenerator.generate()", e);
             throw e;
         } catch (IOException e) {
-            log.debug("PhpGenerator.generate()", e);
+            getLogger().debug("PhpGenerator.generate()", e);
             throw e;
         } catch (Exception e) {
-            log.debug("PhpGenerator.generate()", e);
+            getLogger().debug("PhpGenerator.generate()", e);
             throw new IOException(e.toString());
         }
     }
