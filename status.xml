@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.213 2003/12/17 04:15:14 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.214 2003/12/18 08:02:31 mpo Exp $:-->
 
 <status>
  <developers>
@@ -75,6 +75,7 @@
   <person name="Christopher Oliver" email="coliver@apache.org" id="CO"/>
   <person name="Giacomo Pati" email="giacomo@apache.org" id="GP"/>
   <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
+  <person name="Marc Portier" email="mpo@apache.org" id="MPO"/>
   <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
   <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
   <person name="Reinhard P&#246;tz" email="reinhard@apache.org" id="RP"/>
@@ -189,7 +190,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
-    <action dev="AG" type="fix" due-to-email="ltrillaud@jouve.fr" due-to="Laurent Trillaud">
+   <action dev="MPO" type="add" >
+     Changed semantics on the cforms binding. Added a @direction (which replaces 
+     the @read-only) and a @lenient attribute on all binding implementations in 
+     the pool.
+   </action>
+   <action dev="AG" type="fix" due-to-email="ltrillaud@jouve.fr" due-to="Laurent Trillaud">
      Fix NPE error when pointed tag is empty in xsp-session-fw:getxml. Applying
      patch from ltrillaud@jouve.fr (ltrillaud@jouve.fr).
    </action>
