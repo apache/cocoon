@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaProcessor.java,v 1.3 2000-01-03 01:42:51 stefano Exp $ --
+/*-- $Id: XSPJavaProcessor.java,v 1.4 2000-01-03 18:04:54 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @@author <a href="mailto:ricardo@@apache.org">Ricardo Rocha</a>
- * @@version $Revision: 1.3 $ $Date: 2000-01-03 01:42:51 $
+ * @@version $Revision: 1.4 $ $Date: 2000-01-03 18:04:54 $
  */
 public class XSPJavaProcessor implements XSPLanguageProcessor {
   // Create class loader
@@ -94,6 +94,10 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
   }
 
   public String formatCode(String code) throws Exception {
+    return code;
+
+    // Commented out while we find an open source code formatter
+/*
     if (!this.format) {
       return code;
     }
@@ -114,6 +118,7 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
     );
 
     return out.toString();
+*/
   }
 
   public void compile(String filename) throws Exception {
