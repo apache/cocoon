@@ -85,8 +85,10 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         return rows.size();
     }
 
-    public void addRow() {
-        rows.add(new RepeaterRow());
+    public RepeaterRow addRow() {
+        RepeaterRow repeaterRow = new RepeaterRow();
+        rows.add(repeaterRow);
+        return repeaterRow;
     }
 
     public RepeaterRow getRow(int index) {
