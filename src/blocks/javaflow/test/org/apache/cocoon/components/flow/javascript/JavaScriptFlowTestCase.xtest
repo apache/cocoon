@@ -77,10 +77,11 @@
 
   <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
 
-  <flow-interpreters default="java">
+  <flow-interpreters default="javascript">
     <component-instance class="org.apache.cocoon.components.flow.java.JavaInterpreter" name="java"/>
+    <component-instance class="org.apache.cocoon.components.flow.javascript.JavaScriptInterpreter" name="javascript" debug="false"/>
   </flow-interpreters>
-
+  
   <continuations-manager time-to-live="3600000">
     <expirations-check type="periodic">
       <offset>180000</offset>

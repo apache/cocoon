@@ -26,7 +26,7 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: JavaFlowTestCase.java,v 1.2 2004/06/23 09:16:32 stephan Exp $
+ * @version CVS $Id: JavaFlowTestCase.java,v 1.3 2004/06/24 16:48:53 stephan Exp $
  */
 public class JavaFlowTestCase extends SitemapComponentTestCase {
 
@@ -159,5 +159,10 @@ public class JavaFlowTestCase extends SitemapComponentTestCase {
         parameters.put("p3", "2.3");
         
         String id = callFunction("java", source, "parameterTest", parameters);
+    }
+    
+    public void testClass() throws Exception {
+        String source = "org.apache.cocoon.components.flow.java.test.SimpleFlow";
+        String id = callFunction("java", source, "forClassTest", new HashMap());
     }
 }

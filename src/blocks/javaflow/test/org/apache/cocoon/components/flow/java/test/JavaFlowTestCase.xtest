@@ -78,7 +78,7 @@
   <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
 
   <flow-interpreters default="java">
-    <component-instance class="org.apache.cocoon.components.flow.java.JavaInterpreter" name="java"/>
+    <component-instance class="org.apache.cocoon.components.flow.java.JavaInterpreter" name="java" debug="false"/>
   </flow-interpreters>
 
   <continuations-manager time-to-live="3600000">
