@@ -54,7 +54,8 @@
  </description>
 
  <author>Donald A. Ball Jr.</author>
- <version>1.0</version>
+ <author>Ugo Cei</author>
+ <version>1.1</version>
 -->
 <xsl:stylesheet
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -76,6 +77,7 @@
    <xsp:include>javax.mail.Multipart</xsp:include>
    <xsp:include>javax.mail.internet.MimeMessage</xsp:include>
    <xsp:include>javax.mail.internet.MimePart</xsp:include>
+   <xsp:include>javax.text.DateFormat</xsp:include>
   </xsp:structure>
   <xsl:apply-templates/>
   <xsp:logic>
@@ -174,16 +176,54 @@
  <xsp:expr>_mail_folder.getMessageCount()</xsp:expr>
 </xsl:template>
 
-<xsl:template match="mail:results//mail:get-message">
- <xsl:param name="number"><xsl:value-of select="@number"/></xsl:param>
- {
-  MimeMessage _mail_message = (MimeMessage)_mail_folder.getMessage(<xsl:value-of select="@number"/>);
-  <xsl:apply-templates/>
- }
+<xsl:template match="mail:results//mail:get-messages">
+  <xsl:variable name="start">
+    <xsl:call-template name="get-nested-string">
+      <xsl:with-param name="content" select="mail:limit-messages/mail:start-index"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="end">
+    <xsl:call-template name="get-nested-string">
+      <xsl:with-param name="content" select="mail:limit-messages/mail:end-index"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsp:logic>
+  {
+    int _mail_start = 1;
+    int _mail_end = 10; // _mail_folder.getMessageCount();
+    try {
+      _mail_start = Integer.parseInt(<xsl:copy-of select="$start"/>); 
+    } catch (NumberFormatException _mail_exception) {}
+    if (_mail_start &lt; 1) {
+      _mail_start = 1;
+    }
+    try {
+      _mail_end = Integer.parseInt(<xsl:copy-of select="$end"/>); 
+    } catch (NumberFormatException _mail_exception) {}
+    for (int _mail_i = _mail_start ; 
+         _mail_i &lt;= _mail_end &amp;&amp; _mail_i &lt;= _mail_folder.getMessageCount() ;
+         ++_mail_i) {
+      <message>
+        <xsp:attribute name="number"><xsp:expr>_mail_i</xsp:expr></xsp:attribute>
+        <xsp:logic>
+          MimeMessage _mail_message = (MimeMessage) _mail_folder.getMessage(_mail_i);
+          if (_mail_message != null) {
+            <xsl:apply-templates/>
+	  }
+        </xsp:logic>
+      </message>
+    }
+  }
+  </xsp:logic>
 </xsl:template>
 
 <xsl:template match="mail:results//mail:get-message//mail:get-subject">
  <xsp:expr>_mail_message.getSubject()</xsp:expr>
+</xsl:template>
+
+<xsl:template match="mail:results//mail:get-messages//mail:get-sent-date">
+ <xsp:expr>DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT).format(_mail_message.getSentDate())</xsp:expr>
 </xsl:template>
 
 <xsl:template match="mail:results//mail:get-message//mail:get-from">
@@ -235,14 +275,9 @@
 
 <xsl:template match="mail:results//mail:get-message//get-content">
  <xsp:logic>
-  _mail_process_content(_mail_message);
+  _mail_process_content(request,response,document,xspParentNode,xspCurrentNode,xspNodeStack,session,_mail_message);
  </xsp:logic>
 </xsl:template>
-
-<!--
-<xsl:template match="mail:results//mail:get-message//
-<xsl:template match="mail:results//mail:get-message//
--->
 
 <xsl:template match="@*|node()" priority="-1">
  <xsl:copy>
