@@ -9,12 +9,17 @@
  </header>
  <body>
   <s1 title="JXForms">
-   <p><em>JX</em>Forms is a framework that uses Apache <link href="http://jakarta.apache.org/commons/jxpath"><em>JX</em>Path</link> to support <link href="http://www.w3.org/MarkUp/Forms/">W3C XForms</link>-based markup and automated server-side binding to
-   <link href="http://java.sun.com/products/javabeans/">JavaBeans</link>,
-   <link href="http://www.w3.org/DOM/">XML/DOM</link>,
-   <link href="http://www.jdom.org/">JDOM</link>,
-   <link href="http://jakarta.apache.org/commons/beanutils/api/org/apache/commons/beanutils/DynaBean.html">DynaBeans</link>, and JavaScript objects.
-    </p>
+   <p>
+    <em>JX</em>Forms is a framework that uses Apache
+    <link href="http://jakarta.apache.org/commons/jxpath"><em>JX</em>Path</link>
+    to support <link href="http://www.w3.org/MarkUp/Forms/">W3C XForms</link>-based
+    markup and automated server-side binding to
+    <link href="http://java.sun.com/products/javabeans/">JavaBeans</link>,
+    <link href="http://www.w3.org/DOM/">XML/DOM</link>,
+    <link href="http://www.jdom.org/">JDOM</link>,
+    <link href="http://jakarta.apache.org/commons/beanutils/api/org/apache/commons/beanutils/DynaBean.html">DynaBeans</link>,
+    and JavaScript objects.
+   </p>
 
 
    <p><link href="#Overview">Overview</link></p>
@@ -389,7 +394,7 @@ This form control allows the user to make a single selection from multiple choic
    <li><code>class</code></li>
  </ul>
  <p>
-The required <code>id</code> attribute specifies the unique id of this <code>submit</code> element. This value is returned by the <link href="getSubmitId">getSubmitId</link> function when this element is used to submit a form. The optional <code>continuation</code> attribute provides support for automated back/forward navigation in multipage forms. A value of <code>forward</code> (the default) causes the form to be submitted normally. A value of <code>back</code> causes the previous page of the form to be displayed.
+The required <code>id</code> attribute specifies the unique id of this <code>submit</code> element. This value is returned by the <link href="#getSubmitId">getSubmitId</link> function when this element is used to submit a form. The optional <code>continuation</code> attribute provides support for automated back/forward navigation in multipage forms. A value of <code>forward</code> (the default) causes the form to be submitted normally. A value of <code>back</code> causes the previous page of the form to be displayed.
  </p>
 </s2>
  <s2 title="group">

@@ -65,7 +65,7 @@
               <li>a <em>content section</em> containing the coplet windows</li>
               <li>and a <em>footer </em></li>
           </ul>
-        <figure alt="Parts of the portal" height="300" src="/images/portal-parts.gif" width="400"></figure>    
+        <figure alt="Parts of the portal" height="300" src="images/portal-parts.gif" width="400"></figure>    
         <p>The tab row is actually a part of the content section. As well, a tab row can
         be provided to any coplet window.</p>
           <s2 title="The skin&apos;s stylesheets">
