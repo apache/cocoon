@@ -101,7 +101,15 @@ public class XMLBaseSupport {
         level++;
         String base = attrs.getValue(XMLBASE_NAMESPACE_URI, XMLBASE_ATTRIBUTE);
         if (base != null) {
-            String baseUrl = resolve(getCurrentBase(), base);
+            Source baseSource = null;
+            String baseUrl;
+            try {
+                baseSource = resolve(getCurrentBase(), base);
+                baseUrl = baseSource.getURI();
+            } finally {
+                if (baseSource != null)
+                    resolver.release(baseSource);
+            }
             bases.push(new BaseInfo(baseUrl, level));
         }
     }
@@ -112,37 +120,31 @@ public class XMLBaseSupport {
         level--;
     }
 
-    private String resolve(String baseURI, String location) throws SAXException {
+    /**
+     * Warning: do not forget to release the source returned by this method.
+     */
+    private Source resolve(String baseURI, String location) throws SAXException {
         try {
-            String url;
+            Source source;
             if (baseURI != null) {
-                Source source = resolver.resolveURI(location, baseURI, Collections.EMPTY_MAP);
-                try {
-                    url = source.getURI();
-                } finally {
-                    resolver.release(source);
-                }
+                source = resolver.resolveURI(location, baseURI, Collections.EMPTY_MAP);
             } else {
-                Source source = resolver.resolveURI(location);
-                try {
-                    url = source.getURI();
-                } finally {
-                    resolver.release(source);
-                }
+                source = resolver.resolveURI(location);
             }
             if (logger.isDebugEnabled())
-                logger.debug("XMLBaseSupport: resolved location " + location + " against base URI " + baseURI + " to " + url);
-            return url;
+                logger.debug("XMLBaseSupport: resolved location " + location + " against base URI " + baseURI + " to " + source.getURI());
+            return source;
         } catch (IOException e) {
             throw new SAXException("XMLBaseSupport: problem resolving uri.", e);
         }
     }
 
     /**
-     * Makes the given path absolute based on the current base URL.
+     * Makes the given path absolute based on the current base URL. Do not forget to release
+     * the returned source object!
      * @param spec any URL (relative or absolute, containing a scheme or not)
      */
-    public String makeAbsolute(String spec) throws SAXException {
+    public Source makeAbsolute(String spec) throws SAXException {
         return resolve(getCurrentBase(), spec);
     }
 
