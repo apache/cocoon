@@ -28,10 +28,10 @@
     <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
-	<!-- generate sitemap entries 
+    <!-- generate sitemap entries 
     <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
     -->
-    
+
     <copy todir="${build.webapp}/stylesheets" filtering="on">
       <fileset dir="${webapp}/stylesheets">
         <include name="**/*.xslt"/>
@@ -50,7 +50,8 @@
       </fileset>
     </copy>
 
-    <copy file="${build}/${name}.jar" tofile="${build.webapp.lib}/${name}-${version}.jar"/>
+    <copy file="${build}/${name}.jar"
+          tofile="${build.webapp.lib}/${name}-${version}.jar"/>
 
     <copy todir="${build.webapp.lib}">
       <fileset dir="${lib}/endorsed">
@@ -82,6 +83,20 @@
       </fileset>
       <mapper type="glob" from="*-block.jar" to="cocoon-*-block.jar"/>
     </copy>
+
+    <if>
+      <istrue value="${include.sources-jars}"/>
+      <then>
+        <copy file="${build}/${name}.src.jar"
+              tofile="${build.webapp.lib}/${name}-${version}.src.jar"/>
+        <copy todir="${build.webapp.lib}">
+          <fileset dir="${build.blocks}">
+            <include name="*-block.src.jar"/>
+          </fileset>
+          <mapper type="glob" from="*-block.src.jar" to="cocoon-*-block.src.jar"/>
+        </copy>
+      </then>
+    </if>
 
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
