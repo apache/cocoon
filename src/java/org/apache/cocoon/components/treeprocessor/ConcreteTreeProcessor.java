@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -29,17 +28,18 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.container.ComponentManagerWrapper;
+import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -49,7 +49,7 @@ import org.apache.cocoon.sitemap.impl.DefaultExecutor;
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
  *
- * @version CVS $Id: ConcreteTreeProcessor.java,v 1.3 2004/06/11 20:03:35 vgritsenko Exp $
+ * @version CVS $Id: ConcreteTreeProcessor.java,v 1.4 2004/06/25 15:36:38 cziegeler Exp $
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
 
@@ -318,7 +318,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         // test if this is a call from flow
         boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
-        Environment newEnv = new ForwardEnvironmentWrapper(environment, uri, getLogger());
+        final SitemapSourceInfo info = SitemapSourceInfo.parseURI(environment, uri);
+        Environment newEnv = new ForwardEnvironmentWrapper(environment, info, getLogger());
         if ( isRedirect ) {
             ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
         }
@@ -384,43 +385,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         }
     }
 
-    /**
-     * Local extension of EnvironmentWrapper to propagate otherwise blocked
-     * methods to the actual environment.
-     */
-    private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
-
-        public ForwardEnvironmentWrapper(Environment env,
-            String uri, Logger logger) throws MalformedURLException {
-            super(env, uri, logger);
-        }
-
-        public void setStatus(int statusCode) {
-            environment.setStatus(statusCode);
-        }
-
-        public void setContentLength(int length) {
-            environment.setContentLength(length);
-        }
-
-        public void setContentType(String contentType) {
-            environment.setContentType(contentType);
-        }
-
-        public String getContentType() {
-            return environment.getContentType();
-        }
-
-        public boolean isResponseModified(long lastModified) {
-            return environment.isResponseModified(lastModified);
-        }
-
-        public void setResponseIsNotModified() {
-            environment.setResponseIsNotModified();
-        }
-    }
-
-	public SourceResolver getSourceResolver() {
+    public SourceResolver getSourceResolver() {
 		return wrappingProcessor.getSourceResolver();
 	}
 

@@ -17,7 +17,6 @@ package org.apache.cocoon.environment.wrapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,22 +37,19 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.20 2004/06/23 17:13:00 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.21 2004/06/25 15:36:38 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment {
 
     /** The wrapped environment */
-    protected Environment environment;
-
-    /** The object model */
-    protected Map objectModel;
+    protected final Environment environment;
 
     /** The redirect url */
     protected String redirectURL;
 
     /** The request object */
-    protected Request request;
+    protected final Request request;
 
     /** The stream to output to */
     protected OutputStream outputStream;
@@ -63,58 +59,18 @@ public class EnvironmentWrapper
     protected boolean internalRedirect = false;
     
     /**
-     * Constructs an EnvironmentWrapper object from a Request
-     * and Response objects
+     * Construct a new environment
+     * @param env    The origial Environment
+     * @param info   A description of the uri for the new environment
+     * @param logger The logger to be used by this environment
      */
-    public EnvironmentWrapper(Environment env,
-                              String      requestURI,
-                              String      queryString,
-                              Logger      logger) {
-        this(env, requestURI, queryString, logger,  false, null);
-    }
-
-    /**
-     * Constructs an EnvironmentWrapper object from a Request
-     * and Response objects
-     */
-    public EnvironmentWrapper(Environment      env,
-                              String           requestURI,
-                              String           queryString,
-                              Logger           logger,
-                              boolean          rawMode,
-                              String           view) {
-        super(env.getURI(), view, env.getAction());
-        init(env, requestURI, queryString, logger, rawMode, view);
-        this.setURI(env.getURIPrefix(), env.getURI());
-    }
-    
-    /**
-     * Constructor
-     * @param env
-     * @param uri
-     * @param logger
-     * @throws MalformedURLException
-     */
-    public EnvironmentWrapper(Environment env, String uri,  Logger logger) throws MalformedURLException {
-        super(env.getURI(), env.getView(), env.getAction());
-
-        SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
-
-        this.init(env, info.requestURI, info.queryString, logger, info.rawMode, info.view);
-        this.setURI(info.prefix, info.uri);
+    public EnvironmentWrapper(Environment       env,
+                              SitemapSourceInfo info,
+                              Logger            logger) {
+        super(env.getURI(), info.view, env.getAction());
         
-    }
-    
-    private void init(Environment    env,
-                      String         requestURI,
-                      String         queryString,
-                      Logger         logger,
-                      boolean        rawMode,
-                      String         view){
-
         this.enableLogging(logger);
         this.environment = env;
-        this.view = view;
 
         // create new object model and replace the request object
         Map oldObjectModel = env.getObjectModel();
@@ -130,13 +86,15 @@ public class EnvironmentWrapper
             }
         }
         this.request = new RequestWrapper(ObjectModelHelper.getRequest(oldObjectModel),
-                                          requestURI,
-                                          queryString,
+                                          info.requestURI,
+                                          info.queryString,
                                           this,
-                                          rawMode);
+                                          info.rawMode);
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
+
+        this.setURI(info.prefix, info.uri);        
     }
-   
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
      */
@@ -231,13 +189,6 @@ public class EnvironmentWrapper
      */
     public String getContentType() {
         return this.contentType;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#getObjectModel()
-     */
-    public Map getObjectModel() {
-        return this.objectModel;
     }
 
     /**
