@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 
-
 <!-- 
 
   Basic XMLForm processing stylesheet.  
@@ -206,6 +205,4 @@
       <xsl:value-of select="." />
    </xsl:template>
 
-
 </xsl:stylesheet>
-

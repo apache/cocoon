@@ -77,7 +77,7 @@ import EDU.oswego.cs.dl.util.concurrent.Mutex;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 21. Oct. 2002
- * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
+ * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.3 2003/05/06 14:13:00 vgritsenko Exp $
  */
 public class Web3DataSourceSelectorImpl
     extends AbstractLogEnabled

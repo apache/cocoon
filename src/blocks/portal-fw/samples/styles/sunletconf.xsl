@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<!-- $Id: sunletconf.xsl,v 1.1 2003/03/09 00:05:33 pier Exp $ 
+
+<!-- $Id: sunletconf.xsl,v 1.2 2003/05/06 14:12:55 vgritsenko Exp $ 
 
  Description: The configuration page of a coplet
 
@@ -77,6 +78,5 @@
 		<xsl:apply-templates select="@*|node()" />
 	</xsl:copy>
 </xsl:template>
-
 
 </xsl:stylesheet>

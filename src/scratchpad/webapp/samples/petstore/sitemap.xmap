@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- =========================== Components ================================ -->
@@ -140,16 +141,6 @@
    </map:match>
    </map:pipeline>
 
-
   </map:pipelines> 
-  
 </map:sitemap>
 <!-- end of file -->
-
-
-
-
-
-
-
-

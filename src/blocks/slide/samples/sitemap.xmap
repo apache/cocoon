@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Components =================================== -->
@@ -43,7 +44,6 @@
 <!-- =========================== Views =================================== -->
 
  <map:views>
- 
   <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
@@ -56,7 +56,6 @@
   <map:view name="xml" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
-     
  </map:views>
 
 <!-- =========================== Resources =================================== -->
@@ -88,8 +87,8 @@
    </authentication-manager>
   </map:component-configurations>
 
-  <map:pipeline internal-only="true">
 
+  <map:pipeline internal-only="true">
    <map:match pattern="principallist">
     <map:generate type="principallist">
      <map:parameter name="principalprovider" value="slide"/>
@@ -121,14 +120,13 @@
 
     <map:serialize type="xml"/>
    </map:match>
-
   </map:pipeline>
 
-  <map:pipeline>
 
+  <map:pipeline>
    <map:match pattern="">
-	  <map:redirect-to uri="content/"/>
-	 </map:match>
+    <map:redirect-to uri="content/"/>
+   </map:match>
  
    <map:match pattern="login.html">
     <map:generate src="login.xhtml"/>
@@ -241,7 +239,6 @@
     </map:act>
    </map:match>
 			
-	</map:pipeline>
-
+  </map:pipeline>
  </map:pipelines>
 </map:sitemap>

@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- $Id: sunLet_sundnNews.xsl,v 1.1 2003/03/09 00:05:33 pier Exp $ 
+<!-- $Id: sunLet_sundnNews.xsl,v 1.2 2003/05/06 14:12:55 vgritsenko Exp $ 
 
 -->
 

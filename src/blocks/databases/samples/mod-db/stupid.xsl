@@ -15,13 +15,13 @@
       <xsl:attribute name="bgcolor"><xsl:value-of select="$tablecolor"/></xsl:attribute>
       <xsl:element name="tr"> 
         <xsl:apply-templates select="child::*[1]" mode="head"/>
-      </xsl:element> 
+      </xsl:element>
       <xsl:for-each select="child::*">
         <xsl:element name="tr"> 
           <xsl:apply-templates select="."/>
-        </xsl:element> 
+        </xsl:element>
       </xsl:for-each>
-    </xsl:element> 
+    </xsl:element>
   </xsl:template>
 
   <xsl:template match="sqltblrow" mode="head">
@@ -130,7 +130,7 @@
 	      <xsl:element name="big">	   
                  <xsl:apply-templates/>
 	      </xsl:element>
-	   </xsl:element>	
+	   </xsl:element>
         </xsl:element>
      </xsl:element>
   </xsl:template>

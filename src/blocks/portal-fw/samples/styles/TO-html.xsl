@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0" 
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-<!-- $Id: TO-html.xsl,v 1.1 2003/03/09 00:05:31 pier Exp $ 
-
+<!-- $Id: TO-html.xsl,v 1.2 2003/05/06 14:12:55 vgritsenko Exp $ 
 
 -->
+
+<xsl:stylesheet version="1.0" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template match="page">
    <html>
@@ -96,7 +95,7 @@
     </body>
 </xsl:template>
 
-<xsl:template match="paragraph">
+  <xsl:template match="paragraph">
     <xsl:if test="@title">
       <font face="Arial, Helvetica, sans-serif" size="3">
 	  	<b>
@@ -111,7 +110,7 @@
    </p>
   </xsl:template>
 
-<xsl:template match="logoutparagraph">							
+  <xsl:template match="logoutparagraph">							
 	<p>
    	<font face="Arial, Helvetica, sans-serif" size="2">
  			<xsl:apply-templates/>	
@@ -119,7 +118,7 @@
    </p>
   </xsl:template>
 
-<xsl:template match="pageset">
+  <xsl:template match="pageset">
       <frameset border="0" frameborder="0" framespacing="0" noresize="">
         <xsl:if test="@rows">
           <xsl:attribute name="rows"><xsl:value-of select="@rows"/></xsl:attribute>
@@ -131,11 +130,11 @@
       </frameset>
   </xsl:template>
 
-<xsl:template match="pagepart">
-  <xsl:apply-templates/>
-</xsl:template>
+  <xsl:template match="pagepart">
+    <xsl:apply-templates/>
+  </xsl:template>
 
-<xsl:template match="part">  
+  <xsl:template match="part">  
     <frame frameborder="0" border="0" noresize="" marginHeight="0" marginwidth="0">
       <xsl:attribute name="src"><xsl:value-of select="normalize-space(url)"/></xsl:attribute>
       <xsl:attribute name="name"><xsl:value-of select="@title"/></xsl:attribute>
@@ -148,7 +147,7 @@
     </frame>  
   </xsl:template>
 
-<xsl:template match="picture">
+  <xsl:template match="picture">
     <xsl:if test="action">
       <a href="{action/@url}">
         <img border="0">
@@ -163,7 +162,7 @@
      </xsl:if>
   </xsl:template>
 
-<xsl:template match="picturedyn">
+  <xsl:template match="picturedyn">
     <xsl:if test="action">
       <a href="{action/@url}">
         <img border="0">
@@ -178,7 +177,7 @@
      </xsl:if>
   </xsl:template>
 
-<xsl:template match="link">
+  <xsl:template match="link">
     <a>
       <xsl:choose>
         <xsl:when test="starts-with(normalize-space(url), 'http')">
@@ -197,7 +196,7 @@
     </a>
   </xsl:template>
 
-<xsl:template match="field">
+  <xsl:template match="field">
 	<td>
 	<xsl:value-of select="@name"/>
 	</td>
@@ -209,9 +208,8 @@
 	</td>
   </xsl:template>
 
-<!-- Copy all and apply templates -->
-
-<xsl:template match="@*|node()">
+  <!-- Copy all and apply templates -->
+  <xsl:template match="@*|node()">
    <xsl:copy>
     <xsl:apply-templates select="@*|node()" />
    </xsl:copy>

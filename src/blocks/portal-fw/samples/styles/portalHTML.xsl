@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0" 
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-<!-- $Id: portalHTML.xsl,v 1.1 2003/03/09 00:05:32 pier Exp $ 
-
+<!-- $Id: portalHTML.xsl,v 1.2 2003/05/06 14:12:55 vgritsenko Exp $ 
 
  Description: Portal to HTML
 
 -->
+
+<xsl:stylesheet version="1.0" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!-- The main element -->
 
@@ -265,7 +264,7 @@
 </xsl:template>
 
 
-<xsl:template match="link">
+  <xsl:template match="link">
     <a>
         <xsl:if test="target">
             <xsl:attribute name="target"><xsl:value-of select="normalize-space(target)"/></xsl:attribute>
@@ -275,9 +274,8 @@
     </a>
   </xsl:template>
 
-<!-- Copy all and apply templates -->
-
-<xsl:template match="@*|node()">
+  <!-- Copy all and apply templates -->
+  <xsl:template match="@*|node()">
    <xsl:copy>
     <xsl:apply-templates select="@*|node()" />
    </xsl:copy>

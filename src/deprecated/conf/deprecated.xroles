@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.resolver.Resolver']">
 
     <!-- ====================== deprecated ======================== -->
