@@ -53,7 +53,7 @@ the esql taglib and will be stripped from the output.</p>
 		<source><![CDATA[
 <xsp:page
 	language="java"
-	xmlns:esql="http://apache.org/1999/SQL/v2"
+	xmlns:esql="http://apache.org/cocoon/SQL/v2"
 	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
 >
 

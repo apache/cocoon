@@ -263,7 +263,8 @@
  </faq>
 
  <faq id="faq-xsp64k">
-  <question>Why do I get an error about "code of a method longer than 65536 bytes"?</question>
+  <question>Why do I get an error about "code of a method longer than 65536 bytes" or
+   "illegal target of jump or branch"?</question>
   <answer>
    <p>This is due to a fundamental limitation in the Java specifications, which means
     that XSP pages (which turn XML into Java code) cannot be very large. We suggest that you
