@@ -153,6 +153,27 @@ public class ResourceReader extends AbstractReader
         } catch (SourceException e) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", e);
         }
+
+        setupHeaders();
+    }
+
+    /**
+     * Setup the response headers: Accept-Ranges, Expires.
+     */
+    protected void setupHeaders() {
+        // Tell the client whether we support byte range requests or not
+        if (byteRanges) {
+            response.setHeader("Accept-Ranges", "bytes");
+        } else {
+            response.setHeader("Accept-Ranges", "none");
+        }
+
+        if (expires > 0) {
+            response.setDateHeader("Expires", System.currentTimeMillis() + expires);
+        } else if (expires == 0) {
+            // See Bug #14048
+            response.addHeader("Vary", "Host");
+        }
     }
 
     /**
@@ -166,6 +187,13 @@ public class ResourceReader extends AbstractReader
             this.inputSource = null;
         }
         super.recycle();
+    }
+
+    /**
+     * @return True if byte ranges support is enabled and request has range header.
+     */
+    protected boolean hasRanges() {
+        return this.byteRanges && this.request.getHeader("Range") != null;
     }
 
     /**
@@ -185,7 +213,7 @@ public class ResourceReader extends AbstractReader
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        if (request.getHeader("Range") != null) {
+        if (hasRanges()) {
             // This is a byte range request so we can't use the cache, return null.
             return null;
         } else {
@@ -198,7 +226,7 @@ public class ResourceReader extends AbstractReader
      *         possible to detect
      */
     public long getLastModified() {
-        if(request.getHeader("Range") != null) {
+        if (hasRanges()) {
             // This is a byte range request so we can't use the cache, return null.
             return 0;
         }
@@ -220,13 +248,6 @@ public class ResourceReader extends AbstractReader
     throws IOException, ProcessingException {
         byte[] buffer = new byte[bufferSize];
         int length = -1;
-
-        // tell the client whether we support byte range requests or not
-        if(byteRanges) {
-            response.setHeader("Accept-Ranges", "bytes");
-        } else {
-            response.setHeader("Accept-Ranges", "none");
-        }
 
         String ranges = request.getHeader("Range");
 
@@ -265,7 +286,6 @@ public class ResourceReader extends AbstractReader
             }
 
             response.setHeader("Content-Range", entityRange + "/" + entityLength);
-
             if (response instanceof HttpResponse) {
                 // Response with status 206 (Partial content)
                 ((HttpResponse)response).setStatus(206);
@@ -300,18 +320,6 @@ public class ResourceReader extends AbstractReader
     public void generate()
     throws IOException, ProcessingException {
         try {
-            if (expires > 0) {
-                response.setDateHeader("Expires", System.currentTimeMillis() + expires);
-            } else if (expires == 0) {
-                // See Bug #14048
-                response.addHeader("Vary", "Host");
-            }
-
-            long lastModified = getLastModified();
-            if (lastModified > 0) {
-                response.setDateHeader("Last-Modified", lastModified);
-            }
-
             InputStream inputStream;
             try {
                 inputStream = inputSource.getInputStream();
@@ -319,9 +327,7 @@ public class ResourceReader extends AbstractReader
                 throw SourceUtil.handle("Error during resolving of the input stream", e);
             }
 
-            // Bugzilla Bug #25069, close inputStream in finally block.
-            // This will close inputStream even if processStream throws
-            // an exception
+            // Bugzilla Bug #25069: Close inputStream in finally block.
             try {
                 processStream(inputStream);
             } finally {

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,13 +57,13 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *         of the image that should be served.
  *     </dd>
  *     <dt>&lt;scale(Red|Green|Blue)&gt;</dt>
- *     <dd>This parameter is optional. When specified it will cause the 
- *         specified color component in the image to be multiplied by the 
+ *     <dd>This parameter is optional. When specified it will cause the
+ *         specified color component in the image to be multiplied by the
  *         specified floating point value.
  *     </dd>
  *     <dt>&lt;offset(Red|Green|Blue)&gt;</dt>
- *     <dd>This parameter is optional. When specified it will cause the 
- *         specified color component in the image to be incremented by the 
+ *     <dd>This parameter is optional. When specified it will cause the
+ *         specified color component in the image to be incremented by the
  *         specified floating point value.
  *     </dd>
  *     <dt>&lt;grayscale&gt;</dt>
@@ -86,24 +86,21 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @version CVS $Id$
  */
 final public class ImageReader extends ResourceReader {
+    private static final String GRAYSCALE_DEFAULT = "false";
+    private static final boolean ENLARGE_DEFAULT = true;
 
     private int width;
     private int height;
-
     private float[] scaleColor = new float[3];
     private float[] offsetColor = new float[3];
-    private RescaleOp colorFilter = null;
 
     private boolean enlarge;
-    private final static String ENLARGE_DEFAULT = "true";
+    private RescaleOp colorFilter;
+    private ColorConvertOp grayscaleFilter;
 
-    private ColorConvertOp grayscaleFilter = null;
-    private final static String GRAYSCALE_DEFAULT = "false";
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-            throws ProcessingException, SAXException, IOException {
-
-        super.setup(resolver, objectModel, src, par);
+    throws ProcessingException, SAXException, IOException {
 
         width = par.getParameterAsInteger("width", 0);
         height = par.getParameterAsInteger("height", 0);
@@ -116,7 +113,6 @@ final public class ImageReader extends ResourceReader {
         offsetColor[2] = par.getParameterAsFloat("offsetBlue", 0.0f);
 
         boolean filterColor = false;
-
         for (int i = 0; i < 3; ++i) {
             if (scaleColor[i] != -1.0f) {
                 filterColor = true;
@@ -129,22 +125,36 @@ final public class ImageReader extends ResourceReader {
         }
 
         if (filterColor) {
-            colorFilter = new RescaleOp(scaleColor, offsetColor, null);
-        } else {
-            colorFilter = null;
+            this.colorFilter = new RescaleOp(scaleColor, offsetColor, null);
         }
 
         String grayscalePar = par.getParameter("grayscale", GRAYSCALE_DEFAULT);
-        if (BooleanUtils.toBoolean(grayscalePar)){            
-            grayscaleFilter = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-        } else {
-            grayscaleFilter = null;
-        }   
-        String enlargePar = par.getParameter("allow-enlarging", ENLARGE_DEFAULT);
-        enlarge = BooleanUtils.toBoolean(enlargePar);
+        if (BooleanUtils.toBoolean(grayscalePar)) {
+            this.grayscaleFilter = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+        }
+
+        this.enlarge = par.getParameterAsBoolean("allow-enlarging", ENLARGE_DEFAULT);
+
+        super.setup(resolver, objectModel, src, par);
     }
 
-    /** 
+    protected void setupHeaders() {
+        // Reset byte ranges support for dynamic response
+        if (byteRanges && hasTransform()) {
+            byteRanges = false;
+        }
+
+        super.setupHeaders();
+    }
+
+    /**
+     * @return True if image transform is specified
+     */
+    private boolean hasTransform() {
+        return width > 0 || height > 0 || null != colorFilter || null != grayscaleFilter;
+    }
+
+    /**
      * Returns the affine transform that implements the scaling.
      * The behavior is the following: if both the new width and height values
      * are positive, the image is rescaled according to these new values and
@@ -158,7 +168,7 @@ final public class ImageReader extends ResourceReader {
     private AffineTransform getTransform(double ow, double oh, double nw, double nh) {
         double wm = 1.0d;
         double hm = 1.0d;
-        
+
         if (nw > 0) {
             wm = nw / ow;
             if (nh > 0) {
@@ -187,15 +197,12 @@ final public class ImageReader extends ResourceReader {
     }
 
     protected void processStream(InputStream inputStream) throws IOException, ProcessingException {
-        if (width > 0 || height > 0 || null != colorFilter || null != grayscaleFilter) {
+        if (hasTransform()) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("image " + ((width == 0) ? "?" : Integer.toString(width))
                                   + "x"    + ((height == 0) ? "?" : Integer.toString(height))
                                   + " expires: " + expires);
             }
-
-            // since we create the image on the fly
-            response.setHeader("Accept-Ranges", "none");
 
             /*
              * NOTE (SM):
@@ -246,15 +253,9 @@ final public class ImageReader extends ResourceReader {
                 }
 
                 if (!handleJVMBug()) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug( "No need to handle JVM bug" );
-                    }
                     JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
                     encoder.encode(currentImage);
                 } else {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug( "Need to handle JVM bug" );
-                    }
                     ByteArrayOutputStream bstream = new ByteArrayOutputStream();
                     JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bstream);
                     encoder.encode(currentImage);
@@ -263,7 +264,8 @@ final public class ImageReader extends ResourceReader {
 
                 out.flush();
             } catch (ImageFormatException e) {
-                throw new ProcessingException("Error reading the image. Note that only JPEG images are currently supported.");
+                throw new ProcessingException("Error reading the image. " +
+                                              "Note that only JPEG images are currently supported.");
             } finally {
               // Bugzilla Bug 25069, close inputStream in finally block
               // this will close inputStream even if processStream throws
@@ -287,8 +289,8 @@ final public class ImageReader extends ResourceReader {
      * parameters
     */
     public Serializable getKey() {
-        return this.inputSource.getURI() 
-                + ':' + this.width 
+        return this.inputSource.getURI()
+                + ':' + this.width
                 + ':' + this.height
                 + ":" + this.scaleColor[0]
                 + ":" + this.scaleColor[1]
@@ -302,7 +304,7 @@ final public class ImageReader extends ResourceReader {
 
     /**
      * Determine if workaround for Bug Id 4502892 is neccessary.
-     * This method assumes that Bug is present if 
+     * This method assumes that Bug is present if
      * java.version is undeterminable, and for java.version
      * 1.1, 1.2, 1.3, all other java.version do not need the Bug handling
      *
@@ -327,8 +329,8 @@ final public class ImageReader extends ResourceReader {
             handleJVMBug = true;
         }
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug( "Running java.version " + String.valueOf(java_version) + 
-              " need to handle JVM bug " + String.valueOf(handleJVMBug) );
+            getLogger().debug("Running java " + String.valueOf(java_version) +
+                              " need to handle JVM bug " + String.valueOf(handleJVMBug));
         }
 
         return handleJVMBug;
