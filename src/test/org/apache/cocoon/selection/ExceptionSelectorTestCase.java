@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 
 public class ExceptionSelectorTestCase extends SitemapComponentTestCase {
 
-    private final String EXCEPTION_SELECTOR = "exception";    
+    private static final String EXCEPTION_SELECTOR = "exception";    
 
     /**
      * Run this test suite from commandline
