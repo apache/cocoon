@@ -95,7 +95,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.18 2004/01/19 04:37:37 coliver Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.19 2004/01/21 12:39:21 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -110,8 +110,6 @@ public class TreeProcessor
 
     public static final String REDIRECTOR_ATTR = "sitemap:redirector";
     public static final String COCOON_REDIRECT_ATTR = "sitemap:cocoon-redirect";
-
-    private static final String OBJECT_SOURCE_RESOLVER = "sitemap:sourceresolver";
 
     private static final String XCONF_URL =
         "resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml";
@@ -360,14 +358,14 @@ public class TreeProcessor
 
         Map objectModel = environment.getObjectModel();
 
-        Object oldResolver = objectModel.get(OBJECT_SOURCE_RESOLVER);
+        Object oldResolver = objectModel.get(ProcessingNode.OBJECT_SOURCE_RESOLVER);
         Object oldRedirector = environment.getAttribute(REDIRECTOR_ATTR);
 
         // Build a redirector
         TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
         setupLogger(redirector);
 
-        objectModel.put(OBJECT_SOURCE_RESOLVER, environment);
+        objectModel.put(ProcessingNode.OBJECT_SOURCE_RESOLVER, environment);
         environment.setAttribute(REDIRECTOR_ATTR, redirector);
         try {
             boolean success = this.rootNode.invoke(environment, context);
