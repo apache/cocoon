@@ -104,10 +104,10 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.3 2003/10/15 18:10:46 cziegeler Exp $
  */
 public class ServerPagesAction
-        extends ConfigurableComposerAction
+        extends ConfigurableServiceableAction
         implements Disposable, ThreadSafe {
 
     public static final String REDIRECTOR_OBJECT = "xsp-action:redirector";
@@ -165,7 +165,7 @@ public class ServerPagesAction
 
         try {
             generator.enableLogging(getLogger());
-            generator.compose(this.manager);
+            generator.service(this.manager);
             generator.setup(resolver, objectModel, source, parameters);
 
             // Setup generator output
