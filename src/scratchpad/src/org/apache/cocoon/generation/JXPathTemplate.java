@@ -274,7 +274,8 @@ public class JXPathTemplate extends AbstractGenerator {
 
     class TextEvent extends Event {
         TextEvent(Locator location, 
-                  char[] chars, int start, int length) {
+                  char[] chars, int start, int length) 
+            throws SAXException {
             super(location);
             StringBuffer buf = new StringBuffer();
             CharArrayReader in = new CharArrayReader(chars, start, length);
@@ -286,8 +287,15 @@ public class JXPathTemplate extends AbstractGenerator {
                     if (inExpr) {
                         if (c == '}') {
                             String str = buf.toString();
-                            CompiledExpression compiledExpression = 
-                                JXPathContext.compile(str);
+                            CompiledExpression compiledExpression;
+                            try {
+                                compiledExpression = 
+                                    JXPathContext.compile(str);
+                            } catch (JXPathException exc) {
+                                throw new SAXParseException(exc.getMessage(),
+                                                            location,
+                                                            exc);
+                            }
                             substitutions.add(compiledExpression);
                             buf.setLength(0);
                             inExpr = false;
@@ -352,7 +360,8 @@ public class JXPathTemplate extends AbstractGenerator {
 
     class Characters extends TextEvent {
         Characters(Locator location, 
-                  char[] chars, int start, int length) {
+                  char[] chars, int start, int length) 
+            throws SAXException {
             super(location, chars, start, length);
         }
 
@@ -408,7 +417,8 @@ public class JXPathTemplate extends AbstractGenerator {
     
     class IgnorableWhitespace extends TextEvent {
         IgnorableWhitespace(Locator location, 
-                            char[] chars, int start, int length) {
+                            char[] chars, int start, int length) 
+            throws SAXException {
             super(location, chars, start, length);
         }
     }
@@ -488,7 +498,8 @@ public class JXPathTemplate extends AbstractGenerator {
     class StartElement extends Event {
         StartElement(Locator location, String namespaceURI,
                      String localName, String raw,
-                     Attributes attrs) throws SAXException {
+                     Attributes attrs) 
+            throws SAXException {
             super(location);
             this.namespaceURI = namespaceURI;
             this.localName = localName;
@@ -512,8 +523,16 @@ public class JXPathTemplate extends AbstractGenerator {
                         if (inExpr) {
                             if (c == '}') {
                                 String str = buf.toString();
-                                CompiledExpression compiledExpression = 
-                                    JXPathContext.compile(str);
+                                CompiledExpression compiledExpression;
+                                try {
+                                    compiledExpression =
+                                        JXPathContext.compile(str);
+                                } catch (JXPathException exc) {
+                                    throw new SAXParseException(exc.getMessage(),
+                                                                location,
+                                                                exc);
+                                                                
+                                } 
                                 substEvents.add(new Expression(compiledExpression));
                                 buf.setLength(0);
                                 inExpr = false;
@@ -688,7 +707,8 @@ public class JXPathTemplate extends AbstractGenerator {
 
     class Comment extends TextEvent {
         Comment(Locator location, char[] chars,
-                int start, int length) {
+                int start, int length)
+            throws SAXException {
             super(location, chars, start, length);
         }
     }
@@ -776,7 +796,8 @@ public class JXPathTemplate extends AbstractGenerator {
             lastEvent = ev;
         }
 
-        public void characters(char[] ch, int start, int length) {
+        public void characters(char[] ch, int start, int length) 
+            throws SAXException {
             Characters chars = new Characters(locator,
                                               ch, start, length);
             addEvent(chars);
@@ -853,13 +874,13 @@ public class JXPathTemplate extends AbstractGenerator {
             addEvent(endPrefixMapping);
         }
 
-        public void ignorableWhitespace(char[] ch, int start, int length) {
-            Event chars = new IgnorableWhitespace(locator, ch, start, length);
-            addEvent(chars);
+        public void ignorableWhitespace(char[] ch, int start, int length) 
+            throws SAXException {
+            Event ev = new IgnorableWhitespace(locator, ch, start, length);
+            addEvent(ev);
         }
 
-        public void processingInstruction(String target,
-                                          String data) {
+        public void processingInstruction(String target, String data) {
             Event pi = new ProcessingInstruction(locator, target, data);
             addEvent(pi);
         }
@@ -893,8 +914,13 @@ public class JXPathTemplate extends AbstractGenerator {
                             new SAXParseException("for-each: \"select\" is required", 
                                                   locator, null);
                     }
-                    CompiledExpression expr = 
-                        JXPathContext.compile(getExpr(select));
+                    CompiledExpression expr;
+                    try {
+                        expr = JXPathContext.compile(getExpr(select));
+                    } catch (JXPathException exc) {
+                        throw new SAXParseException(exc.getMessage(),
+                                                    locator, exc);
+                    }
                     StartForEach startForEach = 
                         new StartForEach(locator, expr);
                     newEvent = startForEach;
@@ -912,7 +938,7 @@ public class JXPathTemplate extends AbstractGenerator {
                     CompiledExpression expr;
                     try {
                         expr = JXPathContext.compile(getExpr(test));
-                    } catch (Exception e) {
+                    } catch (JXPathException e) {
                         throw new SAXParseException("choose: \"test\": " + e.getMessage(), locator, null);
                     }
                     StartWhen startWhen = new StartWhen(locator, expr);
@@ -945,7 +971,7 @@ public class JXPathTemplate extends AbstractGenerator {
                     try {
                         expr = 
                             JXPathContext.compile(getExpr(test));
-                    } catch (Exception e) {
+                    } catch (JXPathException e) {
                         throw new SAXParseException("if: \"test\": " + e.getMessage(), locator, null);
                     }
                     StartIf startIf = 
@@ -968,7 +994,8 @@ public class JXPathTemplate extends AbstractGenerator {
             addEvent(new StartPrefixMapping(locator, prefix, uri));
         }
 
-        public void comment(char ch[], int start, int length) {
+        public void comment(char ch[], int start, int length) 
+            throws SAXException {
             addEvent(new Comment(locator, ch, start, length));
         }
 
