@@ -53,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.44 $ $Date: 2001-01-22 21:56:47 $
+ * @version CVS $Revision: 1.1.4.45 $ $Date: 2001-01-23 16:44:51 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -340,6 +340,7 @@ public class CocoonServlet extends HttpServlet {
             }
 
             HttpEnvironment env = new HttpEnvironment(uri, req, res, this.context);
+			env.setLogger(this.log);
 
             if (!this.cocoon.process(env)) {
 
