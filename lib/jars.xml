@@ -571,7 +571,7 @@
     <title>Log4j</title>
     <description>Logging for java</description>
     <used-by>Core and DELI (deli block)</used-by>
-    <lib>optional/log4j-1.2.8.jar</lib>
+    <lib>core/log4j-1.2.8.jar</lib>
     <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
 
@@ -591,7 +591,7 @@
     <title>Servlet API</title>
     <description>Servlet API Version 2.2</description>
     <used-by>Cocoon</used-by>
-    <lib>optional/servlet_2_2.jar</lib>
+    <lib>core/servlet_2_2.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
   <file>
