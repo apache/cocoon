@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.29 2004/03/06 02:25:40 antonio Exp $
+    | CVS $Id: samples.xml,v 1.30 2004/03/10 12:58:13 stephan Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -84,9 +84,6 @@
       An example page producing exceptions and handling them. Demonstrates the 
       handler hierarchy and the exception selectors.
     </sample>
-    <sample href="xsp/" name="Extensible Server Pages">
-      Extensible Server Pages, or XSP.
-    </sample>   
     <sample href="components" name="Components">
       Samples of different components included with the core
     </sample> 

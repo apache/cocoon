@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.39 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.40 2004/03/10 12:58:09 stephan Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -337,17 +337,13 @@ public class CocoonBean extends CocoonWrapper {
             readChecksumFile();
         }
         
-        if (crawler.getRemainingCount()==0) {
-            super.precompile();
-        } else {
+        if (crawler.getRemainingCount()>=0) {
             Iterator iterator = crawler.iterator();
             while (iterator.hasNext()) {
                 Target target = (Target) iterator.next();
-                if (precompileOnly) {
-                    processXSP(target.getSourceURI());
-                } else {
+                if (!precompileOnly) {
                     processTarget(crawler, target);
-                }
+								}
             }
         }
         

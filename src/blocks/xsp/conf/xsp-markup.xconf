@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="markup-languages">
+  <!--+
+      | Logicsheets
+      |
+      | This section defines the XSP logicsheets. A logicsheet is a special
+      | XSLT stylesheet used to translate user-defined dynamic markup into
+      | equivalent XSP markup that embeds directives for a given markup
+      | language.
+      |
+      | Logicsheets are the XSP equivalent of taglibs. For info about
+      | the tags included in the default taglibs, please, refer to the
+      | documentation.
+      +-->
+  <markup-languages>
+    <xsp-language logger="core.markup.xsp" name="xsp">
+      <parameter name="prefix" value="xsp"/>
+      <parameter name="uri" value="http://apache.org/xsp"/>
+
+      <!--+
+          | Properties for the java language
+          +-->
+      <target-language name="java">
+        <!-- Defines the XSP Core logicsheet for the Java language -->
+        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
+
+        <!-- The Request logicsheet: access request parameters -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-request"/>
+          <parameter name="uri" value="http://apache.org/xsp/request/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The Response logicsheet: access response parameters -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-response"/>
+          <parameter name="uri" value="http://apache.org/xsp/response/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The Session logicsheet: manages and access the session -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-session"/>
+          <parameter name="uri" value="http://apache.org/xsp/session/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The Cookie logicsheet: manages and access cookies  -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-cookie"/>
+          <parameter name="uri" value="http://apache.org/xsp/cookie/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/cookie.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The Log logicsheet: access the cocoon logs from an xsp page  -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="log"/>
+          <parameter name="uri" value="http://apache.org/xsp/log/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The Utility logicsheet -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="util"/>
+          <parameter name="uri" value="http://apache.org/xsp/util/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/util.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The xsp-formval taglib serves as interface to retrieve
+             validation results from a request attribute -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-formval"/>
+          <parameter name="uri" value="http://apache.org/xsp/form-validator/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/form-validator.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The sel taglib allows to put multiple pages / view into
+             one xsp. While in general it is good style to put
+             different views into different xsp because they're more
+             easily maintained, this is a useful feature with
+             e.g. with long forms that are broken into parts -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="sel"/>
+          <parameter name="uri" value="http://apache.org/xsp/sel/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/sel.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The Action logicsheet -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="action"/>
+          <parameter name="uri" value="http://apache.org/cocoon/action/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/action.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The capture taglib is for capturing parts of the XSP-generated
+             XML as XML fragments or DOM nodes -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="capture"/>
+          <parameter name="uri" value="http://apache.org/cocoon/capture/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/capture.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The XScript logicsheet -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xscript"/>
+          <parameter name="uri" value="http://apache.org/xsp/xscript/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xscript.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The SOAP logicsheet -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="soap"/>
+          <parameter name="uri" value="http://apache.org/xsp/soap/3.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/soap.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The JPath logicsheet -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="jpath"/>
+          <parameter name="uri" value="http://apache.org/xsp/jpath/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/jpath.xsl"/>
+        </builtin-logicsheet>
+
+        <!-- The input logicsheet allows easy access to InputModules -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="input"/>
+          <parameter name="uri" value="http://apache.org/cocoon/xsp/input/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/input.xsl"/>
+        </builtin-logicsheet>
+      </target-language>
+
+      <!--+
+          | Properties for the javascript language
+          +-->
+      <target-language name="js">
+        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/xsp.xsl"/>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-request"/>
+          <parameter name="uri" value="http://apache.org/xsp/request/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/request.xsl"/>
+        </builtin-logicsheet>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-response"/>
+          <parameter name="uri" value="http://apache.org/xsp/response/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/response.xsl"/>
+        </builtin-logicsheet>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-session"/>
+          <parameter name="uri" value="http://apache.org/xsp/session/2.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/javascript/session.xsl"/>
+        </builtin-logicsheet>
+      </target-language>
+    </xsp-language>
+  </markup-languages>
+</xconf>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id: request.xsp,v 1.1 2004/03/10 12:58:09 stephan Exp $ -->
+
+<xsp:page language="javascript"
+          xmlns:xsp="http://apache.org/xsp"  
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
+<page>
+
+<xsp-request:set-attribute name="attr">Test Attribute Value</xsp-request:set-attribute>
+
+<h1>xsp-request logicsheet output</h1>
+<table border="1">
+<tr>
+  <th>Logicsheet tag</th><th>Output</th><th>Java method</th><th>Output</th></tr>
+<tr>
+  <td>get-uri</td><td><xsp-request:get-uri/></td>
+  <td>getRequestURI</td><td><xsp:expr>request.getRequestURI()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-sitemap-uri</td><td><xsp-request:get-sitemap-uri/></td>
+    </tr>
+<tr>
+  <td>get-scheme</td><td><xsp-request:get-scheme/></td>
+  <td>getScheme</td><td><xsp:expr>request.getScheme()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-character-encoding</td><td><xsp-request:get-character-encoding/></td>
+  <td>getCharacterEncoding</td><td><xsp:expr>request.getCharacterEncoding()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-content-length</td><td><xsp-request:get-content-length/></td>
+  <td>getContentLength</td><td><xsp:expr>request.getContentLength()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-content-type</td><td><xsp-request:get-content-type/></td>
+  <td>getContentType</td><td><xsp:expr>request.getContentType()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-locale</td><td><xsp-request:get-locale/></td>
+  <td>getLocale</td><td><xsp:expr>request.getLocale()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-locales</td><td><xsp:expr>String(<xsp-request:get-locales as="array"/>)</xsp:expr></td>
+  <td>getLocales</td><td><xsp:expr>String(request.getLocales())</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-parameter</td><td><xsp-request:get-parameter name="param"/></td>
+  <td>getParameter</td><td><xsp:expr>request.getParameter("param")</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-parameter with default </td><td><xsp-request:get-parameter name="param" default="default"/></td>
+    </tr>
+<tr>
+  <td>get-parameter-values (as array)</td><td><xsp:expr>String(<xsp-request:get-parameter-values name="param" as="array"/>)</xsp:expr></td>
+  <td>getParameterValues</td><td><xsp:expr>String(request.getParameterValues("param"))</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-parameter-names (as array)</td><td><xsp:expr>String(<xsp-request:get-parameter-names as="array"/>)</xsp:expr></td>
+  <td>getParameterNames</td><td><xsp:expr>String(request.getParameterNames())</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-header accept</td><td><xsp-request:get-header name="accept"/></td>
+  <td>getHeader</td><td><xsp:expr>request.getHeader("accept")</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-header user-agent</td><td><xsp-request:get-header name="user-agent"/></td>
+  <td>getHeader</td><td><xsp:expr>request.getHeader("user-agent")</xsp:expr></td>
+    </tr>
+<!--
+get-int-header
+get-date-header
+-->
+<tr>
+  <td>get-headers accept-language (as array)</td><td><xsp:expr>String(<xsp-request:get-headers name="accept-language" as="array"/>)</xsp:expr></td>
+  <td>getHeaders</td><td><xsp:expr>request.getHeaders("accept-language")</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-header-names (as array)</td><td><xsp:expr>String(<xsp-request:get-header-names as="array"/>)</xsp:expr></td>
+  <td>getHeaderNames</td><td><xsp:expr>String(request.getHeaderNames())</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-attribute attr</td><td><xsp-request:get-attribute name="attr"/></td>
+  <td>getAttribute</td><td><xsp:expr>request.getAttribute("attr")</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-attribute-names (as array)</td><td><xsp:expr>String(<xsp-request:get-attribute-names as="array"/>)</xsp:expr></td>
+  <td>getAttributeNames</td><td><xsp:expr>String(request.getAttributeNames())</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-requested-url</td><td><xsp-request:get-requested-url/></td>
+    </tr>
+<tr>
+  <td>get-remote-address</td><td><xsp-request:get-remote-address/></td>
+  <td>getRemoteAddr</td><td><xsp:expr>request.getRemoteAddr()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-remote-user</td><td><xsp-request:get-remote-user/></td>
+  <td>getRemoteUser</td><td><xsp:expr>request.getRemoteUser()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-context-path</td><td><xsp-request:get-context-path/></td>
+  <td>getContextPath</td><td><xsp:expr>request.getContextPath()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-path-info</td><td><xsp-request:get-path-info/></td>
+  <td>getPathInfo</td><td><xsp:expr>request.getPathInfo()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-server-name</td><td><xsp-request:get-server-name/></td>
+  <td>getServerName</td><td><xsp:expr>request.getServerName()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-server-port</td><td><xsp-request:get-server-port/></td>
+  <td>getServerPort</td><td><xsp:expr>request.getServerPort()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-method</td><td><xsp-request:get-method/></td>
+  <td>getMethod</td><td><xsp:expr>request.getMethod()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-query-string</td><td><xsp-request:get-query-string/></td>
+  <td>getQueryString</td><td><xsp:expr>request.getQueryString()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-protocol</td><td><xsp-request:get-protocol/></td>
+  <td>getProtocol</td><td><xsp:expr>request.getProtocol()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-remote-host</td><td><xsp-request:get-remote-host/></td>
+  <td>getRemoteHost</td><td><xsp:expr>request.getRemoteHost()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>is-secure</td><td><xsp-request:is-secure/></td>
+  <td>isSecure</td><td><xsp:expr>request.isSecure()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-servlet-path</td><td><xsp-request:get-servlet-path/></td>
+  <td>getServletPath</td><td><xsp:expr>request.getServletPath()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-user-principal</td><td><xsp-request:get-user-principal/></td>
+  <td>getUserPrincipal</td><td><xsp:expr>request.getUserPrincipal()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-auth-type</td><td><xsp-request:get-auth-type/></td>
+  <td>getAuthType</td><td><xsp:expr>request.getAuthType()</xsp:expr></td>
+    </tr>
+<tr>
+  <td>is-user-in-role</td><td><xsp-request:is-user-in-role role="admin"/></td>
+  <td>isUserInRole</td><td><xsp:expr>request.isUserInRole("admin")</xsp:expr></td>
+    </tr>
+<tr>
+  <td>get-requested-session-id</td><td><xsp-request:get-requested-session-id/></td>
+  <td>getRequestedSessionId</td><td><xsp:expr>request.getRequestedSessionId()</xsp:expr></td>
+    </tr>
+</table>
+
+	<h1>xsp-request logicsheet output (as xml)</h1>
+<textarea cols="100" rows="30">
+get-uri                     <xsp-request:get-uri as="xml"/>
+get-sitemap-uri             <xsp-request:get-sitemap-uri as="xml"/>
+get-scheme                  <xsp-request:get-scheme as="xml"/>
+get-character-encoding      <xsp-request:get-character-encoding as="xml"/>
+get-content-length          <xsp-request:get-content-length as="xml"/>
+get-content-type            <xsp-request:get-content-type as="xml"/>
+get-locale                  <xsp-request:get-locale as="xml"/>
+get-locales                 <xsp-request:get-locales as="xml"/>
+get-parameter               <xsp-request:get-parameter name="param" as="xml"/>
+get-parameter with default  <xsp-request:get-parameter name="param" default="default" as="xml"/>
+get-parameter-values        <xsp-request:get-parameter-values name="param" as="xml"/>
+get-parameter-names         <xsp-request:get-parameter-names as="xml"/>
+get-header accept           <xsp-request:get-header name="accept" as="xml"/>
+get-header user-agent       <xsp-request:get-header name="user-agent" as="xml"/>
+get-header-names            <xsp-request:get-header-names as="xml"/>
+get-int-header - no sample
+get-date-header - no sample
+get-headers - no sample
+get-headers                 <xsp-request:get-headers name="accept-language" as="xml"/>
+get-attribute attr          <xsp-request:get-attribute name="attr" as="xml"/>
+get-attribute-names         <xsp-request:get-attribute-names as="xml"/>
+get-requested-url           <xsp-request:get-requested-url as="xml"/>
+get-remote-address          <xsp-request:get-remote-address as="xml"/>
+get-remote-user             <xsp-request:get-remote-user as="xml"/>
+get-context-path            <xsp-request:get-context-path as="xml"/>
+get-path-info               <xsp-request:get-path-info as="xml"/>
+get-server-name             <xsp-request:get-server-name as="xml"/>
+get-server-port             <xsp-request:get-server-port as="xml"/>
+get-method                  <xsp-request:get-method as="xml"/>
+get-query-string            <xsp-request:get-query-string as="xml"/>
+get-protocol                <xsp-request:get-protocol as="xml"/>
+get-remote-host             <xsp-request:get-remote-host as="xml"/>
+is-secure                   <xsp-request:is-secure as="xml"/>
+get-servlet-path            <xsp-request:get-servlet-path as="xml"/>
+get-user-principal          <xsp-request:get-user-principal as="xml"/>
+get-auth-type               <xsp-request:get-auth-type as="xml"/>
+is-user-in-role             <xsp-request:is-user-in-role role="admin" as="xml"/>
+get-requested-session-id    <xsp-request:get-requested-session-id as="xml"/>
+</textarea>
+
+<xsp-request:remove-attribute name="attr"/>
+
+<h2>Links</h2>
+<a href="request-test?param=value&amp;a=b&amp;x=y">Get</a>
+<br/>
+<form method="post" action="request-test">
+<input name="param"/>
+<input type="submit" value="Post"/>
+</form>
+
+
+</page>
+</xsp:page>

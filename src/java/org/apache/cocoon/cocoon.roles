@@ -95,29 +95,6 @@
         shorthand="sitemap"
         default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
 
-  <role name="org.apache.cocoon.components.language.generator.ServerPagesSelector"
-       shorthand="server-pages"
-       default-class="org.apache.cocoon.components.language.generator.GeneratorSelector"/>
-
-  <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
-        shorthand="markup-languages"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
-    <hint shorthand="sitemap-language" class="org.apache.cocoon.components.language.markup.CocoonMarkupLanguage"/>
-    <hint shorthand="xsp-language" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage"/>
-  </role>
-
-  <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
-        shorthand="programming-languages"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
-    <hint shorthand="java-language" class="org.apache.cocoon.components.language.programming.java.JavaLanguage"/>
-    <hint shorthand="js-language" class="org.apache.cocoon.components.language.programming.javascript.JavascriptLanguage"/>
-    <hint shorthand="python-language" class="org.apache.cocoon.components.language.programming.python.PythonLanguage"/>
-  </role>
-
-  <role name="org.apache.cocoon.components.language.generator.ProgramGenerator"
-        shorthand="program-generator"
-        default-class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl"/>
-
   <role name="org.apache.cocoon.components.classloader.ClassLoaderManager"
         shorthand="classloader"
         default-class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
@@ -150,10 +127,6 @@
   <role name="org.apache.cocoon.components.sax.XMLDeserializer"
         shorthand="xml-deserializer"
         default-class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"/>
-
-  <role name="org.apache.cocoon.components.xscript.XScriptManager"
-        shorthand="xscript"
-        default-class="org.apache.cocoon.components.xscript.XScriptManagerImpl"/>
 
   <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
         shorthand="notifying-builder"
