@@ -23,7 +23,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>DAV resource</web-resource-name>
-            <url-pattern>/webdav/*</url-pattern>
+            <url-pattern>/*</url-pattern>
             <http-method>COPY</http-method>
             <http-method>DELETE</http-method>
             <http-method>GET</http-method>
@@ -64,6 +64,15 @@
         <auth-method>BASIC</auth-method>
         <realm-name>Slide DAV Server</realm-name>
     </login-config>
+    <security-role>
+        <role-name>root</role-name>
+    </security-role>
+    <security-role>
+        <role-name>guest</role-name>
+    </security-role>
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
     -->
     
 </xweb>

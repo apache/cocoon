@@ -20,7 +20,7 @@
 
     <!-- Definition and configuration of Slide's WebDAV servlet. -->
     <servlet>
-        <servlet-name>Slide</servlet-name>
+        <servlet-name>webdav</servlet-name>
         <display-name>Slide DAV Server</display-name>
         <servlet-class>org.apache.slide.webdav.WebdavServlet</servlet-class>
         <init-param>
@@ -161,9 +161,22 @@
             </description>
         </init-param>
         <load-on-startup>2</load-on-startup>
+        <!-- Uncomment this to get authentication -->
+        <!--security-role-ref>
+            <role-name>root</role-name>
+            <role-link>root</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>guest</role-name>
+            <role-link>guest</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>user</role-name>
+            <role-link>user</role-link>
+        </security-role-ref!-->
     </servlet>
     <servlet-mapping>
-        <servlet-name>Slide</servlet-name>
+        <servlet-name>webdav</servlet-name>
         <url-pattern>/webdav/*</url-pattern>
     </servlet-mapping>
 
