@@ -109,10 +109,12 @@ import java.util.List;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
  * @see InterpreterSelector
- * @version CVS $Id: Interpreter.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ * @version CVS $Id: Interpreter.java,v 1.3 2003/05/07 04:36:33 coliver Exp $
  */
 public interface Interpreter
 {
+
+
   public static class Argument
   {
     public String name;
