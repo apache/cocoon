@@ -170,7 +170,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.9 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.10 2004/03/06 05:09:57 joerg Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -295,7 +295,9 @@ public class SendMailTransformer extends AbstractSAXTransformer
         }
 
         if (name.equals(ELEMENT_SENDMAIL) == true) {
-            // No need to do anything here
+            // Clean from possible previous usage
+            this.toAddresses.clear();
+            this.attachments.clear();
         } else if (name.equals(ELEMENT_SMTPHOST) == true) {
             this.startTextRecording();
             this.mode = MODE_SMTPHOST;
