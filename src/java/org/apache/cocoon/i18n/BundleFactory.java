@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,8 @@ package org.apache.cocoon.i18n;
 
 import java.util.Locale;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 
 /**
  * Bundle Factory implementations are responsible for loading and providing
@@ -26,9 +26,9 @@ import org.apache.avalon.framework.component.ComponentSelector;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: BundleFactory.java,v 1.8 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface BundleFactory extends ComponentSelector {
+public interface BundleFactory extends Component {
 
     /**
      * Bundle factory ROLE name
@@ -100,4 +100,6 @@ public interface BundleFactory extends ComponentSelector {
      * @exception     ComponentException if a bundle is not found
      */
     Bundle select(String bundleName, Locale locale) throws ComponentException;
+
+    void release(Bundle bundle);
 }
