@@ -64,32 +64,36 @@ public final class ManifestToolTask extends Task {
     throws IOException, BuildException {
 
         System.out.println("Writing: " + manifest);
-        FileWriter w = new FileWriter(this.getProject().resolveFile(manifest));
-        w.write("Manifest-Version: 1.0\n");
-
-        if (directoryFile.exists() && directoryFile.isDirectory() ) {
-            w.write("Cocoon-Libs: ");
-
-            final File[] files = directoryFile.listFiles();
-            for(int i = 0; i < files.length; i++) {
-                if (files[i].getName().endsWith(".jar")) {
-                    w.write(files[i].getName());
-                    w.write(" ");
+        FileWriter w = null;
+        try {
+            w = new FileWriter(this.getProject().resolveFile(manifest));
+            w.write("Manifest-Version: 1.0\n");
+    
+            if (directoryFile.exists() && directoryFile.isDirectory() ) {
+                w.write("Cocoon-Libs: ");
+    
+                final File[] files = directoryFile.listFiles();
+                for(int i = 0; i < files.length; i++) {
+                    if (files[i].getName().endsWith(".jar")) {
+                        w.write(files[i].getName());
+                        w.write(" ");
+                    }
+                }
+                w.write("\n");
+    
+                for(int i = 0; i < files.length; i++) {
+                    if (files[i].getName().endsWith(".jar")) {
+                        w.write("Cocoon-Lib-");
+                        String s = files[i].getName().replace('.', '_');
+                        w.write(s);
+                        w.write(": ");
+                        w.write(String.valueOf(files[i].lastModified()));
+                        w.write("\n");
+                    }
                 }
             }
-            w.write("\n");
-
-            for(int i = 0; i < files.length; i++) {
-                if (files[i].getName().endsWith(".jar")) {
-                    w.write("Cocoon-Lib-");
-                    String s = files[i].getName().replace('.', '_');
-                    w.write(s);
-                    w.write(": ");
-                    w.write(String.valueOf(files[i].lastModified()));
-                    w.write("\n");
-                }
-            }
+        }finally {
+            w.close();
         }
-        w.close();
     }
 }
