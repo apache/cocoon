@@ -69,7 +69,7 @@ import java.io.IOException;
  * Allows Servlets and JSPs to be used as a generator.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPGenerator.java,v 1.1 2004/01/16 13:50:37 unico Exp $
+ * @version CVS $Id: JSPGenerator.java,v 1.2 2004/01/30 01:01:23 joerg Exp $
  */
 public class JSPGenerator extends ServiceableGenerator {
 
@@ -126,10 +126,9 @@ public class JSPGenerator extends ServiceableGenerator {
             parser = (SAXParser) super.manager.lookup(SAXParser.ROLE);
             parser.parse(input, super.xmlConsumer);
         } catch (ServletException e) {
-            throw new ProcessingException("ServletException while executing JSPEngine", e.getRootCause());
+            throw new ProcessingException("ServletException while executing JSPEngine", e);
         } catch (SAXException e) {
-            // FIXME: e.getException can be null
-            throw new ProcessingException("SAXException while parsing JSPEngine output", e.getException());
+            throw new ProcessingException("SAXException while parsing JSPEngine output", e);
         } catch (IOException e) {
             throw new ProcessingException("IOException JSPGenerator.generate()", e);
         } catch (ProcessingException e) {
