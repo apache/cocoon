@@ -65,7 +65,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.12 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.13 2004/02/06 16:06:32 tim Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -143,7 +143,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     }
 
     /**
-     * Performs the actual load binding regardless of the flag {@see #loadEnabled}.
+     * Performs the actual load binding regardless of the configured value of the "direction" attribute.
      * Abstract method that subclasses need to implement for specific activity.
      */
     public abstract void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException;
@@ -151,8 +151,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
      * then on generic objects.
-     * Executes the actual loading {@see #doLoad(Widget, JXPathContext)}
-     * depending on the value of {@see #loadEnabled}
+     * Executes the actual loading via {@link #doLoad(Widget, JXPathContext)}
+     * depending on the configured value of the "direction" attribute.
      */
     public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
         boolean inheritedLeniency = jxpc.isLenient();
@@ -178,7 +178,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     }
 
     /**
-     * Performs the actual save binding regardless of the flag {@see #saveEnabled}.
+     * Performs the actual save binding regardless of the configured value of the "direction" attribute.
      * Abstract method that subclasses need to implement for specific activity.
      */
     public abstract void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException;
@@ -186,8 +186,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     /**
      * Redefines the Binding action as working on a JXPathContext Type rather
      * then on generic objects.
-     * Executes the actual saving {@see #doSave(Widget, JXPathContext)}
-     * depending on the value of {@see #saveEnabled}
+     * Executes the actual saving via {@link #doSave(Widget, JXPathContext)}
+     * depending on the configured value of the "direction" attribute.
      */
     public final void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException{
         boolean inheritedLeniency = jxpc.isLenient();
