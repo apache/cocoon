@@ -47,13 +47,14 @@
   engine will take care of installing it when restarted. 
   
   For Apache Tomcat, you have to copy the WAR archive into the '/webapps'
-  directory so do
+  directory, so do
   
     [unix] cp ./build/cocoon/cocoon.war $TOMCAT_HOME/webapps/cocoon.war
     [win32] copy .\build\cocoon\cocoon.war %TOMCAT_HOME%\webapps\cocoon.war
   
   where TOMCAT_HOME points to the directory where tomcat is installed (note:
-  you don't need to set it in the enviornment, it's there only to show you)
+  you don't need to set it in the enviornment, it's there only to show you). For more
+  information on Tomcat 3.2.1 see the FAQ below.
 
 
  5) Restart the servlet engine.
@@ -109,7 +110,18 @@
   directory.
 
 
-  5) I'm still stuck, what do I do?
+  5) I get an Exception when accessing Cocoon the first time. What's wrong?
+
+  Cocoon requires a JAXP 1.1 compliant parser. Recent servlet engines
+  (like Tomcat 3.2.1) use older xml parsers. You have to replace the xml
+  parser with a newer one (e.g. the Xerces 1.3.0).
+  For Tomcat 3.2.1 simply remove the jaxp.jar and the parser.jar from the
+  tomcat/lib directory and copy the xerces.jar to this directory and rename
+  it to parser.jar. Before you restart Tomcat make sure to remove the
+  tomcat/work directory beforehand.
+
+
+  6) I'm still stuck, what do I do?
   
   Well, contact the Cocoon Users mail list (cocoon-users@xml.apache.org).
   Please, do not contact developers directly for help since the user list are
