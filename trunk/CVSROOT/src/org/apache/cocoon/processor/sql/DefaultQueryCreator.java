@@ -45,37 +45,76 @@
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
  Software Foundation, please see <http://www.apache.org/>.
-*/
+ */
 
 package org.apache.cocoon.processor.sql;
 
 import java.sql.*;
+import java.text.*;
 import java.util.*;
+import javax.servlet.http.*;
+import org.w3c.dom.*;
 
 /**
- * Utility methods for this processor.
+ * A class that can create a SQL query. It's given a query to start with,
+ * plus a query_props table that contains parameters from the XML file, and the
+ * parameters table from cocoon that notably may contain a HttpServletRequest
+ * object keyed from "request".
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:28 $
+ * @author <a href="mailto:sidney@krdl.org.sg">Sidney Chong</a>
+ * @version $Revision: 1.1 $ $Date: 1999-12-03 08:42:28 $
  */
 
-public class ConnectionCreator {
+public class DefaultQueryCreator implements QueryCreator {
 
-    protected String dburl;
-    protected String username;
-    protected String password;
+    public static final int SESSION = 1;
+    public static final int REQUEST = 2;
 
-    public ConnectionCreator(Properties props) {
-        this.dburl = props.getProperty("dburl");
-        this.username = props.getProperty("username");
-        this.password = props.getProperty("password");
+    public String getQuery(Connection conn, String query, Element query_element, Properties query_props, Dictionary parameters) throws Exception {
+        HttpServletRequest req = (HttpServletRequest)parameters.get("request");
+        query = substitute(query,req,
+            query_props.getProperty("session-variable-left-delimiter"),
+            query_props.getProperty("session-variable-right-delimiter"),
+            SESSION);
+        query = substitute(query,req,
+            query_props.getProperty("variable-left-delimiter"),
+            query_props.getProperty("variable-right-delimiter"),
+            REQUEST);
+        return query;
     }
 
-    public Connection getConnection() throws SQLException {
-        if (username != null && password != null)
-            return DriverManager.getConnection(dburl,username,password);
-        else
-            return DriverManager.getConnection(dburl);
+    protected static String substitute(String query, HttpServletRequest req, String ldelim, String rdelim, int type) {
+        int llength = ldelim.length();
+        int rlength = rdelim.length();
+        int offset = 0;
+        while (true) {
+            int lindex = query.indexOf(ldelim,offset);
+            if (lindex < 0) break;
+            int rindex = query.indexOf(rdelim,offset+llength);
+            if (rindex < 0 || rindex < lindex) break;
+            String name = query.substring(lindex+llength,rindex);
+            String value = getValue(req, name, type);
+            if (value == null) break;
+            query = query.substring(0,lindex)+value+query.substring(rindex+rlength);
+            offset = lindex+value.length();
+        }
+        return query;
+    }
+
+    protected static String getValue(HttpServletRequest req, String name, int type) {
+        String val = null;
+        switch ( type ) {
+            case SESSION :
+                val = (String) (req.getSession(true).getValue(name));
+                break;
+            case REQUEST :
+                val = req.getParameter(name);
+                break;
+            default :
+                val = "";
+        }
+        return val;
     }
 
 }

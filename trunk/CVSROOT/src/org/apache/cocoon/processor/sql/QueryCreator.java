@@ -45,37 +45,25 @@
  on  behalf of the Apache Software  Foundation and was  originally created by
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache 
  Software Foundation, please see <http://www.apache.org/>.
-*/
+ */
 
 package org.apache.cocoon.processor.sql;
 
 import java.sql.*;
+import java.text.*;
 import java.util.*;
+import javax.servlet.http.*;
+import org.w3c.dom.*;
 
 /**
- * Utility methods for this processor.
+ * An interface that describes a class that can create a SQL query.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:28 $
+ * @version $Revision: 1.1 $ $Date: 1999-12-03 08:42:28 $
  */
 
-public class ConnectionCreator {
+public interface QueryCreator {
 
-    protected String dburl;
-    protected String username;
-    protected String password;
-
-    public ConnectionCreator(Properties props) {
-        this.dburl = props.getProperty("dburl");
-        this.username = props.getProperty("username");
-        this.password = props.getProperty("password");
-    }
-
-    public Connection getConnection() throws SQLException {
-        if (username != null && password != null)
-            return DriverManager.getConnection(dburl,username,password);
-        else
-            return DriverManager.getConnection(dburl);
-    }
+    public String getQuery(Connection conn, String query, Element query_element, Properties query_props, Dictionary parameters) throws Exception;
 
 }

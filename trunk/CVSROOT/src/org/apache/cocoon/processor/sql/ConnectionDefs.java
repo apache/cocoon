@@ -57,7 +57,7 @@ import java.util.*;
  * Default connection values.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.4 $ $Date: 1999-12-02 09:07:46 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:28 $
  */
 
 public class ConnectionDefs {

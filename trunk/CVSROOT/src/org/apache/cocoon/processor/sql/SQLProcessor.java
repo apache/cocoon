@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.4 $ $Date: 1999-12-02 09:07:46 $
+ * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:28 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -81,7 +81,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
     /**
      * The default query creator, does {@...} substitution
      */
-    protected static SQLQueryCreator default_query_creator = new SQLQueryCreator();
+    protected static QueryCreator default_query_creator = new DefaultQueryCreator();
 
     /**
      * Omit null columns
@@ -178,12 +178,12 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
 			timestamp_format = new SimpleDateFormat(timestamp_format_string);
         try {
             if (query == null || query.equals("")) {
-                SQLQueryCreator query_creator;
+                QueryCreator query_creator;
                 if (query_creator_name != null) {
                     if (query_creators.containsKey(query_creator_name)) {
-                        query_creator = (SQLQueryCreator)query_creators.get(query_creator_name);
+                        query_creator = (QueryCreator)query_creators.get(query_creator_name);
                     } else {
-                        query_creator = (SQLQueryCreator)Class.forName(query_creator_name).newInstance();
+                        query_creator = (QueryCreator)Class.forName(query_creator_name).newInstance();
                         query_creators.put(query_creator_name,query_creator);
                     }
                 } else {
@@ -301,7 +301,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
             }
             st.close(); conn.commit();
             query_element.getParentNode().replaceChild(results_node,query_element);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Element error_element = Utils.createErrorElement(document,namespace,query_props,e);
             query_element.getParentNode().replaceChild(error_element,query_element);
             conn.rollback();
