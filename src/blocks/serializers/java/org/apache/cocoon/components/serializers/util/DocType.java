@@ -20,16 +20,25 @@ package org.apache.cocoon.components.serializers.util;
  * the document type public and system IDs and root element name.
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: DocType.java,v 1.1 2004/04/21 09:33:26 pier Exp $
+ * @version CVS $Id: DocType.java,v 1.2 2004/04/30 19:34:46 pier Exp $
  */
 public class DocType {
     /** The name of the root element. */
-    private String root_name = null;
+    protected String root_name = null;
     /** The configured system identifier. */
-    private String public_id = null;
+    protected String public_id = null;
     /** The configured public identifier. */
-    private String system_id = null;
+    protected String system_id = null;
 
+    /**
+     * Create a new <code>DocType</code> instance.
+     * 
+     * @param root_name The document root element name.
+     */
+    public DocType(String root_name) {
+        this(root_name, null, null);
+    }
+    
     /**
      * Create a new <code>DocType</code> instance.
      * 
@@ -94,15 +103,16 @@ public class DocType {
         if (!(object instanceof DocType)) return(false);
         DocType doctype = (DocType)object;
 
-        if (this.public_id != null) {
-            return(this.public_id.equals(doctype.public_id) &&
-                   this.system_id.equals(doctype.system_id) &&
-                   this.root_name.equals(doctype.root_name));
+        if (this.public_id == null) {
+            if (doctype.public_id != null) return(false);
+        } else {
+            if (!this.public_id.equals(doctype.public_id)) return(false);
         }
-
-        if (this.system_id != null) {
-            return(this.system_id.equals(doctype.system_id) &&
-                   this.root_name.equals(doctype.root_name));
+        
+        if (this.system_id == null) {
+            if (doctype.system_id != null) return(false);
+        } else {
+            if (!this.system_id.equals(doctype.system_id)) return(false);
         }
 
         return(this.root_name.equals(doctype.root_name));
