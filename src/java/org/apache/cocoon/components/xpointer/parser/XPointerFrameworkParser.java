@@ -68,7 +68,13 @@ public class XPointerFrameworkParser
     public static XPointer parse(String xpointer) throws ParseException {
         XPointerFrameworkParser xfp =
             new XPointerFrameworkParser(new java.io.StringReader(xpointer));
-        xfp.pointer();
+        try {
+            xfp.pointer();
+        } catch (TokenMgrError e) {
+            // Rethrow TokenMgrErrors as ParseExceptions, because errors aren't caught by Cocoon,
+            // and mistyping in a xpointer isn't such a grave error
+            throw new ParseException(e.getMessage());
+        }
         return xfp.getXPointer();
     }
 
