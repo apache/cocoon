@@ -52,17 +52,16 @@ package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
-import org.apache.cocoon.webapps.session.SessionConstants;
-import org.apache.cocoon.webapps.session.components.SessionManager;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceParameters;
-import org.w3c.dom.DocumentFragment;
 
 /**
  *  This action logs the current user into a given handler. If the
@@ -71,8 +70,8 @@ import org.w3c.dom.DocumentFragment;
  *  If the authentication is not successful, the error information is stored
  *  into the temporary context.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: LoginAction.java,v 1.1 2003/03/09 00:02:17 pier Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: LoginAction.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
 */
 public final class LoginAction
 extends ComposerAction
@@ -84,7 +83,7 @@ implements ThreadSafe {
                    String source,
                    Parameters par)
     throws Exception {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN act resolver="+resolver+
                                    ", objectModel="+objectModel+
                                    ", source="+source+
@@ -116,27 +115,19 @@ implements ThreadSafe {
         AuthenticationManager authManager = null;
         try {
             authManager = (AuthenticationManager) this.manager.lookup(AuthenticationManager.ROLE);
-            Object o;
-
-            o = authManager.authenticate( handlerName,
-                                      authenticationParameters);
-            if ( null == o) {
+            UserHandler handler = authManager.login( handlerName, 
+                                       par.getParameter("application", null),
+                                       authenticationParameters);
+            if ( handler != null) {
                 // success
-                map = authManager.createMap();
+                map = handler.getContext().getContextInfo();
 
-            } else {
-                SessionManager sessionManager = (SessionManager) this.manager.lookup(SessionManager.ROLE);
-                try {
-                    sessionManager.getContext(SessionConstants.TEMPORARY_CONTEXT).appendXML("/", (DocumentFragment)o);
-                } finally {
-                    this.manager.release(sessionManager);
-                }
             }
         } finally {
-            this.manager.release(authManager);
+            this.manager.release( (Component)authManager);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END act map="+map);
         }
 

@@ -50,33 +50,60 @@
 */
 package org.apache.cocoon.webapps.authentication;
 
+import java.io.IOException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.excalibur.source.SourceParameters;
 
 
 
 /**
- * This is the media manager.
- * It provides simple support for developing multi-channel applications
+ * This is the authentication manager.
+ * It is used to authenticate (login, logout) a user. Usually, this
+ * component should not be used from custom code. The provided
+ * actions perform all required tasks.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: MediaManager.java,v 1.1 2003/04/21 19:26:15 cziegeler Exp $
+ * @version CVS $Id: AuthenticationManager.java,v 1.3 2003/05/04 20:19:42 cziegeler Exp $
 */
-public interface MediaManager {
+public interface AuthenticationManager {
 
     /** The Avalon Role */
-    public static final String ROLE = MediaManager.class.getName();
+    public static final String ROLE = AuthenticationManager.class.getName();
 
     /**
-     * Test if the media of the current request is the given value
+     * Is the current user authenticated for the given handler?
+     * @return Returns the corresponding handler if the user is authenticated.
      */
-    boolean testMedia(String value);
+    UserHandler isAuthenticated(String handlerName)
+    throws ProcessingException;
 
     /**
-     * Get all media type names
+     * Is the current user authenticated for the given handler?
+     * If the user is already authenticated, the {@link RequestState}
+     * is updated to the provided information (handler and application).
      */
-    String[] getMediaTypes();
+    boolean checkAuthentication(Redirector redirector,
+                                 String     handlerName,
+                                 String     applicationName)
+    throws ProcessingException, IOException;
 
     /**
-     * Return the current media type
+     * Try to login the user.
+     * If the authentication is successful, the user handler is returned.
+     * If not, <code>null</code> is returned.
      */
-    String getMediaType();
+    UserHandler login(String              handlerName,
+                      String              applicationName,
+                      SourceParameters    parameters)
+    throws ProcessingException;
+
+    /**
+     * Perform a logout of the user.
+     */
+    void logout(String handlerName,
+                 int mode)
+    throws ProcessingException;
 }

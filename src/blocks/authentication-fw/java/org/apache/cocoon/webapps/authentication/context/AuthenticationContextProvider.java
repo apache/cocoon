@@ -50,22 +50,18 @@
 */
 package org.apache.cocoon.webapps.authentication.context;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
-import org.apache.excalibur.source.SourceResolver;
 
 
 /**
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.2 2003/05/01 09:49:14 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContextProvider.java,v 1.3 2003/05/04 20:19:41 cziegeler Exp $
 */
 public final class AuthenticationContextProvider
 implements SessionContextProvider {
@@ -73,16 +69,10 @@ implements SessionContextProvider {
     /**
      * Get the context
      * @param name The name of the context
-     * @param objectModel The objectModel of the current request.
-     * @param resolver    The source resolver
-     * @param componentManager manager
      * @return The context
      * @throws ProcessingException If the context is not available.
      */
-    public SessionContext getSessionContext(String           name,
-                                            Map              objectModel,
-                                            SourceResolver   resolver,
-                                            ComponentManager manager)
+    public SessionContext getSessionContext(String name)
     throws ProcessingException {
         AuthenticationContext context = null;
         if (name.equals(org.apache.cocoon.webapps.authentication.AuthenticationConstants.SESSION_CONTEXT_NAME) ) {
@@ -91,10 +81,18 @@ implements SessionContextProvider {
                 UserHandler handler = state.getHandler();
                 if ( handler != null ) {
                     context = handler.getContext();
-                    context.setApplicationName(state.getApplicationName());                }
+                }
             }
         }
         return context;
+    }
+
+    /**
+     * Does the context exist?
+     */
+    public boolean existsSessionContext(String name)
+    throws ProcessingException {
+        return (this.getSessionContext( name ) != null);
     }
 
 }

@@ -58,8 +58,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
@@ -68,11 +69,13 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.portal.PortalConstants;
 import org.apache.cocoon.webapps.portal.context.SessionContextProviderImpl;
+import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.MediaManager;
 import org.apache.cocoon.webapps.session.components.AbstractSessionComponent;
-import org.apache.cocoon.webapps.session.components.SessionManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.cocoon.webapps.session.xml.XMLUtil;
@@ -84,23 +87,17 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.store.Store;
+import org.w3c.dom.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.w3c.dom.Node;
-import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Document;
-import org.w3c.dom.Text;
-import org.w3c.dom.NamedNodeMap;
 
 
 /**
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.3 2003/04/27 15:04:48 cziegeler Exp $
+ * @version CVS $Id: PortalManager.java,v 1.4 2003/05/04 20:19:39 cziegeler Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -167,32 +164,40 @@ extends AbstractSessionComponent {
     /** The authenticationManager */
     private AuthenticationManager authenticationManager;
 
-    /** Init the class,
-     *  add the provider for the portal context
-     */
-    static {
-        // add the provider for the portal context
-        SessionContextProvider provider = new SessionContextProviderImpl();
-        try {
-            SessionManager.addSessionContextProvider(provider, PortalConstants.SESSION_CONTEXT_NAME);
-        } catch (ProcessingException local) {
-            throw new CascadingRuntimeException("Unable to register provider for portal context.", local);
-        }
-    }
-
+    /** The media manager */
+    private MediaManager mediaManager;
+    
     /**
      * Avalon Recyclable Interface
      */
     public void recycle() {
         if (this.manager != null) {
             this.manager.release(this.profileStore);
-            this.manager.release(this.authenticationManager);
+            this.manager.release( (Component)this.authenticationManager);
+            this.manager.release( (Component)this.mediaManager);
             this.profileStore = null;
             this.authenticationManager = null;
+            this.mediaManager = null;
         }
         super.recycle();
     }
 
+    /**
+     * Composable
+     */
+    public void compose(ComponentManager manager)
+    throws ComponentException {
+        super.compose( manager );
+        ContextManager contextManager = (ContextManager)manager.lookup(ContextManager.ROLE);
+        // add the provider for the portal context
+        SessionContextProvider provider = new SessionContextProviderImpl();
+        try {
+            contextManager.addSessionContextProvider(provider, PortalConstants.SESSION_CONTEXT_NAME);
+        } catch (ProcessingException pe) {
+            // ignore this!
+        }
+    }
+    
     /**
      * Get the profile store
      */
@@ -209,7 +214,7 @@ extends AbstractSessionComponent {
     }
 
     /**
-     * Get the profile store
+     * Get the authentication manager
      */
     public AuthenticationManager getAuthenticationManager()
     throws ProcessingException {
@@ -221,6 +226,21 @@ extends AbstractSessionComponent {
             }
         }
         return this.authenticationManager;
+    }
+
+    /**
+     * Get the media manager
+     */
+    public MediaManager getMediaManager()
+    throws ProcessingException {
+        if (this.mediaManager == null) {
+            try {
+                this.mediaManager = (MediaManager)this.manager.lookup(MediaManager.ROLE);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Error during lookup of MediaManager.", ce);
+            }
+        }
+        return this.mediaManager;
     }
 
     /**
@@ -273,16 +293,17 @@ extends AbstractSessionComponent {
         final Session session = this.getSessionManager().getSession(false);
         if (session != null) {
             synchronized(session) {
-                String appName = this.getAuthenticationManager().getApplicationName();
+                String appName = RequestState.getState().getApplicationName();
                 String attrName = PortalConstants.PRIVATE_SESSION_CONTEXT_NAME;
                 if (appName != null) {
                     attrName = attrName + ':' + appName;
                 }
-                context = this.getSessionManager().getContext(attrName);
+                context = this.getContextManager().getContext(attrName);
                 if (context == null && create == true) {
 
                     // create new context
-                    context = this.getAuthenticationManager().createHandlerContext(attrName, null, null);
+                    
+                    context = RequestState.getState().getHandler().createApplicationContext(attrName, null, null);
 
                 }
             } // end synchronized
@@ -364,7 +385,7 @@ extends AbstractSessionComponent {
             String command = this.request.getParameter(PortalManager.REQ_PARAMETER_ADMIN_COPLETS);
             if (command != null && copletsFragment != null) {
                 try {
-                    this.getSessionManager().startWritingTransaction(context);
+                    this.getTransactionManager().startWritingTransaction(context);
                     // save : save coplets base
                     // new  : new coplet
                     // delete : use id to delete coplet
@@ -507,8 +528,9 @@ extends AbstractSessionComponent {
 
                         SourceParameters pars = new SourceParameters();
                         pars.setSingleParameterValue("profile", "coplet-base");
-                        pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-                        pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+                        RequestState state = RequestState.getState();
+                        pars.setSingleParameterValue("application", state.getApplicationName());
+                        pars.setSingleParameterValue("handler", state.getHandlerName());
 
                         String saveResource = (String)configuration.get(PortalConstants.CONF_COPLETBASE_SAVE_RESOURCE);
 
@@ -528,7 +550,7 @@ extends AbstractSessionComponent {
                         }
                     }
                 } finally {
-                    this.getSessionManager().stopWritingTransaction(context);
+                    this.getTransactionManager().stopWritingTransaction(context);
                 }
             }
 
@@ -658,7 +680,8 @@ extends AbstractSessionComponent {
                 // load the base coplets profile
                 if (copletsFragment == null) {
                     SourceParameters pars = new SourceParameters();
-                    pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
+                    RequestState reqstate = RequestState.getState();
+                    pars.setSingleParameterValue("application", reqstate.getApplicationName());
                     String res = (String)configuration.get(PortalConstants.CONF_COPLETBASE_RESOURCE);
                     if (res == null) {
                         throw new ProcessingException("No configuration for portal-coplet base profile found.");
@@ -731,15 +754,16 @@ extends AbstractSessionComponent {
                            boolean adminProfile)
     throws SAXException, ProcessingException, IOException {
         // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN showPortal consumer=" + consumer+", configMode="+
                              configMode+", adminProfile="+adminProfile);
         }
+                
         SessionContext context = this.getContext(true);
         String profileID = null;
         Map storedProfile = null;
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("start portal generation");
         }
         if (context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE) != null) {
@@ -750,7 +774,7 @@ extends AbstractSessionComponent {
         }
         if (storedProfile == null) {
 
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("start building profile");
             }
             this.createProfile(context, PortalManager.BUILDTYPE_VALUE_ID, null, null, adminProfile);
@@ -762,7 +786,7 @@ extends AbstractSessionComponent {
             if (storedProfile == null) {
                 throw new ProcessingException("portal: No portal profile found.");
             }
-            if (this.getLogger().isDebugEnabled() == true) {
+            if (this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug("end building profile");
             }
         }
@@ -850,7 +874,7 @@ extends AbstractSessionComponent {
                 ", profile="+storedProfile);
         }
         try {
-            this.getSessionManager().startReadingTransaction(context);
+            this.getTransactionManager().startReadingTransaction(context);
 
             DocumentFragment profile;
             Map              defaultCoplets;
@@ -858,7 +882,7 @@ extends AbstractSessionComponent {
             Map              portalLayouts;
             Map              copleyLayouts;
             Node[]           miscNodes;
-            String           mediaType = this.getAuthenticationManager().getMediaType();
+            String           mediaType = this.getMediaManager().getMediaType();
 
             profile = (DocumentFragment)storedProfile.get(PortalConstants.PROFILE_PROFILE);
             portalLayouts = (Map)storedProfile.get(PortalConstants.PROFILE_PORTAL_LAYOUTS);
@@ -1111,7 +1135,7 @@ extends AbstractSessionComponent {
         } catch (javax.xml.transform.TransformerException local) { // end synchronized
             throw new ProcessingException("TransformerException: " + local, local);
         } finally {
-            this.getSessionManager().stopReadingTransaction(context);
+            this.getTransactionManager().stopReadingTransaction(context);
         }
         if (this.getLogger().isDebugEnabled() == true) {
             this.getLogger().debug("END showPortal");
@@ -1157,7 +1181,7 @@ extends AbstractSessionComponent {
 
             SessionContext context = this.getContext(true);
             try {
-                this.getSessionManager().startWritingTransaction(context);
+                this.getTransactionManager().startWritingTransaction(context);
 
                 String profileID = this.getProfileID(type, role, id, adminProfile);
                 Map theProfile = null;
@@ -1294,7 +1318,7 @@ extends AbstractSessionComponent {
                     context.setAttribute(PortalManager.ATTRIBUTE_PORTAL_ID, id);
                 }
             } finally {
-                this.getSessionManager().stopWritingTransaction(context);
+                this.getTransactionManager().stopWritingTransaction(context);
             }// end synchronized
         } catch (javax.xml.transform.TransformerException local) {
             throw new ProcessingException("TransformerException: " + local, local);
@@ -1565,9 +1589,10 @@ extends AbstractSessionComponent {
     throws ProcessingException {
         // No sync required
         StringBuffer key = new StringBuffer((adminProfile == true ? "aprofile:" : "uprofile:"));
-        key.append(this.getAuthenticationManager().getHandlerName())
+        RequestState reqstate = RequestState.getState();
+        key.append(reqstate.getHandlerName())
            .append('|')
-           .append(this.getAuthenticationManager().getApplicationName())
+           .append(reqstate.getApplicationName())
            .append(':')
            .append(type);
 
@@ -1853,7 +1878,7 @@ extends AbstractSessionComponent {
         profileMap.put(PortalConstants.PROFILE_MEDIA_COPLETS, mediaCoplets);
 
         // get AuthenticationManager instance
-        String[] types = this.getAuthenticationManager().getMediaTypes();
+        String[] types = this.getMediaManager().getMediaTypes();
         Map      mediaMap;
         for(int i = 0; i < types.length; i++) {
             mediaCoplets.put(types[i], new HashMap(5, 3));
@@ -2342,7 +2367,7 @@ extends AbstractSessionComponent {
         Element defLayout = (Element)DOMUtil.getSingleNode(baseProfile,
                         "profile/layout-profile/portal/layouts/layout[not(@*)]");
         Node currentLayout;
-        String[] types = this.getAuthenticationManager().getMediaTypes();
+        String[] types = this.getMediaManager().getMediaTypes();
 
         for(int i = 0; i < types.length; i++) {
              currentLayout = DOMUtil.getSingleNode(baseProfile,
@@ -2370,7 +2395,7 @@ extends AbstractSessionComponent {
         Element defLayout = (Element)DOMUtil.getSingleNode(baseProfile,
                         "profile/layout-profile/coplets/layouts/layout[not(@*)]");
         Node currentLayout;
-        String[] types = this.getAuthenticationManager().getMediaTypes();
+        String[] types = this.getMediaManager().getMediaTypes();
 
         for(int i = 0; i < types.length; i++) {
             currentLayout = DOMUtil.getSingleNode(baseProfile,
@@ -2672,7 +2697,7 @@ extends AbstractSessionComponent {
             boolean visible = DOMUtil.getValueAsBooleanOf(element,
                 "status/visible");
             // second: check media
-            String media = this.getAuthenticationManager().getMediaType();
+            String media = this.getMediaManager().getMediaType();
             if (visible == true && copletConf.hasAttributeNS(null, "media") == true) {
                 String copletMedia = copletConf.getAttributeNS(null, "media");
                 visible = media.equals(copletMedia);
@@ -2692,7 +2717,7 @@ extends AbstractSessionComponent {
                               "customization/coplet[@id='"+copletID+"' and @number='"+element.getAttributeNS(null, "number")+"']");
                         hasConfig = (customInfo != null);
                     }
-                    if (showCustomizePage == true || hasConfig == false) {
+                    if (showCustomizePage || !hasConfig ) {
                         Node node = DOMUtil.selectSingleNode(element, "status/customize");
                         DOMUtil.setValueOfNode(node, "true");
                     } else {
@@ -2874,7 +2899,7 @@ extends AbstractSessionComponent {
      */
     public String getMediaType() 
     throws ProcessingException {
-        return this.getAuthenticationManager().getMediaType();
+        return this.getMediaManager().getMediaType();
     }
     
     /**
@@ -2885,7 +2910,7 @@ extends AbstractSessionComponent {
                                            Map    mediaCoplets) 
     throws ProcessingException {
         // calling method is synced
-        String media = this.getAuthenticationManager().getMediaType();
+        String media = this.getMediaManager().getMediaType();
         Map    coplets = (Map)mediaCoplets.get(media);
         Element coplet = null;
         if (coplets != null) coplet = (Element)coplets.get(copletID);
@@ -3191,7 +3216,7 @@ extends AbstractSessionComponent {
             && (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE) != null) {
 
             try {
-                this.getSessionManager().startReadingTransaction(context);
+                this.getTransactionManager().startReadingTransaction(context);
                 Map theProfile = this.retrieveProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID,
                      (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE),
                      (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ID), false));
@@ -3207,7 +3232,7 @@ extends AbstractSessionComponent {
                     }
                 }
             } finally {
-                this.getSessionManager().stopReadingTransaction(context);
+                this.getTransactionManager().stopReadingTransaction(context);
             } // end synced
         }
 
@@ -3244,8 +3269,9 @@ extends AbstractSessionComponent {
             this.getLogger().debug("BEGIN getConfiguration");
         }
         Map result = null;
-        String appName = this.getAuthenticationManager().getApplicationName();
-        String handlerName = this.getAuthenticationManager().getHandlerName();
+        RequestState reqstate = RequestState.getState();
+        String appName = reqstate.getApplicationName();
+        String handlerName = reqstate.getHandlerName();
         Session session = this.getSessionManager().getSession(false);
         if (session != null && appName != null && handlerName != null) {
 
@@ -3256,7 +3282,7 @@ extends AbstractSessionComponent {
                     try {
                         Configuration config;
 
-                        Configuration conf = this.getAuthenticationManager().getModuleConfiguration(PortalConstants.AUTHENTICATION_MODULE_NAME);
+                        Configuration conf = reqstate.getModuleConfiguration(PortalConstants.AUTHENTICATION_MODULE_NAME);
                         if (conf == null) {
                             throw new ProcessingException("portal: Configuration for application '" + appName + "' not found.");
                         }
@@ -3414,19 +3440,19 @@ extends AbstractSessionComponent {
                               boolean adminProfile)
     throws SAXException, IOException, ProcessingException {
         // no sync required
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN createProfile context="+context+
                                    ", type="+type+
                                    ", role="+role+
                                    ", id="+id);
         }
 
-        SourceParameters pars = this.getAuthenticationManager().createParameters(null);
+        RequestState reqstate = RequestState.getState();
+        SourceParameters pars = reqstate.getHandler().getContext().getContextInfoAsParameters();
         pars.setSingleParameterValue("type", type);
         pars.setSingleParameterValue("admin", (adminProfile == true ? "true" : "false"));
 
-        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) == false ||
-            role != null) {
+        if (!type.equals(PortalManager.BUILDTYPE_VALUE_ID) || role != null) {
             pars.setSingleParameterValue("ID", id);
             pars.setSingleParameterValue("role", role);
         } else {
@@ -3479,8 +3505,9 @@ extends AbstractSessionComponent {
         String           res;
 
         SourceParameters pars = new SourceParameters();
-        pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-        pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+        RequestState reqstate = RequestState.getState();
+        pars.setSingleParameterValue("application", reqstate.getApplicationName());
+        pars.setSingleParameterValue("handler", reqstate.getHandlerName());
         pars.setSingleParameterValue("profile", "coplet-base");
 
         // First load the base profiles: copletProfile + layoutProfile
@@ -3572,8 +3599,9 @@ extends AbstractSessionComponent {
             throw new ProcessingException("No configuration for portal-role delta profile found.");
         }
         SourceParameters pars = new SourceParameters();
-        pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-        pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+        RequestState reqstate = RequestState.getState();
+        pars.setSingleParameterValue("application", reqstate.getApplicationName());
+        pars.setSingleParameterValue("handler", reqstate.getHandlerName());
         pars.setSingleParameterValue("profile", "global-delta");
 
         if (this.getLogger().isDebugEnabled() == true) {
@@ -3623,11 +3651,12 @@ extends AbstractSessionComponent {
         // calling method is synced
 
         DocumentFragment roleFragment;
+        RequestState reqstate = RequestState.getState();
         SourceParameters pars;
         pars = new SourceParameters();
         pars.setSingleParameterValue("role", role);
-        pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-        pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+        pars.setSingleParameterValue("application", reqstate.getApplicationName());
+        pars.setSingleParameterValue("handler", reqstate.getHandlerName());
         pars.setSingleParameterValue("profile", "role-delta");
 
         String res = (String)config.get(PortalConstants.CONF_ROLEDELTA_LOADRESOURCE);
@@ -3677,12 +3706,13 @@ extends AbstractSessionComponent {
     throws ProcessingException {
         // calling method is synced
         DocumentFragment userFragment;
+        RequestState reqstate = RequestState.getState();
         SourceParameters pars;
         pars = new SourceParameters();
         pars.setSingleParameterValue("ID", id);
         pars.setSingleParameterValue("role", role);
-        pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-        pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+        pars.setSingleParameterValue("application", reqstate.getApplicationName());
+        pars.setSingleParameterValue("handler", reqstate.getHandlerName());
         pars.setSingleParameterValue("profile", "user-delta");
 
         String res = (String)config.get(PortalConstants.CONF_USERDELTA_LOADRESOURCE);
@@ -3742,11 +3772,12 @@ extends AbstractSessionComponent {
         if (res != null) {
             DocumentFragment userFragment;
             SourceParameters pars;
+            RequestState reqstate = RequestState.getState();
             pars = new SourceParameters();
             pars.setSingleParameterValue("ID", id);
             pars.setSingleParameterValue("role", role);
-            pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-            pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+            pars.setSingleParameterValue("application", reqstate.getApplicationName());
+            pars.setSingleParameterValue("handler", reqstate.getHandlerName());
             pars.setSingleParameterValue("profile", "user-status");
             if (this.getLogger().isDebugEnabled() == true) {
                 this.getLogger().debug("loading user status profile");
@@ -3805,12 +3836,13 @@ extends AbstractSessionComponent {
 
             try {
 
+                RequestState reqstate = RequestState.getState();
                 SourceParameters pars;
                 pars = new SourceParameters();
                 pars.setSingleParameterValue("ID", id);
                 pars.setSingleParameterValue("role", role);
-                pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-                pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+                pars.setSingleParameterValue("application", reqstate.getApplicationName());
+                pars.setSingleParameterValue("handler", reqstate.getHandlerName());
                 pars.setSingleParameterValue("profile", "user-status");
 
                 SourceUtil.writeDOM(res, 
@@ -3991,14 +4023,15 @@ extends AbstractSessionComponent {
                             }
 
                             // build delta
+                            RequestState reqstate = RequestState.getState();
                             DocumentFragment delta;
                             delta = this.buildProfileDelta(type, role, id, this.getIsAdminProfile(profileID));
                             SourceParameters pars = new SourceParameters();
                             pars.setSingleParameterValue("type", profileType);
                             if (id != null) pars.setSingleParameterValue("ID", id);
                             if (role != null) pars.setSingleParameterValue("role", role);
-                            pars.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
-                            pars.setSingleParameterValue("handler", this.getAuthenticationManager().getHandlerName());
+                            pars.setSingleParameterValue("application", reqstate.getApplicationName());
+                            pars.setSingleParameterValue("handler", reqstate.getHandlerName());
                             SourceUtil.writeDOM(saveResource, 
                                                null, 
                                                pars,
@@ -4183,8 +4216,9 @@ extends AbstractSessionComponent {
         if (this.getLogger().isDebugEnabled() == true) {
             this.getLogger().debug("BEGIN getUsers role="+role+", ID="+ID);
         }
+        RequestState reqstate = RequestState.getState();
         Document frag = null;
-        Configuration conf = this.getAuthenticationManager().getModuleConfiguration("single-role-user-management");
+        Configuration conf = reqstate.getModuleConfiguration("single-role-user-management");
         if (conf != null) {
 
             // get load-users resource (optional)
@@ -4195,9 +4229,10 @@ extends AbstractSessionComponent {
     
                 if (loadUsersResource != null) {
                     SourceParameters parameters = (loadUsersResourceParameters == null) ? new SourceParameters()
+
                                                                              : loadUsersResourceParameters;
-                    if (this.getAuthenticationManager().getApplicationName() != null)
-                        parameters.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
+                    if (reqstate.getApplicationName() != null)
+                        parameters.setSingleParameterValue("application", reqstate.getApplicationName());
                     if (ID != null) {
                         parameters.setSingleParameterValue("type", "user");
                         parameters.setSingleParameterValue("ID", ID);
@@ -4233,7 +4268,9 @@ extends AbstractSessionComponent {
         }
         Document frag = null;
 
-        Configuration conf = this.getAuthenticationManager().getModuleConfiguration("single-role-user-management");
+        RequestState reqstate = RequestState.getState();
+
+        Configuration conf = reqstate.getModuleConfiguration("single-role-user-management");
         if (conf != null) {
 
             // get load-roles resource (optional)
@@ -4244,8 +4281,8 @@ extends AbstractSessionComponent {
                 if (loadRolesResource != null) {
                     SourceParameters parameters = (loadRolesResourceParameters == null) ? new SourceParameters()
                                                                            : loadRolesResourceParameters;
-                    if (this.getAuthenticationManager().getApplicationName() != null)
-                        parameters.setSingleParameterValue("application", this.getAuthenticationManager().getApplicationName());
+                    if (reqstate.getApplicationName() != null)
+                        parameters.setSingleParameterValue("application", reqstate.getApplicationName());
                     parameters.setSingleParameterValue("type", "roles");
                     frag = this.loadResource(loadRolesResource, parameters);
                 }

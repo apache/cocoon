@@ -54,7 +54,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.webapps.session.SessionConstants;
 
 /**
@@ -62,7 +63,7 @@ import org.apache.cocoon.webapps.session.SessionConstants;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.1 2003/03/09 00:06:10 pier Exp $
+ * @version CVS $Id: StandardSessionContextProvider.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
 */
 public final class StandardSessionContextProvider
 implements SessionContextProvider {
@@ -70,31 +71,60 @@ implements SessionContextProvider {
     /**
      * Get the context
      * @param name The name of the context
-     * @param objectModel The objectModel of the current request.
-     * @param resolver    The source resolver
-     * @param componentManager manager
      * @return The context
      * @throws ProcessingException If the context is not available.
      */
-    public SessionContext getSessionContext(String           name,
-                                            Map              objectModel,
-                                            SourceResolver   resolver,
-                                            ComponentManager manager)
+    public SessionContext getSessionContext(String name)
     throws ProcessingException {
-        SessionContext context = null;
-        if ( name.equals(SessionConstants.TEMPORARY_CONTEXT) ) {
-            context = new SimpleSessionContext();
-            context.setup(name, null, null);
-        } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
-            context = new RequestSessionContext();
-            context.setup(name, null, null);
-            ((RequestSessionContext)context).setup( objectModel, manager );
-        } else if ( name.equals(SessionConstants.RESPONSE_CONTEXT) ) {
-            context = new ResponseSessionContext();
-            context.setup(name, null, null);
-            ((ResponseSessionContext)context).setup( objectModel );
+        final ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        
+        // get the context from the object model
+        SessionContext context = this.getContext( objectModel, name );
+        if ( context == null ) {
+            if ( name.equals(SessionConstants.TEMPORARY_CONTEXT) ) {
+                context = new SimpleSessionContext();
+                context.setup(name, null, null);
+            } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
+                context = new RequestSessionContext();
+                context.setup(name, null, null);
+                ((RequestSessionContext)context).setup( objectModel, manager );
+            } else if ( name.equals(SessionConstants.RESPONSE_CONTEXT) ) {
+                context = new ResponseSessionContext();
+                context.setup(name, null, null);
+                ((ResponseSessionContext)context).setup( objectModel );
+            }
+            objectModel.put(this.getClass().getName()+name, context);
         }
         return context;
     }
 
+    /**
+     * Does the context exist?
+     */
+    public boolean existsSessionContext(String name)
+    throws ProcessingException {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        return (this.getContext( objectModel, name) != null);
+    }
+
+    private SessionContext getContext(Map objectModel, String name) {
+        SessionContext context = (SessionContext) objectModel.get(this.getClass().getName()+name);
+        if ( context != null && !name.equals(SessionConstants.TEMPORARY_CONTEXT)) {
+            if ( name.equals(SessionConstants.REQUEST_CONTEXT)) {
+                RequestSessionContext r = (RequestSessionContext)context;
+                if (!(r.getRequest() == ObjectModelHelper.getRequest( objectModel))) {
+                    context = null;
+                    objectModel.remove(this.getClass().getName()+name);
+                }
+            } else {
+                ResponseSessionContext r = (ResponseSessionContext)context;
+                if (!(r.getResponse() == ObjectModelHelper.getResponse( objectModel))) {
+                    context = null;
+                    objectModel.remove(this.getClass().getName()+name);
+                }
+            }
+        }
+        return context; 
+    }
 }

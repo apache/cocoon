@@ -52,6 +52,7 @@ package org.apache.cocoon.webapps.session.acting;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -59,13 +60,13 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.session.components.SessionManager;
+import org.apache.cocoon.webapps.session.SessionManager;
 
 /**
  * This action creates and terminates a session.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionAction.java,v 1.1 2003/03/09 00:06:07 pier Exp $
+ * @version CVS $Id: SessionAction.java,v 1.2 2003/05/04 20:19:42 cziegeler Exp $
 */
 public final class SessionAction
 extends ComposerAction
@@ -98,7 +99,7 @@ implements ThreadSafe {
         } catch (ComponentException ce) {
             throw new ProcessingException("Error during lookup of sessionManager component.", ce);
         } finally {
-            this.manager.release( sessionManager );
+            this.manager.release( (Component)sessionManager );
         }
 
         return EMPTY_MAP;

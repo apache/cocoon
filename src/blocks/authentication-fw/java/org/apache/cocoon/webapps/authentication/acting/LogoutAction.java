@@ -52,6 +52,7 @@ package org.apache.cocoon.webapps.authentication.acting;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
@@ -59,13 +60,14 @@ import org.apache.cocoon.acting.ComposerAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
 
 /**
  *  This action logs the current user out of a given handler
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: LogoutAction.java,v 1.1 2003/03/09 00:02:17 pier Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: LogoutAction.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
 */
 public final class LogoutAction
 extends ComposerAction
@@ -77,7 +79,7 @@ implements ThreadSafe {
                    String source,
                    Parameters par)
     throws Exception {
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN act resolver="+resolver+
                                    ", objectModel="+objectModel+
                                    ", source="+source+
@@ -99,17 +101,19 @@ implements ThreadSafe {
         // logout
         AuthenticationManager authManager = null;
         try {
+            RequestState state = RequestState.getState();
+            
             authManager = (AuthenticationManager) this.manager.lookup(AuthenticationManager.ROLE);
             final String handlerName = par.getParameter("handler",
-                                                         authManager.getHandlerName());
+                                                         (state == null ? null : state.getHandlerName()));
             if ( null == handlerName )
                 throw new ProcessingException("LogoutAction requires at least the handler parameter.");
             authManager.logout( handlerName , mode );
         } finally {
-            this.manager.release( authManager );
+            this.manager.release( (Component)authManager );
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
+        if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END act map={}");
         }
 

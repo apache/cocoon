@@ -48,61 +48,61 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.acting;
+package org.apache.cocoon.webapps.session;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.acting.ComposerAction;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.components.Manager;
-import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.webapps.session.context.SessionContext;
 
 /**
- *  This action tests if the user is logged in for a given handler.
+ *  Transaction management<p>
+ *  </p>
+ *  Transactions are a series of get/set calls to a session context which must
+ *  be seen as atomic (single modification).
+ *  We distingish between reading and writing. Usually parallel reading is
+ *  allowed but if one thread wants to write, no other can read or write.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NewLoggedInAction.java,v 1.2 2003/05/01 09:49:14 cziegeler Exp $
+ * @version CVS $Id: TransactionManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
 */
-public final class NewLoggedInAction
-extends ComposerAction
-implements ThreadSafe {
+public interface TransactionManager {
 
-    public Map act(Redirector redirector,
-                   SourceResolver resolver,
-                   Map objectModel,
-                   String source,
-                   Parameters par)
-    throws Exception {
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN act resolver="+resolver+
-                                   ", objectModel="+objectModel+
-                                   ", source="+source+
-                                   ", par="+par);
-        }
+    /** Avalon role */
+    String ROLE = TransactionManager.class.getName();;
 
-        Map map = null;
-        String handlerName = par.getParameter("handler", null);
-        Manager authManager = null;
 
-        try {
-            authManager = (Manager) this.manager.lookup(Manager.ROLE);
-            UserHandler handler = authManager.isAuthenticated(handlerName);
-            if ( handler != null ) {
-                map = handler.getContext().getContextInfo();
-            }
-        } finally {
-            this.manager.release( (Component)authManager);
-        }
+    /**
+     *  Reset the transaction management state.
+     */
+    void resetTransactions(SessionContext context);
 
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END act map="+map);
-        }
+    /**
+     *  Start a reading transaction.
+     *  This call must always be matched with a stopReadingTransaction().
+     *  Otherwise the session context is blocked.
+     */
+    void startReadingTransaction(SessionContext context)
+    throws ProcessingException;
 
-        return map;
-    }
+    /**
+     *  Stop a reading transaction.
+     *  This call must always be done for each startReadingTransaction().
+     *  Otherwise the session context is blocked.
+     */
+    void stopReadingTransaction(SessionContext context);
+
+    /**
+     *  Start a writing transaction.
+     *  This call must always be matched with a stopWritingTransaction().
+     *  Otherwise the session context is blocked.
+     */
+    void startWritingTransaction(SessionContext context)
+    throws ProcessingException;
+
+    /**
+     *  Stop a writing transaction.
+     *  This call must always be done for each startWritingTransaction().
+     *  Otherwise the session context is blocked.
+     */
+    void stopWritingTransaction(SessionContext context);
 
 }

@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * pipeline.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPreTransformer.java,v 1.1 2003/03/09 00:06:11 pier Exp $
+ * @version CVS $Id: SessionPreTransformer.java,v 1.2 2003/05/04 20:19:39 cziegeler Exp $
 */
 public class SessionPreTransformer
 extends AbstractSessionTransformer {
@@ -176,7 +176,7 @@ extends AbstractSessionTransformer {
                               ", attr=" + attr);
         }
         if (name.equals(CREATECONTEXT_ELEMENT) == true) {
-            this.getSessionManager().createContext(attr.getValue(CREATECONTEXT_NAME_ATTRIBUTE),
+            this.getContextManager().createContext(attr.getValue(CREATECONTEXT_NAME_ATTRIBUTE),
                                                       attr.getValue(CREATECONTEXT_LOAD_ATTRIBUTE),
                                                       attr.getValue(CREATECONTEXT_SAVE_ATTRIBUTE));
 
@@ -237,7 +237,7 @@ extends AbstractSessionTransformer {
             pars.setSingleParameterValue("contextname", contextName);
             pars.setSingleParameterValue("path", path);
 
-            this.getSessionManager().getContext(contextName).loadXML(path,
+            this.getContextManager().getContext(contextName).loadXML(path,
                                                                         pars,
                                                                         this.objectModel,
                                                                         this.resolver,

@@ -50,19 +50,28 @@
 */
 package org.apache.cocoon.webapps.authentication.user;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
+import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.webapps.session.context.SessionContext;
+import org.xml.sax.SAXException;
 
 /**
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.3 2003/05/01 09:49:14 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.4 2003/05/04 20:19:39 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -79,6 +88,9 @@ implements java.io.Serializable {
     /** Loaded List */
     private List loadedApps = new ArrayList(3);
     
+    /** Application contexts */
+    private List applicationContexts;
+     
    /**
      * Create a new handler object.
      */
@@ -108,6 +120,41 @@ implements java.io.Serializable {
     }
     
     /**
+     * Create Application Context.
+     * This context is destroyed when the user logs out of the handler
+     */
+    public synchronized SessionContext createApplicationContext(String name,
+                                                                  String loadURI,
+                                                                 String saveURI)
+    throws ProcessingException {
+
+        SessionContext context = null;
+
+        ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+        ContextManager contextManager = null;
+        try {
+            contextManager = (ContextManager)manager.lookup(ContextManager.ROLE);
+            // create new context
+            context = contextManager.createContext(name, loadURI, saveURI);
+            if ( this.applicationContexts == null) {
+                this.applicationContexts = new ArrayList(3);
+            }
+            this.applicationContexts.add( name );
+
+        } catch (ComponentException ce) {
+            throw new ProcessingException("Unable to create session context.", ce);
+        } catch (IOException ioe) {
+            throw new ProcessingException("Unable to create session context.", ioe);
+        } catch (SAXException saxe) {
+            throw new ProcessingException("Unable to create session context.", saxe);
+        } finally {
+            manager.release( (Component)contextManager);
+        }
+
+        return context;
+    }
+
+    /**
      * Get the handler name
      */
     public String getHandlerName() {
@@ -128,5 +175,31 @@ implements java.io.Serializable {
     public void setApplicationIsLoaded(ApplicationConfiguration appConf) {
         this.loadedApps.add( appConf );
         this.appsLoaded = (this.loadedApps.size() == this.handler.getApplications().size());
+    }
+    
+    /**
+     * Terminate the handler
+     */
+    public void terminate() 
+    throws ProcessingException {
+        ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+
+        if ( this.applicationContexts != null ) {
+            ContextManager contextManager = null;
+
+            try {
+                contextManager = (ContextManager)manager.lookup(ContextManager.ROLE);
+
+                Iterator i = this.applicationContexts.iterator();
+                while ( i.hasNext() ) {
+                    final String current = (String)i.next();
+                    contextManager.deleteContext( current );
+                }
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Unable to create session context.", ce);
+            } finally {
+                manager.release( (Component)contextManager);
+            }
+        }
     }
 }

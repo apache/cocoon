@@ -53,8 +53,8 @@ package org.apache.cocoon.webapps.authentication.generation;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
@@ -64,7 +64,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.generation.ComposerGenerator;
-import org.apache.cocoon.webapps.authentication.components.AuthenticationManager;
+import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
+import org.apache.cocoon.webapps.authentication.user.RequestState;
+import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -84,7 +86,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.1 2003/03/09 00:02:21 pier Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.2 2003/05/04 20:19:42 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ComposerGenerator {
@@ -104,25 +106,22 @@ extends ComposerGenerator {
     throws IOException, SAXException, ProcessingException {
 
         this.xmlConsumer.startDocument();
-        AuthenticationManager authManager = null;
-        try {
-            authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-
-            if (authManager.isAuthenticated() == true) {
-                Configuration conf = authManager.getModuleConfiguration("single-role-user-management");
+        RequestState state = RequestState.getState();
+        if ( state != null ) {
+            try {
+                UserHandler userhandler = state.getHandler();
+                
+                Configuration conf = state.getModuleConfiguration("single-role-user-management");
                 if (conf == null) {
                     throw new ProcessingException("Module configuration 'single-role-user-management' for authentication user management generator not found.");
                 }
                 UserManagementHandler handler = new UserManagementHandler(conf,
-                                                                          authManager.getApplicationName());
-                this.showConfiguration(this.xmlConsumer, this.source, handler, authManager);
+                                                                          state.getApplicationName());
+                this.showConfiguration(this.xmlConsumer, this.source, handler, userhandler.getContext());
+            
+            } catch (ConfigurationException ex) {
+                throw new ProcessingException("ConfigurationException: " + ex, ex);
             }
-        } catch (ConfigurationException ex) {
-            throw new ProcessingException("ConfigurationException: " + ex, ex);
-        } catch (ComponentException ex) {
-            throw new ProcessingException("ComponentException: " + ex, ex);
-        } finally {
-            this.manager.release( authManager );
         }
 
         this.xmlConsumer.endDocument();
@@ -138,7 +137,7 @@ extends ComposerGenerator {
     public void showConfiguration(XMLConsumer consumer,
                                    String      src,
                                    UserManagementHandler handler,
-                                   AuthenticationManager authManager)
+                                   AuthenticationContext context)
     throws ProcessingException, SAXException, IOException {
         // synchronized
         if (this.getLogger().isDebugEnabled() == true) {
@@ -235,9 +234,9 @@ extends ComposerGenerator {
                 String user;
 
                 if (isAdmin == false) {
-                    SourceParameters pars = authManager.createParameters(null);
-                    id = pars.getParameter("ID", null);
-                    role = pars.getParameter("role", null);
+                    Map pars = context.getContextInfo();
+                    id = (String) pars.get("ID");
+                    role = (String) pars.get("role");
                     user = "old";
                 } else {
                     role = request.getParameter(REQ_PARAMETER_ROLE);
@@ -292,9 +291,9 @@ extends ComposerGenerator {
                 String id;
 
                 if (isAdmin == false) {
-                    SourceParameters pars = authManager.createParameters(null);
-                    id = pars.getParameter("ID", null);
-                    role = pars.getParameter("role", null);
+                    Map pars = context.getContextInfo();
+                    id = (String) pars.get("ID");
+                    role = (String) pars.get("role");
                 } else {
                     role = request.getParameter(REQ_PARAMETER_ROLE);
                     id   = request.getParameter(REQ_PARAMETER_ID);
@@ -335,9 +334,9 @@ extends ComposerGenerator {
                 String id;
 
                 if (isAdmin == false) {
-                    SourceParameters pars = authManager.createParameters(null);
-                    id = pars.getParameter("ID", null);
-                    role = pars.getParameter("role", null);
+                    Map pars = context.getContextInfo();
+                    id = (String) pars.get("ID");
+                    role = (String) pars.get("role");
                 } else {
                     role = request.getParameter(REQ_PARAMETER_ROLE);
                     id   = request.getParameter(REQ_PARAMETER_ID);

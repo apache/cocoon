@@ -57,6 +57,7 @@ import java.util.Map;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -65,14 +66,13 @@ import org.apache.cocoon.webapps.portal.components.PortalManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.SAXException;
 
 /**
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.1 2003/03/09 00:05:19 pier Exp $
+ * @version CVS $Id: SessionContextProviderImpl.java,v 1.2 2003/05/04 20:19:41 cziegeler Exp $
 */
 public final class SessionContextProviderImpl
 implements SessionContextProvider {
@@ -84,13 +84,13 @@ implements SessionContextProvider {
      * @return The context
      * @throws ProcessingException If the context is not available.
      */
-    public SessionContext getSessionContext(String name,
-                                            Map objectModel,
-                                            SourceResolver   resolver,
-                                            ComponentManager manager)
+    public SessionContext getSessionContext(String name)
     throws ProcessingException {
-        SessionContext context = null;
-        if (name.equals(PortalConstants.SESSION_CONTEXT_NAME) == true) {
+        ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+        Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+
+        SessionContext context = this.getContext( objectModel, name );
+        if (name.equals(PortalConstants.SESSION_CONTEXT_NAME) && context == null) {
             Request req = ObjectModelHelper.getRequest(objectModel);
             Session session = req.getSession(false);
             if (session != null) {
@@ -110,7 +110,7 @@ implements SessionContextProvider {
                                 String copletID = value.substring(sepOne+1, sepTwo);
                                 String copletNumber = value.substring(sepTwo+1);
 
-                                if (copletIdentifier.equals("coplet") == true) {
+                                if (copletIdentifier.equals("coplet")) {
                                     Map info = new HashMap(3);
                                     SessionContextImpl.copletInfo.set(info);
 
@@ -130,8 +130,8 @@ implements SessionContextProvider {
                             throw new ProcessingException("Portal context not available outside a coplet.");
                         }
                     }
-
                     context = new SessionContextImpl(name, objectModel, portal);
+                    objectModel.put(this.getClass().getName()+name, context);
                 } catch (SAXException se) {
                     throw new ProcessingException("SAXException", se);
                 } catch (IOException ioe) {
@@ -145,4 +145,26 @@ implements SessionContextProvider {
         }
         return context;
     }
+    
+    /**
+     * Does the context exist?
+     */
+    public boolean existsSessionContext(String name)
+    throws ProcessingException {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        return (this.getContext( objectModel, name) != null);
+    }
+
+    private SessionContext getContext(Map objectModel, String name) {
+        SessionContext context = (SessionContext) objectModel.get(this.getClass().getName()+name);
+        if ( context != null ) {
+            SessionContextImpl r = (SessionContextImpl)context;
+            if (!(r.getRequest() == ObjectModelHelper.getRequest( objectModel))) {
+                context = null;
+                objectModel.remove(this.getClass().getName()+name);
+            }
+        }
+        return context; 
+    }
+    
 }

@@ -48,12 +48,13 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.webapps.authentication.components;
+package org.apache.cocoon.webapps.session.components;
 
 import java.io.IOException;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -63,18 +64,18 @@ import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.MediaManager;
+import org.apache.cocoon.webapps.session.MediaManager;
 import org.xml.sax.SAXException;
 
 /**
- * This is the basis authentication component.
- *
+ * This is the default implementation for the media manager
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultMediaManager.java,v 1.1 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: DefaultMediaManager.java,v 1.1 2003/05/04 20:19:41 cziegeler Exp $
 */
 public final class DefaultMediaManager
 extends AbstractLogEnabled
-implements MediaManager, Configurable, RequestLifecycleComponent, Recyclable {
+implements MediaManager, Configurable, RequestLifecycleComponent, Recyclable, Component {
 
     /** The media Types */
     private PreparedMediaType[] allMediaTypes;

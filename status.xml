@@ -55,10 +55,6 @@
       Test, test, test :-)
     </action>   
  
-    <action context="code" assigned-to="CZ">
-      Redesign the SitemapConfigurable handling.
-    </action>
-
     <action context="docs" assigned-to="open">
       For 2.1: Attend to any high+ issues in the
       <link href="plan/todo-doc.html">Documentation To Do List</link>
@@ -199,6 +195,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="update">
+   Redesign/modularizing the authentication and session framework.
+  </action>
   <action dev="GR" type="add" fixes-bug="19206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
     Added 304 support to cacheable pipelines
   </action>

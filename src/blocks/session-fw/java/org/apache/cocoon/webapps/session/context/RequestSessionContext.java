@@ -147,7 +147,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getAuthType()
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: RequestSessionContext.java,v 1.1 2003/03/09 00:06:09 pier Exp $
+ * @version CVS $Id: RequestSessionContext.java,v 1.2 2003/05/04 20:19:40 cziegeler Exp $
 */
 public final class RequestSessionContext
 implements SessionContext {
@@ -207,6 +207,13 @@ implements SessionContext {
         return this.name;
     }
 
+    /**
+     * Get the request object
+     */
+    public Request getRequest() {
+        return this.request;
+    }
+    
     /**
      * Build path
      */
