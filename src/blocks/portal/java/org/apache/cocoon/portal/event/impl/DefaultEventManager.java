@@ -80,15 +80,21 @@ import org.apache.cocoon.portal.event.Publisher;
 import org.apache.cocoon.portal.event.Register;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
-import org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
+ * @author CZiegeler
  *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+/**
+ * This is the default implementation of the event manager.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.11 2003/12/10 14:04:15 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.12 2003/12/10 14:07:32 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -120,14 +126,23 @@ public class DefaultEventManager
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventManager#getPublisher()
+     */
     public Publisher getPublisher() {
         return this;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventManager#getRegister()
+     */
     public Register getRegister() {
         return this;
     }
     
+    /**
+     * Helper method to get the current object model 
+     */
     protected Map getObjectModel() {
         return ContextHelper.getObjectModel( this.context );
     }
@@ -154,6 +169,9 @@ public class DefaultEventManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize()
     throws Exception {
         this.eventClass = Class.forName( rootEventType );
@@ -200,6 +218,9 @@ public class DefaultEventManager
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Publisher#publish(org.apache.cocoon.portal.event.Event)
+     */
     public void publish( final Event event ) {
         
         if ( getLogger().isDebugEnabled() ) {
@@ -217,6 +238,9 @@ public class DefaultEventManager
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Register#subscribe(org.apache.cocoon.portal.event.Subscriber)
+     */
     public void subscribe( final Subscriber subscriber )
     throws InvalidEventTypeException {
         if ( !eventClass.isAssignableFrom( subscriber.getEventType() ) ) {
@@ -237,6 +261,9 @@ public class DefaultEventManager
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Register#unsubscribe(org.apache.cocoon.portal.event.Subscriber)
+     */
     public void unsubscribe( Subscriber subscriber )
     throws InvalidEventTypeException {
         
@@ -254,8 +281,8 @@ public class DefaultEventManager
         }
     }
 
-    /**
-     * Process the events
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.EventManager#processEvents()
      */
     public void processEvents()
     throws ProcessingException {
