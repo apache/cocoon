@@ -83,9 +83,6 @@
   </markup-languages>
 
   <datasources>
-    <hint shorthand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
-    <hint shorthand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
-
     <jdbc name="personnel">
       <pool-controller min="5" max="10"/>
       <dburl>@database-url@</dburl>
@@ -157,7 +154,10 @@
 
  <role name="org.apache.avalon.util.datasource.DataSourceComponentSelector"
        shorthand="datasources"
-       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector">
+    <hint shorthand="jdbc" class="org.apache.avalon.util.datasource.JdbcDataSource"/>
+    <hint shorthand="j2ee" class="org.apache.avalon.util.datasource.J2eeDataSource"/>
+</role>
 
  <role name="org.apache.cocoon.components.url.URLFactory"
        shorthand="url-factory"
