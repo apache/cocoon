@@ -65,7 +65,7 @@ import java.util.Map;
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSamplingEnvironment.java,v 1.1 2003/03/09 00:09:29 pier Exp $
+ * @version CVS $Id: LinkSamplingEnvironment.java,v 1.2 2003/05/12 13:26:17 stephan Exp $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
@@ -76,7 +76,7 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                                    File contextFile,
                                    Map attributes,
                                    Map parameters,
-                                   CommandlineContext cliContext,
+                                   CommandLineContext cliContext,
                                    Logger log)
             throws MalformedURLException, IOException {
         super(uri, Constants.LINK_VIEW, contextFile, new ByteArrayOutputStream(), log);

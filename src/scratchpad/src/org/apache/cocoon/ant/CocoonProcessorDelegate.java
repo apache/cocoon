@@ -70,14 +70,14 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.commandline.CommandlineContext;
+import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 
 /**
  * A facade for Cocoon processing
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonProcessorDelegate.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
+ * @version CVS $Id: CocoonProcessorDelegate.java,v 1.4 2003/05/12 13:26:17 stephan Exp $
  */
 public class CocoonProcessorDelegate extends AbstractLogEnabled
          implements Contextualizable, Configurable, Initializable {
@@ -86,7 +86,7 @@ public class CocoonProcessorDelegate extends AbstractLogEnabled
 
     private org.apache.avalon.framework.context.Context context;
 
-    private CommandlineContext clContext;
+    private CommandLineContext clContext;
     private File contextDir;
     private File destDir;
 
@@ -142,7 +142,7 @@ public class CocoonProcessorDelegate extends AbstractLogEnabled
      * @exception  Exception  Description of Exception
      */
     public void initialize() throws Exception {
-        clContext = (CommandlineContext) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        clContext = (CommandLineContext) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
         contextDir = new File(clContext.getRealPath("/"));
 
         destDir = (File) this.context.get("dest-dir");
