@@ -29,43 +29,50 @@ import org.apache.cocoon.Main;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
+
 /**
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-06 21:25:28 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-30 21:36:46 $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
 
+    private Logger log = LogKit.getLoggerFor("cocoon");
+
     private boolean skip = false;
-    
-    public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters) 
+
+    public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters)
     throws MalformedURLException, IOException {
         super(uri, Cocoon.LINK_VIEW, contextFile, new ByteArrayOutputStream());
+        log.debug("LinkSamplingEnvironment: uri=" + uri);
         this.objectModel.put(Cocoon.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
         this.objectModel.put(Cocoon.RESPONSE_OBJECT, new CommandLineResponse());
     }
 
-    /** 
-     * Set the ContentType 
-     */ 
+    /**
+     * Set the ContentType
+     */
     public void setContentType(String contentType) {
         if (!Cocoon.LINK_CONTENT_TYPE.equals(contentType)) {
             this.skip = true;
         }
     }
- 
-    /** 
+
+    /**
      * Indicates if other links are present.
-     */ 
+     */
     public Collection getLinks() throws IOException {
         ArrayList list = new ArrayList();
         if (!skip) {
             BufferedReader buffer = new BufferedReader(
                 new InputStreamReader(
                     new ByteArrayInputStream(
-                        ((ByteArrayOutputStream) stream).toByteArray()
+                        ((ByteArrayOutputStream) super.stream).toByteArray()
                     )
                 )
             );
