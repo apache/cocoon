@@ -1,4 +1,4 @@
-/*-- $Id: NoCache.java,v 1.6 2000-11-01 20:12:38 greenrd Exp $ --
+/*-- $Id: NoCache.java,v 1.7 2000-11-20 01:43:52 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import org.apache.cocoon.framework.*;
  * A caching implementation that doesn't cache anything :).
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $Date: 2000/02/14 00:59:18 $
+ * @version $Revision: 1.7 $Date: 2000/02/14 00:59:18 $
  */
 public class NoCache extends AbstractActor implements Cache, Status {
 
@@ -74,10 +74,10 @@ public class NoCache extends AbstractActor implements Cache, Status {
     }
 
     /**
-     * Just returns the current time.
+     * Just returns -1.
      */
     public long getLastModified(HttpServletRequest request) {
-      return System.currentTimeMillis ();
+      return -1;
     }
 
     public String getStatus() {

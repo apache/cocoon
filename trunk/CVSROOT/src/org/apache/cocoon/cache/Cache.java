@@ -1,4 +1,4 @@
-/*-- $Id: Cache.java,v 1.6 2000-11-01 20:12:40 greenrd Exp $ --
+/*-- $Id: Cache.java,v 1.7 2000-11-20 01:43:52 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -57,7 +57,7 @@ import javax.servlet.http.*;
  * The interface that all caching implementations must adhere to.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $Date: 2000/02/14 00:59:18 $
+ * @version $Revision: 1.7 $Date: 2000/02/14 00:59:18 $
  */
 
 public interface Cache extends Actor {
@@ -76,8 +76,7 @@ public interface Cache extends Actor {
 
     /**
      * Get the time that this request was added to the cache.
-     * If the request is no longer in the cache (maybe it was
-     * cleared due to low memory), just returns the current time.
+     * If the request is not in the cache, just returns -1.
      */
     public long getLastModified(HttpServletRequest request);
 

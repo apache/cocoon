@@ -93,6 +93,12 @@
       /* User Class Declarations */
       <xsl:apply-templates select="xsp:logic" />
 
+      <xsl:if test="xsp:structure/xsp:cacheable">
+        public boolean isCacheable (HttpServletRequest request) {
+          return true;
+        }
+      </xsl:if>
+
       public void populateDocument(
         HttpServletRequest request,
         HttpServletResponse response,

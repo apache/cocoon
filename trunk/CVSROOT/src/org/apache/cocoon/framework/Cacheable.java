@@ -1,4 +1,4 @@
-/*-- $Id: Page.java,v 1.5 2000-11-20 01:43:54 greenrd Exp $ -- 
+/*-- $Id: Cacheable.java,v 1.1 2000-11-20 01:43:54 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -50,92 +50,19 @@
  */
 package org.apache.cocoon.framework;
 
-import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import org.w3c.dom.*;
 
 /**
- * The Page wrapper class.
+ * If a Component does not implement this interface, any requests using
+ * this Component will never be cached. Note that AbstractFormatter
+ * and XSPPage automatically implement this interface.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-11-20 01:43:54 $
+ * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
+ * @version $Revision: 1.1 $ $Date: 2000-11-20 01:43:54 $
  */
 
-public class Page implements java.io.Serializable, Changeable, Cacheable {
-	
-    private String content = "text/xml";
-    private String contentType;
+public interface Cacheable {
 
-    private boolean cached = false;
-    private Vector changeables = new Vector(3);
-
-    public String getContent() {
-	return this.content;
-    }
-    
-    public void setContent(String content) {
-        this.content = content;
-    }
-	
-    public String getContentType() {
-	return this.contentType;
-    }
-
-    public void setContentType(String type) {
-        if (type != null) this.contentType = type;
-    }
-    
-    public boolean isText() {
-    	return this.contentType.startsWith("text");
-    }
-    
-    public Enumeration getChangeables() {
-        return this.changeables.elements();
-    }
-    
-    public void setChangeable(Changeable change) {
-        this.changeables.addElement(change);
-    }
-    
-    public boolean isCached() {
-        return cached;
-    }
-
-    public boolean hasChanged (Object context) {
-        HttpServletRequest request = (HttpServletRequest) context;
-
-        Enumeration e = getChangeables();
-        while (e.hasMoreElements()) {
-            Changeable c = (Changeable) e.nextElement();
-            if (c.hasChanged (request)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isCacheable (HttpServletRequest request) {
-
-        // Certain types of requests should never be cached
-        // Surprisingly, according to HTTP 1.1 spec, POST is
-        // not one of them!
-        String method = request.getMethod ();
-        if (method.equals ("OPTIONS") || method.equals ("PUT") ||
-            method.equals ("DELETE") || method.equals ("TRACE"))
-            return false;
-
-        Enumeration e = getChangeables();
-        while (e.hasMoreElements()) {
-            Object x = e.nextElement ();
-            if (!(x instanceof Cacheable)) return false;
-
-            Cacheable c = (Cacheable) x;
-            if (!c.isCacheable(request)) return false;
-        }
-        return true;
-    }
-    
-    public void setCached(boolean cached) {
-        this.cached = cached;
-    }
+  /** Returns whether this request is suitable for cacheing. */
+  public boolean isCacheable (HttpServletRequest request);
 }

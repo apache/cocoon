@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+<document>
+ <header>
+  <title>Cocoon Caching</title>
+  <authors>
+   <person name="Robin Green" email="greenrd@hotmail.com"/>
+  </authors>
+ </header>
+<body>
+ <s1 title="A Brief Guide to the Cocoon Cache System">
+  <p>
+   The Cocoon cache system started off clean, simple, and easy to understand.
+   However, unfortunately, it has outstripped its original design, and there
+   are now various confusing aspects to it. This document does not attempt to
+   be an exhaustive guide to Cocoon caching, but attempts to briefly document
+   the most important aspects. A more comprehensive version may be written a
+   later time - and remember, we're always 
+   <connect href="contrib.xml">looking for volunteers</connect> to write
+   documentation!
+  </p>
+
+  <p>
+   Please read the comments in <code>cocoon.properties</code> for an
+   explanation of the global caching parameters that Cocoon accepts.
+  </p>
+
+  <s2 title="What is cached and what is not?">
+
+   <p>Currently, in Cocoon 1.x, the main result
+    that is cached is the final output (usually HTML) of the request.
+    Although a few other things are cached (such as in-memory representations
+    of stylesheets and logicsheets) these are largely transparent to the Cocoon
+    developer. In other words, the results of each stage in the pipeline
+    are <em>not</em> cached.
+   </p>
+
+   <p>
+    Various Cocoon components have different behaviours with regard to caching.
+    Some components disable caching for all requests that use them; others
+    flush a page from the cache and regenerate it under certain conditions.
+    As per the HTTP 1.1 spec, certain request types
+    such as PUT are never cached under any circumstances (however, POST is
+    not one of these types - although 99% of the time it is not advisable to
+    cache a POST request, it is possible to do so.)
+   </p>
+ 
+   <note>This document is accurate with respect to Cocoon 1.8.1. Older and
+    newer versions may behave differently.</note>
+
+   <p>
+    In the table below, if any component being used by a request disables caching,
+    caching is disabled for that request. If any component being used by a request
+    invalidates the cache, the cached copy of that request is invalidated and removed.
+   </p>
+
+   <table>
+    <tr>
+     <th>Component</th>
+     <th>Component Type</th>
+     <th>Disables Caching For Affected Requests?</th>
+     <th>Invalidates Cache?</th>
+    </tr>
+    <tr>
+     <td>ProducerFromFile</td>
+     <td>Producer (default)</td>
+     <td>Never</td>
+     <td>When file changes</td>
+    </tr>
+    <tr>
+     <td>DCP</td>
+     <td>Processor</td>
+     <td>Always</td>
+     <td>n/a</td>
+    </tr>
+    <tr>
+     <td>LDAP</td>
+     <td>Processor</td>
+     <td>Always</td>
+     <td>n/a</td>
+    </tr>
+    <tr>
+     <td>SQL</td>
+     <td>Processor</td>
+     <td>Always</td>
+     <td>n/a</td>
+    </tr>
+    <tr>
+     <td>XInclude</td>
+     <td>Processor</td>
+     <td>Never</td>
+     <td>When included file changes(?)</td>
+    </tr>
+    <tr>
+     <td>XSLT</td>
+     <td>Processor</td>
+     <td>Never</td>
+     <td>When stylesheet changes. NOTE: The caching behaviour of
+      the XSLT document() function is not specified in the XSLT 1.0
+      specification, so we recommend an alternative (e.g. 
+      the more powerful XInclude)
+      unless you don't care about caching.</td>
+    </tr>
+    <tr>
+     <td>XSP</td>
+     <td>"Processor"/"Producer"</td>
+     <td>By default, yes; however, XSP pages can override this by putting
+      <code>&lt;xsp:cacheable/&gt;</code> within <code>&lt;xsp:structure&gt;
+      </code> (see XSP documentation.)
+     </td>
+     <td>Not applicable if xsp:cacheable tag is missing, since page will
+      never be cached. Otherwise, define the <code>public boolean hasChanged
+      (Object context)</code> method to define cache invalidation behaviour.
+      Always returning <code>false</code> will never invalidate, for example. 
+      The context object is currently a HttpServletRequest. Default behaviour
+      is always invalidate. (see XSP documentation.)
+     </td>
+    </tr>
+    <tr>
+     <td>All Cocoon-supplied Formatters</td>
+     <td>Formatters</td>
+     <td>Never</td>
+     <td>Never</td>
+    </tr>
+   </table>
+  </s2>
+
+  <s2 title="The XSP Repository">
+   <p>
+    The XSP repository where compiled XSP pages are stored
+    (see <code>cocoon.properties</code>) is often thought of as a cache, but
+    strictly speaking it is not. At the moment, all commonly available Java compilers
+    such as <code>javac</code> and <code>jikes</code> will only read and write files,
+    not in-memory objects. Thus, writing <code>.java</code> and <code>.class</code>
+    files to disk is essential.
+   </p>
+   <p>
+    It does not really make sense to say that XSP pages are compiled once, and then
+    "cached" thereafter so that they do not have to be used again. While this is 
+    approximately true, XSP generated classes are just normal classes - they remain
+    in memory after use. No caching mechanism is needed.
+   </p>
+   <p>
+    Although XSP is implemented in Cocoon 1 as a Processor, it is really more like a
+    Producer, because it ignores whether its input has changed. It was written based
+    on the assumption that it would be fed directly from a ProducerFromFile, and nothing
+    else. Thus XSPProcessor will <strong>not</strong> correctly handle dynamic input.
+    This is also why you cannot use XSP twice for one request  
+    (unless you use something like XInclude).
+   </p>
+   <note>
+    This anomaly has been corrected in Cocoon 2, where XSP is a Generator.
+   </note>
+  </s2>
+
+  <s2 title="What determines request equivalence?">
+   <p>Cocoon uses the following factors to decide if a request is equivalent to a
+    previous one. Only if all factors are identical will the cached copy (if any)
+    be used.</p>
+
+   <ul>
+    <li>HTTP User Agent string (identifies the browser)</li>
+    <li>Scheme (HTTP, HTTPS, etc.)</li>
+    <li>Server name</li>
+    <li>Port</li>
+    <li>Rest of URI, including query string</li>
+   </ul>
+  </s2>
+
+  <s2 title="Example of caching dynamic content - Why Bother?">
+   <p>Sometimes there is no point, and it can even cause bugs. Hence,
+    all dynamic content, by default, is not cached.
+    However, because Cocoon caches based on the <strong>query string</strong>,
+    as mentioned above, it can be useful to override this.
+   </p>
+
+   <p>Suppose you are presenting a large web directory with Cocoon.
+    All of the directory content is served from a robust back-end database.
+    Since the root of the directory (?node=1) is requested so frequently, it
+    makes sense to cache the transformed representation (HTML) of this 
+    and other popular nodes. Assuming you are using
+    XSP, you can simply declare <code>&lt;xsp:cacheable/&gt;</code> and the
+    following method:
+   </p>
+
+   <source>
+     public boolean hasChanged (Object context) {
+       return false; // to cache everything and leave
+       // memory management up to Cocoon
+
+       // or
+       try {
+         return Integer.parseInt 
+           (((HttpServletRequest) context).getParameter ("node")) 
+           &lt; 50; // only cache the most important 50 nodes.
+       }
+       catch (NumberFormatException ex) {
+         // error pages don't change
+         return false;
+       } 
+     }
+   </source>
+  </s2>
+
+  <s2 title="Advanced Cache Control">
+   <p>
+    If writing your own Producer or Processor, implement the
+    <code>org.apache.cocoon.framework.Cacheable</code> and
+    <code>org.apache.cocoon.framework.Changeable</code> interfaces to
+    define custom caching behaviour. The same degree of control is also
+    available to XSP pages - see table above.
+   </p>
+  </s2>
+ </s1>
+</body>
+</document>

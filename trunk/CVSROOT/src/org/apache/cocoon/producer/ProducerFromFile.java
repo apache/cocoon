@@ -1,4 +1,4 @@
-/*-- $Id: ProducerFromFile.java,v 1.9 2000-05-06 11:13:53 stefano Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.10 2000-11-20 01:43:59 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -65,10 +65,10 @@ import org.apache.cocoon.framework.*;
  * based on its tranlated path.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-05-06 11:13:53 $
+ * @version $Revision: 1.10 $ $Date: 2000-11-20 01:43:59 $
  */
 
-public class ProducerFromFile extends AbstractProducer implements Status {
+public class ProducerFromFile extends AbstractProducer implements Status, Cacheable {
     
     private Monitor monitor = new Monitor(10);
 
@@ -88,6 +88,10 @@ public class ProducerFromFile extends AbstractProducer implements Status {
     
     public boolean hasChanged(Object context) {
         return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context));
+    }
+
+    public boolean isCacheable(HttpServletRequest request) {
+        return true;
     }
     
     public String getStatus() {

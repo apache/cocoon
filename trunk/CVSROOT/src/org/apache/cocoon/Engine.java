@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.37 2000-11-16 17:31:53 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.38 2000-11-20 01:43:53 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.interpreter.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.37 $ $Date: 2000-11-16 17:31:53 $
+ * @version $Revision: 1.38 $ $Date: 2000-11-20 01:43:53 $
  */
 
 public class Engine implements Defaults {
@@ -319,7 +319,9 @@ public class Engine implements Defaults {
                 }
             }
 
-            if (page == null) {
+            boolean wasInCache = (page != null);
+
+            if (!wasInCache) {
 
                 // the page was not found in the cache or the cache was
                 // disabled, we need to process it
@@ -394,7 +396,7 @@ public class Engine implements Defaults {
                             page.setContentType(formatter.getMIMEType());
                         }
 
-                        // cache the created page.
+                        // cache the created page, if it is cacheable
                         cache.setPage(page, request);
 
                         // page is done without memory errors so exit the loop
@@ -425,8 +427,12 @@ public class Engine implements Defaults {
                 response.setContentType(page.getContentType());
 
                 // set the Last-Modified header if this option is enabled in cocoon.properties
+                // and the request has been cached
                 if (LASTMODIFIED) {
-                   response.setDateHeader ("Last-Modified", cache.getLastModified (request));
+                   long lastMod = cache.getLastModified (request);
+                   if (lastMod > -1) {
+                      response.setDateHeader ("Last-Modified", lastMod);
+                   }
                 }
 
                 // get the output writer
@@ -441,7 +447,7 @@ public class Engine implements Defaults {
                 if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
                     time = System.currentTimeMillis() - time;
                     out.println("<!-- This page was served "
-                        + (page.isCached() ? "from cache " : "")
+                        + (wasInCache ? "from cache " : "")
                         + "in " + time + " milliseconds by "
                         + Cocoon.version() + " -->");
                     //out.println("<!-- free memory: " + Runtime.getRuntime().freeMemory() + " -->");

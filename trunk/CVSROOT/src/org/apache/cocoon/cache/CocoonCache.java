@@ -1,4 +1,4 @@
-/*-- $Id: CocoonCache.java,v 1.8 2000-11-14 22:02:57 greenrd Exp $ --
+/*-- $Id: CocoonCache.java,v 1.9 2000-11-20 01:43:52 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.framework.*;
  * statically and dynamically generated.
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $Date: 2000/11/01 20:12:40 $
+ * @version $Revision: 1.9 $Date: 2000/11/01 20:12:40 $
  */
 public class CocoonCache implements Cache, Status {
 
@@ -86,41 +86,30 @@ public class CocoonCache implements Cache, Status {
             return null;
         }
 
-        boolean changed = false;
-        Enumeration e = page.getChangeables();
-        while (e.hasMoreElements()) {
-            Changeable c = (Changeable) e.nextElement();
-            changed = c.hasChanged(request);
-            if (changed) {
-                break;
-            }
-        }
-
+        boolean changed = page.hasChanged (request);
         if (changed) store.remove (encoded);
-
         return (changed) ? null : page;
     }
 
     /**
      * Get the time that this request was added to the cache.
-     * If the request is no longer in the cache (maybe it was
-     * cleared due to low memory), just returns the current time.
+     * If the request is not in the cache, returns -1.
      */
     public long getLastModified(HttpServletRequest request) {
       try {
-        return store.getTime (request);
+        return store.getTime (Utils.encode (request));
       }
       catch (NullPointerException ex) {
-        return System.currentTimeMillis ();
+        return -1;
       }
     }
 
     /**
-     * This method inserts the page in cache and associates it
+     * If the page is cacheable, inserts it in cache and associates it
      * with the given request.
      */
     public void setPage(Page page, HttpServletRequest request) {
-        if (!page.isCached()) {
+        if (!page.isCached() && page.isCacheable (request)) {
             page.setCached(true);
             this.store.hold(Utils.encode(request), page);
         }

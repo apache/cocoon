@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.29 2000-11-15 18:33:32 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.30 2000-11-20 01:43:57 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,10 +78,10 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.29 $ $Date: 2000-11-15 18:33:32 $
+ * @version $Revision: 1.30 $ $Date: 2000-11-20 01:43:57 $
  */
 public class XSPProcessor extends AbstractActor
-  implements Processor, Configurable, Status
+  implements Processor, Configurable, Status, Cacheable
 {
   public static final String DEFAULT_LANGUAGE = "java";
   public static final String LOGICSHEET_PI = "xml-logicsheet";
@@ -331,17 +331,14 @@ public class XSPProcessor extends AbstractActor
     HttpServletResponse response =
       (HttpServletResponse) parameters.get("response");
 
+    // XXX: This is a mess - keys all over the place! - RDG
+
     // Determine source document's absolute pathname
     String filename = Utils.getBasename(request, servletContext);
-
     File sourceFile = new File(filename);
-    try {
-      filename = sourceFile.getCanonicalPath();
-    } catch (IOException e) {
-      filename = sourceFile.getAbsolutePath();
-    }
+    filename = getStoreKey (request);
 
-    // Get page from Cocoon cache
+    // Get page from Cocoon store
     PageEntry pageEntry = (PageEntry) this.store.get(filename);
 
     // New page?
@@ -374,7 +371,7 @@ public class XSPProcessor extends AbstractActor
       this.store.hold(filename, pageEntry);
     }
 
-    // Get page from Cocoon cache AGAIN to ensure proper synchronization
+    // Get page from Cocoon store AGAIN to ensure proper synchronization
     pageEntry = (PageEntry) this.store.get(filename);
 
     synchronized (pageEntry) {
@@ -619,21 +616,32 @@ public class XSPProcessor extends AbstractActor
     return this.global;
   }
 
-  public boolean hasChanged(Object context) {
-    if (!(context instanceof HttpServletRequest)) return true; // Can't interpret context
-
-    HttpServletRequest request = (HttpServletRequest) context;
-    String filename = Utils.getBasename(request, servletContext);
-
-    File sourceFile = new File(filename);
-    try {
-      filename = sourceFile.getCanonicalPath();
-    } catch (IOException e) {
-      filename = sourceFile.getAbsolutePath();
+  protected String getStoreKey (Object context) {
+    if (!(context instanceof HttpServletRequest)) {
+      return null; // can't interpret context
     }
 
-    // Get page from Cocoon cache
-    PageEntry pageEntry = (PageEntry) this.store.get(filename);
+    HttpServletRequest request = (HttpServletRequest) context;
+ 
+    // Determine source document's absolute pathname
+    String filename = Utils.getBasename(request, servletContext);
+    File sourceFile = new File(filename);
+    try {
+      return sourceFile.getCanonicalPath();
+    } catch (IOException e) {
+      return sourceFile.getAbsolutePath();
+    }
+  }
+
+  protected PageEntry getPageEntry (Object context) {
+    String storeKey = getStoreKey (context);
+    if (storeKey == null) return null;
+    return (PageEntry) store.get (storeKey);
+  }
+
+  public boolean hasChanged(Object context) {
+    // Get page from Cocoon store
+    PageEntry pageEntry = getPageEntry (context);
 
     // New page?
     if (pageEntry == null) return true;
@@ -641,6 +649,18 @@ public class XSPProcessor extends AbstractActor
     // NOT pageEntry.hasChanged ()! We are calling the hasChanged method
     // of the XSP page itself.
     return pageEntry.getPage().hasChanged(context);
+  }
+
+  public boolean isCacheable(HttpServletRequest request) {
+    // Get page from Cocoon store
+    PageEntry pageEntry = getPageEntry (request);
+
+    // New page?
+    if (pageEntry == null) return true;
+
+    // NOT pageEntry.isCacheable ()! We are calling the isCacheable method
+    // of the XSP page itself.
+    return pageEntry.getPage().isCacheable(request);
   }
 
   public String getStatus() {
@@ -676,6 +696,7 @@ public class XSPProcessor extends AbstractActor
       return this.logicsheets;
     }
 
+    /** Does the page need recompiling? */
     public boolean hasChanged() throws Exception {
       if (
         !this.target.exists() ||

@@ -1,4 +1,4 @@
-/*-- $Id: AbstractFormatter.java,v 1.3 2000-04-04 11:11:16 stefano Exp $ -- 
+/*-- $Id: AbstractFormatter.java,v 1.4 2000-11-20 01:43:54 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,13 +55,15 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.apache.xml.serialize.*;
 import org.apache.cocoon.framework.*;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 2000-04-04 11:11:16 $
+ * @version $Revision: 1.4 $ $Date: 2000-11-20 01:43:54 $
  */
 
-public abstract class AbstractFormatter implements Configurable, Formatter, Status {
+public abstract class AbstractFormatter 
+implements Configurable, Formatter, Status, Cacheable {
  
     protected String statusMessage = "Abstract Formatter";
     protected String MIMEtype;
@@ -160,4 +162,8 @@ public abstract class AbstractFormatter implements Configurable, Formatter, Stat
         message.append("<br>");
         return message.toString();
     }       
+
+    public boolean isCacheable (HttpServletRequest request) {
+        return true;
+    }
 }

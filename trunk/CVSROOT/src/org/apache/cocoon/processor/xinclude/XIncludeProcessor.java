@@ -78,6 +78,7 @@ import org.apache.cocoon.logger.Logger;
 import org.apache.cocoon.xml.util.XPathAPI;
 import org.apache.cocoon.framework.Status;
 import org.apache.cocoon.framework.AbstractActor;
+import org.apache.cocoon.framework.Cacheable;
 import org.apache.cocoon.framework.Director;
 import org.apache.cocoon.framework.Monitor;
 import org.apache.cocoon.processor.Processor;
@@ -101,9 +102,9 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.18 $ $Date: 2000-11-15 05:20:00 $ $Author: balld $
+ * @version CVS $Revision: 1.19 $ $Date: 2000-11-20 01:43:55 $ $Author: greenrd $
  */
-public class XIncludeProcessor extends AbstractActor implements Processor, Status {
+public class XIncludeProcessor extends AbstractActor implements Processor, Status, Cacheable {
 
 	protected boolean debug = false;
 
@@ -151,6 +152,10 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 		}
 		return false;
 	}
+
+        public boolean isCacheable(HttpServletRequest request) {
+               return true;
+        }
 
 class XIncludeElement {
 

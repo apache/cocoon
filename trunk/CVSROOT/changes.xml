@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.149 2000-11-19 20:38:51 greenrd Exp $ 
+  $Id: changes.xml,v 1.150 2000-11-20 01:43:51 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,13 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="update">
+   New caching interface introduced - org.apache.cocoon.framework.Cacheable
+   and corresponding xsp tag xsp:cacheable. Incomplete cacheing documentation
+   page added. Requests that there is no point
+   in cacheing, will now not be cached. This was partly in response to
+   LastModified oddities, and partly to improve memory usage efficiency.
+  </action>
   <action dev="RDG" type="fix">
    Made store cleanup algorithm more aggressive. Hopefully this should clear
    up some of the OutOfMemoryErrors people have been having.
@@ -139,7 +146,7 @@
    Added put-value to session taglib for JServ compatibility.
   </action>
   <action dev="RDG" type="fix" due-to="Hao Wang" due-to-email="hbwang@cs.wisc.edu">
-   Spaces are not trimmed from class names read from cocoon.properties (by Engine or Router)
+   Spaces are now trimmed from class names read from cocoon.properties (by Engine or Router)
    so that extra spaces won't create odd startup errors.
   </action>
   <action dev="DB" type="fix" due-to="Peter Verhage" due-to-email="peter@ibuildings.nl">

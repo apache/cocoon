@@ -1,4 +1,4 @@
-/*-- $Id: XSPPage.java,v 1.7 2000-09-17 14:31:28 greenrd Exp $ -- 
+/*-- $Id: XSPPage.java,v 1.8 2000-11-20 01:43:56 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,9 +63,9 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.7 $ $Date: 2000-09-17 14:31:28 $
+ * @version $Revision: 1.8 $ $Date: 2000-11-20 01:43:56 $
  */
-public abstract class XSPPage extends AbstractProducer {
+public abstract class XSPPage extends AbstractProducer implements Cacheable {
   protected Parser xspParser;
   protected ServletContext servletContext;
   protected XSPGlobal global;
@@ -103,6 +103,14 @@ public abstract class XSPPage extends AbstractProducer {
     HttpServletResponse response,
     Document document
   ) throws Exception;
+
+  /**
+   * For backward repository compatibility when upgrading to Cocoon 1.8.1
+   * from an earlier version.
+   */
+  public boolean isCacheable (HttpServletRequest request) {
+    return false;
+  }
 
   // <xsp:expr> methods
   protected Text xspExpr(char v, Document factory) {
