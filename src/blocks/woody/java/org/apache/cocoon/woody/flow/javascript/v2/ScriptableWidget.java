@@ -639,6 +639,20 @@ public class ScriptableWidget extends ScriptableObject {
         }
     }
 
+    public void jsFunction_setSelectionList(Object objectArg, Object valuePathArg, Object labelPathArg) throws Exception {
+        if (delegate instanceof Field ||
+            delegate instanceof MultiValueField) {
+            Object object = unwrap(objectArg);
+            String valuePath = Context.toString(valuePathArg);
+            String labelPath = Context.toString(labelPathArg);
+            if (delegate instanceof Field) {
+                ((Field)delegate).setSelectionList(object, valuePath, labelPath);
+            } else {
+                ((MultiValueField)delegate).setSelectionList(object, valuePath, labelPath);
+            }
+        }
+    }
+
     static final Object[] WIDGET_CLASS_MAP = {
         Form.class, "Form",
         Field.class, "Field",
