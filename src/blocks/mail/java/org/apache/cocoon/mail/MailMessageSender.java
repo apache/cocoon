@@ -59,7 +59,7 @@ import java.util.Properties;
  * A helper class used by the {@link org.apache.cocoon.acting.Sendmail}
  * and the <code>sendmail.xsl</code> logicsheet for sending an email message.
  *
- * <h3>Parameters</h3>
+ * <h3>Configuration</h3>
  * <table><tbody>
  * <tr><th>smtp-host</th><td>SMTP server to use sending mail.</td><td>opt</td><td>String</td><td><code>localhost</code></td></tr>
  * <tr><th>smtp-user</th><td>User name for authentication</td><td>opt</td><td>String</td></tr>
@@ -85,6 +85,7 @@ public class MailMessageSender
 
     private String from;
     private String to;
+    private String replyTo;
     private String cc;
     private String bcc;
     private String subject;
@@ -282,7 +283,6 @@ public class MailMessageSender
      */
     public void send(org.apache.cocoon.environment.SourceResolver resolver)
     throws AddressException, MessagingException {
-
         // resolver is automatically down-casted
         doSend(resolver);
     }
@@ -294,13 +294,13 @@ public class MailMessageSender
         final MimeMessage message = new MimeMessage(this.session);
 
         if (this.from == null) {
-            throw new AddressException("no from address");
+            throw new AddressException("No from address");
         } else {
             try {
                 message.setFrom(new InternetAddress(this.from));
             } catch (AddressException e) {
-                throw new AddressException(
-                    "invalid from address: " + this.from + ": " + e.getMessage());
+                throw new AddressException("Invalid from address: " + this.from + ": " +
+                                           e.getMessage());
             }
         }
 
@@ -311,8 +311,17 @@ public class MailMessageSender
                 message.setRecipients(RecipientType.TO,
                                       InternetAddress.parse(this.to));
             } catch (AddressException e) {
-                throw new AddressException(
-                    "invalid to address: " + this.to + ": " + e.getMessage());
+                throw new AddressException("Invalid to address: " + this.to + ": " +
+                                           e.getMessage());
+            }
+        }
+
+        if (this.replyTo != null) {
+            try {
+                message.setReplyTo(InternetAddress.parse(this.replyTo));
+            } catch (AddressException e) {
+                throw new AddressException("Invalid replyTo address: " + this.replyTo + ": " +
+                                           e.getMessage());
             }
         }
 
@@ -321,8 +330,8 @@ public class MailMessageSender
                 message.setRecipients(RecipientType.CC,
                                       InternetAddress.parse(this.cc));
             } catch (AddressException e) {
-                throw new AddressException(
-                    "invalid cc address: " + this.cc + ": " + e.getMessage());
+                throw new AddressException("Invalid cc address: " + this.cc + ": " +
+                                           e.getMessage());
             }
         }
 
@@ -331,8 +340,8 @@ public class MailMessageSender
                 message.setRecipients(RecipientType.BCC,
                                       InternetAddress.parse(this.bcc));
             } catch (AddressException e) {
-                throw new AddressException(
-                    "invalid bcc address: " + this.bcc + ": " + e.getMessage());
+                throw new AddressException("Invalid bcc address: " + this.bcc + ": " +
+                                           e.getMessage());
             }
         }
 
@@ -516,6 +525,20 @@ public class MailMessageSender
     public void setTo(String to) {
         if (!("".equals(to) || "null".equals(to))) {
             this.to = to.trim();
+        }
+    }
+
+    /**
+     * Sets the reply-to address(es) for the message. The address
+     * is in the format, that
+     * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
+     * (one or more email addresses separated by a commas).
+     * @param replyTo the address(es) that replies should be sent to
+     * @see javax.mail.internet.InternetAddress#parse(String)
+     */
+    public void setReplyTo(String replyTo) {
+        if (!("".equals(replyTo) || "null".equals(replyTo))) {
+            this.replyTo = replyTo.trim();
         }
     }
 

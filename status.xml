@@ -482,6 +482,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="VG" type="add" fixes-bug="28973" due-to="Andrew Thornton" due-to-email="andrew@caret.cam.ac.uk">
+     Mail Block: Add support for replyTo.
+   </action>
    <action dev="VG" type="update">
      OJB Block: Integrated OJB logging with Cocoon logging.
    </action>

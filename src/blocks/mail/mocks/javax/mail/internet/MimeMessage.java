@@ -25,8 +25,8 @@ import javax.mail.MessagingException;
 /**
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
- * 
- * @version CVS $Id: MimeMessage.java,v 1.4 2004/03/06 02:25:44 antonio Exp $
+ *
+ * @version CVS $Id$
  */
 public class MimeMessage extends Message implements MimePart {
 
@@ -71,19 +71,24 @@ public class MimeMessage extends Message implements MimePart {
     }
 
     public void setRecipients(Message.RecipientType type, Address[] addresses)
-        throws MessagingException {
+    throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
     }
 
     public void setText(java.lang.String text, java.lang.String charset)
-        throws MessagingException {
+    throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
     }
 
     public void setDataHandler(DataHandler dh) throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
     }
 
     public void setFileName(String filename) throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
     }
-    
+
     public void setContent(Multipart mp) throws MessagingException {
+        throw new NoSuchMethodError("This is a mock object");
     }
 }
