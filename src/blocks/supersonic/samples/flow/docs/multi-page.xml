@@ -62,7 +62,7 @@
             <cinclude:include element="flowscript-code" src="cocoon:/text-file/flow/multi-page/multi-page.js"/>
         </p>
         <p>
-            It's not more complicated than the previous example, but slightly
+            It is not more complicated than the previous example, but slightly
             longer due to the (boring) copying of request parameters into
             the message object. This boring part is where Cocoon Forms will
             come into play, by making it easier to <em>bind</em> data to
@@ -86,8 +86,8 @@
         </p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/multi-page/page1.xml/page"/>
         <p>
-            This is page 1, page 2 is similar but shows the <em>text</em> field instead of
-            the fields present on page 1.
+            This is page 1. The page 2 is similar but shows the <em>text</em>
+            field instead of the fields present on page 1.
         </p>
     </content>
 </page>

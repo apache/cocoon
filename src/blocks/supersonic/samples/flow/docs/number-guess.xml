@@ -63,7 +63,7 @@
         </p>
         <p>
             The maxValue parameter is used by our Flowscript <em>public_startGuessNumber</em> function,
-            but doesn't hurt if it's passed to other functions (like in the next example).
+            but doesn't hurt if it is passed to other functions (like in the next example).
         </p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/start"/>
 
