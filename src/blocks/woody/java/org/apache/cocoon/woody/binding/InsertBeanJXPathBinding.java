@@ -52,11 +52,9 @@ package org.apache.cocoon.woody.binding;
 
 import java.lang.reflect.Method;
 
-import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.commons.jxpath.AbstractFactory;
-import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Pointer;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.commons.jxpath.JXPathContext;
 
 /**
  * InsertBeanJXPathBinding provides an implementation of a {@link Binding}
@@ -67,7 +65,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
  * <li>This Binding does not perform any actions when loading.</li>
  * </ol>
  *
- * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.6 2004/01/27 05:50:08 tim Exp $
+ * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.7 2004/01/27 11:43:29 joerg Exp $
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
