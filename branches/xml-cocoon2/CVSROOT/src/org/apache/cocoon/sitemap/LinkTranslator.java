@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-27 14:57:26 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 17:49:41 $
  */
 public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
 
@@ -122,7 +122,7 @@ public class LinkTranslator extends AbstractXMLProducer implements XMLConsumer {
             }
         }
         if (tran!=null) {
-            int x=a.getIndex(tran);
+            int x=a2.getIndex(tran);
             if (x>-1) {
                 String resolved=this.linkResolver.resolve(a2.getValue(x),part);
                 if (resolved!=null) a2.setValue(x,this.prepath+resolved);

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-02-27 14:57:26 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-02-27 17:49:41 $
  */
 public class GenericProcessor
 implements Composer, Configurable, Processor, LinkResolver {
@@ -115,8 +115,8 @@ implements Composer, Configurable, Processor, LinkResolver {
         Enumeration e=conf.getConfigurations("filter");
         while (e.hasMoreElements()) {
             Configuration f=(Configuration)e.nextElement();
-            this.filters.addElement("filter:"+c.getAttribute("name"));
-            this.filtersParam.addElement(Parameters.fromConfiguration(c));
+            this.filters.addElement("filter:"+f.getAttribute("name"));
+            this.filtersParam.addElement(Parameters.fromConfiguration(f));
         }
     }
 
@@ -159,8 +159,10 @@ implements Composer, Configurable, Processor, LinkResolver {
      */
     public String resolve(String source, String partition) {
         if ((partition==null)||(this.partition.name.equals(partition))) {
-            String translated=this.sourceTranslator.translate(source);
-            if (translated!=null) return(translated);
+            //if (source!=null) {
+                String translated=this.sourceTranslator.translate(source);
+                if (translated!=null) return(translated);
+            //}
         }
         return(this.partition.resolve(source,partition,this));
     }
