@@ -218,10 +218,10 @@
      Updated antlr to 2.7.4, db-ojb to 1.0.1
    </action>
    <action dev="TC" type="fix" fixes-bug="31297" due-to="Nikolaus Rath" due-to-email="Nikolaus@rath.org">
-     Javaflow block: also support inherited methods
+     Javaflow block: Support inherited methods
    </action>
    <action dev="TC" type="add">
-     Javaflow block: ported back parameter support from trunk
+     Javaflow block: Add parameter support
    </action>
    <action dev="SW" type="add">
      CForms block: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
@@ -276,7 +276,7 @@
      Portal block: Apply patch for handling GET method when no enctype is set in CopletTransformer.
    </action>
    <action dev="TC" type="fix" fixes-bug="31545">
-    Throw a more meaningful exception if charset classes are missing
+     Throw a more meaningful exception if charset classes are missing
    </action>
    <action dev="TC" type="fix" fixes-bug="30874">
      Fixes the SQLTransformer not to close the statement twice
