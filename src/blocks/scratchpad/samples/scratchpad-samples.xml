@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.12 2004/04/05 12:25:36 antonio Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.13 2004/06/07 01:04:18 antonio Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Scratchpad Samples">
 
@@ -24,24 +24,27 @@
     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
- <group name="Garbage">
-    <sample name="Garbage" href="garbage/">
-      Flowscript Calculator Sample using Garbage Template Generator
+  <group name="Betwixt">
+    <sample name="Example" href="betwixt/">
+      Show the usage of the Betwixt Transformer
     </sample>
   </group>
-  
+
   <group name="Castor">
     <sample name="CastorTransformer" href="castor/">
       Show the usage of the Castor Transformer.
     </sample>
   </group>
-
-  <group name="Jelly">
-    <sample name="Test 1" href="jelly/test1">
-      A test of the Jelly generator - you have to download and install the jelly.jar first!
+  
+  <group name="Garbage">
+    <sample name="Garbage" href="garbage/">
+      Flowscript Calculator Sample using Garbage Template Generator
     </sample>
-    <sample name="Test 2" href="jelly/test2">
-      A test of the Jelly generator - you have to download and install the jelly.jar first!
+  </group>
+  
+  <group name="Groovy Flow Engine">
+    <sample name="Groovy" href="groovyflow/">
+      An experimental Groovy Flow Engine based on the JavaFlow Engine
     </sample>
   </group>
 
@@ -57,21 +60,41 @@
       Make sure the Batik block is included before testing this sample.
     </sample>
   </group>
-
-  <group name="Betwixt">
-    <sample name="Example" href="betwixt/">
-      Show the usage of the Betwixt Transformer
+  
+  <group name="Jelly">
+    <sample name="Test 1" href="jelly/test1">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+    <sample name="Test 2" href="jelly/test2">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
     </sample>
   </group>
 
-  <group name="Sitemap Viewer">
-    <sample name="Sitemap Viewer" href="sitemap-viewer/">
-        Experimental sitemap viewer
+  <group name="Module Source">
+    <sample name="Request URI"
+            href="module-source/test1">
+      Use a source that reads from a request URI.
+    </sample>
+    <sample name="Text field"
+            href="module-source/test2">
+      Use a source that reads from a input text field.
+    </sample>
+    <sample name="XML text field"
+            href="module-source/test4">
+      Read XML data from a text field. Also demonstrates the use of
+      input from multi part mime posts and require that uploads are
+      enabled in web.xml.
     </sample>
   </group>
   
   <group name="Othello">
     <sample name="Example" href="othello/">Template based static web site.</sample>
+  </group>
+  
+  <group name="Sitemap Viewer">
+    <sample name="Sitemap Viewer" href="sitemap-viewer/">
+        Experimental sitemap viewer
+    </sample>
   </group>
 
   <group name="Sources">
@@ -101,22 +124,4 @@
         session attribute "test".
     </sample>
   </group>
-
-  <group name="Module Source">
-    <sample name="Request URI"
-            href="module-source/test1">
-      Use a source that reads from a request URI.
-    </sample>
-    <sample name="Text field"
-            href="module-source/test2">
-      Use a source that reads from a input text field.
-    </sample>
-    <sample name="XML text field"
-            href="module-source/test4">
-      Read XML data from a text field. Also demonstrates the use of
-      input from multi part mime posts and require that uploads are
-      enabled in web.xml.
-    </sample>
-  </group>
-
 </samples>

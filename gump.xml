@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.159 2004/06/04 07:30:49 antonio Exp $
+    | CVS $Id: gump.xml,v 1.160 2004/06/07 01:04:18 antonio Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -153,6 +153,7 @@
     <depend project="cocoon-block-cron"/>
     <depend project="cocoon-block-batik" type="samples"/>
     <depend project="cocoon-block-xsp"/>
+    <depend project="cocoon-block-javaflow"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -775,7 +776,7 @@
     <jar name="blocks/woody-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>  
+  </project>
 
   <project name="cocoon-block-qdox" status="unstable">
     <package>org.apache.cocoon</package>
@@ -909,10 +910,10 @@
       <property name="block-name" value="eventcache"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
-    
+
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-xsp" type="samples"/>
-    
+
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/test"/>
     <work nested="tools/anttasks"/>
@@ -1010,6 +1011,7 @@
     <depend project="cocoon-block-forms" type="samples"/>
 
     <work nested="tools/anttasks"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/ojb/mocks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/ojb-block.jar"/>
@@ -1047,10 +1049,10 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    
+
     <depend project="cocoon-block-databases" />
     <depend project="cocoon-block-eventcache" />
-    
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
