@@ -29,10 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -40,6 +36,9 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.axis.AxisEngine;
 import org.apache.axis.Constants;
@@ -88,10 +87,10 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  * 
- * @version CVS $Id: SoapServerImpl.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class SoapServerImpl extends AbstractLogEnabled
-    implements SoapServer, Composable, Configurable, Contextualizable, Initializable,
+    implements SoapServer, Serviceable, Configurable, Contextualizable, Initializable,
                Startable, ThreadSafe
 {
     /**
@@ -127,8 +126,8 @@ public class SoapServerImpl extends AbstractLogEnabled
     // context reference
     private Context m_context;
 
-    // component manager reference
-    private ComponentManager m_manager;
+    // serivce manager reference
+    private ServiceManager m_manager;
 
     /**
      * Contextualize this Reader.
@@ -145,11 +144,11 @@ public class SoapServerImpl extends AbstractLogEnabled
     /**
      * Compose this server
      *
-     * @param manager a <code>ComponentManager</code> value
+     * @param manager a <code>ServiceManager</code> value
      * @exception ComponentException if an error occurs
      */
-    public void compose(ComponentManager manager)
-        throws ComponentException
+    public void service(ServiceManager manager)
+        throws ServiceException
     {
         m_manager = manager;
     }
@@ -377,7 +376,7 @@ public class SoapServerImpl extends AbstractLogEnabled
             finally
             {
                 if (resolver != null) m_manager.release(resolver);
-                if (parser != null) m_manager.release((Component)parser);
+                if (parser != null) m_manager.release(parser);
             }
         }
 
@@ -490,7 +489,7 @@ public class SoapServerImpl extends AbstractLogEnabled
 
         // Add Avalon specifics to MessageContext
         msgContext.setProperty(LOGGER, getLogger());
-        msgContext.setProperty(AvalonProvider.COMPONENT_MANAGER, m_manager);
+        msgContext.setProperty(AvalonProvider.SERVICE_MANAGER, m_manager);
 
         // Save some HTTP specific info in the bag in case someone needs it
         msgContext.setProperty(Constants.MC_JWS_CLASSDIR, m_jwsClassDir);

@@ -20,12 +20,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
@@ -36,26 +36,26 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.10 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
-    implements Composable, Disposable {
+    implements Serviceable, Disposable {
 
-    /** The component manager instance */
-    protected ComponentManager manager;
+    /** The service manager instance */
+    protected ServiceManager manager;
 
     /** The cached InputModule-Selector */
-    protected ComponentSelector inputSelector = null;
+    protected ServiceSelector inputSelector;
 
     /** The cached default InputModule */
-    protected InputModule input = null;
+    protected InputModule input;
 
     /** The default InputModule name / shorthand. Defaults to 'request-param' */
     protected String defaultInput = "request-param"; // default to request parameters
 
     /** The default InputModule configuration */
-    protected Configuration inputConf = null;  // will become an empty configuration object
-                                               // during configure() so why bother here...
+    protected Configuration inputConf;  // will become an empty configuration object
+                                        // during configure() so why bother here...
     
     /** Is this instance initialized? */
     protected boolean initialized = false;
@@ -71,15 +71,9 @@ public abstract class AbstractMetaModule extends AbstractInputModule
     private final static String[] OPNAME = new String[] {"GET_VALUE", "GET_VALUES", "GET_NAMES"};
 
 
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager=manager;
     }
-
 
     /**
      * Initialize the meta module with exactly one other input
@@ -98,7 +92,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         try {
             // obtain input modules
             if (!this.initialized) {
-                this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                this.inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
                 if (this.inputSelector != null && this.inputSelector instanceof ThreadSafe) {
                     
                     if (this.defaultInput != null) {
@@ -137,15 +131,15 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * Obtain a permanent reference to an InputModule.
      */
     protected InputModule obtainModule(String type) {
-        ComponentSelector inputSelector = this.inputSelector;
+        ServiceSelector inputSelector = this.inputSelector;
         InputModule module = null;
         try {
             if (inputSelector == null) 
-                inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
 
-            if (inputSelector.hasComponent(type)){
+            if (inputSelector.isSelectable(type)){
                 
-                if (type != null && inputSelector.hasComponent(type))
+                if (type != null && inputSelector.isSelectable(type))
                     module = (InputModule) inputSelector.select(type);
                 
                 if (!(module instanceof ThreadSafe) ) {
@@ -158,9 +152,9 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                     getLogger().warn("A problem occurred setting up '" + type
                                      +"': Selector is "+(inputSelector!=null?"not ":"")
                                      +"null, Component is "
-                                     +(inputSelector!=null && inputSelector.hasComponent(type)?"known":"unknown"));
+                                     +(inputSelector!=null && inputSelector.isSelectable(type)?"known":"unknown"));
             
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             if (getLogger().isWarnEnabled())
                 getLogger().warn("Could not obtain selector for InputModules: "+ce.getMessage());
         } finally {
@@ -177,17 +171,17 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * release a permanent reference to an InputModule.
      */
     protected void releaseModule(InputModule module) {
-        ComponentSelector inputSelector = this.inputSelector;
+        ServiceSelector inputSelector = this.inputSelector;
         if (module != null) {
             try {
                 // FIXME: Is it OK to release a module when we have released the selector before?
                 if (inputSelector == null) 
-                    inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                    inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
                 
                 inputSelector.release(module);
                 module = null;
                 
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 if (getLogger().isWarnEnabled())
                     getLogger().warn("Could not obtain selector for InputModules: "+ce.getMessage());
             } finally {
@@ -307,7 +301,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                          InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf)
         throws ConfigurationException {
 
-        ComponentSelector cs = this.inputSelector;
+        ServiceSelector cs = this.inputSelector;
         Object value = null;
         String name = null;
         InputModule input = null;
@@ -317,8 +311,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
         try {
             if (cs == null) {
                 try {
-                cs = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
-                } catch (ComponentException e) {
+                cs = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+                } catch (ServiceException e) {
                     throw new ConfigurationException("Could not find MetaModule's module selector", e);
                 }
             }
@@ -344,11 +338,11 @@ public abstract class AbstractMetaModule extends AbstractInputModule
             }
 
             if (input == null) {
-                if (cs.hasComponent(name)) {
+                if (cs.isSelectable(name)) {
                     release = true;
                     try {
                     input = (InputModule) cs.select(name);
-                    } catch (ComponentException e) {
+                    } catch (ServiceException e) {
                         throw new ConfigurationException(
                                 "MetaModule unable to create "+
                                 (useDynamic ? "dynamically" : "statically")+

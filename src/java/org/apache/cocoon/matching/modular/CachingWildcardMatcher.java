@@ -19,16 +19,15 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.modules.input.InputModule;
-
 import org.apache.cocoon.matching.AbstractWildcardMatcher;
 
 import java.util.Map;
@@ -46,14 +45,14 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CachingWildcardMatcher.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CachingWildcardMatcher extends AbstractWildcardMatcher
-    implements Configurable,  Initializable, Composable, Disposable
+    implements Configurable,  Initializable, Serviceable, Disposable
 {
 
-    /** The component manager instance */
-    protected ComponentManager manager;
+    /** The service manager instance */
+    protected ServiceManager manager;
 
     private String defaultParam;
     private String defaultInput = "request-param"; // default to request parameters
@@ -63,37 +62,32 @@ public class CachingWildcardMatcher extends AbstractWildcardMatcher
     String INPUT_MODULE_SELECTOR = INPUT_MODULE_ROLE+"Selector";
 
     private boolean initialized = false;
-    private InputModule input = null;
-    private ComponentSelector inputSelector = null;
+    private InputModule input;
+    private ServiceSelector inputSelector;
 
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-
-        this.manager=manager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
-
-
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.defaultParam = config.getChild("parameter-name").getValue(null);
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name",this.defaultInput);
     }
 
-
-
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() {
-
         try {
             // obtain input module
-            this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+            this.inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
             if (this.defaultInput != null && 
                 this.inputSelector != null && 
-                this.inputSelector.hasComponent(this.defaultInput)
+                this.inputSelector.isSelectable(this.defaultInput)
                 ){
                 this.input = (InputModule) this.inputSelector.select(this.defaultInput);
                 if (!(this.input instanceof ThreadSafe && this.inputSelector instanceof ThreadSafe) ) {
@@ -108,7 +102,7 @@ public class CachingWildcardMatcher extends AbstractWildcardMatcher
                     getLogger().error("A problem occurred setting up '" + this.defaultInput 
                                       + "': Selector is "+(this.inputSelector!=null?"not ":"")
                                       +"null, Component is "
-                                      +(this.inputSelector!=null&&this.inputSelector.hasComponent(this.defaultInput)?"known":"unknown"));
+                                      +(this.inputSelector!=null&&this.inputSelector.isSelectable(this.defaultInput)?"known":"unknown"));
             }
         } catch (Exception e) {
             if (getLogger().isWarnEnabled()) 
@@ -118,8 +112,10 @@ public class CachingWildcardMatcher extends AbstractWildcardMatcher
 
 
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-
         if (!this.initialized) 
             if (getLogger().isErrorEnabled()) 
                 getLogger().error("Uninitialized Component! FAILING");
@@ -170,12 +166,12 @@ public class CachingWildcardMatcher extends AbstractWildcardMatcher
         } else {
             // input was not thread safe
             // so acquire it again
-            ComponentSelector iputSelector = null;
+            ServiceSelector iputSelector = null;
             InputModule iput = null;
             try {
                 // obtain input module
-                iputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (inputName != null && iputSelector != null && iputSelector.hasComponent(inputName)){
+                iputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                if (inputName != null && iputSelector != null && iputSelector.isSelectable(inputName)){
                     iput = (InputModule) iputSelector.select(inputName);
                 }
                 if (iput != null) {

@@ -19,13 +19,12 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.components.modules.input.InputModule;
-
 import org.apache.cocoon.matching.AbstractWildcardMatcher;
 
 import java.util.Map;
@@ -43,14 +42,14 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardMatcher.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class WildcardMatcher extends AbstractWildcardMatcher
-    implements Configurable, Composable
+    implements Configurable, Serviceable
 {
 
-    /** The component manager instance */
-    protected ComponentManager manager;
+    /** The service manager instance */
+    protected ServiceManager manager;
 
     private String defaultParam;
     private String defaultInput = "request-param"; // default to request parameters
@@ -59,11 +58,10 @@ public class WildcardMatcher extends AbstractWildcardMatcher
     String INPUT_MODULE_ROLE = InputModule.ROLE;
     String INPUT_MODULE_SELECTOR = INPUT_MODULE_ROLE+"Selector";
 
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager=manager;
     }
 
@@ -89,7 +87,7 @@ public class WildcardMatcher extends AbstractWildcardMatcher
         }
 
         InputModule input = null;
-        ComponentSelector inputSelector = null;
+        ServiceSelector inputSelector = null;
         Object result = null;
 
         // one could test whether the input module is ThreadSafe and
@@ -101,8 +99,8 @@ public class WildcardMatcher extends AbstractWildcardMatcher
 
         try {
             // obtain input module
-            inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (inputName != null && inputSelector != null && inputSelector.hasComponent(inputName)){
+            inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+            if (inputName != null && inputSelector != null && inputSelector.isSelectable(inputName)){
                 input = (InputModule) inputSelector.select(inputName);
             }
             if (input != null) {

@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -47,7 +45,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * </tbody></table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SelectMetaInputModule.java,v 1.4 2004/06/16 14:57:54 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class SelectMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -208,13 +206,6 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
             this.getLogger().debug("Obtained value : "+result);
         }
         return result;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
     }
 
     /* (non-Javadoc)

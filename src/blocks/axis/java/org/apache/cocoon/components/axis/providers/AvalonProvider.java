@@ -17,8 +17,7 @@
 // currently part of Cocoon until it's officially in Axis CVS (BZ#12903)
 package org.apache.cocoon.components.axis.providers;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.MessageContext;
@@ -84,15 +83,14 @@ import javax.xml.rpc.server.ServiceLifecycle;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: AvalonProvider.java,v 1.5 2004/03/05 13:01:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class AvalonProvider extends RPCProvider
-{
+public class AvalonProvider extends RPCProvider {
     /**
-     * Constant used to retrieve the ComponentManager reference
+     * Constant used to retrieve the ServiceManager reference
      * from the MessageContext object.
      */
-    public static final String COMPONENT_MANAGER = "component-manager";
+    public static final String SERVICE_MANAGER = "service-manager";
 
     /**
      * Constant which represents the name of the ROLE this
@@ -115,11 +113,11 @@ public class AvalonProvider extends RPCProvider
     )
         throws Exception
     {
-        ComponentManager manager =
-            (ComponentManager) msgContext.getProperty(COMPONENT_MANAGER);
+        ServiceManager manager =
+            (ServiceManager) msgContext.getProperty(SERVICE_MANAGER);
 
         if (manager == null)
-            throw new AxisFault("Could not access Avalon ComponentManager");
+            throw new AxisFault("Could not access Avalon ServiceManager");
 
         return decorate(manager.lookup(role), manager);
     }
@@ -129,13 +127,12 @@ public class AvalonProvider extends RPCProvider
      * proxy (see below).
      *
      * @param object a <code>Component</code> instance
-     * @param manager a <code>ComponentManager</code> instance
+     * @param manager a <code>ServiceManager</code> instance
      * @return the <code>Proxy</code> wrapped <code>Component</code> instance
      * @exception Exception if an error occurs
      */
-    private Object decorate(final Component object, final ComponentManager manager)
-        throws Exception
-    {
+    private Object decorate(final Object object, final ServiceManager manager)
+    throws Exception {
         // obtain a list of all interfaces this object implements
         Class[] interfaces = object.getClass().getInterfaces();
 
@@ -160,8 +157,7 @@ public class AvalonProvider extends RPCProvider
      * Return the option in the configuration that contains the service class
      * name. In the Avalon case, it is the ROLE name to lookup.
      */
-    protected String getServiceClassNameOptionName()
-    {
+    protected String getServiceClassNameOptionName() {
         return ROLE;
     }
 
@@ -240,17 +236,17 @@ public class AvalonProvider extends RPCProvider
         private final String SL_DESTROY = "destroy";
         private final Class  SL_CLASS = ServiceLifecycle.class;
 
-        // Component & ComponentManager references
-        private final Component m_object;
-        private final ComponentManager m_manager;
+        // Component & ServiceManager references
+        private final Object m_object;
+        private final ServiceManager m_manager;
 
         /**
          * Simple constructor, sets all internal references
          *
          * @param object a <code>Component</code> instance
-         * @param manager a <code>ComponentManager</code> instance
+         * @param manager a <code>ServiceManager</code> instance
          */
-        public Handler(final Component object, final ComponentManager manager)
+        public Handler(final Object object, final ServiceManager manager)
         {
             m_object = object;
             m_manager = manager;

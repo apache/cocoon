@@ -23,12 +23,9 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.LoginContext;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.xml.sax.SAXException;
