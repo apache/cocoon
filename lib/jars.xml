@@ -40,9 +40,9 @@
  <file>
 	<title>Avalon Excalibur DataSource</title>
 	<description>Part of avalon, it is a set of classes and patterns that
-       support high level server development. (This JAR has been compiled on Java 1.3 to be run on JVM 1.3 or earlier.)</description>
+       support high level server development. (This JAR has been compiled on Java 1.3 to be run on JVM 1.3)</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/jvm1.2/excalibur-datasource-vm12-20021121.jar</lib>
+	<lib>core/jvm1.3/excalibur-datasource-vm13-20021121.jar</lib>
 	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
