@@ -50,11 +50,17 @@
 */
 package org.apache.cocoon.woody.datatype.typeimpl;
 
-import org.outerj.expression.ExpressionContext;
-import org.apache.cocoon.woody.datatype.*;
-import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
-import java.util.*;
+import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.DatatypeBuilder;
+import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.datatype.ValidationRule;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import org.outerj.expression.ExpressionContext;
 
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
