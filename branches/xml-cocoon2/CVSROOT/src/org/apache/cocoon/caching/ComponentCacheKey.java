@@ -16,7 +16,7 @@ package org.apache.cocoon.caching;
  *      is unique inside the component space.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:16 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:52 $
  */
 public final class ComponentCacheKey {
 

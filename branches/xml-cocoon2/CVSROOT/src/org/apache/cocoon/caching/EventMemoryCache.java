@@ -10,11 +10,11 @@ package org.apache.cocoon.caching;
 import org.apache.cocoon.components.store.MemoryStore;
 
 /**
- * An implementation for the EventCache which simply uses stores the
+ * An implementation for the EventCache which simply stores the
  * cached objects in the memory.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:21 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:54 $
  */
 public final class EventMemoryCache
 extends MemoryStore

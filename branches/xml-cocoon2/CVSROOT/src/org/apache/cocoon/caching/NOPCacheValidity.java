@@ -7,16 +7,22 @@
  *****************************************************************************/
 package org.apache.cocoon.caching;
 
-import org.apache.cocoon.components.store.Store;
-
 /**
- * This is the EventCache. It stores cached <code>EventPipelines</code>.
- * The objects stored in this cache are <code>CachedEventObjects</code>.
+ * A validation object which is always valid.
+ * This might be the most used CacheValidity object for serializers.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:53 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:32:56 $
  */
-public interface EventCache
-extends Store {
+public final class NOPCacheValidity
+implements CacheValidity {
+
+    public boolean isValid(CacheValidity validity) {
+        return validity instanceof NOPCacheValidity;
+    }
+
+    public String toString() {
+        return "NOPCacheValidity";
+    }
 
 }

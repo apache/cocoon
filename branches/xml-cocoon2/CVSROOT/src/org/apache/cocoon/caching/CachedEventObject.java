@@ -13,9 +13,9 @@ import java.util.Map;
  * This is an cached object as it is stored in the <code>EventCache</code>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:14 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:32:48 $
  */
-public final class CachedObject {
+public final class CachedEventObject {
 
     private Map validityObjects;
     private Object saxFragment;
@@ -27,8 +27,8 @@ public final class CachedObject {
      *        <code>ComponentCacheKey</code>
      * @param saxFragment     The cached sax stream
      */
-    public CachedObject(Map validityObjects,
-                        Object saxFragment) {
+    public CachedEventObject(Map validityObjects,
+                             Object saxFragment) {
         this.validityObjects = validityObjects;
         this.saxFragment = saxFragment;
     }

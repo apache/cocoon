@@ -10,13 +10,13 @@ package org.apache.cocoon.caching;
 import org.apache.cocoon.components.store.Store;
 
 /**
- * This is the EventCache. It stores cached <code>EventPipelines</code>.
- * The objects stored in this cache are <code>CachedEventObjects</code>.
+ * This is the StreamCache. It stores cached <code>StreamPipelines</code>.
+ * The objects stored in this cache are <code>CachedStreamObjects</code>.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:53 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:33:00 $
  */
-public interface EventCache
+public interface StreamCache
 extends Store {
 
 }

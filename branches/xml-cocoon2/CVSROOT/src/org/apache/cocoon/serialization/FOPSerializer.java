@@ -20,6 +20,10 @@ import org.apache.fop.messaging.MessageListener;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.messaging.MessageEvent;
 
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -29,10 +33,12 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-21 09:58:10 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-17 10:33:19 $
  *
  */
-public class FOPSerializer extends AbstractSerializer implements MessageListener, Recyclable {
+public class FOPSerializer extends AbstractSerializer
+implements MessageListener, Recyclable, Cacheable {
 
     /**
      * The FOP driver
@@ -93,7 +99,31 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
         // we should consume the events in some meaningful way
         // for example formatting them on the metapipeline
     }
-    
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     * This method must be invoked before the generateValidity() method.
+     *
+     * @return The generated key or <code>0</code> if the component
+     *              is currently not cacheable.
+     */
+    public long generateKey() {
+        return 1;
+    }
+
+    /**
+     * Generate the validity object.
+     * Before this method can be invoked the generateKey() method
+     * must be invoked.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        return new NOPCacheValidity();
+    }
+
     /**
      * Recycle the component and remove it from the MessageList
      */

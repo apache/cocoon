@@ -110,4 +110,8 @@
        shorthand="event-cache"
        default-class="org.apache.cocoon.caching.EventMemoryCache"/>
 
+<role name="org.apache.cocoon.caching.StreamCache"
+       shorthand="stream-cache"
+       default-class="org.apache.cocoon.caching.StreamMemoryCache"/>
+
 </role-list>

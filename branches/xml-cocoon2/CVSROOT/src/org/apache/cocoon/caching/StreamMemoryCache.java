@@ -7,16 +7,17 @@
  *****************************************************************************/
 package org.apache.cocoon.caching;
 
-import org.apache.cocoon.components.store.Store;
+import org.apache.cocoon.components.store.MemoryStore;
 
 /**
- * This is the EventCache. It stores cached <code>EventPipelines</code>.
- * The objects stored in this cache are <code>CachedEventObjects</code>.
+ * An implementation for the StreamCache which simply stores the
+ * cached objects in the memory.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:53 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:33:02 $
  */
-public interface EventCache
-extends Store {
+public final class StreamMemoryCache
+extends MemoryStore
+implements StreamCache {
 
 }

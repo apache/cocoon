@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * or more <code>ComponentCacheKey</code> objects.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:23 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:57 $
  */
 public final class PipelineCacheKey {
 
@@ -23,6 +23,14 @@ public final class PipelineCacheKey {
     private String toStringValue = "PCK:";
 
     public void addKey(ComponentCacheKey key) {
+        if (this.list == null) {
+            this.list = new ArrayList();
+        }
+        this.list.add(key);
+        toStringValue = toStringValue + key.toString();
+    }
+
+    public void addKey(PipelineCacheKey key) {
         if (this.list == null) {
             this.list = new ArrayList();
         }
