@@ -107,7 +107,7 @@
     </fb:on-bind>
 
     <fb:on-delete-row>
-      <!-- chose on of these to test -->
+      <!-- choose one of these to test -->
       <!--
       <fb:set-attribute name="row-state" value="deleted" />
       -->

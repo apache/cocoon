@@ -24,7 +24,7 @@
       | The very specific advanced stylings as the calendar or htmlarea (both
       | also need additional JS files) are separated out of this file.
       +-->
-
+       
   <xsl:import href="forms-field-styling.xsl"/>
   <xsl:include href="forms-calendar-styling.xsl"/>
   <xsl:include href="forms-htmlarea-styling.xsl"/>
@@ -99,7 +99,7 @@
             </th>
             <th> </th>
             <th>
-              <xsl:copy-of select="fi:styling/fi:selected-label/node()"/>
+              <xsl:copy-of select="fi:styling/fi:selected-label/node()"/>    
             </th>
           </tr>
         </xsl:if>
@@ -116,7 +116,7 @@
                     <xsl:copy-of select="fi:label/node()"/>
                   </option>
                 </xsl:if>
-              </xsl:for-each>
+              </xsl:for-each>  
             </select>
           </td>
           <td>
@@ -125,7 +125,7 @@
             <xsl:text>&#160;</xsl:text>
             <input type="button" value="&gt;" onclick="opt{generate-id()}.forms_transferRight()">
               <xsl:if test="@state='disabled'">
-                <xsl:attribute name="disabled">disabled</xsl:attribute>
+                <xsl:attribute name="disabled">disabled</xsl:attribute> 
               </xsl:if>
             </input>
             <xsl:text>&#160;</xsl:text>

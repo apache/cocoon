@@ -29,7 +29,7 @@
     <head>
       <xsl:apply-templates/>
       <xsl:apply-templates select="." mode="forms-page"/>
-      <xsl:apply-templates select="." mode="forms-field"/>
+      <xsl:apply-templates select="." mode="forms-field"/>  
     </head>
   </xsl:template>
 
@@ -41,6 +41,7 @@
       <xsl:apply-templates select="." mode="forms-page"/>
       <xsl:apply-templates select="." mode="forms-field"/>
       <xsl:apply-templates/>
+      <xsl:apply-templates select="." mode="forms-afterload"/>       
     </body>
   </xsl:template>
 
