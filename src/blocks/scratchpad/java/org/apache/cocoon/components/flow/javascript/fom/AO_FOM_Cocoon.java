@@ -65,6 +65,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
+import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -85,7 +86,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: AO_FOM_Cocoon.java,v 1.3 2003/09/24 22:00:34 cziegeler Exp $
+ * @version CVS $Id: AO_FOM_Cocoon.java,v 1.4 2003/10/28 17:22:17 vgritsenko Exp $
  */
 
 public class AO_FOM_Cocoon extends ScriptableObject {
@@ -199,7 +200,9 @@ public class AO_FOM_Cocoon extends ScriptableObject {
     }
 
     public void jsFunction_redirectTo(String uri) throws Exception {
-        environment.redirect(false, uri);
+        // Cannot use environment directly as TreeProcessor uses own version of redirector
+        // environment.redirect(false, uri);
+        PipelinesNode.getRedirector(environment).redirect(false, uri);
     }
 
     /*
