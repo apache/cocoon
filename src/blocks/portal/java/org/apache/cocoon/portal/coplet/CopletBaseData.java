@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseData.java,v 1.4 2003/05/21 13:06:01 cziegeler Exp $
+ * @version CVS $Id: CopletBaseData.java,v 1.5 2003/05/26 09:52:59 cziegeler Exp $
  */
 public final class CopletBaseData { 
 
@@ -68,8 +68,6 @@ public final class CopletBaseData {
 	private String id;
 
 	private String copletAdapterName = null;
-
-	private String defaultRendererName = null;
 
 	public CopletBaseData() {
 	}
@@ -84,14 +82,6 @@ public final class CopletBaseData {
 
 	public String getCopletAdapterName() {
 		return this.copletAdapterName;
-	}
-
-	public String getDefaultRendererName() {
-		return this.defaultRendererName;
-	}
-
-	public void setDefaultRendererName(String defaultName) {
-		this.defaultRendererName = defaultName;
 	}
 
 	public Object getCopletConfig(String key) {

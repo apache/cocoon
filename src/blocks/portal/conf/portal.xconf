@@ -144,7 +144,7 @@
                 renderer="row">
         </layout>
         <layout name="tab" 
-                class="org.apache.cocoon.portal.layout.impl.TabLayout" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
                 renderer="tab">
             <aspects>
                 <aspect name="tab" class="java.lang.Integer" store="session" auto-create="true"/>

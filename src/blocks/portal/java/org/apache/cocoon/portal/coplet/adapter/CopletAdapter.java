@@ -66,18 +66,46 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletAdapter.java,v 1.2 2003/05/22 15:19:43 cziegeler Exp $
+ * @version CVS $Id: CopletAdapter.java,v 1.3 2003/05/26 09:52:59 cziegeler Exp $
  */
 public interface CopletAdapter 
     extends Component {
 
     String ROLE = CopletAdapter.class.getName();
     
+    /**
+     * Initialize the coplet
+     * This method is called immediately after a new instance is created.
+     * For each coplet, this method is only invoked once.
+     * @param coplet The coplet
+     */
     void init(CopletInstanceData coplet);
     
+    /**
+     * Destroy the coplet
+     * This method is invoked when a coplet instance will be destroyed
+     * For each coplet, this method is only invoked once.
+     * @param coplet
+     */
+    void destroy(CopletInstanceData coplet);
+
+    /**
+     * Stream the content of the coplet
+     */
     void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException;
     
-    void destroy(CopletInstanceData coplet);
-    
+    /**
+     * User logs in to a coplet
+     * This method is invoked when a user logs in for each coplet instance
+     * of the user
+     */
+    void login(CopletInstanceData coplet);
+        
+    /**
+     * User logs out from a coplet
+     * This method is invoked when a user logs out for each coplet instance
+     * of this user.
+     */
+    void logout(CopletInstanceData coplet);
 }

@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.aspect.impl;
+package org.apache.cocoon.portal.event.subscriber.impl;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -64,14 +64,14 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: SizingEventSubscriber.java,v 1.3 2003/05/22 12:32:48 cziegeler Exp $
+ * @version CVS $Id: SizingEventSubscriber.java,v 1.1 2003/05/26 09:52:59 cziegeler Exp $
  */
 public final class SizingEventSubscriber implements Subscriber {
 
-    private ComponentManager componentManager;
+    private ComponentManager manager;
 
     public SizingEventSubscriber(ComponentManager manager) {
-        this.componentManager = manager;
+        this.manager = manager;
     }
 
     /* (non-Javadoc)
@@ -96,13 +96,13 @@ public final class SizingEventSubscriber implements Subscriber {
         SizingStatus target = statusEvent.getStatus();
         ProfileManager profileManager = null;
         try {
-            profileManager = (ProfileManager) this.componentManager.lookup(ProfileManager.ROLE);
+            profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
             target = new SizingStatus();
             statusEvent.getCopletInstanceData().setAspectData("size", target);
         } catch (ComponentException ce) {
             // ignore
         } finally {
-            this.componentManager.release(profileManager);
+            this.manager.release(profileManager);
         }
         
         int action = statusEvent.getAction();

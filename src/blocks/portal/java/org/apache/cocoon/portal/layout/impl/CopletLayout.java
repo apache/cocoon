@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.layout.AbstractLayout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletLayout.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: CopletLayout.java,v 1.2 2003/05/26 09:52:59 cziegeler Exp $
  */
 public final class CopletLayout extends AbstractLayout {
     
@@ -72,10 +72,4 @@ public final class CopletLayout extends AbstractLayout {
         return this.copletInstanceData;
     }
 
-    public String getRendererName() {
-        if (this.rendererName == null) {
-            return this.copletInstanceData.getCopletData().getCopletBaseData().getDefaultRendererName();
-        }
-        return this.rendererName;
-    }
 }

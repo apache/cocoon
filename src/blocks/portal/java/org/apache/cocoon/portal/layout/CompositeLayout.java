@@ -60,7 +60,9 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.3 2003/05/22 15:19:43 cziegeler Exp $
+ * TODO Make an interface out of this
+ * 
+ * @version CVS $Id: CompositeLayout.java,v 1.4 2003/05/26 09:52:58 cziegeler Exp $
  */
 public class CompositeLayout extends AbstractLayout {
 

@@ -21,10 +21,6 @@
 			<bind-xml name="coplet-adapter" />
 		</field>
 
-		<field name="defaultRendererName" type="java.lang.String">
-			<bind-xml name="default-renderer" />
-		</field>
-
 		<field name="copletConfig" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.profile.impl.ConfigurationFieldHandler">
 			<bind-xml name="configuration"/>
 		</field>
