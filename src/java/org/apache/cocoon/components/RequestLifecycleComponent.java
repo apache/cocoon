@@ -69,9 +69,10 @@ import org.xml.sax.SAXException;
  * the {@link #setup(SourceResolver, Map)} method is called.
  * 
  * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
+ * @deprecated Use the {@link org.apache.cocoon.components.persistence.RequestDataStore} instead.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.5 2003/09/02 10:26:18 cziegeler Exp $
+ * @version CVS $Id: RequestLifecycleComponent.java,v 1.6 2004/01/10 14:20:03 cziegeler Exp $
  */
 public interface RequestLifecycleComponent extends Poolable {
 
