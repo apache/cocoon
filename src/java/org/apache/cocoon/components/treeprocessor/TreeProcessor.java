@@ -328,7 +328,7 @@ public class TreeProcessor
 
             newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes());
         } finally {
-            CocoonComponentManager.leaveEnvironment(false);
+            CocoonComponentManager.leaveEnvironment();
             this.builderSelector.release(builder);
         }
 
@@ -377,4 +377,8 @@ public class TreeProcessor
             this.manager = null;
 	    }
 	}
+    
+    public String toString() {
+        return "TreeProcessor - " + (source == null ? "[unknown location]" : source.getURI());
+    }
 }

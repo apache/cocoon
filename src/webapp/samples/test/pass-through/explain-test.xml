@@ -33,6 +33,7 @@
                 <li><link href="welcome1">One "cocoon:" URL</link></li>
                 <li><link href="welcome2">Two chained "cocoon:" URLs</link></li>
                 <li><link href="welcome3">Three chained "cocoon:" URLs</link></li>
+            	   <li><link href="aggregate">Aggregation of the above</link></li>
             </ul>
         </para>
     </content>
