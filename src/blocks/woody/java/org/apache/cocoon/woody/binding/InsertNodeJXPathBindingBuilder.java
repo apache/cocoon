@@ -50,24 +50,22 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Document;
+import org.w3c.dom.*;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 /**
- * InsertNodeJXPathBindingBuilder provides a helper class for the Factory 
- * implemented in {@link JXPathBindingManager} that helps construct the 
- * actual {@link InsertNodeJXPathBinding} out of the configuration in the 
+ * InsertNodeJXPathBindingBuilder provides a helper class for the Factory
+ * implemented in {@link JXPathBindingManager} that helps construct the
+ * actual {@link InsertNodeJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
  * &lt;wb:insert-node&gt;
- *   &lt;!-- in here comes a template that will be inserted in the target 
+ *   &lt;!-- in here comes a template that will be inserted in the target
  *           document --&gt;
  * &lt;/wb:insert-node&gt;
  * </code></pre>
@@ -76,13 +74,13 @@ public class InsertNodeJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
 
     /**
-     * Creates an instance of {@link InsertNodeJXPathBinding} configured 
-     * with the nested template of the bindingElm. 
+     * Creates an instance of {@link InsertNodeJXPathBinding} configured
+     * with the nested template of the bindingElm.
      */
     public JXPathBindingBase buildBinding(
         Element bindingElm,
         JXPathBindingManager.Assistant assistant) throws BindingException {
-            
+
         try {
             DocumentFragment domTemplate = null;
 
@@ -94,8 +92,24 @@ public class InsertNodeJXPathBindingBuilder
                 try {
                     source = sourceResolver.resolveURI(src);
                     Document document = SourceUtil.toDOM(source);
+                    Element element = document.getDocumentElement();
+
+                    String xpath = bindingElm.getAttribute("xpath");
+                    if (!xpath.equals("")) {
+                        XPathProcessor xpathProcessor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
+                        try {
+                            Node node = xpathProcessor.selectSingleNode(document, xpath);
+                            if (node == null)
+                                throw new BindingException("XPath expression \"" + xpath + "\" didn't return a result.");
+                            if (!(node instanceof Element))
+                                throw new BindingException("XPath expression \"" + xpath + "\" did not return an element node.");
+                            element = (Element)node;
+                        } finally {
+                            manager.release(xpathProcessor);
+                        }
+                    }
                     domTemplate = document.createDocumentFragment();
-                    domTemplate.appendChild(document.getDocumentElement());
+                    domTemplate.appendChild(element);
                 } finally {
                     if (source != null)
                         sourceResolver.release(source);
