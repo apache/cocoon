@@ -45,6 +45,8 @@
 
   Installation Instructions and Documentation
   -------------------------------------------
+  
+  READ the WARNING.txt!
 
   Read the INSTALL.txt file in this directory for the installation instructions.
 
