@@ -6,9 +6,20 @@
     <component-instance class="org.apache.cocoon.components.flow.javascript.fom.AO_FOM_JavaScriptInterpreter" name="intercepted-javascript">
       <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/ao_fom_system.js</load-on-startup>
       <reload-scripts>true</reload-scripts>
-      <enable-interception>true</enable-interception>
       <check-time>40</check-time>
-      <!--  <debugger>enabled</debugger> -->  <!-- JavaScript Debugger support -->
-    </component-instance>    
+      <!--  <debugger>enabled</debugger> --> <!-- JavaScript Debugger support -->
+      
+      <!-- ************* interception support ***************** -->
+        <!-- on/off switch -->
+        <enable-interception>true</enable-interception>
+        <!-- list of all functions that stop flow execution -->
+        <cont-creating-functions>
+          <function>cocoon.sendPageAndWait()</function>
+          <function>woody.send()</function>
+        </cont-creating-functions>
+        <!-- the result script is copied in the same directory as the basescript 
+             if the file protocol is used to resolve the script -->
+        <copy-result-script>true</copy-result-script>
+    </component-instance>   
 
 </xconf>
