@@ -79,12 +79,12 @@ the result of the evaluation:</p>
 </p>
 </s2>
 <s2 title="for-each">
-<p>The <code>forEach</code> tag allows you to iterate over a collection 
+<p>The <code>for-each</code> tag allows you to iterate over a collection 
 of objects:</p><p>
 <source>
-  &lt;forEach select="XPathExpression"&gt;
+  &lt;for-each select="XPathExpression"&gt;
     body
- &lt;/forEach&gt;
+ &lt;/for-each&gt;
 </source>
 <p>When using XPath expressions within <code>for-each</code> the current element is the context node and can be referenced with:</p>
 <source>.</source></p>
