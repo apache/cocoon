@@ -86,7 +86,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.1 2003/03/09 00:09:07 pier Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.2 2003/05/03 18:34:41 gianugo Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -479,7 +479,7 @@ public abstract class AbstractProcessingPipeline
         }
 
         if ( this.reader != null ) {
-            if (this.checkLastModified( environment )) {
+            if (this.checkIfModified( environment, this.reader.getLastModified() )) {
                 return true;
             }
 
@@ -576,12 +576,11 @@ public abstract class AbstractProcessingPipeline
         }
     }
 
-    protected boolean checkLastModified(Environment environment)
+    protected boolean checkIfModified(Environment environment,
+                                        long lastModified)
     throws ProcessingException {
         // has the read resource been modified?
-        long lastModified = this.reader.getLastModified();
-        if (lastModified != 0
-            && !environment.isResponseModified(lastModified)) {
+        if(!environment.isResponseModified(lastModified)) {
 
             // environment supports this, so we are finished
             environment.setResponseIsNotModified();

@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.4 2003/04/29 10:45:21 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.5 2003/05/03 18:34:41 gianugo Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -252,10 +252,12 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
      *         environment is not able to test it
      */
     public boolean isResponseModified(long lastModified) {
-        long if_modified_since = this.request.getDateHeader("If-Modified-Since");
-
-        this.response.setDateHeader("Last-Modified", lastModified);
-        return (if_modified_since < lastModified);
+        if (lastModified != 0) {
+            long if_modified_since = this.request.getDateHeader("If-Modified-Since");
+            this.response.setDateHeader("Last-Modified", lastModified);
+            return (if_modified_since < lastModified);
+        }
+        return true;
     }
 
     /**

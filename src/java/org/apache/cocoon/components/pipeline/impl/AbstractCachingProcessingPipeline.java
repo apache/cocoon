@@ -80,7 +80,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.4 2003/05/02 13:10:23 bdelacretaz Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.5 2003/05/03 18:34:41 gianugo Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
             extends AbstractProcessingPipeline
@@ -108,6 +108,9 @@ public abstract class AbstractCachingProcessingPipeline
 
     /** The cached byte stream */
     protected byte[]           cachedResponse;
+    /** The timestamp of the cached byte stream */
+    protected long             cachedLastModified;
+
     /** The index indicating the first transformer getting input from the cache */
     protected int firstProcessedTransformerIndex;
     /** Complete response is cached */
@@ -213,6 +216,12 @@ public abstract class AbstractCachingProcessingPipeline
         if (this.toCacheKey == null && this.cachedResponse == null) {
             return super.processXMLPipeline( environment );
         } else if (this.cachedResponse != null && this.completeResponseIsCached) {
+
+            // Allow for 304 (not modified) responses in dynamic content
+            if (super.checkIfModified( environment, this.cachedLastModified )) {
+                return true;
+            }
+
             try {
                 final OutputStream outputStream = environment.getOutputStream(0);
                 if (this.cachedResponse.length > 0) {
@@ -457,6 +466,7 @@ public abstract class AbstractCachingProcessingPipeline
         this.completeResponseIsCached = this.cacheCompleteResponse;
         this.fromCacheKey = this.toCacheKey.copy();        
         this.firstProcessedTransformerIndex = this.firstNotCacheableTransformerIndex;
+        this.cachedLastModified = 0L;
 
         boolean finished = false;
         
@@ -496,6 +506,7 @@ public abstract class AbstractCachingProcessingPipeline
                                 new Date(responseExpires.longValue()));
                         }
                         this.cachedResponse = response.getResponse();
+                        this.cachedLastModified = response.lastModified;
                         return;
                     } else {
                         if (this.getLogger().isDebugEnabled()) {
@@ -531,7 +542,7 @@ public abstract class AbstractCachingProcessingPipeline
                         response.setExpires(new Long(expires + System.currentTimeMillis()));                                
                     }        
                 }
-                
+
                 SourceValidity[] fromCacheValidityObjects = response.getValidityObjects();
 
                 int i = 0;
@@ -579,6 +590,7 @@ public abstract class AbstractCachingProcessingPipeline
                     }
                     // we are valid, ok that's it
                     this.cachedResponse = response.getResponse();
+                    this.cachedLastModified = response.lastModified;
                 } else {
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("validatePipeline: cached content is invalid for '" + environment.getURI() + "'.");
