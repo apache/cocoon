@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.2 2003/03/26 21:21:43 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:13 vgritsenko Exp $ -->
 
 <samples>
+
+  <group name="Back">
+   <sample name="Back" href="../">
+   Back to the samples home page.
+   </sample>
+  </group>
 
   <group name="Flowscript">
     <sample name="Calculator" href="calc/">

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: samples.xml,v 1.2 2003/03/27 17:55:47 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:15 vgritsenko Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Back">
+   <sample name="Back" href="../">
+    Back to the samples home page.
+   </sample>
+  </group>
 
   <group name="Hello, XSP">
    <sample name="Hello Page" href="java/hello">

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s0="http://www.cocoonhive.org/cocoonbook/2002/" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.cocoonhive.org/cocoonbook/2002/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.xmlsoap.org/wsdl/
 http://schemas.xmlsoap.org/wsdl/">
   <message name="HelloWorldHttpGetIn"/>

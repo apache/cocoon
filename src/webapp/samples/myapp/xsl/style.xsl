@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- CVS: $Id: style.xsl,v 1.1 2003/03/09 00:11:17 pier Exp $ -->
+
+<!-- CVS $Id: style.xsl,v 1.2 2003/05/07 04:57:14 vgritsenko Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 

@@ -6,7 +6,7 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: simple-samples2html.xsl,v 1.4 2003/05/06 19:23:51 vgritsenko Exp $
+    | CVS $Id: simple-samples2html.xsl,v 1.5 2003/05/07 04:57:13 vgritsenko Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,7 +16,7 @@
  <xsl:template match="/">
   <html>
    <head>
-     <title>Apache Cocoon 2.1-M2-dev</title>
+     <title>Apache Cocoon @version@</title>
      <link rel="SHORTCUT ICON" href="favicon.ico"/>
      <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
    </head>

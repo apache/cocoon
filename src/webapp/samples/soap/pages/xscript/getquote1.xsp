@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: getquote1.xsp,v 1.1 2003/03/27 17:55:46 stefano Exp $ -->
-
 <!--
   Author: Ovidiu Predescu "ovidiu@cup.hp.com"
-
   Date: October 9, 2001
+  CVS $Id: getquote1.xsp,v 1.2 2003/05/07 04:57:14 vgritsenko Exp $
  -->
+
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
           xmlns:xsp-request="http://apache.org/xsp/request/2.0"

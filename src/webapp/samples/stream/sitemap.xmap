@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.2 2003/04/30 09:24:02 stephan Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.3 2003/05/07 04:57:15 vgritsenko Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -35,7 +35,8 @@
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
-        <map:parameter name="file" value=".xsp"/>
+        <map:parameter name="remove" value="order"/>
+        <map:parameter name="file" value="OrderPage.xml"/>
      </map:transform>
      <map:serialize type="html"/>
    </map:match>
