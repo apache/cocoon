@@ -34,8 +34,7 @@ import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
 import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
 import org.apache.avalon.excalibur.cli.CLUtil;
-import org.apache.log.Category;
-import org.apache.log.LogKit;
+import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
 import org.apache.log.Logger;
 import org.apache.log.Priority;
@@ -46,7 +45,7 @@ import org.apache.log.output.FileOutputLogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.33 $ $Date: 2001-05-04 09:22:41 $
+ * @version CVS $Revision: 1.1.4.34 $ $Date: 2001-05-05 02:52:19 $
  */
 
 public class Main {
@@ -156,8 +155,7 @@ public class Main {
 
         try {
             final Priority priority = Priority.getPriorityForName(logLevel);
-            LogKit.setGlobalPriority(priority);
-            log = LogKit.getLoggerFor("cocoon");
+            log = Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon");
             log.setPriority(priority);
 
 
@@ -167,7 +165,7 @@ public class Main {
                 log.setLogTargets(new LogTarget[] {new FileOutputLogTarget(logUrl)});
         } catch (MalformedURLException mue) {
             String error = "Cannot write on the specified log file.  Please, make sure the path exists and you have write permissions.";
-            LogKit.log(error, mue);
+            Hierarchy.getDefaultHierarchy().log(error, mue);
             System.out.println(error);
             System.exit(1);
         }
