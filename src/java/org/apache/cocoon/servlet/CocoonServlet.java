@@ -314,7 +314,11 @@ public class CocoonServlet extends HttpServlet {
                 throw new ServletException("Unable to determine servlet context URL.", me);
             }
         }
-        this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.servletContextURL);
+        try {
+            this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.servletContextURL));            
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
 
         // Init logger
         initLogger();
@@ -835,6 +839,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // ignore
             }
         }
 
@@ -1174,6 +1179,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // ignore
             }
         }
 
@@ -1182,6 +1188,7 @@ public class CocoonServlet extends HttpServlet {
         forceProperty();
 
         try {
+            this.exception = null;
             URL configFile = (URL) this.appContext.get(Constants.CONTEXT_CONFIG_URL);
             if (getLogger().isInfoEnabled()) {
                 getLogger().info("Reloading from: " + configFile.toExternalForm());
@@ -1212,9 +1219,8 @@ public class CocoonServlet extends HttpServlet {
         final String rootlogger = this.settings.getCocoonLogger();
         if (rootlogger != null) {
             return this.getLoggerManager().getLoggerForCategory(rootlogger);
-        } else {
-            return getLogger();
         }
+        return getLogger();
     }
 
     /**
@@ -1316,9 +1322,8 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
             }
             return defaultValue;
-        } else {
-            return result;
         }
+        return result;
     }
 
     protected Logger getLogger() {

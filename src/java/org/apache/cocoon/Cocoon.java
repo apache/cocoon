@@ -134,30 +134,23 @@ public class Cocoon
         this.parentServiceManager = manager;
     }
 
-    /**
-     * Describe <code>contextualize</code> method here.
-     *
-     * @param context a <code>Context</code> value
-     * @exception ContextException if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
-        if (this.context == null) {
-            this.context = new ComponentContext(context);
-            ((DefaultContext)this.context).makeReadOnly();
+        this.context = new ComponentContext(context);
+        ((DefaultContext)this.context).makeReadOnly();
 
-            try {
-                // FIXME : add a configuration option for the refresh delay.
-                // for now, hard-coded to 1 second.
-                URLSource urlSource = new URLSource();
-                urlSource.init((URL) context.get(Constants.CONTEXT_CONFIG_URL), null);
-                this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                                                                         1000L);
+        final Settings settings = Core.getSettings(this.context);
+        final URL u = (URL)this.context.get(Constants.CONTEXT_CONFIG_URL);
+        try {
+            URLSource urlSource = new URLSource();
+            urlSource.init(u, null);
+            this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
+                                                                     settings.getConfigurationReloadDelay());
 
-            } catch (IOException ioe) {
-                throw new ContextException("Could not open configuration file.", ioe);
-            } catch (Exception e) {
-                throw new ContextException("contextualize(..) Exception", e);
-            }
+        } catch (IOException ioe) {
+            throw new ContextException("Could not open configuration file: " + u, ioe);
         }
     }
 
@@ -171,10 +164,8 @@ public class Cocoon
         this.loggerManager = loggerManager;
     }
 
-    /**
-     * The <code>initialize</code> method
-     *
-     * @exception Exception if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
@@ -198,7 +189,7 @@ public class Cocoon
         this.processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
 
         this.environmentHelper = new EnvironmentHelper(
-                (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
+                (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, this.serviceManager);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.cocoon.environment.internal;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -40,7 +41,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.4 2004/07/08 12:42:27 vgritsenko Exp $
+ * @version CVS $Id$
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -70,8 +71,10 @@ implements SourceResolver, Serviceable, Disposable {
      * Constructor
      *
      */
-    public EnvironmentHelper(String context) {
-        this.context = context;
+    public EnvironmentHelper(URL context) {
+        if ( context != null ) {
+            this.context = context.toExternalForm();
+        }
     }
 
     /**
@@ -387,9 +390,8 @@ final class CloningInheritableThreadLocal
     protected Object childValue(Object parentValue) {
         if ( null != parentValue) {
             return ((EnvironmentStack)parentValue).clone();
-        } else {
-            return null;
         }
+        return null;
     }
 }
 

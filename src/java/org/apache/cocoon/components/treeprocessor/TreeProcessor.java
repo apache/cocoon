@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.net.URL;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -174,7 +176,7 @@ public class TreeProcessor extends AbstractLogEnabled
         // setup the environment helper
         if (this.environmentHelper == null ) {
             this.environmentHelper = new EnvironmentHelper(
-                    (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
+                    (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
         }
         ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, this.manager);

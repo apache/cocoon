@@ -38,7 +38,7 @@
   </style>
   
   <content>
-    <ft:form-template action="#{$continuation/id}.continue" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
     
     <p>This is an example of how dynamic templates (using the JX macros) allow to change the
        page structure depending on the form contents. By adding or removing rows in the repeater

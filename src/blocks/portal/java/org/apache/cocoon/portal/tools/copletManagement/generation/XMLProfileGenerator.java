@@ -28,8 +28,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.persistence.CastorSourceConverter;
 import org.apache.cocoon.components.persistence.ConverterException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
@@ -54,7 +52,6 @@ extends ServiceableGenerator {
         
         SAXParser parser = null;
         CastorSourceConverter converter = null;
-        final Request request = ObjectModelHelper.getRequest(this.objectModel);
         final Object context = FlowHelper.getContextObject(this.objectModel);
         Map myMap = new HashMap();
         if (context instanceof Map) {

@@ -122,7 +122,7 @@ extends AbstractFactoryHandler {
                 this.permanentlyRemovePoolable( poolable );
             }
 
-            if( ( this.size > 0 ) && this.logger.isDebugEnabled() ) {
+            if( this.size > 0 && this.logger.isDebugEnabled() ) {
                 this.logger.debug( "There were " + this.size
                                    + " outstanding objects when the pool was disposed." );
             }
@@ -154,7 +154,7 @@ extends AbstractFactoryHandler {
         Object poolable;
         synchronized( this.semaphore ) {
             // Look for a Poolable at the end of the m_ready list
-            if( this.readySize > 0 ){
+            if ( this.readySize > 0 ){
                 // A poolable is ready and waiting in the pool
                 poolable = this.ready.removeLast();
                 this.readySize--;
@@ -164,7 +164,7 @@ extends AbstractFactoryHandler {
                 poolable = this.factory.newInstance();
                 this.size++;
 
-                if( this.logger.isDebugEnabled() ) {
+                if ( this.logger.isDebugEnabled() ) {
                     this.logger.debug( "Created a new " + poolable.getClass().getName()
                                        + " from the object factory." );
                 }

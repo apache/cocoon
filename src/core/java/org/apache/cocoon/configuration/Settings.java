@@ -238,6 +238,11 @@ public class Settings {
     protected String overrideLogLevel;
 
     /**
+     * Delay between reload checks for the configuration
+     */
+    protected long configurationReloadDelay = 1000;
+
+    /**
      * Create a new settings object
      */
     public Settings() {
@@ -261,6 +266,8 @@ public class Settings {
                         this.initClassloader = BooleanUtils.toBoolean(value);
                     } else if ( key.equals("configuration") ) {
                         this.configuration = value;
+                    } else if ( key.equals("configuration.reloaddelay") ) {
+                        this.configurationReloadDelay = NumberUtils.toLong(value);
                     } else if ( key.equals("logging.configuration") ) {
                         this.loggingConfiguration = value;
                     } else if ( key.equals("logging.logger.access") ) {
@@ -649,12 +656,28 @@ public class Settings {
         }                
     }
 
+    /**
+     * @return Returns the configurationReloadDelay.
+     */
+    public long getConfigurationReloadDelay() {
+        return configurationReloadDelay;
+    }
+    
+    /**
+     * @param configurationReloadDelay The configurationReloadDelay to set.
+     */
+    public void setConfigurationReloadDelay(long configurationReloadDelay) {
+        this.configurationReloadDelay = configurationReloadDelay;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public String toString() {
+        // FIXME - add all
         return "Settings:\n"+
-               "- Configuration: " + this.configuration + "\n" + 
+               "- Configuration: " + this.configuration + "\n" +
+               "- Configuration-reload-delay: " + this.configurationReloadDelay + "\n" +
                "- InitClassloader: " + this.initClassloader + "\n" + 
                "- ForceProperties: " + ( this.forceProperties == null ? "-" : this.forceProperties.toString() ) + "\n" +
                "- Logging-Configuration: " + this.loggingConfiguration + "\n" +
@@ -696,6 +719,8 @@ public class Settings {
                 value = String.valueOf(this.initClassloader);
             } else if ( sKey.equals("configuration") ) {
                 value = this.configuration;
+            } else if ( sKey.equals("configuration.reloaddelay") ) {
+                value = String.valueOf(this.configurationReloadDelay);
             } else if ( sKey.equals("logging.configuration") ) {
                 value = this.loggingConfiguration;
             } else if ( sKey.equals("logging.logger.access") ) {

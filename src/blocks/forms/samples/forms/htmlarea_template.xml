@@ -18,7 +18,7 @@
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
   <title>HTMLArea</title>
   <content>
-    <ft:form-template action="#{$continuation/id}.continue" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
       <div style="width:500px">
         <ft:widget-label id="data1"/><br/>
         <ft:widget id="data1">
