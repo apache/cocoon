@@ -58,7 +58,7 @@ import java.util.Map;
  * for the forms template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.7 2004/03/18 21:04:39 joerg Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.8 2004/04/08 08:20:18 mpo Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -313,6 +313,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         pipeContext.setLocale(Locale.getDefault());
                     }
                 }
+                
+                // we need to merge input.attrs with possible overruling attributes 
+                // from the pipeContext
+                input.addAttributes(pipeContext.getFormAttributes());
 
                 String[] namesToTranslate = {"action"};
                 Attributes transAttrs = translateAttributes(input.attrs, namesToTranslate);
