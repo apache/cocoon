@@ -51,4 +51,10 @@
       <validation-rule name="regexp" src="org.apache.cocoon.woody.datatype.validationruleimpl.RegExpValidationRuleBuilder"/>
     </validation-rules>
   </woody-datatype>
+  
+  <woody-selection-lists default="default">
+    <selection-list name="default" class="org.apache.cocoon.woody.datatype.DefaultSelectionListBuilder"/>
+    <selection-list name="flow-jxpath" class="org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder"/>
+  </woody-selection-lists>
+
 </xconf>

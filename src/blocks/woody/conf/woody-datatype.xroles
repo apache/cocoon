@@ -4,4 +4,8 @@
   <role name="org.apache.cocoon.woody.datatype.DatatypeManager"
     shorthand="woody-datatype"
     default-class="org.apache.cocoon.woody.datatype.DefaultDatatypeManager"/>
+    
+  <role name="org.apache.cocoon.woody.datatype.SelectionListBuilderSelector"
+    shorthand="woody-selection-lists"
+    default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
 </xroles>
