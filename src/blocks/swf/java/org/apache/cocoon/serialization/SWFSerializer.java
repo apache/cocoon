@@ -53,10 +53,6 @@ package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -66,16 +62,13 @@ import de.tivano.flash.swf.publisher.SWFWriter;
  * uses the project http://developer.berlios.de/projects/spark-xml/
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: SWFSerializer.java,v 1.2 2003/03/16 17:49:08 vgritsenko Exp $
+ * @version CVS $Id: SWFSerializer.java,v 1.3 2003/09/05 07:40:20 cziegeler Exp $
  */
-public class SWFSerializer extends AbstractSerializer implements Configurable {
+public class SWFSerializer extends AbstractSerializer  {
+    
     private final static String mimeType = "application/x-shockwave-flash";
 
     private SWFWriter handler;
-
-    public void configure(Configuration configuration) throws ConfigurationException {
-        getLogger().debug("configured the SWF serializer");
-    }
 
     public String getMimeType() {
       return(mimeType);

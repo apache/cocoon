@@ -156,10 +156,10 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.4 2003/08/07 13:34:46 joerg Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.5 2003/09/05 07:40:21 cziegeler Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
-    implements Disposable, CacheableProcessingComponent, Configurable, Initializable {
+    implements CacheableProcessingComponent, Configurable, Initializable {
 
     private static String XMLDB_URI = "http://apache.org/cocoon/xmldb/1.0";
     private static String XMLDB_QUERY_ELEMENT = "query";
@@ -635,11 +635,7 @@ public class XMLDBTransformer extends AbstractTransformer
             getLogger().error("Failed to close collection " + base + ". Error " + e.errorCode, e);
         }
         collection = null;
+        super.recycle();
     }
 
-    /**
-     * dispose
-     */
-    public void dispose() {
-    }
 }

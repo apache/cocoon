@@ -84,7 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3RfcTransformer.java,v 1.6 2003/07/10 22:14:33 reinhard Exp $
+ * @version CVS $Id: Web3RfcTransformer.java,v 1.7 2003/09/05 07:40:20 cziegeler Exp $
  */
 public class Web3RfcTransformer extends AbstractTransformer 
 implements Composable, Disposable, Configurable, Poolable, Recyclable {
@@ -149,15 +149,15 @@ implements Composable, Disposable, Configurable, Poolable, Recyclable {
         this.streamer              = null;
         this.error                 = false;
         this.startcount            = 0;
+        super.recycle();
     }
 
     /** Free all ressources */
     public void dispose() {
-        this.recycle();
-        this.manager               = null;
-        this.attributes            = null;
-        this.web3source            = null;
-        this.tags                  = null;
+        this.manager    = null;
+        this.attributes = null;
+        this.web3source = null;
+        this.tags       = null;
     }
     
     /**
