@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.portal.tools.PortalToolManager']">
+<samplesxconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.portal.tools.PortalToolManager']">
 
   <component class="org.apache.cocoon.portal.tools.PortalToolManager" role="org.apache.cocoon.portal.tools.PortalToolManager">
 	<parameter name="root" value="context://samples/blocks/portal/tools/"/>
@@ -23,4 +23,4 @@
 	<parameter name="auth" value="auth.xml"/>
   </component>
 
-</xconf>
+</samplesxconf>
