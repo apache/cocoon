@@ -168,7 +168,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-03-07 20:49:50 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-03-07 22:18:32 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -251,6 +251,8 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                     return;
             }
         }
+
+        request.setAttribute(attribute, value);
 
         switch (typeObject.intValue()) {
             case Types.CLOB:

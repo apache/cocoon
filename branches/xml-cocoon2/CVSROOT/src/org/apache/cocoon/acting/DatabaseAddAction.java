@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-02 20:26:27 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-07 22:18:34 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -68,7 +68,6 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             Iterator keys = conf.getChild("table").getChild("keys").getChildren("key");
             Iterator values = conf.getChild("table").getChild("values").getChildren("value");
             int currentIndex = 1;
-
 
             while (keys.hasNext()) {
                 Configuration key = (Configuration) keys.next();
