@@ -201,14 +201,18 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
-            // Make sure the old value has been parsed and validated.
-            Object oldValue = getValue();
+            
+            // If we have some value-changed listeners, we must make sure the current value has been
+            // parsed, to fill the event. Otherwise, we don't need to spend that extra CPU time.
+            boolean hasListeners = hasValueChangedListeners();
+            Object oldValue = hasListeners ? getValue() : null;
+            
             enteredValue = newEnteredValue;
             validationError = null;
             value = null;
             this.valueState = VALUE_UNPARSED;
 
-            if (hasValueChangedListeners()) {
+            if (hasListeners) {
                 // Throw an event that will hold the old value and
                 // will lazily compute the new value only if needed.
                 getForm().addWidgetEvent(new DeferredValueChangedEvent(this, oldValue));
