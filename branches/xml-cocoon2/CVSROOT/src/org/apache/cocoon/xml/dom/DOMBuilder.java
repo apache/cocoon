@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-05 17:25:31 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-14 20:51:08 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */
@@ -60,7 +60,7 @@ public class DOMBuilder implements XMLConsumer {
     /** The locator */
     private Locator locator=null;
     /** The listener */
-    private Listener listener=null;
+    protected Listener listener=null;
     /** The namespaces table */
     private NamespacesTable namespaces=null;
     /** The current document */
