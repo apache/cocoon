@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.190 2004/03/23 07:59:29 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.191 2004/04/11 06:22:14 antonio Exp $:-->
 
 <status>
  <developers>
@@ -204,7 +204,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
-    <action dev="AG" type="update">
+   <action dev="AG" type="update">
+     Updated jetty to 4.2.19
+   </action>
+   <action dev="AG" type="update">
      Updated jdtcore to 2.1.3, rhino1.5r4-continuations to 20040228
    </action>
    <action dev="JH" type="fix" fixes-bug="13904" due-to="Bernhard Huber" due-to-email="huber@apache.org">
