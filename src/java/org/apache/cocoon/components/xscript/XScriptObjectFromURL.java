@@ -50,14 +50,10 @@
 */
 package org.apache.cocoon.components.xscript;
 
-import org.apache.avalon.framework.component.ComponentException;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceNotFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,20 +62,16 @@ import java.io.InputStream;
  * An <code>XScriptObject</code> created from the contents of a URL.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptObjectFromURL.java,v 1.1 2003/03/09 00:09:27 pier Exp $
+ * @version CVS $Id: XScriptObjectFromURL.java,v 1.2 2003/03/11 14:42:54 vgritsenko Exp $
  * @since August 30, 2001
  */
 public class XScriptObjectFromURL extends XScriptObject {
+
     /**
      * The content obtained from this URL becomes the content of this
      * instance.
      */
     String systemId;
-
-    /**
-     * The content length.
-     */
-    int contentLength;
 
     /**
      * When was the content of the URL last modified.
@@ -92,19 +84,15 @@ public class XScriptObjectFromURL extends XScriptObject {
         this.systemId = systemId;
     }
 
-    public InputStream getInputStream()
-            throws ProcessingException, IOException {
+    public InputStream getInputStream() throws IOException, SourceNotFoundException {
         SourceResolver resolver = null;
         Source source = null;
         try {
             resolver = (SourceResolver) componentManager.lookup(SourceResolver.ROLE);
             source = resolver.resolveURI(this.systemId);
-
             return source.getInputStream();
-        } catch (SourceException ex) {
-            throw SourceUtil.handle(ex);
-        } catch (ComponentException ex) {
-            throw new ProcessingException(ex);
+        } catch (Exception e) {
+            throw new SourceException("Exception during processing of " + this.systemId, e);
         } finally {
             if (resolver != null) {
                 resolver.release(source);
@@ -121,15 +109,12 @@ public class XScriptObjectFromURL extends XScriptObject {
         return 0;
     }
 
-    public String getSystemId() {
-        // FIXME: generate a real system id to represent this object
-        return "xscript:url:" + systemId;
-    }
-
-    public void recycle() {
-    }
-
     public String toString() {
         return new StringBuffer("XScriptObjectFromURL(systemId = ").append(systemId).append(")").toString();
+    }
+
+    public String getURI() {
+        // FIXME: generate a real system id to represent this object
+        return "xscript:url:" + systemId;
     }
 }
