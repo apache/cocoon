@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.340 2004/05/25 14:24:00 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.341 2004/05/27 08:36:15 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -156,12 +156,6 @@
       Finish moving the scratchpad stuff in main trunk.
     </action>
 
-    <action context="code" assigned-to="SMS">
-      Enable the 'use-store' parameter of the XSLT processor component. Test for occuring
-      memory leaks. Seems only occuring if the xalan transformer is used. There also seems to be
-      a problem during the serialization of the transient store, if the servlet container were
-      stopped.
-    </action>
    </actions>
 
    <actions priority="medium">
