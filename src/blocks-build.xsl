@@ -88,12 +88,12 @@
         <sequential>
         <!-- Test if this block has special build -->
           <if>
-            <available file="@{{dir}}/build.xml"/>
+            <available file="@{{dir}}/build-special.xml"/>
             <then>
               <ant inheritAll="true"
                    inheritRefs="false"
                    target="main"
-                   antfile="@{{dir}}/build.xml">
+                   antfile="@{{dir}}/build-special.xml">
                 <property name="block.dir" value="@{{dir}}"/>
               </ant>
             </then>
