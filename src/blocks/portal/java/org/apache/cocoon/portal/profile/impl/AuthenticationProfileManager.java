@@ -92,7 +92,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.4 2003/05/28 07:14:41 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.5 2003/05/28 07:23:55 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
@@ -136,28 +136,32 @@ public class AuthenticationProfileManager
         ComponentSelector adapterSelector = null;
         try {
             adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
-            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
-            
+            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
+
+            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(portalPrefix+"/CopletInstanceData");
             Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
             while ( iter.hasNext() ) {
                 CopletInstanceData cid = (CopletInstanceData) iter.next();
                 CopletAdapter adapter = null;
                 try {
-                    adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                    adapter = (CopletAdapter)adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
                     adapter.logout( cid );
                 } finally {
                     adapterSelector.release( adapter );
                 }
             }
+
+            service.removeAttribute(portalPrefix+"/CopletData");
+            service.removeAttribute(portalPrefix+"/CopletInstanceData");
+            service.removeAttribute(portalPrefix+"/Layout");
         } catch (ComponentException e) {
             throw new CascadingRuntimeException("Unable to lookup portal service.", e);
         } finally {
             this.manager.release(service);
             this.manager.release(adapterSelector);
-        }        
+        }
     }
     
     /**
