@@ -25,7 +25,7 @@ import java.io.OutputStream;
  * the output stream.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BufferedOutputStream.java,v 1.3 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version CVS $Id: BufferedOutputStream.java,v 1.4 2004/06/24 07:14:44 cziegeler Exp $
  * @since   2.1
  */
 public final class BufferedOutputStream extends FilterOutputStream {
@@ -104,7 +104,6 @@ public final class BufferedOutputStream extends FilterOutputStream {
      * We don't flush here. 
      *
      * @exception  IOException  if an I/O error occurs.
-     * @see        java.io.FilterOutputStream#out
      */
     public void flush() throws IOException {
     }
