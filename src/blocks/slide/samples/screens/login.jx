@@ -43,8 +43,8 @@
          You can find more info on how to do this for both Jetty and Tomcat in the
          <a href="http://jakarta.apache.org/slide/howto-jaas.html">Slide documentation</a>.
          <br/>
-         Alternatively you could edit WEB-INF/slide.xconf domain configuration file and
-         grant the desired privileges to the unauthenticated user.
+         Alternatively you could grant the desired privileges to the unauthenticated user
+         via the administration app.
         </p>
         <p class="samplesNote">
          In order to use the upload feature within these samples
