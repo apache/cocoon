@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.56 2001-01-12 21:20:30 greenrd Exp $
+  $Id: todo.xml,v 1.57 2001-01-18 21:23:20 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -31,6 +31,12 @@
  </actions>
 
  <actions priority="medium">
+  <action context="code" assigned-to="DB">
+   Add StoredProcedure support to esql.
+  </action>
+  <action context="code" bugid="38">
+   (UNCONFIRMED) Fix XInclude bug with including content from servlets/CGIs.
+  </action>
   <action context="code" bugid="5" assigned-to="RDG">
    Work out how to integrate inline XSP docs (such as inline esql docs)
    into the build docs procedure.
