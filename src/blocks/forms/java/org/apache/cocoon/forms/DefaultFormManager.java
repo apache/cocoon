@@ -34,6 +34,7 @@ import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.SimpleServiceSelector;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -41,7 +42,7 @@ import org.xml.sax.InputSource;
 /**
  * Component implementing the {@link FormManager} role.
  * 
- * @version $Id: DefaultFormManager.java,v 1.4 2004/03/18 13:56:09 bruno Exp $
+ * @version $Id: DefaultFormManager.java,v 1.5 2004/06/01 10:51:28 bruno Exp $
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
@@ -97,6 +98,24 @@ public class DefaultFormManager
         return (Form)formDefinition.createInstance();
     }
 
+    public Form createForm(String uri) throws Exception {
+        SourceResolver sourceResolver = null;
+        Source source = null;
+
+        try {
+            sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+
+            source = sourceResolver.resolveURI(uri);
+            Form form = createForm(source);
+            return form;
+        } finally {
+            if (source != null)
+                sourceResolver.release(source);
+            if (sourceResolver != null)
+                manager.release(sourceResolver);
+        }
+    }
+
     public Form createForm(Element formElement) throws Exception {
         return (Form)getFormDefinition(formElement).createInstance();
     }
@@ -132,6 +151,35 @@ public class DefaultFormManager
 
         FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
         return (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
+    }
+
+    public FormDefinition createFormDefinition(String uri) throws Exception {
+        SourceResolver sourceResolver = null;
+        Source source = null;
+        Document formDocument = null;
+
+        try {
+            sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+            source = sourceResolver.resolveURI(uri);
+
+            try {
+                InputSource inputSource = new InputSource(source.getInputStream());
+                inputSource.setSystemId(source.getURI());
+                formDocument = DomHelper.parse(inputSource);
+            }
+            catch (Exception exc) {
+                throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
+            }
+
+        } finally {
+            if (source != null)
+                sourceResolver.release(source);
+            if (sourceResolver != null)
+                manager.release(sourceResolver);
+        }
+
+        Element formElement = formDocument.getDocumentElement();
+        return getFormDefinition(formElement);
     }
 
     /**

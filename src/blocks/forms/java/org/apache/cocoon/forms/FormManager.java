@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 /**
  * Work interface for the component that can create {@link Form}s.
  * 
- * @version $Id: FormManager.java,v 1.2 2004/03/18 13:56:09 bruno Exp $
+ * @version $Id: FormManager.java,v 1.3 2004/06/01 10:51:28 bruno Exp $
  */
 public interface FormManager {
     
@@ -33,10 +33,22 @@ public interface FormManager {
      * Creates a form instance based on the XML form definition
      * that can be read from the specified source.
      *
+     * <p>To avoid having to resolve the Source object yourself,
+     * use the {@link #createForm(java.lang.String)} method.
+     *
      * <p>The form definition will be cached, so that future form instances
      * can be creted quickly.
      */
     Form createForm(Source source) throws Exception;
+
+    /**
+     * Creates a form instance based on the XML form definition
+     * that can be retrieved from the specified URI.
+     *
+     * <p>The form definition will be cached, so that future form instances
+     * can be creted quickly.
+     */
+    Form createForm(String uri) throws Exception;
 
     /**
      * Creates a form instance based on the XML form definition that is
@@ -57,4 +69,14 @@ public interface FormManager {
      * <p>The Form Definition will not be cached.
      */
     FormDefinition createFormDefinition(Element formElement) throws Exception;
+
+    /**
+     * Creates a form definition based on the XML form definition
+     * that can be retrieved from the specified URI.
+     *
+     * <p>The specified element must be a fd:form element.
+
+     * <p>The Form Definition will not be cached.
+     */
+    FormDefinition createFormDefinition(String uri) throws Exception;
 }

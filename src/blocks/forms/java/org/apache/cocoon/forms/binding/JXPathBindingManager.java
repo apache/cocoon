@@ -30,6 +30,7 @@ import org.apache.cocoon.forms.datatype.DatatypeManager;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.SimpleServiceSelector;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -39,7 +40,7 @@ import org.xml.sax.InputSource;
  * usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package </a>.
  * 
- * @version CVS $Id: JXPathBindingManager.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: JXPathBindingManager.java,v 1.3 2004/06/01 10:51:28 bruno Exp $
  */
 public class JXPathBindingManager extends AbstractLogEnabled implements
         BindingManager, Serviceable, Disposable, Initializable, Configurable,
@@ -110,6 +111,26 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
             }
         }
         return binding;
+    }
+
+    public Binding createBinding(String bindingURI) throws BindingException {
+        SourceResolver sourceResolver = null;
+        Source source = null;
+
+        try {
+            try {
+                sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(bindingURI);
+            } catch (Exception e) {
+                throw new BindingException("Error resolving binding source: " + bindingURI);
+            }
+            return createBinding(source);
+        } finally {
+            if (source != null)
+                sourceResolver.release(source);
+            if (sourceResolver != null)
+                serviceManager.release(sourceResolver);
+        }
     }
 
     private Assistant getBuilderAssistant() {

@@ -19,7 +19,7 @@ import org.apache.excalibur.source.Source;
 
 /**
  * BindingManager declares the factory method that produces actual Bindings.
- * @version CVS $Id: BindingManager.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: BindingManager.java,v 1.2 2004/06/01 10:51:28 bruno Exp $
  */
 public interface BindingManager {
 
@@ -35,7 +35,13 @@ public interface BindingManager {
 
     /**
      * Creates a binding from the XML config found at source parameter.
+     * The binding will be cached.
      */
     Binding createBinding(Source bindingFile) throws BindingException;
 
+    /**
+     * Creates a binding from the XML config found at bindingURI parameter.
+     * The binding will be cached.
+     */
+    Binding createBinding(String bindingURI) throws BindingException;
 }
