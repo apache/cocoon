@@ -102,7 +102,7 @@ function showForm1() {
     wid.birthdate.value = new java.util.Date();
     //
     // You can perform actions when a new row is added to a repeater (like
-    // setting the row's 'onChange' properties or initializing its values
+    // setting the row's 'onChange' properties or initializing its values)
     // by assigning a function to the repeater's 'onAddRow' property:
     //
     wid.contacts.onAddRow = function(row) {
@@ -242,13 +242,13 @@ function selectCar() {
             if (oldValue == null) {
               wid.message.value = "A " + wid.make.value + " " + newValue + " is a very good choice.";
             } else {
-              wid.message.value = "So you prefer a " +  " ?";
+              wid.message.value = "So you prefer a " + wid.make.value + " " + newValue + " ?";
             }
         }
+        wid.model.value = null;
     }
     form.showForm("carselector-display-pipeline");
-    cocoon.request.setAttribute("carselectorform", form.getWidget().unwrap());
-    cocoon.sendPage("carselector-success-pipeline.xsp");
+    cocoon.sendPage("carselector-success-pipeline", wid);
 }
 
 function determineLocale() {

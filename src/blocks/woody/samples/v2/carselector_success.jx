@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+    <title>Car selector result</title>
+    <content>
+      You selected: maker: ${make.value},
+      type: ${type.value},
+      model: ${model.value}
+    </content>
+</page>
