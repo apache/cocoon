@@ -87,7 +87,7 @@ public interface RepositoryPropertyHelper {
      * set multiple properties
      * 
      * @param uri  the uri of the resource.
-     * @param poperties  a Map containing the properties to set.
+     * @param properties  a Map containing the properties to set.
      * @return  a boolean indicating success.
      * @throws ProcessingException
      */

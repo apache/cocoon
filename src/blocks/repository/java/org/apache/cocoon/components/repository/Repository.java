@@ -73,7 +73,7 @@ public interface Repository {
      * save content
      * 
      * @param uri  the uri of the resource.
-     * @param content  the to be saved content given as a W3C Node object.
+     * @param node  the to be saved content given as a W3C Node object.
      * @return  a boolean indicating success.
      * @throws ProcessingException
      */
@@ -83,7 +83,7 @@ public interface Repository {
      * save content
      * 
      * @param uri  the uri of the resource.
-     * @param content  the to be saved content given as a Excalibur Source object.
+     * @param source  the to be saved content given as a Excalibur Source object.
      * @return  a boolean indicating success.
      * @throws ProcessingException
      */
