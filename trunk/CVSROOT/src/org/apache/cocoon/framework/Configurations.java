@@ -1,4 +1,4 @@
-/*-- $Id: Configurations.java,v 1.6 2000-02-13 18:29:22 stefano Exp $ --
+/*-- $Id: Configurations.java,v 1.7 2000-05-01 23:51:18 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.io.*;
  * class to work.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-02-13 18:29:22 $
+ * @version $Revision: 1.7 $ $Date: 2000-05-01 23:51:18 $
  */
 
 public class Configurations {
@@ -89,6 +89,25 @@ public class Configurations {
         InputStream input = new FileInputStream(file);
         properties.load(input);
         input.close();
+    }
+
+    /**                                                                  
+     * Create the class from a the InputStream                           
+     */                                                                  
+    public Configurations(InputStream stream) throws Exception {         
+        this(stream, null);                                              
+    }                                                                    
+                                                                         
+    /**
+     * Create the class with given defaults and from the URL resource
+     */
+    public Configurations(InputStream stream, Configurations defaults) throws Exception {
+        if (defaults != null) {
+            properties = new Properties(defaults.properties);
+        } else {
+            properties = new Properties();
+        }
+        properties.load(stream);
     }
 
     /**
