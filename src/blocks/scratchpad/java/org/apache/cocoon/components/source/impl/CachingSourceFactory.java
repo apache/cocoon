@@ -105,7 +105,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * </tr>
  * </tbody></table>
  *  
- * @version CVS $Id: CachingSourceFactory.java,v 1.6 2004/03/23 12:47:22 unico Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.7 2004/03/23 16:28:54 unico Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory extends AbstractLogEnabled
@@ -271,7 +271,7 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
             while (names.hasNext()) {
                 String name = (String) names.next();
                 if (name.startsWith("cocoon:")) {
-                    params.setParameter(name.substring("cocoon:".length()),sp.getParameter(name));
+                    params.setParameter(name.substring("cocoon:".length()), sp.getParameter(name));
                     sp.removeParameter(name);
                 }
             }
@@ -281,12 +281,12 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
             }
         }
         
-        final String cacheName = params.getParameter("cache-name", null);
         int expires = params.getParameterAsInteger("cache-expires", -1);
         if (expires == -1) {
             expires = this.defaultExpires;
             params.setParameter("cache-expires", String.valueOf(this.defaultExpires));
         }
+        params.setParameter("cache-role", this.cacheRole);
         
         final Source wrappedSource = this.resolver.resolveURI(uri);
         CachingSource source;
@@ -294,29 +294,23 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
             source = new TraversableCachingSource(scheme,
                                                   location,
                                                   (TraversableSource) wrappedSource,
-                                                  cacheName,
+                                                  params,
                                                   expires,
-                                                  parameters,
                                                   this.async);
         }
         else {
             source = new CachingSource(scheme,
                                        location,
                                        wrappedSource,
-                                       cacheName,
+                                       params,
                                        expires,
-                                       parameters,
                                        this.async);
-        }
-
-        if (this.async) {
-            // schedule it with the refresher
-            this.refresher.refresh(source.getCacheKey(), uri, this.cacheRole, params);
         }
 
         // set the required components directly for speed
         source.cache = this.cache;
         source.resolver = this.resolver;
+        source.refresher = this.refresher;
 
         ContainerUtil.enableLogging(source, this.getLogger());
         try {

@@ -57,26 +57,26 @@ import org.apache.excalibur.source.SourceResolver;
  * Default implementation of the refresher.
  * 
  * @since 2.1.1
- * @version CVS $Id: DelayRefresher.java,v 1.1 2004/03/22 17:38:25 unico Exp $
+ * @version CVS $Id: DelayRefresher.java,v 1.2 2004/03/23 16:28:54 unico Exp $
  */
 public class DelayRefresher extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSafe, Refresher, CronJob {
     
-    private static final String PARAM_CACHE_ROLE     = "cache-role";
-    private static final String PARAM_CACHE_EXPIRES  = "cache-expires";
-    private static final String PARAM_UPDATE_TARGET  = "update-target";
-    private static final String PARAM_WRITE_INTERVAL = "write-interval";
-	private static final String PARAM_WRITE_FILE   = "write-file";
+    private static final String PARAM_CACHE_ROLE          = "cache-role";
+    private static final String PARAM_CACHE_EXPIRES       = "cache-expires";
+    private static final String PARAM_UPDATE_TARGET_ROLE  = "update-target-role";
+    private static final String PARAM_WRITE_INTERVAL      = "write-interval";
+	private static final String PARAM_WRITE_FILE          = "write-file";
 	
-	private static final String DEFAULT_WRITE_FILE = "refresher-targets.xml";
+	private static final String DEFAULT_WRITE_FILE        = "refresher-targets.xml";
 	
-    private static final String CACHE_KEY = "cache-key";
+    private static final String CACHE_KEY                 = "cache-key";
 	
-    private static final String TAGNAME_TARGET = "target";
-	private static final String ATTR_CACHE = "cache";
-	private static final String ATTR_EXPIRES = "expires";
-    private static final String ATTR_KEY = "key";
-	private static final String ATTR_URI = "uri";
+    private static final String TAGNAME_TARGET            = "target";
+	private static final String ATTR_CACHE                = "cache";
+	private static final String ATTR_EXPIRES              = "expires";
+    private static final String ATTR_KEY                  = "key";
+	private static final String ATTR_URI                  = "uri";
     
     // service dependencies
     protected ServiceManager manager;
@@ -124,7 +124,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        this.updateTarget = parameters.getParameter(PARAM_UPDATE_TARGET, CronJob.ROLE + "/UpdateTarget");
+        this.updateTarget = parameters.getParameter(PARAM_UPDATE_TARGET_ROLE, CronJob.ROLE + "/UpdateTarget");
         int writeInterval = parameters.getParameterAsInteger(PARAM_WRITE_INTERVAL, 0);
         if (writeInterval > 0) {
             this.setupRefreshJobSource(parameters);

@@ -16,13 +16,11 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.TraversableSource;
@@ -31,33 +29,17 @@ import org.apache.excalibur.source.TraversableSource;
  * Traversable version of {@link org.apache.cocoon.components.source.impl.CachingSource}.
  */
 public class TraversableCachingSource extends CachingSource implements TraversableSource {
-
-	// the Source children in case of a collection
-    private TraversableSource[] m_children;
     
-    public TraversableCachingSource(String protocol,
-                                    String uri,
-                                    String sourceURI,
-                                    String cacheName,
-                                    int expires,
-                                    Map parameters,
-                                    boolean async) {
-        super(protocol, uri, sourceURI, cacheName, expires, parameters, async);
-    }
+    private TraversableSource tsource;
     
     public TraversableCachingSource(String protocol,
                                     String location,
                                     TraversableSource source,
-                                    String cacheName,
+                                    Parameters params,
                                     int expires,
-                                    Map parameters,
                                     boolean async) {
-        super(protocol, location, source, cacheName, expires, parameters, async);
-    }
-    
-    public void dispose() {
-		super.dispose();
-		m_children = null;
+        super(protocol, location, source, params, expires, async);
+        this.tsource = source;
     }
     
     // ---------------------------------------------------- TraversableSource implementation
@@ -94,8 +76,10 @@ public class TraversableCachingSource extends CachingSource implements Traversab
 
     public Source getChild(String name) throws SourceException {
         
+        Source child;
         try {
             initMetaResponse(false);
+            child = this.tsource.getChild(name);
         }
         catch (SourceException e) {
             throw e;
@@ -108,7 +92,7 @@ public class TraversableCachingSource extends CachingSource implements Traversab
             throw new SourceException("Source is not a collection");
         }
         
-        return createChildSource(name);
+        return createSource(getChildURI(super.uri, name), child);
     }
 
     public Collection getChildren() throws SourceException {
@@ -126,18 +110,19 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         if (!isCollection()) {
             throw new SourceException("Source is not a collection");
         }
-
+        
         final Collection result = new ArrayList();
-        if (m_children != null) {
-            for (int i = 0; i < m_children.length; i++) {
-                result.add(createChildSource(m_children[i]));
+        final TraversableSourceMeta meta = (TraversableSourceMeta) super.response.getExtra();
+        final String[] children = meta.getChildren();
+        for (int i = 0; i < children.length; i++) {
+            Source child;
+            try {
+                child = this.tsource.getChild(children[i]);
             }
-        }
-        else {
-            final String[] children = ((TraversableSourceMeta) super.response.getExtra()).getChildren();
-            for (int i = 0; i < children.length; i++) {
-                result.add(createChildSource(children[i]));
+            catch (IOException e) {
+                throw new SourceException("Failure getting child", e);
             }
+            result.add(createSource(getChildURI(super.uri, children[i]), child));
         }
         
         return result;
@@ -145,104 +130,36 @@ public class TraversableCachingSource extends CachingSource implements Traversab
 
     public Source getParent() throws SourceException {
         
+        Source parent;
         try {
             initMetaResponse(false);
+            parent = this.tsource.getParent();
         }
         catch (SourceException e) {
             throw e;
         }
         catch (IOException e) {
-            throw new SourceException("Failure getting child", e);
+            throw new SourceException("Failure getting parent", e);
         }
         
-        return createSource(getParentURI(super.uri), getParentURI(super.sourceURI));
+        return createSource(getParentURI(super.uri), parent);
     }
 
 
     // ---------------------------------------------------- helper methods
-    
-    protected SourceMeta readMeta() throws IOException {
-        final TraversableSourceMeta meta = new TraversableSourceMeta();
-        
-        final long lastModified = getTraversableSource().getLastModified();
-        if (lastModified > 0) {
-            meta.setLastModified(lastModified);
-        }
-        else {
-            meta.setLastModified(System.currentTimeMillis());
-        }
-        meta.setMimeType(getTraversableSource().getMimeType());
-        
-        meta.setName(getTraversableSource().getName());
-        meta.setIsCollection(getTraversableSource().isCollection());
-        
-        if (meta.isCollection()) {
-            final Collection children = getTraversableSource().getChildren();
-            if (children != null) {
-                m_children = new TraversableSource[children.size()];
-                final String[] names = new String[children.size()];
-                final Iterator iter = children.iterator();
-                int count = 0;
-                while(iter.hasNext()) {
-                    TraversableSource child = (TraversableSource) iter.next();
-                    m_children[count] = child;
-                    names[count] = child.getName();
-                    count++;
-                }
-                meta.setChildren(names);
-            }
-        }
-        return meta;
-    }
-    
-    protected TraversableSource getTraversableSource() throws MalformedURLException, IOException {
-        return (TraversableSource) getSource();
-    }
-    
-    private TraversableCachingSource createChildSource(TraversableSource childSource)
-    throws SourceException {
-        return createSource(childSource, getChildURI(super.uri, childSource.getName()));
-    }
 
-    private TraversableCachingSource createSource(TraversableSource wrappedSource, String sourceURI)
-    throws SourceException {
-        final TraversableCachingSource child = 
-            new TraversableCachingSource(super.protocol,
-                                         sourceURI,
-                                         wrappedSource,
-                                         super.cacheName,
-                                         super.expires,
-                                         super.parameters,
-                                         super.async);
-        child.cache = super.cache;
-        child.resolver = super.resolver;
-        ContainerUtil.enableLogging(child,getLogger());
-        try {
-            ContainerUtil.service(child,super.manager);
-            ContainerUtil.initialize(child);
-        } catch (Exception e) {
-            throw new SourceException("Unable to initialize source.", e);
-        }
-        return child;
-    }
-    
-    private TraversableCachingSource createChildSource(String childName) 
-    throws SourceException {
-        return createSource(getChildURI(super.uri, childName), getChildURI(super.sourceURI, childName));
-    }
-
-    private TraversableCachingSource createSource(String uri, String sourceURI) 
+    private TraversableCachingSource createSource(String uri, Source wrapped) 
     throws SourceException {
         final TraversableCachingSource source = 
             new TraversableCachingSource(super.protocol,
                                          uri,
-                                         sourceURI,
-                                         super.cacheName,
-                                         super.expires,
+                                         (TraversableSource) wrapped,
                                          super.parameters,
+                                         super.expires,
                                          super.async);
         source.cache = super.cache;
         source.resolver = super.resolver;
+        source.refresher = super.refresher;
         ContainerUtil.enableLogging(source, getLogger());
         try {
             ContainerUtil.service(source, super.manager);
@@ -313,35 +230,4 @@ public class TraversableCachingSource extends CachingSource implements Traversab
         return parentUri + qs;
     }
 
-    protected static class TraversableSourceMeta extends SourceMeta {
-        
-        private String   m_name;
-        private boolean  m_isCollection;
-        private String[] m_children;
-        
-        protected String getName() {
-            return m_name;
-        }
-        
-        protected void setName(String name) {
-            m_name = name;
-        }
-        
-        protected boolean isCollection() {
-            return m_isCollection;
-        }
-        
-        protected void setIsCollection(boolean isCollection) {
-            m_isCollection = isCollection;
-        }
-        
-        protected String[] getChildren() {
-            return m_children;
-        }
-        
-        protected void setChildren(String[] children) {
-            m_children = children;
-        }
-        
-    }
 }

@@ -15,155 +15,158 @@
  */
 package org.apache.cocoon.components.source.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.ExtendedCachedResponse;
 import org.apache.cocoon.caching.SimpleCacheKey;
 import org.apache.cocoon.components.cron.ConfigurableCronJob;
-import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.xml.sax.InputSource;
 
 /**
  * A target updating a cache entry.
  *
  * This target requires several parameters:
- * - uri (String): The uri to cache, every valid protocol can be used, except the Cocoon protocol!
- * - cacheRole (String): The role of the cache component to store the content
- * - expires (long): The time in seconds the cached content is valid
- * - cacheKey (SimpleCacheKey) : The key used to cache the content
+ * <ul>
+ * <li>
+ *   <code>uri (String)</code>: 
+ *   The uri to cache, every valid protocol can be used, except the Cocoon protocol!
+ * </li>
+ * <li>
+ *  <code>cache-role (String)</code>: 
+ *  The role of the cache component to store the content
+ * </li>
+ * <li>
+ *  <code>cache-expires (long)</code>: 
+ *  The time in seconds the cached content is valid
+ * </li>
+ * <li>
+ *  <code>fail-safe (boolean)</code>
+ *  Whether to invalidate the cached response when updating it failed.
+ * </li>
+ * <li>
+ *  <code>cache-key (SimpleCacheKey)</code>: 
+ *  The key used to cache the content
+ * </li>
+ * </ul>
  *  
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UpdateTarget.java,v 1.3 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: UpdateTarget.java,v 1.4 2004/03/23 16:28:54 unico Exp $
  */
-public class UpdateTarget 
-    extends AbstractLogEnabled
-    implements Recyclable, Serviceable, ConfigurableCronJob {
+public class UpdateTarget extends AbstractLogEnabled
+implements Serviceable, ConfigurableCronJob {
     
-    protected String uri;
-    
-    protected String cacheRole;
-    
-    protected long expires;
-    
+    // service dependencies
     protected ServiceManager manager;
-    
     protected SourceResolver resolver;
     
+    // configuration
+    protected String uri;
+    protected String cacheRole;
+    protected int expires;
+    protected boolean failSafe;
+    
+    // the key under which to store the CachedResponse in the Cache
     protected SimpleCacheKey cacheKey;
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.cornerstone.services.scheduler.Target#targetTriggered(java.lang.String)
-     */
-    public void execute(String name) {
-        if ( this.uri != null ) {
-            if ( this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("Refreshing " + this.uri);
-            }
-
-            Source source = null;
-            Cache cache = null;
-            try {
-                cache = (Cache)this.manager.lookup(this.cacheRole);
-                // the content expires, so remove it                
-                cache.remove(cacheKey);
-                
-                source = this.resolver.resolveURI(this.uri);
-
-                XMLSerializer serializer = null;
-                SAXParser parser = null;
-                byte[] cachedResponse;
-                byte[] content = null;
-                
-                try {
-                    serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
-                    if ( source instanceof XMLizable ) {
-                        ((XMLizable)source).toSAX(serializer);
-                    } else {
-                        // resd the content
-                        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        final byte[] buffer = new byte[2048];
-                        final InputStream inputStream = source.getInputStream();
-                        int length;
         
-                        while ((length = inputStream.read(buffer)) > -1) {
-                            baos.write(buffer, 0, length);
-                        }
-                        baos.flush();
-                        inputStream.close();
-                        
-                        content = baos.toByteArray();
-                        
-                        parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
-                    
-                        final InputSource inputSource = new InputSource(new ByteArrayInputStream(content));
-                        inputSource.setSystemId(source.getURI());
-                    
-                        parser.parse( inputSource, serializer );
-                    }
-                    cachedResponse = (byte[])serializer.getSAXFragment();
-                } finally {
-                    this.manager.release(parser);
-                    this.manager.release(serializer);
-                }
-                
-                SourceValidity val = new ExpiresValidity(this.expires);
-                ExtendedCachedResponse response = new ExtendedCachedResponse(val, content);
-                response.setAlternativeResponse(cachedResponse);
-                cache.store(cacheKey, response);
-            
-            } catch (Exception ignore) {
-                this.getLogger().error("Exception during updating " +this.uri, ignore);
-            } finally {
-                this.resolver.release(source);
-                this.manager.release( cache );
-            }
-
-        }
+    // ---------------------------------------------------- Lifecycle
+    
+    public UpdateTarget() {
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.components.scheduler.ConfigurableTarget#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
-     */
-    public void setup(Parameters pars, Map objects) {
-        this.uri = pars.getParameter("uri", null);
-        this.cacheRole = pars.getParameter("cache-role", Cache.ROLE);
-        this.expires = pars.getParameterAsLong("cache-expires", 1800);
-        this.cacheKey = (SimpleCacheKey) objects.get("cache-key");
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
-     */
-    public void recycle() {
-        this.uri = null;
-        this.cacheKey = null;
-        this.expires = 0;
-        this.cacheRole = null;
-    }
-
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.scheduler.ConfigurableTarget#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
+     */
+    public void setup(Parameters pars, Map objects) {
+        this.uri = pars.getParameter("uri", null);
+        this.cacheRole = pars.getParameter("cache-role", Cache.ROLE);
+        this.expires = pars.getParameterAsInteger("cache-expires", 60);
+        this.failSafe = pars.getParameterAsBoolean("fail-safe", true);
+        this.cacheKey = (SimpleCacheKey) objects.get("cache-key");
+    }
+    
+    
+    // ---------------------------------------------------- CronJob implementation
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.cornerstone.services.scheduler.Target#targetTriggered(java.lang.String)
+     */
+    public void execute(String name) {
+        if (this.uri != null) {
+            if (this.getLogger().isInfoEnabled()) {
+                this.getLogger().info("Refreshing " + this.uri);
+            }
+            
+            Source source = null;
+            Cache cache = null;
+            try {
+                
+                cache = (Cache) this.manager.lookup(this.cacheRole);
+                source = this.resolver.resolveURI(this.uri);
+                
+                CachedSourceResponse response = (CachedSourceResponse) cache.get(this.cacheKey);
+                
+                if (source.exists()) {
+                    
+                    // what is in the cached response?
+                    byte[] binary = null;
+                    byte[] xml = null;
+                    if (response != null) {
+                        binary = response.getBinaryResponse();
+                        xml = response.getXMLResponse();
+                    }
+                    
+                    // create a new cached response
+                    response = new CachedSourceResponse(new ExpiresValidity(this.expires * 1000));
+                    
+                    // only create objects that have previously been used
+                    if (binary != null) {
+                        binary = CachingSource.readBinaryResponse(source);
+                        response.setBinaryResponse(binary);
+                    }
+                    if (xml != null) {
+                        xml = CachingSource.readXMLResponse(source, binary, this.manager);
+                        response.setXMLResponse(xml);
+                    }
+                    // meta info is always set
+                    response.setExtra(CachingSource.readMeta(source));
+                    
+                    cache.store(this.cacheKey, response);
+                }
+                else if (response != null) {
+                    cache.remove(this.cacheKey);
+                }
+            } catch (Exception e) {
+                if (!failSafe) {
+                    // the content expires, so remove it
+                    cache.remove(cacheKey);
+                    getLogger().warn("Exception during updating " + this.uri, e);
+                }
+                else {
+                    getLogger().warn("Updating of source " + this.uri + " failed. " +
+                        "Cached response (if any) will be stale.", e);
+                }
+            } finally {
+                this.resolver.release(source);
+                this.manager.release(cache);
+            }
+        }
     }
 
 }
