@@ -5,23 +5,22 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml;
 
+import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.cocoon.xml.AbstractXMLProducer;
-
 /**
- * This class provides a bridge class to connect to existing content 
+ * This class provides a bridge class to connect to existing content
  * handlers and lexical handlers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 14:33:36 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:09:32 $
  */
 public class AbstractXMLPipe extends AbstractXMLProducer implements XMLPipe {
 

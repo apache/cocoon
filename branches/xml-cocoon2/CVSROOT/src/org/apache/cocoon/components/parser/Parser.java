@@ -11,15 +11,15 @@ import java.io.IOException;
 import org.apache.avalon.component.Component;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.xml.dom.DOMFactory;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-23 02:06:16 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-25 17:06:12 $
  */
 public interface Parser extends Component, XMLProducer, DOMFactory {
 

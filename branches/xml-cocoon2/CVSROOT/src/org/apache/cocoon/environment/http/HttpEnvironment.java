@@ -14,15 +14,12 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Session;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

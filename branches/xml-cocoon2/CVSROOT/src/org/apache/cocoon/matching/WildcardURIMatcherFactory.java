@@ -5,16 +5,12 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.matching;
 
-import org.apache.cocoon.CodeFactory;
-
 import org.apache.avalon.configuration.ConfigurationException;
-
-import org.w3c.dom.NodeList;
-
 import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.cocoon.CodeFactory;
+import org.w3c.dom.NodeList;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -23,21 +19,21 @@ import org.apache.avalon.logger.AbstractLoggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-04-23 17:52:53 $
+ * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-04-25 17:08:05 $
  */
 
 public class WildcardURIMatcherFactory extends AbstractLoggable implements CodeFactory {
 
     /** The int representing '*' in the pattern <code>int []</code>. */
-    protected static final int MATCH_FILE	= -1;
+    protected static final int MATCH_FILE        = -1;
     /** The int representing '**' in the pattern <code>int []</code>. */
-    protected static final int MATCH_PATH	= -2;
+    protected static final int MATCH_PATH        = -2;
     /** The int representing begin in the pattern <code>int []</code>. */
-    protected static final int MATCH_BEGIN	= -4;
+    protected static final int MATCH_BEGIN        = -4;
     /** The int representing end in pattern <code>int []</code>. */
-    protected static final int MATCH_THEEND	= -5;
+    protected static final int MATCH_THEEND        = -5;
     /** The int value that terminates the pattern <code>int []</code>. */
-    protected static final int MATCH_END	= -3;
+    protected static final int MATCH_END        = -3;
 
     /** The <code>int []</code> identifying the pattern to match. */
     protected int[] sourcePattern = null;

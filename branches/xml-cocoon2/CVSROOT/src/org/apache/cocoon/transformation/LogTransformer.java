@@ -7,20 +7,17 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.parameters.Parameters;
-import org.apache.excalibur.pool.Poolable;
-
-import org.apache.cocoon.ProcessingException;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.EntityResolver;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.excalibur.pool.Poolable;
+import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -46,7 +43,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-20 20:50:17 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-25 17:09:01 $
  *
  */
 public class LogTransformer extends AbstractTransformer implements Poolable {

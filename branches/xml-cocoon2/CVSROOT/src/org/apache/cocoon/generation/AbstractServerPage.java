@@ -7,20 +7,18 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-
 import java.io.File;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.environment.Request;
-import org.xml.sax.helpers.AttributesImpl;
-
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Base implementation of <code>ServerPagesGenerator</code>. This class
  * declares variables that must be explicitly initialized by code generators.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-30 17:14:32 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:07:35 $
  */
 public abstract class AbstractServerPage
   extends ServletGenerator implements CompiledComponent

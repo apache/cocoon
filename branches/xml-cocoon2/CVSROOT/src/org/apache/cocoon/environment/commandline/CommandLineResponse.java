@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
-
-
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
 
@@ -21,7 +19,7 @@ import org.apache.cocoon.environment.Response;
  * Creates a specific servlet response simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-18 12:05:56 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:07:13 $
  */
 
 public class CommandLineResponse implements Response {

@@ -9,25 +9,22 @@ package org.apache.cocoon.components.pipeline;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.logger.AbstractLoggable;
-
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapComponentSelector;
-import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.Roles;
-
+import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.EntityResolver;
 
 /** A <CODE>ResourcePipeline</CODE> either
@@ -38,7 +35,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:50:00 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:06:17 $
  */
 public abstract class AbstractStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     protected EventPipeline eventPipeline;
@@ -59,7 +56,7 @@ public abstract class AbstractStreamPipeline extends AbstractLoggable implements
     protected ComponentManager manager;
 
     /**
-     * Pass the <code>ComponentManager</code> to the <code>composer</code>.
+     * Pass the <code>ComponentManager</code> to the <code>Composable</code>.
      * The <code>Composable</code> implementation should use the specified
      * <code>ComponentManager</code> to acquire the components it needs for
      * execution.

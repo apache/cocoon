@@ -8,10 +8,9 @@
 package org.apache.cocoon.environment.http;
 
 import java.lang.String;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import javax.servlet.ServletContext;
-
 import org.apache.cocoon.environment.Context;
 
 /**
@@ -28,24 +27,24 @@ public class HttpContext implements Context {
      * Constructs a HttpContext object from a ServletContext object
      */
     public HttpContext (ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
+                this.servletContext = servletContext;
+        }
 
     public Object getAttribute(String name) {
-		return servletContext.getAttribute(name);
-	}
+                return servletContext.getAttribute(name);
+        }
 
-	public URL getResource(String path)
+        public URL getResource(String path)
                          throws MalformedURLException {
-		return servletContext.getResource(path);
-	}
+                return servletContext.getResource(path);
+        }
 
-	public String getRealPath(String path)
+        public String getRealPath(String path)
                          throws MalformedURLException {
-		return servletContext.getRealPath(path);
-	}
+                return servletContext.getRealPath(path);
+        }
 
-	public java.lang.String getMimeType(String file) {
-		return servletContext.getMimeType(file);
-	}
+        public java.lang.String getMimeType(String file) {
+                return servletContext.getMimeType(file);
+        }
 }

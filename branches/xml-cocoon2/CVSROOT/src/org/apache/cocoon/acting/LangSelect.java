@@ -16,15 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-
-import org.apache.avalon.parameters.Parameters;
-
 import org.xml.sax.EntityResolver;
 
 /**
@@ -33,7 +30,7 @@ import org.xml.sax.EntityResolver;
  * Definition in sitemap:
  * <pre>
  * &lt;map:actions&gt;
- *		&lt;map:action name="lang_select" src="org.apache.cocoon.acting.LangSelect"/&gt;
+ *                &lt;map:action name="lang_select" src="org.apache.cocoon.acting.LangSelect"/&gt;
  * </pre>
  *
  * And you use it in following way:
@@ -41,7 +38,7 @@ import org.xml.sax.EntityResolver;
  * <pre>
  * &lt;map:match pattern="file"&gt;
  * &lt;map:act type="lang_select"&gt;
- *		&lt;map:generate src="file_{lang}.xml"/&gt;
+ *                &lt;map:generate src="file_{lang}.xml"/&gt;
  * &lt;/map:act&gt;
  * </pre>
  *

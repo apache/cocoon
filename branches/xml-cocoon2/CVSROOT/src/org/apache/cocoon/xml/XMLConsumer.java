@@ -11,7 +11,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * This interfaces identifies classes that consume XML data, receiving 
+ * This interfaces identifies classes that consume XML data, receiving
  * notification of SAX events.
  * <br>
  * This interface unites the idea of SAX <code>ContentHandler</code> and
@@ -19,7 +19,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:43 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:09:40 $
  */
 public interface XMLConsumer extends ContentHandler, LexicalHandler {
 }

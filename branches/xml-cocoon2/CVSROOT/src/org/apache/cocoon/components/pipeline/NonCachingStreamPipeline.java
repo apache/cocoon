@@ -8,7 +8,6 @@
 package org.apache.cocoon.components.pipeline;
 
 import java.io.IOException;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 
@@ -20,7 +19,7 @@ import org.apache.cocoon.environment.Environment;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-19 11:30:39 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:23 $
  */
 public final class NonCachingStreamPipeline extends AbstractStreamPipeline {
 

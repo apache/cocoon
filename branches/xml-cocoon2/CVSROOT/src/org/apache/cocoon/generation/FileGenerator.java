@@ -7,25 +7,25 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.TimeStampCacheValidity;
-import org.apache.cocoon.components.parser.Parser;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.util.HashUtil;
+import org.apache.excalibur.pool.Poolable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.avalon.component.Component;
 
 /**
  *
@@ -37,7 +37,7 @@ import org.apache.avalon.component.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-20 20:50:06 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-25 17:07:37 $
  */
 public class FileGenerator extends ComposerGenerator
 implements Cacheable {

@@ -8,10 +8,9 @@
 
 package org.apache.cocoon.util;
 
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.SourceLocator;
-
+import javax.xml.transform.TransformerException;
 import org.apache.log.Logger;
 
 public class TraxErrorHandler implements ErrorListener {
@@ -45,7 +44,7 @@ public class TraxErrorHandler implements ErrorListener {
     private void printLocation(TransformerException exception)
     {
       SourceLocator locator = exception.getLocator();
-  
+
       if(null != locator)
       {
         // System.out.println("Parser fatal error: "+exception.getMessage());
@@ -56,7 +55,7 @@ public class TraxErrorHandler implements ErrorListener {
         if(logger != null)
             logger.error("Error in TraxTransformer: " + id + "; Line " + locator.getLineNumber()
                            + "; Column " + locator.getColumnNumber()+"; ", exception);
-        else 
+        else
             System.out.println("Error in TraxTransformer: " + id + "; Line " + locator.getLineNumber()
                            + "; Column " + locator.getColumnNumber()+";" + exception);
       }

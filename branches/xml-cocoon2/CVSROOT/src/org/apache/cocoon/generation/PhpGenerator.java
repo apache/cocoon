@@ -9,23 +9,18 @@ package org.apache.cocoon.generation;
 
 import java.io.*;
 import java.util.*;
-
-import net.php.servlet;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
+import net.php.servlet;
 import org.apache.avalon.component.Component;
-import org.apache.excalibur.pool.Poolable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.http.HttpEnvironment;
-
+import org.apache.excalibur.pool.Poolable;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -35,7 +30,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-20 20:50:07 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-25 17:07:43 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 

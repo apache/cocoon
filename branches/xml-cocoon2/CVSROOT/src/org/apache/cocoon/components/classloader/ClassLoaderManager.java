@@ -7,10 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.components.classloader;
 
-import org.apache.avalon.component.Component;
-
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
+import org.apache.avalon.component.Component;
 
 /**
  * A class loader manager acting as a proxy for a <b>single</b>
@@ -19,7 +18,7 @@ import java.io.File;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-20 20:49:49 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:05:26 $
  */
 public interface ClassLoaderManager extends Component {
     /**

@@ -8,38 +8,32 @@
 package org.apache.cocoon.components.language.markup.sitemap;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import org.xml.sax.XMLReader;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.helpers.AttributesImpl;
-
+import java.util.List;
+import java.util.Set;
+import org.apache.avalon.logger.Loggable;
 import org.apache.cocoon.components.language.markup.*;
 import org.apache.cocoon.components.language.markup.sitemap.*;
-
-
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-
 import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
-
-import java.io.IOException;
+import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * This class implements <code>MarkupLanguage</code> for Cocoon's
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:49:53 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-25 17:05:42 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
 

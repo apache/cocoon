@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon;
 
 import java.io.File;
@@ -13,25 +12,29 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
+import org.apache.avalon.activity.Disposable;
+import org.apache.avalon.activity.Initializable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.context.Context;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.context.ContextException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.SAXConfigurationHandler;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.Initializable;
+import org.apache.avalon.configuration.SAXConfigurationHandler;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.context.ContextException;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.cocoon.Modifiable;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.store.FilesystemStore;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
@@ -40,20 +43,15 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.excalibur.component.DefaultComponentManager;
 import org.apache.excalibur.component.DefaultRoleManager;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
-
-import org.apache.cocoon.components.language.generator.ProgramGenerator;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.components.url.URLFactory;
+import org.xml.sax.SAXException;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.77 $ $Date: 2001-04-24 15:27:39 $
+ * @version CVS $Revision: 1.4.2.78 $ $Date: 2001-04-25 17:04:53 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -104,7 +102,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         }
     }
 
-    public void init() throws Exception {
+    public void initialize() throws Exception {
         this.componentManager = new DefaultComponentManager();
         this.componentManager.setLogger(getLogger());
         this.componentManager.contextualize(this.context);

@@ -5,17 +5,15 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-
 import org.apache.cocoon.xml.AbstractXMLProducer;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
-
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.AttributeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DocumentHandler;
@@ -31,10 +29,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * <code>xmlns:...</code> element attributes into appropriate
  * <code>startPrefixMapping(...)</code> and <code>endPrefixMapping(...)</code>
  * calls.
- * 
+ *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 14:33:39 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:09:36 $
  */
 public class DocumentHandlerAdapter extends AbstractXMLProducer
 implements DocumentHandler {
@@ -76,32 +74,32 @@ implements DocumentHandler {
         if (super.contentHandler==null) return;
         else super.contentHandler.setDocumentLocator(locator);
     }
-    
+
     /**
      * Receive notification of the beginning of a document.
      */
     public void startDocument ()
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
         super.contentHandler.startDocument();
-    }    
-    
+    }
+
     /**
      * Receive notification of the end of a document.
      */
     public void endDocument ()
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
         super.contentHandler.endDocument();
-    }    
-    
+    }
+
     /**
      * Receive notification of the beginning of an element.
      */
     public void startElement (String name, AttributeList a)
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
         // Check for namespace declarations (two loops because we're not sure
@@ -138,17 +136,17 @@ implements DocumentHandler {
                                           w.getQName(),a2);
         // Forward on the stack
         this.stack++;
-    }    
-    
+    }
+
     /**
      * Receive notification of the end of an element.
      */
     public void endElement (String name)
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
-	    // Get back on the stack
-	    this.stack--;
+            // Get back on the stack
+            this.stack--;
         // Notify the contentHandler
         NamespacesTable.Name w=this.namespaces.resolve(null,name,null,null);
         super.contentHandler.endElement(w.getUri(),w.getLocalName(),
@@ -163,36 +161,36 @@ implements DocumentHandler {
             NamespacesTable.Declaration d=namespaces.removeDeclaration(prefix);
             super.contentHandler.endPrefixMapping(d.getPrefix());
         }
-    }    
-    
-    
+    }
+
+
     /**
      * Receive notification of character data.
      */
     public void characters (char ch[], int start, int len)
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
         super.contentHandler.characters(ch,start,len);
-    }    
-    
-    
+    }
+
+
     /**
      * Receive notification of ignorable whitespace in element content.
      */
     public void ignorableWhitespace (char ch[], int start, int len)
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
         super.contentHandler.ignorableWhitespace(ch,start,len);
-    }    
-    
-    
+    }
+
+
     /**
      * Receive notification of a processing instruction.
      */
     public void processingInstruction (String target, String data)
-	throws SAXException {
+        throws SAXException {
         if (super.contentHandler==null)
             throw new SAXException("ContentHandler not set");
         super.contentHandler.processingInstruction(target,data);

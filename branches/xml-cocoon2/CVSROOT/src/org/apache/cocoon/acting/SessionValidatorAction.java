@@ -1,22 +1,19 @@
-// $Id: SessionValidatorAction.java,v 1.1.2.4 2001-04-20 20:49:46 bloritsch Exp $
+// $Id: SessionValidatorAction.java,v 1.1.2.5 2001-04-25 17:05:13 donaldp Exp $
 package org.apache.cocoon.acting;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-
-import org.apache.avalon.parameters.Parameters;
+import java.util.Map;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.*;
-import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.Tokenizer;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 
 /**
@@ -25,8 +22,8 @@ import org.apache.cocoon.environment.Session;
  * file (its format is defined in AbstractValidatorAction).
  * <pre>
  * &lt;map:act type="session-validator"&gt;
- * 	&lt;parameter name="descriptor" value="context://descriptor.xml"&gt;
- * 	&lt;parameter name="validate" value="username,password"&gt;
+ *         &lt;parameter name="descriptor" value="context://descriptor.xml"&gt;
+ *         &lt;parameter name="validate" value="username,password"&gt;
  * &lt;/map:act&gt;
  * </pre>
  *
@@ -38,7 +35,7 @@ import org.apache.cocoon.environment.Session;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:49:46 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:05:13 $
  */
 public class SessionValidatorAction extends AbstractValidatorAction
 {
@@ -89,5 +86,5 @@ public class SessionValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: SessionValidatorAction.java,v 1.1.2.4 2001-04-20 20:49:46 bloritsch Exp $
+// $Id: SessionValidatorAction.java,v 1.1.2.5 2001-04-25 17:05:13 donaldp Exp $
 // vim: set et ts=4 sw=4:

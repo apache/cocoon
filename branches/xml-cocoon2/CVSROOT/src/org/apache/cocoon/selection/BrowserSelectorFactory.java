@@ -8,16 +8,13 @@
 package org.apache.cocoon.selection;
 
 import org.apache.avalon.configuration.ConfigurationException;
-
-import org.w3c.dom.NodeList;
-import org.w3c.dom.traversal.TreeWalker;
-import org.w3c.dom.traversal.NodeFilter;
-import org.w3c.dom.Node;
-import org.w3c.dom.NamedNodeMap;
-
-import org.apache.xerces.dom.TreeWalkerImpl;
-
 import org.apache.cocoon.CodeFactory;
+import org.apache.xerces.dom.TreeWalkerImpl;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.traversal.NodeFilter;
+import org.w3c.dom.traversal.TreeWalker;
 
 /**
  * This class generates source code which tests a specific browser pattern
@@ -26,7 +23,7 @@ import org.apache.cocoon.CodeFactory;
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-23 19:38:19 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:08:18 $
 */
 
 

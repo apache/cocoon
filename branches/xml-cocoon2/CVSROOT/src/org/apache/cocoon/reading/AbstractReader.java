@@ -7,24 +7,21 @@
  *****************************************************************************/
 package org.apache.cocoon.reading;
 
-import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
-
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.excalibur.pool.Recyclable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
-
-import org.apache.cocoon.ProcessingException;
-
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.excalibur.pool.Recyclable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-20 20:50:09 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:08:13 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */

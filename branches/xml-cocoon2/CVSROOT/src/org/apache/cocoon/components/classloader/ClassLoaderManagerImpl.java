@@ -7,19 +7,18 @@
  *****************************************************************************/
 package org.apache.cocoon.components.classloader;
 
-import java.io.IOException;
 import java.io.File;
-import java.net.URL;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import org.apache.cocoon.util.ClassUtils;
-
+import java.net.URL;
 import org.apache.avalon.thread.ThreadSafe;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-20 20:49:49 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:05:27 $
  */
 public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**

@@ -5,21 +5,16 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.servlet;
-
-import java.util.Date;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Arrays;
+import java.util.Date;
 import java.util.StringTokenizer;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -27,35 +22,31 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.xml.sax.SAXException;
-
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.context.DefaultContext;
-
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
+import org.apache.cocoon.Notifier;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.environment.http.RequestWrapper;
-import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.components.classloader.RepositoryClassLoader;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.environment.http.RequestWrapper;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.components.classloader.RepositoryClassLoader;
-
-import org.apache.log.Logger;
-import org.apache.log.LogKit;
-import org.apache.log.Priority;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.log.Category;
+import org.apache.log.LogKit;
+import org.apache.log.LogTarget;
+import org.apache.log.Logger;
+import org.apache.log.Priority;
 import org.apache.log.output.FileOutputLogTarget;
 import org.apache.log.output.ServletOutputLogTarget;
-import org.apache.log.LogTarget;
+import org.xml.sax.SAXException;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -65,7 +56,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.88 $ $Date: 2001-04-25 15:27:03 $
+ * @version CVS $Revision: 1.1.4.89 $ $Date: 2001-04-25 17:08:36 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -140,7 +131,7 @@ public class CocoonServlet extends HttpServlet {
         String uploadDirParam = conf.getInitParameter("upload-directory");
         if ((uploadDirParam != null) && (uploadDirParam.trim().equals("") == false)) {
             this.uploadDir = IOUtils.createFile( new File(this.servletContext.getRealPath("/")) , uploadDirParam);
-        } else	{
+        } else        {
             this.uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
         }
 
@@ -530,7 +521,7 @@ public class CocoonServlet extends HttpServlet {
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
             c.contextualize(this.appContext);
             c.setLogger(this.log);
-            c.init();
+            c.initialize();
             this.creationTime = new Date().getTime();
 
             if (this.cocoon != null) {

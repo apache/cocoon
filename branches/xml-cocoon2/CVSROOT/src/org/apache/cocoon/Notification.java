@@ -8,14 +8,11 @@
 
 package org.apache.cocoon;
 
-import java.util.HashMap;
-
-import java.io.StringWriter;
 import java.io.PrintWriter;
-
-import org.xml.sax.SAXException;
-
+import java.io.StringWriter;
+import java.util.HashMap;
 import org.apache.avalon.CascadingException;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -24,7 +21,7 @@ import org.apache.avalon.CascadingException;
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @created 24 August 2000
  */
- 
+
 public class Notification implements Notificable {
 
     /**
@@ -81,7 +78,7 @@ public class Notification implements Notificable {
         setSource(o.getClass().getName());
         setMessage(o.toString());
     }
-    
+
     /**
      * Constructor for the Notification object
      *

@@ -7,14 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup;
 
-import org.xml.sax.XMLReader;
-import org.xml.sax.InputSource;
-
 import org.apache.avalon.component.Component;
-
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-
 import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 /**
  * This interface defines a markup language whose SAX producer's instance are to
@@ -22,7 +19,7 @@ import org.xml.sax.EntityResolver;
  * document augmenting it with dynamic content
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-20 20:49:52 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:05:39 $
  */
 public interface MarkupLanguage extends Component {
     /**

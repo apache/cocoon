@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.environment;
 
 import java.io.BufferedReader;
@@ -19,7 +18,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 12:05:54 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:07:02 $
  *
  */
 
@@ -30,12 +29,12 @@ public interface Request {
      * Returns the value of the named attribute as an <code>Object</code>,
      * or <code>null</code> if no attribute of the given name exists.
      *
-     * @param name	a <code>String</code> specifying the name of
-     *			the attribute
+     * @param name        a <code>String</code> specifying the name of
+     *                        the attribute
      *
-     * @return		an <code>Object</code> containing the value
-     *			of the attribute, or <code>null</code> if
-     *			the attribute does not exist
+     * @return                an <code>Object</code> containing the value
+     *                        of the attribute, or <code>null</code> if
+     *                        the attribute does not exist
      *
      */
     Object get(String name);
@@ -45,12 +44,12 @@ public interface Request {
      * Returns the value of the named attribute as an <code>Object</code>,
      * or <code>null</code> if no attribute of the given name exists.
      *
-     * @param name	a <code>String</code> specifying the name of
-     *			the attribute
+     * @param name        a <code>String</code> specifying the name of
+     *                        the attribute
      *
-     * @return		an <code>Object</code> containing the value
-     *			of the attribute, or <code>null</code> if
-     *			the attribute does not exist
+     * @return                an <code>Object</code> containing the value
+     *                        of the attribute, or <code>null</code> if
+     *                        the attribute does not exist
      *
      */
 
@@ -63,9 +62,9 @@ public interface Request {
      * if the request has no attributes available to it.
      *
      *
-     * @return		an <code>Enumeration</code> of strings
-     *			containing the names
-     * 			of the request's attributes
+     * @return                an <code>Enumeration</code> of strings
+     *                        containing the names
+     *                         of the request's attributes
      *
      */
 
@@ -77,9 +76,9 @@ public interface Request {
      * does not specify a character encoding
      *
      *
-     * @return		a <code>String</code> containing the name of
-     *			the chararacter encoding, or <code>null</code>
-     *			if the request does not specify a character encoding
+     * @return                a <code>String</code> containing the name of
+     *                        the chararacter encoding, or <code>null</code>
+     *                        if the request does not specify a character encoding
      *
      */
 
@@ -88,8 +87,8 @@ public interface Request {
     /**
      * Returns the length, in bytes, of the request body
      *
-     * @return		an integer containing the length of the
-     * 			request body or -1 if the length is not known
+     * @return                an integer containing the length of the
+     *                         request body or -1 if the length is not known
      *
      */
 
@@ -98,9 +97,9 @@ public interface Request {
     /**
      * Returns the MIME type of the body of the request
      *
-     * @return		a <code>String</code> containing the name
-     *			of the MIME type of
-     * 			the request, or -1 if the type is not known
+     * @return                a <code>String</code> containing the name
+     *                        of the MIME type of
+     *                         the request, or -1 if the type is not known
      *
      */
 
@@ -109,13 +108,13 @@ public interface Request {
     /**
      * Returns the value of a request parameter as a <code>String</code>,
      *
-     * @param name 	a <code>String</code> specifying the
-     *			name of the parameter
+     * @param name         a <code>String</code> specifying the
+     *                        name of the parameter
      *
-     * @return		a <code>String</code> representing the
-     *			single value of the parameter
+     * @return                a <code>String</code> representing the
+     *                        single value of the parameter
      *
-     * @see 		#getParameterValues
+     * @see                 #getParameterValues
      *
      */
 
@@ -129,11 +128,11 @@ public interface Request {
      * no parameters, the method returns an
      * empty <code>Enumeration</code>.
      *
-     * @return		an <code>Enumeration</code> of <code>String</code>
-     *			objects, each <code>String</code> containing
-     * 			the name of a request parameter; or an
-     *			empty <code>Enumeration</code> if the
-     *			request has no parameters
+     * @return                an <code>Enumeration</code> of <code>String</code>
+     *                        objects, each <code>String</code> containing
+     *                         the name of a request parameter; or an
+     *                        empty <code>Enumeration</code> if the
+     *                        request has no parameters
      *
      */
 
@@ -147,13 +146,13 @@ public interface Request {
      * <p>If the parameter has a single value, the array has a length
      * of 1.
      *
-     * @param name	a <code>String</code> containing the name of
-     *			the parameter whose value is requested
+     * @param name        a <code>String</code> containing the name of
+     *                        the parameter whose value is requested
      *
-     * @return		an array of <code>String</code> objects
-     *			containing the parameter's values
+     * @return                an array of <code>String</code> objects
+     *                        containing the parameter's values
      *
-     * @see		#getParameter
+     * @see                #getParameter
      *
      */
 
@@ -167,8 +166,8 @@ public interface Request {
      * returned is the same as the value of the CGI variable
      * <code>SERVER_PROTOCOL</code>.
      *
-     * @return		a <code>String</code> containing the protocol
-     *			name and version number
+     * @return                a <code>String</code> containing the protocol
+     *                        name and version number
      *
      */
 
@@ -181,8 +180,8 @@ public interface Request {
      * Different schemes have different rules for constructing URLs,
      * as noted in RFC 1738.
      *
-     * @return		a <code>String</code> containing the name
-     *			of the scheme used to make this request
+     * @return                a <code>String</code> containing the name
+     *                        of the scheme used to make this request
      *
      */
 
@@ -193,8 +192,8 @@ public interface Request {
      * For HTTP servlets, same as the value of the CGI variable
      * <code>SERVER_NAME</code>.
      *
-     * @return		a <code>String</code> containing the name
-     *			of the server to which the request was sent
+     * @return                a <code>String</code> containing the name
+     *                        of the server to which the request was sent
      */
 
     String getServerName();
@@ -204,7 +203,7 @@ public interface Request {
      * For HTTP servlets, same as the value of the CGI variable
      * <code>SERVER_PORT</code>.
      *
-     * @return		an integer specifying the port number
+     * @return                an integer specifying the port number
      *
      */
 
@@ -215,8 +214,8 @@ public interface Request {
      * that sent the request.  For HTTP servlets, same as the value of the
      * CGI variable <code>REMOTE_ADDR</code>.
      *
-     * @return		a <code>String</code> containing the
-     *			IP address of the client that sent the request
+     * @return                a <code>String</code> containing the
+     *                        IP address of the client that sent the request
      *
      */
 
@@ -228,8 +227,8 @@ public interface Request {
      * determined. For HTTP servlets, same as the value of the CGI variable
      * <code>REMOTE_HOST</code>.
      *
-     * @return		a <code>String</code> containing the fully qualified name
-     *			of the client
+     * @return                a <code>String</code> containing the fully qualified name
+     *                        of the client
      *
      */
 
@@ -246,10 +245,10 @@ public interface Request {
      * reserved for use by Sun Microsystems.
      *
      *
-     * @param name			a <code>String</code> specifying
-     *					the name of the attribute
+     * @param name                        a <code>String</code> specifying
+     *                                        the name of the attribute
      *
-     * @param o				the <code>Object</code> to be stored
+     * @param o                                the <code>Object</code> to be stored
      *
      */
 
@@ -267,8 +266,8 @@ public interface Request {
      * reserved for use by Sun Microsystems.
      *
      *
-     * @param name			a <code>String</code> specifying
-     *					the name of the attribute to remove
+     * @param name                        a <code>String</code> specifying
+     *                                        the name of the attribute to remove
      *
      */
 
@@ -282,7 +281,7 @@ public interface Request {
      * this method returns the default locale for the server.
      *
      *
-     * @return		the preferred <code>Locale</code> for the client
+     * @return                the preferred <code>Locale</code> for the client
      *
      */
 
@@ -299,7 +298,7 @@ public interface Request {
      * <code>Locale</code>, the default locale for the server.
      *
      *
-     * @return		an <code>Enumeration</code> of preferred
+     * @return                an <code>Enumeration</code> of preferred
      *                  <code>Locale</code> objects for the client
      *
      */
@@ -312,7 +311,7 @@ public interface Request {
      * secure channel, such as HTTPS.
      *
      *
-     * @return		a boolean indicating if the request was made using a
+     * @return                a boolean indicating if the request was made using a
      *                  secure channel
      *
      */
@@ -325,9 +324,9 @@ public interface Request {
      * objects the client sent with this request.
      * This method returns <code>null</code> if no cookies were sent.
      *
-     * @return		an array of all the <code>Cookies</code>
-     *			included with this request, or <code>null</code>
-     *			if the request has no cookies
+     * @return                an array of all the <code>Cookies</code>
+     *                        included with this request, or <code>null</code>
+     *                        if the request has no cookies
      *
      *
      */
@@ -351,21 +350,21 @@ public interface Request {
      * can't be converted to a date, the method throws
      * an <code>IllegalArgumentException</code>.
      *
-     * @param name		a <code>String</code> specifying the
-     *				name of the header
+     * @param name                a <code>String</code> specifying the
+     *                                name of the header
      *
-     * @return			a <code>long</code> value
-     *				representing the date specified
-     *				in the header expressed as
-     *				the number of milliseconds
-     *				since January 1, 1970 GMT,
-     *				or -1 if the named header
-     *				was not included with the
-     *				reqest
+     * @return                        a <code>long</code> value
+     *                                representing the date specified
+     *                                in the header expressed as
+     *                                the number of milliseconds
+     *                                since January 1, 1970 GMT,
+     *                                or -1 if the named header
+     *                                was not included with the
+     *                                reqest
      *
-     * @exception	IllegalArgumentException	If the header value
-     *							can't be converted
-     *							to a date
+     * @exception        IllegalArgumentException        If the header value
+     *                                                        can't be converted
+     *                                                        to a date
      *
      */
 
@@ -379,14 +378,14 @@ public interface Request {
      * The header name is case insensitive. You can use
      * this method with any request header.
      *
-     * @param name		a <code>String</code> specifying the
-     *				header name
+     * @param name                a <code>String</code> specifying the
+     *                                header name
      *
-     * @return			a <code>String</code> containing the
-     *				value of the requested
-     *				header, or <code>null</code>
-     *				if the request does not
-     *				have a header of that name
+     * @return                        a <code>String</code> containing the
+     *                                value of the requested
+     *                                header, or <code>null</code>
+     *                                if the request does not
+     *                                have a header of that name
      *
      */
 
@@ -407,14 +406,14 @@ public interface Request {
      * The header name is case insensitive. You can use
      * this method with any request header.
      *
-     * @param name		a <code>String</code> specifying the
-     *				header name
+     * @param name                a <code>String</code> specifying the
+     *                                header name
      *
-     * @return			a <code>Enumeration</code> containing the
-     *				values of the requested
-     *				header, or <code>null</code>
-     *				if the request does not
-     *				have any headers of that name
+     * @return                        a <code>Enumeration</code> containing the
+     *                                values of the requested
+     *                                header, or <code>null</code>
+     *                                if the request does not
+     *                                have any headers of that name
      *
      */
 
@@ -430,13 +429,13 @@ public interface Request {
      * servlets to access headers using this method, in
      * which case this method returns <code>null</code>
      *
-     * @return			an enumeration of all the
-     *				header names sent with this
-     *				request; if the request has
-     *				no headers, an empty enumeration;
-     *				if the servlet container does not
-     *				allow servlets to use this method,
-     *				<code>null</code>
+     * @return                        an enumeration of all the
+     *                                header names sent with this
+     *                                request; if the request has
+     *                                no headers, an empty enumeration;
+     *                                if the servlet container does not
+     *                                allow servlets to use this method,
+     *                                <code>null</code>
      *
      */
 
@@ -448,10 +447,10 @@ public interface Request {
      * request was made, for example, GET, POST, or PUT.
      * Same as the value of the CGI variable REQUEST_METHOD.
      *
-     * @return			a <code>String</code>
-     *				specifying the name
-     *				of the method with which
-     *				this request was made
+     * @return                        a <code>String</code>
+     *                                specifying the name
+     *                                of the method with which
+     *                                this request was made
      *
      */
 
@@ -469,12 +468,12 @@ public interface Request {
      * <p>Same as the value of the CGI variable PATH_INFO.
      *
      *
-     * @return		a <code>String</code> specifying
-     *			extra path information that comes
-     *			after the servlet path but before
-     *			the query string in the request URL;
-     *			or <code>null</code> if the URL does not have
-     *			any extra path information
+     * @return                a <code>String</code> specifying
+     *                        extra path information that comes
+     *                        after the servlet path but before
+     *                        the query string in the request URL;
+     *                        or <code>null</code> if the URL does not have
+     *                        any extra path information
      *
      */
 
@@ -490,10 +489,10 @@ public interface Request {
      * this method returns <code>null</code>.
      *
      *
-     * @return		a <code>String</code> specifying the
-     *			real path, or <code>null</code> if
-     *			the URL does not have any extra path
-     *			information
+     * @return                a <code>String</code> specifying the
+     *                        real path, or <code>null</code> if
+     *                        the URL does not have any extra path
+     *                        information
      *
      *
      */
@@ -509,9 +508,9 @@ public interface Request {
      * returns "".
      *
      *
-     * @return		a <code>String</code> specifying the
-     *			portion of the request URI that indicates the context
-     *			of the request
+     * @return                a <code>String</code> specifying the
+     *                        portion of the request URI that indicates the context
+     *                        of the request
      *
      *
      */
@@ -525,9 +524,9 @@ public interface Request {
      * if the URL does not have a query string. Same as the value
      * of the CGI variable QUERY_STRING.
      *
-     * @return		a <code>String</code> containing the query
-     *			string or <code>null</code> if the URL
-     *			contains no query string
+     * @return                a <code>String</code> containing the query
+     *                        string or <code>null</code> if the URL
+     *                        contains no query string
      *
      */
 
@@ -542,9 +541,9 @@ public interface Request {
      * depends on the browser and type of authentication. Same as the
      * value of the CGI variable REMOTE_USER.
      *
-     * @return		a <code>String</code> specifying the login
-     *			of the user making this request, or <code>null</code
-     *			if the user login is not known
+     * @return                a <code>String</code> specifying the login
+     *                        of the user making this request, or <code>null</code
+     *                        if the user login is not known
      *
      */
 
@@ -561,11 +560,11 @@ public interface Request {
      * <code>null</code>.
      *
      *
-     * @return		a <code>String</code> specifying the session
-     *			ID, or <code>null</code> if the request did
-     *			not specify a session ID
+     * @return                a <code>String</code> specifying the session
+     *                        ID, or <code>null</code> if the request did
+     *                        not specify a session ID
      *
-     * @see		#isRequestedSessionIdValid
+     * @see                #isRequestedSessionIdValid
      *
      */
 
@@ -588,9 +587,9 @@ public interface Request {
      * </table>
      * </blockquote>
      *
-     * @return		a <code>String</code> containing
-     *			the part of the URL from the
-     *			protocol name up to the query string
+     * @return                a <code>String</code> containing
+     *                        the part of the URL from the
+     *                        protocol name up to the query string
      *
      *
      */
@@ -606,9 +605,9 @@ public interface Request {
      * of the CGI variable SCRIPT_NAME.
      *
      *
-     * @return		a <code>String</code> containing
-     *			the name or path of the servlet being
-     *			called, as specified in the request URL
+     * @return                a <code>String</code> containing
+     *                        the name or path of the servlet being
+     *                        called, as specified in the request URL
      *
      *
      */
@@ -633,18 +632,18 @@ public interface Request {
      *
      *
      *
-     * @param		<code>true</code> to create
-     *			a new session for this request if necessary;
-     *			<code>false</code> to return <code>null</code>
-     *			if there's no current session
+     * @param                <code>true</code> to create
+     *                        a new session for this request if necessary;
+     *                        <code>false</code> to return <code>null</code>
+     *                        if there's no current session
      *
      *
-     * @return 		the <code>HttpSession</code> associated
-     *			with this request or <code>null</code> if
-     * 			<code>create</code> is <code>false</code>
-     *			and the request has no valid session
+     * @return                 the <code>HttpSession</code> associated
+     *                        with this request or <code>null</code> if
+     *                         <code>create</code> is <code>false</code>
+     *                        and the request has no valid session
      *
-     * @see	#getSession()
+     * @see        #getSession()
      *
      *
      */
@@ -656,10 +655,10 @@ public interface Request {
      * Returns the current session associated with this request,
      * or if the request does not have a session, creates one.
      *
-     * @return		the <code>HttpSession</code> associated
-     *			with this request
+     * @return                the <code>HttpSession</code> associated
+     *                        with this request
      *
-     * @see	#getSession(boolean)
+     * @see        #getSession(boolean)
      *
      */
 
@@ -669,13 +668,13 @@ public interface Request {
      *
      * Checks whether the requested session ID is still valid.
      *
-     * @return			<code>true</code> if this
-     *				request has an id for a valid session
-     *				in the current session context;
-     *				<code>false</code> otherwise
+     * @return                        <code>true</code> if this
+     *                                request has an id for a valid session
+     *                                in the current session context;
+     *                                <code>false</code> otherwise
      *
-     * @see			#getRequestedSessionId
-     * @see			#getSession
+     * @see                        #getRequestedSessionId
+     * @see                        #getSession
      *
      */
 
@@ -685,12 +684,12 @@ public interface Request {
      *
      * Checks whether the requested session ID came in as a cookie.
      *
-     * @return			<code>true</code> if the session ID
-     *				came in as a
-     *				cookie; otherwise, <code>false</code>
+     * @return                        <code>true</code> if the session ID
+     *                                came in as a
+     *                                cookie; otherwise, <code>false</code>
      *
      *
-     * @see			#getSession
+     * @see                        #getSession
      *
      */
 
@@ -701,12 +700,12 @@ public interface Request {
      * Checks whether the requested session ID came in as part of the
      * request URL.
      *
-     * @return			<code>true</code> if the session ID
-     *				came in as part of a URL; otherwise,
-     *				<code>false</code>
+     * @return                        <code>true</code> if the session ID
+     *                                came in as part of a URL; otherwise,
+     *                                <code>false</code>
      *
      *
-     * @see			#getSession
+     * @see                        #getSession
      *
      */
 

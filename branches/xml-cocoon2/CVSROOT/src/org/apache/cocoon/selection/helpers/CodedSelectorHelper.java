@@ -7,13 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.selection.helpers;
 
-import org.apache.cocoon.Constants;
-
 import java.util.Map;
-
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Session;
 
 /**
@@ -23,7 +21,7 @@ import org.apache.cocoon.environment.Session;
  * variables for developer ease.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-18 12:06:04 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:08:22 $
  */
 public abstract class CodedSelectorHelper
 {

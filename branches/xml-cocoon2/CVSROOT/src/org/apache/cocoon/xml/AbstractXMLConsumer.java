@@ -7,14 +7,13 @@
  *****************************************************************************/
 package org.apache.cocoon.xml;
 
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.log.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-
-import org.apache.log.Logger;
-import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This abstract class provides default implementation of the methods specified
@@ -22,7 +21,7 @@ import org.apache.avalon.logger.AbstractLoggable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-20 20:50:19 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:09:31 $
  */
 public abstract class AbstractXMLConsumer extends AbstractLoggable implements XMLConsumer {
 

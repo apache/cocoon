@@ -7,45 +7,42 @@
  *****************************************************************************/
 package org.apache.cocoon.reading;
 
-import java.io.IOException;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Date;
 import java.util.Map;
-
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.HashUtil;
-
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.parameters.Parameters;
-
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-20 20:50:10 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-25 17:08:15 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if

@@ -12,24 +12,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.context.Context;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.thread.ThreadSafe;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.context.ContextException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.context.Context;
+import org.apache.avalon.context.ContextException;
+import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage;
@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.50 $ $Date: 2001-04-24 12:14:36 $
+ * @version CVS $Revision: 1.1.2.51 $ $Date: 2001-04-25 17:05:33 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable
     implements ProgramGenerator, Contextualizable, Composable, Configurable, ThreadSafe, Disposable {

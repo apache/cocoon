@@ -5,32 +5,28 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.sitemap;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Iterator;
 import java.util.HashMap;
-
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.context.Context;
+import java.util.Iterator;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.context.Context;
 import org.apache.avalon.context.ContextException;
+import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.Handler;
 import org.apache.cocoon.sitemap.XSLTFactoryLoader;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -39,7 +35,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-24 12:14:46 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:08:46 $
  */
 public class Manager extends AbstractLoggable implements Configurable, Composable, Contextualizable {
 

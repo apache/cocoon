@@ -9,17 +9,16 @@
 package org.apache.cocoon.util;
 
 import java.io.File;
-import java.net.URL;
-import java.net.MalformedURLException;
-
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A collection of class management utility methods.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-30 17:14:41 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:09:11 $
  */
 public class ClassUtils {
 

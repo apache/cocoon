@@ -8,13 +8,13 @@
 
 package org.apache.cocoon.util.url.resource;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.avalon.logger.Loggable;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.log.Logger;
 
 /**
@@ -22,7 +22,7 @@ import org.apache.log.Logger;
  *
  * @author: <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author: <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:50:19 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:09:27 $
  */
 public class Handler extends URLStreamHandler implements Loggable {
     private Logger log;

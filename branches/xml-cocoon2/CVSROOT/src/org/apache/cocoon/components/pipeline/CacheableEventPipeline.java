@@ -8,16 +8,15 @@
 package org.apache.cocoon.components.pipeline;
 
 import java.util.Map;
-
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.caching.PipelineCacheKey;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * This marker interface declares an <code>EventPipeline</code> as cacheable.
  *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-17 10:33:11 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:06:19 $
  */
 public interface CacheableEventPipeline {
 

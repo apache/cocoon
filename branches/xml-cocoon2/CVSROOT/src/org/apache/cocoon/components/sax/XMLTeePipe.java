@@ -7,20 +7,17 @@
  * the LICENSE file.                                                         *
  ****************************************************************************
  */
-
 package org.apache.cocoon.components.sax;
 
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLPipe;
+import org.apache.cocoon.xml.XMLProducer;
 import org.apache.excalibur.pool.Recyclable;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-
-import org.apache.cocoon.xml.XMLPipe;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLProducer;
 
 
 /**
@@ -28,7 +25,7 @@ import org.apache.cocoon.xml.XMLProducer;
  * The incoming events are forwarded to two other components.
  *
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:50:02 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:06:34 $
  */
 
 public final class XMLTeePipe

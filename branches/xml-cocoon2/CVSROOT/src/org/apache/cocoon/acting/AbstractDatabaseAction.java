@@ -7,54 +7,51 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.sql.Time;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.Array;
-import java.sql.Date;
-import java.sql.Ref;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.sql.Blob;
 import java.sql.Clob;
-import java.net.URL;
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.BufferedInputStream;
-import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentSelector;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.configuration.SAXConfigurationHandler;
-import org.apache.excalibur.datasource.DataSourceComponent;
-
-import org.apache.cocoon.Roles;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
-import org.apache.cocoon.components.url.URLFactory;
-import org.apache.cocoon.components.parser.Parser;
+import org.apache.excalibur.datasource.DataSourceComponent;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * Set up environment for configurable form handling data.  It is
@@ -175,7 +172,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-20 20:49:44 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-25 17:05:03 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
     protected Map files = new HashMap();

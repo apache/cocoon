@@ -7,23 +7,20 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import java.util.Iterator;
 import java.util.Enumeration;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
-import org.apache.excalibur.pool.Poolable;
-
+import java.util.Iterator;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
+import org.apache.excalibur.pool.Poolable;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-20 20:50:07 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:07:44 $
  */
 public class RequestGenerator extends ServletGenerator implements Poolable {
 

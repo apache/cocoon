@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.util;
 
 import java.io.File;
@@ -16,7 +15,7 @@ import java.io.FileFilter;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</A>
  */
- 
+
 public class JavaArchiveFilter implements FileFilter {
 
     public boolean accept(File file) {
@@ -24,4 +23,4 @@ public class JavaArchiveFilter implements FileFilter {
         return (name.endsWith(".jar") || name.endsWith(".zip"));
     }
 
-} 
+}

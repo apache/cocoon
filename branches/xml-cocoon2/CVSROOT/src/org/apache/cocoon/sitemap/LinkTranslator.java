@@ -5,29 +5,24 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.sitemap;
 
-import java.io.PrintStream;
 import java.io.IOException;
-
+import java.io.PrintStream;
 import java.util.Map;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.EntityResolver;
-
 import org.apache.avalon.parameters.Parameters;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.NetUtils;
+import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
+import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:50:14 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-25 17:08:45 $
  */
 
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {

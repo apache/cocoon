@@ -6,32 +6,26 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  */
-
 package org.apache.cocoon.components.language.markup.xsp;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.IOUtils;
@@ -41,12 +35,15 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.11 $ $Date: 2001-04-18 12:05:49 $
+ * @version $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:05:47 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {

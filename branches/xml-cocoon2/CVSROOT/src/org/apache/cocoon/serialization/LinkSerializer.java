@@ -8,21 +8,18 @@
 
 package org.apache.cocoon.serialization;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.IOException;
-
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 import org.apache.excalibur.pool.Poolable;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
-
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-20 20:50:11 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:08:29 $
  */
 
 public class LinkSerializer extends ExtendedXLinkPipe implements Serializer, Poolable {

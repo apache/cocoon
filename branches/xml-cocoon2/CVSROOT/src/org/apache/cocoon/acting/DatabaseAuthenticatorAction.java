@@ -1,29 +1,24 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.6 2001-04-24 17:32:55 dims Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.7 2001-04-25 17:05:06 donaldp Exp $
 package org.apache.cocoon.acting;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Collections;
-
-import org.apache.avalon.parameters.Parameters;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.excalibur.datasource.DataSourceComponent;
-
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.*;
-import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.sql.SQLException;
-
+import org.apache.cocoon.util.Tokenizer;
+import org.apache.excalibur.datasource.DataSourceComponent;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * This action is used to authenticate user by comparing several request
@@ -32,14 +27,14 @@ import java.sql.SQLException;
  * used for all actions derived from AbstractDatabaseAction.
  * <pre>
  * &lt;root&gt;
- * 	&lt;connection&gt;personnel&lt;/connection&gt;
- * 	&lt;table name="users_table&gt;
- * 		&lt;select dbcol="username" request-param="username"
- * 		to-session="username"/&gt;
- * 		&lt;select dbcol="password" request-param="password"/&gt;
- * 		&lt;select dbcol="role" to-session="role" type="string"/&gt;
- * 		&lt;select dbcol="skin" to-session="skin" type="string"/&gt;
- * 	&lt;/table&gt;
+ *         &lt;connection&gt;personnel&lt;/connection&gt;
+ *         &lt;table name="users_table&gt;
+ *                 &lt;select dbcol="username" request-param="username"
+ *                 to-session="username"/&gt;
+ *                 &lt;select dbcol="password" request-param="password"/&gt;
+ *                 &lt;select dbcol="role" to-session="role" type="string"/&gt;
+ *                 &lt;select dbcol="skin" to-session="skin" type="string"/&gt;
+ *         &lt;/table&gt;
  * &lt;/root&gt;
  * </pre>
  * The values specified via "request-param" describe the name of HTTP request
@@ -51,14 +46,14 @@ import java.sql.SQLException;
  * Additionally all parameters that are
  * propagated to the session are made available to the sitemap via {name}
  * expression.
- * 
+ *
  * If there is no need to touch the session object, providing just one-time
  * verification, you can specify action parameter "create-session" to "no" or
  * "false". No values are then propagated to the sesion and session object is
  * not verified.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-24 17:32:55 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:05:06 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -75,7 +70,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                     parameters.getParameter ("descriptor", null));
             boolean cs = true;
             String create_session = parameters.getParameter ("create-session", null);
-            if (create_session != null && 
+            if (create_session != null &&
                     ("no".equals (create_session.trim ()) || "false".equals (create_session.trim ()))) {
                 cs = false;
             }
@@ -160,7 +155,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                 request_value = req.getParameter (
                         request_param);
                 if (request_value == null || request_value.trim().equals ("")) {
-                    getLogger ().debug ("DBAUTH: request-param " 
+                    getLogger ().debug ("DBAUTH: request-param "
                             + request_param + " does not exist");
                     return null;
                 }
@@ -231,5 +226,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.6 2001-04-24 17:32:55 dims Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.7 2001-04-25 17:05:06 donaldp Exp $
 // vim: set et ts=4 sw=4:

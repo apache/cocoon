@@ -7,9 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.components.store;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import org.apache.avalon.component.Component;
-import java.io.IOException;
 
 /**
  *
@@ -19,7 +19,7 @@ import java.io.IOException;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-20 20:50:03 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:06:47 $
  */
 public interface Store extends Component {
 

@@ -2,16 +2,15 @@ package org.apache.cocoon.generation;
 
 import java.io.*;
 import java.util.*;
-import org.xml.sax.SAXException;
-
 import org.apache.log.LogKit;
+import org.xml.sax.SAXException;
 
 /**
  * An extension of DirectoryGenerators that adds extra attributes for image
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.7 $ $Date: 2001-02-19 15:58:08 $
+ * @version $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:07:42 $
  */
 public class ImageDirectoryGenerator extends DirectoryGenerator {
 

@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.environment;
 
 import java.util.Enumeration;
@@ -35,7 +34,7 @@ import java.util.Enumeration;
  * will not be directly visible in another.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-18 12:05:55 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:07:04 $
  *
  */
 
@@ -46,13 +45,13 @@ public interface Session {
      * Returns the time when this session was created, measured
      * in milliseconds since midnight January 1, 1970 GMT.
      *
-     * @return				a <code>long</code> specifying
-     * 					when this session was created,
-     *					expressed in
-     *					milliseconds since 1/1/1970 GMT
+     * @return                                a <code>long</code> specifying
+     *                                         when this session was created,
+     *                                        expressed in
+     *                                        milliseconds since 1/1/1970 GMT
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        invalidated session
      *
      */
     long getCreationTime();
@@ -63,11 +62,11 @@ public interface Session {
      * to this session. The identifier is assigned
      * by the context container and is implementation dependent.
      *
-     * @return				a string specifying the identifier
-     *					assigned to this session
+     * @return                                a string specifying the identifier
+     *                                        assigned to this session
      *
-     * @exeption IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exeption IllegalStateException        if this method is called on an
+     *                                        invalidated session
      *
      */
     String getId();
@@ -82,14 +81,14 @@ public interface Session {
      * a value associated with the session, do not affect the access
      * time.
      *
-     * @return				a <code>long</code>
-     *					representing the last time
-     *					the client sent a request associated
-     *					with this session, expressed in
-     *					milliseconds since 1/1/1970 GMT
+     * @return                                a <code>long</code>
+     *                                        representing the last time
+     *                                        the client sent a request associated
+     *                                        with this session, expressed in
+     *                                        milliseconds since 1/1/1970 GMT
      *
-     * @exeption IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exeption IllegalStateException        if this method is called on an
+     *                                        invalidated session
      *
      */
 
@@ -101,8 +100,8 @@ public interface Session {
      * contextcontainer will invalidate this session.  A negative time
      * indicates the session should never timeout.
      *
-     * @param interval		An integer specifying the number
-     * 				of seconds
+     * @param interval                An integer specifying the number
+     *                                 of seconds
      *
      */
     void setMaxInactiveInterval(int interval);
@@ -116,11 +115,11 @@ public interface Session {
     * A negative time indicates the session should never timeout.
     *
     *
-    * @return		an integer specifying the number of
-    *			seconds this session remains open
-    *			between client requests
+    * @return                an integer specifying the number of
+    *                        seconds this session remains open
+    *                        between client requests
     *
-    * @see		#setMaxInactiveInterval
+    * @see                #setMaxInactiveInterval
     *
     *
     */
@@ -131,12 +130,12 @@ public interface Session {
      * Returns the object bound with the specified name in this session, or
      * <code>null</code> if no object is bound under the name.
      *
-     * @param name		a string specifying the name of the object
+     * @param name                a string specifying the name of the object
      *
-     * @return			the object with the specified name
+     * @return                        the object with the specified name
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        invalidated session
      *
      */
     Object getAttribute(String name);
@@ -146,13 +145,13 @@ public interface Session {
      * Returns an <code>Enumeration</code> of <code>String</code> objects
      * containing the names of all the objects bound to this session.
      *
-     * @return			an <code>Enumeration</code> of
-     *				<code>String</code> objects specifying the
-     *				names of all the objects bound to
-     *				this session
+     * @return                        an <code>Enumeration</code> of
+     *                                <code>String</code> objects specifying the
+     *                                names of all the objects bound to
+     *                                this session
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        invalidated session
      *
      */
     Enumeration getAttributeNames();
@@ -163,13 +162,13 @@ public interface Session {
      * the object is replaced.
      *
      *
-     * @param name			the name to which the object is bound;
-     *					cannot be null
+     * @param name                        the name to which the object is bound;
+     *                                        cannot be null
      *
-     * @param value			the object to be bound; cannot be null
+     * @param value                        the object to be bound; cannot be null
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        invalidated session
      *
      */
     void setAttribute(String name, Object value);
@@ -181,11 +180,11 @@ public interface Session {
      * bound with the specified name, this method does nothing.
      *
      *
-     * @param name				the name of the object to
-     *						remove from this session
+     * @param name                                the name of the object to
+     *                                                remove from this session
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        invalidated session
      */
     void removeAttribute(String name);
 
@@ -194,8 +193,8 @@ public interface Session {
      * Invalidates this session
      * to it.
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					already invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        already invalidated session
      *
      */
     void invalidate();
@@ -208,12 +207,12 @@ public interface Session {
      * the client had disabled the use of cookies, then a session would
      * be new on each request.
      *
-     * @return 				<code>true</code> if the
-     *					server has created a session,
-     *					but the client has not yet joined
+     * @return                                 <code>true</code> if the
+     *                                        server has created a session,
+     *                                        but the client has not yet joined
      *
-     * @exception IllegalStateException	if this method is called on an
-     *					already invalidated session
+     * @exception IllegalStateException        if this method is called on an
+     *                                        already invalidated session
      *
      */
     boolean isNew();

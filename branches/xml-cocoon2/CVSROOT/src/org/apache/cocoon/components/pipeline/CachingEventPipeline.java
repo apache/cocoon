@@ -7,45 +7,41 @@
  *****************************************************************************/
 package org.apache.cocoon.components.pipeline;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
-import java.io.IOException;
-
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.Disposable;
 import org.apache.avalon.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CachedEventObject;
+import org.apache.cocoon.caching.ComponentCacheKey;
+import org.apache.cocoon.caching.EventCache;
+import org.apache.cocoon.caching.PipelineCacheKey;
+import org.apache.cocoon.components.sax.XMLDeserializer;
+import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLTeePipe;
+import org.apache.cocoon.components.saxconnector.SAXConnector;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.sitemap.ErrorNotifier;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.AbstractXMLProducer;
-import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLMulticaster;
 import org.apache.cocoon.xml.XMLPipe;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.saxconnector.SAXConnector;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
-import org.apache.cocoon.caching.EventCache;
-import org.apache.cocoon.components.sax.XMLTeePipe;
-
-import org.apache.cocoon.caching.ComponentCacheKey;
-import org.apache.cocoon.caching.PipelineCacheKey;
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CachedEventObject;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.sitemap.ErrorNotifier;
-
-import org.xml.sax.SAXException;
+import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  * The CachingEventPipeline
@@ -56,7 +52,7 @@ import org.xml.sax.EntityResolver;
  * does not cache! (If it would cache, the response would be cached twice!)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-24 20:18:24 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:06:19 $
  */
 public final class CachingEventPipeline
 extends AbstractEventPipeline

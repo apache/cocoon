@@ -1,25 +1,25 @@
 package org.apache.cocoon.transformation;
 
-import java.util.Map;
 import java.io.IOException;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ext.LexicalHandler;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.cocoon.xml.dom.DOMFactory;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.Roles;
-import org.apache.avalon.component.Composable;
+import java.util.Map;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.Disposable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.apache.cocoon.xml.dom.DOMFactory;
+import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.w3c.dom.Document;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * An Abstract DOM Transformer, for use when a transformer needs a DOM-based

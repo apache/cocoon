@@ -7,35 +7,31 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import org.apache.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.parameters.Parameters;
-
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.generation.ImageDirectoryGenerator;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import oracle.jdbc.OracleResultSet;
 import oracle.sql.BLOB;
 import oracle.sql.CLOB;
-import oracle.jdbc.OracleResultSet;
-
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.generation.ImageDirectoryGenerator;
+import org.apache.excalibur.datasource.DataSourceComponent;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -43,7 +39,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-20 20:49:45 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:11 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();

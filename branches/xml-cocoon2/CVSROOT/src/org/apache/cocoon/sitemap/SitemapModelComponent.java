@@ -9,19 +9,17 @@ package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
 import java.util.Map;
-
 import org.apache.avalon.component.Component;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-
-import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:50:14 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:08:49 $
  */
 public interface SitemapModelComponent extends Component {
 

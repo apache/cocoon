@@ -7,11 +7,11 @@
  *****************************************************************************/
 package org.apache.cocoon.components.transcoder;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * An extendable Batik Transcoder factory.
@@ -19,7 +19,7 @@ import java.util.HashMap;
  * type. This factory is extendable as new <code>Transcoder</code>s can
  * be added at runtime.
  * @author Ross Burton
- * @version $Revision: 1.1.2.1 $, $Date: 2001-03-09 14:55:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2001-04-25 17:06:50 $
  */
 public class ExtendableTranscoderFactory implements TranscoderFactory {
 

@@ -7,34 +7,31 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.NOPCacheValidity;
-import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.apache.cocoon.xml.dom.DOMFactory;
-import org.apache.cocoon.Roles;
-import org.apache.cocoon.util.HashUtil;
-import org.apache.cocoon.transformation.AbstractTransformer;
-import org.apache.cocoon.generation.FragmentExtractorGenerator;
-import org.apache.cocoon.ProcessingException;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.Disposable;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.helpers.AttributesImpl;
-
-import org.w3c.dom.Document;
-
-import java.util.Map;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.io.IOException;
+import java.util.Map;
+import org.apache.avalon.activity.Disposable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.NOPCacheValidity;
+import org.apache.cocoon.generation.FragmentExtractorGenerator;
+import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.cocoon.util.HashUtil;
+import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.apache.cocoon.xml.dom.DOMFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 
 /** The transformation half of the FragmentExtractor.
@@ -45,7 +42,7 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-20 20:50:17 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:09:00 $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements Composable, Disposable, Cacheable {

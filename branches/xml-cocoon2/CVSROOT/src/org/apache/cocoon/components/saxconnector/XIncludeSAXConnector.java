@@ -7,47 +7,41 @@
  *****************************************************************************/
 package org.apache.cocoon.components.saxconnector;
 
-import java.net.URL;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Stack;
+import java.net.URL;
 import java.util.ArrayList;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.Locator;
-import org.xml.sax.helpers.AttributesImpl;
-
-import org.apache.cocoon.Roles;
+import java.util.Map;
+import java.util.Stack;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentSelector;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.Composable;
-import org.apache.excalibur.pool.Recyclable;
-
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.components.url.URLFactory;
-import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.pipeline.StreamPipeline;
-import org.apache.cocoon.xml.XMLProducer;
+import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-
-
-import org.xml.sax.SAXException;
+import org.apache.cocoon.xml.XMLProducer;
+import org.apache.excalibur.pool.Recyclable;
+import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
-
-import java.util.Map;
-import java.io.IOException;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 15:39:06 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:41 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 
@@ -158,7 +152,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         super.setDocumentLocator(locator);
     }
 
-    protected void processXIncludeElement(String src, String element, String ns, String prefix) 
+    protected void processXIncludeElement(String src, String element, String ns, String prefix)
         throws SAXException,MalformedURLException,IOException {
 
         ComponentSelector selector = null;
@@ -168,7 +162,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         try {
             selector = (ComponentSelector) manager.lookup(Roles.SERVERPAGES);
             sitemap = (Sitemap) selector.select("sitemap");
-            getLogger().debug("Processing XInclude element: src=" + src 
+            getLogger().debug("Processing XInclude element: src=" + src
                                 + ", sitemap=" + sitemap
                                 + ", element=" + element
                                 + ", ns=" + ns
@@ -196,7 +190,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             getLogger().error("Error selecting sitemap",e);
         } finally {
             if (selector != null) {
-                if (sitemap != null) 
+                if (sitemap != null)
                     selector.release((Component)sitemap);
                 this.manager.release((Component)selector);
             }

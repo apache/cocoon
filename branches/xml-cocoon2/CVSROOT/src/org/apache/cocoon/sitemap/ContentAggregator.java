@@ -11,24 +11,15 @@ package org.apache.cocoon.sitemap;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.Attributes;
-import org.xml.sax.ext.LexicalHandler;
-
 import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.pipeline.StreamPipeline;
@@ -38,10 +29,16 @@ import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: ContentAggregator.java,v 1.1.2.8 2001-04-24 22:26:50 giacomo Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.1.2.9 2001-04-25 17:08:43 donaldp Exp $
  */
 
 public class ContentAggregator extends ContentHandlerWrapper
@@ -98,7 +95,7 @@ public class ContentAggregator extends ContentHandlerWrapper
     private int rootElementIndex;
 
     /**
-     * Pass the <code>ComponentManager</code> to the <code>composer</code>.
+     * Pass the <code>ComponentManager</code> to the <code>Composable</code>.
      * The <code>Composable</code> implementation should use the specified
      * <code>ComponentManager</code> to acquire the components it needs for
      * execution.

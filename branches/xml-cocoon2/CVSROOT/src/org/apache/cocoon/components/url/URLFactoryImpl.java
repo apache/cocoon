@@ -8,12 +8,11 @@
 package org.apache.cocoon.components.url;
 
 import java.io.File;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.apache.avalon.component.Component;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
@@ -23,14 +22,12 @@ import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.logger.Loggable;
-
-//import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: URLFactoryImpl.java,v 1.1.2.8 2001-04-24 12:14:42 dims Exp $
+ * @version $Id: URLFactoryImpl.java,v 1.1.2.9 2001-04-25 17:06:55 donaldp Exp $
  */
 public class URLFactoryImpl extends AbstractLoggable implements URLFactory, Component, Configurable, Contextualizable {
 

@@ -8,27 +8,27 @@
 package org.apache.cocoon.components.parser;
 
 import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.dom.DOMFactory;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.w3c.dom.Document;
-import org.w3c.dom.DOMImplementation;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
 
 /**
  * An XMLParser that is only dependant on JAXP 1.1 compliant parsers.
  * If only we can get rid of the need for the Document...
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-23 02:06:16 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:11 $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler {

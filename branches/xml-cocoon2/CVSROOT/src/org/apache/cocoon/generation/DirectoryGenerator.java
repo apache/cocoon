@@ -15,23 +15,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Stack;
-
+import org.apache.avalon.component.Component;
+import org.apache.avalon.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.url.URLFactory;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import org.apache.avalon.component.Component;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.excalibur.pool.Poolable;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Roles;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.url.URLFactory;
-
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
 
 /**
  * Generates an XML directory listing.
@@ -68,7 +64,7 @@ import org.apache.regexp.RESyntaxException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-20 20:50:06 $ */
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-04-25 17:07:37 $ */
 
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 

@@ -8,22 +8,17 @@
 
 package org.apache.cocoon.servlet;
 
-import java.util.Date;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.components.classloader.RepositoryClassLoader;
-
 import org.apache.avalon.context.ContextException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.classloader.RepositoryClassLoader;
+import org.apache.cocoon.util.IOUtils;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -34,7 +29,7 @@ import org.apache.avalon.context.ContextException;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-24 12:14:44 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:08:37 $
  */
 
 public class ParanoidCocoonServlet extends CocoonServlet {

@@ -7,37 +7,33 @@
  *****************************************************************************/
 package org.apache.cocoon.reading;
 
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentSelector;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.Disposable;
-import org.apache.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
-
-import org.apache.cocoon.Roles;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.Constants;
-
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Blob;
-import java.sql.Timestamp;
 import java.sql.SQLException;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
-
-import org.xml.sax.SAXException;
-
+import org.apache.avalon.activity.Disposable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
+import org.apache.excalibur.datasource.DataSourceComponent;
+import org.xml.sax.SAXException;
 
 /**
  * This Reader pulls a resource from a database.  It is configured with

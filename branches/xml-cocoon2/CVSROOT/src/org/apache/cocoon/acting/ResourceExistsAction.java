@@ -7,30 +7,26 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.Disposable;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.parameters.Parameters;
-
-import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.url.URLFactory;
-
-import java.net.URL;
-import java.io.IOException;
+import org.apache.cocoon.environment.Request;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * This action simply checks to see if a given resource exists. It takes a
@@ -38,7 +34,7 @@ import java.io.IOException;
  * null otherwise. It has only been tested with context urls.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:49:45 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:05:11 $
  */
 public class ResourceExistsAction extends ComposerAction {
 

@@ -1,14 +1,14 @@
 package org.apache.cocoon.xml;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.log.Logger;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import java.io.IOException;
-import org.apache.log.Logger;
-import org.apache.avalon.logger.AbstractLoggable;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 
 /**
  * Logging entity resolver to assist in caching.

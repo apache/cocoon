@@ -8,21 +8,17 @@
 package org.apache.cocoon.environment.http;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.io.File;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
-
 import javax.servlet.RequestDispatcher;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
-
 import org.apache.cocoon.environment.Request;
+import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
 
 /**
  *

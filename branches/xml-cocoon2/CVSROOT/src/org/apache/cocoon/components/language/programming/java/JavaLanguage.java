@@ -12,29 +12,26 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.avalon.parameters.Parameters;
-
-import org.apache.avalon.component.Composable;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.logger.Loggable;
-
+import org.apache.avalon.parameters.Parameters;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.JavaArchiveFilter;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
+import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.*;
-import org.apache.cocoon.components.language.LanguageException;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.JavaArchiveFilter;
 
 /**
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-23 17:52:27 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-25 17:06:04 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composable, Disposable {
 

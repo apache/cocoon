@@ -1,16 +1,23 @@
+/*****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
 package org.apache.cocoon.components.store;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.Map;
 import org.apache.avalon.component.Component;
-import org.apache.avalon.thread.ThreadSafe;
+import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.thread.ThreadSafe;
 
 /**
  * This class provides a cache algorithm for the requested documents.

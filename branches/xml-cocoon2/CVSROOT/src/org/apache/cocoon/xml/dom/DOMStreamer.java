@@ -9,10 +9,8 @@
 package org.apache.cocoon.xml.dom;
 
 import java.util.Vector;
-
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.XMLConsumer;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -25,7 +23,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -37,7 +34,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-12 14:17:49 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:09:55 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 
@@ -191,7 +188,7 @@ public class DOMStreamer extends AbstractXMLProducer {
                 if (raw.length()>5) prefix=raw.substring(6);
                 nslist.addElement(prefix);
                 super.contentHandler.startPrefixMapping(prefix,val);
-            } 
+            }
             atts.addAttribute(uri,loc,raw,"CDATA",val);
         }
         // Get and normalize values for the Element

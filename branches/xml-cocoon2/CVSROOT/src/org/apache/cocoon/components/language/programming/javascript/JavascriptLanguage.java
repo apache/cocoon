@@ -8,19 +8,16 @@
 package org.apache.cocoon.components.language.programming.javascript;
 
 import java.io.File;
-
+import org.apache.cocoon.components.language.LanguageException;
+import org.apache.cocoon.components.language.programming.java.*;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.tools.jsc.Main;
-
-import org.apache.cocoon.components.language.programming.java.*;
-
-import org.apache.cocoon.components.language.LanguageException;
 
 /**
  * The compiled Javascript (Rhino) programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-23 17:52:39 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:08 $
  */
 public class JavascriptLanguage extends JavaLanguage
 {

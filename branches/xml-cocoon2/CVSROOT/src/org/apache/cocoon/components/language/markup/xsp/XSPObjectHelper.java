@@ -9,15 +9,12 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.SAXException;
-
-import org.w3c.dom.Node;
-
 import org.apache.cocoon.xml.XMLFragment;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Base class for XSP's object model manipulation logicsheets
@@ -25,7 +22,7 @@ import org.apache.cocoon.xml.dom.DOMStreamer;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
  *         (Cocoon1 <code>xspExpr()</code> methods port)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-01-22 21:56:36 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:05:46 $
  */
 public class XSPObjectHelper {
   /**

@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.matching.helpers;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ import java.util.HashMap;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-15 20:35:15 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:08:10 $
  */
 public class WildcardURIMatcher {
 

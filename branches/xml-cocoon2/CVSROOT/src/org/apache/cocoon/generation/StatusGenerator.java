@@ -5,25 +5,22 @@
 * version 1.1, a copy of which has been included  with this distribution in *
 * the LICENSE file.                                                         *
 *****************************************************************************/
-
 package org.apache.cocoon.generation;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.text.DateFormat;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import org.apache.excalibur.pool.Poolable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-
-import org.apache.excalibur.pool.Poolable;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /** Generates an XML representation of the current status of Cocoon.
  * Potted DTD:
@@ -51,7 +48,7 @@ import org.apache.excalibur.pool.Poolable;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:50:07 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:07:49 $
  */
 public class StatusGenerator extends ComposerGenerator implements Poolable {
 

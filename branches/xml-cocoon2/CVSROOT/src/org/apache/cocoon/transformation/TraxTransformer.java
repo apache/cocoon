@@ -7,60 +7,54 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import java.io.IOException;
-import java.util.Iterator;
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Hashtable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.text.StringCharacterIterator;
-
+import java.io.IOException;
 import java.lang.reflect.Method;
-
-import org.apache.cocoon.environment.Request;
-
+import java.text.StringCharacterIterator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Iterator;
+import java.util.Map;
+import javax.xml.transform.Templates;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.logger.Loggable;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.excalibur.pool.Recyclable;
 import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.logger.Loggable;
 import org.apache.avalon.parameters.Parameters;
-
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.store.Store;
-import org.apache.cocoon.components.browser.Browser;
-import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CompositeCacheValidity;
 import org.apache.cocoon.caching.ParametersCacheValidity;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.cocoon.components.browser.Browser;
+import org.apache.cocoon.components.store.Store;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.util.TraxErrorHandler;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
-
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.excalibur.pool.Recyclable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Templates;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.SAXResult;
 
 /**
  *
@@ -68,7 +62,7 @@ import javax.xml.transform.sax.SAXResult;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-24 14:26:16 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-25 17:09:02 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposable {
@@ -124,7 +118,7 @@ implements Transformer, Composable, Recyclable, Configurable, Cacheable, Disposa
         return handler;
     }
 
-    private Templates getTemplates (String systemID, String xsluri) 
+    private Templates getTemplates (String systemID, String xsluri)
        throws IOException
     {
         Templates templates = null;

@@ -9,7 +9,6 @@ package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
 import org.apache.avalon.component.Component;
-
 import org.xml.sax.EntityResolver;
 
 /**
@@ -17,7 +16,7 @@ import org.xml.sax.EntityResolver;
  * documents writeen in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-20 20:49:50 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-25 17:05:33 $
  */
 public interface ProgramGenerator extends Component {
   /**

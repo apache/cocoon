@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.Map;
-
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
@@ -20,7 +19,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-20 11:27:11 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-25 17:07:01 $
  */
 
 public interface Environment extends EntityResolver {

@@ -8,26 +8,23 @@
 
 package org.apache.cocoon;
 
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
-
-import java.text.DateFormat;
-
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Generates an XML representation of the current notification.
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-20 07:16:09 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-25 17:04:55 $
  */
 
 public class Notifier {

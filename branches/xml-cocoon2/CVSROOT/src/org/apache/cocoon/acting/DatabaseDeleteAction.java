@@ -10,29 +10,25 @@ package org.apache.cocoon.acting;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
-
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.xml.sax.EntityResolver;
-
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.parameters.Parameters;
-
-import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
 import org.apache.excalibur.datasource.DataSourceComponent;
+import org.xml.sax.EntityResolver;
 
 /**
  * Delete a record from a database.  This Action assumes that all
@@ -42,7 +38,7 @@ import org.apache.excalibur.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-20 20:49:44 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-25 17:05:07 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();

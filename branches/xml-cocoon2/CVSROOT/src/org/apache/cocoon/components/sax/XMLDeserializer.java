@@ -8,7 +8,6 @@
 package org.apache.cocoon.components.sax;
 
 import org.apache.cocoon.xml.XMLProducer;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -23,7 +22,7 @@ import org.xml.sax.SAXException;
  * the serialized data.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:51 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:06:32 $
  */
 public interface XMLDeserializer
 extends XMLProducer {

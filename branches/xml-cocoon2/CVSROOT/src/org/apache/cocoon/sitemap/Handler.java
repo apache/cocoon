@@ -5,45 +5,40 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.sitemap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.net.URL;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.language.generator.ProgramGenerator;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.components.pipeline.StreamPipeline;
-import org.apache.cocoon.components.pipeline.EventPipeline;
-import org.apache.cocoon.components.url.URLFactory;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.Roles;
-
+import org.apache.avalon.activity.Disposable;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Context;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.Disposable;
+import org.apache.avalon.context.ContextException;
+import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.language.generator.ProgramGenerator;
+import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.environment.Environment;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-24 12:14:46 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-25 17:08:44 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composable, Contextualizable, Processor, Disposable {
     private Context context;
@@ -228,7 +223,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     }
 
     public void throwEventualException() throws Exception {
-        if (this.exception != null) 
+        if (this.exception != null)
             throw new ProcessingException("Exception in Handler",this.exception);
     }
 

@@ -8,14 +8,11 @@
 package org.apache.cocoon.matching;
 
 import java.util.Stack;
-
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.NamedNodeMap;
-
 import org.apache.avalon.configuration.ConfigurationException;
-
 import org.apache.xerces.dom.TreeWalkerImpl;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This class generates source code which matches a specific browser pattern
@@ -23,7 +20,7 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 04:38:55 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-25 17:08:02 $
  */
 
 public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {

@@ -7,20 +7,17 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.net.URL;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationBuilder;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.SAXConfigurationHandler;
-
-import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
-
+import org.apache.cocoon.components.url.URLFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -31,7 +28,7 @@ import org.xml.sax.InputSource;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-20 20:49:43 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:05:03 $
  */
 public abstract class AbstractComplementaryConfigurableAction extends ComposerAction {
     private static Map configurations = new HashMap();

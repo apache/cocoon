@@ -8,50 +8,45 @@
 
 package org.apache.cocoon;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.PrintStream;
+import java.io.IOException;
 import java.io.OutputStream;
-
+import java.io.PrintStream;
 import java.net.MalformedURLException;
-
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
-
+import org.apache.avalon.context.DefaultContext;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
+import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.JavaArchiveFilter;
+import org.apache.cocoon.util.MIMEUtils;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.excalibur.cli.CLArgsParser;
 import org.apache.excalibur.cli.CLOption;
 import org.apache.excalibur.cli.CLOptionDescriptor;
 import org.apache.excalibur.cli.CLUtil;
-import org.apache.avalon.context.DefaultContext;
-
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.util.MIMEUtils;
-import org.apache.cocoon.util.JavaArchiveFilter;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
-import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
-
-import org.apache.log.Logger;
-import org.apache.log.LogKit;
-import org.apache.log.Priority;
 import org.apache.log.Category;
-import org.apache.log.output.FileOutputLogTarget;
-import org.apache.log.output.DefaultOutputLogTarget;
+import org.apache.log.LogKit;
 import org.apache.log.LogTarget;
+import org.apache.log.Logger;
+import org.apache.log.Priority;
+import org.apache.log.output.DefaultOutputLogTarget;
+import org.apache.log.output.FileOutputLogTarget;
 
 /**
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.30 $ $Date: 2001-04-20 20:49:42 $
+ * @version CVS $Revision: 1.1.4.31 $ $Date: 2001-04-25 17:04:54 $
  */
 
 public class Main {
@@ -217,7 +212,7 @@ public class Main {
             Cocoon c = new Cocoon();
             c.setLogger(log);
             c.contextualize(appContext);
-            c.init();
+            c.initialize();
             Main main = new Main(c, context, dest);
             main.warmup();
             if(main.process(targets, xspOnly)==0)

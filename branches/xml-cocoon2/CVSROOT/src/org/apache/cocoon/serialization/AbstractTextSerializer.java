@@ -9,26 +9,22 @@
 package org.apache.cocoon.serialization;
 
 import java.util.Properties;
-
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-
-import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.NOPCacheValidity;
-
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.sax.SAXTransformerFactory;
-
 import org.apache.cocoon.util.TraxErrorHandler;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-23 17:11:45 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:08:26 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable, Cacheable {
 

@@ -8,16 +8,13 @@
 package org.apache.cocoon.selection;
 
 import org.apache.avalon.configuration.ConfigurationException;
-
-import org.w3c.dom.NodeList;
-import org.w3c.dom.traversal.TreeWalker;
-import org.w3c.dom.traversal.NodeFilter;
-import org.w3c.dom.Node;
-import org.w3c.dom.NamedNodeMap;
-
-import org.apache.xerces.dom.TreeWalkerImpl;
-
 import org.apache.cocoon.CodeFactory;
+import org.apache.xerces.dom.TreeWalkerImpl;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.traversal.NodeFilter;
+import org.w3c.dom.traversal.TreeWalker;
 
 /**
  * This class generates source code to implement a selector that
@@ -30,7 +27,7 @@ import org.apache.cocoon.CodeFactory;
  *
  *   <map:select type="host">
  *      <map:when test="uk-site">
- *    	<map:transform src="stylesheets/page/uk.xsl"/>
+ *            <map:transform src="stylesheets/page/uk.xsl"/>
  *      </map:when>
  *      <map:otherwise>
  *     <map:transform src="stylesheets/page/us.xsl"/>
@@ -38,7 +35,7 @@ import org.apache.cocoon.CodeFactory;
  *   </map:select>
  *
  * @author <a href="mailto:cbritton@centervilletech.com">Colin Britton</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 13:05:06 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:08:19 $
 */
 
 

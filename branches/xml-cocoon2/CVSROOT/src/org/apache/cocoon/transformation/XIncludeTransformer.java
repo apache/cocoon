@@ -7,44 +7,44 @@
  *****************************************************************************/
 package org.apache.cocoon.transformation;
 
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.BufferedInputStream;
-import java.util.Stack;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.ContentHandler;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.Document;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.logger.Loggable;
-import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.avalon.Disposable;
+import java.util.Stack;
+import javax.xml.transform.TransformerException;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
-import org.apache.cocoon.Roles;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.xml.XIncludeContentHandler;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.cocoon.xml.XIncludeContentHandler;
+import org.apache.excalibur.pool.Poolable;
 import org.apache.xpath.XPathAPI;
-import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * My first pass at an XInclude transformation. Currently it should set the base URI
@@ -54,7 +54,7 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-24 14:12:41 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-25 17:09:03 $ $Author: donaldp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable, Poolable, Disposable {
 

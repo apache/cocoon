@@ -8,42 +8,37 @@
 package org.apache.cocoon.generation;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.EntityResolver;
-
 import java.util.LinkedList;
-import org.xml.sax.Locator;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ext.LexicalHandler;
-
-import org.apache.avalon.component.Composable;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.excalibur.pool.Recyclable;
-import org.apache.avalon.Disposable;
-
+import org.apache.avalon.component.Composable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.language.markup.xsp.XSPGenerator;
 import org.apache.cocoon.components.url.URLFactory;
-
-import java.io.IOException;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.excalibur.pool.Recyclable;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import java.net.MalformedURLException;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.Roles;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This class acts as a proxy to a dynamically loaded<code>Generator</code>
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-23 17:52:44 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-25 17:07:47 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator

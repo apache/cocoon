@@ -8,23 +8,20 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import java.util.Enumeration;
-
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import java.util.Map;
 import java.util.Vector;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.SAXException;
-
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-18 12:05:49 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:47 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**

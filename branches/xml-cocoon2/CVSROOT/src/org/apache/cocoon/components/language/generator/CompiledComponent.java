@@ -16,7 +16,7 @@ import org.apache.cocoon.Modifiable;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-24 15:27:44 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-25 17:05:31 $
  */
 public interface CompiledComponent extends Component, Composable, Modifiable {
 }

@@ -8,17 +8,15 @@
 package org.apache.cocoon.reading;
 
 import java.io.IOException;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.sitemap.SitemapOutputComponent;
-
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 11:27:21 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:08:14 $
  */
 public interface Reader extends SitemapModelComponent, SitemapOutputComponent {
 

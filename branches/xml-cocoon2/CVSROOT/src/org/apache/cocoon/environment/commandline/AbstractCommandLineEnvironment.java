@@ -9,18 +9,16 @@
 package org.apache.cocoon.environment.commandline;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.io.IOException;
-
+import java.io.OutputStream;
 import java.net.MalformedURLException;
-
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 /**
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 12:05:56 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:07:10 $
  */
 
 public abstract class AbstractCommandLineEnvironment extends AbstractEnvironment {

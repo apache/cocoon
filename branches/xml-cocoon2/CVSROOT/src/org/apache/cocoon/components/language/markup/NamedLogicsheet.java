@@ -7,9 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup;
 
-import org.xml.sax.InputSource;
-
 import java.io.IOException;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -19,7 +18,7 @@ import org.xml.sax.SAXException;
  * namespace
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:43:18 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:05:40 $
  */
 public class NamedLogicsheet extends Logicsheet {
     /**

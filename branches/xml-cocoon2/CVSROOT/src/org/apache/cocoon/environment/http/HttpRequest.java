@@ -13,14 +13,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
-
-import javax.servlet.ServletInputStream;
 import javax.servlet.RequestDispatcher;
-
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
 /**
@@ -28,7 +25,7 @@ import org.apache.cocoon.environment.Session;
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.1.2.10 2001-04-20 13:05:02 cziegeler Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.1.2.11 2001-04-25 17:07:24 donaldp Exp $
  */
 
 public class HttpRequest implements Request {
@@ -186,7 +183,7 @@ public class HttpRequest implements Request {
     }
 
     /**
-     * @deprecated		As of Version 2.1 of the Java Servlet
+     * @deprecated                As of Version 2.1 of the Java Servlet
      * API, use {@link #isRequestedSessionIdFromURL}
      *instead.
      */
@@ -285,7 +282,7 @@ public class HttpRequest implements Request {
     }
 
     /**
-     * @deprecated 	As of Version 2.1 of the Java Servlet API,
+     * @deprecated         As of Version 2.1 of the Java Servlet API,
      * use {@link javax.servlet.ServletContext#getRealPath} instead.
      */
     public String getRealPath(String path) {

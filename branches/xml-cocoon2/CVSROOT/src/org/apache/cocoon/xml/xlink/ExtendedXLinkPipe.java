@@ -8,11 +8,10 @@
 
 package org.apache.cocoon.xml.xlink;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This class extends the XLink semantic capabilities to understand those
@@ -22,13 +21,13 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  * the semantics of XHTML/WML/SMIL/SVG and all the rest of the languages that
  * use either XLink of the above attributes.
  *
- * NOTE: this class is clearly a hack and is not future compatible, but 
+ * NOTE: this class is clearly a hack and is not future compatible, but
  * since many XML formats to date are not compatible with the XLink semantics
  * this is what we have to do to live in the bleeding edge. Once there will
  * be a way to remove this, that will be a happy day for XML and for Cocoon too.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-01 00:16:45 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:10:01 $
  */
 
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
@@ -40,13 +39,13 @@ public abstract class ExtendedXLinkPipe extends XLinkPipe {
             simpleLink(href, null, null, null, null, null, uri, name, raw, attr);
             return;
         }
-        
+
         String src = attr.getValue(uri, "src");
         if (src != null) {
             simpleLink(src, null, null, null, null, null, uri, name, raw, attr);
             return;
         }
-        
+
         super.startElement(uri, name, raw, attr);
     }
 

@@ -7,18 +7,16 @@
  *****************************************************************************/
 package org.apache.cocoon.selection;
 
-
 import org.apache.avalon.configuration.ConfigurationException;
-import org.w3c.dom.NodeList;
 import org.apache.cocoon.CodeFactory;
-
+import org.w3c.dom.NodeList;
 
 /**
  * This class generates source code which tests the enviromnent based on
  * embedded java code within the 'test' clause of the select.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-12 04:38:59 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-25 17:08:19 $
  */
 public class CodedSelectorFactory extends java.lang.Object
         implements CodeFactory {

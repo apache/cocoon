@@ -19,7 +19,7 @@ import org.xml.sax.ext.LexicalHandler;
  * </code>endDocument</code> messages.
  *
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.2 $ $Date: 2001-04-25 13:51:34 $
+ * @version $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:09:37 $
  */
 public class IncludeXMLConsumer extends AbstractXMLConsumer {
     final private ContentHandler contentHandler;

@@ -8,34 +8,20 @@
 
 package org.apache.cocoon.generation;
 
-// Cocoon imports
-
-import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.ProcessingException;
-
-// Avalon imports
-
+import com.ibm.bsf.BSFException;
+import com.ibm.bsf.BSFManager;
+import com.ibm.bsf.util.IOUtils;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.io.StringReader;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-
-// Java runtime imports
-
-import java.io.Reader;
-import java.io.FileReader;
-import java.io.StringReader;
-import java.io.FileNotFoundException;
-
-// BSF imports
-
-import com.ibm.bsf.BSFManager;
-import com.ibm.bsf.util.IOUtils;
-import com.ibm.bsf.BSFException;
-
-// SAX imports
-
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.parser.Parser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -44,7 +30,7 @@ import org.xml.sax.SAXException;
  * and additional interpreter (Rhino, Jython, etc.) as a Cocoon Generator
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:50:07 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:07:45 $
  */
 public class ScriptGenerator extends ComposerGenerator {
 

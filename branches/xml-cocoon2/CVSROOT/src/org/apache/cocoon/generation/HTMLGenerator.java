@@ -7,30 +7,27 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
 import org.apache.avalon.component.Component;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
-
-import java.net.URL;
-import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-
+import org.apache.excalibur.pool.Poolable;
 import org.w3c.tidy.Tidy;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-20 20:50:06 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:07:41 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
 

@@ -9,14 +9,11 @@
 package org.apache.cocoon.sitemap;
 
 import java.util.HashMap;
-
+import org.apache.avalon.logger.Loggable;
 import org.apache.cocoon.CodeFactory;
 import org.apache.cocoon.util.ClassUtils;
-
-import org.w3c.dom.NodeList;
-
 import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import org.w3c.dom.NodeList;
 
 /**
  * This class is used as a XSLT extension class. It is used by the sitemap
@@ -28,7 +25,7 @@ import org.apache.avalon.logger.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:50:14 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:08:51 $
  */
 
 public class XSLTFactoryLoader {

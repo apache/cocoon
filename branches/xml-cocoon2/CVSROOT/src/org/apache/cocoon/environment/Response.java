@@ -5,18 +5,17 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.environment;
 
-import java.util.Locale;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Defines an interface to provide client response information .
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-19 13:59:30 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:07:03 $
  *
  */
 
@@ -32,9 +31,9 @@ public interface Response {
      * <p>See RFC 2047 (http://ds.internic.net/rfc/rfc2045.txt)
      * for more information about character encoding and MIME.
      *
-     * @return		a <code>String</code> specifying the
-     *			name of the charset, for
-     *			example, <code>ISO-8859-1</code>
+     * @return                a <code>String</code> specifying the
+     *                        name of the charset, for
+     *                        example, <code>ISO-8859-1</code>
      *
      */
 
@@ -47,7 +46,7 @@ public interface Response {
      *
      * @param loc  the locale of the response
      *
-     * @see 		#getLocale
+     * @see                 #getLocale
      *
      */
 
@@ -57,7 +56,7 @@ public interface Response {
      * Returns the locale assigned to the response.
      *
      *
-     * @see 		#setLocale
+     * @see                 #setLocale
      *
      */
 
@@ -81,14 +80,14 @@ public interface Response {
      * <code>setVersion</code> method.
      *
      *
-     * @param name 			a <code>String</code> specifying the name of the cookie
+     * @param name                         a <code>String</code> specifying the name of the cookie
      *
-     * @param value			a <code>String</code> specifying the value of the cookie
+     * @param value                        a <code>String</code> specifying the value of the cookie
      *
-     * @throws IllegalArgumentException	if the cookie name contains illegal characters
-     *					(for example, a comma, space, or semicolon)
-     *					or it is one of the tokens reserved for use
-     *					by the cookie protocol
+     * @throws IllegalArgumentException        if the cookie name contains illegal characters
+     *                                        (for example, a comma, space, or semicolon)
+     *                                        or it is one of the tokens reserved for use
+     *                                        by the cookie protocol
      *
      */
     Cookie createCookie(String name, String value);
@@ -107,10 +106,10 @@ public interface Response {
      * Returns a boolean indicating whether the named response header
      * has already been set.
      *
-     * @param	name	the header name
-     * @return		<code>true</code> if the named response header
-     *			has already been set;
-     * 			<code>false</code> otherwise
+     * @param        name        the header name
+     * @return                <code>true</code> if the named response header
+     *                        has already been set;
+     *                         <code>false</code> otherwise
      */
 
     boolean containsHeader(String name);
@@ -128,9 +127,9 @@ public interface Response {
      * method.  Otherwise, URL rewriting cannot be used with browsers
      * which do not support cookies.
      *
-     * @param	url	the url to be encoded.
-     * @return		the encoded URL if encoding is needed;
-     * 			the unchanged URL otherwise.
+     * @param        url        the url to be encoded.
+     * @return                the encoded URL if encoding is needed;
+     *                         the unchanged URL otherwise.
      */
 
     String encodeURL(String url);
@@ -144,8 +143,8 @@ public interface Response {
      * <code>containsHeader</code> method can be used to test for the
      * presence of a header before setting its value.
      *
-     * @param	name	the name of the header to set
-     * @param	value	the assigned date value
+     * @param        name        the name of the header to set
+     * @param        value        the assigned date value
      *
      * @see #containsHeader
      * @see #addDateHeader
@@ -160,8 +159,8 @@ public interface Response {
      * milliseconds since the epoch.  This method allows response headers
      * to have multiple values.
      *
-     * @param	name	the name of the header to set
-     * @param	value	the additional date value
+     * @param        name        the name of the header to set
+     * @param        value        the additional date value
      *
      * @see #setDateHeader
      */
@@ -176,8 +175,8 @@ public interface Response {
      * used to test for the presence of a header before setting its
      * value.
      *
-     * @param	name	the name of the header
-     * @param	value	the header value
+     * @param        name        the name of the header
+     * @param        value        the header value
      *
      * @see #containsHeader
      * @see #addHeader
@@ -189,8 +188,8 @@ public interface Response {
      * Adds a response header with the given name and value.
      * This method allows response headers to have multiple values.
      *
-     * @param	name	the name of the header
-     * @param	value	the additional header value
+     * @param        name        the name of the header
+     * @param        value        the additional header value
      *
      * @see #setHeader
      */

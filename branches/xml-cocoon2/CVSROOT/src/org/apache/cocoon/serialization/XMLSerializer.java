@@ -9,18 +9,16 @@
 package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
-
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.OutputKeys;
-
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.excalibur.pool.Poolable;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-23 17:11:50 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-25 17:08:30 $
  */
 
 public class XMLSerializer extends AbstractTextSerializer implements Poolable {

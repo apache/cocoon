@@ -85,11 +85,11 @@ public class Tokenizer implements Enumeration {
    * after the current position; false otherwise.
    */
   public boolean hasMoreTokens() {
-    return ((current < max) ? (true) : 
-      (((current == max) && (max == 0 
+    return ((current < max) ? (true) :
+      (((current == max) && (max == 0
         || (returnTokens && delim.indexOf(str.charAt(previous)) >= 0)))));
   }
-  
+
   /**
    * Returns the next token from this string tokenizer.
    *

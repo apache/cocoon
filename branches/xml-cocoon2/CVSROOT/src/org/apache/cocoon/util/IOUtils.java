@@ -7,21 +7,19 @@
  *****************************************************************************/
 package org.apache.cocoon.util;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.Collator;
-import java.util.Locale;
 import java.util.Arrays;
-
+import java.util.Locale;
 import org.apache.log.LogKit;
 
 /**
@@ -30,7 +28,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-12 05:55:25 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-25 17:09:12 $
  */
 public class IOUtils {
 
@@ -111,21 +109,21 @@ public class IOUtils {
     return object;
   }
 
-  /** 
+  /**
    * These are java keywords as specified at the following URL (sorted alphabetically).
    * http://java.sun.com/docs/books/jls/second_edition/html/lexical.doc.html#229308
-   */     
-  static final String keywords[] = 
+   */
+  static final String keywords[] =
   {
       "abstract",  "boolean",     "break",    "byte",         "case",
       "catch",     "char",        "class",    "const",        "continue",
       "default",   "do",          "double",   "else",         "extends",
       "final",     "finally",     "float",    "for",          "goto",
       "if",        "implements",  "import",   "instanceof",   "int",
-      "interface", "long",        "native",   "new",          "package",  
+      "interface", "long",        "native",   "new",          "package",
       "private",   "protected",   "public",   "return",       "short",
-      "static",    "strictfp",    "super",    "switch",       "synchronized", 
-      "this",      "throw",       "throws",   "transient",    "try",          
+      "static",    "strictfp",    "super",    "switch",       "synchronized",
+      "this",      "throw",       "throws",   "transient",    "try",
       "void",      "volatile",    "while"
   };
 
@@ -142,7 +140,7 @@ public class IOUtils {
   private static boolean isJavaKeyword(String keyword) {
     return (Arrays.binarySearch(keywords, keyword, englishCollator) >= 0);
   }
-        
+
   // **********************
   // File Methods
   // **********************
@@ -168,7 +166,7 @@ public class IOUtils {
       if (i > start) {
         buffer.append(File.separator);
       }
-    
+
       boolean isJavaKeyword = isJavaKeyword(path[i]);
 
       char[] chars = path[i].toCharArray();
@@ -257,20 +255,20 @@ public class IOUtils {
           directoryPath = directory.getCanonicalPath();
           filePath = file.getCanonicalPath();
 
-          // If the context directory does not have a File.separator 
+          // If the context directory does not have a File.separator
           // at the end then add one explicitly
           if(!directoryPath.endsWith(File.separator)){
             directoryPath += File.separator;
           }
-      
-          // If the context dir contains both kinds of spearator 
+
+          // If the context dir contains both kinds of spearator
           // then standardize on using the File.separator
           if ((directoryPath.indexOf('/') !=-1) && (directoryPath.indexOf('\\') !=-1)) {
             directoryPath = directoryPath.replace('\\', File.separator.charAt(0));
             directoryPath = directoryPath.replace('/', File.separator.charAt(0));
           }
 
-          // If the file path contains both kinds of spearator 
+          // If the file path contains both kinds of spearator
           // then standardize on using the File.separator
           if ((filePath.indexOf('/') !=-1) && (filePath.indexOf('\\') !=-1)) {
             filePath = filePath.replace('\\', File.separator.charAt(0));

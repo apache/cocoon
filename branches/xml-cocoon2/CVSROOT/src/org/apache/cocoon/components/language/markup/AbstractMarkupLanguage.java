@@ -10,50 +10,47 @@ package org.apache.cocoon.components.language.markup;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.LinkedList;
-import java.util.Vector;
-import java.util.List;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Date;
 import java.util.Enumeration;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.apache.avalon.component.Composable;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Vector;
 import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.logger.AbstractLoggable;
-
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.util.IOUtils;
+import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-04-23 17:11:35 $
+ * @version CVS $Revision: 1.1.2.36 $ $Date: 2001-04-25 17:05:36 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composable, Configurable {
     /** The supported language table */
@@ -265,7 +262,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
             // Create code generator
             LogicsheetCodeGenerator codeGenerator = new LogicsheetCodeGenerator();
             codeGenerator.setLogger(getLogger());
-            codeGenerator.init();
+            codeGenerator.initialize();
             // set the transformer chain builder filter
             TransformerChainBuilderFilter tranBuilder = getTranformerChainBuilder(codeGenerator, resolver);
             tranBuilder.setLanguageDescriptor(language);

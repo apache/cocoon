@@ -7,24 +7,21 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.Roles;
 import org.apache.avalon.component.ComponentManager;
-import org.apache.cocoon.components.parser.Parser;
-
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-
-import org.apache.excalibur.pool.Poolable;
+import org.apache.avalon.context.Context;
 import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.context.Context;
-
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.generation.AbstractServerPage;
+import org.apache.excalibur.pool.Poolable;
 
 /**
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-24 12:14:37 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-25 17:05:45 $
  */
 public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Poolable {
 

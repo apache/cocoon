@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.environment.http;
 
 import org.apache.cocoon.environment.Cookie;
@@ -46,7 +45,7 @@ import org.apache.cocoon.environment.Cookie;
  *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 13:05:02 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:07:23 $
  *
  */
 
@@ -86,14 +85,14 @@ implements Cookie {
      * <code>setVersion</code> method.
      *
      *
-     * @param name 			a <code>String</code> specifying the name of the cookie
+     * @param name                         a <code>String</code> specifying the name of the cookie
      *
-     * @param value			a <code>String</code> specifying the value of the cookie
+     * @param value                        a <code>String</code> specifying the value of the cookie
      *
-     * @throws IllegalArgumentException	if the cookie name contains illegal characters
-     *					(for example, a comma, space, or semicolon)
-     *					or it is one of the tokens reserved for use
-     *					by the cookie protocol
+     * @throws IllegalArgumentException        if the cookie name contains illegal characters
+     *                                        (for example, a comma, space, or semicolon)
+     *                                        or it is one of the tokens reserved for use
+     *                                        by the cookie protocol
      * @see #setValue
      * @see #setVersion
      *
@@ -121,8 +120,8 @@ implements Cookie {
      * to the user. Comments
      * are not supported by Netscape Version 0 cookies.
      *
-     * @param purpose		a <code>String</code> specifying the comment
-     *				to display to the user
+     * @param purpose                a <code>String</code> specifying the comment
+     *                                to display to the user
      *
      * @see #getComment
      *
@@ -140,8 +139,8 @@ implements Cookie {
      * Returns the comment describing the purpose of this cookie, or
      * <code>null</code> if the cookie has no comment.
      *
-     * @return			a <code>String</code> containing the comment,
-     *				or <code>null</code> if none
+     * @return                        a <code>String</code> containing the comment,
+     *                                or <code>null</code> if none
      *
      * @see #setComment
      *
@@ -167,9 +166,9 @@ implements Cookie {
      * to the server that sent them.
      *
      *
-     * @param pattern		a <code>String</code> containing the domain name
-     *				within which this cookie is visible;
-     *				form is according to RFC 2109
+     * @param pattern                a <code>String</code> containing the domain name
+     *                                within which this cookie is visible;
+     *                                form is according to RFC 2109
      *
      * @see #getDomain
      *
@@ -188,7 +187,7 @@ implements Cookie {
      * Returns the domain name set for this cookie. The form of
      * the domain name is set by RFC 2109.
      *
-     * @return			a <code>String</code> containing the domain name
+     * @return                        a <code>String</code> containing the domain name
      *
      * @see #setDomain
      *
@@ -215,10 +214,10 @@ implements Cookie {
      * when the Web browser exits. A zero value causes the cookie
      * to be deleted.
      *
-     * @param expiry		an integer specifying the maximum age of the
-     * 				cookie in seconds; if negative, means
-     *				the cookie is not stored; if zero, deletes
-     *				the cookie
+     * @param expiry                an integer specifying the maximum age of the
+     *                                 cookie in seconds; if negative, means
+     *                                the cookie is not stored; if zero, deletes
+     *                                the cookie
      *
      *
      * @see #getMaxAge
@@ -239,9 +238,9 @@ implements Cookie {
      * until browser shutdown.
      *
      *
-     * @return			an integer specifying the maximum age of the
-     *				cookie in seconds; if negative, means
-     *				the cookie persists until browser shutdown
+     * @return                        an integer specifying the maximum age of the
+     *                                cookie in seconds; if negative, means
+     *                                the cookie persists until browser shutdown
      *
      *
      * @see #setMaxAge
@@ -270,7 +269,7 @@ implements Cookie {
      * information on setting path names for cookies.
      *
      *
-     * @param uri		a <code>String</code> specifying a path
+     * @param uri                a <code>String</code> specifying a path
      *
      *
      * @see #getPath
@@ -291,8 +290,8 @@ implements Cookie {
      * cookie is visible to all subpaths on the server.
      *
      *
-     * @return		a <code>String</code> specifying a path that contains
-     *			a servlet name, for example, <i>/catalog</i>
+     * @return                a <code>String</code> specifying a path that contains
+     *                        a servlet name, for example, <i>/catalog</i>
      *
      * @see #setPath
      *
@@ -313,9 +312,9 @@ implements Cookie {
      *
      * <p>The default value is <code>false</code>.
      *
-     * @param flag	if <code>true</code>, sends the cookie from the browser
-     *			to the server using only when using a secure protocol;
-     *			if <code>false</code>, sent on any protocol
+     * @param flag        if <code>true</code>, sends the cookie from the browser
+     *                        to the server using only when using a secure protocol;
+     *                        if <code>false</code>, sent on any protocol
      *
      * @see #getSecure
      *
@@ -334,8 +333,8 @@ implements Cookie {
      * only over a secure protocol, or <code>false</code> if the
      * browser can send cookies using any protocol.
      *
-     * @return		<code>true</code> if the browser can use
-     *			any standard protocol; otherwise, <code>false</code>
+     * @return                <code>true</code> if the browser can use
+     *                        any standard protocol; otherwise, <code>false</code>
      *
      * @see #setSecure
      *
@@ -354,7 +353,7 @@ implements Cookie {
      * Returns the name of the cookie. The name cannot be changed after
      * creation.
      *
-     * @return		a <code>String</code> specifying the cookie's name
+     * @return                a <code>String</code> specifying the cookie's name
      *
      */
 
@@ -378,7 +377,7 @@ implements Cookie {
      * and semicolons. Empty values may not behave the same way
      * on all browsers.
      *
-     * @param newValue		a <code>String</code> specifying the new value
+     * @param newValue                a <code>String</code> specifying the new value
      *
      *
      * @see #getValue
@@ -397,8 +396,8 @@ implements Cookie {
     /**
      * Returns the value of the cookie.
      *
-     * @return			a <code>String</code> containing the cookie's
-     *				present value
+     * @return                        a <code>String</code> containing the cookie's
+     *                                present value
      *
      * @see #setValue
      * @see Cookie
@@ -421,9 +420,9 @@ implements Cookie {
      * by a browser use and identify the browser's cookie version.
      *
      *
-     * @return			0 if the cookie complies with the
-     *				original Netscape specification; 1
-     *				if the cookie complies with RFC 2109
+     * @return                        0 if the cookie complies with the
+     *                                original Netscape specification; 1
+     *                                if the cookie complies with RFC 2109
      *
      * @see #setVersion
      *
@@ -446,9 +445,9 @@ implements Cookie {
      * version 1 as experimental; do not use it yet on production sites.
      *
      *
-     * @param v			0 if the cookie should comply with
-     *				the original Netscape specification;
-     *				1 if the cookie should comply with RFC 2109
+     * @param v                        0 if the cookie should comply with
+     *                                the original Netscape specification;
+     *                                1 if the cookie should comply with RFC 2109
      *
      * @see #getVersion
      *

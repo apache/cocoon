@@ -8,40 +8,40 @@
 
 package org.apache.cocoon.serialization;
 
-import org.apache.cocoon.*;
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.NOPCacheValidity;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.components.transcoder.TranscoderFactory;
-import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
-import org.apache.cocoon.xml.*;
-import org.apache.cocoon.xml.dom.*;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.component.ComponentManager;
+import java.awt.*;
+import java.awt.image.*;
+import java.io.*;
+import java.util.Iterator;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import java.io.*;
-import java.awt.*;
-import java.awt.image.*;
-import java.util.Iterator;
-import org.xml.sax.*;
-import org.xml.sax.ext.*;
+import org.apache.batik.transcoder.*;
+import org.apache.cocoon.*;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.NOPCacheValidity;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
+import org.apache.cocoon.components.transcoder.TranscoderFactory;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.xml.*;
+import org.apache.cocoon.xml.dom.*;
+import org.apache.excalibur.pool.Poolable;
 import org.w3c.dom.*;
 import org.w3c.dom.svg.*;
-import org.apache.batik.transcoder.*;
-import org.apache.cocoon.util.ClassUtils;
+import org.xml.sax.*;
+import org.xml.sax.ext.*;
 
 /**
  * A Batik based Serializer for generating PNG/JPEG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-20 20:50:12 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-25 17:08:29 $
  */
 public class SVGSerializer extends SVGBuilder
         implements Composable, Serializer, Configurable, Poolable, Cacheable {

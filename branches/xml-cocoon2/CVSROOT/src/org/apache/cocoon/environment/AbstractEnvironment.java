@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.environment;
 
 import java.io.File;
@@ -13,17 +12,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
-
-import org.apache.cocoon.environment.Environment;
-
+import java.util.Map;
 import org.apache.avalon.logger.AbstractLoggable;
-
+import org.apache.cocoon.environment.Environment;
+import org.apache.log.LogKit;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import org.apache.log.LogKit;
 
 public abstract class AbstractEnvironment extends AbstractLoggable implements Environment {
 

@@ -7,17 +7,13 @@
  *****************************************************************************/
 package org.apache.cocoon.matching;
 
+import org.apache.avalon.configuration.ConfigurationException;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.cocoon.CodeFactory;
-
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
-
-import org.apache.avalon.configuration.ConfigurationException;
-
 import org.w3c.dom.NodeList;
-
-import org.apache.avalon.logger.AbstractLoggable;
 
 /**
  * This class generates source code which represents a specific pattern matcher
@@ -25,7 +21,7 @@ import org.apache.avalon.logger.AbstractLoggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-23 17:52:51 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-25 17:08:05 $
  */
 
 public class RegexpURIMatcherFactory extends AbstractLoggable implements CodeFactory {

@@ -42,16 +42,13 @@ package org.apache.cocoon.components.language.markup.xsp;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.SAXException;
-
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Request;
-
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 public class XSPCookieHelper extends XSPObjectHelper {
   /**
@@ -70,19 +67,19 @@ public class XSPCookieHelper extends XSPObjectHelper {
 
         @param name     name to be set for the cookie
 
-        @param value	value to be set for the cookie
+        @param value        value to be set for the cookie
 
-        @param comment	comment to be set for the cookie
+        @param comment        comment to be set for the cookie
 
-        @param domain	domain to be set for the cookie
+        @param domain        domain to be set for the cookie
 
-        @param maxage	maxage to be set for the cookie
+        @param maxage        maxage to be set for the cookie
 
-        @param path		path to be set for the cookie
+        @param path                path to be set for the cookie
 
-        @param secure	secure property to be set for the cookie
+        @param secure        secure property to be set for the cookie
 
-        @param version	version to be set for the cookie
+        @param version        version to be set for the cookie
   */
     public static void addCookie(Map objectModel, String name, String value,
                                     String comment, String domain, int maxage, String path,
@@ -611,10 +608,10 @@ public class XSPCookieHelper extends XSPObjectHelper {
                        If both name and index are specified, name will take
                        preference.
 
-    @param valueOf	   Specifies the property whose value if to be retrieved.
+    @param valueOf           Specifies the property whose value if to be retrieved.
                        Properties have been specifed above
 
-    @return 	If the name or index that is passed is improper then a null value
+    @return         If the name or index that is passed is improper then a null value
                 will be returned, otherwise whatever will be the extracted value of
                 the property will be returned.
 */
@@ -632,7 +629,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
 
         Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
 
-        int count 			 = 0;
+        int count                          = 0;
 
         String returnValue = null;
 

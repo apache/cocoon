@@ -27,7 +27,7 @@ import org.w3c.dom.Text;
 
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.Disposable;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentManager;
 

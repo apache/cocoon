@@ -11,13 +11,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-
-import org.apache.cocoon.environment.Response;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.Response;
 
 /**
  *
@@ -115,14 +113,14 @@ public class HttpResponse implements Response {
     }
 
     /**
-     * @deprecated	As of version 2.1, use encodeURL(String url) instead
+     * @deprecated        As of version 2.1, use encodeURL(String url) instead
      */
     public String encodeUrl(String url) {
         return this.res.encodeUrl(url);
     }
 
     /**
-     * @deprecated	As of version 2.1, use
+     * @deprecated        As of version 2.1, use
      *              encodeRedirectURL(String url) instead
      */
     public String encodeRedirectUrl(String url) {

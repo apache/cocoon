@@ -17,7 +17,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 12:41:31 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:09:41 $
  */
 
 public final class XMLMulticaster implements XMLConsumer {
@@ -112,7 +112,7 @@ public final class XMLMulticaster implements XMLConsumer {
     }
 
     public void startDTD(String name, String public_id, String system_id)
-			throws SAXException {
+                        throws SAXException {
         for(int i=0; i<this.lexicalHandlerList.length; i++)
             if (this.lexicalHandlerList[i] != null)
                 this.lexicalHandlerList[i].startDTD(name, public_id, system_id);
@@ -149,7 +149,7 @@ public final class XMLMulticaster implements XMLConsumer {
     }
 
     public void comment(char ary[], int start, int length)
-			throws SAXException {
+                        throws SAXException {
         for(int i=0; i<this.lexicalHandlerList.length; i++)
             if (this.lexicalHandlerList[i] != null)
                 this.lexicalHandlerList[i].comment(ary, start, length);

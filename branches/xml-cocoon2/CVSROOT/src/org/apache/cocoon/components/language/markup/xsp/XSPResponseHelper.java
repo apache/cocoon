@@ -10,22 +10,18 @@ package org.apache.cocoon.components.language.markup.xsp;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
-
-import org.apache.cocoon.environment.Response;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.SAXException;
-
 import org.apache.cocoon.Constants;
-
+import org.apache.cocoon.environment.Response;
 import org.apache.log.LogKit;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * The XSP <code>Response</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-19 13:11:41 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-25 17:05:47 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**

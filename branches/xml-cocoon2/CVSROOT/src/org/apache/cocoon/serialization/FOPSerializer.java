@@ -11,19 +11,16 @@ package org.apache.cocoon.serialization;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.NOPCacheValidity;
 import org.apache.excalibur.pool.Recyclable;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
-import org.apache.fop.messaging.MessageListener;
-import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.messaging.MessageEvent;
-
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheValidity;
-import org.apache.cocoon.caching.NOPCacheValidity;
-
+import org.apache.fop.messaging.MessageHandler;
+import org.apache.fop.messaging.MessageListener;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -34,7 +31,7 @@ import org.xml.sax.SAXException;
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-20 20:50:11 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-25 17:08:27 $
  *
  */
 public class FOPSerializer extends AbstractSerializer

@@ -1,20 +1,17 @@
-// $Id: AbstractValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.4 2001-04-25 17:05:04 donaldp Exp $
 package org.apache.cocoon.acting;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
-
-import org.apache.avalon.parameters.Parameters;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.*;
 import org.apache.cocoon.util.Tokenizer;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * Abstract implementation of action that needs to perform validation of
@@ -27,31 +24,31 @@ import org.apache.cocoon.util.Tokenizer;
  *
  * <pre>
  * &lt;root&gt;
- * 	&lt;parameter name="username" type="string" nullable="no"/&gt;
- * 	&lt;parameter name="id" type="long" nullable="no"/&gt;
- * 	&lt;parameter name="sallary" type="double" nullable="no"/&gt;
- * 	&lt;parameter name="theme" type="string" nullable="yes" default="dflt"/&gt;
+ *         &lt;parameter name="username" type="string" nullable="no"/&gt;
+ *         &lt;parameter name="id" type="long" nullable="no"/&gt;
+ *         &lt;parameter name="sallary" type="double" nullable="no"/&gt;
+ *         &lt;parameter name="theme" type="string" nullable="yes" default="dflt"/&gt;
  * &lt;/root&gt;
  * </pre>
  *
  * The types recognized by validator and its possible validation parameters
  * <table border="1">
- * 	<tr>
- * 		<td><b>string</b></td><td>nullable="yes|no" default="str"</td>
- * 	</tr>
- * 	<tr>
- * 		<td><b>long</b></td><td>nullable="yes|no" default="123123"</td>
- * 	</tr>
- * 	<tr>
- * 		<td><b>double</b></td><td>nullable="yes|no" default="0.5"</td>
- * 	</tr>
+ *         <tr>
+ *                 <td><b>string</b></td><td>nullable="yes|no" default="str"</td>
+ *         </tr>
+ *         <tr>
+ *                 <td><b>long</b></td><td>nullable="yes|no" default="123123"</td>
+ *         </tr>
+ *         <tr>
+ *                 <td><b>double</b></td><td>nullable="yes|no" default="0.5"</td>
+ *         </tr>
  * </table>
  * Default value takes place only when specified parameter is nullable and
  * really is null or empty. Long numbers may be specified in decimal, hex or
  * octal values as accepted by java.Lang.decode (String s).
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:49:44 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-25 17:05:04 $
  */
 public abstract class AbstractValidatorAction
 extends AbstractComplementaryConfigurableAction
@@ -290,5 +287,5 @@ implements Configurable
     }
 }
 
-// $Id: AbstractValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.4 2001-04-25 17:05:04 donaldp Exp $
 // vim: set et ts=4 sw=4:

@@ -5,7 +5,6 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.environment;
 
 /**
@@ -44,7 +43,7 @@ package org.apache.cocoon.environment;
  *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-18 12:05:54 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 17:07:00 $
  *
  */
 

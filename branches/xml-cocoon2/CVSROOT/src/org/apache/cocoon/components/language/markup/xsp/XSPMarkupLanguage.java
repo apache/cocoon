@@ -8,32 +8,27 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
-
-import org.xml.sax.XMLReader;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.Attributes;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLFilterImpl;
-
+import org.apache.avalon.logger.Loggable;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetCodeGenerator;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-
-import org.apache.cocoon.Constants;
-
 import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
-
-import java.io.IOException;
+import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * This class implements <code>MarkupLanguage</code> for Cocoon's
@@ -41,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-20 20:49:54 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-25 17:05:46 $
  */
 public class XSPMarkupLanguage extends AbstractMarkupLanguage {
 

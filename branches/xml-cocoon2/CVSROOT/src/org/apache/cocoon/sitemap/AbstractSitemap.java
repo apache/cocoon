@@ -14,40 +14,37 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.thread.ThreadSafe;
-import org.apache.avalon.context.Contextualizable;
-import org.apache.avalon.context.Context;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.context.Context;
 import org.apache.avalon.context.ContextException;
+import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
-import org.apache.avalon.Disposable;
-import org.apache.excalibur.component.DefaultComponentSelector;
-
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.classloader.RepositoryClassLoader;
-import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.ClassUtils;
-
+import org.apache.excalibur.component.DefaultComponentSelector;
 import org.xml.sax.SAXException;
 
 /**
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.37 $ $Date: 2001-04-24 12:14:45 $
+ * @version CVS $Revision: 1.1.2.38 $ $Date: 2001-04-25 17:08:41 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable, ThreadSafe {
     private Context context;

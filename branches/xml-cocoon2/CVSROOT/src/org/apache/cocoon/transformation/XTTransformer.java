@@ -8,71 +8,65 @@
 
 package org.apache.cocoon.transformation;
 
+import com.jclark.xsl.om.Name;
+import com.jclark.xsl.om.Node;
+import com.jclark.xsl.om.XSLException;
+import com.jclark.xsl.sax.ExtensionHandlerImpl;
+import com.jclark.xsl.sax.MultiNamespaceResult;
+import com.jclark.xsl.sax.OutputMethodHandler;
+import com.jclark.xsl.sax.ResultBase;
+import com.jclark.xsl.sax.XMLProcessorEx;
+import com.jclark.xsl.sax.XMLProcessorImpl;
+import com.jclark.xsl.tr.Engine;
+import com.jclark.xsl.tr.EngineImpl;
+import com.jclark.xsl.tr.ParameterSet;
+import com.jclark.xsl.tr.Sheet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 import java.util.HashMap;
-
-import org.apache.cocoon.environment.Request;
-
-import org.apache.log.Logger;
-import org.apache.avalon.logger.Loggable;
+import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
+import org.apache.avalon.logger.Loggable;
 import org.apache.avalon.parameters.Parameters;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.avalon.Disposable;
-
-import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Roles;
+import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.DocumentHandlerAdapter;
-import org.apache.cocoon.xml.DocumentHandlerWrapper;
-import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.components.url.URLFactory;
-
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.xml.DocumentHandlerAdapter;
+import org.apache.cocoon.xml.DocumentHandlerWrapper;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.pool.Poolable;
+import org.apache.log.Logger;
+import org.xml.sax.AttributeList;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.Parser;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.DocumentHandler;
-import org.xml.sax.HandlerBase;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.HandlerBase;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.Parser;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.AttributeList;
 import org.xml.sax.ext.LexicalHandler;
-
-import com.jclark.xsl.sax.XMLProcessorImpl;
-import com.jclark.xsl.sax.XMLProcessorEx;
-import com.jclark.xsl.sax.OutputMethodHandler;
-import com.jclark.xsl.sax.ResultBase;
-import com.jclark.xsl.sax.MultiNamespaceResult;
-import com.jclark.xsl.sax.ExtensionHandlerImpl;
-import com.jclark.xsl.tr.ParameterSet;
-import com.jclark.xsl.tr.Sheet;
-import com.jclark.xsl.tr.Engine;
-import com.jclark.xsl.tr.EngineImpl;
-import com.jclark.xsl.om.Node;
-import com.jclark.xsl.om.Name;
-import com.jclark.xsl.om.XSLException;
-
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-24 15:27:49 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-25 17:09:04 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
 implements Transformer, Composable, Loggable, Poolable, Disposable {

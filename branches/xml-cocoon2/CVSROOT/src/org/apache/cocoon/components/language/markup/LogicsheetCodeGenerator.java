@@ -7,37 +7,32 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ContentHandler;
-
-import java.io.IOException;
-
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerException;
-
-import org.apache.log.Logger;
 import org.apache.avalon.logger.AbstractLoggable;
-
 import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.log.Logger;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-23 17:11:38 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-25 17:05:38 $
  */
 public class LogicsheetCodeGenerator extends AbstractLoggable implements MarkupCodeGenerator {
 
@@ -57,7 +52,7 @@ public class LogicsheetCodeGenerator extends AbstractLoggable implements MarkupC
     /**
     * Initialize the LogicsheetCodeGenerator.
     */
-    public void init() {
+    public void initialize() {
 
         Properties format = new Properties();
 

@@ -9,36 +9,35 @@
 package org.apache.cocoon.components.language.markup;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.PrintWriter;
-import java.util.Map;
+import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
-import org.xml.sax.InputSource;
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.XMLReader;
-import org.xml.sax.Attributes;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.DTDHandler;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLReaderFactory;
-import javax.xml.transform.TransformerFactory;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
 import org.apache.avalon.logger.AbstractLoggable;
-
 import org.apache.cocoon.util.TraxErrorHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.DTDHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -48,7 +47,7 @@ import org.apache.cocoon.util.TraxErrorHandler;
  * transformed into an equivalent XSLT stylesheet anyway... This class should probably be based on an interface...
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-23 17:11:37 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:05:37 $
  */
 public class Logicsheet extends AbstractLoggable {
     /** The trax TransformerFactory */

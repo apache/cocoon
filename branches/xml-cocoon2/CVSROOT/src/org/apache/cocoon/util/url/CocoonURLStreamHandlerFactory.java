@@ -8,18 +8,17 @@
 
 package org.apache.cocoon.util.url;
 
-import java.net.URLStreamHandlerFactory;
 import java.net.URLStreamHandler;
-import org.apache.cocoon.util.ClassUtils;
+import java.net.URLStreamHandlerFactory;
 import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.avalon.logger.Loggable;
-
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  *  This class implements the Factory for URLStreamHandlers
  *
  * @author: <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:50:18 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:09:21 $
  */
 public class CocoonURLStreamHandlerFactory extends AbstractLoggable implements URLStreamHandlerFactory {
 

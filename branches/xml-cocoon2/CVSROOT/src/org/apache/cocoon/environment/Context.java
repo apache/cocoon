@@ -8,14 +8,14 @@
 
 package org.apache.cocoon.environment;
 
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- * Defines an interface to provide client context information .  
- * 
+ * Defines an interface to provide client context information .
+ *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-18 12:05:53 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:07:00 $
  *
  */
 

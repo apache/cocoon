@@ -7,39 +7,35 @@
  *****************************************************************************/
 package org.apache.cocoon.components.pipeline;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.io.IOException;
-
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.ComponentSelector;
+import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.Disposable;
 import org.apache.avalon.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.xml.AbstractXMLProducer;
-import org.apache.cocoon.xml.XMLProducer;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.saxconnector.SAXConnector;
-
-import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.sitemap.ErrorNotifier;
-
-import org.xml.sax.SAXException;
+import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-24 22:05:57 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:06:16 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -136,7 +132,7 @@ implements EventPipeline, Disposable {
         }
 
         if (super.xmlConsumer == null &&
-            super.contentHandler == null && 
+            super.contentHandler == null &&
             super.lexicalHandler == null) {
             return false;
         }

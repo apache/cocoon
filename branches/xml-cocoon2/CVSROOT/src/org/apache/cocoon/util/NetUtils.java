@@ -9,9 +9,9 @@
 package org.apache.cocoon.util;
 
 import java.io.File;
-import java.util.Map;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 import org.apache.log.LogKit;
 
 /**
@@ -19,7 +19,7 @@ import org.apache.log.LogKit;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 13:30:47 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:09:13 $
  */
 
 public class NetUtils {

@@ -5,21 +5,16 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-
 package org.apache.cocoon.sitemap;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
-
-import org.apache.cocoon.Notifier;
-import org.apache.cocoon.Notification;
-
-import org.apache.cocoon.generation.ComposerGenerator;
-
+import java.util.Hashtable;
 import org.apache.avalon.thread.ThreadSafe;
+import org.apache.cocoon.Notification;
+import org.apache.cocoon.Notifier;
+import org.apache.cocoon.generation.ComposerGenerator;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * Generates an XML representation of the current notification.
@@ -27,9 +22,8 @@ import org.apache.avalon.thread.ThreadSafe;
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @created 31 July 2000
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:50:14 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:08:43 $
  */
-
 public class ErrorNotifier extends ComposerGenerator {
 
     /**

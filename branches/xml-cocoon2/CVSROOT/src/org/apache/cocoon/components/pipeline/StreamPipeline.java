@@ -9,10 +9,9 @@ package org.apache.cocoon.components.pipeline;
 
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.Composable;
-import org.apache.excalibur.pool.Recyclable;
 import org.apache.avalon.parameters.Parameters;
-
 import org.apache.cocoon.Processor;
+import org.apache.excalibur.pool.Recyclable;
 
 /** A <CODE>StreamPipeline</CODE> either
  * <UL>
@@ -21,7 +20,7 @@ import org.apache.cocoon.Processor;
  *  <CODE>Serializer</CODE> and let them produce the character stream
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-20 20:50:00 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-25 17:06:23 $
  */
 public interface StreamPipeline extends Component, Composable, Recyclable, Processor {
 

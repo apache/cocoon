@@ -12,24 +12,22 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.xml.sax.EntityResolver;
-import org.xml.sax.SAXException;
-
 import org.apache.avalon.component.Component;
-import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CachedStreamObject;
-import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
 import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.caching.StreamCache;
 import org.apache.cocoon.environment.Environment;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /** A <CODE>StreamPipeline</CODE> either
  * <UL>
@@ -46,7 +44,7 @@ import org.apache.cocoon.environment.Environment;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-20 20:50:00 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 17:06:20 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 

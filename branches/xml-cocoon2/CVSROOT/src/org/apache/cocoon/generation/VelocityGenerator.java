@@ -7,29 +7,26 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.Properties;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentException;
-import org.apache.excalibur.pool.Poolable;
-import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
-
-import java.net.URL;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.StringReader;
-import java.util.Properties;
-
-import org.apache.velocity.app.Velocity;
+import org.apache.cocoon.components.parser.Parser;
+import org.apache.excalibur.pool.Poolable;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:50:07 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 17:07:50 $
  */
 public class VelocityGenerator extends ServletGenerator implements Poolable {
 

@@ -7,21 +7,20 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.context.Contextualizable;
-
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.components.pipeline.StreamPipeline;
-import org.apache.cocoon.components.pipeline.EventPipeline;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * Base interface for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.4.18 $ $Date: 2001-04-20 20:50:14 $
+ * @version CVS $Revision: 1.1.4.19 $ $Date: 2001-04-25 17:08:46 $
  */
 public interface Sitemap extends CompiledComponent, Configurable, Contextualizable, Processor {
     int GENERATOR = 1;

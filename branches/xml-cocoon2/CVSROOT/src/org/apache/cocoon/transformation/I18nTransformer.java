@@ -9,37 +9,33 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.cocoon.Roles;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Map;
+import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.component.Composable;
+import org.apache.avalon.logger.Loggable;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
 import org.apache.cocoon.acting.LangSelect;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
-
 import org.apache.excalibur.pool.Poolable;
-import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.component.Composable;
-import org.apache.avalon.component.Component;
-import org.apache.avalon.parameters.Parameters;
-import org.apache.avalon.logger.Loggable;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.BufferedReader;
-import java.util.Map;
-import java.util.Hashtable;
-
-import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * I18nTransformer. Cocoon2 port of Infozone groups I18nProcessor.
@@ -48,20 +44,20 @@ import java.net.MalformedURLException;
  * </p>
  * <p>
  * &lt;map:transformer<br>
- *	name="translate"<br>
- *	src="org.apache.cocoon.transformation.I18nTransformer"/&gt;<br>
+ *        name="translate"<br>
+ *        src="org.apache.cocoon.transformation.I18nTransformer"/&gt;<br>
  * </p>
  * <p>
  * &lt;map:match pattern="file"&gt;<br>
- *	&lt;map:generate src="file.xml"/&gt;<br>
- * 	&lt;map:transform type="translate"&gt;<br>
- *		&lt;parameter name="default_lang" value="fi"/&gt;<br>
- *		&lt;parameter name="available_lang_1" value="fi"/&gt;<br>
- *		&lt;parameter name="available_lang_2" value="en"/&gt;<br>
- *		&lt;parameter name="available_lang_3" value="sv"/&gt;<br>
- *		&lt;parameter name="src"<br>
- *			value="translations/file_trans.xml"/&gt;<br>
- *	&lt;/map:transform&gt;<br>
+ *        &lt;map:generate src="file.xml"/&gt;<br>
+ *         &lt;map:transform type="translate"&gt;<br>
+ *                &lt;parameter name="default_lang" value="fi"/&gt;<br>
+ *                &lt;parameter name="available_lang_1" value="fi"/&gt;<br>
+ *                &lt;parameter name="available_lang_2" value="en"/&gt;<br>
+ *                &lt;parameter name="available_lang_3" value="sv"/&gt;<br>
+ *                &lt;parameter name="src"<br>
+ *                        value="translations/file_trans.xml"/&gt;<br>
+ *        &lt;/map:transform&gt;<br>
  * </p>
  * <p>
  * When user requests .../file?lang=fi<br>
@@ -71,17 +67,17 @@ import java.net.MalformedURLException;
  * <p>
  * file.xml:<br>
  * &lt;root xmlns:i="http://apache.org/cocoon/i18n"&gt;<br>
- * 	&lt;elem i:tr="y"&gt;Translate me&lt;/elem&gt;<br>
- * 	&lt;elem&gt;&lt;i:tr&gt;Translate me&lt;/i:tr&gt;&lt;/elem&gt;<br>
+ *         &lt;elem i:tr="y"&gt;Translate me&lt;/elem&gt;<br>
+ *         &lt;elem&gt;&lt;i:tr&gt;Translate me&lt;/i:tr&gt;&lt;/elem&gt;<br>
  * &lt;/root&gt;
  * </p>
  * <p>
  * file_trans.xml:<br>
  * &lt;translations&gt;<br>
- * 	&lt;entry&gt;&lt;key&gt;Translate me&lt;/key&gt;<br>
- * 		&lt;translation lang="sv"&gt;÷vers‰tta mej&lt;/translation&gt;<br>
- * 		&lt;translation lang="fi"&gt;K‰‰nn‰ minut&lt;/translation&gt;<br>
- *	&lt;/entry&gt;<br>
+ *         &lt;entry&gt;&lt;key&gt;Translate me&lt;/key&gt;<br>
+ *                 &lt;translation lang="sv"&gt;÷vers‰tta mej&lt;/translation&gt;<br>
+ *                 &lt;translation lang="fi"&gt;K‰‰nn‰ minut&lt;/translation&gt;<br>
+ *        &lt;/entry&gt;<br>
  * &lt;/translations&gt;<br>
  * </p>
  * <p>
@@ -98,9 +94,9 @@ import java.net.MalformedURLException;
  * </p>
  *
  *
- *TODO 	-Caching dictionaries in memory.<br>
- * 		-Implementing Infozone group I18nProcessors param substitutions
- * 		where you can enter params in the translated text.
+ *TODO         -Caching dictionaries in memory.<br>
+ *                 -Implementing Infozone group I18nProcessors param substitutions
+ *                 where you can enter params in the translated text.
  *
  *
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>

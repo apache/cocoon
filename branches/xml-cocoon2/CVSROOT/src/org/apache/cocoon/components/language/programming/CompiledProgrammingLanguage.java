@@ -6,26 +6,25 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  */
-
 package org.apache.cocoon.components.language.programming;
 
 import java.io.File;
-import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.component.Composable;
-import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Context;
+import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Contextualizable;
+import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.components.language.LanguageException;
 
 /**
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-24 12:14:39 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-25 17:05:53 $
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
     /** The compiler */

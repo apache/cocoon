@@ -8,16 +8,14 @@
 
 package org.apache.cocoon.environment.commandline;
 
-import org.apache.cocoon.Constants;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Iterator;
-
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -26,7 +24,7 @@ import org.apache.cocoon.environment.Session;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-18 12:05:56 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-25 17:07:12 $
  */
 
 /*

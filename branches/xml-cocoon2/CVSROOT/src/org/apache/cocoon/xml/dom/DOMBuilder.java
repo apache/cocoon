@@ -9,10 +9,10 @@
 package org.apache.cocoon.xml.dom;
 
 import java.util.Vector;
-
-import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.avalon.logger.Loggable;
 import org.apache.cocoon.xml.NamespacesTable;
-
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.log.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -25,14 +25,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
-import org.apache.avalon.logger.Loggable;
-import org.apache.log.Logger;
 
 /**
  * The <code>DOMBuilder</code> is a utility class that will generate a W3C
@@ -40,7 +36,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-20 20:50:20 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-25 17:09:54 $
  */
 public class DOMBuilder implements XMLConsumer, Loggable {
     protected Logger log;
