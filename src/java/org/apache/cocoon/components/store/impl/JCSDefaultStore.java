@@ -17,25 +17,55 @@ package org.apache.cocoon.components.store.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Properties;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
+import org.apache.excalibur.store.Store;
+import org.apache.jcs.access.GroupCacheAccess;
+import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 
 /**
  * This is the default store implementation based on JCS
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @version CVS $Id: JCSDefaultStore.java,v 1.1 2004/05/17 14:02:50 cziegeler Exp $
+ * @version CVS $Id: JCSDefaultStore.java,v 1.2 2004/05/19 08:43:05 cziegeler Exp $
  */
 public class JCSDefaultStore 
-    extends AbstractJCSStore
-    implements Contextualizable {
+    extends AbstractLogEnabled
+    implements Store,
+               Contextualizable,
+               Parameterizable,
+               Initializable,
+               Disposable, 
+               ThreadSafe {
+
+    /** The JCS configuration properties */
+    protected Properties properties;
+    
+    /** The JCS region name */
+    protected String region;
+    
+    /** JCS Cache manager */
+    private CompositeCacheManager cacheManager;
+    
+    /** The Java Cache System object */
+    private JCSCacheAccess jcs;
 
     /** The location of the JCS default properties file */
     private static final String DEFAULT_PROPERTIES = "org/apache/cocoon/components/store/default.ccf";
@@ -56,7 +86,26 @@ public class JCSDefaultStore
     public void parameterize(Parameters parameters) 
     throws ParameterException {
         // TODO describe options
-        super.parameterize(parameters);
+        this.region = parameters.getParameter("region-name","main");
+        
+        Properties defaults = new Properties();
+        try {
+            String defaultsFile = this.getDefaultPropertiesFile();
+            if (defaultsFile != null) {
+                defaults.load(Thread.currentThread().getContextClassLoader().
+                    getResourceAsStream(defaultsFile));
+            }
+        } catch (IOException e) {
+            throw new ParameterException("Failure loading cache defaults",e);
+        }
+        
+        this.properties = new Properties(defaults);
+        String[] names = parameters.getNames();
+        for (int i = 0; i < names.length; i++) {
+            if (names[i].startsWith("jcs.")) {
+                this.properties.put(names[i], parameters.getParameter(names[i]));
+            }
+        }
         
         int maxobjects = parameters.getParameterAsInteger("maxobjects", -1);
         if (maxobjects != -1) {
@@ -99,6 +148,30 @@ public class JCSDefaultStore
         
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        this.cacheManager = CompositeCacheManager.getUnconfiguredInstance();
+        this.cacheManager.configure(this.properties);
+        this.jcs = new JCSCacheAccess(cacheManager.getCache(region));
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.jcs != null ) {
+            this.jcs.dispose();
+            this.jcs = null;
+        }
+        if ( this.cacheManager != null ) {
+            this.cacheManager.release();
+            this.cacheManager = null;            
+        }
+        this.properties = null;
+    }
+    
     protected String getDefaultPropertiesFile() {
         return DEFAULT_PROPERTIES;
     }
@@ -134,4 +207,113 @@ public class JCSDefaultStore
                                     directory.getAbsolutePath());
     }
 
+    // ---------------------------------------------------- Store implementation
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#get(java.lang.Object)
+     */
+    public Object get(Object key) {
+        Object value = this.jcs.get(key);
+        if (getLogger().isDebugEnabled()) {
+            if (value != null) {
+                getLogger().debug("Found key: " + key);
+            } else {
+                getLogger().debug("NOT Found key: " + key);
+            }
+        }
+        
+        return value;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#store(java.lang.Object, java.lang.Object)
+     */
+    public void store(Object key, Object value)
+    throws IOException {
+        
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Store object " + value + " with key "+ key);
+        }
+        
+        try {
+            this.jcs.put(key, value);
+        } catch (CacheException ce) {
+            getLogger().error("Failure storing object ", ce);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#free()
+     */
+    public void free() {
+        // TODO
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#clear()
+     */
+    public void clear() {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Clearing the store");
+        }
+        
+        try {
+            this.jcs.remove();               
+        } catch (CacheException ce) {
+            getLogger().error("Failure clearing store", ce);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#remove(java.lang.Object)
+     */
+    public void remove(Object key) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Removing item " + key);
+        }
+        
+        try {
+           this.jcs.remove(key);
+        } catch (CacheException ce) {
+            getLogger().error("Failure removing object", ce);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
+     */
+    public boolean containsKey(Object key) {
+        return this.jcs.get(key) != null;
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#keys()
+     */
+    public Enumeration keys() {
+      return new IteratorEnumeration(this.jcs.getGroupKeys("").iterator());
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#size()
+     */
+    public int size() {
+        return this.jcs.getSize();
+    }
+    
+
+    private static class JCSCacheAccess extends GroupCacheAccess {
+        private JCSCacheAccess(CompositeCache cacheControl) {
+            super(cacheControl);
+        }
+        
+        private int getSize() {
+            return super.cacheControl.getSize();
+        }
+        
+        protected void dispose() {
+            super.dispose();
+        }
+    }
+    
 }
