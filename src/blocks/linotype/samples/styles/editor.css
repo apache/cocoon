@@ -18,6 +18,12 @@
 #navigation {
 	margin: 10px;
 }
+
+#navigation .date {
+	color: #555;
+	font-size: 80%;
+	margin-left: 5px;
+}	
 	
 #page {
 	margin: 10px;

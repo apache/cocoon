@@ -33,10 +33,13 @@
                     }
                     return;
                 } else {
-                    form.elements['date'].value = getDate();
-                    form.elements['time'].value = getTime();
-                    form.elements['fulldate'].value = getFullDate();
-                    form.elements['isodate'].value = getISODate();
+                	if (!form.elements['date'].value || (action == "publish")) {
+                    	form.elements['date'].value = getDate();
+	                    form.elements['time'].value = getTime();
+	                    form.elements['fulldate'].value = getFullDate();
+	                    form.elements['isodate'].value = getISODate();
+                    	alert("I am updating date");
+                    }
                     form.elements['innerHTML'].value = getInnerHTML();
                     form.elements['xml:content'].value = getContent();
                 }
@@ -56,10 +59,10 @@
         <form name="data" action="{string('#{$continuation/id}')}.kont" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="action"/>
           <input type="hidden" name="author" value="{string('#{userid}')}"/>
-          <input type="hidden" name="date"/>
-          <input type="hidden" name="time"/>
-          <input type="hidden" name="fulldate"/>
-          <input type="hidden" name="isodate"/>
+          <input type="hidden" name="date" value="{n:news/@creation-date}"/>
+          <input type="hidden" name="time" value="{n:news/@creation-time}"/>
+          <input type="hidden" name="fulldate" value="{n:news/@creation-fulldate}"/>
+          <input type="hidden" name="isodate" value="{n:news/@creation-isodate}"/>
           <input type="hidden" name="xml:content"/>
           <input type="hidden" name="innerHTML"/>
 
@@ -120,7 +123,7 @@
           </div>
 
           <div id="navigation">
-           <a href="../../../../">linotype</a> &#187; <a href="../../../">private</a> &#187; <xsl:value-of select="$id"/>
+           <a href="../../../../">linotype</a> &#187; <a href="../../../">private</a> &#187; <xsl:value-of select="$id"/> <span class="date">[<xsl:value-of select="n:news/@creation-date"/> ~ <xsl:value-of select="n:news/@creation-time"/>]</span>
           </div>
 
           <xsl:apply-templates/>
@@ -137,6 +140,7 @@
             <input type="button" value="Save" onclick="doAction('save')"/>
             <input type="button" value="Finish" onclick="doAction('finish')"/>
             <input type="button" value="Publish" onclick="doAction('publish')"/>
+            <!--input type="checkbox" name="update_date"/><label for="update_date">Update date</label-->
           </div>
           
           <script type="text/javascript">

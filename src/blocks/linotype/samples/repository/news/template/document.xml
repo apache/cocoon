@@ -16,5 +16,5 @@
 -->
 <n:news xmlns:n="http://www.betaversion.org/linotype/news/1.0" online="on">
   <n:title>Title</n:title>
-  <body xmlns="http://www.w3.org/1999/xhtml">Content</body>
+  <body xmlns="http://www.w3.org/1999/xhtml"><p>Content</p></body>
 </n:news>

@@ -31,10 +31,10 @@
 <li>Image inclusion, resizing and uploading are all done inside the editor page without a need for external upload.</li>
 <li>The stylesheets are designed for both text readability and elegance. The use of serif fonts is intentional because it increases text readability and gives a pleasant retro style that matches the linotype concept.</li>
 <li>The entire thing has been designed around the <q>less is more</q> paradigm.</li>
-<li>The code is licensed under the <a href="http://www.apache.org/foundation/licence-FAQ.html">Apache License 1.1</a> which doesn't force code contribution back to the project but does protect the name, thus the project recognition and its community.</li>
+<li>The code is licensed under the <a href="http://www.apache.org/foundation/licence-FAQ.html">Apache License 2.0</a> which doesn't force code contribution back to the project but does protect the name, thus the project recognition and its community.</li>
 </ul>
 
 <p>Enjoy and spread the word.</p>
 
-<p><strong xmlns:h="http://www.w3.org/1999/xhtml">Stefano Mazzocchi.</strong></p>
+<p><strong>Stefano Mazzocchi.</strong></p>
 </body></n:news>
