@@ -43,10 +43,9 @@ import org.xml.sax.SAXException;
 
 /**
  * Verify if a user can be authenticated.
- * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.15 2004/06/18 14:28:55 vgritsenko Exp $
+ * @version CVS $Id$
 */
 public class PipelineAuthenticator
     extends AbstractLogEnabled
