@@ -135,7 +135,7 @@ public class MutableEnvironmentFacade implements Environment {
      * @see org.apache.cocoon.environment.Environment#getAction()
      */
     public String getAction() {
-            return env.getAction();
+        return env.getAction();
     }
 
     /* (non-Javadoc)
