@@ -34,6 +34,21 @@
 			</font>
 	    </td>
 		<td align="right" bgColor="{$bgColor}">
+			<xsl:if test="edit-uri">
+				<a href="{edit-uri}">
+	  			    <img src="images/edit.gif" border="0" alt="Edit"/>
+	  			</a>
+			</xsl:if>
+			<xsl:if test="help-uri">
+				<a href="{help-uri}">
+	  			    <img src="images/help.gif" border="0" alt="Help"/>
+	  			</a>
+			</xsl:if>
+			<xsl:if test="view-uri">
+				<a href="{view-uri}">
+	  			    <img src="images/view.gif" border="0" alt="View"/>
+	  			</a>
+			</xsl:if>
 			<xsl:if test="fullscreen-uri and not(maximize-uri)">
 				<a href="{fullscreen-uri}">
 	  			    <img src="images/customize.gif" border="0" alt="Full Screen"/>

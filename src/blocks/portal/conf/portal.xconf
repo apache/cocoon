@@ -29,9 +29,18 @@
     </subscriber-roles>
  </component>
 
- <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
+  <!-- This is the portal manager.
+       If you don't need the JSR-168 support uncomment the following line and comment out 
+       the definition below:
+    <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" 
+               logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
 
- <component class="org.apache.cocoon.portal.impl.PortalServiceImpl" logger="portal" role="org.apache.cocoon.portal.PortalService">
+  -->
+  <component class="org.apache.cocoon.portal.impl.PortletPortalManager" 
+             logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
+
+  <!-- This is the portal service -->
+  <component class="org.apache.cocoon.portal.impl.PortalServiceImpl" logger="portal" role="org.apache.cocoon.portal.PortalService">
    <portals>
      <!-- Configure your portals here: -->
    </portals>
@@ -42,9 +51,17 @@
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventConverter" logger="portal" role="org.apache.cocoon.portal.event.EventConverter">
  </component>
 
- <!-- Coplet Adapter configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.coplet.adapter.CopletAdapterSelector">
-     <coplet-adapter name="uri" class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter" logger="portal"/>
+  <!-- Coplet Adapter configuration -->
+  <component class="org.apache.cocoon.components.ExtendedComponentSelector" 
+             role="org.apache.cocoon.portal.coplet.adapter.CopletAdapterSelector">
+    <!-- This is the pipeline/uri based adapter -->
+    <coplet-adapter name="uri" 
+                    class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter" 
+                    logger="portal"/>
+    <!-- This is the JSR-168 adapter -->
+    <coplet-adapter name="portlet"
+                    class="org.apache.cocoon.portal.coplet.adapter.impl.PortletAdapter" 
+                    logger="portal"/>
  </component>
 
 
@@ -53,6 +70,8 @@
     <aspect name="composite-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
     <aspect name="tab-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
     <aspect name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
+    <aspect name="portlet-window"
+            class="org.apache.cocoon.portal.layout.renderer.aspect.impl.PortletWindowAspect"/>
 
     <!-- This aspect can be used to render the minimize/maximize buttons -->
     <aspect name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>

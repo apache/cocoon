@@ -106,13 +106,33 @@
              </aspect>
          </aspects>
      </renderer>
-     <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+     <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
              <aspect type="history"/>
              <aspect type="coplet"/>
          </aspects>
      </renderer>
-     <renderer name="link" class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" logger="portal"/>
+     <renderer name="portlet-window"
+               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
+               logger="portal">
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{global:skin}styles/window.xsl"/>
+             </aspect>
+             <aspect type="parameter">
+                 <parameter name="tag-name" value="window"/>
+             </aspect>
+             <aspect type="portlet-window">
+                 <parameter name="root-tag" value="false"/>
+             </aspect>
+             <aspect type="coplet-removing"/>
+             <aspect type="history"/>
+             <aspect type="coplet-cinclude"/>
+         </aspects>
+     </renderer>
+     <renderer name="link" 
+               class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" 
+               logger="portal"/>
      <renderer name="decorated-frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
             <aspect type="xslt">
@@ -173,6 +193,7 @@
                 class="org.apache.cocoon.portal.layout.impl.CopletLayout">
             <renderers default="window">
                 <renderer name="window"/>
+                <renderer name="portlet-window"/>
                 <renderer name="nowindow"/>
             </renderers>
         </layout>

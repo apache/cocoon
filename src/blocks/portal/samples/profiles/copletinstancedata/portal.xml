@@ -66,4 +66,13 @@
    <coplet-instance-data id="Login-1" name="standard">
       <coplet-data>Login</coplet-data>
    </coplet-instance-data>
+
+   <coplet-instance-data id="Portlet-1" name="standard">
+      <coplet-data>Portlet1</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portlet-2" name="standard">
+      <coplet-data>Portlet2</coplet-data>
+   </coplet-instance-data>
+
 </coplets>
