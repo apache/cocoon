@@ -179,8 +179,8 @@
     &lt;/cinclude:configuration&gt;
     &lt;cinclude:parameters&gt;
       &lt;cinclude:parameter&gt;
-	  &lt;cinclude:name&gt;message&lt;/session:name&gt;
-	  &lt;cinclude:value&gt;Hi there&lt;/session:value&gt;
+	  &lt;cinclude:name&gt;message&lt;/cinclude:name&gt;
+	  &lt;cinclude:value&gt;Hi there&lt;/cinclude:value&gt;
 	&lt;/cinclude:parameter&gt;
 	&lt;cinclude:parameter&gt;
 	  &lt;cinclude:name&gt;_Process&lt;/cinclude:name&gt;
