@@ -34,98 +34,102 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
+ * This is the base class for a store implementation based on JCS.
  * For JCS Configuration details see:
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @author <a href="mailto:cmoss@tvnz.co.nz">Corin Moss</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: AbstractJCSStore.java,v 1.1 2004/05/17 07:53:41 cziegeler Exp $
  */
-public abstract class AbstractJCSStore extends AbstractLogEnabled
-    implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
+public abstract class AbstractJCSStore 
+    extends AbstractLogEnabled
+    implements Store, 
+               Parameterizable,
+               Initializable,
+               Disposable, 
+               ThreadSafe {
     
     /** The JCS configuration properties */
-    protected Properties m_properties;
+    protected Properties properties;
     
     /** The JCS region name */
-    protected String m_region;
+    protected String region;
     
     /** JCS Cache manager */
-    private CompositeCacheManager m_cacheManager;
+    private CompositeCacheManager cacheManager;
     
     /** The Java Cache System object */
-    private JCSCacheAccess m_JCS;
+    private JCSCacheAccess jcs;
+    
+    /**
+     * Override in sub classes
+     */
+    protected abstract String getDefaultPropertiesFile();
     
     
-    // ---------------------------------------------------- Lifecycle
-    
-    public AbstractJCSStore() {
-    }
-    
-    public void parameterize(Parameters parameters) throws ParameterException {
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void parameterize(Parameters parameters) 
+    throws ParameterException {
         
-        m_region = parameters.getParameter("region-name","main");
+        this.region = parameters.getParameter("region-name","main");
         
         Properties defaults = new Properties();
         try {
-            String defaultsFile = getDefaultPropertiesFile();
+            String defaultsFile = this.getDefaultPropertiesFile();
             if (defaultsFile != null) {
                 defaults.load(Thread.currentThread().getContextClassLoader().
                     getResourceAsStream(defaultsFile));
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new ParameterException("Failure loading cache defaults",e);
         }
         
-        m_properties = new Properties(defaults);
+        this.properties = new Properties(defaults);
         String[] names = parameters.getNames();
         for (int i = 0; i < names.length; i++) {
             if (names[i].startsWith("jcs.")) {
-                m_properties.put(names[i], parameters.getParameter(names[i]));
+                this.properties.put(names[i], parameters.getParameter(names[i]));
             }
         }
 
     }
     
-    protected String getDefaultPropertiesFile() {
-        return null;
-    }
-    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() throws Exception {
-        m_cacheManager = CompositeCacheManager.getUnconfiguredInstance();
-        m_cacheManager.configure(m_properties);
-        m_JCS = new JCSCacheAccess(m_cacheManager.getCache(m_region));
+        this.cacheManager = CompositeCacheManager.getUnconfiguredInstance();
+        this.cacheManager.configure(this.properties);
+        this.jcs = new JCSCacheAccess(cacheManager.getCache(region));
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-        m_JCS.dispose();
-        m_cacheManager.release();
-        m_JCS = null;
-        m_cacheManager = null;
-        m_properties = null;
+        if ( this.jcs != null ) {
+            this.jcs.dispose();
+            this.jcs = null;
+        }
+        if ( this.cacheManager != null ) {
+            this.cacheManager.release();
+            this.cacheManager = null;            
+        }
+        this.properties = null;
     }
     
     // ---------------------------------------------------- Store implementation
     
-    /**
-     * Returns a Object from the store associated with the Key Object
-     *
-     * @param key the Key object
-     * @return the Object associated with Key Object
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#get(java.lang.Object)
      */
-    public Object get(Object key) 
-    {
-        Object value = null;
-        
-        value = m_JCS.get(key);
-        if (getLogger().isDebugEnabled()) 
-        {
-            if (value != null) 
-            {
+    public Object get(Object key) {
+        Object value = this.jcs.get(key);
+        if (getLogger().isDebugEnabled()) {
+            if (value != null) {
                 getLogger().debug("Found key: " + key);
-            } 
-            else 
-            {
+            } else {
                 getLogger().debug("NOT Found key: " + key);
             }
         }
@@ -133,105 +137,80 @@ public abstract class AbstractJCSStore extends AbstractLogEnabled
         return value;
     }
     
-    /**
-     * Store the given object.
-     *
-     * @param key the key object
-     * @param value the value object
-     * @exception  IOException
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#store(java.lang.Object, java.lang.Object)
      */
     public void store(Object key, Object value)
-        throws IOException 
-    {
+    throws IOException {
         
-        if (getLogger().isDebugEnabled()) 
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Store object " + value + " with key "+ key);
         }
         
-        try 
-        {
-            m_JCS.put(key, value);
-        } 
-        catch (CacheException ce) 
-        {
+        try {
+            this.jcs.put(key, value);
+        } catch (CacheException ce) {
             getLogger().error("Failure storing object ", ce);
         }
     }
     
-    /**
-     * Frees some values of the store.
-     * TODO: implementation?
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
+        // TODO
     }
     
-    /**
-     * Clear the Store of all elements
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#clear()
      */
-    public void clear() 
-    {
-        
-        if (getLogger().isDebugEnabled()) 
-        {
+    public void clear() {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Clearing the store");
         }
         
-        try
-        {
-            m_JCS.remove();               
-        } 
-        catch (CacheException ce) 
-        {
+        try {
+            this.jcs.remove();               
+        } catch (CacheException ce) {
             getLogger().error("Failure clearing store", ce);
         }
     }
     
-    /**
-     * Removes a value from the data file with the given key.
-     *
-     * @param key the key object
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#remove(java.lang.Object)
      */
-    public void remove(Object key)
-    {
-        if (getLogger().isDebugEnabled()) 
-        {
+    public void remove(Object key) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Removing item " + key);
         }
         
-        try 
-        {
-           m_JCS.remove(key);
-        }
-        catch (CacheException ce)
-        {
+        try {
+           this.jcs.remove(key);
+        } catch (CacheException ce) {
             getLogger().error("Failure removing object", ce);
         }
     }
     
-    /**
-     * Test if the store contains the element.
-     *
-     * @param key the key object
-     * @return true if Key exists and false if not
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
      */
-    public boolean containsKey(Object key) 
-    {
-        return m_JCS.get(key) != null;
+    public boolean containsKey(Object key) {
+        return this.jcs.get(key) != null;
     }
     
     
-    /**
-     * Return all existing keys.
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#keys()
      */
-    public Enumeration keys() 
-    {
-      return new IteratorEnumeration(this.m_JCS.getGroupKeys("").iterator());
+    public Enumeration keys() {
+      return new IteratorEnumeration(this.jcs.getGroupKeys("").iterator());
     }
     
-    public int size() 
-    {
-        return m_JCS.getSize();
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.store.Store#size()
+     */
+    public int size() {
+        return this.jcs.getSize();
     }
     
 

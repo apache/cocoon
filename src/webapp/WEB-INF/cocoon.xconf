@@ -422,8 +422,9 @@
       |    When the number of maxobjects has been reached. The last object
       |    in the cache will be thrown out.
       +-->
-  <transient-store logger="core.store.transient">
-     <parameter name="maxobjects" value="100"/>
+  <transient-store class="org.apache.cocoon.components.store.JCSTransientStore" 
+                    logger="core.store.transient">
+    <parameter name="maxobjects" value="1000"/>
   </transient-store>
   
   <!--+
@@ -437,14 +438,16 @@
       |    When the number of maxobjects has been reached. The last object
       |    in the cache will be thrown out.
       +-->
-  <store logger="core.store">
-     <parameter name="maxobjects" value="100"/>
+  <store class="org.apache.cocoon.components.store.JCSDefaultStore" 
+         logger="core.store">
+    <parameter name="maxobjects" value="1000"/>
+    <parameter name="use-cache-directory" value="true"/>
   </store>
 
   <!--+
       | Persistent Store: holds objects that have to survive shutdown.
-      | WARNING: FilesystemStore is broken. Cocoon uses DefaultPersistentStore based
-      | on the Avalon Excalibur JispStore instead.
+      | WARNING: FilesystemStore and JispStore are broken. Cocoon uses 
+      | JCSPersistentStore based on Jakarta JCS instead.
       |
       | Common configuration parameters:
       |  use-cache-directory: Indicates that cache directory specified in
@@ -454,14 +457,11 @@
       |  directory: Specifies directory to use. Absolute or relative to the
       |             work directory.
       |
-      | DefaultStore configuration parameters:
-      |  datafile: Name of the store file to use. Defaults to cocoon.dat
-      |  indexfile: Name of the index file to use. Defaults to cocoon.idx
-      |  order: The page size of the B-Tree index, as an integer (default=301).
       +-->
-  <persistent-store logger="core.store.persistent">
+  <persistent-store class="org.apache.cocoon.components.store.JCSPersistentStore"
+                    logger="core.store.persistent">
     <parameter name="use-cache-directory" value="true"/>
-    <parameter name="order" value="2701"/>
+    <parameter name="maxobjects" value="1000"/>
   </persistent-store>
 
   <!--+
