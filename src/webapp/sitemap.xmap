@@ -72,6 +72,15 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>
+      <!--
+        Interpreted Xalan
+      <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+        Old (6.5.2) Saxon:
+      <transformer-factory>com.icl.saxon.TransformerFactoryImpl</transformer-factory>
+        New (7.x?) Saxon: 
+      <transformer-factory>net.sf.saxon.TransformerFactoryImpl</transformer-factory>
+       -->
+
     </map:transformer>
 
     <!-- NOTE: This used to be the default XSLT processor. The default now is XSLTC -->
