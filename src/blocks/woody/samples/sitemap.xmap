@@ -33,11 +33,31 @@
 
  </map:components>
 
+ <map:views>
+  <map:view name="content" from-label="content">
+   <map:serialize type="xml"/>
+  </map:view>
+
+  <map:view name="pretty-content" from-label="data">
+   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+   <map:serialize type="html"/>
+  </map:view>
+
+  <map:view name="links" from-position="last">
+   <map:serialize type="links"/>
+  </map:view>
+ </map:views>
+
+
  <map:pipelines>
    <map:pipeline>
 
      <map:match pattern="">
-       <map:read src="welcome.html"/>
+      <map:generate src="welcome.xml"/>
+      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+      <map:serialize/>
      </map:match>
 
      <!--
@@ -85,6 +105,13 @@
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/form1_template.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
        <map:serialize/>
      </map:match>
 
@@ -120,6 +147,13 @@
        <map:transform src="xsl/html/woody-default.xsl"/>
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_template.xml"/>
+         <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:serialize/>
      </map:match>

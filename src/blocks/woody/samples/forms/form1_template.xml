@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
-<html xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
-  <head>
-    <title>Form 1 sample</title>
-  </head>
-  <body>
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0">
+  <title>Sample form</title>
+  <content>
     <form action="form1" method="POST">
       <table border="1">
         <tr>
@@ -84,5 +82,5 @@
 
       <input type="submit"/>
     </form>
-  </body>
-</html>
+  </content>
+</page>
