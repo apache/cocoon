@@ -51,8 +51,10 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -77,7 +79,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.4 2003/07/02 18:33:38 cziegeler Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.5 2003/07/09 07:42:22 cziegeler Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -96,7 +98,15 @@ public class ParanoidCocoonServlet extends HttpServlet {
 		super.init(config);
 
 		// Create the classloader in which we will load the servlet
-		this.classloader = getClassLoader(this.getContextDir());
+        // this can either be specified by an external file configured
+        // as a parameter in web.xml or (the default) all jars and 
+        // classes from WEB-INF/lib and WEB-INF/classes are used.
+        final String externalClasspath = config.getInitParameter("paranoid-classpath");
+        if ( externalClasspath == null ) {
+            this.classloader = this.getClassLoader(this.getContextDir());
+        } else {
+            this.classloader = this.getClassLoader(externalClasspath);
+        }
         
         String servletName = config.getInitParameter("servlet-class");
         if (servletName == null) {
@@ -190,6 +200,44 @@ public class ParanoidCocoonServlet extends HttpServlet {
 		return ParanoidClassLoader.newInstance(urls, this.getClass().getClassLoader());
 	}
     
+    /**
+     * Get the classloader that will be used to create the actual servlet. Its classpath is defined
+     * by an external file.
+     */
+    protected ClassLoader getClassLoader(String externalClasspath) 
+    throws ServletException {
+        final List urlList = new ArrayList();
+
+        log("Adding classpath from " + externalClasspath);
+        try {
+            FileReader fileReader = new FileReader(externalClasspath);
+            LineNumberReader lineReader = new LineNumberReader(fileReader);
+        
+            String line;
+            do {
+                line = lineReader.readLine();
+                if ( line != null ) {
+                    final URL lib;
+                    if ( line.indexOf(':') == -1) {
+                        File entry = new File(line);        
+                        lib = entry.toURL();
+                    } else {
+                        lib = new URL(line);
+                    }
+                    log("Adding class library " + lib);
+                    urlList.add(lib);
+                }
+            } while ( line != null );
+            lineReader.close();
+        } catch (IOException io) {
+            throw new ServletException(io);
+        }
+              
+        URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
+        
+        return ParanoidClassLoader.newInstance(urls, this.getClass().getClassLoader());
+    }
+
 	/**
 	 * Service the request by delegating the call to the real servlet
 	 */

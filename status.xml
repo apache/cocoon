@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.81 2003/07/06 20:37:47 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.82 2003/07/09 07:42:23 cziegeler Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    ParanoidCocoonServlet can optionally configured with a file containing the classpath.
+  </action>
+  <action dev="CZ" type="add">
+    Configuration cocoon.xconf can now be read from any location.
+  </action>
   <action dev="SW" type="fix">
     Flow view can now be in "internal-only" pipelines.
   </action>

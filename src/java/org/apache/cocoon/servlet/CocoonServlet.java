@@ -122,7 +122,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.8 2003/06/03 13:25:42 sylvain Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.9 2003/07/09 07:42:22 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -865,7 +865,12 @@ public class CocoonServlet extends HttpServlet {
 
         URL result;
         try {
-            result = this.servletContext.getResource(usedFileName);
+            // test if this is a qualified url
+            if ( usedFileName.indexOf(':') == -1) {
+                result = this.servletContext.getResource(usedFileName);
+            } else {
+                result = new URL(usedFileName);
+            }
         } catch (Exception mue) {
             String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
             log.error(msg, mue);
