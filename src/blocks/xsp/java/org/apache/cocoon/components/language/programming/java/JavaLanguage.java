@@ -44,7 +44,7 @@ import org.apache.commons.lang.SystemUtils;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.3 2004/07/12 12:47:29 antonio Exp $
+ * @version CVS $Id$
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
         implements Initializable, ThreadSafe, Serviceable, Disposable {
@@ -176,6 +176,10 @@ public class JavaLanguage extends CompiledProgrammingLanguage
             if (compiler instanceof LogEnabled) {
                 ((LogEnabled)compiler).enableLogging(getLogger());
             }
+            // some may be Serviceable
+            if (compiler instanceof Serviceable) {
+                ((Serviceable)compiler).service(this.manager);
+            }
 
             int pos = name.lastIndexOf(File.separatorChar);
             String filename = name.substring(pos + 1);
@@ -214,6 +218,9 @@ public class JavaLanguage extends CompiledProgrammingLanguage
         } catch (IOException e) {
             getLogger().warn("Error during compilation", e);
             throw new LanguageException("Error during compilation: " + e.getMessage());
+        } catch (ServiceException e) {
+            getLogger().warn("Could not initialize the compiler", e);
+            throw new LanguageException("Could not initialize the compiler: " + e.getMessage());
         }
     }
 
