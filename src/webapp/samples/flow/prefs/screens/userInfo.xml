@@ -21,7 +21,7 @@
   <title>${title}></title>
   <content>
     <jx:choose>
-      <jx:when test="errorMsg">
+      <jx:when test="${errorMsg != null}">
         <para><strong>${errorMsg}</strong></para>
       </jx:when>
       <jx:otherwise>
