@@ -38,6 +38,9 @@
     <copy file="${block.dir}/conf/package.jdo" tofile="${build.blocks.ojb.samples}/package.jdo"/>
     <copy file="${block.dir}/conf/repository.dtd" tofile="${build.webapp.classes}/repository.dtd"/>
     <copy file="${block.dir}/conf/repository.xml" tofile="${build.webapp.classes}/repository.xml"/>
+    <copy file="${block.dir}/conf/repository_database.xml" tofile="${build.webapp.classes}/repository_database.xml"/>
+    <copy file="${block.dir}/conf/repository_internal.xml" tofile="${build.webapp.classes}/repository_internal.xml"/>
+    <copy file="${block.dir}/conf/repository_user.xml" tofile="${build.webapp.classes}/repository_user.xml"/>
     <copy file="${block.dir}/conf/OJB.properties" tofile="${build.webapp.classes}/OJB.properties"/>
   </target>
 

@@ -37,20 +37,20 @@
 						<i18n:text i18n:catalogue="local">search.criteria.label</i18n:text>:
 					</jx:otherwise>
 				</jx:choose>
+				<ul>
+					<jx:forEach var="item" items="${result.query.criteria}">
+						<li>
+							<span class="query.criterion-field" title="local:criterion.field.hint" i18n:attr="title">
+								<i18n:text i18n:catalogue="local">search.${item.field}.field</i18n:text>
+							</span>
+							<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
+								<i18n:text i18n:catalogue="local">search.${item.match}.match</i18n:text>
+							</span>
+							<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${item.term}”.</span>
+						</li>
+					</jx:forEach>
+				</ul>
 			</span>
-			<ul class="query.criteria">
-				<jx:forEach var="item" items="${result.query.criteria}">
-					<li>
-						<span class="query.criterion-field" title="local:criterion.field.hint" i18n:attr="title">
-							<i18n:text i18n:catalogue="local">search.${item.field}.field</i18n:text>
-						</span>
-						<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
-							<i18n:text i18n:catalogue="local">search.${item.match}.match</i18n:text>
-						</span>
-						<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${item.term}”.</span>
-					</li>
-				</jx:forEach>
-			</ul>
 		</p>
 		<!-- links -->
 		<p class="links">
@@ -58,11 +58,20 @@
 			<span> | </span>
 			<a href="history.html" title="local:search.history.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">search.history.title</i18n:text></a>
 			<span> | </span>
+			<a href="favourites.html" title="local:search.favourites.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">search.favourites.title</i18n:text></a>
+			<span> | </span>
 			<a href="simple.html" title="local:new.simple.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">new.simple.label</i18n:text></a>
 			<span> | </span>
 			<a href="advanced.html" title="local:new.advanced.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">new.advanced.label</i18n:text></a>
 			<span> | </span>
 			<a href="welcome" title="local:link.home.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">link.home.label</i18n:text></a>
+			<span> | </span>
+			<jx:choose>
+				<jx:when test="${result.query.id == null}">
+					<a href="add-favourite.html?hid=${result.id}" title="local:history.save.hint" i18n:attr="title"><i18n:text i18n:catalogue="local">history.save.label</i18n:text></a>
+				</jx:when>
+				<jx:otherwise><span title="local:search.fave.hint" i18n:attr="title"><img src="images/fave.jpg" alt="favourite"/></span></jx:otherwise>
+			</jx:choose>			
 		</p>
 		<!-- paging -->
 		<title><i18n:text i18n:catalogue="local">search.section.title</i18n:text></title>

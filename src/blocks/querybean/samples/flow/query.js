@@ -36,27 +36,27 @@ function clearHistory() {
 }
 
 // display the User's Favourite Searches
-/*function showFavourites() {
+function showFavourites() {
 	var favourites = null;
 	try {
 		favourites = new QueryFavourites(cocoon.parameters["user-id"]);
 		cocoon.sendPage(cocoon.parameters["screen"], {queries: favourites.list()});
-	} catch (error) {
-		cocoon.log.error(error);
-		cocoon.sendPage("screen/error", {message: error});
+	/*} catch (error) {
+		cocoon.log.error("BLAH:" + error);
+		cocoon.sendPage("screen/error", {message: error});*/
 	} finally {
 		if (favourites != null) favourites.close();
 	}
-}*/
+}
 
 
 // add a history item to the User's Favourite Searches
-/*function addFavourite() {
+function addFavourite() {
 	var history = new QueryHistory(cocoon.parameters["history"]);
 	var favourites = null;
 	try {
 		favourites = new QueryFavourites(cocoon.parameters["user-id"]);
-		var query = history.get(cocoon.parameters["hid"]);
+		var query = history.get(cocoon.parameters["hid"], false);
 		if (query != null) {
 			favourites.add(query);
 		}
@@ -67,10 +67,10 @@ function clearHistory() {
 	} finally {
 		if (favourites != null) favourites.close();
 	}
-}*/
+}
 
 // add an item from the User's Favourite Searches, using it's ID
-/*function removeFavourite() {
+function removeFavourite() {
 	var favourites = null;
 	try {
 		favourites = new QueryFavourites(cocoon.parameters["user-id"]);
@@ -82,7 +82,7 @@ function clearHistory() {
 	} finally {
 		if (favourites != null) favourites.close();
 	}
-}*/
+}
 
 // perform searches
 function doSearch() {
@@ -109,7 +109,7 @@ function doSearch() {
 				return;				
 			}
 		} else { 																							// editing a Query from history
-			var query = history.get(cocoon.parameters["hid"]);
+			var query = history.get(cocoon.parameters["hid"], true);
 			if (edit(query)) {
 				result = searcher.search(query, history);
 			} else {

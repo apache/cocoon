@@ -23,4 +23,5 @@
   <!-- Include dependencies -->
   <include src="context://WEB-INF/xconf/cocoon-forms.xconf"/>
   <include src="context://WEB-INF/xconf/cocoon-lucene.xconf"/>
+  <include src="context://WEB-INF/xconf/cocoon-ojb.xconf"/>
 </components>

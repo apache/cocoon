@@ -955,6 +955,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-forms" type="samples"/>
     <depend project="cocoon-block-lucene"/>
+    <depend project="cocoon-block-ojb"/>
     <depend project="jakarta-lucene"/>
 
     <work nested="tools/anttasks"/>
