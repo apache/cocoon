@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<locks xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="lock" items="${locks}">
+    <lock>
+      <id>${lock.getLockId()}</id>
+      <object>${lock.getObjectUri()}</object>
+      <type>${lock.getTypeUri()}</type>
+      <subject>${lock.getSubjectUri()}</subject>
+      <expiration>${lock.getExpirationDate()}</expiration>
+      <exclusive>${lock.isExclusive()}</exclusive>
+      <inheritable>${lock.isInheritable()}</inheritable>
+    </lock>
+  </jx:forEach>
+</locks>

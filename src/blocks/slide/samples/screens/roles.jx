@@ -2,7 +2,10 @@
 <roles xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="role" items="${roles}">
     <role>
-      <name>${role}</name>
+      <uri>${role.uri}</uri>
+      <jx:forEach var="member" items="${role.members}">
+        <member>${member}</member>
+      </jx:forEach>
     </role>
   </jx:forEach>
 </roles>
