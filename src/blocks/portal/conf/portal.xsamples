@@ -4,7 +4,7 @@
 
   <group name="Portal Engine">
     <sample name="Demo Portal" href="portal/portal">
-      This is a demo of the new powerfull portal engine based on Apache Cocoon.
+      This is a demo of the new powerful portal engine based on Apache Cocoon.
     </sample>
   </group>
   
