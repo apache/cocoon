@@ -1,271 +1,271 @@
 <?xml version="1.0"?>
 <site label="Cocoon" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="home">
 
-<doc label="Apache Cocoon project bylaws addendum" href="bylaws-addendum.xml"/>
-<doc label="[]" href="catalog-test.xml"/>
-<doc label="[]" href="dictionary.xml"/>
-<doc label="Cocoon Features" href="features.xml"/>
-<doc label="Apache Cocoon" href="index-old.xml"/>
-<doc label="Apache Cocoon" href="index.xml"/>
-<doc label="Introducing Cocoon" href="introduction.xml"/>
-<doc label="Apache License" href="license.xml"/>
-<doc label="Overview of Apache Cocoon" href="overview.xml"/>
-<doc label="Apache Cocoon Performance Tips" href="performancetips.xml"/>
-<doc label="[]" href="tabs.xml"/>
-<doc label="Who we are" href="who.xml"/>
-<doc label="Fast guide to XDoc Writing" href="/css/testdoc.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Basic XML/XSL Transformation" href="/ctwig/ctwig-basic01.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Basic XSP Processing" href="/ctwig/ctwig-basic02.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Basic XSP/Logicsheet Processing" href="/ctwig/ctwig-basic03.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Contributing" href="/ctwig/ctwig-contributing.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Getting Started" href="/ctwig/ctwig-gettingstarted.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Installing" href="/ctwig/ctwig-installing.xml"/>
-<doc label="cTwIG - Installing on Mac OS X" href="/ctwig/ctwig-osx.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Transformations" href="/ctwig/ctwig-transformations.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide - Why" href="/ctwig/ctwig-why.xml"/>
-<doc label="cTwIG - Cocoon Two Idiots Guide" href="/ctwig/index.xml"/>
-<doc label="[]" href="/ctwig/sample/transformations/basic01/basic01-01.xml"/>
-<doc label="[]" href="/ctwig/sample/transformations/basic02/basic02-01.xml"/>
-<doc label="[]" href="/ctwig/sample/transformations/basic03/basic03-01.xml"/>
-<doc label="Avalon for Apache Cocoon" href="/developing/avalon.xml"/>
-<doc label="Using Databases in Apache Cocoon" href="/developing/datasources.xml"/>
-<doc label="DELI" href="/developing/deli.xml"/>
-<doc label="DELI Quick Start Guide" href="/developing/deliquick.xml"/>
-<doc label="Extending Apache Cocoon" href="/developing/extending.xml"/>
-<doc label="Request Processing" href="/developing/httprequest.xml"/>
-<doc label="Developer Documentation" href="/developing/index.xml"/>
-<doc label="Parent Service Manager" href="/developing/parent-component-manager.xml"/>
-<doc label="Cocoon Source Resolving" href="/developing/source.xml"/>
-<doc label="Cocoon Source Resolving" href="/developing/stores.xml"/>
-<doc label="Web3" href="/developing/web3.xml"/>
-<doc label="The Portal Basket" href="/developing/portal/basket.xml"/>
-<doc label="Configuring Coplets" href="/developing/portal/coplets.xml"/>
-<doc label="Portal: Event Handling" href="/developing/portal/events.xml"/>
-<doc label="Portal: Using forms" href="/developing/portal/forms.xml"/>
-<doc label="Webapps Developer Documentation" href="/developing/portal/index.xml"/>
-<doc label="Configuring the Cocoon Portal" href="/developing/portal/portal-block.xml"/>
-<doc label="Configuring Profiles" href="/developing/portal/profiles.xml"/>
-<doc label="Authentication Framework" href="/developing/webapps/authentication.xml"/>
-<doc label="Session Contexts" href="/developing/webapps/contexts.xml"/>
-<doc label="Simple Forms" href="/developing/webapps/forms.xml"/>
-<doc label="Webapps Developer Documentation" href="/developing/webapps/index.xml"/>
-<doc label="Building Portals with Cocoon" href="/developing/webapps/portal.xml"/>
-<doc label="Session Management" href="/developing/webapps/session.xml"/>
-<doc label="[]" href="/drafts/cocoon2-docbook.xml"/>
-<doc label="Action FAQs" href="/faq/faq-actions.xml"/>
-<doc label="Aggregator FAQs" href="/faq/faq-aggregators.xml"/>
-<doc label="Cocoon Configuration FAQs" href="/faq/faq-configure-c2.xml"/>
-<doc label="Environment Configuration FAQs" href="/faq/faq-configure-environment.xml"/>
-<doc label="CVS FAQs" href="/faq/faq-cvs.xml"/>
-<doc label="Database FAQs" href="/faq/faq-databases.xml"/>
-<doc label="Debugging FAQs" href="/faq/faq-debugging.xml"/>
-<doc label="Cocoon Sitemap Generator FAQs" href="/faq/faq-generators.xml"/>
-<doc label="Installation FAQs" href="/faq/faq-install.xml"/>
-<doc label="Cocoon Sitemap Matcher FAQs" href="/faq/faq-matchers.xml"/>
-<doc label="Cocoon Sitemap Selector FAQs" href="/faq/faq-selectors.xml"/>
-<doc label="Cocoon Sitemap Serializer FAQs" href="/faq/faq-serializers.xml"/>
-<doc label="Sitemap FAQs" href="/faq/faq-sitemap.xml"/>
-<doc label="Cocoon Sitemap Transformer FAQs" href="/faq/faq-transformers.xml"/>
-<doc label="XSLT FAQs" href="/faq/faq-xslt.xml"/>
-<doc label="XSP FAQs" href="/faq/faq-xsp.xml"/>
-<doc label="Cocoon FAQs" href="/faq/index.xml"/>
-<doc label="How to Author Core Documentation" href="/howto/howto-author-core-docs.xml"/>
-<doc label="How to author an FAQ" href="/howto/howto-author-faq.xml"/>
-<doc label="How to Author a How-To" href="/howto/howto-author-howto.xml"/>
-<doc label="How to Author a Code Snippet" href="/howto/howto-author-snippet.xml"/>
-<doc label="How to Contribute a Patch via Bugzilla" href="/howto/howto-bugzilla.xml"/>
-<doc label="How to run and explore the Cocoon samples" href="/howto/howto-explore-samples.xml"/>
-<doc label="How to use the Cocoon Flow Debugger" href="/howto/howto-flow-debugger.xml"/>
-<doc label="How to Publish XML Documents in HTML and PDF" href="/howto/howto-html-pdf-publishing.xml"/>
-<doc label="How to use the Paginator Transformer" href="/howto/howto-paginator-transformer.xml"/>
-<doc label="How to Prepare a Patch" href="/howto/howto-patch.xml"/>
-<doc label="Cocoon How-Tos" href="/howto/index.xml"/>
-<doc label="Installing Apache Cocoon" href="/installing/index.xml"/>
-<doc label="Cocoon JARs" href="/installing/jars.xml"/>
-<doc label="Installing Apache Cocoon" href="/installing/requirements.xml"/>
-<doc label="Testing your Apache Cocoon" href="/installing/tests.xml"/>
-<doc label="Updating Cocoon" href="/installing/updating.xml"/>
-<doc label="[]" href="/plan/changes-doc.xml"/>
-<doc label="About the Cocoon Documentation Effort" href="/plan/doc.xml"/>
-<doc label="Planning Notes" href="/plan/index.xml"/>
-<doc label="Issues with Documentation" href="/plan/issues-doc.xml"/>
-<doc label="Linkstatus - assess and mend any broken hyperlinks" href="/plan/linkstatus.xml"/>
-<doc label="Proposed TOC" href="/plan/proposed-toc.xml"/>
-<doc label="Release Plan" href="/plan/release.xml"/>
-<doc label="Review of sitemap component documentation" href="/plan/review-sitemap-docs.xml"/>
-<doc label="Release Plan" href="/plan/roadmap.xml"/>
-<doc label="Refactoring of Cocoon Samples" href="/plan/samples.xml"/>
-<doc label="[]" href="/plan/todo-doc.xml"/>
-<doc label="Updating Cocoon" href="/plan/updating.xml"/>
-<doc label="Cocoon Snippets" href="/snippet/index.xml"/>
-<doc label="Internal Pipeline Snippet" href="/snippet/snippet-internal-pipeline.xml"/>
-<doc label="Specifying Different XSLT Processor Options" href="/snippet/snippet-xslt-options.xml"/>
-<doc label="Apache Cocoon User Guide" href="/tracks/first-steps-track.xml"/>
-<doc label="Apache Cocoon User Guide" href="/tracks/index.xml"/>
-<doc label="Apache Cocoon User Guide" href="/tracks/web-publishing-track.xml"/>
-<doc label="Cocoon Tutorials" href="/tutorial/index.xml"/>
-<doc label="How to develop Web Applications" href="/tutorial/tutorial-develop-webapp.xml"/>
-<doc label="Write a Custom Generator" href="/tutorial/tutorial-generator.xml"/>
-<doc label="Writing a Cocoon 2 generator" href="/tutorial/tutorial-rmi-generator.xml"/>
-<doc label="Tutorial screenshots" href="/tutorial/tutorial-shots.xml"/>
-<doc label="User Documentation" href="/userdocs/index.xml"/>
-<doc label="Actions" href="/userdocs/actions/actions.xml"/>
-<doc label="Database Actions" href="/userdocs/actions/database-actions.xml"/>
-<doc label="ScriptAction in Cocoon" href="/userdocs/actions/script-action.xml"/>
-<doc label="Sendmail Action" href="/userdocs/actions/sendmail-action.xml"/>
-<doc label="Session Action" href="/userdocs/actions/session-action.xml"/>
-<doc label="Creating and Using Actions" href="/userdocs/concepts/actions.xml"/>
-<doc label="Caching" href="/userdocs/concepts/caching.xml"/>
-<doc label="Entity resolution with catalogs" href="/userdocs/concepts/catalog.xml"/>
-<doc label="Database Access" href="/userdocs/concepts/databases.xml"/>
-<doc label="Error Handling" href="/userdocs/concepts/errorhandling.xml"/>
-<doc label="Understanding Apache Cocoon" href="/userdocs/concepts/index.xml"/>
-<doc label="Using and Implementing Matchers and Selectors" href="/userdocs/concepts/matchers_selectors.xml"/>
-<doc label="Input Modules Reference" href="/userdocs/concepts/modules-ref.xml"/>
-<doc label="Modules" href="/userdocs/concepts/modules.xml"/>
-<doc label="MRUMemoryStore and Swapping under Apache Cocoon" href="/userdocs/concepts/mrustore.xml"/>
-<doc label="The persistent cache under Apache Cocoon" href="/userdocs/concepts/persistence.xml"/>
-<doc label="Cocoon Profiler" href="/userdocs/concepts/profiler.xml"/>
-<doc label="Redirection" href="/userdocs/concepts/redirection.xml"/>
-<doc label="Example sitemap snippets" href="/userdocs/concepts/sitemap-examples.xml"/>
-<doc label="The Sitemap" href="/userdocs/concepts/sitemap.xml"/>
-<doc label="StoreJanitor in Apache Cocoon" href="/userdocs/concepts/storejanitor.xml"/>
-<doc label="XML Validation Facilities" href="/userdocs/concepts/validation.xml"/>
-<doc label="Views" href="/userdocs/concepts/views.xml"/>
-<doc label="XML Searching" href="/userdocs/concepts/xmlsearching.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/api.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/continuations.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/how-does-it-work.xml"/>
-<doc label="Apache Cocoon - Control Flow" href="/userdocs/flow/index.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/java.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/jpath.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/jxtemplate.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/sitemap.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/tutor.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/using.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/velocity.xml"/>
-<doc label="Advanced Control Flow" href="/userdocs/flow/views.xml"/>
-<doc label="Cocoon Forms: Java API" href="/userdocs/forms/api_java.xml"/>
-<doc label="Cocoon Forms: Javascript API" href="/userdocs/forms/api_javascript.xml"/>
-<doc label="Cocoon Forms: Binding Framework" href="/userdocs/forms/binding.xml"/>
-<doc label="Cocoon Forms: Datatypes" href="/userdocs/forms/datatypes.xml"/>
-<doc label="Cocoon Forms: Event Handling" href="/userdocs/forms/eventhandling.xml"/>
-<doc label="Apache Cocoon Forms: Forms Generator" href="/userdocs/forms/formsgenerator.xml"/>
-<doc label="Cocoon Forms: Introduction" href="/userdocs/forms/index.xml"/>
-<doc label="Cocoon Forms: A Simple Example" href="/userdocs/forms/sample.xml"/>
-<doc label="Cocoon Forms: Template Generator" href="/userdocs/forms/templategenerator.xml"/>
-<doc label="Cocoon Forms: Template Transformer" href="/userdocs/forms/templatetransformer.xml"/>
-<doc label="Cocoon Forms: Validation" href="/userdocs/forms/validation.xml"/>
-<doc label="Cocoon Forms: action widget" href="/userdocs/forms/widget_action.xml"/>
-<doc label="Cocoon Forms: aggregatefield widget" href="/userdocs/forms/widget_aggregatefield.xml"/>
-<doc label="Cocoon Forms: booleanfield widget" href="/userdocs/forms/widget_booleanfield.xml"/>
-<doc label="Cocoon Forms: field widget" href="/userdocs/forms/widget_field.xml"/>
-<doc label="Cocoon Forms: messages widget" href="/userdocs/forms/widget_messages.xml"/>
-<doc label="Cocoon Forms: multivaluefield widget" href="/userdocs/forms/widget_multivaluefield.xml"/>
-<doc label="Cocoon Forms: output widget" href="/userdocs/forms/widget_output.xml"/>
-<doc label="Cocoon Forms: repeater widget" href="/userdocs/forms/widget_repeater.xml"/>
-<doc label="Cocoon Forms: repeater-action widget" href="/userdocs/forms/widget_repeater_action.xml"/>
-<doc label="Cocoon Forms: row-action widget" href="/userdocs/forms/widget_row_action.xml"/>
-<doc label="Cocoon Forms: submit widget" href="/userdocs/forms/widget_submit.xml"/>
-<doc label="Cocoon Forms: upload widget" href="/userdocs/forms/widget_upload.xml"/>
-<doc label="Cocoon Forms: XSLT" href="/userdocs/forms/xslt.xml"/>
-<doc label="Description of the calendar generator" href="/userdocs/generators/calendar-generator.xml"/>
-<doc label="Directory Generator" href="/userdocs/generators/directory-generator.xml"/>
-<doc label="Notifying Generator" href="/userdocs/generators/error-generator.xml"/>
-<doc label="Fragment Extractor Generator" href="/userdocs/generators/extractor-generator.xml"/>
-<doc label="File Generator" href="/userdocs/generators/file-generator.xml"/>
-<doc label="Generators in Cocoon" href="/userdocs/generators/generators.xml"/>
-<doc label="HTML Generator" href="/userdocs/generators/html-generator.xml"/>
-<doc label="Image Directory Generator" href="/userdocs/generators/imagedirectory-generator.xml"/>
-<doc label="JSP Generator" href="/userdocs/generators/jsp-generator.xml"/>
-<doc label="Description of the jx generator" href="/userdocs/generators/jx-generator.xml"/>
-<doc label="LinkStatus Generator" href="/userdocs/generators/linkstatus-generator.xml"/>
-<doc label="Description of the mp3directory generator" href="/userdocs/generators/mp3directory-generator.xml"/>
-<doc label="Profile Generator" href="/userdocs/generators/profile-generator.xml"/>
-<doc label="Request Generator" href="/userdocs/generators/request-generator.xml"/>
-<doc label="ScriptGenerator in Cocoon" href="/userdocs/generators/script-generator.xml"/>
-<doc label="Search Generator" href="/userdocs/generators/search-generator.xml"/>
-<doc label="Server Pages Generator" href="/userdocs/generators/serverpages-generator.xml"/>
-<doc label="Status Generator" href="/userdocs/generators/status-generator.xml"/>
-<doc label="Stream Generator" href="/userdocs/generators/stream-generator.xml"/>
-<doc label="Velocity Generator" href="/userdocs/generators/velocity-generator.xml"/>
-<doc label="Portal Syndication with Web Services and Cocoon" href="/userdocs/generators/wsproxy-generator.xml"/>
-<doc label="XML:DB Generator" href="/userdocs/generators/xmldb-generator.xml"/>
-<doc label="XML:DB Collection Generator" href="/userdocs/generators/xmldbcollection-generator.xml"/>
-<doc label="XPath Directory Generator" href="/userdocs/generators/xpathdirectory-generator.xml"/>
-<doc label="Matchers" href="/userdocs/matchers/matchers.xml"/>
-<doc label="Template-Matcher in Cocoon" href="/userdocs/matchers/template-matcher.xml"/>
-<doc label="WildcardHeader-Matcher in Cocoon" href="/userdocs/matchers/wildcardheader-matcher.xml"/>
-<doc label="WildcardURI-Matcher in Cocoon" href="/userdocs/matchers/wildcarduri-matcher.xml"/>
-<doc label="Offline Page Generation with Apache Ant" href="/userdocs/offline/ant.xml"/>
-<doc label="The Cocoon Bean" href="/userdocs/offline/bean.xml"/>
-<doc label="Offline Page Generation with the Command Line Interface" href="/userdocs/offline/cli.xml"/>
-<doc label="Configuration of Cocoon for Offline Use" href="/userdocs/offline/configuration.xml"/>
-<doc label="Offline Page Generation" href="/userdocs/offline/index.xml"/>
-<doc label="Axis RPC Reader in Cocoon" href="/userdocs/readers/axisrpc-reader.xml"/>
-<doc label="DatabaseReader" href="/userdocs/readers/database-reader.xml"/>
-<doc label="DirectoryZipArchiver" href="/userdocs/readers/directoryziparchiver-reader.xml"/>
-<doc label="ImageReader in Cocoon" href="/userdocs/readers/image-reader.xml"/>
-<doc label="JSP Reader in Cocoon" href="/userdocs/readers/jsp-reader.xml"/>
-<doc label="Readers in Cocoon" href="/userdocs/readers/readers.xml"/>
-<doc label="ResourceReader in Cocoon" href="/userdocs/readers/resource-reader.xml"/>
-<doc label="Browser-Selector in Cocoon" href="/userdocs/selectors/browser-selector.xml"/>
-<doc label="DateSelector in Cocoon" href="/userdocs/selectors/date-selector.xml"/>
-<doc label="Host-Selector in Cocoon" href="/userdocs/selectors/host-selector.xml"/>
-<doc label="Parameter Selector" href="/userdocs/selectors/parameter-selector.xml"/>
-<doc label="Regular-Expression-Header-Selector in Cocoon" href="/userdocs/selectors/regular-expression-header-selector.xml"/>
-<doc label="RequestAttribute-Selector in Cocoon" href="/userdocs/selectors/requestattribute-selector.xml"/>
-<doc label="RequestMethodSelector in Cocoon" href="/userdocs/selectors/requestmethod-selector.xml"/>
-<doc label="RequestParameter-Selector in Cocoon" href="/userdocs/selectors/requestparameter-selector.xml"/>
-<doc label="ResourceExistsSelector in Cocoon" href="/userdocs/selectors/resourceexists-selector.xml"/>
-<doc label="Selectors" href="/userdocs/selectors/selectors.xml"/>
-<doc label="HTML Serializer" href="/userdocs/serializers/html-serializer.xml"/>
-<doc label="Link Serializer" href="/userdocs/serializers/link-serializer.xml"/>
-<doc label="PCL Serializer" href="/userdocs/serializers/pcl-serializer.xml"/>
-<doc label="PDF Serializer" href="/userdocs/serializers/pdf-serializer.xml"/>
-<doc label="PS Serializer" href="/userdocs/serializers/ps-serializer.xml"/>
-<doc label="Serializers" href="/userdocs/serializers/serializers.xml"/>
-<doc label="The SVG Serializer" href="/userdocs/serializers/svg-serializer.xml"/>
-<doc label="SVG/JPEG Serializer" href="/userdocs/serializers/svgjpeg-serializer.xml"/>
-<doc label="SVG/PNG Serializer" href="/userdocs/serializers/svgpng-serializer.xml"/>
-<doc label="SVG/TIFF Serializer" href="/userdocs/serializers/svgtiff-serializer.xml"/>
-<doc label="SVG/XML Serializer" href="/userdocs/serializers/svgxml-serializer.xml"/>
-<doc label="Text Serializer" href="/userdocs/serializers/text-serializer.xml"/>
-<doc label="VRML Serializer" href="/userdocs/serializers/vrml-serializer.xml"/>
-<doc label="WML Serializer" href="/userdocs/serializers/wap-serializer.xml"/>
-<doc label="XHTML Serializer" href="/userdocs/serializers/xhtml-serializer.xml"/>
-<doc label="HSSF Serializer" href="/userdocs/serializers/xls-serializer.xml"/>
-<doc label="XML Serializer" href="/userdocs/serializers/xml-serializer.xml"/>
-<doc label="Zip archive Serializer" href="/userdocs/serializers/ziparchive-serializer.xml"/>
-<doc label="Augment Transformer" href="/userdocs/transformers/augment-transformer.xml"/>
-<doc label="CInclude Transformer" href="/userdocs/transformers/cinclude-transformer.xml"/>
-<doc label="EncodeURL Transformer" href="/userdocs/transformers/encodeurl-transformer.xml"/>
-<doc label="Fragment Extractor Transformer" href="/userdocs/transformers/extractor-transformer.xml"/>
-<doc label="Filter Transformer" href="/userdocs/transformers/filter-transformer.xml"/>
-<doc label="I18n Transformer" href="/userdocs/transformers/i18n-transformer.xml"/>
-<doc label="Description of the JX transformer" href="/userdocs/transformers/jx-template-transformer.xml"/>
-<doc label="LDAP Transformer" href="/userdocs/transformers/ldap-transformer.xml"/>
-<doc label="Lexical Transformer" href="/userdocs/transformers/lexer-transformer.xml"/>
-<doc label="Log Transformer" href="/userdocs/transformers/log-transformer.xml"/>
-<doc label="Parser Transformer" href="/userdocs/transformers/parser-transformer.xml"/>
-<doc label="Pattern Transformer" href="/userdocs/transformers/pattern-transformer.xml"/>
-<doc label="Read DOM Session Transformer" href="/userdocs/transformers/readdomsession-transformer.xml"/>
-<doc label="Source Writing Transformer" href="/userdocs/transformers/sourcewriting-transformer.xml"/>
-<doc label="SQL Transformer" href="/userdocs/transformers/sql-transformer.xml"/>
-<doc label="Transformers" href="/userdocs/transformers/transformers.xml"/>
-<doc label="Write DOM Session Transformer" href="/userdocs/transformers/writedomsession-transformer.xml"/>
-<doc label="XInclude Transformer" href="/userdocs/transformers/xinclude-transformer.xml"/>
-<doc label="XSLT Transformer" href="/userdocs/transformers/xslt-transformer.xml"/>
-<doc label="ESQL Taglib" href="/userdocs/xsp/esql.xml"/>
-<doc label="User Documentation - XSP" href="/userdocs/xsp/index.xml"/>
-<doc label="Logicsheet Concepts" href="/userdocs/xsp/logicsheet-concepts.xml"/>
-<doc label="Using Form Validation" href="/userdocs/xsp/logicsheet-forms.xml"/>
-<doc label="XSP Logicsheet Guide" href="/userdocs/xsp/logicsheet.xml"/>
-<doc label="Request Logicsheet" href="/userdocs/xsp/request.xml"/>
-<doc label="Sendmail Logicsheet" href="/userdocs/xsp/sendmail.xml"/>
-<doc label="Session Logicsheet" href="/userdocs/xsp/session.xml"/>
-<doc label="Session tracking with Cocoon" href="/userdocs/xsp/sessions.xml"/>
-<doc label="XSP Internals" href="/userdocs/xsp/xsp-internals.xml"/>
-<doc label="XSP learning map" href="/userdocs/xsp/xsp.xml"/>
+<doc label="Apache Cocoon project bylaws addendum" href="bylaws-addendum.html"/>
+<doc label="[]" href="catalog-test.html"/>
+<doc label="[]" href="dictionary.html"/>
+<doc label="Cocoon Features" href="features.html"/>
+<doc label="Apache Cocoon" href="index-old.html"/>
+<doc label="Apache Cocoon" href="index.html"/>
+<doc label="Introducing Cocoon" href="introduction.html"/>
+<doc label="Apache License" href="license.html"/>
+<doc label="Overview of Apache Cocoon" href="overview.html"/>
+<doc label="Apache Cocoon Performance Tips" href="performancetips.html"/>
+<doc label="[]" href="tabs.html"/>
+<doc label="Who we are" href="who.html"/>
+<doc label="Fast guide to XDoc Writing" href="/css/testdoc.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Basic XML/XSL Transformation" href="/ctwig/ctwig-basic01.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Basic XSP Processing" href="/ctwig/ctwig-basic02.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Basic XSP/Logicsheet Processing" href="/ctwig/ctwig-basic03.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Contributing" href="/ctwig/ctwig-contributing.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Getting Started" href="/ctwig/ctwig-gettingstarted.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Installing" href="/ctwig/ctwig-installing.html"/>
+<doc label="cTwIG - Installing on Mac OS X" href="/ctwig/ctwig-osx.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Transformations" href="/ctwig/ctwig-transformations.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide - Why" href="/ctwig/ctwig-why.html"/>
+<doc label="cTwIG - Cocoon Two Idiots Guide" href="/ctwig/index.html"/>
+<doc label="[]" href="/ctwig/sample/transformations/basic01/basic01-01.html"/>
+<doc label="[]" href="/ctwig/sample/transformations/basic02/basic02-01.html"/>
+<doc label="[]" href="/ctwig/sample/transformations/basic03/basic03-01.html"/>
+<doc label="Avalon for Apache Cocoon" href="/developing/avalon.html"/>
+<doc label="Using Databases in Apache Cocoon" href="/developing/datasources.html"/>
+<doc label="DELI" href="/developing/deli.html"/>
+<doc label="DELI Quick Start Guide" href="/developing/deliquick.html"/>
+<doc label="Extending Apache Cocoon" href="/developing/extending.html"/>
+<doc label="Request Processing" href="/developing/httprequest.html"/>
+<doc label="Developer Documentation" href="/developing/index.html"/>
+<doc label="Parent Service Manager" href="/developing/parent-component-manager.html"/>
+<doc label="Cocoon Source Resolving" href="/developing/source.html"/>
+<doc label="Cocoon Source Resolving" href="/developing/stores.html"/>
+<doc label="Web3" href="/developing/web3.html"/>
+<doc label="The Portal Basket" href="/developing/portal/basket.html"/>
+<doc label="Configuring Coplets" href="/developing/portal/coplets.html"/>
+<doc label="Portal: Event Handling" href="/developing/portal/events.html"/>
+<doc label="Portal: Using forms" href="/developing/portal/forms.html"/>
+<doc label="Webapps Developer Documentation" href="/developing/portal/index.html"/>
+<doc label="Configuring the Cocoon Portal" href="/developing/portal/portal-block.html"/>
+<doc label="Configuring Profiles" href="/developing/portal/profiles.html"/>
+<doc label="Authentication Framework" href="/developing/webapps/authentication.html"/>
+<doc label="Session Contexts" href="/developing/webapps/contexts.html"/>
+<doc label="Simple Forms" href="/developing/webapps/forms.html"/>
+<doc label="Webapps Developer Documentation" href="/developing/webapps/index.html"/>
+<doc label="Building Portals with Cocoon" href="/developing/webapps/portal.html"/>
+<doc label="Session Management" href="/developing/webapps/session.html"/>
+<doc label="[]" href="/drafts/cocoon2-docbook.html"/>
+<doc label="Action FAQs" href="/faq/faq-actions.html"/>
+<doc label="Aggregator FAQs" href="/faq/faq-aggregators.html"/>
+<doc label="Cocoon Configuration FAQs" href="/faq/faq-configure-c2.html"/>
+<doc label="Environment Configuration FAQs" href="/faq/faq-configure-environment.html"/>
+<doc label="CVS FAQs" href="/faq/faq-cvs.html"/>
+<doc label="Database FAQs" href="/faq/faq-databases.html"/>
+<doc label="Debugging FAQs" href="/faq/faq-debugging.html"/>
+<doc label="Cocoon Sitemap Generator FAQs" href="/faq/faq-generators.html"/>
+<doc label="Installation FAQs" href="/faq/faq-install.html"/>
+<doc label="Cocoon Sitemap Matcher FAQs" href="/faq/faq-matchers.html"/>
+<doc label="Cocoon Sitemap Selector FAQs" href="/faq/faq-selectors.html"/>
+<doc label="Cocoon Sitemap Serializer FAQs" href="/faq/faq-serializers.html"/>
+<doc label="Sitemap FAQs" href="/faq/faq-sitemap.html"/>
+<doc label="Cocoon Sitemap Transformer FAQs" href="/faq/faq-transformers.html"/>
+<doc label="XSLT FAQs" href="/faq/faq-xslt.html"/>
+<doc label="XSP FAQs" href="/faq/faq-xsp.html"/>
+<doc label="Cocoon FAQs" href="/faq/index.html"/>
+<doc label="How to Author Core Documentation" href="/howto/howto-author-core-docs.html"/>
+<doc label="How to author an FAQ" href="/howto/howto-author-faq.html"/>
+<doc label="How to Author a How-To" href="/howto/howto-author-howto.html"/>
+<doc label="How to Author a Code Snippet" href="/howto/howto-author-snippet.html"/>
+<doc label="How to Contribute a Patch via Bugzilla" href="/howto/howto-bugzilla.html"/>
+<doc label="How to run and explore the Cocoon samples" href="/howto/howto-explore-samples.html"/>
+<doc label="How to use the Cocoon Flow Debugger" href="/howto/howto-flow-debugger.html"/>
+<doc label="How to Publish XML Documents in HTML and PDF" href="/howto/howto-html-pdf-publishing.html"/>
+<doc label="How to use the Paginator Transformer" href="/howto/howto-paginator-transformer.html"/>
+<doc label="How to Prepare a Patch" href="/howto/howto-patch.html"/>
+<doc label="Cocoon How-Tos" href="/howto/index.html"/>
+<doc label="Installing Apache Cocoon" href="/installing/index.html"/>
+<doc label="Cocoon JARs" href="/installing/jars.html"/>
+<doc label="Installing Apache Cocoon" href="/installing/requirements.html"/>
+<doc label="Testing your Apache Cocoon" href="/installing/tests.html"/>
+<doc label="Updating Cocoon" href="/installing/updating.html"/>
+<doc label="[]" href="/plan/changes-doc.html"/>
+<doc label="About the Cocoon Documentation Effort" href="/plan/doc.html"/>
+<doc label="Planning Notes" href="/plan/index.html"/>
+<doc label="Issues with Documentation" href="/plan/issues-doc.html"/>
+<doc label="Linkstatus - assess and mend any broken hyperlinks" href="/plan/linkstatus.html"/>
+<doc label="Proposed TOC" href="/plan/proposed-toc.html"/>
+<doc label="Release Plan" href="/plan/release.html"/>
+<doc label="Review of sitemap component documentation" href="/plan/review-sitemap-docs.html"/>
+<doc label="Release Plan" href="/plan/roadmap.html"/>
+<doc label="Refactoring of Cocoon Samples" href="/plan/samples.html"/>
+<doc label="[]" href="/plan/todo-doc.html"/>
+<doc label="Updating Cocoon" href="/plan/updating.html"/>
+<doc label="Cocoon Snippets" href="/snippet/index.html"/>
+<doc label="Internal Pipeline Snippet" href="/snippet/snippet-internal-pipeline.html"/>
+<doc label="Specifying Different XSLT Processor Options" href="/snippet/snippet-xslt-options.html"/>
+<doc label="Apache Cocoon User Guide" href="/tracks/first-steps-track.html"/>
+<doc label="Apache Cocoon User Guide" href="/tracks/index.html"/>
+<doc label="Apache Cocoon User Guide" href="/tracks/web-publishing-track.html"/>
+<doc label="Cocoon Tutorials" href="/tutorial/index.html"/>
+<doc label="How to develop Web Applications" href="/tutorial/tutorial-develop-webapp.html"/>
+<doc label="Write a Custom Generator" href="/tutorial/tutorial-generator.html"/>
+<doc label="Writing a Cocoon 2 generator" href="/tutorial/tutorial-rmi-generator.html"/>
+<doc label="Tutorial screenshots" href="/tutorial/tutorial-shots.html"/>
+<doc label="User Documentation" href="/userdocs/index.html"/>
+<doc label="Actions" href="/userdocs/actions/actions.html"/>
+<doc label="Database Actions" href="/userdocs/actions/database-actions.html"/>
+<doc label="ScriptAction in Cocoon" href="/userdocs/actions/script-action.html"/>
+<doc label="Sendmail Action" href="/userdocs/actions/sendmail-action.html"/>
+<doc label="Session Action" href="/userdocs/actions/session-action.html"/>
+<doc label="Creating and Using Actions" href="/userdocs/concepts/actions.html"/>
+<doc label="Caching" href="/userdocs/concepts/caching.html"/>
+<doc label="Entity resolution with catalogs" href="/userdocs/concepts/catalog.html"/>
+<doc label="Database Access" href="/userdocs/concepts/databases.html"/>
+<doc label="Error Handling" href="/userdocs/concepts/errorhandling.html"/>
+<doc label="Understanding Apache Cocoon" href="/userdocs/concepts/index.html"/>
+<doc label="Using and Implementing Matchers and Selectors" href="/userdocs/concepts/matchers_selectors.html"/>
+<doc label="Input Modules Reference" href="/userdocs/concepts/modules-ref.html"/>
+<doc label="Modules" href="/userdocs/concepts/modules.html"/>
+<doc label="MRUMemoryStore and Swapping under Apache Cocoon" href="/userdocs/concepts/mrustore.html"/>
+<doc label="The persistent cache under Apache Cocoon" href="/userdocs/concepts/persistence.html"/>
+<doc label="Cocoon Profiler" href="/userdocs/concepts/profiler.html"/>
+<doc label="Redirection" href="/userdocs/concepts/redirection.html"/>
+<doc label="Example sitemap snippets" href="/userdocs/concepts/sitemap-examples.html"/>
+<doc label="The Sitemap" href="/userdocs/concepts/sitemap.html"/>
+<doc label="StoreJanitor in Apache Cocoon" href="/userdocs/concepts/storejanitor.html"/>
+<doc label="XML Validation Facilities" href="/userdocs/concepts/validation.html"/>
+<doc label="Views" href="/userdocs/concepts/views.html"/>
+<doc label="XML Searching" href="/userdocs/concepts/xmlsearching.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/api.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/continuations.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/how-does-it-work.html"/>
+<doc label="Apache Cocoon - Control Flow" href="/userdocs/flow/index.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/java.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/jpath.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/jxtemplate.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/sitemap.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/tutor.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/using.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/velocity.html"/>
+<doc label="Advanced Control Flow" href="/userdocs/flow/views.html"/>
+<doc label="Cocoon Forms: Java API" href="/userdocs/forms/api_java.html"/>
+<doc label="Cocoon Forms: Javascript API" href="/userdocs/forms/api_javascript.html"/>
+<doc label="Cocoon Forms: Binding Framework" href="/userdocs/forms/binding.html"/>
+<doc label="Cocoon Forms: Datatypes" href="/userdocs/forms/datatypes.html"/>
+<doc label="Cocoon Forms: Event Handling" href="/userdocs/forms/eventhandling.html"/>
+<doc label="Apache Cocoon Forms: Forms Generator" href="/userdocs/forms/formsgenerator.html"/>
+<doc label="Cocoon Forms: Introduction" href="/userdocs/forms/index.html"/>
+<doc label="Cocoon Forms: A Simple Example" href="/userdocs/forms/sample.html"/>
+<doc label="Cocoon Forms: Template Generator" href="/userdocs/forms/templategenerator.html"/>
+<doc label="Cocoon Forms: Template Transformer" href="/userdocs/forms/templatetransformer.html"/>
+<doc label="Cocoon Forms: Validation" href="/userdocs/forms/validation.html"/>
+<doc label="Cocoon Forms: action widget" href="/userdocs/forms/widget_action.html"/>
+<doc label="Cocoon Forms: aggregatefield widget" href="/userdocs/forms/widget_aggregatefield.html"/>
+<doc label="Cocoon Forms: booleanfield widget" href="/userdocs/forms/widget_booleanfield.html"/>
+<doc label="Cocoon Forms: field widget" href="/userdocs/forms/widget_field.html"/>
+<doc label="Cocoon Forms: messages widget" href="/userdocs/forms/widget_messages.html"/>
+<doc label="Cocoon Forms: multivaluefield widget" href="/userdocs/forms/widget_multivaluefield.html"/>
+<doc label="Cocoon Forms: output widget" href="/userdocs/forms/widget_output.html"/>
+<doc label="Cocoon Forms: repeater widget" href="/userdocs/forms/widget_repeater.html"/>
+<doc label="Cocoon Forms: repeater-action widget" href="/userdocs/forms/widget_repeater_action.html"/>
+<doc label="Cocoon Forms: row-action widget" href="/userdocs/forms/widget_row_action.html"/>
+<doc label="Cocoon Forms: submit widget" href="/userdocs/forms/widget_submit.html"/>
+<doc label="Cocoon Forms: upload widget" href="/userdocs/forms/widget_upload.html"/>
+<doc label="Cocoon Forms: XSLT" href="/userdocs/forms/xslt.html"/>
+<doc label="Description of the calendar generator" href="/userdocs/generators/calendar-generator.html"/>
+<doc label="Directory Generator" href="/userdocs/generators/directory-generator.html"/>
+<doc label="Notifying Generator" href="/userdocs/generators/error-generator.html"/>
+<doc label="Fragment Extractor Generator" href="/userdocs/generators/extractor-generator.html"/>
+<doc label="File Generator" href="/userdocs/generators/file-generator.html"/>
+<doc label="Generators in Cocoon" href="/userdocs/generators/generators.html"/>
+<doc label="HTML Generator" href="/userdocs/generators/html-generator.html"/>
+<doc label="Image Directory Generator" href="/userdocs/generators/imagedirectory-generator.html"/>
+<doc label="JSP Generator" href="/userdocs/generators/jsp-generator.html"/>
+<doc label="Description of the jx generator" href="/userdocs/generators/jx-generator.html"/>
+<doc label="LinkStatus Generator" href="/userdocs/generators/linkstatus-generator.html"/>
+<doc label="Description of the mp3directory generator" href="/userdocs/generators/mp3directory-generator.html"/>
+<doc label="Profile Generator" href="/userdocs/generators/profile-generator.html"/>
+<doc label="Request Generator" href="/userdocs/generators/request-generator.html"/>
+<doc label="ScriptGenerator in Cocoon" href="/userdocs/generators/script-generator.html"/>
+<doc label="Search Generator" href="/userdocs/generators/search-generator.html"/>
+<doc label="Server Pages Generator" href="/userdocs/generators/serverpages-generator.html"/>
+<doc label="Status Generator" href="/userdocs/generators/status-generator.html"/>
+<doc label="Stream Generator" href="/userdocs/generators/stream-generator.html"/>
+<doc label="Velocity Generator" href="/userdocs/generators/velocity-generator.html"/>
+<doc label="Portal Syndication with Web Services and Cocoon" href="/userdocs/generators/wsproxy-generator.html"/>
+<doc label="XML:DB Generator" href="/userdocs/generators/xmldb-generator.html"/>
+<doc label="XML:DB Collection Generator" href="/userdocs/generators/xmldbcollection-generator.html"/>
+<doc label="XPath Directory Generator" href="/userdocs/generators/xpathdirectory-generator.html"/>
+<doc label="Matchers" href="/userdocs/matchers/matchers.html"/>
+<doc label="Template-Matcher in Cocoon" href="/userdocs/matchers/template-matcher.html"/>
+<doc label="WildcardHeader-Matcher in Cocoon" href="/userdocs/matchers/wildcardheader-matcher.html"/>
+<doc label="WildcardURI-Matcher in Cocoon" href="/userdocs/matchers/wildcarduri-matcher.html"/>
+<doc label="Offline Page Generation with Apache Ant" href="/userdocs/offline/ant.html"/>
+<doc label="The Cocoon Bean" href="/userdocs/offline/bean.html"/>
+<doc label="Offline Page Generation with the Command Line Interface" href="/userdocs/offline/cli.html"/>
+<doc label="Configuration of Cocoon for Offline Use" href="/userdocs/offline/configuration.html"/>
+<doc label="Offline Page Generation" href="/userdocs/offline/index.html"/>
+<doc label="Axis RPC Reader in Cocoon" href="/userdocs/readers/axisrpc-reader.html"/>
+<doc label="DatabaseReader" href="/userdocs/readers/database-reader.html"/>
+<doc label="DirectoryZipArchiver" href="/userdocs/readers/directoryziparchiver-reader.html"/>
+<doc label="ImageReader in Cocoon" href="/userdocs/readers/image-reader.html"/>
+<doc label="JSP Reader in Cocoon" href="/userdocs/readers/jsp-reader.html"/>
+<doc label="Readers in Cocoon" href="/userdocs/readers/readers.html"/>
+<doc label="ResourceReader in Cocoon" href="/userdocs/readers/resource-reader.html"/>
+<doc label="Browser-Selector in Cocoon" href="/userdocs/selectors/browser-selector.html"/>
+<doc label="DateSelector in Cocoon" href="/userdocs/selectors/date-selector.html"/>
+<doc label="Host-Selector in Cocoon" href="/userdocs/selectors/host-selector.html"/>
+<doc label="Parameter Selector" href="/userdocs/selectors/parameter-selector.html"/>
+<doc label="Regular-Expression-Header-Selector in Cocoon" href="/userdocs/selectors/regular-expression-header-selector.html"/>
+<doc label="RequestAttribute-Selector in Cocoon" href="/userdocs/selectors/requestattribute-selector.html"/>
+<doc label="RequestMethodSelector in Cocoon" href="/userdocs/selectors/requestmethod-selector.html"/>
+<doc label="RequestParameter-Selector in Cocoon" href="/userdocs/selectors/requestparameter-selector.html"/>
+<doc label="ResourceExistsSelector in Cocoon" href="/userdocs/selectors/resourceexists-selector.html"/>
+<doc label="Selectors" href="/userdocs/selectors/selectors.html"/>
+<doc label="HTML Serializer" href="/userdocs/serializers/html-serializer.html"/>
+<doc label="Link Serializer" href="/userdocs/serializers/link-serializer.html"/>
+<doc label="PCL Serializer" href="/userdocs/serializers/pcl-serializer.html"/>
+<doc label="PDF Serializer" href="/userdocs/serializers/pdf-serializer.html"/>
+<doc label="PS Serializer" href="/userdocs/serializers/ps-serializer.html"/>
+<doc label="Serializers" href="/userdocs/serializers/serializers.html"/>
+<doc label="The SVG Serializer" href="/userdocs/serializers/svg-serializer.html"/>
+<doc label="SVG/JPEG Serializer" href="/userdocs/serializers/svgjpeg-serializer.html"/>
+<doc label="SVG/PNG Serializer" href="/userdocs/serializers/svgpng-serializer.html"/>
+<doc label="SVG/TIFF Serializer" href="/userdocs/serializers/svgtiff-serializer.html"/>
+<doc label="SVG/XML Serializer" href="/userdocs/serializers/svgxml-serializer.html"/>
+<doc label="Text Serializer" href="/userdocs/serializers/text-serializer.html"/>
+<doc label="VRML Serializer" href="/userdocs/serializers/vrml-serializer.html"/>
+<doc label="WML Serializer" href="/userdocs/serializers/wap-serializer.html"/>
+<doc label="XHTML Serializer" href="/userdocs/serializers/xhtml-serializer.html"/>
+<doc label="HSSF Serializer" href="/userdocs/serializers/xls-serializer.html"/>
+<doc label="XML Serializer" href="/userdocs/serializers/xml-serializer.html"/>
+<doc label="Zip archive Serializer" href="/userdocs/serializers/ziparchive-serializer.html"/>
+<doc label="Augment Transformer" href="/userdocs/transformers/augment-transformer.html"/>
+<doc label="CInclude Transformer" href="/userdocs/transformers/cinclude-transformer.html"/>
+<doc label="EncodeURL Transformer" href="/userdocs/transformers/encodeurl-transformer.html"/>
+<doc label="Fragment Extractor Transformer" href="/userdocs/transformers/extractor-transformer.html"/>
+<doc label="Filter Transformer" href="/userdocs/transformers/filter-transformer.html"/>
+<doc label="I18n Transformer" href="/userdocs/transformers/i18n-transformer.html"/>
+<doc label="Description of the JX transformer" href="/userdocs/transformers/jx-template-transformer.html"/>
+<doc label="LDAP Transformer" href="/userdocs/transformers/ldap-transformer.html"/>
+<doc label="Lexical Transformer" href="/userdocs/transformers/lexer-transformer.html"/>
+<doc label="Log Transformer" href="/userdocs/transformers/log-transformer.html"/>
+<doc label="Parser Transformer" href="/userdocs/transformers/parser-transformer.html"/>
+<doc label="Pattern Transformer" href="/userdocs/transformers/pattern-transformer.html"/>
+<doc label="Read DOM Session Transformer" href="/userdocs/transformers/readdomsession-transformer.html"/>
+<doc label="Source Writing Transformer" href="/userdocs/transformers/sourcewriting-transformer.html"/>
+<doc label="SQL Transformer" href="/userdocs/transformers/sql-transformer.html"/>
+<doc label="Transformers" href="/userdocs/transformers/transformers.html"/>
+<doc label="Write DOM Session Transformer" href="/userdocs/transformers/writedomsession-transformer.html"/>
+<doc label="XInclude Transformer" href="/userdocs/transformers/xinclude-transformer.html"/>
+<doc label="XSLT Transformer" href="/userdocs/transformers/xslt-transformer.html"/>
+<doc label="ESQL Taglib" href="/userdocs/xsp/esql.html"/>
+<doc label="User Documentation - XSP" href="/userdocs/xsp/index.html"/>
+<doc label="Logicsheet Concepts" href="/userdocs/xsp/logicsheet-concepts.html"/>
+<doc label="Using Form Validation" href="/userdocs/xsp/logicsheet-forms.html"/>
+<doc label="XSP Logicsheet Guide" href="/userdocs/xsp/logicsheet.html"/>
+<doc label="Request Logicsheet" href="/userdocs/xsp/request.html"/>
+<doc label="Sendmail Logicsheet" href="/userdocs/xsp/sendmail.html"/>
+<doc label="Session Logicsheet" href="/userdocs/xsp/session.html"/>
+<doc label="Session tracking with Cocoon" href="/userdocs/xsp/sessions.html"/>
+<doc label="XSP Internals" href="/userdocs/xsp/xsp-internals.html"/>
+<doc label="XSP learning map" href="/userdocs/xsp/xsp.html"/>
 
 </site>
