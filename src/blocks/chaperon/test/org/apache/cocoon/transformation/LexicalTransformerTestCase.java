@@ -59,28 +59,33 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: LexicalTransformerTestCase.java,v 1.1 2003/04/09 12:24:35 stephan Exp $
+ * @version CVS $Id: LexicalTransformerTestCase.java,v 1.2 2003/04/16 13:47:57 stephan Exp $
  */
 public class LexicalTransformerTestCase extends AbstractTransformerTestCase {
 
     public LexicalTransformerTestCase(String name) {
         super(name);
+    }
 
-        String transformer = "lexer";
-        HashMap objectmodel = new HashMap();
+    public void testLexicalTransformer1() {
         String src = "resource://org/apache/cocoon/transformation/lexertest-lexicon1.xml";
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/lexertest-input1.xml";
         String result = "resource://org/apache/cocoon/transformation/lexertest-result1.xml";
 
-        addTestStep(transformer, objectmodel, src, parameters, input, result,
-                    EQUAL);
+        print(load(input));
+        print(load(src));
 
-        src = "resource://org/apache/cocoon/transformation/lexertest-lexicon2.xml";
-        input = "resource://org/apache/cocoon/transformation/lexertest-input2.xml";
-        result = "resource://org/apache/cocoon/transformation/lexertest-result2.xml";
+        assertEqual(load(result), transform("lexer", src, parameters, load(input)));
+    }
 
-        addTestStep(transformer, objectmodel, src, parameters, input, result,
-                    EQUAL);
+    public void testLexicalTransformer2() {
+
+        String src = "resource://org/apache/cocoon/transformation/lexertest-lexicon2.xml";
+        Parameters parameters = new Parameters();
+        String input = "resource://org/apache/cocoon/transformation/lexertest-input2.xml";
+        String result = "resource://org/apache/cocoon/transformation/lexertest-result2.xml";
+
+        assertEqual(load(result), transform("lexer", src, parameters, load(input)));
     }
 }
