@@ -59,6 +59,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -68,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingCachingProcessingPipeline.java,v 1.4 2003/07/03 07:59:59 cziegeler Exp $
+ * @version CVS $Id: ProfilingCachingProcessingPipeline.java,v 1.5 2004/02/02 13:50:37 stephan Exp $
  */
 public class ProfilingCachingProcessingPipeline
   extends CachingProcessingPipeline {
@@ -233,6 +234,17 @@ public class ProfilingCachingProcessingPipeline
                 this.data.setSetupTime(index++,
                                        System.currentTimeMillis()-time);
             }
+
+            time = System.currentTimeMillis();
+            if (this.serializer instanceof SitemapModelComponent) {
+                ((SitemapModelComponent)this.serializer).setup(
+                    environment,
+                    environment.getObjectModel(),
+                    serializerSource,
+                    serializerParam
+                );
+            }
+            this.data.setSetupTime(index++, System.currentTimeMillis()-time);
 
             String mimeType = this.serializer.getMimeType();
 
