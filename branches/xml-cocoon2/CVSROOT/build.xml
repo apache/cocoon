@@ -460,9 +460,6 @@ by the main ones.
   <!-- Clean targets                                                       -->
   <!-- =================================================================== -->
   <target name="clean" depends="init" description="* Cleans the build directories">
-    <delete file="${docs.dir}/changes.xml"/>
-    <delete file="${docs.dir}/todo.xml"/>
-    <delete file="${docs.dir}/book.xml"/>
     <delete dir="${build.dir}"/>
   </target>
 
