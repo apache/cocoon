@@ -3,7 +3,8 @@
   <target name="forrest" depends="prepare, prepare-docs, forrest.init, validate-jars, javadocs" description="Generates static HTML documentation">
     <!-- Add some other documents -->
     <copy file="${build.temp}/jars.xml"
-      tofile="${build.context}/xdocs/installing/jars.xml" filtering="off"/>
+      tofile="${build.context}/xdocs/installing/jars.xml" filtering="off"
+      overwrite="yes"/>
 
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
   </target>
