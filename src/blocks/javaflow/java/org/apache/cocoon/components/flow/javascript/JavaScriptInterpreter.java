@@ -41,7 +41,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * Implementation of the java flow interpreter.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.3 2004/06/29 15:07:14 joerg Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptInterpreter extends AbstractInterpreter implements Configurable {
 
@@ -65,7 +65,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter implements Config
         
         continuationclassloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
         continuationclassloader.addIncludeClass("org.mozilla.**");
-        continuationclassloader.setDebug(config.getAttributeAsBoolean("debug", false));
+        continuationclassloader.setDebug(config.getAttributeAsBoolean("debug", true));
 
         Configuration[] includes = config.getChildren("include");
         for (int i = 0; i < includes.length; i++)
