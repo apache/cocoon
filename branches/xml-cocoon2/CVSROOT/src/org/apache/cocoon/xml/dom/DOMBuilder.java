@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-30 14:17:47 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-30 17:57:30 $
  */
 public class DOMBuilder implements XMLConsumer, Loggable {
     protected Logger log;
@@ -105,7 +105,24 @@ public class DOMBuilder implements XMLConsumer, Loggable {
     }
 
     /**
-     * Return the newly built Document.
+     * Constructs a new instance that appends nodes to the given parent node.<br/>
+     * Note : you cannot use a <code>Listener<code> when appending to a
+     * <code>Node</code>, because the notification occurs at <code>endDocument()</code>
+     * which does not happen here.
+     */
+    
+    public DOMBuilder(Node parentNode) {
+        // Set the document as the owner of this node
+        this.document = parentNode.getOwnerDocument();
+        // Create a namespace table
+        this.namespaces=new NamespacesTable();
+        // Set the current node
+        this.current = parentNode;
+        // Go directly to BODY state
+        this.state = S_BODY;
+    }
+        
+    /**     * Return the newly built Document.
      */
     public Document getDocument() {
         return(this.document);
