@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-22 18:08:59 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-12-27 21:12:03 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -238,7 +238,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
     </xsl:variable>
 
     <xsl:variable name="content">
-      <xsl:for-each select="text()|xsp:expr">
+      <xsl:for-each select="text()|xsp:expr|xsp:text">
         <xsl:choose>
           <xsl:when test="name(.) = 'xsp:expr'">
             String.valueOf(<xsl:value-of select="."/>)
