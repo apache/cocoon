@@ -51,13 +51,13 @@
 package org.apache.cocoon.components.search;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -92,10 +92,10 @@ import java.io.IOException;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.3 2003/12/12 08:14:41 huber Exp $
+ * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.4 2004/01/06 13:40:25 joerg Exp $
  */
 public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
-         implements LuceneCocoonSearcher, Configurable, Composable, Disposable, Recyclable
+         implements LuceneCocoonSearcher, Configurable, Serviceable, Disposable, Recyclable
 {
 
     /**
@@ -191,15 +191,15 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
     protected final static String DIRECTORY_DEFAULT = null;
 
     /**
-     * The component manager instance
+     * The service manager instance
      *
      */
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
     private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
     private String defaultSearchFieldDefault = DEFAULT_SEARCH_FIELD_DEFAULT;
     private String defaultQueryDefault = DEFAULT_QUERY_DEFAULT;
-    private String queryparserClassnameDefault = QUERYPARSER_CLASSNAME_DEFAULT;
+//    private String queryparserClassnameDefault = QUERYPARSER_CLASSNAME_DEFAULT;
     private String directoryDefault = DIRECTORY_DEFAULT;
 
     /**
@@ -306,7 +306,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
                 defaultQueryDefault = value;
             }
         }
-
+/*
         child = conf.getChild(QUERYPARSER_CLASSNAME_CONFIG, false);
         if (child != null) {
             value = child.getValue(QUERYPARSER_CLASSNAME_DEFAULT);
@@ -314,7 +314,7 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
                 queryparserClassnameDefault = value;
             }
         }
-
+*/
         child = conf.getChild(DIRECTORY_CONFIG, false);
         if (child != null) {
             value = child.getValue(DIRECTORY_DEFAULT);
@@ -331,13 +331,13 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
 
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
-     * @param  manager                 of this component
-     * @exception  ComponentException  is never thrown
+     * @param manager  manager of this component
+     * @exception  ServiceException  is never thrown
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
