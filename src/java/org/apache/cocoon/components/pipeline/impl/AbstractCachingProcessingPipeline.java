@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,7 +82,7 @@ public abstract class AbstractCachingProcessingPipeline
     protected PipelineCacheKey toCacheKey;
     /** The source validities used for caching */
     protected SourceValidity[] toCacheSourceValidities;
-    
+
     /** The index indicating to the first transformer which is not cacheable */
     protected int firstNotCacheableTransformerIndex;
     /** Cache complete response */
@@ -96,7 +96,7 @@ public abstract class AbstractCachingProcessingPipeline
     protected boolean doSmartCaching;
     /** Default setting for smart caching */
     protected boolean configuredDoSmartCaching;
-    
+
     /**
      * Abstract methods defined in subclasses
      */
@@ -116,7 +116,7 @@ public abstract class AbstractCachingProcessingPipeline
         this.configuredDoSmartCaching =
             params.getParameterAsBoolean("smart-caching", true);
     }
-    
+
     /**
      * Setup this component
      */
@@ -211,7 +211,7 @@ public abstract class AbstractCachingProcessingPipeline
             }
             try {
                 OutputStream os = null;
-                
+
                 if (this.cacheCompleteResponse && this.toCacheKey != null) {
                     os = new CachingOutputStream(environment.getOutputStream(
                             this.outputBufferSize));
@@ -235,7 +235,7 @@ public abstract class AbstractCachingProcessingPipeline
                         ByteArrayOutputStream baos =
                             new ByteArrayOutputStream();
                         this.serializer.setOutputStream(baos);
-    
+
                         // execute the pipeline:
                         if ( this.xmlDeserializer != null ) {
                             this.xmlDeserializer.deserialize(
@@ -332,7 +332,7 @@ public abstract class AbstractCachingProcessingPipeline
 
             while (this.firstNotCacheableTransformerIndex < transformerSize
                     && continueTest) {
-                final Transformer trans = 
+                final Transformer trans =
                     (Transformer)super.transformers.get(
                             this.firstNotCacheableTransformerIndex);
                 key = null;
@@ -355,7 +355,7 @@ public abstract class AbstractCachingProcessingPipeline
                     continueTest = false;
                 }
             }
-            // all transformers are cacheable => pipeline is cacheable 
+            // all transformers are cacheable => pipeline is cacheable
             // test serializer if this is not an internal request
             if (this.firstNotCacheableTransformerIndex == transformerSize
                 && super.serializer == this.lastConsumer) {
@@ -388,10 +388,10 @@ public abstract class AbstractCachingProcessingPipeline
             // only update validity objects if we cannot use
             // a cached response or when the cached response does
             // cache less than now is cacheable
-            if (this.fromCacheKey == null 
+            if (this.fromCacheKey == null
                 || this.fromCacheKey.size() < this.toCacheKey.size()) {
 
-                this.toCacheSourceValidities = 
+                this.toCacheSourceValidities =
                     new SourceValidity[this.toCacheKey.size()];
                 int len = this.toCacheSourceValidities.length;
                 int i = 0;
@@ -400,7 +400,7 @@ public abstract class AbstractCachingProcessingPipeline
                         this.getValidityForInternalPipeline(i);
 
                     if (validity == null) {
-                        if (i > 0 
+                        if (i > 0
                             && (this.fromCacheKey == null
                                     || i > this.fromCacheKey.size())) {
                             // shorten key
@@ -437,21 +437,21 @@ public abstract class AbstractCachingProcessingPipeline
     }
 
     /**
-     * Calculate the key that can be used to get something from the cache, and 
+     * Calculate the key that can be used to get something from the cache, and
      * handle expires properly.
-     * 
+     *
      */
     protected void validatePipeline(Environment environment)
     throws ProcessingException {
         this.completeResponseIsCached = this.cacheCompleteResponse;
-        this.fromCacheKey = this.toCacheKey.copy();        
+        this.fromCacheKey = this.toCacheKey.copy();
         this.firstProcessedTransformerIndex = this.firstNotCacheableTransformerIndex;
         this.cachedLastModified = 0L;
 
         boolean finished = false;
-        
+
         while (this.fromCacheKey != null && !finished) {
-            
+
             finished = true;
             final CachedResponse response = this.cache.get( this.fromCacheKey );
 
@@ -459,7 +459,7 @@ public abstract class AbstractCachingProcessingPipeline
             if (response != null) {
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug(
-                        "Found cached response for '" + environment.getURI() + 
+                        "Found cached response for '" + environment.getURI() +
                         "' using key: " + this.fromCacheKey
                     );
                 }
@@ -495,27 +495,27 @@ public abstract class AbstractCachingProcessingPipeline
                                 environment.getURI() +
                                 " regenerating content.");
                         }
-                        
+
                         // If an expires parameter was provided, use it. If this parameter is not available
                         // it means that the sitemap was modified, and the old expires value is not valid
                         // anymore.
                         if (expires != 0) {
                             if (this.getLogger().isDebugEnabled())
                                 this.getLogger().debug("Refreshing expires informations");
-                            response.setExpires(new Long(expires + System.currentTimeMillis()));    
+                            response.setExpires(new Long(expires + System.currentTimeMillis()));
                         } else {
                             if (this.getLogger().isDebugEnabled())
                                 this.getLogger().debug("No expires defined anymore for this object, setting it to no expires");
                             response.setExpires(null);
-                        }                                   
+                        }
                     }
                 } else {
                     // The response had no expires informations. See if it needs to be set (i.e. because the configuration has changed)
                     if (expires != 0) {
                         if (this.getLogger().isDebugEnabled())
                             this.getLogger().debug("Setting a new expires object for this resource");
-                        response.setExpires(new Long(expires + System.currentTimeMillis()));                                
-                    }        
+                        response.setExpires(new Long(expires + System.currentTimeMillis()));
+                    }
                 }
 
                 SourceValidity[] fromCacheValidityObjects = response.getValidityObjects();
@@ -528,7 +528,7 @@ public abstract class AbstractCachingProcessingPipeline
                     SourceValidity validity = fromCacheValidityObjects[i];
                     int valid = validity != null ? validity.isValid() : -1;
                     if ( valid == 0) { // don't know if valid, make second test
-                       
+
                         validity = this.getValidityForInternalPipeline(i);
 
                         if (validity != null) {
@@ -607,15 +607,15 @@ public abstract class AbstractCachingProcessingPipeline
                     this.completeResponseIsCached = false;
                 }
             } else {
-                
+
                 // no cached response found
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug(
-                        "Cached response not found for '" + environment.getURI() + 
+                        "Cached response not found for '" + environment.getURI() +
                         "' using key: " +  this.fromCacheKey
                     );
                 }
-               
+
                 if (!this.doSmartCaching) {
                     // try a shorter key
                     if (this.fromCacheKey.size() > 1) {
@@ -653,7 +653,7 @@ public abstract class AbstractCachingProcessingPipeline
         if (this.toCacheKey != null) {
             this.validatePipeline(environment);
         }
-        this.setupValidities();        
+        this.setupValidities();
     }
 
     /**
@@ -854,9 +854,9 @@ public abstract class AbstractCachingProcessingPipeline
 
         } else {
             int vals = 0;
-            
+
             if ( null != this.toCacheKey
-                 && !this.cacheCompleteResponse 
+                 && !this.cacheCompleteResponse
                  && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
                  vals = this.toCacheKey.size();
             } else if ( null != this.fromCacheKey
@@ -880,19 +880,19 @@ public abstract class AbstractCachingProcessingPipeline
      * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getKeyForEventPipeline()
      */
     public String getKeyForEventPipeline() {
-        if ( null != this.toCacheKey 
+        if ( null != this.toCacheKey
              && !this.cacheCompleteResponse
              && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
              return String.valueOf(HashUtil.hash(this.toCacheKey.toString()));
         }
-        if ( null != this.fromCacheKey 
+        if ( null != this.fromCacheKey
              && !this.completeResponseIsCached
              && this.firstProcessedTransformerIndex == super.transformers.size()) {
             return String.valueOf(HashUtil.hash(this.fromCacheKey.toString()));
         }
         return null;
     }
-    
+
     SourceValidity getValidityForInternalPipeline(int index) {
         final SourceValidity validity;
 
@@ -937,12 +937,11 @@ public abstract class AbstractCachingProcessingPipeline
         }
         return validity;
     }
-    
+
     /**
      * Recyclable Interface
      */
     public void recycle() {
-
         this.generatorRole = null;
         this.transformerRoles.clear();
         this.serializerRole = null;
@@ -950,7 +949,7 @@ public abstract class AbstractCachingProcessingPipeline
 
         this.fromCacheKey = null;
         this.cachedResponse = null;
-        
+
         this.transformerIsCacheableProcessingComponent = null;
         this.toCacheKey = null;
         this.toCacheSourceValidities = null;
@@ -964,12 +963,12 @@ final class DeferredPipelineValidity implements DeferredValidity {
 
     private final AbstractCachingProcessingPipeline pipeline;
     private final int index;
-    
+
     public DeferredPipelineValidity(AbstractCachingProcessingPipeline pipeline, int index) {
         this.pipeline = pipeline;
         this.index = index;
     }
-    
+
     /**
      * @see org.apache.excalibur.source.impl.validity.DeferredValidity#getValidity()
      */
