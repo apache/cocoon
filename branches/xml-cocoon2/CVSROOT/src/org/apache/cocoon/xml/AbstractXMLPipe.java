@@ -14,46 +14,17 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
-import org.apache.cocoon.xml.AbstractXMLConsumer;
+import org.apache.cocoon.xml.AbstractXMLProducer;
 
 /**
  * This class provides a bridge class to connect to existing content 
  * handlers and lexical handlers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-25 14:47:45 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 14:33:36 $
  */
-public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProducer {
+public class AbstractXMLPipe extends AbstractXMLProducer implements XMLPipe {
 
-    private XMLConsumer consumer;
-    private ContentHandler ch;
-    private LexicalHandler lh;
-
-    /**
-     * Set the <code>XMLConsumer</code> that will receive XML data.
-     */
-    public void setConsumer(XMLConsumer consumer) {
-        this.consumer = consumer;
-    }
-    
-    /**
-     * Indicate the content handler this class bridges.
-     *
-     * @param handler The bridged content handler.
-     */
-    public void setContentHandler(ContentHandler handler) {
-        this.ch = handler;
-    }
-
-    /**
-     * Indicate the lexical handler this class bridges.
-     *
-     * @param handler The bridged lexical handler.
-     */
-    public void setLexicalHandler(LexicalHandler handler) {
-        this.lh = handler;
-    }
-    
     /**
      * Receive an object for locating the origin of SAX document events.
      *
@@ -61,7 +32,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      *                document event.
      */
     public void setDocumentLocator(Locator locator) {
-        if (ch != null) ch.setDocumentLocator(locator);
+        if (contentHandler != null) contentHandler.setDocumentLocator(locator);
     }
 
     /**
@@ -69,7 +40,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void startDocument()
     throws SAXException {
-        if (ch != null) ch.startDocument();
+        if (contentHandler != null) contentHandler.startDocument();
     }
 
     /**
@@ -77,7 +48,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void endDocument()
     throws SAXException {
-        if (ch != null) ch.endDocument();
+        if (contentHandler != null) contentHandler.endDocument();
     }
 
     /**
@@ -88,7 +59,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
-        if (ch != null) ch.startPrefixMapping(prefix, uri);
+        if (contentHandler != null) contentHandler.startPrefixMapping(prefix, uri);
     }
 
     /**
@@ -98,7 +69,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void endPrefixMapping(String prefix)
     throws SAXException {
-        if (ch != null) ch.endPrefixMapping(prefix);
+        if (contentHandler != null) contentHandler.endPrefixMapping(prefix);
     }
 
     /**
@@ -116,7 +87,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        if (ch != null) ch.startElement(uri, loc, raw, a);
+        if (contentHandler != null) contentHandler.startElement(uri, loc, raw, a);
     }
 
 
@@ -133,7 +104,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void endElement(String uri, String loc, String raw)
     throws SAXException {
-        if (ch != null) ch.endElement(uri, loc, raw);
+        if (contentHandler != null) contentHandler.endElement(uri, loc, raw);
     }
 
     /**
@@ -145,7 +116,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void characters(char c[], int start, int len)
     throws SAXException {
-        if (ch != null) ch.characters(c, start, len);
+        if (contentHandler != null) contentHandler.characters(c, start, len);
     }
 
     /**
@@ -157,7 +128,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void ignorableWhitespace(char c[], int start, int len)
     throws SAXException {
-        if (ch != null) ch.ignorableWhitespace(c, start, len);
+        if (contentHandler != null) contentHandler.ignorableWhitespace(c, start, len);
     }
 
     /**
@@ -169,7 +140,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void processingInstruction(String target, String data)
     throws SAXException {
-        if (ch != null) ch.processingInstruction(target, data);
+        if (contentHandler != null) contentHandler.processingInstruction(target, data);
     }
 
     /**
@@ -180,7 +151,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void skippedEntity(String name)
     throws SAXException {
-        if (ch != null) ch.skippedEntity(name);
+        if (contentHandler != null) contentHandler.skippedEntity(name);
     }
 
     /**
@@ -194,7 +165,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void startDTD(String name, String publicId, String systemId)
     throws SAXException {
-        if (lh != null) lh.startDTD(name, publicId, systemId);
+        if (lexicalHandler != null) lexicalHandler.startDTD(name, publicId, systemId);
     }
 
     /**
@@ -202,7 +173,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void endDTD()
     throws SAXException {
-        if (lh != null) lh.endDTD();
+        if (lexicalHandler != null) lexicalHandler.endDTD();
     }
 
     /**
@@ -213,7 +184,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void startEntity(String name)
     throws SAXException {
-        if (lh != null) lh.startEntity(name);
+        if (lexicalHandler != null) lexicalHandler.startEntity(name);
     }
 
     /**
@@ -223,7 +194,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void endEntity(String name)
     throws SAXException {
-        if (lh != null) lh.endEntity(name);
+        if (lexicalHandler != null) lexicalHandler.endEntity(name);
     }
 
     /**
@@ -231,7 +202,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void startCDATA()
     throws SAXException {
-        if (lh != null) lh.startCDATA();
+        if (lexicalHandler != null) lexicalHandler.startCDATA();
     }
 
     /**
@@ -239,7 +210,7 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void endCDATA()
     throws SAXException {
-        if (lh != null) lh.endCDATA();
+        if (lexicalHandler != null) lexicalHandler.endCDATA();
     }
 
     /**
@@ -251,6 +222,6 @@ public class XMLConsumerBridge extends AbstractXMLConsumer implements XMLProduce
      */
     public void comment(char ch[], int start, int len)
     throws SAXException {
-        if (lh != null) lh.comment(ch, start, len);
+        if (lexicalHandler != null) lexicalHandler.comment(ch, start, len);
     }
 }

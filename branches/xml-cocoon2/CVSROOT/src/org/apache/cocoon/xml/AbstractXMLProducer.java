@@ -16,14 +16,15 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:43 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-27 14:33:37 $
  */
 public abstract class AbstractXMLProducer implements XMLProducer {
     
     /** The <code>ContentHandler</code> receiving SAX events. */
-    protected ContentHandler contentHandler=null;
+    protected ContentHandler contentHandler;
+    
     /** The <code>LexicalHandler</code> receiving SAX events. */
-    protected LexicalHandler lexicalHandler=null;
+    protected LexicalHandler lexicalHandler;
 
     /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
@@ -32,8 +33,8 @@ public abstract class AbstractXMLProducer implements XMLProducer {
      * and <code>setLexicalHandler(consumer)</code>.
      */
     public void setConsumer(XMLConsumer consumer) {
-        this.contentHandler=consumer;
-        this.lexicalHandler=consumer;
+        this.contentHandler = consumer;
+        this.lexicalHandler = consumer;
     }
 
     /**
@@ -42,8 +43,8 @@ public abstract class AbstractXMLProducer implements XMLProducer {
      * Subclasses may retrieve this <code>ContentHandler</code> instance
      * accessing the protected <code>super.contentHandler</code> field.
      */
-    public void setContentHandler(ContentHandler content) {
-        this.contentHandler=content;
+    public void setContentHandler(ContentHandler handler) {
+        this.contentHandler = handler;
     }
 
     /**
@@ -56,7 +57,7 @@ public abstract class AbstractXMLProducer implements XMLProducer {
      *                                  the <code>XMLConsumer</code> were
      *                                  already set.
      */
-    public void setLexicalHandler(LexicalHandler lexical) {
-        this.lexicalHandler=lexical;
+    public void setLexicalHandler(LexicalHandler handler) {
+        this.lexicalHandler = handler;
     }
 }
