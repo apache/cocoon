@@ -113,4 +113,10 @@ public interface LinkService {
      */
     boolean isSecure();
 
+    /**
+     * @param url The url to encode.
+     * @return The enocoded URL.
+     * @see javax.servlet.http.ServletResponse#encodeURL(String url).
+     */
+    String encodeURL(String url);
 }
