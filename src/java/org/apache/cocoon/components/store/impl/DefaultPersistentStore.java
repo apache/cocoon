@@ -41,7 +41,8 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultPersistentStore.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @deprecated Use the JCS store instead
+ * @version CVS $Id: DefaultPersistentStore.java,v 1.3 2004/05/24 07:05:17 cziegeler Exp $
  */
 public class DefaultPersistentStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
