@@ -50,14 +50,13 @@
 */
 package org.apache.cocoon.util.log;
 
-import org.apache.log.Hierarchy;
+import java.io.StringWriter;
+import java.util.Stack;
+
 import org.apache.log.LogEvent;
 import org.apache.log.Priority;
 import org.apache.log.format.Formatter;
 import org.apache.log.util.DefaultErrorHandler;
-
-import java.io.StringWriter;
-import java.util.Stack;
 
 /**
  * A refactoring of <code>org.apache.log.format.PatternFormatter</code> that
@@ -75,7 +74,7 @@ import java.util.Stack;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtensiblePatternFormatter.java,v 1.2 2003/08/04 03:23:08 joerg Exp $
+ * @version CVS $Id: ExtensiblePatternFormatter.java,v 1.3 2003/08/04 03:31:37 joerg Exp $
  */
 public class ExtensiblePatternFormatter
     implements Formatter
@@ -423,7 +422,7 @@ public class ExtensiblePatternFormatter
                 break;
 
             default:
-                new DefaultErrorHandler().error("Unknown Pattern specification." + run.m_type. null, null);
+                new DefaultErrorHandler().error("Unknown Pattern specification." + run.m_type, null, null);
         }
 
         return str;
