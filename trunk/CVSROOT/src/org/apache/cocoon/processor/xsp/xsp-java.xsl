@@ -5,7 +5,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
-    Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
+    Copyright (C) 1999-2001 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -143,7 +143,9 @@
 
 	<!-- Method level declarations should go here... -->
 
-        <xsl:apply-templates select="*[not(starts-with(name(.), 'xsp:'))]"/>
+        <xsl:apply-templates select="*[not(starts-with(name(.), 'xsp:'))]">
+          <xsl:with-param name="first-element">true</xsl:with-param>
+        </xsl:apply-templates>
       }
     }
   </xsl:template>
@@ -155,11 +157,17 @@
       document.createElement("<xsl:value-of select="@name"/>");
 
     <!-- Add namespace declarations -->
+    <!-- Filter namespaces already present on the parent element -->
+    <xsl:variable name="parent-element" select=".."/>
     <xsl:for-each select="namespace::*">
+      <xsl:variable name="ns-prefix" select="local-name(.)"/>
+      <xsl:variable name="ns-uri" select="string(.)"/>
+      <xsl:if test="not($parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
       ((Element) xspCurrentNode).setAttribute(
         "xmlns:<xsl:value-of select="local-name(.)"/>",
         "<xsl:value-of select="."/>"
       );
+      </xsl:if>
     </xsl:for-each>
 
     xspParentNode.appendChild(xspCurrentNode);
@@ -245,6 +253,7 @@
 
 
   <xsl:template match="*">
+    <xsl:param name="first-element">false</xsl:param>
     xspParentNode = xspCurrentNode;
     xspNodeStack.push(xspParentNode);
     xspCurrentNode =
@@ -254,12 +263,34 @@
     <xsl:apply-templates select="@*"/>
 
     <!-- Add namespace declarations -->
+    <!-- Filter namespaces already present on the parent element -->
+    <xsl:variable name="parent-element" select=".."/>
     <xsl:for-each select="namespace::*">
+      <xsl:variable name="ns-prefix" select="local-name(.)"/>
+      <xsl:variable name="ns-uri" select="string(.)"/>
+      <xsl:if test="not($parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri])">
       ((Element) xspCurrentNode).setAttribute(
         "xmlns:<xsl:value-of select="local-name(.)"/>",
         "<xsl:value-of select="."/>"
       );
+      </xsl:if>
     </xsl:for-each>
+
+    <!-- If first element, declare namespaces that also exist on the parent (i.e. not locally declared),
+         and filter out "xmlns:xmlns" namespace produced by Xerces+Saxon -->
+    <xsl:if test="$first-element = 'true'">
+      <xsl:for-each select="namespace::*">
+        <xsl:variable name="ns-prefix" select="local-name(.)"/>
+        <xsl:variable name="ns-uri" select="string(.)"/>
+          <xsl:if test="($ns-prefix != 'xmlns') and $parent-element/namespace::*[local-name(.) = $ns-prefix and string(.) = $ns-uri]">
+          ((Element) xspCurrentNode).setAttribute(
+            "xmlns:<xsl:value-of select="$ns-prefix"/>",
+            "<xsl:value-of select="$ns-uri"/>"
+          );
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:if>
+
 
     <xsl:apply-templates/>
 
