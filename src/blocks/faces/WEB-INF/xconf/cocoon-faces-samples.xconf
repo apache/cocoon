@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-faces.xconf"/>
+
   <component-instance role="org.apache.cocoon.taglib.TagSelector" class="org.apache.cocoon.core.container.DefaultServiceSelector">
     <!--
       - CarStore Demo taglib: Custom components

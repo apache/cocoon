@@ -15,7 +15,14 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-forms.xconf"/>
+
   <flow-interpreters>
     <component-instance 
       class="org.apache.cocoon.components.flow.apples.ApplesProcessor" 
