@@ -56,16 +56,15 @@ import com.hp.hpl.deli.Workspace;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
@@ -98,17 +97,17 @@ import java.util.*;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: DeliImpl.java,v 1.7 2003/09/26 14:04:51 butlermh Exp $
+ * @version CVS $Id: DeliImpl.java,v 1.8 2004/02/06 22:46:53 joerg Exp $
  */
 public final class DeliImpl extends AbstractLogEnabled
-    implements Parameterizable, Deli, Composable, Disposable, Initializable,
+    implements Parameterizable, Deli, Serviceable, Disposable, Initializable,
                ThreadSafe, Contextualizable {
 
     /** The name of the main DELI configuration file */
     private String deliConfig = "WEB-INF/deli/config/deliConfig.xml";
 
-    /** The component manager */
-    protected ComponentManager manager = null;
+    /** The service manager */
+    protected ServiceManager manager = null;
 
     /** Parser used to construct the DOM tree to import the profile to a stylesheet */
     protected DOMParser parser;
@@ -124,12 +123,12 @@ public final class DeliImpl extends AbstractLogEnabled
         this.servletContext = new CocoonServletContext(ctx);
     }
 
-    /** Compose this class */
-    public void compose(ComponentManager manager) throws ComponentException {
+    /** Service this class */
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         try {
             this.parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             getLogger().error("DELI Exception while creating parser: ", e);
             throw e;
         }
@@ -155,7 +154,7 @@ public final class DeliImpl extends AbstractLogEnabled
     /** Dispose of this class */
     public void dispose() {
         if (parser != null) {
-            this.manager.release((Component)parser);
+            this.manager.release(parser);
         }
         this.parser = null;
     }

@@ -51,46 +51,43 @@
 
 package org.apache.cocoon.transformation;
 
-import com.sap.mw.jco.IFunctionTemplate;
-import com.sap.mw.jco.JCO;
-
-import org.apache.cocoon.components.web3.Web3Client;
-import org.apache.cocoon.components.web3.Web3DataSource;
-import org.apache.cocoon.components.web3.Web3Streamer;
-import org.apache.cocoon.components.web3.Web3;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.cocoon.environment.SourceResolver;
-
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.excalibur.pool.Poolable;
-import org.apache.avalon.excalibur.pool.Recyclable;
-
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.components.web3.Web3;
+import org.apache.cocoon.components.web3.Web3Client;
+import org.apache.cocoon.components.web3.Web3DataSource;
+import org.apache.cocoon.components.web3.Web3Streamer;
+import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import com.sap.mw.jco.IFunctionTemplate;
+import com.sap.mw.jco.JCO;
 
 /**
  * TBD
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3RfcTransformer.java,v 1.7 2003/09/05 07:40:20 cziegeler Exp $
+ * @version CVS $Id: Web3RfcTransformer.java,v 1.8 2004/02/06 22:54:05 joerg Exp $
  */
 public class Web3RfcTransformer extends AbstractTransformer 
-implements Composable, Disposable, Configurable, Poolable, Recyclable {
+implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
     
-    /** The component manager instance */
-    protected ComponentManager  manager             = null;
+    /** The service manager instance */
+    protected ServiceManager  manager             = null;
     protected Web3DataSource    web3source          = null;
     
     protected Web3Client        connection          = null;
@@ -125,8 +122,7 @@ implements Composable, Disposable, Configurable, Poolable, Recyclable {
         }
     }
 
-    public void compose(ComponentManager manager) {
-        
+    public void service(ServiceManager manager) {
         this.manager = manager;
         initTags();
     }
@@ -191,9 +187,9 @@ implements Composable, Disposable, Configurable, Poolable, Recyclable {
         if ( Web3.URI.equals( uri ) && !this.error ) { 
             switch ( Integer.parseInt( (String) this.tags.get( loc ))) {
                 case INCLUDE_ELEM: 
-                    ComponentSelector r3sc = null;
+                    ServiceSelector r3sc = null;
                     try {
-                        r3sc = (ComponentSelector) 
+                        r3sc = (ServiceSelector) 
                             this.manager.lookup ( Web3DataSource.ROLE + "Selector");
                         this.web3source = (Web3DataSource) r3sc.select( this.backend );
                         this.connection = this.web3source.getWeb3Client();
@@ -301,11 +297,11 @@ implements Composable, Disposable, Configurable, Poolable, Recyclable {
             switch ( Integer.parseInt( (String) this.tags.get( loc ))) {
                 case INCLUDE_ELEM: 
                     Web3Streamer w3s = null;
-                    ComponentSelector streamerSelector = null;
+                    ServiceSelector streamerSelector = null;
                     try {
                         this.connection.execute( this.function );
                         streamerSelector = 
-                            (ComponentSelector) 
+                            (ServiceSelector) 
                             this.manager.lookup( Web3Streamer.ROLE + "Selector" );
                         w3s = (Web3Streamer) streamerSelector.select( this.streamer );
                         w3s.stream( this.function,  super.contentHandler );

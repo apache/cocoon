@@ -50,11 +50,10 @@
 */
 package org.apache.cocoon.components.web3;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.Serviceable;
 
 import java.lang.Exception;
 
@@ -63,10 +62,10 @@ import java.lang.Exception;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3DataSource.java,v 1.4 2003/07/10 22:14:32 reinhard Exp $
+ * @version CVS $Id: Web3DataSource.java,v 1.5 2004/02/06 22:54:05 joerg Exp $
  */
-public interface Web3DataSource extends Component, Configurable, 
-    Initializable, Disposable, Composable {
+public interface Web3DataSource extends Configurable, Initializable, Disposable,
+                                        Serviceable {
         
     String ROLE = "org.apache.cocoon.components.web3.Web3DataSource";
     

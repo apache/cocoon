@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.taglib;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.jxpath.JXPathCocoonContexts;
@@ -64,11 +64,11 @@ import org.apache.commons.jxpath.JXPathContext;
  * Add support for setting and getting variables
  * 
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: VarTagSupport.java,v 1.4 2004/02/05 10:47:24 cziegeler Exp $
+ * @version CVS $Id: VarTagSupport.java,v 1.5 2004/02/06 22:56:46 joerg Exp $
  */
-public abstract class VarTagSupport extends TagSupport implements Composable {
+public abstract class VarTagSupport extends TagSupport implements Serviceable {
     protected String var;
-    protected ComponentManager componentManager;
+    protected ServiceManager manager;
     private JXPathCocoonContexts jxpathContexts;
     private Request request;
 
@@ -128,8 +128,8 @@ public abstract class VarTagSupport extends TagSupport implements Composable {
     private final JXPathContext getVariableContext() {
         if (jxpathContexts == null) {
             try {
-                jxpathContexts = (JXPathCocoonContexts) componentManager.lookup(JXPathCocoonContexts.ROLE);
-            } catch (ComponentException e) {
+                jxpathContexts = (JXPathCocoonContexts) manager.lookup(JXPathCocoonContexts.ROLE);
+            } catch (ServiceException e) {
                 //XXX
             }
         }
@@ -138,16 +138,16 @@ public abstract class VarTagSupport extends TagSupport implements Composable {
     }
 
     /*
-     * @see Composable#compose(ComponentManager)
+     * @see Serviceable#service(ServiceManager)
      */
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.componentManager = componentManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
     public void recycle() {
         this.var = null;
-        if ( this.componentManager != null ) {
-            this.componentManager.release(this.jxpathContexts);
+        if ( this.manager != null ) {
+            this.manager.release(this.jxpathContexts);
         }
         this.jxpathContexts = null;
         this.request = null;

@@ -53,9 +53,9 @@ package org.apache.cocoon.components.web3.impl;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
 
 import EDU.oswego.cs.dl.util.concurrent.Mutex;
 
@@ -70,7 +70,7 @@ import org.apache.cocoon.components.web3.Web3DataSource;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3DataSourceImpl.java,v 1.4 2003/07/10 22:14:32 reinhard Exp $
+ * @version CVS $Id: Web3DataSourceImpl.java,v 1.5 2004/02/06 22:54:05 joerg Exp $
  */
 public class Web3DataSourceImpl extends AbstractLogEnabled
 implements Web3DataSource, ThreadSafe {
@@ -84,10 +84,10 @@ implements Web3DataSource, ThreadSafe {
     protected int            level = 0;
 
     private static Mutex     lock = new Mutex();
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.manager = componentManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
     /** Configure backend component */
