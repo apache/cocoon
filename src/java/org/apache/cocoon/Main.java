@@ -55,25 +55,21 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.HelpFormatter;
 
 import org.apache.cocoon.Constants;
-
 import org.apache.cocoon.bean.CocoonBean;
 
 /**
@@ -84,7 +80,7 @@ import org.apache.cocoon.bean.CocoonBean;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: Main.java,v 1.4 2003/06/04 19:29:07 bruno Exp $
+ * @version CVS $Id: Main.java,v 1.5 2003/06/11 02:59:36 vgritsenko Exp $
  */
 public class Main {
 
@@ -290,21 +286,24 @@ public class Main {
 
         long startTimeMillis = System.currentTimeMillis();
 
-        CocoonBean cocoon = new CocoonBean();
-        String destDir = null;
-
         Main.setOptions();
-        CommandLineParser parser = new PosixParser();
-        CommandLine line = parser.parse( options, args );
+        CommandLine line = new PosixParser().parse( options, args );
+        CocoonBean cocoon = new CocoonBean();
 
         if (line.hasOption(HELP_OPT)) {
              printUsage();
-        }
-        if (line.hasOption(VERSION_OPT)) {
+        } else if (line.hasOption(VERSION_OPT)) {
              printVersion();
         }
+
+        String destDir = null;
+        if (line.hasOption(DEST_DIR_OPT)) {
+            destDir = line.getOptionValue(DEST_DIR_OPT);
+        }
+
         if (line.hasOption(XCONF_OPT)) {
-            Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT));
+            // destDir from command line overrides one in xconf file
+            destDir = Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT), destDir);
         }
         if (line.hasOption(VERBOSE_OPT)) {
             cocoon.setVerbose(true);
@@ -312,9 +311,7 @@ public class Main {
         if (line.hasOption(PRECOMPILE_ONLY_OPT)) {
             cocoon.setPrecompileOnly(true);
         }
-        if (line.hasOption(DEST_DIR_OPT)) {
-            destDir = line.getOptionValue(DEST_DIR_OPT);
-        }
+
         if (line.hasOption(WORK_DIR_OPT)) {
             cocoon.setWorkDir(line.getOptionValue(WORK_DIR_OPT));
         }
@@ -346,10 +343,10 @@ public class Main {
             cocoon.setBrokenLinkReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
         }
         if (line.hasOption(URI_FILE_OPT)) {
-            cocoon.addTargets(processURIFile(line.getOptionValue(URI_FILE_OPT)));
+            cocoon.addTargets(processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
         }
         if (line.hasOption(FOLLOW_LINKS_OPT)) {
-        cocoon.setFollowLinks(yesno(line.getOptionValue(FOLLOW_LINKS_OPT)));
+            cocoon.setFollowLinks(yesno(line.getOptionValue(FOLLOW_LINKS_OPT)));
         }
         if (line.hasOption(CONFIRM_EXTENSIONS_OPT)) {
             cocoon.setConfirmExtensions(yesno(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "yes")));
@@ -357,9 +354,8 @@ public class Main {
         if (line.hasOption(LOAD_CLASS_OPT)){
             cocoon.addLoadedClasses(Arrays.asList(line.getOptionValues(LOAD_CLASS_OPT)));
         }
-        for (Iterator i = line.getArgList().iterator(); i.hasNext();) {
-            cocoon.addTarget((String)i.next(), destDir);
-        }
+
+        cocoon.addTargets(line.getArgList(), destDir);
 
         System.out.println(getProlog());
         
@@ -413,15 +409,13 @@ public class Main {
      * @param cocoon a <code>CocoonBean</code> that will be configured by the xconf file
      * @param filename a <code>String</code> value
      */
-    private static void processXConf(CocoonBean cocoon, String filename) {
+    private static String processXConf(CocoonBean cocoon, String filename, String destDir) {
 
         try {
             final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
             final Document conf = builder.parse(new File(filename).toURL().toExternalForm());
 
             Node root = conf.getDocumentElement();
-
             if (!NODE_ROOT.equals(root.getNodeName())) {
                 throw new IllegalArgumentException("Expected root node of "+ NODE_ROOT);
             }
@@ -438,9 +432,13 @@ public class Main {
             if (Main.hasAttribute(root, ATTR_CONFIRM_EXTENSIONS)) {
                 cocoon.setConfirmExtensions(Main.getBooleanAttributeValue(root, ATTR_CONFIRM_EXTENSIONS));
             }
-            NodeList nodes = root.getChildNodes();
 
-            for (int i=0; i<nodes.getLength();i++) {
+            if (destDir == null || destDir.length() == 0) {
+                destDir = getNodeValue(root, NODE_DEST_DIR);
+            }
+
+            NodeList nodes = root.getChildNodes();
+            for (int i = 0; i < nodes.getLength(); i++) {
                 Node node = nodes.item(i);
                 if (node.getNodeType()== Node.ELEMENT_NODE) {
                     String nodeName = node.getNodeName();
@@ -460,7 +458,7 @@ public class Main {
                         cocoon.setConfigFile(getNodeValue(node));
 
                     } else if (nodeName.equals(NODE_DEST_DIR)) {
-                        cocoon.setDestDir(getNodeValue(node));
+                        // Ignore
 
                     } else if (nodeName.equals(NODE_WORK_DIR)) {
                         cocoon.setWorkDir(getNodeValue(node));
@@ -475,20 +473,21 @@ public class Main {
                         cocoon.setDefaultFilename(getNodeValue(node));
 
                     } else if (nodeName.equals(NODE_URI)) {
-                        Main.parseURINode(cocoon, node);
+                        Main.parseURINode(cocoon, node, destDir);
 
                     } else if (nodeName.equals(NODE_URI_FILE)) {
-                        cocoon.addTargets(Main.processURIFile(getNodeValue(node)));
+                        cocoon.addTargets(Main.processURIFile(getNodeValue(node)), destDir);
 
                     } else {
                         throw new IllegalArgumentException("Unknown element: " + nodeName);
                     }
                 }
             }
-
         } catch (Exception e) {
             System.out.println("ERROR: "+e.getMessage());
         }
+
+        return destDir;
     }
 
     private static void parseLoggingNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
@@ -525,45 +524,55 @@ public class Main {
             throw new IllegalArgumentException("Unexpected children of "+NODE_LOGGING+" node");
         }
     }
-    private static void parseURINode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
-        String type = null;
-        String root = null;
-        String src = null;
-        String dest = null;
 
-        if (node.getAttributes().getLength()==0) {
-            cocoon.addTarget(getNodeValue(node));
-            return;
-        }
-        if (Main.hasAttribute(node, ATTR_URI_TYPE)) {
-            type = Main.getAttributeValue(node, ATTR_URI_TYPE);
-        }
-        if (Main.hasAttribute(node, ATTR_URI_SOURCEPREFIX)) {
-            root = Main.getAttributeValue(node, ATTR_URI_SOURCEPREFIX);
-        }
-        if (Main.hasAttribute(node, ATTR_URI_DESTURI)) {
-            dest = Main.getAttributeValue(node, ATTR_URI_DESTURI);
-        }
-        if (Main.hasAttribute(node, ATTR_URI_SOURCEURI)) {
-            src = Main.getAttributeValue(node, ATTR_URI_SOURCEURI);
-        } else {
-            throw new IllegalArgumentException("Missing src attribute on uri node");
-        }
-        if (src == null) {
-            throw new IllegalArgumentException("Missing src attribute in <uri> node");
-        } else if (root != null && type!=null & dest!=null) {
-            cocoon.addTarget(type, root, src, dest);
-        } else if (root!=null & dest!=null) {
-            cocoon.addTarget(root, src, dest);
-        } else if (dest!=null) {
-            cocoon.addTarget(src, dest);
-        } else {
-            cocoon.addTarget(src);
-        }
+    private static void parseURINode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
         NodeList nodes = node.getChildNodes();
-        if (nodes.getLength()!=0) {
-            throw new IllegalArgumentException("Unexpected children of "+NODE_LOGGING+" node");
+        if (nodes.getLength() != 0) {
+            throw new IllegalArgumentException("Unexpected children of <" + NODE_LOGGING + "> node");
         }
+
+        if (node.getAttributes().getLength() == 0) {
+            cocoon.addTarget(getNodeValue(node), destDir);
+        } else {
+            String src = Main.getAttributeValue(node, ATTR_URI_SOURCEURI);
+
+            String type = null;
+            if (Main.hasAttribute(node, ATTR_URI_TYPE)) {
+                type = Main.getAttributeValue(node, ATTR_URI_TYPE);
+            }
+            String root = null;
+            if (Main.hasAttribute(node, ATTR_URI_SOURCEPREFIX)) {
+                root = Main.getAttributeValue(node, ATTR_URI_SOURCEPREFIX);
+            }
+            String dest = null;
+            if (Main.hasAttribute(node, ATTR_URI_DESTURI)) {
+                dest = Main.getAttributeValue(node, ATTR_URI_DESTURI);
+            }
+
+            if (root != null && type != null & dest != null) {
+                cocoon.addTarget(type, root, src, dest);
+            } else if (root != null & dest != null) {
+                cocoon.addTarget(root, src, dest);
+            } else if (dest != null) {
+                cocoon.addTarget(src, dest);
+            } else {
+                cocoon.addTarget(src, destDir);
+            }
+        }
+    }
+
+    private static String getNodeValue(Node root, String name) throws IllegalArgumentException {
+        NodeList nodes = root.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType()== Node.ELEMENT_NODE) {
+                String nodeName = node.getNodeName();
+                if (nodeName.equals(name)) {
+                    return getNodeValue(node);
+                }
+            }
+        }
+        return null;
     }
 
     private static String getNodeValue(Node node) throws IllegalArgumentException {
@@ -571,7 +580,7 @@ public class Main {
         NodeList children = node.getChildNodes();
         boolean found = false;
 
-        for (int i=0; i< children.getLength(); i++) {
+        for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
             if (child.getNodeType() == Node.TEXT_NODE) {
                 s.append(child.getNodeValue());
@@ -590,11 +599,11 @@ public class Main {
         NamedNodeMap nodes = node.getAttributes();
         if (nodes != null) {
             Node attribute = nodes.getNamedItem(attr);
-            if (attribute != null) {
+            if (attribute != null && attribute.getNodeValue() != null) {
                 return attribute.getNodeValue();
             }
         }
-        throw new IllegalArgumentException("Missing "+attr+" attribute");
+        throw new IllegalArgumentException("Missing " + attr + " attribute on <" + node.getNodeName() + "> node");
     }
 
     private static boolean hasAttribute(Node node, String attr) {
@@ -605,6 +614,7 @@ public class Main {
         }
         return false;
     }
+
     private static boolean getBooleanAttributeValue(Node node, String attr) {
         NamedNodeMap nodes = node.getAttributes();
         if (nodes != null) {

@@ -106,7 +106,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.9 2003/06/06 12:21:10 vgritsenko Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.10 2003/06/11 02:59:36 vgritsenko Exp $
  */
 public class CocoonBean {
 
@@ -143,7 +143,6 @@ public class CocoonBean {
     // Internal Objects
     private CommandLineContext cliContext;
     private Cocoon cocoon;
-    private String destDir;
     private static Logger log;
     private Map attributes;
     private HashMap empty;
@@ -162,12 +161,6 @@ public class CocoonBean {
     public void initialize() throws Exception {
         // @todo@ when does the logger get initialised? uv
         // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
-        if (destDir.equals("")) {
-            String error = "Careful, you must specify a destination dir when using the -d/--destDir argument";
-            log.fatalError(error);
-            System.out.println(error);
-            System.exit(1);
-        }
 
         if (contextDir.equals("")) {
             String error = "Careful, you must specify a configuration file when using the -c/--contextDir argument";
@@ -288,12 +281,11 @@ public class CocoonBean {
     /**
      * Try loading the configuration file from a single location
      */
-    private static File tryConfigurationFile(String filename) throws IOException {
-        File conf;
+    private static File tryConfigurationFile(String filename) {
         if (log.isDebugEnabled()) {
             log.debug("Trying configuration file at: " + filename);
         }
-        conf = new File(filename);
+        File conf = new File(filename);
         if (conf.canRead()) {
             return conf;
         } else {
@@ -405,10 +397,6 @@ public class CocoonBean {
         this.workDir = workDir;
     }
 
-    public void setDestDir(String destDir) {
-        this.destDir = destDir;
-    }
-
     public void setConfigFile(String configFile) {
         this.configFile = configFile;
     }
@@ -465,26 +453,35 @@ public class CocoonBean {
         this.classList.addAll(classList);
     }
 
-    public void addTarget(String sourceURI) {
-        targets.add(new Target(sourceURI, destDir));
-    }
-
-    public void addTarget(String type, String root, String sourceURI, String destURI){
+    /**
+     * Adds a target for processing
+     *
+     * @param type Type of target - append, replace, insert.
+     * @param root
+     * @param sourceURI URI of the starting page
+     * @param destURI URI specifying destination for the generated pages.
+     * @throws IllegalArgumentException if destURI is missing
+     */
+    public void addTarget(String type, String root, String sourceURI, String destURI)
+            throws IllegalArgumentException {
         targets.add(new Target(type, root, sourceURI, destURI));
     }
 
-    public void addTarget(String type, String sourceURI, String destURI){
+    public void addTarget(String type, String sourceURI, String destURI)
+            throws IllegalArgumentException {
         targets.add(new Target(type, sourceURI, destURI));
     }
 
-    public void addTarget(String sourceURI, String destURI){
+    public void addTarget(String sourceURI, String destURI)
+            throws IllegalArgumentException {
         targets.add(new Target(sourceURI, destURI));
     }
 
-    public void addTargets(List uris) {
+    public void addTargets(List uris, String destURI)
+            throws IllegalArgumentException {
         Iterator i = uris.iterator();
         while (i.hasNext()) {
-            Target target = new Target((String)i.next(), destDir);
+            Target target = new Target((String)i.next(), destURI);
             targets.add(target);
         }
     }
@@ -573,37 +570,31 @@ public class CocoonBean {
         if (!initialized){
             initialize();
         }
+
         attributes = new HashMap();
         empty = new HashMap();
         allProcessedLinks = new HashMap();
         allTranslatedLinks = new HashMap();
 
-        int nCount = 0;
-        Target target;
-
-        HashMap targetMap = new java.util.HashMap();
+        Map targetMap = new HashMap();
         Iterator i = targets.iterator();
         while (i.hasNext()) {
-            target = (Target)i.next();
-            if (!targetMap.containsKey(target.getHashCode())) {
-                targetMap.put(target.getHashCode(), target);
-            }
+            Target target = (Target)i.next();
+            targetMap.put(target, target);
         }
 
+        int nCount = 0;
         while (targetMap.size() > 0) {
-            String hashCode = (String)(new ArrayList(targetMap.keySet()).get(0));
-            target = (Target)targetMap.get(hashCode);
+            Target target = (Target)targetMap.keySet().iterator().next();
             try {
-                if (allProcessedLinks.get(hashCode) == null) {
+                if (!allProcessedLinks.containsKey(target)) {
                     if (precompileOnly) {
-                        this.processXSP(target.getSourceURI());
+                        processXSP(target.getSourceURI());
                     } else if (this.followLinks) {
                         i = processTarget(target).iterator();
                         while (i.hasNext()) {
                             target = (Target)i.next();
-                            if (!targetMap.containsKey(target.getHashCode())) {
-                                targetMap.put(target.getHashCode(), target);
-                            }
+                            targetMap.put(target, target);
                         }
                     } else {
                         processTarget(target);
@@ -613,7 +604,7 @@ public class CocoonBean {
                 printBroken (target.getSourceURI(), rnfe.getMessage());
             }
 
-            targetMap.remove(target.getHashCode());
+            targetMap.remove(target);
             nCount++;
 
             if (log.isInfoEnabled()) {
@@ -626,7 +617,6 @@ public class CocoonBean {
             recursivelyPrecompile(context, context);
         }
         outputBrokenLinks();
-
     }
 
     /**
@@ -711,6 +701,7 @@ public class CocoonBean {
      *       processing continues until all processing is complete
      *   </li>
      * </ul>
+     *
      * @param target a <code>Target</code> target to process
      * @return a <code>Collection</code> containing all links found, as
      * Target objects.
@@ -757,7 +748,7 @@ public class CocoonBean {
             filename = suri;
         }
         // Store processed URI list to avoid eternal loop
-        allProcessedLinks.put(target.getHashCode(),target);
+        allProcessedLinks.put(target, target);
 
         if ("".equals(filename)) {
             return new ArrayList();
@@ -1161,15 +1152,17 @@ public class CocoonBean {
             File[] libraries = root.listFiles();
             Arrays.sort(libraries);
             for (int i = 0; i < libraries.length; i++) {
-                // FIXME: endsWith(".jar") or .zip
-                buildClassPath.append(File.pathSeparatorChar)
-                              .append(IOUtils.getFullFilename(libraries[i]));
+                if (libraries[i].getAbsolutePath().endsWith(".jar")) {
+                    buildClassPath.append(File.pathSeparatorChar)
+                                  .append(IOUtils.getFullFilename(libraries[i]));
+                }
             }
         }
 
         buildClassPath.append(File.pathSeparatorChar)
                       .append(System.getProperty("java.class.path"));
 
+        // Extra class path is necessary for non-classloader-aware java compilers to compile XSPs
 //        buildClassPath.append(File.pathSeparatorChar)
 //                      .append(getExtraClassPath(context));
 
@@ -1180,31 +1173,41 @@ public class CocoonBean {
     }
 
     public class Target {
-        private static final String DEFAULT_TYPE = "default";
-        private static final String REPLACE_TYPE = "replace";
+        // Defult type is append
         private static final String APPEND_TYPE = "append";
+        private static final String REPLACE_TYPE = "replace";
         private static final String INSERT_TYPE = "insert";
-        private String type;
-        private String root;
-        private String sourceURI;
-        private String destURI;
 
-        public Target(String type, String root, String sourceURI, String destURI){
+        private final String type;
+        private final String root;
+        private final String sourceURI;
+        private final String destURI;
+
+        private transient int _hashCode;
+        private transient String _toString;
+
+        public Target(String type, String root, String sourceURI, String destURI) throws IllegalArgumentException {
             this.type = type;
             this.root = root;
             this.sourceURI = NetUtils.normalize(sourceURI);
+            if (destURI == null || destURI.length() == 0) {
+                throw new IllegalArgumentException("You must specify a destination directory when defining a target");
+            }
+            if (!destURI.endsWith("/")) {
+                destURI += "/";
+            }
             this.destURI = destURI;
         }
 
-        public Target(String type, String sourceURI, String destURI){
+        public Target(String type, String sourceURI, String destURI) throws IllegalArgumentException {
             this(type, "", sourceURI, destURI);
         }
 
-        public Target(String sourceURI, String destURI){
-            this(DEFAULT_TYPE, "", sourceURI, destURI);
+        public Target(String sourceURI, String destURI) throws IllegalArgumentException {
+            this(APPEND_TYPE, "", sourceURI, destURI);
         }
 
-        public Target getDerivedTarget(String newURI) throws ProcessingException {
+        public Target getDerivedTarget(String newURI) throws IllegalArgumentException {
             if (!newURI.startsWith(root)) {
                 return null;
             }
@@ -1218,42 +1221,21 @@ public class CocoonBean {
             }
             actualSourceURI = actualSourceURI.substring(root.length());
 
-            if (DEFAULT_TYPE.equals(this.type)){
-                return this.getFinalURIWithDefault(actualSourceURI);
-            }
-            else if (REPLACE_TYPE.equals(this.type)){
-                return this.getFinalURIWithReplace(actualSourceURI);
-            }
-            else if (APPEND_TYPE.equals(this.type)){
-                return this.getFinalURIWithAppend(actualSourceURI);
-            }
-            else if (INSERT_TYPE.equals(this.type)){
-                return this.getFinalURIWithInsert(actualSourceURI);
+            if (APPEND_TYPE.equals(this.type)){
+                return destURI + actualSourceURI;
+            } else if (REPLACE_TYPE.equals(this.type)){
+                return destURI;
+            } else if (INSERT_TYPE.equals(this.type)){
+                int starPos = destURI.indexOf("*");
+                if (starPos == -1) {
+                    throw new ProcessingException("Missing * in replace mapper uri");
+                } else if (starPos == destURI.length()-1) {
+                   return destURI.substring(0,starPos) + actualSourceURI;
+                } else {
+                    return destURI.substring(0,starPos) + actualSourceURI + destURI.substring(starPos+1);
+                }
             } else {
                 throw new ProcessingException("Unknown mapper type: " + this.type);
-            }
-        }
-
-        private String getFinalURIWithDefault(String actualSourceURI){
-            return destDir + "/" + actualSourceURI;
-        }
-
-        private String getFinalURIWithAppend(String actualSourceURI){
-            return destURI + actualSourceURI;
-        }
-
-        private String getFinalURIWithReplace(String actualSourceURI){
-            return destURI;
-        }
-
-        private String getFinalURIWithInsert(String actualSourceURI) throws ProcessingException {
-            int starPos = destURI.indexOf("*");
-            if (starPos == -1) {
-                throw new ProcessingException("Missing * in replace mapper uri");
-            } else if (starPos == destURI.length()-1) {
-               return destURI.substring(0,starPos) + actualSourceURI;
-            } else {
-                return destURI.substring(0,starPos) + actualSourceURI + destURI.substring(starPos+1);
             }
         }
 
@@ -1261,19 +1243,32 @@ public class CocoonBean {
             return root + sourceURI;
         }
 
-        // @todo@ this is misusing the 'hashCode' name - hashCodes should be integer it seems, uv
-        public String getHashCode() {
-            return type + "|" + root +"|" + sourceURI + "|" + destURI;
-        }
-
         public OutputStream getOutputStream(String filename) throws IOException, ProcessingException {
             final String finalDestinationURI = this.getFinalURI(filename);
-            Source src = (Source) sourceResolver.resolveURI(finalDestinationURI);
+            Source src = sourceResolver.resolveURI(finalDestinationURI);
             if (!(src instanceof ModifiableSource)) {
                 throw new ProcessingException("Source is not Modifiable: " + finalDestinationURI);
             }
             ModifiableSource outputSource = (ModifiableSource) src;
             return outputSource.getOutputStream();
+        }
+
+        public boolean equals(Object o) {
+            return (o instanceof Target) && o.toString().equals(toString());
+        }
+
+        public int hashCode() {
+            if (_hashCode == 0) {
+                return _hashCode = toString().hashCode();
+            }
+            return _hashCode;
+        }
+
+        public String toString() {
+            if (_toString == null) {
+                return _toString = "<" + type + "|" + root +"|" + sourceURI + "|" + destURI + ">";
+            }
+            return _toString;
         }
     }
 }
