@@ -21,23 +21,22 @@
    
    <ul>
     <li><link href="http://sunshine.s-und-n.de/">SunShine Portal Demo</link></li>
-    <li><link href="http://www.xslt-patterns.com/">XSLTPatterns.com</link></li>
     <li><link href="http://www.adolos.com/">Adolos</link></li>
     <li><link href="http://outerthought.org/">Outerthought</link></li>
-    <li><link href="http://www.medisite-pro.fr/">Medisite PRO</link></li>
     <li><link href="http://cupva.cbim.it/">Servizio Prima Disponibilit&agrave;</link></li>
     <li><link href="http://robocode.diverman.com/">Robocode Fanatics!</link></li>
-    <li><link href="http://www.generasound.com/">GeneraSound</link></li>
+    <li><link href="http://www.generasound.com/">GeneraSound</link></li> <!-- seems PHP to me, no header -->
     <li><link href="http://www.dyanet.com/">Dyanet</link></li>
-    <li><link href="http://www.g-ne.de/">G-NE group for net-intelligence GmbH</link></li>
+    <li><link href="http://www.g-ne.de/">G-NE group for net-intelligence GmbH</link></li> <!-- couldn't confirm -->
     <li><link href="http://www.osmosis.gr/">Osmosis - networks and consulting</link></li>
-    <li><link href="http://www.bethe1.com/">The EMPLOYMENT specialist in FASHION, BEAUTY and RETAIL</link></li>
-    <li><link href="http://www.lofex.de/">LOcal Food EXpress</link></li>
-    <li><link href="http://www.triptravel.net/">Wh@m Project</link></li>
+    <li><link href="http://www.bethe1.com/">The EMPLOYMENT specialist in FASHION, BEAUTY and RETAIL</link></li> <!-- no X-Cocoon header -->
+    <li><link href="http://www.lofex.de/">LOcal Food EXpress</link></li> <!-- no X-Cocoon header -->
+    <li><link href="http://www.triptravel.net/">Wh@m Project</link></li> <!-- no X-Cocoon header -->
     <li><link href="http://dir.salon.com/">Salon Directory</link></li>
-    <li><link href="http://www.navigationzone.net/">NavigationZone</link></li>
-    <li><link href="http://www.ccel.org/">The Christian Classics Ethereal Library</link></li>
+    <li><link href="http://www.navigationzone.net/">NavigationZone</link></li> <!-- couldn't confirm -->
+    <li><link href="http://www.ccel.org/">The Christian Classics Ethereal Library</link></li> <!-- couldn't confirm -->
     <li><link href="http://www.urlaubstage.de/">Urlaubstage.de</link></li>
+    <!-- going home, please continue from here -->
     <li><link href="http://www.mnhb.ru/">Moscow Neftekhimichesky Bank</link></li>
     <li><link href="http://www.belfoot.tv/">belfoot.tv</link></li>
     <li><link href="http://www.elysee.tv/">elysee.tv</link></li>
