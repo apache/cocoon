@@ -80,6 +80,11 @@
         <exclude name="servlet*.jar"/>
       </fileset>
     </copy>
+    <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf"
+            srcdir="${scratchpad.src}" 
+            includes="**/*.xconf"
+            addComments="true"/>
+
   </target>
  
   <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
