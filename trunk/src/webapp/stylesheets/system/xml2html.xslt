@@ -8,7 +8,7 @@
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
     | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.6 2003/11/14 14:06:06 joerg Exp $
+    | CVS $Id: xml2html.xslt,v 1.7 2004/03/06 13:42:47 joerg Exp $
     +-->
     
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -86,6 +86,7 @@ function click(event) {
          </SPAN>
          <SPAN class="pi">
             <xsl:value-of select="name(.)"/>
+            <xsl:text> </xsl:text>
             <xsl:value-of select="."/>
          </SPAN>
          <SPAN class="m">
