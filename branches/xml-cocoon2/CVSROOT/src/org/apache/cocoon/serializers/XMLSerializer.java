@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.4.4 $ $Date: 2000-02-27 07:13:55 $
+ * @version CVS $Revision: 1.1.4.5 $ $Date: 2000-02-28 18:41:06 $
  */
 public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The namespaces table */
@@ -323,6 +323,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** Print a string */
     private void print(String s)
     throws SAXException {
+        if(s==null) return;
         char data[]=s.toCharArray();
         this.print(data,0,data.length);
     }
@@ -350,6 +351,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** Print a string */
     private void printSafe(String s)
     throws SAXException {
+        if(s==null) return;
         char data[]=s.toCharArray();
         this.printSafe(data,0,data.length);
     }
