@@ -256,6 +256,7 @@ public class IncludeTransformer extends AbstractTransformer
         this.m_validity = null;
         this.x_parameters = null;
         this.x_value = null;
+        this.x_source = null;
 
         if (this.m_buffering) {
             // Wait for threads to complete and release Sources
