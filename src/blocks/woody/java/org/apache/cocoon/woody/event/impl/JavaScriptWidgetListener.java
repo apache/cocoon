@@ -142,11 +142,6 @@ public abstract class JavaScriptWidgetListener {
         }
     }
     
-    public static final void traceHack(Object obj) {
-        System.err.println("trace of " + obj.getClass().getName());
-        System.err.println(obj);
-    }
-    
     public static class JSActionListener extends JavaScriptWidgetListener implements ActionListener {
 
         public JSActionListener(Script script) {
