@@ -87,7 +87,6 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -102,7 +101,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.22 2003/10/21 13:54:03 bloritsch Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.23 2003/12/02 14:48:50 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1029,7 +1028,8 @@ public class CocoonServlet extends HttpServlet {
             if (uri.charAt(0) == '/') {
                 uri = uri.substring(1);
             }
-            env = getEnvironment(URLDecoder.decode(uri), request, res);
+            // Pass uri into environment without URLDecoding, as it is already decoded.
+            env = getEnvironment(uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon servlet", e);
