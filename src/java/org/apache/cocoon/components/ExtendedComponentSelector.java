@@ -67,7 +67,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.5 2003/10/28 19:53:57 cziegeler Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.6 2003/11/06 14:30:01 cziegeler Exp $
  */
 
 public class ExtendedComponentSelector 
@@ -78,16 +78,13 @@ public class ExtendedComponentSelector
     protected RoleManager roles;
 
     /** The parent selector, if any */
-    protected ComponentSelector parentSelector;
+    protected ExtendedComponentSelector parentSelector;
 
     /** The parent locator, if any */
     protected ComponentLocator parentLocator;
 
     /** The class loader to use */
     protected ClassLoader classLoader;
-
-    /** The components selected in the parent selector */
-    protected Set parentComponents;
 
     /** The role of this selector. Set in <code>configure()</code>. */
     protected String roleName;
@@ -310,8 +307,7 @@ public class ExtendedComponentSelector
 
             } catch(ComponentException ce) {
                 // Doesn't exist here : try in parent selector
-                Component component = this.parentSelector.select(hint);
-                this.parentComponents.add(component);
+                final Component component = this.parentSelector.select(hint);
                 return component;
             }
         }
@@ -319,7 +315,8 @@ public class ExtendedComponentSelector
 
     public void release(Component component) {
         // Was it selected on the parent ?
-        if (this.parentComponents != null && this.parentComponents.remove(component)) {
+        if ( this.parentSelector != null &&
+             this.parentSelector.canRelease(component) ) {
             this.parentSelector.release(component);
 
         } else {
@@ -358,8 +355,7 @@ public class ExtendedComponentSelector
             throw new ComponentException(null, "Parent selector is already set");
         }
         this.parentLocator = locator;
-        this.parentSelector = (ComponentSelector) locator.lookup();
-        this.parentComponents = new HashSet();
+        this.parentSelector = (ExtendedComponentSelector) locator.lookup();
     }
 
     /* (non-Javadoc)
@@ -371,8 +367,18 @@ public class ExtendedComponentSelector
             this.parentLocator.release( this.parentSelector );
             this.parentLocator = null;
             this.parentSelector = null;
-            this.parentComponents = null;
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.ExcaliburComponentSelector#canRelease(org.apache.avalon.framework.component.Component)
+     */
+    protected boolean canRelease(Component component) {
+        if ( this.parentSelector != null &&
+             this.parentSelector.canRelease(component) ) {
+            return true;
+        }
+        return super.canRelease(component);
     }
 
 }
