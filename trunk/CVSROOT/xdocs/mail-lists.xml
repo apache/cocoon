@@ -31,6 +31,18 @@
     best to implement a site, comparisons with other XML frameworks, etc.
     But don't forget to look in the FAQ first, please!</p>
 
+   <p><strong>This is not an appropriate list for general XSL questions.</strong> 
+    Instead
+    look at the FAQ for XML/XSL links (such as the excellent
+    <link href="http://www.zvon.org/xxl/XSLTutorial/Books/Book1/index.html">
+    XSL tutorial at Zvon.org</link>) or try the 
+    <link href="http://www.mulberrytech.com/xsl/">Mulberrytech XSL list</link>.</p>
+
+   <p><strong>This is also not an appropriate list for general Java questions.</strong>
+    Instead try <link href="news:comp.lang.java.help">news:comp.lang.java.help</link>
+    or <link href="http://hotdispatch.com/">http://hotdispatch.com/</link>, for
+    example.</p>
+
    <p><strong>IMPORTANT:</strong> If you are posting about a problem you are having
     (as most people do), it will aid in finding a speedy resolution if you provide
     full configuration details (especially the <strong>Cocoon version number</strong>,

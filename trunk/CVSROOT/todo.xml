@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.39 2000-10-24 02:20:34 greenrd Exp $
+  $Id: todo.xml,v 1.40 2000-10-27 11:38:15 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -17,8 +17,7 @@
 
  <actions priority="high">
   <action context="code">
-   Make ESQL default to inner-method=false but make this configurable
-   in cocoon.properties.
+   Make ESQL default to inner-method=false.
   </action>
   <action context="code">
    Track down cause of OutOfMemoryError.
@@ -40,9 +39,6 @@
  </actions>
 
  <actions priority="medium">
-  <action context="code" assigned-to="RDG">
-   Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
-  </action>
   <action context="code">
    Integrate and test Jeremy Quinn's multiline get-nested-content template,
    especially for use with &lt;xsp:expr&gt;.
@@ -88,6 +84,9 @@
  <actions priority="low">
   <action context="docs">
    Make &lt;connect&gt; tags work correctly when xdocs are transformed to HTML docs.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Make cocoon.properties (i.e. Configurations objects) easily accessible from XSP.
   </action>
   <action context="docs">
    Make authors appear on all HTML docs (where appropriate).
