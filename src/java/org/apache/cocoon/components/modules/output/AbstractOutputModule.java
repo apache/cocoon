@@ -1,40 +1,40 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.components.modules.output;
-
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.HashMap;
-//import java.util.HashMap;
+
+import java.util.Map;
 
 /**
  * AbstractOutputModule gives you the infrastructure for easily
- * deploying more output modules.  In order to get at the
- * Logger, use getLogger().
+ * deploying more output modules.
+ *
+ * <p>In order to get at the logger, use <code>getLogger()</code>.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractOutputModule.java,v 1.4 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractOutputModule extends AbstractLogEnabled
     implements OutputModule, Configurable, Disposable {
@@ -43,21 +43,22 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
      * Stores (global) configuration parameters as <code>key</code> /
      * <code>value</code> pairs.
      */
-    protected HashMap settings = null;
+    protected HashMap settings;
 
     /**
      * Configures the module.
      *
-     * Takes all elements nested in component declaration and stores
+     * <p>Takes all elements nested in component declaration and stores
      * them as key-value pairs in <code>settings</code>. Nested
      * configuration option are not catered for. This way global
-     * configuration options can be used.
+     * configuration options can be used.</p>
      *
-     * For nested configurations override this function.
-     * */
+     * <p>For nested configurations override this function.</p>
+     */
     public void configure(Configuration conf) throws ConfigurationException {
         Configuration[] parameters = conf.getChildren();
-        this.settings = new HashMap(parameters.length);
+        // Ideally here should be length * 1.333(3) but simple +1 will do for lengths up to 3
+        this.settings = new HashMap(parameters.length + 1);
         for (int i = 0; i < parameters.length; i++) {
             String key = parameters[i].getName();
             String val = parameters[i].getValue("");
@@ -66,84 +67,77 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
     }
 
     /**
-     *  dispose
+     * Dispose
      */
     public void dispose() {
-        // Purposely empty so that we don't need to implement it in every
-        // class.
+        // Implemeted so that we don't need to implement it in every subclass
+        this.settings = null;
     }
 
     /**
-     * Utility method to store parameters in a map as request attribute until 
+     * Utility method to store parameters in a map as request attribute until
      * either {@link #rollback(Map, String)} or {@link #prepareCommit(Map, String)}
      * is called.
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
      * @param name - name of the attribute to set
      * @param value - attribute value
-     */    
-    protected void transientSetAttribute( Map objectModel, String trans_place, String name, Object value ) {
+     */
+    protected void transientSetAttribute(Map objectModel, String trans_place, String name, Object value) {
+        final Request request = ObjectModelHelper.getRequest(objectModel);
 
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        Object temp = request.getAttribute(trans_place);
-        Map aMap = null;
-
-        if (temp == null) {           
-            aMap = new java.util.HashMap();
-            // need java.util.HashMap here since JXPath does not like the extended version...
-        } else {
-            aMap = (Map) temp;
+        Map map = (Map) request.getAttribute(trans_place);
+        if (map == null) {
+            // Need java.util.HashMap here since JXPath does not like the extended version...
+            map = new java.util.HashMap();
         }
 
-        aMap.put(name,value);
-
-        request.setAttribute(trans_place, aMap);
+        map.put(name, value);
+        request.setAttribute(trans_place, map);
     }
 
     /**
      * Clears all uncommitted transient attributes.
+     *
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
-     */    
-    protected void rollback( Map objectModel, String trans_place) {
-        ObjectModelHelper.getRequest(objectModel).setAttribute(trans_place, null);
+     */
+    protected void rollback(Map objectModel, String trans_place) {
+        ObjectModelHelper.getRequest(objectModel).removeAttribute(trans_place);
     }
 
     /**
      * Returns a whether an transient attribute already exists.
-     * {@link #transientSetAttribute(Map, String, String, Object)} since the last call to 
+     * {@link #transientSetAttribute(Map, String, String, Object)} since the last call to
      * {@link #rollback(Map, String)} or {@link #prepareCommit(Map, String)}
+     *
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
-     */    
-    protected boolean attributeExists( Map objectModel, String trans_place, String name )
-    {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        Object temp = request.getAttribute(trans_place);
-        if (temp == null) {
+     */
+    protected boolean attributeExists(Map objectModel, String trans_place, String name) {
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+
+        Map map = (Map) request.getAttribute(trans_place);
+        if (map == null) {
             return false;
-        } else {
-            return ((Map) temp).containsKey(name);
         }
+
+        return map.containsKey(name);
     }
 
     /**
-     * Returns a map containing all transient attributes and remove them i.e. attributes set with 
-     * {@link #transientSetAttribute(Map, String, String, Object)} since the last call to 
+     * Returns a map containing all transient attributes and remove them i.e. attributes set with
+     * {@link #transientSetAttribute(Map, String, String, Object)} since the last call to
      * {@link #rollback(Map, String)} or {@link #prepareCommit(Map, String)}
+     *
      * @param objectModel - the objectModel
      * @param trans_place - request attribute name used for the transient data
-     */    
-    protected Map prepareCommit( Map objectModel, String trans_place )
-    {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        Object temp = request.getAttribute(trans_place);
-        request.setAttribute(trans_place, null);
-        if (temp == null) {
-            return null;
-        } else {
-            return (Map) temp;
-        }
-    }
+     */
+    protected Map prepareCommit(Map objectModel, String trans_place) {
+        final Request request = ObjectModelHelper.getRequest(objectModel);
 
+        Map data = (Map) request.getAttribute(trans_place);
+        request.removeAttribute(trans_place);
+        return data;
+    }
 }
