@@ -67,7 +67,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * This transformer allows you to set properties on an InspectableSource.
+ * This transformer allows you to set and remove properties on an InspectableSource.
  * 
 * <p>Input XML document example:</p>
  * <pre>
@@ -75,17 +75,19 @@ import org.xml.sax.SAXException;
  *   ...
  *   &lt;source:patch xmlns:source="http://apache.org/cocoon/propwrite/1.0"&gt;
  *     &lt;source:source&gt;webdav://localhost/webdav/step1/repo/contentA.xml&lt;/source:source&gt;
- *     &lt;source:prop name="author" namespace="meta"&gt;me&lt;/source:prop&gt;
- *     &lt;source:props&gt;
+ *     &lt;source:set&gt;
  *       &lt;myns:author xmlns:myns="meta"&gt;me&lt;/myns:author&gt;
- *     &lt;/source:props&gt;
+ *     &lt;/source:set&gt;
+ *     &lt;source:remove&gt;
+ *       &lt;myns:title xmlns:myns="meta"/&gt;
+ *     &lt;/source:remove&gt;
  *   &lt;/source:patch&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SourcePropsWritingTransformer.java,v 1.3 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: SourcePropsWritingTransformer.java,v 1.4 2003/11/22 13:11:52 gcasper Exp $
  */
 public class SourcePropsWritingTransformer
     extends AbstractSAXTransformer {
