@@ -89,24 +89,24 @@ import java.util.StringTokenizer;
 /**
  * Eclipse Java Compiler
  *
- * @version CVS $Id: EclipseJavaCompiler.java,v 1.2 2003/03/11 17:09:04 vgritsenko Exp $
+ * @version CVS $Id: EclipseJavaCompiler.java,v 1.3 2003/03/20 04:12:49 vgritsenko Exp $
  */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
     static boolean target14;
+    static boolean source14;
 
     static {
         // Detect JDK version we are running under
         String version = System.getProperty("java.specification.version");
         try {
-            target14 = Float.parseFloat(version) >= 1.4;
+            source14 = target14 = Float.parseFloat(version) >= 1.4;
         } catch (NumberFormatException e) {
-            target14 = false;
+            source14 = target14 = false;
         }
     }
 
     boolean debug;
-    boolean source14;
 
     String sourceDir;
     String sourceFile; 
@@ -130,27 +130,30 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
     }
 
     public void setFile(String file) {
-        // This seems to be the absolute path to the file to be compiled
+        // This is the absolute path to the file to be compiled
         this.sourceFile = file;
     }
 
-    public void setSource(String source) {
-        // This seems to simply be the directory the file to
-        // be compiled resides in
-        // FIXME: this.sourceDir = destDir; does not work here
+    public void setSource(String srcDir) {
+        // This is the "sourcepath" of the file to be
+        // compiled
+        this.sourceDir = srcDir;
     }
 
     public void setDestination(String destDir) {
-        // This seems to indicate the "sourcepath" of the file to be
-        // compiled (as well as the output directory)
+        // This is the output directory)
         this.destDir = destDir;
-        this.sourceDir = destDir;
     }
 
     public void setEncoding(String encoding) {
         this.sourceEncoding = encoding; 
     }
 
+    /**
+     * Eclipse Java compiler ignores class path setting and uses current
+     * Java class loader
+     * @param cp classpath to be ignored
+     */
     public void setClasspath(String cp) {
         // Not used 
     }
