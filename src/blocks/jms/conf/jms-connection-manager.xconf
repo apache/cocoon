@@ -15,20 +15,31 @@
   limitations under the License.
 -->
 <xconf xpath="/cocoon" unless="jms-connection-manager">
+  <!-- +
+    | Configuration of a set JMS Connections. 
+    | Three types of connections can be configured: 
+    | - general <connection>s: created by a call to ConnectionFactory.createConnection()
+    | - <topic-connection>s: created by a call to TopicConnectionFactory.createTopicConnection()
+    | - <queue-connection>s: created by a call to QeueuConnectionFactory.createQueueConnection()
+    | 
+    | Each connection must have a unique name to retrieve it. This is the name other components
+    | use to retrieve it.
+    | 
+    | All connection types support the same set of parameters:
+    | - javax.naming.*: properties used to create the initial JNDI context.
+    |   JNDI parameters must be specified with their literal values here.
+    |   For example, javax.naming.Context.INITIAL_CONTEXT_FACTORY is 
+    |   equivalent to "java.naming.factory.initial".
+    | - connection-factory: the JNDI lookup name of the javax.jms.ConnectionFactory service.
+    | - username / password: optional connection credentials
+    + -->
   <jms-connection-manager logger="core.jms">
     <topic-connection name="local-topics">
-      <!-- +
-        | JNDI Parameters must be specified with their literal values here.
-        | For example, javax.naming.Context.INITIAL_CONTEXT_FACTORY is 
-        | equivalent to "java.naming.factory.initial".  If a jndi.properties 
-        | file is on the classpath, jndi-info can be left empty to use those 
-        | properties instead.
-        + -->
       <parameter name="java.naming.factory.initial" value="org.exolab.jms.jndi.InitialContextFactory"/>
       <parameter name="java.naming.provider.url" value="rmi://localhost:1099/"/>
       <!-- OpenJMS RMI topic connection factory -->
       <parameter name="connection-factory" value="JmsTopicConnectionFactory"/>
-      <!-- optional username and password
+      <!--
       <parameter name="username" value="user"/>
       <parameter name="password" value="secret"/>
       -->
