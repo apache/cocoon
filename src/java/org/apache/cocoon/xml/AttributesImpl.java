@@ -54,7 +54,7 @@ package org.apache.cocoon.xml;
  * A helper Class creating SAX Attributes
  * 
  * @author <a href="mailto:volker.schmitt@basf-ag.de">Volker Schmitt</a>
- * @version CVS $Id: AttributesImpl.java,v 1.1 2003/05/06 12:09:20 cziegeler Exp $
+ * @version CVS $Id: AttributesImpl.java,v 1.2 2003/12/11 14:29:10 cziegeler Exp $
  */
 public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
 
@@ -94,4 +94,25 @@ public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
                             		String value) {
 		addAttribute(uri, localName, qName, AttributeTypes.CDATA, value);
 	}
+    
+    /**
+     * Remove an attribute
+     */
+    public void removeAttribute(String localName) {
+        final int index = this.getIndex(localName);
+        if ( index != -1 ) {
+            this.removeAttribute(index);
+        }
+    }
+
+    /**
+     * Remove an attribute
+     */
+    public void removeAttribute(String uri, String localName) {
+        final int index = this.getIndex(uri, localName);
+        if ( index != -1 ) {
+            this.removeAttribute(index);
+        }
+    }
 }
+  
