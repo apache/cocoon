@@ -66,7 +66,7 @@ import java.util.List;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: FileSavingEnvironment.java,v 1.4 2003/08/17 13:43:00 upayavira Exp $
+ * @version CVS $Id: FileSavingEnvironment.java,v 1.5 2003/11/16 00:52:08 vgritsenko Exp $
  */
 public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
 
@@ -85,9 +85,12 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
                                  Logger log)
     throws MalformedURLException {
         super(uri, null, context, stream, log);
-        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, new CommandLineRequest(this, null, uri, null, attributes, parameters));
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, new CommandLineResponse());
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, cliContext);
+        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
+                             new CommandLineRequest(this, null, uri, null, attributes, parameters));
+        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
+                             new CommandLineResponse());
+        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
+                             cliContext);
         this.sourceLastModified = lastModified;
         if (links != null) {
             this.objectModel.put(Constants.LINK_OBJECT, links);
@@ -96,6 +99,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
             this.objectModel.put(Constants.LINK_COLLECTION_OBJECT, gatheredLinks);
         }
     }
+    
     public FileSavingEnvironment(String uri,
                                  File context,
                                  Map attributes,
@@ -134,8 +138,4 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
     public boolean isModified() {
         return this.modified;
     }
-
 }
-
-
-

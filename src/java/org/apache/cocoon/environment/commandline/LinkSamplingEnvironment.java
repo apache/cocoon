@@ -69,7 +69,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSamplingEnvironment.java,v 1.5 2003/08/19 23:27:03 joerg Exp $
+ * @version CVS $Id: LinkSamplingEnvironment.java,v 1.6 2003/11/16 00:52:08 vgritsenko Exp $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
@@ -82,14 +82,17 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                                    Map parameters,
                                    CommandLineContext cliContext,
                                    Logger log)
-            throws MalformedURLException, IOException {
+    throws MalformedURLException, IOException {
         super(uri, Constants.LINK_VIEW, contextFile, new ByteArrayOutputStream(), log);
         if (getLogger().isDebugEnabled()) {
-            this.getLogger().debug("LinkSamplingEnvironment: uri = " + uri);
+            getLogger().debug("uri = " + uri);
         }
-        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, new CommandLineRequest(this, null, uri, null, attributes, parameters));
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, new CommandLineResponse());
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, cliContext);
+        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
+                             new CommandLineRequest(this, null, uri, null, attributes, parameters));
+        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
+                             new CommandLineResponse());
+        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
+                             cliContext);
     }
 
     /**

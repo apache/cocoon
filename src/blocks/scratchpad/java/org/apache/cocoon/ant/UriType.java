@@ -62,7 +62,7 @@ import org.apache.cocoon.util.NetUtils;
  * over all classes.
  *
  * @author    huber@apache.org
- * @version CVS $Id: UriType.java,v 1.2 2003/10/31 21:41:59 vgritsenko Exp $
+ * @version CVS $Id: UriType.java,v 1.3 2003/11/16 00:52:08 vgritsenko Exp $
  */
 public class UriType {
     private String uri;
@@ -183,7 +183,7 @@ public class UriType {
 
 
     /**
-     *   Gets the parameters attribute of the UriType object
+     * Gets the parameters attribute of the UriType object
      *
      * @return    The parameters value
      */
@@ -193,7 +193,7 @@ public class UriType {
 
 
     /**
-     *   Gets the deparameterizedURI attribute of the UriType object
+     * Gets the deparameterizedURI attribute of the UriType object
      *
      * @return    The deparameterizedURI value
      */
@@ -203,7 +203,7 @@ public class UriType {
 
 
     /**
-     *   Gets the sURI attribute of the UriType object
+     * Gets the sURI attribute of the UriType object
      *
      * @return    The sURI value
      */
@@ -213,7 +213,7 @@ public class UriType {
 
 
     /**
-     *   Gets the mangledURI attribute of the UriType object
+     * Gets the mangledURI attribute of the UriType object
      *
      * @return    The mangledURI value
      */
@@ -223,7 +223,7 @@ public class UriType {
 
 
     /**
-     *   Gets the path attribute of the UriType object
+     * Gets the path attribute of the UriType object
      *
      * @return    The path value
      */
@@ -233,7 +233,7 @@ public class UriType {
 
 
     /**
-     *   Gets the filename attribute of the UriType object
+     * Gets the filename attribute of the UriType object
      *
      * @return    The filename value
      */
@@ -243,7 +243,7 @@ public class UriType {
 
 
     /**
-     *   Gets the extension attribute of the UriType object
+     * Gets the extension attribute of the UriType object
      *
      * @return    The extension value
      */
@@ -359,15 +359,15 @@ public class UriType {
      * Calculate all member values depending on the uri member value
      */
     protected void init() {
-        if (uri != null) {
-            parameters = new HashMap();
-            deparameterizedUri = NetUtils.deparameterize(uri, parameters);
-            sUri = NetUtils.parameterize(deparameterizedUri, parameters);
-            mangledUri = mangledUri(sUri);
-            path = NetUtils.getPath(uri);
+        if (this.uri != null) {
+            this.parameters = new HashMap();
+            this.deparameterizedUri = NetUtils.deparameterize(this.uri, this.parameters);
+            this.sUri = NetUtils.parameterize(this.deparameterizedUri, this.parameters);
+            this.mangledUri = mangledUri(this.sUri);
+            this.path = NetUtils.getPath(this.uri);
             
-            if (path.length() == 0) {
-                path = "/";
+            if (this.path.length() == 0) {
+                this.path = "/";
             }
         }
     }
