@@ -155,6 +155,8 @@
     <depend project="cocoon-block-axis"/>
     <depend project="cocoon-block-batik" type="samples"/>
     <depend project="cocoon-block-cron"/>
+    <depend project="cocoon-block-eventcache"/>
+    <depend project="cocoon-block-repository"/>
     <depend project="cocoon-block-xsp"/>
     <depend project="apache-garbage"/>
 

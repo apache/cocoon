@@ -42,7 +42,7 @@
         |   A Refresher is used when asynchronic caching is turned on. It is responsible for
         |   updating the cached contents in the background.
         | - 'default-expires' (-1). The expires value if it is not specified on the source
-        |    itself.
+        |    itself. The default value of -1 means to never expire.
         +-->
     <component-instance name="cached"
                         class="org.apache.cocoon.components.source.impl.CachingSourceFactory"
@@ -50,9 +50,9 @@
       <!--
       <parameter name="async" value="true"/>
       <parameter name="cache-role" value="org.apache.cocoon.caching.Cache"/>
-      <parameter name="refresher-role" value="org.apache.cocoon.components.source.impl.Refresher/Delay"/>
       <parameter name="default-expires" value="-1"/>
       -->
+      <parameter name="refresher-role" value="org.apache.cocoon.components.source.impl.Refresher/Delay"/>
     </component-instance>
 
 </xconf>
