@@ -34,8 +34,7 @@ public final class CopletLayout extends AbstractLayout {
     
     public void setCopletInstanceData(CopletInstanceData cid) {
         this.copletInstanceData = cid;
-        String id = cid.getId();
-        if (id != null) {
+        if ( this.getId() == null ) {
             this.setId(cid.getId());
         }
     }
