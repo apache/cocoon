@@ -42,6 +42,17 @@
     is in most cases much easier that starting with your old application
     and adapting it for Cocoon 2.2.x.</p>
   </s1>
+  <s1 title="Sitemap Changes">
+    <s2 title="Mime-Types and Readers">
+      <p>The way, a reader sets the mime-type has changed. Now the following algorithm is used:</p>
+      <ol>
+       <li>If the reader instance has a mime-type definition, it is used.</li>
+       <li>If the used reader has a mime-type definition, it is used.</li>
+       <li>If both are not set, the reader itself has to provide the mime-type.</li>
+      </ol>
+      <p>You can find further information in <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.</p>
+    </s2>
+  </s1>
   <s1 title="Recompilation">
     <p>
       As detailed below some deprecated classes and methods have been removed,
