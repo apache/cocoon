@@ -38,7 +38,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-18 21:34:30 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-01-18 22:02:16 $
  */
 public class DefaultComponentManager implements ComponentManager, Configurable {
 
@@ -101,6 +101,10 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
             }
 
             this.components.put(role, componentClass);
+
+	    if (Configurable.class.isAssignableFrom(componentClass)) {
+	        this.configurations.put(role, new DefaultConfiguration("", "-"));
+	    }
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {

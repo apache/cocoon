@@ -40,7 +40,7 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-01-18 21:34:28 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-01-18 22:02:14 $
  */
 public class CocoonComponentSelector implements ComponentSelector, Composer, Configurable, ThreadSafe {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -166,18 +166,16 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Con
     private Component getThreadsafeComponent(Object hint, Class component)
     throws ComponentManagerException {
 
-        Component retVal = (Component) this.instances.get(hint);
+        Component retVal;
 
-        if (retVal == null) {
-            try {
-                retVal = (Component) component.newInstance();
+        try {
+            retVal = (Component) component.newInstance();
 
-                this.setupComponent(hint, retVal);
-                this.instances.put(hint, retVal);
-            } catch (Exception e) {
-                log.error("Could not set up the Component for hint: " + String.valueOf(hint), e);
-                throw new ComponentNotAccessibleException("Could not set up the Component for hint: " + String.valueOf(hint), e);
-            }
+            this.setupComponent(hint, retVal);
+            this.instances.put(hint, retVal);
+        } catch (Exception e) {
+            log.error("Could not set up the Component for hint: " + String.valueOf(hint), e);
+            throw new ComponentNotAccessibleException("Could not set up the Component for hint: " + String.valueOf(hint), e);
         }
 
         return retVal;
