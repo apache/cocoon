@@ -105,6 +105,7 @@
             <!-- Paths configuration -->
             <userspath>/users</userspath>
             <rolespath>/roles</rolespath>
+            <groupspath>/groups</groupspath>
             <actionspath>/actions</actionspath>
             <filespath>/files</filespath>
 
@@ -139,7 +140,7 @@
                         <property name="password" namespace="http://jakarta.apache.org/slide/">root</property>
                         </revision>
                     </objectnode>
-                    <!-- /users/john and /users/john2 represent authenticated users -->
+                    <!-- /users/john and represents an authenticated user -->
                     <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/users/john">
                       <revision>
                         <property name="password" namespace="http://jakarta.apache.org/slide/">john</property>
@@ -159,7 +160,7 @@
                     </objectnode>
                     <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/roles/user">
                         <revision>
-                            <property name="group-member-set"><![CDATA[<D:href xmlns:D='DAV:'>/users/john</D:href><D:href xmlns:D='DAV:'>/users/john2</D:href><D:href xmlns:D='DAV:'>/users/root</D:href>]]></property>
+                            <property name="group-member-set"><![CDATA[<D:href xmlns:D='DAV:'>/users/john</D:href><D:href xmlns:D='DAV:'>/users/root</D:href>]]></property>
                         </revision>
                     </objectnode>
                     <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/roles/guest">
@@ -167,6 +168,11 @@
                             <property name="group-member-set"><![CDATA[<D:href xmlns:D='DAV:'>/users/guest</D:href>]]></property>
                         </revision>
                     </objectnode>
+                </objectnode>
+                <!-- groups -->
+                <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/groups">
+                    <permission action="all" subject="self" inheritable="true"/>
+                    <permission action="all" subject="unauthenticated" inheritable="true" negative="true"/>
                 </objectnode>
                 <!-- action -->
                 <objectnode classname="org.apache.slide.structure.ActionNode" uri="/actions">
