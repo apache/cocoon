@@ -306,7 +306,7 @@ implements CacheableProcessingComponent  {
          * @see SourceValidity#isValid()
          */
         public int isValid() {
-            return(SourceValidity.UNKNOWN);
+            return(SourceValidity.VALID);
         }
 
         /**
