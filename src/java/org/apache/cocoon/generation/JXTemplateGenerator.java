@@ -62,6 +62,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -352,7 +353,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.25 2003/12/29 21:26:05 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.26 2004/01/04 01:07:53 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -691,6 +692,25 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         public Iterator getIterator(Object obj, Info i)
             throws Exception {
             if (!(obj instanceof Scriptable)) {
+                // support Enumeration
+                if (obj instanceof Enumeration) {
+                    final Enumeration e = (Enumeration)obj;
+                    return new Iterator() {
+
+                            public boolean hasNext() {
+                                return e.hasMoreElements();
+                            }
+
+                            public Object next() {
+                                return e.nextElement();
+                            }
+
+                            public void remove() {
+                                // no action
+                            }
+
+                        };
+                }
                 return super.getIterator(obj, i);
             }
             if (obj instanceof NativeArray) {
@@ -878,6 +898,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     final static String IMPORT = "import";
     final static String SET = "set";
     final static String MACRO = "macro";
+    final static String EVALBODY = "evalBody";
     final static String PARAMETER = "parameter";
     final static String FORMAT_NUMBER = "formatNumber";
     final static String FORMAT_DATE = "formatDate";
@@ -1598,7 +1619,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     static class StartForEach extends StartInstruction {
         StartForEach(StartElement raw,
-                     Expression items, String var, String varStatus,
+                     Expression items, Expression var, Expression varStatus,
                      Expression begin, Expression end, Expression step, Boolean lenient) {
             super(raw);
             this.items = items;
@@ -1610,8 +1631,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             this.lenient = lenient;
         }
         final Expression items;
-        final String var;
-        final String varStatus;
+        final Expression var;
+        final Expression varStatus;
         final Expression begin;
         final Expression end;
         final Expression step;
@@ -1673,6 +1694,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     static class StartTemplate extends StartInstruction {
         StartTemplate(StartElement raw) {
+            super(raw);
+        }
+    }
+
+    static class StartEvalBody extends StartInstruction {
+        StartEvalBody(StartElement raw) {
             super(raw);
         }
     }
@@ -2358,8 +2385,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Expression step = compileInt(attrs.getValue("step"),
                                                  FOR_EACH,
                                                  locator);
-                    String var = attrs.getValue("var");
-                    String varStatus = attrs.getValue("varStatus");
+                    Expression var =
+                        compileExpr(attrs.getValue("var"), 
+                                    null, locator);           
+                    Expression varStatus =
+                        compileExpr(attrs.getValue("varStatus"), 
+                                    null, locator);           
                     if (items == null) {
                         if (select == null && (begin == null || end == null)) {
                             throw new SAXParseException("forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified", locator, null);
@@ -2546,6 +2577,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     if (syntaxErr) {
                         throw new SAXParseException("<parameter> not allowed here", locator, null);
                     }
+                } else if (localName.equals(EVALBODY)) {
+                    StartEvalBody startEval = 
+                        new StartEvalBody(startElement);
+                    newEvent = startEval;
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
                     String value = attrs.getValue("value");
@@ -2654,6 +2689,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 gen.execute(gen.getConsumer(),
                             gen.getJexlContext(),
                             gen.getJXPathContext(),
+                            null,
                             getStartEvent(), null);
             }
 
@@ -2870,7 +2906,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
         }
         execute(this.xmlConsumer,
-                globalJexlContext, jxpathContext, 
+                globalJexlContext, jxpathContext, null,
                 startEvent, null);
     }
 
@@ -3009,7 +3045,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
    }
 
     private void call(Locator location,
-                      String messagePrefix,
+                      StartElement macroCall,
                       final XMLConsumer consumer,
                       MyJexlContext jexlContext,
                       JXPathContext jxpathContext,
@@ -3017,9 +3053,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         throws SAXException {
         try {
             execute(consumer, jexlContext,
-                    jxpathContext, startEvent, endEvent);
+                    jxpathContext, macroCall,
+                    startEvent, endEvent);
         } catch (SAXParseException exc) {
-            throw new SAXParseException(messagePrefix +": " +exc.getMessage(),
+            throw new SAXParseException(macroCall.localName +": " +exc.getMessage(),
                                         location, 
                                         exc);
         }
@@ -3064,6 +3101,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     private void execute(final XMLConsumer consumer,
                          MyJexlContext jexlContext,
                          JXPathContext jxpathContext,
+                         StartElement macroCall,
                          Event startEvent, Event endEvent) 
     throws SAXException {
         Event ev = startEvent;
@@ -3191,6 +3229,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 final Object items = startForEach.items;
                 Iterator iter = null;
                 int begin, end, step;
+                String var, varStatus;
                 try {
                     if (items == null) {
                         iter = NULL_ITER;
@@ -3250,6 +3289,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     step = startForEach.step == null ? 1 : 
                         getIntValue(startForEach.step, jexlContext,
                                     jxpathContext);
+                    var = getStringValue(startForEach.var, jexlContext, 
+                                            jxpathContext);
+                    varStatus = getStringValue(startForEach.varStatus, 
+                                               jexlContext, 
+                                               jxpathContext);
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(),
                                                 ev.location,
@@ -3269,15 +3313,15 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     iter.next();
                 }
                 LoopTagStatus status = null;
-                if (startForEach.varStatus != null) {
+                if (varStatus != null) {
                     status = new LoopTagStatus();
                     status.begin = begin;
                     status.end = end;
                     status.step = step;
                     status.first = true;
-                    localJexlContext.put(startForEach.varStatus,
+                    localJexlContext.put(varStatus,
                                          status);
-                    localJXPathVariables.declareVariable(startForEach.varStatus,
+                    localJXPathVariables.declareVariable(varStatus,
                                                          status);
                 }
                 for (int count = 1; i <= end && iter.hasNext(); i+=step, count++) {
@@ -3301,8 +3345,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                             value);
                     }
                     localJXPathContext.setVariables(localJXPathVariables);
-                    if (startForEach.var != null) {
-                        localJexlContext.put(startForEach.var, value);
+                    if (var != null) {
+                        localJexlContext.put(var, value);
                     }
                     if (status != null) {
                         status.index = i;
@@ -3314,6 +3358,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     execute(consumer,
                             localJexlContext,
                             localJXPathContext,
+                            macroCall,
                             startForEach.next,
                             startForEach.endInstruction);
                     for (int skip = step-1; 
@@ -3344,7 +3389,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     if (result) {
                         execute(consumer,
-                                jexlContext, jxpathContext,
+                                jexlContext, jxpathContext, macroCall,
                                 startWhen.next, startWhen.endInstruction);
                         break;
                     }
@@ -3352,7 +3397,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 if (startWhen == null) {
                     if (startChoose.otherwise != null) {
                         execute(consumer,
-                                jexlContext, jxpathContext,
+                                jexlContext, jxpathContext, macroCall,
                                 startChoose.otherwise.next,
                                 startChoose.otherwise.endInstruction);
                     }
@@ -3378,9 +3423,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                          "set",
                                          "set",
                                          EMPTY_ATTRS);
-                    execute(builder, jexlContext, jxpathContext,
-                            startSet.next, 
-                            startSet.endInstruction);
+                    execute(builder, jexlContext, jxpathContext, macroCall,
+                            startSet.next, startSet.endInstruction);
                     builder.endElement(NS,
                                        "set",
                                        "set");
@@ -3523,7 +3567,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         jxpathContextFactory.newContext(null, arr);
                     localJXPathContext.setVariables(vars);
                     call(ev.location,
-                         startElement.localName,
+                         startElement,
                          consumer, 
                          localJexlContext, localJXPathContext,
                          def.body, def.endInstruction);
@@ -3695,6 +3739,18 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                 e);
                 }
             } else if (ev instanceof StartTemplate) {
+            } else if (ev instanceof StartEvalBody) {
+                StartEvalBody startEval = (StartEvalBody)ev;
+                try {
+                    execute(consumer, jexlContext,
+                            jxpathContext, null,
+                            macroCall.next, macroCall.endElement);
+                } catch (Exception exc) {
+                    throw new SAXParseException(exc.getMessage(),
+                                                ev.location, exc);
+                }
+                ev = startEval.endInstruction.next;
+                continue;
             } else if (ev instanceof StartDefine) {
                 StartDefine startDefine = (StartDefine)ev;
                 definitions.put(startDefine.qname, startDefine);
@@ -3812,8 +3868,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                     null);
                     }
                 }
-                execute(consumer, selectJexl, selectJXPath, doc.next, 
-                        doc.endDocument);
+                execute(consumer, selectJexl, selectJXPath, macroCall,
+                        doc.next, doc.endDocument);
                 ev = startImport.endInstruction.next;
                 continue;
             }
