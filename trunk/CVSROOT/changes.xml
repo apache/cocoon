@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.226 2001-03-26 15:30:27 greenrd Exp $ 
+  $Id: changes.xml,v 1.227 2001-03-26 16:46:44 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="paint007@mc.duke.edu" due-to-email="paint007@mc.duke.edu">
+   XSP now allows periods (.) in namespaces for namespace-mapped logicsheets.
+  </action>
   <action dev="RDG" type="add" due-to="Sebastien Koechlin" due-to-email="skoechlin@ivision.fr">
    Added ability to omit xml declaration from output (see cocoon.properties).
   </action>

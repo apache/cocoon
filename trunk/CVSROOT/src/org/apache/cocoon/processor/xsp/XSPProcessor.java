@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.41 2001-03-22 19:58:27 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.42 2001-03-26 16:46:47 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.41 $ $Date: 2001-03-22 19:58:27 $
+ * @version $Revision: 1.42 $ $Date: 2001-03-26 16:46:47 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -269,8 +269,8 @@ public class XSPProcessor extends AbstractActor
 
     while (e.hasMoreElements()) {
       String str = (String) e.nextElement();
-      String namespace = str.substring(0, str.indexOf('.'));
-      String language = str.substring(str.indexOf('.') + 1);
+      String namespace = str.substring(0, str.lastIndexOf('.'));
+      String language = str.substring(str.lastIndexOf('.') + 1);
       String location = (String) lsConf.get(str);
 
       if (this.languages.get(language) == null) {
