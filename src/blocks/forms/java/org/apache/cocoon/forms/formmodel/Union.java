@@ -111,7 +111,7 @@ public class Union extends AbstractContainerWidget {
 
     // TODO: Simplify this logic.
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
 
         Widget widget;

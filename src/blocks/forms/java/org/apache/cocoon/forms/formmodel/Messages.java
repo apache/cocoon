@@ -59,7 +59,7 @@ public class Messages extends AbstractWidget {
     }
 
     public boolean validate() {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isValidatingValues())
             return true;
         else
             return messages.size() == 0;
