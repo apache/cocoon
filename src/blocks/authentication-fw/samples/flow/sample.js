@@ -13,6 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+//
+// SVN $Id$
+//
 cocoon.load("resource://org/apache/cocoon/webapps/authentication/flow/javascript/auth.js");
 
 function isLoggedIn() {

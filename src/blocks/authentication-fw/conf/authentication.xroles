@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
+<!-- SVN $Id:$ -->
 <xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.webapps.authentication.AuthenticationManager']">
 
   <role name="org.apache.cocoon.webapps.authentication.AuthenticationManager"
