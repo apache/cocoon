@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Constants;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
@@ -55,6 +56,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;!ATTLIST statusinfo
  *     date CDATA #IMPLIED
  *     host CDATA #IMPLIED
+ *     cocoon-version CDATA #IMPLIED
  * &gt;
  *
  * &lt;!ELEMENT group (group|value)*&gt;
@@ -74,7 +76,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.10 2004/07/02 08:33:42 antonio Exp $
+ * @version CVS $Id$
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -172,6 +174,7 @@ public class StatusGenerator extends ServiceableGenerator {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute(namespace, "date", "date", "CDATA", dateTime);
         atts.addAttribute(namespace, "host", "host", "CDATA", localHost);
+        atts.addAttribute(namespace, "cocoon-version", "cocoon-version", "CDATA", Constants.VERSION);
         ch.startElement(namespace, "statusinfo", "statusinfo", atts);
 
         genVMStatus(ch);
@@ -271,11 +274,11 @@ public class StatusGenerator extends ServiceableGenerator {
             atts.clear();
             atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
             ch.startElement(namespace, "value", "value", atts);
-            Enumeration enum = this.store_persistent.keys();
-            while (enum.hasMoreElements()) {
+            Enumeration enumer = this.store_persistent.keys();
+            while (enumer.hasMoreElements()) {
                 size++;
     
-                Object key  = enum.nextElement();
+                Object key  = enumer.nextElement();
                 Object val  = store_persistent.get(key);
                 String line = null;
                 if (val == null) {
