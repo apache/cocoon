@@ -51,7 +51,9 @@
                   <wi:label>Boolean fields</wi:label>
                   <wi:items>
                     <wt:widget id="somebool"/>
-                    <wt:widget id="drinks"/>
+                    <wt:widget id="drinks">
+                      <wi:styling list-type="checkbox"/>
+                    </wt:widget>
                   </wi:items>
                 </wi:group>
               </wi:items>

@@ -50,7 +50,9 @@
                   <wi:label>Boolean fields</wi:label>
                   <wi:items>
                     <wt:widget id="somebool"/>
-                    <wt:widget id="drinks"/>
+                    <wt:widget id="drinks">
+                      <wi:styling list-type="listbox" listbox-size="4"/>
+                    </wt:widget>
                   </wi:items>
                 </wi:group>
               </wi:items>
