@@ -269,21 +269,16 @@
     <target name="{@name}" unless="unless.exclude.block.{$block-name}"/>
 
     <target name="{@name}-compile" unless="unless.exclude.block.{$block-name}">
-      <xsl:if test="depend">
-        <xsl:attribute name="depends">
+      <xsl:attribute name="depends">
+        <xsl:if test="depend">
+          <xsl:value-of select="$block-name"/><xsl:text>-prepare,</xsl:text>
           <xsl:value-of select="@name"/>,<xsl:value-of select="@name"/>-excluded<xsl:text/>
           <xsl:for-each select="$cocoon-block-dependencies">
             <xsl:text>,</xsl:text>
             <xsl:value-of select="concat(@project, '-compile')"/>
           </xsl:for-each>
-        </xsl:attribute>
-      </xsl:if>
-
-      <!-- Test if this block has special build -->
-      <available property="{$block-name}.has.build" file="${{blocks}}/{$block-name}/build.xml"/>
-
-      <!-- Test if this block has mocks -->
-      <available property="{$block-name}.has.mocks" type="dir" file="${{blocks}}/{$block-name}/mocks/"/>
+        </xsl:if>
+      </xsl:attribute>
 
       <xsl:if test="@status='unstable'">
         <echo message="==================== WARNING ======================="/>
@@ -294,11 +289,119 @@
         <echo message="===================================================="/>
       </xsl:if>
 
-      <antcall target="{$block-name}-compile"/>
+      <!-- Test if this block has special build -->
+      <if>
+        <available file="${{blocks}}/{$block-name}/build.xml"/>
+        <then>
+          <ant inheritAll="true"
+               inheritRefs="false"
+               target="main"
+               antfile="${{blocks}}/{$block-name}/build.xml">
+            <property name="block.dir" value="${{blocks}}/{$block-name}"/>
+          </ant>
+        </then>
+      </if>
+
+      <!-- Test if this block has mocks -->
+      <if>
+        <available type="dir" file="${{blocks}}/{$block-name}/mocks/"/>
+        <then>
+          <mkdir dir="${{build.blocks}}/{$block-name}/mocks"/>
+          <javac srcdir="${{blocks}}/{$block-name}/mocks"
+                 destdir="${{build.blocks}}/{$block-name}/mocks"
+                 debug="${{compiler.debug}}"
+                 optimize="${{compiler.optimize}}"
+                 deprecation="${{compiler.deprecation}}"
+                 target="${{target.vm}}"
+                 nowarn="${{compiler.nowarn}}"
+                 compiler="${{compiler}}">
+            <classpath refid="classpath"/>
+          </javac>
+        </then>
+      </if>
+      
+      <!-- This is a little bit tricky:
+           As the javac task checks, if a src directory is available and
+           stops if its not available, we use the following property
+           to either point to a jdk dependent directory or - if not
+           available - to the usual java source directory.
+           If someone knows a better solution...
+      -->
+      <!-- Currently, we have no JVM dependent sources
+      <condition property="dependend.vm" value="${{target.vm}}">
+        <available file="${{blocks}}/{$block-name}/java${{target.vm}}"/>
+      </condition>
+      <condition property="dependend.vm" value="">
+        <not>
+          <available file="${{blocks}}/{$block-name}/java${{target.vm}}"/>
+        </not>
+      </condition>
+      -->
+      <javac destdir="${{build.blocks}}/{$block-name}/dest"
+             debug="${{compiler.debug}}"
+             optimize="${{compiler.optimize}}"
+             deprecation="${{compiler.deprecation}}"
+             target="${{target.vm}}"
+             nowarn="${{compiler.nowarn}}"
+             compiler="${{compiler}}">
+        <src path="${{blocks}}/{$block-name}/java"/>
+        <!-- Currently, we have no JVM dependent sources
+        <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
+        -->
+        <classpath refid="classpath"/>
+        <exclude name="**/samples/**/*.java"/>
+      </javac>
+
+      <copy filtering="on" todir="${{build.blocks}}/{$block-name}/dest">
+        <fileset dir="${{blocks}}/{$block-name}/java">
+          <patternset refid="unprocessed.sources"/>
+        </fileset>
+      </copy>
+
+      <copy filtering="off" todir="${{build.blocks}}/{$block-name}/dest">
+        <fileset dir="${{blocks}}/{$block-name}/java">
+          <include name="**/Manifest.mf"/>
+          <include name="META-INF/**"/>
+        </fileset>
+      </copy>
+
+      <jar jarfile="${{build.blocks}}/{$block-name}-block.jar" index="true">
+        <fileset dir="${{build.blocks}}/{$block-name}/dest">
+          <include name="org/**"/>
+          <include name="META-INF/**"/>
+        </fileset>
+      </jar>
+
+      <!-- exclude sample classes from the block package -->
+      <mkdir dir="${{build.blocks}}/{$block-name}/samples"/>
+      <javac destdir="${{build.blocks}}/{$block-name}/samples"
+             debug="${{compiler.debug}}"
+             optimize="${{compiler.optimize}}"
+             deprecation="${{compiler.deprecation}}"
+             target="${{target.vm}}"
+             nowarn="${{compiler.nowarn}}"
+             compiler="${{compiler}}">
+        <src path="${{blocks}}/{$block-name}/java"/>
+        <!-- Currently, we have no JVM dependent sources
+        <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
+        -->
+        <classpath refid="classpath"/>
+        <include name="**/samples/**/*.java"/>
+      </javac>
     </target>
 
     <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
-      <xsl:attribute name="depends"><xsl:value-of select="$block-name"/>-prepare<xsl:if test="depend">,<xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:if></xsl:attribute>
+      <xsl:attribute name="depends">
+        <xsl:value-of select="$block-name"/><xsl:text>-prepare</xsl:text>
+        <xsl:if test="depend">
+          <xsl:text>,</xsl:text>
+          <xsl:value-of select="@name"/>
+          <xsl:for-each select="depend[contains(@project,'cocoon-block-')]">
+            <xsl:text>,</xsl:text>
+            <xsl:value-of select="@project"/><xsl:text>-patch</xsl:text>
+          </xsl:for-each>
+        </xsl:if>
+      </xsl:attribute>
                                                                                                                                                                                
       <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xmap"/>
@@ -413,165 +516,68 @@
         </xsl:attribute>
       </xsl:if>
 
-      <!-- Test if this block has mocks -->
-      <available property="{$block-name}.has.mocks" type="dir" file="${{blocks}}/{$block-name}/mocks/"/>
-
       <mkdir dir="${{build.blocks}}/{$block-name}/dest"/>
     </target>
 
-    <target name="{$block-name}-compile" depends="{$block-name}-build,{$block-name}-prepare,{$block-name}-mocks">
-
-      <!-- This is a little bit tricky:
-           As the javac task checks, if a src directory is available and
-           stops if its not available, we use the following property
-           to either point to a jdk dependent directory or - if not
-           available - to the usual java source directory.
-           If someone knows a better solution...
-      -->
-      <!-- Currently, we have no JVM dependent sources
-      <condition property="dependend.vm" value="${{target.vm}}">
-        <available file="${{blocks}}/{$block-name}/java${{target.vm}}"/>
-      </condition>
-      <condition property="dependend.vm" value="">
-        <not>
-          <available file="${{blocks}}/{$block-name}/java${{target.vm}}"/>
-        </not>
-      </condition>
-      -->
-      <javac destdir="${{build.blocks}}/{$block-name}/dest"
-             debug="${{compiler.debug}}"
-             optimize="${{compiler.optimize}}"
-             deprecation="${{compiler.deprecation}}"
-             target="${{target.vm}}"
-             nowarn="${{compiler.nowarn}}"
-             compiler="${{compiler}}">
-        <src path="${{blocks}}/{$block-name}/java"/>
-        <!-- Currently, we have no JVM dependent sources
-        <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
-        -->
-        <classpath refid="classpath"/>
-        <exclude name="**/samples/**/*.java"/>
-      </javac>
-
-      <copy filtering="on" todir="${{build.blocks}}/{$block-name}/dest">
-        <fileset dir="${{blocks}}/{$block-name}/java">
-          <patternset refid="unprocessed.sources"/>
-        </fileset>
-      </copy>
-
-      <copy filtering="off" todir="${{build.blocks}}/{$block-name}/dest">
-        <fileset dir="${{blocks}}/{$block-name}/java">
-          <include name="**/Manifest.mf"/>
-          <include name="META-INF/**"/>
-        </fileset>
-      </copy>
-
-      <jar jarfile="${{build.blocks}}/{$block-name}-block.jar" index="true">
-        <fileset dir="${{build.blocks}}/{$block-name}/dest">
-          <include name="org/**"/>
-          <include name="META-INF/**"/>
-        </fileset>
-      </jar>
-
-      <!-- exclude sample classes from the block package -->
-      <mkdir dir="${{build.blocks}}/{$block-name}/samples"/>
-      <javac destdir="${{build.blocks}}/{$block-name}/samples"
-             debug="${{compiler.debug}}"
-             optimize="${{compiler.optimize}}"
-             deprecation="${{compiler.deprecation}}"
-             target="${{target.vm}}"
-             nowarn="${{compiler.nowarn}}"
-             compiler="${{compiler}}">
-        <src path="${{blocks}}/{$block-name}/java"/>
-        <!-- Currently, we have no JVM dependent sources
-        <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
-        -->
-        <classpath refid="classpath"/>
-        <include name="**/samples/**/*.java"/>
-      </javac>
-    </target>
-
-    <target name="{$block-name}-build" if="{$block-name}.has.build">
-      <ant inheritAll="true"
-           inheritRefs="false"
-           target="main"
-           antfile="${{blocks}}/{$block-name}/build.xml">
-        <property name="block.dir" value="${{blocks}}/{$block-name}"/>
-      </ant>
-    </target>
-
-    <target name="{$block-name}-mocks" depends="{$block-name}-prepare" if="{$block-name}.has.mocks">
-      <mkdir dir="${{build.blocks}}/{$block-name}/mocks"/>
-      <javac srcdir="${{blocks}}/{$block-name}/mocks"
-             destdir="${{build.blocks}}/{$block-name}/mocks"
-             debug="${{compiler.debug}}"
-             optimize="${{compiler.optimize}}"
-             deprecation="${{compiler.deprecation}}"
-             target="${{target.vm}}"
-             nowarn="${{compiler.nowarn}}"
-             compiler="${{compiler}}">
-        <classpath refid="classpath"/>
-      </javac>
-    </target>
-
     <target name="{@name}-tests" unless="unless.exclude.block.{$block-name}">
-      <xsl:if test="depend">
-        <xsl:attribute name="depends">
+      <xsl:attribute name="depends">
+        <xsl:value-of select="@name"/><xsl:text>-compile</xsl:text>
+        <xsl:if test="depend">
+          <xsl:text>,</xsl:text>
           <xsl:value-of select="@name"/>
           <xsl:for-each select="$cocoon-block-dependencies">
             <xsl:text>,</xsl:text>
             <xsl:value-of select="concat(@project, '-compile')"/>
           </xsl:for-each>
-        </xsl:attribute>
-      </xsl:if>
+        </xsl:if>
+      </xsl:attribute>
 
       <!-- Test if this block has tests -->
-      <available property="{$block-name}.has.tests" file="${{blocks}}/{$block-name}/test"/>
+      <if>
+        <available file="${{blocks}}/{$block-name}/test"/>
+        <then>
+          <mkdir dir="${{build.blocks}}/{$block-name}/test"/>
 
-      <antcall target="{$block-name}-tests"/>
-    </target>
+          <copy todir="${{build.blocks}}/{$block-name}/test" filtering="on">
+            <fileset dir="${{blocks}}/{$block-name}/test" excludes="**/*.java"/>
+          </copy>
 
-    <target name="{$block-name}-tests" depends="{$block-name}-compile" if="{$block-name}.has.tests">
-      <mkdir dir="${{build.blocks}}/{$block-name}/test"/>
+          <javac destdir="${{build.blocks}}/{$block-name}/test"
+                 debug="${{compiler.debug}}"
+                 optimize="${{compiler.optimize}}"
+                 deprecation="${{compiler.deprecation}}"
+                 target="${{target.vm}}"
+                 nowarn="${{compiler.nowarn}}"
+                 compiler="${{compiler}}">
+            <src path="${{blocks}}/{$block-name}/test"/>
+            <classpath>
+              <path refid="classpath"/>
+              <path refid="test.classpath"/>
+              <pathelement location="${{build.test}}"/>
+            </classpath>
+          </javac>
 
-      <copy todir="${{build.blocks}}/{$block-name}/test" filtering="on">
-        <fileset dir="${{blocks}}/{$block-name}/test" excludes="**/*.java"/>
-      </copy>
-
-      <javac destdir="${{build.blocks}}/{$block-name}/test"
-             debug="${{compiler.debug}}"
-             optimize="${{compiler.optimize}}"
-             deprecation="${{compiler.deprecation}}"
-             target="${{target.vm}}"
-             nowarn="${{compiler.nowarn}}"
-             compiler="${{compiler}}">
-        <src path="${{blocks}}/{$block-name}/test"/>
-        <classpath>
-          <path refid="classpath"/>
-          <path refid="test.classpath"/>
-          <pathelement location="${{build.test}}"/>
-        </classpath>
-      </javac>
-
-      <junit printsummary="yes" haltonfailure="yes" fork="yes">
-        <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
-        <classpath>
-          <path refid="classpath"/>
-          <path refid="test.classpath"/>
-          <pathelement location="${{build.test}}"/>
-          <pathelement location="${{build.blocks}}/{$block-name}/test"/>
-        </classpath>
-        <formatter type="plain" usefile="no"/>
-        <batchtest>
-          <fileset dir="${{build.blocks}}/{$block-name}/test">
-            <include name="**/*TestCase.class"/>
-            <include name="**/*Test.class"/>
-            <exclude name="**/AllTest.class"/>
-            <exclude name="**/*$$*Test.class"/>
-            <exclude name="**/Abstract*.class"/>
-          </fileset>
-        </batchtest>
-      </junit>
+          <junit printsummary="yes" haltonfailure="yes" fork="yes">
+            <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
+            <classpath>
+              <path refid="classpath"/>
+              <path refid="test.classpath"/>
+              <pathelement location="${{build.test}}"/>
+              <pathelement location="${{build.blocks}}/{$block-name}/test"/>
+            </classpath>
+            <formatter type="plain" usefile="no"/>
+            <batchtest>
+              <fileset dir="${{build.blocks}}/{$block-name}/test">
+                <include name="**/*TestCase.class"/>
+                <include name="**/*Test.class"/>
+                <exclude name="**/AllTest.class"/>
+                <exclude name="**/*$$*Test.class"/>
+                <exclude name="**/Abstract*.class"/>
+              </fileset>
+            </batchtest>
+          </junit>
+        </then>
+      </if>
     </target>
     <target name="{@name}-prepare-anteater-tests" unless="unless.exclude.block.{$block-name}">
 
