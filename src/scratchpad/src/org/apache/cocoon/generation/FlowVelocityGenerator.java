@@ -112,16 +112,39 @@ import java.util.Set;
 /**
  * <p>Cocoon {@link Generator} that produces dynamic XML SAX events
  * from a Velocity template file.</p>
- *
- * <p> This differs from VelocityGenerator only in the objects that
- * populate the velocity context passed to the template. In this
- * generator there are two objects:
- * <ul>
- * <li><code>flowContext</code> - which represents the bean that was from the Flowscript </li>
- * <li><code>continuation</code> - which represents the current continuation - an instance of {@link org.apache.cocoon.components.flow.WebContinuation}</li>
- * </ul>
- * The immediate properties of the bean object are also available in the context
+ * If called from a Flowscript, the immediate properties of the context object from the Flowscript are available in the Velocity context.
+ * In that case, the current Web Continuation from the Flowscript 
+ * is also available as a variable named <code>continuation</code>. You would 
+ * typically access its <code>id</code>:
+ * <p><pre>
+ *    &lt;form action="$continuation.id"&gt;
+ * </pre></p>
+ * <p>You can also reach previous continuations by using the <code>getContinuation()</code> function:</p>
+ * <p><pre>
+ *     &lt;form action="$continuation.getContinuation(1).id}" >
+ * </pre></p>
  * 
+ * In addition the following implicit objects are always available in
+ * the Velocity context:
+ * <p>
+ * <dl>
+ * <dt><code>request</code> (<code>org.apache.cocoon.environment.Request</code>)</dt>
+ * <dd>The Cocoon current request</dd>
+ *
+ * <dt><code>response</code> (<code>org.apache.cocoon.environment.Response</code>)</dt>
+ * <dd>The Cocoon response associated with the current request</dd>
+ *
+ * <dt><code>session</code> (<code>org.apache.cocoon.environment.Session</code>)</dt>
+ * <dd>The Cocoon session associated with the current request</dd>
+ *
+ * <dt><code>context</code> (<code>org.apache.cocoon.environment.Context</code>)</dt>
+ * <dd>The Cocoon context associated with the current request</dd>
+ *
+ * <dt><code>parameters</code> (<code>org.apache.avalon.framework.parameters.Parameters</code>)</dt>
+ * <dd>Any parameters passed to the generator in the pipeline</dd>
+ * </dl>
+ * </p>
+ *
  *
  * <h2>Sitemap Configuration</h2>
  *
@@ -163,7 +186,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.5 2003/04/15 06:52:28 coliver Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.6 2003/04/22 20:03:42 coliver Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -850,11 +873,6 @@ public class FlowVelocityGenerator extends ComposerGenerator
             final WebContinuation kont =
                 (WebContinuation) ((Environment) resolver).getAttribute("kont");
             
-            // This velocity context provides two variables: "this" which represents the
-            // bean object passed to sendPage*() and "continuation" which is the
-            // current continuation. The immediate properties of the bean object are
-            // also available in the context.
-            //
             // Hack? I use JXPath to determine the properties of the bean object
             final JXPathBeanInfo bi = JXPathIntrospector.getBeanInfo(bean.getClass());
             DynamicPropertyHandler h = null;

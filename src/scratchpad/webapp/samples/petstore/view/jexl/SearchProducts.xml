@@ -5,7 +5,7 @@
         <backpointer name="Main Menu" do="index.do" />
         <search>
             <c:forEach var="item" items="${searchResultsProductList}" >
-                <product name="${item.name} id="${item.productId}">
+                <product name="${item.name}" id="${item.productId}">
                     <product-desc>${descn}</product-desc>
                 </product>
             </c:forEach>
