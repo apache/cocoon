@@ -17,7 +17,6 @@ import org.apache.avalon.activity.Disposable;
 import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentManager;
-import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -26,7 +25,7 @@ import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -41,7 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-26 19:24:57 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-26 21:12:07 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 
@@ -155,8 +154,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
     protected void processXIncludeElement(String src, String element, String ns, String prefix)
         throws SAXException,MalformedURLException,IOException {
 
-        ComponentSelector selector = null;
-        Sitemap sitemap = null;
+        Manager sitemap = null;
         EventPipeline eventPipeline = null;
         StreamPipeline pipeline = null;
         if (element == null) element="";
@@ -164,8 +162,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         if (prefix == null) prefix="";
 
         try {
-            selector = (ComponentSelector) manager.lookup(Roles.SERVERPAGES);
-            sitemap = (Sitemap) selector.select("sitemap");
+            sitemap = (Manager) manager.lookup(Roles.SITEMAP_MANAGER);
             getLogger().debug("Processing XInclude element: src=" + src
                                 + ", sitemap=" + sitemap
                                 + ", element=" + element
@@ -184,7 +181,8 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             ((XMLProducer)eventPipeline).setConsumer(consumer);
 
             this.environment.pushURI(src);
-            sitemap.process(this.environment, pipeline, eventPipeline);
+            sitemap.invoke(this.environment, "", src, true, true, pipeline, eventPipeline);
+            //sitemap.process(this.environment, pipeline, eventPipeline);
             eventPipeline.process(this.environment);
             this.environment.popURI();
 
@@ -193,11 +191,8 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         } catch (Exception e) {
             getLogger().error("Error selecting sitemap",e);
         } finally {
-            if (selector != null) {
-                if (sitemap != null)
-                    selector.release((Component)sitemap);
-                this.manager.release((Component)selector);
-            }
+            if (sitemap != null)
+                this.manager.release((Component)sitemap);
             if(eventPipeline != null)
                 this.manager.release((Component)eventPipeline);
             if(pipeline != null)

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.apache.avalon.component.Component;
 import org.apache.avalon.component.ComponentManager;
 import org.apache.avalon.component.Composable;
 import org.apache.avalon.configuration.Configurable;
@@ -20,6 +21,7 @@ import org.apache.avalon.context.Context;
 import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.EventPipeline;
@@ -35,9 +37,9 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-25 17:08:46 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-26 21:12:09 $
  */
-public class Manager extends AbstractLoggable implements Configurable, Composable, Contextualizable {
+public class Manager extends AbstractLoggable implements Component, Configurable, Composable, Contextualizable, ThreadSafe {
 
     private Context context;
 

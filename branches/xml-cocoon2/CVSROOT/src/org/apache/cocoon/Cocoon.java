@@ -27,6 +27,7 @@ import org.apache.avalon.context.Context;
 import org.apache.avalon.context.ContextException;
 import org.apache.avalon.context.Contextualizable;
 import org.apache.avalon.logger.AbstractLoggable;
+import org.apache.avalon.thread.ThreadSafe;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -51,9 +52,9 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.78 $ $Date: 2001-04-25 17:04:53 $
+ * @version CVS $Revision: 1.4.2.79 $ $Date: 2001-04-26 21:12:02 $
  */
-public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
+public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
     private Context context;
 
@@ -211,6 +212,7 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
         getLogger().debug("Sitemap location = " + this.sitemapFileName);
         getLogger().debug("Checking sitemap reload = " + this.checkSitemapReload);
         getLogger().debug("Reloading sitemap asynchron = " + this.reloadSitemapAsynchron);
+        this.componentManager.addComponentInstance(Roles.SITEMAP_MANAGER, this.sitemapManager);
     }
 
     /** Queries the class to estimate its ergodic period termination. */
