@@ -198,11 +198,6 @@
     <action context="code" assigned-to="SMS">
       You can't upload a file within the Slide block.
     </action>
-
-    <action context="code">
-      The 'B2B' example doesn't work (samples/stream/order).
-    </action>
-
    </actions>
   </todo>
 
