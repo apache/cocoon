@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.14 2004/06/09 09:41:16 cziegeler Exp $
+ * @version CVS $Id: Constants.java,v 1.15 2004/06/11 21:37:04 vgritsenko Exp $
  */
 public final class Constants {
 
@@ -233,7 +233,7 @@ public final class Constants {
     public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
     /** The namespace URI for the Error/Exception XML */
-    public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/" + CONF_VERSION;
+    public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/2.1";
 
     /** The namespace prefix for the Error/Exception XML */
     public static final String ERROR_NAMESPACE_PREFIX = "error";
@@ -265,14 +265,14 @@ public final class Constants {
     /** Application <code>Context</code> Key for the default encoding */
     public static final String CONTEXT_DEFAULT_ENCODING = "default-encoding";
 
-    
+
     /**
      * Should descriptors be reloaded?
      *
      * FIXME(GP): Isn't this Action specific only?
      */
     public static final boolean DESCRIPTOR_RELOADABLE_DEFAULT = true;
-    
+
 }
 
 
