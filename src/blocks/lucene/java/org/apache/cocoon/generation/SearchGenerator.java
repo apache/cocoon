@@ -128,7 +128,8 @@ import java.util.Enumeration;
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SearchGenerator.java,v 1.3 2003/09/04 09:38:38 cziegeler Exp $
+ * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
+ * @version CVS $Id: SearchGenerator.java,v 1.4 2003/09/27 13:21:11 joerg Exp $
  */
 public class SearchGenerator extends ServiceableGenerator
     implements Contextualizable, Initializable, Disposable
@@ -137,12 +138,17 @@ public class SearchGenerator extends ServiceableGenerator
     /**
      * The XML namespace for the output document.
      */
-    protected final static String namespace = "http://apache.org/cocoon/search/1.0";
+    protected final static String NAMESPACE = "http://apache.org/cocoon/search/1.0";
+
+    /**
+     * The XML namespace prefix for the output document.
+     */
+    protected final static String PREFIX = "search";
 
     /**
      * The XML namespace for xlink
      */
-    protected final static String xlinkNamespace = "http://www.w3.org/1999/xlink";
+    protected final static String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 
     /**
      * Description of the Field
@@ -150,9 +156,15 @@ public class SearchGenerator extends ServiceableGenerator
     protected final static String CDATA = "CDATA";
 
     /**
-     * Root element of generated xml content, ie <code>results</code>.
+     * Name of root element of generated xml content, ie <code>results</code>.
      */
     protected final static String RESULTS_ELEMENT = "results";
+
+    /**
+     * Qualified name of root element of generated xml content, ie <code>search:results</code>.
+     */
+    protected final static String Q_RESULTS_ELEMENT = PREFIX + ":" + RESULTS_ELEMENT;
+
 
     /**
      * Attribute <code>date</code> of <code>results</code> element.
@@ -169,21 +181,32 @@ public class SearchGenerator extends ServiceableGenerator
 
     /**
      * Attribute <code>start-index</code> of <code>results</code> element.
-     * Echos the <code>startIndex</code> query parameter.
+     * Echoes the <code>startIndex</code> query parameter.
      */
     protected final static String START_INDEX_ATTRIBUTE = "start-index";
 
     /**
      * Attribute <code>page-length</code> of <code>results</code> element.
-     * Echos the <code>pageLenth</code> query parameter.
+     * Echoes the <code>pageLenth</code> query parameter.
      */
     protected final static String PAGE_LENGTH_ATTRIBUTE = "page-length";
 
+    /**
+     * Attribute <code>name</code> of <code>hit</code> element.
+     */
+    protected final static String NAME_ATTRIBUTE = "name";
+    
     /**
      * Child element of generated xml content, ie <code>hits</code>.
      * This element describes all hits.
      */
     protected final static String HITS_ELEMENT = "hits";
+
+    /**
+     * QName of child element of generated xml content, ie <code>search:hits</code>.
+     * This element describes all hits.
+     */
+    protected final static String Q_HITS_ELEMENT = PREFIX + ":" + HITS_ELEMENT;
 
     /**
      * Attribute <code>total-count</code> of <code>hits</code> element.
@@ -202,6 +225,12 @@ public class SearchGenerator extends ServiceableGenerator
      * This element describes a single hit.
      */
     protected final static String HIT_ELEMENT = "hit";
+
+    /**
+     * QName of child element of generated xml content, ie <code>search:hit</code>.
+     * This element describes a single hit.
+     */
+    protected final static String Q_HIT_ELEMENT = PREFIX + ":" + HIT_ELEMENT;
 
     /**
      * Attribute <code>rank</code> of <code>hit</code> element.
@@ -231,16 +260,32 @@ public class SearchGenerator extends ServiceableGenerator
     protected final static String FIELD_ELEMENT = "field";
 
     /**
+     * QName of child element <code>search:field</code> of the <code>hit</code> element.
+     */
+    protected final static String Q_FIELD_ELEMENT = PREFIX + ":" + FIELD_ELEMENT;
+
+    /**
      * Child element of generated xml content, ie <code>navigation</code>.
      * This element describes some hints for easier navigation.
      */
     protected final static String NAVIGATION_ELEMENT = "navigation";
 
     /**
-     * Child element of generated xml content, ie <code>navigation</code>.
+     * QName of child element of generated xml content, ie <code>search:navigation</code>.
+     */
+    protected final static String Q_NAVIGATION_ELEMENT = PREFIX + ":" + NAVIGATION_ELEMENT;
+
+    /**
+     * Child element of generated xml content, ie <code>navigation-page</code>.
      * This element describes the start-index of page containing hits.
      */
     protected final static String NAVIGATION_PAGE_ELEMENT = "navigation-page";
+
+    /**
+     * QName of child element of generated xml content, ie <code>search:navigation-page</code>.
+     * This element describes the start-index of page containing hits.
+     */
+    protected final static String Q_NAVIGATION_PAGE_ELEMENT = PREFIX + ":" + NAVIGATION_PAGE_ELEMENT;
 
     /**
      * Attribute <code>has-next</code> of <code>navigation-page</code> element.
@@ -438,16 +483,15 @@ public class SearchGenerator extends ServiceableGenerator
 
         // try getting the queryString from the generator sitemap params
         
-        queryString = "";
         queryString = par.getParameter(QUERY_PARAM, "");
         
         // try getting the queryString from the request params
         if (queryString.equals("")) {
-					param_name = par.getParameter(QUERY_STRING_PARAM, QUERY_STRING_PARAM_DEFAULT);
-					if (request.getParameter(param_name) != null) {
-							queryString = request.getParameter(param_name);
-					}
-				}
+            param_name = par.getParameter(QUERY_STRING_PARAM, QUERY_STRING_PARAM_DEFAULT);
+            if (request.getParameter(param_name) != null) {
+                queryString = request.getParameter(param_name);
+            }
+        }
         // always try lookup the start index from the request params
         // get startIndex
         startIndex = null;
@@ -523,14 +567,14 @@ public class SearchGenerator extends ServiceableGenerator
 
         // Start the document and set the namespace.
         this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("search", namespace);
-        this.contentHandler.startPrefixMapping("xlink", xlinkNamespace);
+        this.contentHandler.startPrefixMapping(PREFIX, NAMESPACE);
+        this.contentHandler.startPrefixMapping("xlink", XLINK_NAMESPACE);
 
         generateResults();
 
         // End the document.
         this.contentHandler.endPrefixMapping("xlink");
-        this.contentHandler.endPrefixMapping("");
+        this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
     }
 
@@ -538,7 +582,7 @@ public class SearchGenerator extends ServiceableGenerator
     /**
      * Create an Integer.
      * <p>
-     *   Create an Integer from String s, iff conversion fails return null.
+     *   Create an Integer from String s, if conversion fails return null.
      * </p>
      *
      * @param  s  Converting s to an Integer
@@ -579,24 +623,20 @@ public class SearchGenerator extends ServiceableGenerator
         long time = System.currentTimeMillis();
 
         atts.clear();
-        atts.addAttribute(namespace, DATE_ATTRIBUTE,
-            DATE_ATTRIBUTE, CDATA, String.valueOf(time));
+        atts.addAttribute("", DATE_ATTRIBUTE, DATE_ATTRIBUTE, CDATA, String.valueOf(time));
         if (queryString != null && queryString.length() > 0)
-            atts.addAttribute(namespace, QUERY_STRING_ATTRIBUTE,
-                QUERY_STRING_ATTRIBUTE, CDATA, String.valueOf(queryString));
-        atts.addAttribute(namespace, START_INDEX_ATTRIBUTE,
-            START_INDEX_ATTRIBUTE, CDATA, String.valueOf(startIndex));
-        atts.addAttribute(namespace, PAGE_LENGTH_ATTRIBUTE,
-            PAGE_LENGTH_ATTRIBUTE, CDATA, String.valueOf(pageLength));
+            atts.addAttribute("", QUERY_STRING_ATTRIBUTE, QUERY_STRING_ATTRIBUTE, CDATA, String.valueOf(queryString));
+        atts.addAttribute("", START_INDEX_ATTRIBUTE, START_INDEX_ATTRIBUTE, CDATA, String.valueOf(startIndex));
+        atts.addAttribute("", PAGE_LENGTH_ATTRIBUTE, PAGE_LENGTH_ATTRIBUTE, CDATA, String.valueOf(pageLength));
 
-        contentHandler.startElement(namespace, RESULTS_ELEMENT, RESULTS_ELEMENT, atts);
+        contentHandler.startElement(NAMESPACE, RESULTS_ELEMENT, Q_RESULTS_ELEMENT, atts);
 
         // build xml from the hits
         generateHits(pager);
         generateNavigation(pager);
 
         // End root element.
-        contentHandler.endElement(namespace, "results", "results");
+        contentHandler.endElement(NAMESPACE, RESULTS_ELEMENT, Q_RESULTS_ELEMENT);
     }
 
 
@@ -610,13 +650,13 @@ public class SearchGenerator extends ServiceableGenerator
     private void generateHits(LuceneCocoonPager pager) throws SAXException {
         if (pager != null && pager.hasNext()) {
             atts.clear();
-            atts.addAttribute(namespace, TOTAL_COUNT_ATTRIBUTE, TOTAL_COUNT_ATTRIBUTE,
+            atts.addAttribute("", TOTAL_COUNT_ATTRIBUTE, TOTAL_COUNT_ATTRIBUTE,
                 CDATA, String.valueOf(pager.getCountOfHits()));
-            atts.addAttribute(namespace, COUNT_OF_PAGES_ATTRIBUTE, COUNT_OF_PAGES_ATTRIBUTE,
+            atts.addAttribute("", COUNT_OF_PAGES_ATTRIBUTE, COUNT_OF_PAGES_ATTRIBUTE,
                 CDATA, String.valueOf(pager.getCountOfPages()));
-            contentHandler.startElement(namespace, HITS_ELEMENT, HITS_ELEMENT, atts);
+            contentHandler.startElement(NAMESPACE, HITS_ELEMENT, Q_HITS_ELEMENT, atts);
             generateHit(pager);
-            contentHandler.endElement(namespace, HITS_ELEMENT, HITS_ELEMENT);
+            contentHandler.endElement(NAMESPACE, HITS_ELEMENT, Q_HITS_ELEMENT);
         }
     }
 
@@ -642,13 +682,13 @@ public class SearchGenerator extends ServiceableGenerator
             String uri = doc.get(LuceneXMLIndexer.URL_FIELD);
 
             atts.clear();
-            atts.addAttribute(namespace, RANK_ATTRIBUTE, RANK_ATTRIBUTE, CDATA,
+            atts.addAttribute("", RANK_ATTRIBUTE, RANK_ATTRIBUTE, CDATA,
                     String.valueOf(counter));
-            atts.addAttribute(namespace, SCORE_ATTRIBUTE, SCORE_ATTRIBUTE, CDATA,
+            atts.addAttribute("", SCORE_ATTRIBUTE, SCORE_ATTRIBUTE, CDATA,
                     String.valueOf(score));
-            atts.addAttribute(namespace, URI_ATTRIBUTE, URI_ATTRIBUTE, CDATA,
+            atts.addAttribute("", URI_ATTRIBUTE, URI_ATTRIBUTE, CDATA,
                     String.valueOf(uri));
-            contentHandler.startElement(namespace, HIT_ELEMENT, HIT_ELEMENT, atts);
+            contentHandler.startElement(NAMESPACE, HIT_ELEMENT, Q_HIT_ELEMENT, atts);
             // fix me, add here a summary of this hit
             for (Enumeration e = doc.fields(); e.hasMoreElements(); ) {
                 Field field = (Field)e.nextElement();
@@ -656,15 +696,15 @@ public class SearchGenerator extends ServiceableGenerator
                     if (LuceneXMLIndexer.URL_FIELD.equals(field.name()))
                         continue;
                     atts.clear();
-                    atts.addAttribute(namespace, "name", "name", CDATA, field.name());
-                    contentHandler.startElement(namespace, FIELD_ELEMENT, FIELD_ELEMENT, atts);
+                    atts.addAttribute("", NAME_ATTRIBUTE, NAME_ATTRIBUTE, CDATA, field.name());
+                    contentHandler.startElement(NAMESPACE, FIELD_ELEMENT, Q_FIELD_ELEMENT, atts);
                     String value = field.stringValue();
                     contentHandler.characters(value.toCharArray(), 0, value.length());
-                    contentHandler.endElement(namespace, FIELD_ELEMENT, FIELD_ELEMENT);
+                    contentHandler.endElement(NAMESPACE, FIELD_ELEMENT, Q_FIELD_ELEMENT);
                 }
             }
 
-            contentHandler.endElement(namespace, HIT_ELEMENT, HIT_ELEMENT);
+            contentHandler.endElement(NAMESPACE, HIT_ELEMENT, Q_HIT_ELEMENT);
         }
     }
 
@@ -681,31 +721,31 @@ public class SearchGenerator extends ServiceableGenerator
         if (pager != null) {
             // generate navigation element
             atts.clear();
-            atts.addAttribute(namespace, TOTAL_COUNT_ATTRIBUTE, TOTAL_COUNT_ATTRIBUTE,
+            atts.addAttribute("", TOTAL_COUNT_ATTRIBUTE, TOTAL_COUNT_ATTRIBUTE,
                 CDATA, String.valueOf(pager.getCountOfHits()));
-            atts.addAttribute(namespace, COUNT_OF_PAGES_ATTRIBUTE, COUNT_OF_PAGES_ATTRIBUTE,
+            atts.addAttribute("", COUNT_OF_PAGES_ATTRIBUTE, COUNT_OF_PAGES_ATTRIBUTE,
                 CDATA, String.valueOf(pager.getCountOfPages()));
-            atts.addAttribute(namespace, HAS_NEXT_ATTRIBUTE, HAS_NEXT_ATTRIBUTE,
+            atts.addAttribute("", HAS_NEXT_ATTRIBUTE, HAS_NEXT_ATTRIBUTE,
                 CDATA, String.valueOf(pager.hasNext()));
-            atts.addAttribute(namespace, HAS_PREVIOUS_ATTRIBUTE, HAS_PREVIOUS_ATTRIBUTE,
+            atts.addAttribute("", HAS_PREVIOUS_ATTRIBUTE, HAS_PREVIOUS_ATTRIBUTE,
                 CDATA, String.valueOf(pager.hasPrevious()));
-            atts.addAttribute(namespace, NEXT_INDEX_ATTRIBUTE, NEXT_INDEX_ATTRIBUTE,
+            atts.addAttribute("", NEXT_INDEX_ATTRIBUTE, NEXT_INDEX_ATTRIBUTE,
                 CDATA, String.valueOf(pager.nextIndex()));
-            atts.addAttribute(namespace, PREVIOUS_INDEX_ATTRIBUTE, PREVIOUS_INDEX_ATTRIBUTE,
+            atts.addAttribute("", PREVIOUS_INDEX_ATTRIBUTE, PREVIOUS_INDEX_ATTRIBUTE,
                 CDATA, String.valueOf(pager.previousIndex()));
-            contentHandler.startElement(namespace, NAVIGATION_ELEMENT, NAVIGATION_ELEMENT, atts);
+            contentHandler.startElement(NAMESPACE, NAVIGATION_ELEMENT, Q_NAVIGATION_ELEMENT, atts);
             int count_of_pages = pager.getCountOfPages();
             for (int i = 0, page_start_index = 0;
                     i < count_of_pages;
                     i++, page_start_index += pageLength.intValue()) {
                 atts.clear();
-                atts.addAttribute(namespace, START_INDEX_ATTRIBUTE, START_INDEX_ATTRIBUTE,
+                atts.addAttribute("", START_INDEX_ATTRIBUTE, START_INDEX_ATTRIBUTE,
                     CDATA, String.valueOf(page_start_index));
-                contentHandler.startElement(namespace, NAVIGATION_PAGE_ELEMENT, NAVIGATION_PAGE_ELEMENT, atts);
-                contentHandler.endElement(namespace, NAVIGATION_PAGE_ELEMENT, NAVIGATION_PAGE_ELEMENT);
+                contentHandler.startElement(NAMESPACE, NAVIGATION_PAGE_ELEMENT, Q_NAVIGATION_PAGE_ELEMENT, atts);
+                contentHandler.endElement(NAMESPACE, NAVIGATION_PAGE_ELEMENT, Q_NAVIGATION_PAGE_ELEMENT);
             }
             // navigation is EMPTY element
-            contentHandler.endElement(namespace, NAVIGATION_ELEMENT, NAVIGATION_ELEMENT);
+            contentHandler.endElement(NAMESPACE, NAVIGATION_ELEMENT, Q_NAVIGATION_ELEMENT);
         }
     }
 
@@ -714,7 +754,7 @@ public class SearchGenerator extends ServiceableGenerator
      * Build hits from a query input, and setup paging object.
      *
      * @since
-     * @throws  ProcessingException  iff an error occurs
+     * @throws  ProcessingException  if an error occurs
      */
     private LuceneCocoonPager buildHits() throws ProcessingException {
 
