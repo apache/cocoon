@@ -73,7 +73,7 @@ import java.io.OutputStream;
  * should wrap all the text inside it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TextSerializer.java,v 1.2 2003/04/27 17:57:41 vgritsenko Exp $
+ * @version CVS $Id: TextSerializer.java,v 1.3 2003/10/22 18:03:07 bloritsch Exp $
  */
 public class TextSerializer extends AbstractTextSerializer {
 
@@ -108,7 +108,7 @@ public class TextSerializer extends AbstractTextSerializer {
             this.setContentHandler(handler);
             this.setLexicalHandler(handler);
        } catch (Exception e) {
-            final String message = "Cannot set TextSerializer outputstream"; 
+            final String message = "Cannot set TextSerializer outputstream";
             throw new CascadingIOException(message, e);
         }
     }
@@ -136,8 +136,8 @@ public class TextSerializer extends AbstractTextSerializer {
         super.endDocument();
     }
 
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.hasRootElement = false;
         this.hadNoRootElement = false;
     }

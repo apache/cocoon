@@ -58,7 +58,7 @@ import java.io.OutputStream;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractSerializer.java,v 1.1 2003/03/09 00:09:36 pier Exp $
+ * @version CVS $Id: AbstractSerializer.java,v 1.2 2003/10/22 18:03:07 bloritsch Exp $
  */
 
 public abstract class AbstractSerializer
@@ -73,7 +73,7 @@ extends AbstractXMLPipe implements Serializer {
      * Set the {@link OutputStream} where the requested resource should
      * be serialized.
      */
-    public void setOutputStream(OutputStream out) 
+    public void setOutputStream(OutputStream out)
     throws IOException {
         this.output = out;
     }
@@ -90,8 +90,8 @@ extends AbstractXMLPipe implements Serializer {
     /**
      * Recycle serializer by removing references
      */
-    public void recycle() {
-        super.recycle();
+    public void reset() {
+        super.reset();
         this.output = null;
     }
 

@@ -96,7 +96,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ResourceReader.java,v 1.2 2003/03/19 15:42:17 cziegeler Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.3 2003/10/22 18:03:08 bloritsch Exp $
  */
 public class ResourceReader extends AbstractReader implements CacheableProcessingComponent {
 
@@ -142,12 +142,12 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
     /**
      * Recyclable
      */
-    public void recycle() {
+    public void reset() {
         if (inputSource != null) {
             super.resolver.release(inputSource);
             inputSource = null;
         }
-        super.recycle();
+        super.reset();
     }
 
     /**
@@ -276,12 +276,12 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
             else {
                 response.addHeader("Vary", "Host");
             }
-            
+
             long lastModified = getLastModified();
             if (lastModified > 0) {
                 response.setDateHeader("Last-Modified", lastModified);
             }
-            
+
             try {
                 inputStream = inputSource.getInputStream();
             }

@@ -102,7 +102,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.5 2003/07/06 11:35:40 sylvain Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.6 2003/10/22 18:03:07 bloritsch Exp $
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -111,10 +111,10 @@ import org.xml.sax.helpers.NamespaceSupport;
 // TODO (2) : handle more attributes on <entry> for properties of ZipEntry
 //            (compression method and level, time, comment, etc.)
 
-public class ZipArchiveSerializer 
-    extends AbstractSerializer 
+public class ZipArchiveSerializer
+    extends AbstractSerializer
     implements Composable, Disposable {
-        
+
     /**
      * The namespace for elements handled by this serializer,
      * "http://apache.org/cocoon/zip-archive/1.0".
@@ -412,9 +412,8 @@ public class ZipArchiveSerializer
     }
 
     /**
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
-    public void recycle() {
+    public void reset() {
         this.exception = null;
         if (this.serializer != null) {
             this.selector.release(this.serializer);
@@ -422,11 +421,11 @@ public class ZipArchiveSerializer
         if (this.selector != null) {
             this.manager.release(this.selector);
         }
-        
+
         this.nsSupport.reset();
-        super.recycle();
+        super.reset();
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
