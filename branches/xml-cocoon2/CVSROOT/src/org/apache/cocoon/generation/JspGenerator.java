@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-30 14:17:22 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-05-01 14:41:34 $
  */
 public class JspGenerator extends ServletGenerator implements Poolable {
 
@@ -183,6 +183,9 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public boolean isSecure(){ return request.isSecure(); }
         public RequestDispatcher getRequestDispatcher(String s){ return request.getRequestDispatcher(s); }
         public String getRealPath(String s){ return request.getRealPath(s); }
+        public java.lang.StringBuffer getRequestURL() { return null; }
+        public java.util.Map getParameterMap() { return null; }
+        public void setCharacterEncoding(java.lang.String $1) { }
     }
 
     /**
@@ -232,6 +235,8 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public void addIntHeader(String s, int i){response.addIntHeader(s, i); }
         public void setStatus(int i){response.setStatus(i); }
         public void setStatus(int i, String s){response.setStatus(i, s); }
+        public void resetBuffer(){}
+
     }
 
     /**
