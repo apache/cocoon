@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-14 20:51:08 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-28 10:14:24 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */
@@ -261,7 +261,7 @@ public class DOMBuilder implements XMLConsumer {
             String aval=a.getValue(x);
             NamespacesTable.Name k=this.namespaces.resolve(auri,araw,null,aloc);
             // Set the attribute into the element
-            auri=k.getPrefix().length()==0?"":k.getUri();
+            auri=k.getPrefix().length()==0 ? null : k.getUri();
             e.setAttributeNS(auri,k.getQName(),aval);
         }
         // Append the xmlns... attributes
