@@ -10,7 +10,7 @@ package org.apache.cocoon.matching;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.traversal.NodeIterator;
  
 /** 
  * This class generates source code which represents a specific pattern matcher
@@ -19,7 +19,7 @@ import org.w3c.dom.DocumentFragment;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-10-25 16:02:17 $ 
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2000-10-30 23:02:44 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -41,7 +41,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
     /**
      * Generates the matcher parameter level source code
      */
-    public String generateParameterSource (DocumentFragment conf)
+    public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "int []";
     }
@@ -49,7 +49,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
     /**
      * Generates the matcher method level source code
      */
-    public String generateMethodSource (DocumentFragment conf) 
+    public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
         return "          ArrayList list = new ArrayList();\n   if (WildcardURIMatcher.match (list, ((HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT))\n					.getRequestURI(), pattern)) {\n	      return list;\n	  } else {\n	      return null;\n	  }\n";
     }
@@ -58,7 +58,7 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
      * Generates the matcher class level source code
      */
     public String generateClassSource (String prefix, String pattern, 
-                                       DocumentFragment conf) 
+                                       NodeIterator conf)
     throws ConfigurationException {
         StringBuffer result = new StringBuffer();
         try {

@@ -9,7 +9,7 @@ package org.apache.cocoon.selection;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.traversal.NodeIterator;
 import org.w3c.dom.traversal.TreeWalker;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.Node;
@@ -26,20 +26,19 @@ import org.apache.cocoon.CodeFactory;
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-30 20:21:44 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-30 23:02:46 $
 */
 
 
 public class BrowserSelectorFactory implements CodeFactory {
 
-    public String generateParameterSource (DocumentFragment conf)
+    public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "String []";
     }
 
-    public String generateClassSource (String test, String prefix, DocumentFragment conf)
+    public String generateClassSource (String prefix, String test, NodeIterator conf)
     throws ConfigurationException {
-        TreeWalker tw = new TreeWalkerImpl (conf, NodeFilter.SHOW_ALL, null, false);
         Node node = null;
         Node nodeattrname  = null;
         Node nodeattruseragent = null;
@@ -49,7 +48,7 @@ public class BrowserSelectorFactory implements CodeFactory {
         sb.append("static String [] ")
           .append(prefix)
           .append("_expr = {");
-        while ((node = tw.nextNode()) != null) {
+        while ((node = conf.nextNode()) != null) {
             if (node.getNodeName().equals("browser") &&
                 node.getNodeType() == Node.ELEMENT_NODE) {
                 nm = node.getAttributes();
@@ -58,7 +57,7 @@ public class BrowserSelectorFactory implements CodeFactory {
                     nodeattruseragent = nm.getNamedItem("useragent");
                     if (nodeattrname != null && nodeattruseragent != null
                             && nodeattrname.getNodeValue().equals(test)) {
-                        sb.append(cnt==0 ? "\"" : ",\"")
+                        sb.append(cnt++==0 ? "\"" : ",\"")
                           .append(nodeattruseragent.getNodeValue())
                           .append("\"");
                     }
@@ -68,14 +67,8 @@ public class BrowserSelectorFactory implements CodeFactory {
         return sb.append("};").toString();
     }
 
-    public String generateMethodSource (DocumentFragment conf)
+    public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
-        TreeWalker tw = new TreeWalkerImpl (conf, NodeFilter.SHOW_ALL, null, false);
-        Node node = null;
-        Node nodeattrname  = null;
-        Node nodeattruseragent = null;
-        NamedNodeMap nm = null;
-
         StringBuffer sb = new StringBuffer();
          sb.append("if (pattern != null && objectModel.get(Cocoon.REQUEST_OBJECT) != null) {")
           .append("javax.servlet.http.HttpServletRequest request = (javax.servlet.http.HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);")

@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.traversal.NodeIterator;
  
 /** 
  * Interface a class has to implement that produces java source code 
@@ -22,16 +22,16 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-25 16:02:15 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-30 23:02:43 $ 
  */ 
 
 public interface CodeFactory {
-    public String generateParameterSource (DocumentFragment conf)
+    public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException;
 
-    public String generateClassSource (String test, String prefix, DocumentFragment conf) 
+    public String generateClassSource (String prefix, String test, NodeIterator conf)
     throws ConfigurationException;
 
-    public String generateMethodSource (DocumentFragment conf) 
+    public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException;
 }

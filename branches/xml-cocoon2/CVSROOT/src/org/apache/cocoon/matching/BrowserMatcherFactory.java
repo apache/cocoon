@@ -9,11 +9,9 @@ package org.apache.cocoon.matching;
 
 import java.util.Stack;
 
-import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.traversal.NodeIterator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.traversal.TreeWalker;
-import org.w3c.dom.traversal.NodeFilter;
 
 import org.apache.avalon.ConfigurationException;
 
@@ -25,21 +23,20 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-10-25 16:02:17 $ 
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-30 23:02:44 $ 
  */ 
 
-public class BrowserMatcherFactory implements MatcherFactory {
+public class BrowserMatcherFactory implements org.apache.cocoon.CodeFactory {
 
-    public String generateMethodSource (DocumentFragment conf)
+    public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
-        TreeWalker tw = new TreeWalkerImpl (conf, NodeFilter.SHOW_ALL, null, false);
         Node node = null;
         Node nodea = null;
         NamedNodeMap nm = null;
 
         sb.append ("/*\n");
-        while ((node = tw.nextNode()) != null) {
+        while ((node = conf.nextNode()) != null) {
             sb.append("name=")
               .append(node.getNodeName())
               .append(" type=")
@@ -60,12 +57,12 @@ public class BrowserMatcherFactory implements MatcherFactory {
     }
 
     public String generateClassSource (String prefix, String pattern, 
-                                       DocumentFragment conf)
+                                       NodeIterator conf)
     throws ConfigurationException {
         return "\n// Dummy values\nstatic String " + prefix + "_expr = \"" + pattern + "\";\n";
     }
 
-    public String generateParameterSource (DocumentFragment conf)
+    public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "String";
     }

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import org.apache.cocoon.CodeFactory;
 import org.apache.cocoon.util.ClassUtils;
 
-import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.traversal.NodeIterator;
   
 /** 
  * This class is used as a XSLT extension class. It is used by the sitemap 
@@ -22,15 +22,15 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-25 16:02:19 $ 
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-30 23:02:46 $ 
  */ 
 
 public class XSLTFactoryLoader {
     
     HashMap obj = new HashMap();
 
-    public String getClassSource(String className, String prefix, String pattern, DocumentFragment conf) 
-    throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception { 
+    public String getClassSource(String className, String prefix, String pattern, NodeIterator conf)
+    throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
         Object factory = obj.get(className);
         if (factory == null) factory = ClassUtils.newInstance(className); 
         obj.put(className, factory); 
@@ -43,7 +43,7 @@ public class XSLTFactoryLoader {
                             + "\". Should implement the CodeFactory interface");
     }
     
-    public String getParameterSource(String className, DocumentFragment conf)
+    public String getParameterSource(String className, NodeIterator conf)
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
         Object factory = obj.get(className);
 	if (factory == null) factory = ClassUtils.newInstance(className);
@@ -57,7 +57,7 @@ public class XSLTFactoryLoader {
 	                     + "\". Should implement the CodeFactory interface");
     }
     
-    public String getMethodSource(String className, DocumentFragment conf) 
+    public String getMethodSource(String className, NodeIterator conf)
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception { 
         Object factory = obj.get(className);
         if (factory == null) factory = ClassUtils.newInstance(className); 

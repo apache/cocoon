@@ -13,7 +13,7 @@ import org.apache.regexp.RESyntaxException;
 
 import org.apache.avalon.ConfigurationException;
 
-import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.traversal.NodeIterator;
  
 /** 
  * This class generates source code which represents a specific pattern matcher
@@ -21,17 +21,17 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-25 16:02:17 $ 
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-30 23:02:44 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
-    public String generateParameterSource (DocumentFragment conf)
+    public String generateParameterSource (NodeIterator conf)
     throws ConfigurationException {
         return "RE";
     }
 
     public String generateClassSource (String prefix, String pattern, 
-                                       DocumentFragment conf) 
+                                       NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         try {
@@ -68,7 +68,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         }
     }
 
-    public String generateMethodSource (DocumentFragment conf) 
+    public String generateMethodSource (NodeIterator conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("ArrayList list = new ArrayList ();")

@@ -76,7 +76,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.56 $ $Date: 2000-10-30 18:37:43 $
+     * @version CVS $Revision: 1.1.2.57 $ $Date: 2000-10-30 23:02:43 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -134,7 +134,7 @@
             </xsl:variable>
             <xsl:if test="not(preceding::map:when[@test = $this-test])">
             /** The generated selector for a test of "<xsl:value-of select="@test"/>" */
-              <xsl:value-of select="java:getClassSource($factory-loader,string($src),string(@test),string($selector-name),$config)"/>
+              <xsl:value-of select="java:getClassSource($factory-loader,string($src),string($selector-name),string(@test),$config)"/>
             </xsl:if>
           </xsl:for-each>
         </xsl:if>
@@ -163,9 +163,9 @@
       /** The generated selectors (for backward compatability. Should be removed in the future) */
       <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector[@factory]">
         <xsl:variable name="factory" select="@factory"/>
-          <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
+        <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
         <xsl:variable name="default" select="$type = ../@default"/>
-        <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
+        <xsl:variable name="config" select="descendant-or-self::*"/>
         private boolean <xsl:value-of select="$type"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($factory),$config)"/> pattern, Map objectModel) {
           <xsl:value-of select="java:getMethodSource($factory-loader, string($factory),$config)"/>
         }
@@ -180,7 +180,7 @@
             <xsl:value-of select="@test"/>
           </xsl:variable>
           <xsl:if test="not(preceding::map:when[@test = $this-test])">
-            <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string(@test),string($selector-name),$config)"/>
+            <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($selector-name),string(@test),$config)"/>
           </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
