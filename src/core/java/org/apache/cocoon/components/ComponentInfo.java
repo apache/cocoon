@@ -28,6 +28,7 @@ public final class ComponentInfo {
     public static final int MODEL_PRIMITIVE = 0;
     public static final int MODEL_SINGLETON = 1;
     public static final int MODEL_POOLED    = 2;
+    public static final int MODEL_NON_THREAD_SAFE_POOLED = 3;
     
     private int model;
     private String initMethodName;
@@ -154,6 +155,10 @@ public final class ComponentInfo {
         final String model = attr.getAttribute("model", null);
         if ( "pooled".equals(model) ) {
             this.setModel(ComponentInfo.MODEL_POOLED);
+            this.setPoolInMethodName(attr.getAttribute("pool-in", null));
+            this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
+        } else if ("non-thread-safe-pooled".equals(model)) {
+            this.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
             this.setPoolInMethodName(attr.getAttribute("pool-in", null));
             this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
         } else if ( "singleton".equals(model) ) {
