@@ -24,7 +24,7 @@ import org.apache.cocoon.kernel.logging.Logger;
  * logging individual lines to a {@link ServletContext}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
 public class ServletLogger extends AbstractLogger {
 
@@ -38,7 +38,7 @@ public class ServletLogger extends AbstractLogger {
      * @param context the {@link ServletContext} to log to.
      */
     public ServletLogger(ServletContext context) {
-        this(DEBUG, true, context);
+        this(null, DEBUG, true, context);
     }
     
     /**
@@ -50,10 +50,22 @@ public class ServletLogger extends AbstractLogger {
      * @param context the {@link ServletContext} to log to.
      */
     public ServletLogger(int level, boolean trace, ServletContext context) {
-        super(null, level, false, trace);
+        this(null, level, trace, context);
+    }
 
-        if (context == null) throw new NullPointerException("Null context");
-        this.context = context;
+    /**
+     * <p>Create a new {@link ServletLogger} associated with a specific
+     * {@link ServletContext}.</p>
+     *
+     * @param nam the name of this instance.
+     * @param lvl the level of output.
+     * @param trc if <b>true</b> exception stack traces will be produced.
+     * @param ctx the {@link ServletContext} to log to.
+     */
+    public ServletLogger(String nam, int lvl, boolean trc, ServletContext ctx) {
+        super(nam, lvl, false, trc);
+        if (ctx == null) throw new NullPointerException("Null context");
+        this.context = ctx;
     }
     
     /* ====================================================================== */
@@ -65,5 +77,20 @@ public class ServletLogger extends AbstractLogger {
      */
     public void output(String line) {
         this.context.log(line);
+    }
+
+    /**
+     * <p>Return a sub-{@link Logger} of this {@link Logger}.</p>
+     * 
+     * @return a {@link Logger} instance associated with a specific name.
+     */
+    public Logger subLogger(String name) {
+        if (name == null) {
+            this.debug("Requested child logger without name (returning self)");
+            return(this);
+        }
+
+        name = (this.name == null ? name : this.name + "." + name);
+        return new ServletLogger(name, level, trace, context);
     }
 }

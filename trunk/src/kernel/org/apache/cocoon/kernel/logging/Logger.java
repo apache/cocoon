@@ -22,7 +22,7 @@ package org.apache.cocoon.kernel.logging;
  * <p>This implementation never logs.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class Logger {
 
@@ -116,5 +116,14 @@ public class Logger {
      * @param throwable the throwable.
      */
     public void fatal(String message, Throwable throwable) {
+    }
+    
+    /**
+     * <p>Return a sub-{@link Logger} of this {@link Logger}.</p>
+     * 
+     * @return a {@link Logger} instance associated with a specific name.
+     */
+    public Logger subLogger(String name) {
+        return(this);
     }
 }

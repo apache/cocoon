@@ -25,7 +25,7 @@ import org.apache.cocoon.kernel.logging.Logger;
  * writing to {@link System#err} or a specified {@link PrintStream}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public class ConsoleLogger extends AbstractLogger {
 
@@ -138,5 +138,20 @@ public class ConsoleLogger extends AbstractLogger {
      */
     public void output(String line) {
         this.out.println(line);
+    }
+
+    /**
+     * <p>Return a sub-{@link Logger} of this {@link Logger}.</p>
+     * 
+     * @return a {@link Logger} instance associated with a specific name.
+     */
+    public Logger subLogger(String name) {
+        if (name == null) {
+            this.debug("Requested child logger without name (returning self)");
+            return(this);
+        }
+
+        name = (this.name == null ? name : this.name + "." + name);
+        return new ConsoleLogger(name, level, time, trace, out);
     }
 }

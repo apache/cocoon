@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * log entries and outputting them.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.8 $)
+ * @version 1.0 (CVS $Revision: 1.9 $)
  */
 public abstract class AbstractLogger extends Logger {
 
@@ -51,17 +51,20 @@ public abstract class AbstractLogger extends Logger {
     /* ====================================================================== */
 
     /** <p>The logging level.</p> */
-    private int level = DEBUG;
+    protected int level = DEBUG;
 
     /** <p>The name of this logger.</p> */
-    private String name = null;
+    protected String name = null;
+    
+    /** <p>Whether we should produce exception stack traces or not.</p> */
+    protected boolean trace = true;
+    
+    /** <p>Whether we should produce a timestamp or not.</p> */
+    protected boolean time = true;
     
     /** <p>The timestamp formatter (if any).</p> */
-    private SimpleDateFormat time = null;
+    private SimpleDateFormat format = null;
 
-    /** <p>Whether we should produce exception stack traces or not.</p> */
-    private boolean trace = true;
-    
     /* ====================================================================== */
         
     /**
@@ -81,11 +84,12 @@ public abstract class AbstractLogger extends Logger {
         else if (level > FATAL) this.level = FATAL;
         else this.level = level;
 
-        /* Produce a timestamp? */
-        if (time) this.time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
-        
-        /* Trace exceptions? */
+        /* Produce a timestamp? Trace exceptions? */
         this.trace = trace;
+        this.time = time;
+        if (this.time) {
+            this.format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+        }
     }
     
     /* ====================================================================== */
@@ -210,7 +214,7 @@ public abstract class AbstractLogger extends Logger {
         StringBuffer buffer = new StringBuffer(64);
         
         /* If we got a time formatter, append the time */
-        if (this.time != null) buffer.append(this.time.format(new Date()));
+        if (this.format != null) buffer.append(this.format.format(new Date()));
         
         /* Dump out the log level */
         if (buffer.length() > 0) buffer.append(" ");
@@ -330,4 +334,11 @@ public abstract class AbstractLogger extends Logger {
         if (buffer != null) this.output(buffer.toString());
         return(new StringBuffer(200));
     }
+
+    /**
+     * <p>Return a sub-{@link Logger} of this {@link Logger}.</p>
+     * 
+     * @return a {@link Logger} instance associated with a specific name.
+     */
+    public abstract Logger subLogger(String name);
 }
