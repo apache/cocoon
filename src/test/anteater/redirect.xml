@@ -30,6 +30,12 @@
       </match>
     </httpRequest>
     
+    <httpRequest href="${redirect-test}/redirect-to-internal-from-sitemap">
+      <match>
+        <responseCode value="200"/>
+      </match>
+    </httpRequest>
+    
     <httpRequest href="${redirect-test}/redirect-to-from-flow">
       <match>
         <responseCode value="302"/>
