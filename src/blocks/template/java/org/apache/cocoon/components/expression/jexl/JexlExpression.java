@@ -15,10 +15,13 @@
  */
 package org.apache.cocoon.components.expression.jexl;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl.util.Introspector;
+import org.apache.commons.jexl.util.introspection.Info;
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionCompiler;
 import org.apache.cocoon.components.expression.ExpressionContext;
@@ -52,11 +55,32 @@ public class JexlExpression implements Expression {
 
     public Iterator iterate(ExpressionContext context)
         throws ExpressionException {
-        return null;
+        Iterator iter = null;
+        Object result = evaluate(context);
+        if (result != null) {
+            /* The Info object is supposed to contain the script
+               location where the expression is invoked and use that
+               in a warning log message if no iterator can be
+               generated. This info is not available in the expression
+               object and might not be relevant either as it can be
+               used from a non script situation.
+            */
+            try {
+                iter = Introspector.getUberspect().getIterator(result, new Info("Unknown", 0, 0));
+            } catch (Exception e) {
+                throw new ExpressionException("Couldn't get an iterator from expression " +
+                                              getExpression(), e);
+            }
+        }
+        if (iter == null) {
+            iter = EMPTY_ITER;
+        }
+        return iter;
     }
 
     public void assign(ExpressionContext context, Object value)
         throws ExpressionException {
+        throw new UnsupportedOperationException("Assign is not yet implemented for Jexl");
     }
 
     public String getExpression() {
@@ -67,7 +91,7 @@ public class JexlExpression implements Expression {
         return this.language;
     }
 
-    static class ContextAdapter implements JexlContext {
+    private static class ContextAdapter implements JexlContext {
         private final ExpressionContext context;
         public ContextAdapter(ExpressionContext context) {
             this.context = context;
@@ -79,6 +103,31 @@ public class JexlExpression implements Expression {
 
         public void setVars(Map map) {
             this.context.setVars(map);
+        }
+    }
+
+    private static final Iterator EMPTY_ITER = new Iterator() {
+        public boolean hasNext() {
+            return false;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+            // EMPTY
+        }
+    };
+
+    static {
+        // Hack: there's no _nice_ way to add my introspector to Jexl right now
+        try {
+            Field field = Introspector.class.getDeclaredField("uberSpect");
+            field.setAccessible(true);
+            field.set(null, new JSIntrospector());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

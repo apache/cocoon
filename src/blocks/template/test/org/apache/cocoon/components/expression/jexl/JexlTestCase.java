@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.expression.jexl;
 
+import java.util.Iterator;
+
 import junit.framework.TestCase;
 import org.apache.cocoon.components.expression.Expression;
 import org.apache.cocoon.components.expression.ExpressionCompiler;
@@ -36,5 +38,17 @@ public class JexlTestCase extends TestCase {
         context.put("b", new Long(2));
         Expression expression = compiler.compile("jexl", "a+b");
         assertEquals(new Long(3), expression.evaluate(context));
+    }
+
+    public void testIterator() throws ExpressionException {
+        ExpressionCompiler compiler = new JexlCompiler();
+        ExpressionContext context = new ExpressionContext();
+        String[] arr = {"foo"};
+        context.put("arr", arr);
+        Expression expression = compiler.compile("jexl", "arr");
+        Iterator iter = expression.iterate(context);
+        assertTrue("hasNext", iter.hasNext());
+        assertEquals("foo", iter.next());
+        assertFalse("hasNext", iter.hasNext());
     }
 }
