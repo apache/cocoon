@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-11 15:05:49 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-11 16:06:30 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -64,6 +64,10 @@ class RepositoryClassLoader extends ClassLoader {
   public void addDirectory(File repository) throws IOException {
     String fullFilename = null;
 
+    if (repository == null) {
+        throw new IOException("You cannot add a null directory");
+    }
+
     // Ensure the same directory isn't specified twice
     try {
         int count = this.repositories.size();
@@ -75,24 +79,24 @@ class RepositoryClassLoader extends ClassLoader {
                 return;
             }
         }
+
+        if (!repository.exists()) {
+          throw new IOException("Non-existent: " + fullFilename);
+        }
+
+        if (!repository.isDirectory()) {
+          throw new IOException("Not a directory: " + fullFilename);
+        }
+
+        if (!(repository.canRead() && repository.canWrite())) {
+          throw new IOException("Not readable/writable: " + fullFilename);
+        }
+
+        this.repositories.addElement(repository);
     } catch (SecurityException se) {
         log.debug("RepositoryClassLoader:SecurityException", se);
         throw new IOException("Cannot access directory" + fullFilename);
     }
-
-    if (!repository.exists()) {
-      throw new IOException("Non-existent: " + fullFilename);
-    }
-
-    if (!repository.isDirectory()) {
-      throw new IOException("Not a directory: " + fullFilename);
-    }
-
-    if (!(repository.canRead() && repository.canWrite())) {
-      throw new IOException("Not readable/writable: " + fullFilename);
-    }
-
-    this.repositories.addElement(repository);
   }
 
   /**

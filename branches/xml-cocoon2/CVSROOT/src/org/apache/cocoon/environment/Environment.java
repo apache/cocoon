@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-09-02 21:12:35 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-11 16:06:47 $
  */
 
 public interface Environment extends EntityResolver {
@@ -28,42 +28,42 @@ public interface Environment extends EntityResolver {
     /**
      * Get the URI to process
      */
-    public String getUri();
+    String getUri();
 
     /**
      * Get the view to process
      */
-    public String getView();
+    String getView();
 
     /**
      * Change the context from uriprefix to context
      */
-    public void changeContext(String uriprefix, String context) throws MalformedURLException;
+    void changeContext(String uriprefix, String context) throws MalformedURLException;
 
     /**
      * Redirect to the given URL
      */
-    public void redirect(String url) throws IOException;
+    void redirect(String url) throws IOException;
 
     /**
      * Set the content type of the generated resource
      */
-    public void setContentType(String mimeType);
+    void setContentType(String mimeType);
 
     /**
      * Set the response status code
      */
-    public void setStatus(int statusCode); 
+    void setStatus(int statusCode);
 
     /**
      * Get the output stream where to write the generated resource.
      */
-    public OutputStream getOutputStream() throws IOException;
+    OutputStream getOutputStream() throws IOException;
 
     /**
      * Get the underlying object model
      */
-    public Map getObjectModel();
+    Map getObjectModel();
 
 }
 

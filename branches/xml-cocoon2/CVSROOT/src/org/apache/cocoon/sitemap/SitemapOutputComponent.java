@@ -15,18 +15,18 @@ import org.apache.avalon.Component;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-08-16 05:08:19 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-11 16:06:57 $
  */
 public interface SitemapOutputComponent extends Component {
 
     /**
-     * Set the <code>OutputStream</code> where the requested resource should 
+     * Set the <code>OutputStream</code> where the requested resource should
      * be serialized.
      */
-    public void setOutputStream(OutputStream out) throws IOException;
+    void setOutputStream(OutputStream out) throws IOException;
 
     /**
      * Get the mime-type of the output of this <code>Component</code>.
      */
-    public String getMimeType();
+    String getMimeType();
 }

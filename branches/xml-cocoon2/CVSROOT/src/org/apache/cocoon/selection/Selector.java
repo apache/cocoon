@@ -14,19 +14,19 @@ import org.apache.avalon.Component;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-02 21:12:39 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:54 $
  */
 public interface Selector extends Component {
     /**
      * Selectors test pattern against some objects in a <code>Map</code>
      * model and signals success with the returned boolean value
      * @param expression  The expression to test.
-     * @param objectModel The <code>Map</code> containing object of the 
+     * @param objectModel The <code>Map</code> containing object of the
      *                    calling environment which may be used
      *                    to select values to test the expression.
      * @return boolean    Signals successfull test.
      */
-    public boolean select (String expression, Map objectModel);
+    boolean select (String expression, Map objectModel);
 }
 
 

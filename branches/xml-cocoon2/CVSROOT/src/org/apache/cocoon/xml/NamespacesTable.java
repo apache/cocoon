@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml;
 
 import org.xml.sax.SAXException;
@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-27 07:36:01 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-11 16:06:59 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */
@@ -114,7 +114,7 @@ public class NamespacesTable {
      * The array length might be <b>zero</b> if no prefixes are associated with
      * the specified uri.
      *
-     * @return A <b>non-null</b> <code>String</code> array. 
+     * @return A <b>non-null</b> <code>String</code> array.
      */
     public String[] getPrefixes(String uri) {
         int hash=uri.hashCode();
@@ -215,8 +215,8 @@ public class NamespacesTable {
             else uri=temp;
         }
         NameImpl name=new NameImpl();
-		if (uri.length() > 0) name.uri=uri;
-		else name.uri=null;
+        if (uri.length() > 0) name.uri=uri;
+        else name.uri=null;
         name.raw=raw;
         name.prefix=prefix;
         name.local=local;
@@ -268,7 +268,7 @@ public class NamespacesTable {
         private String local=null;
         /** The namespace raw name. */
         private String raw=null;
-        
+
         /** Return the namespace URI. */
         public String getUri() { return(this.uri); }
         /** Return the namespace prefix. */
@@ -285,13 +285,13 @@ public class NamespacesTable {
      */
     public static interface Name {
         /** Return the namespace URI. */
-        public String getUri();
+        String getUri();
         /** Return the namespace prefix. */
-        public String getPrefix();
+        String getPrefix();
         /** Return the namespace local name. */
-        public String getLocalName();
+        String getLocalName();
         /** Return the namespace raw name. */
-        public String getQName();
+        String getQName();
     }
 
     /**
@@ -300,8 +300,8 @@ public class NamespacesTable {
      */
     public static interface Declaration {
         /** Return the namespace URI. */
-        public String getUri();
+        String getUri();
         /** Return the namespace prefix. */
-        public String getPrefix();
+        String getPrefix();
     }
 }

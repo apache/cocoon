@@ -22,54 +22,54 @@ import org.apache.log.LogKit;
 
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-02 13:40:05 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-11 16:06:26 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe {
     private Logger log = LogKit.getLoggerFor("cocoon");
-	
-	/** The class which this <code>ComponentFactory</code>
-	 * should create.
-	 */
-	private Class componentClass;
 
-	/** The configuration for this component.
-	 */
-	private Configuration conf;
+    /** The class which this <code>ComponentFactory</code>
+     * should create.
+     */
+    private Class componentClass;
 
-	/** The component manager for this component.
-	 */
-	private ComponentManager manager;
+    /** The configuration for this component.
+     */
+    private Configuration conf;
 
-	/** Construct a new component factory for the specified component.
-	 * @param componentClass the class to instantiate (must have a default constructor).
-	 * @param config the <code>Configuration</code> object to pass to new instances.
-	 * @param manager the component manager to pass to <code>Composer</code>s.
-	 */
-	public ComponentFactory(Class componentClass, Configuration config, ComponentManager manager) {
-		this.componentClass = componentClass;
-		this.conf = config;
-		this.manager = manager;
-	}
+    /** The component manager for this component.
+     */
+    private ComponentManager manager;
 
-	public Poolable newInstance() throws Exception {
-		Poolable comp = (Poolable)componentClass.newInstance();
+    /** Construct a new component factory for the specified component.
+     * @param componentClass the class to instantiate (must have a default constructor).
+     * @param config the <code>Configuration</code> object to pass to new instances.
+     * @param manager the component manager to pass to <code>Composer</code>s.
+     */
+    public ComponentFactory(Class componentClass, Configuration config, ComponentManager manager) {
+        this.componentClass = componentClass;
+        this.conf = config;
+        this.manager = manager;
+    }
+
+    public Poolable newInstance() throws Exception {
+        Poolable comp = (Poolable)componentClass.newInstance();
 
         log.debug("ComponentFactory creating new instance of "
             + componentClass.getName() + "."
         );
-		
-		if ( comp instanceof Configurable ) {
-			((Configurable)comp).configure(this.conf);
-		}
 
-		if ( comp instanceof Composer) {
-			((Composer)comp).compose(this.manager);
-		}
+        if ( comp instanceof Configurable ) {
+            ((Configurable)comp).configure(this.conf);
+        }
 
-		return comp;
-	}
-	
-	public Class getCreatedClass() {
-		return componentClass;
-	}
+        if ( comp instanceof Composer) {
+            ((Composer)comp).compose(this.manager);
+        }
+
+        return comp;
+    }
+
+    public final Class getCreatedClass() {
+        return componentClass;
+    }
 }

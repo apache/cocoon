@@ -14,7 +14,7 @@ import org.xml.sax.InputSource;
  * This interfaces defines the functionality of a source code generator
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-12 16:43:16 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-11 16:06:39 $
  */
 public interface MarkupCodeGenerator {
     /**
@@ -27,6 +27,6 @@ public interface MarkupCodeGenerator {
     * @return The generated source code
     * @exception Exception If an error occurs during code generation
     */
-    public String generateCode(XMLReader reader, InputSource input, String filename)
+    String generateCode(XMLReader reader, InputSource input, String filename)
         throws Exception;
 }

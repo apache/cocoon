@@ -18,10 +18,10 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-08-04 21:11:56 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-11 16:06:52 $
  */
 public interface Reader extends SitemapModelComponent, SitemapOutputComponent {
 
-    public void generate()
+    void generate()
     throws IOException, SAXException, ProcessingException;
 }

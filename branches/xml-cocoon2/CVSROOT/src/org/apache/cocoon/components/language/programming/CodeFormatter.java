@@ -11,16 +11,16 @@ package org.apache.cocoon.components.language.programming;
  * This interface defines source beautifying formatting
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:30 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-11 16:06:42 $
  */
 public interface CodeFormatter {
   /**
-   * Format and beautify a <code>String</code> containing source code 
+   * Format and beautify a <code>String</code> containing source code
    *
    * @param code The input source code
    * @param encoding The encoding used for constant strings embedded in the
    * source code
    * @return The formatted source code
    */
-  public String format(String code, String encoding);
+  String format(String code, String encoding);
 }

@@ -18,42 +18,42 @@ import org.apache.avalon.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-29 18:30:33 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:46 $
  */
 public interface Store extends Component {
 
     /**
      * Get the object associated to the given unique key.
      */
-    public Object get(Object key);
-    
+    Object get(Object key);
+
     /**
      * Store the given object in a persistent state. It is up to the
      * caller to ensure that the key has a persistent state across
      * different JVM executions.
-     */ 
-    public void store(Object key, Object value);
+     */
+    void store(Object key, Object value);
 
     /**
      * Holds the given object in a volatile state. This means
      * the object store will discard held objects if the
      * virtual machine is restarted or some error happens.
-     */ 
-    public void hold(Object key, Object value);
-    
+     */
+    void hold(Object key, Object value);
+
     /**
      * Remove the object associated to the given key.
      */
-    public void remove(Object key);
-    
+    void remove(Object key);
+
     /**
      * Indicates if the given key is associated to a contained object.
      */
-    public boolean containsKey(Object key);
-    
+    boolean containsKey(Object key);
+
     /**
      * Returns the list of used keys as an Enumeration of Objects.
      */
-    public Enumeration keys();
-    
+    Enumeration keys();
+
 }

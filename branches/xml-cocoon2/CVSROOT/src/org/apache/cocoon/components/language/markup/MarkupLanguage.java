@@ -22,7 +22,7 @@ import org.xml.sax.EntityResolver;
  * document augmenting it with dynamic content
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-19 14:43:17 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-11 16:06:41 $
  */
 public interface MarkupLanguage extends Component {
     /**
@@ -32,7 +32,7 @@ public interface MarkupLanguage extends Component {
     *
     * @return The input document's encoding
     */
-    public String getEncoding();
+    String getEncoding();
 
     /**
     * Generate source code from the input source for the target
@@ -44,7 +44,7 @@ public interface MarkupLanguage extends Component {
     * @return The generated source code
     * @exception Exception If an error occurs during code generation
     */
-    public String generateCode(
+    String generateCode(
         InputSource input, String filename,
         ProgrammingLanguage programmingLanguage,
         EntityResolver resolver

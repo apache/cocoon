@@ -19,10 +19,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:11:44 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-11 16:06:49 $
  */
 public interface Generator extends XMLProducer, SitemapModelComponent {
 
-    public void generate()
+    void generate()
     throws IOException, SAXException, ProcessingException;
 }

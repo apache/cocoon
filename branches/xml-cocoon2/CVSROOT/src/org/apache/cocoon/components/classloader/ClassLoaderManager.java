@@ -19,29 +19,29 @@ import java.io.File;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-07 17:10:34 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-11 16:06:30 $
  */
 public interface ClassLoaderManager extends Component {
-  /**
-   * Add a directory to the proxied class loader
-   *
-   * @param directoryName The repository name
-   * @exception IOException If the directory is invalid
-   */
-  public void addDirectory(File directoryName) throws IOException;
+    /**
+    * Add a directory to the proxied class loader
+    *
+    * @param directoryName The repository name
+    * @exception IOException If the directory is invalid
+    */
+    void addDirectory(File directoryName) throws IOException;
 
-  /**
-   * Load a class through the proxied class loader
-   *
-   * @param className The name of the class to be loaded
-   * @return The loaded class
-   * @exception ClassNotFoundException If the class is not found
-   */
-  public Class loadClass(String className) throws ClassNotFoundException;
+    /**
+    * Load a class through the proxied class loader
+    *
+    * @param className The name of the class to be loaded
+    * @return The loaded class
+    * @exception ClassNotFoundException If the class is not found
+    */
+    Class loadClass(String className) throws ClassNotFoundException;
 
-  /**
-   * Reinstantiate the proxied class loader to allow for class reloading
-   *
-   */
-  public void reinstantiate();
+    /**
+    * Reinstantiate the proxied class loader to allow for class reloading
+    *
+    */
+    void reinstantiate();
 }

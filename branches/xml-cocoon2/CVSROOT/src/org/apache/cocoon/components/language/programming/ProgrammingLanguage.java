@@ -17,7 +17,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * This interface states the functionality of a programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-07 17:10:49 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 16:06:43 $
  */
 public interface ProgrammingLanguage extends Component {
   /**
@@ -25,7 +25,7 @@ public interface ProgrammingLanguage extends Component {
    *
    * @return The canonical source file extension
    */
-  public String getSourceExtension();
+  String getSourceExtension();
 
   /**
    * Load a program from a file
@@ -37,7 +37,7 @@ public interface ProgrammingLanguage extends Component {
    * @return The loaded program
    * @exception LanguageException If an error occurs during loading
    */
-  public Object load(String filename, File baseDirectory, String encoding)
+  Object load(String filename, File baseDirectory, String encoding)
     throws LanguageException;
 
   /**
@@ -47,7 +47,7 @@ public interface ProgrammingLanguage extends Component {
    * @return A new program type instance
    * @exception LanguageException If an instantiation error occurs
    */
-  public Object instantiate(Object program) throws LanguageException;
+  Object instantiate(Object program) throws LanguageException;
 
   /**
    * Unload from memory and invalidate a given program
@@ -57,7 +57,7 @@ public interface ProgrammingLanguage extends Component {
    * @param baseDirectory The directory containing the program file
    * @exception LanguageException If an error occurs
    */
-  public void unload (Object program, String filename, File baseDirectory)
+  void unload (Object program, String filename, File baseDirectory)
     throws LanguageException;
 
   /**
@@ -67,7 +67,7 @@ public interface ProgrammingLanguage extends Component {
    * @return The code formatter object or <code>null</code> if none is
    * available
    */
-  public CodeFormatter getCodeFormatter();
+  CodeFormatter getCodeFormatter();
 
   /**
    * Escape a <code>String</code> according to the programming language's
@@ -76,19 +76,19 @@ public interface ProgrammingLanguage extends Component {
    * @param constant The string to be escaped
    * @return The escaped string
    */
-  public String quoteString(String constant);
+  String quoteString(String constant);
 
   /**
    * Set Language Name
    *
    * @param name The name of the language
    */
-  public void setLanguageName(String name);
+  void setLanguageName(String name);
 
   /**
    * Get Language Name
    *
    * @return The name of the language
    */
-  public String getLanguageName();
+  String getLanguageName();
 }

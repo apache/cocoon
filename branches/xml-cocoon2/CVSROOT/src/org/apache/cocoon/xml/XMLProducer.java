@@ -12,7 +12,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This interfaces identifies classes that produce XML data, sending SAX
- * events to the configured <code>XMLConsumer</code> (or SAX 
+ * events to the configured <code>XMLConsumer</code> (or SAX
  * <code>ContentHandler</code> and <code>LexicalHandler</code>).
  * <br>
  * It's beyond the scope of this interface to specify a way in which the XML
@@ -20,22 +20,22 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-17 17:09:38 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-11 16:06:59 $
  */
 public interface XMLProducer {
 
     /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
      */
-    public void setConsumer(XMLConsumer consumer);
+    void setConsumer(XMLConsumer consumer);
 
     /**
      * Set the <code>ContentHandler</code> that will receive XML data.
      */
-    public void setContentHandler(ContentHandler content);
+    void setContentHandler(ContentHandler content);
 
     /**
      * Set the <code>LexicalHandler</code> that will receive XML data.
      */
-    public void setLexicalHandler(LexicalHandler lexical);
+    void setLexicalHandler(LexicalHandler lexical);
 }

@@ -22,35 +22,35 @@ public interface Notificable {
     /**
      *  Gets the Type attribute of the Notificable object
      */
-    public String getType();
+    String getType();
 
     /**
      *  Gets the Title attribute of the Notificable object
      */
-    public String getTitle();
+    String getTitle();
 
     /**
      *  Gets the Source attribute of the Notificable object
      */
-    public String getSource();
+    String getSource();
 
     /**
      *  Gets the Sender attribute of the Notificable object
      */
-    public String getSender();
+    String getSender();
 
     /**
      *  Gets the Message attribute of the Notificable object
      */
-    public String getMessage();
+    String getMessage();
 
     /**
      *  Gets the Description attribute of the Notificable object
      */
-    public String getDescription();
+    String getDescription();
 
     /**
      *  Gets the ExtraDescriptions attribute of the Notificable object
      */
-    public HashMap getExtraDescriptions();
+    HashMap getExtraDescriptions();
 }

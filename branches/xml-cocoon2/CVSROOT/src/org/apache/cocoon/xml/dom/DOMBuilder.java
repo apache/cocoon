@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.xml.dom;
 
 import java.util.Vector;
@@ -36,7 +36,7 @@ import org.apache.log.Logger;
 
 /**
  * The <code>DOMBuilder</code> is a utility cl		Object hint = null;
-		String className = null;
+        String className = null;
 
                 try {
 ass that will generate a W3C
@@ -44,7 +44,7 @@ ass that will generate a W3C
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-11-10 22:38:56 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-11 16:07:01 $
  */
 public class DOMBuilder implements XMLConsumer {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -62,7 +62,7 @@ public class DOMBuilder implements XMLConsumer {
     private static final String stateName[]={
         "Available", "DTD Processing", "Document", "Body", "CDATA Section"
     };
-    
+
     /** The current state */
     private int state=S_AVAIL;
     /** The locator */
@@ -161,7 +161,7 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Report the start of DTD declarations, if any. 
+     * Report the start of DTD declarations, if any.
      *
      * @param name The document type name.
      * @param publicId The declared public identifier for the external DTD
@@ -170,7 +170,7 @@ public class DOMBuilder implements XMLConsumer {
      *                 subset, or null if none was declared.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void startDTD(String name, String publicId, String systemId) 
+    public void startDTD(String name, String publicId, String systemId)
     throws SAXException {
         // This method can be called only at DOCUMENT level
         if(state!=S_DOC) throw new SAXException("Invalid state"+location());
@@ -195,14 +195,14 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Report the end of DTD declarations. 
+     * Report the end of DTD declarations.
      *
      * @param chars The characters from the XML document.
      * @param start The start position in the array.
      * @param len The number of characters to read from the array.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void endDTD() 
+    public void endDTD()
     throws SAXException {
         // This method can be called only at DTD level
         if(state!=S_DTD) throw new SAXException("Invalid state"+location());
@@ -324,7 +324,7 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Begin the scope of a prefix-URI Namespace mapping. 
+     * Begin the scope of a prefix-URI Namespace mapping.
      *
      * @param pre The Namespace prefix being declared.
      * @param uri The Namespace URI the prefix is mapped to.
@@ -340,7 +340,7 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * End the scope of a prefix-URI mapping. 
+     * End the scope of a prefix-URI mapping.
      *
      * @param prefix The Namespace prefix that was being mapped.
      */
@@ -356,11 +356,11 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Report the start of a CDATA section. 
+     * Report the start of a CDATA section.
      *
      * @exception SAXException If this method was not called appropriately.
      */
-    public void startCDATA() 
+    public void startCDATA()
     throws SAXException {
         // This method can only called at BODY level
         if(state!=S_BODY) throw new SAXException("Invalid state"+location());
@@ -368,21 +368,21 @@ public class DOMBuilder implements XMLConsumer {
         // Set the CDATASection as the current element
         this.current.appendChild(cdata);
         this.current=cdata;
-        // Do a state change        
+        // Do a state change
         state=S_CDATA;
     }
 
     /**
-     * Report the end of a CDATA section. 
+     * Report the end of a CDATA section.
      *
      * @exception SAXException If this method was not called appropriately.
      */
-    public void endCDATA() 
+    public void endCDATA()
     throws SAXException {
         // This method can only called at BODY level
         if(state!=S_CDATA) throw new SAXException("Invalid state"+location());
         // Set the parent of the CDATASection as the current element
-        // We don't need to check the node type because in CDATA state the 
+        // We don't need to check the node type because in CDATA state the
         // current element can be ONLY a CDATASection node
         this.current=this.current.getParentNode();
         if (this.current==null) throw new SAXException("No parent"+location());
@@ -391,14 +391,14 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Report the beginning of an entity. 
+     * Report the beginning of an entity.
      *
      * @param chars The characters from the XML document.
      * @param start The start position in the array.
      * @param len The number of characters to read from the array.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void startEntity(java.lang.String name) 
+    public void startEntity(java.lang.String name)
     throws SAXException {
         // This method can only called at BODY level
         if((state!=S_BODY)&&(state!=S_DTD))
@@ -410,14 +410,14 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Report the end of an entity. 
+     * Report the end of an entity.
      *
      * @param chars The characters from the XML document.
      * @param start The start position in the array.
      * @param len The number of characters to read from the array.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void endEntity(java.lang.String name) 
+    public void endEntity(java.lang.String name)
     throws SAXException {
         // This method can only called at BODY level
         if(state!=S_BODY) throw new SAXException("Invalid state"+location());
@@ -450,7 +450,7 @@ public class DOMBuilder implements XMLConsumer {
         // This method can only called at BODY or CDATA levels
         if(state<S_BODY) throw new SAXException("Invalid state "+location());
         // Check if we are in the CDATA state
-        String data=new String(chars,start,len);        
+        String data=new String(chars,start,len);
         if(state==S_CDATA) {
             ((CDATASection)this.current).appendData(data);
         } else {
@@ -504,14 +504,14 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Report an XML comment anywhere in the document. 
+     * Report an XML comment anywhere in the document.
      *
      * @param chars The characters from the XML document.
      * @param start The start position in the array.
      * @param len The number of characters to read from the array.
      * @exception SAXException If this method was not called appropriately.
      */
-    public void comment(char chars[], int start, int len) 
+    public void comment(char chars[], int start, int len)
     throws SAXException {
         // This is because Xerces reports comments inside DTDs
         if(state==S_DTD) return;
@@ -524,7 +524,7 @@ public class DOMBuilder implements XMLConsumer {
     }
 
     /**
-     * Receive notification of a skipped entity. 
+     * Receive notification of a skipped entity.
      *
      * @param name The name of the skipped entity. If it is a parameter entity,
      *             the name will begin with '%'.
@@ -566,11 +566,11 @@ public class DOMBuilder implements XMLConsumer {
      * be notified of a successful DOM tree generation.
      */
     public static interface Listener {
-    
+
         /**
          * Receive notification of a successfully completed DOM tree generation.
          */
-        public void notify(Document doc)
+        void notify(Document doc)
         throws SAXException;
     }
 }
