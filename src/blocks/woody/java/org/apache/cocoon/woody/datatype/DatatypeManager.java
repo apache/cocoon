@@ -51,6 +51,7 @@
 package org.apache.cocoon.woody.datatype;
 
 import org.w3c.dom.Element;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 
 /**
  * Work interface for the component that manages the datatypes.
@@ -70,4 +71,9 @@ public interface DatatypeManager {
      * {@link DatatypeBuilder}s while building a {@link Datatype}.
      */
     public ValidationRule createValidationRule(Element validationRuleElement) throws Exception;
+
+    /**
+     * Creates a convertor based on an XML description.
+     */
+    public Convertor createConvertor(String dataTypeName, Element convertorElement) throws Exception;
 }
