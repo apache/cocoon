@@ -76,6 +76,8 @@ public class Repeater extends AbstractWidget {
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
         this.definition = repeaterDefinition;
+        // setup initial size
+        removeRows();
     }
 
     public String getId() {
@@ -163,10 +165,15 @@ public class Repeater extends AbstractWidget {
     }
 
     /**
-     * Clears all rows from the repeater.
+     * Clears all rows from the repeater and go back to the initial size
      */
     public void removeRows() {
         rows.clear();
+        
+        // and reset to initial size
+        for (int i = 0; i < this.definition.getInitialSize(); i++) {
+            addRow();
+        }
     }
 
     /**
