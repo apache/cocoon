@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!--
+    convert a page so that is is usable as input for the SWFSerializer
+    $Id: page2swf.xsl,v 1.2 2003/05/03 07:35:03 bdelacretaz Exp $
+-->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:param name="view-source"/>
@@ -403,6 +409,11 @@
         <Glyph char="z" advance="512" xmin="20" ymin="-531" xmax="490" ymax="0">
             <ShapeRaw>EDVLNGfbNge5J9m34Gy1XnGqWO2uX5uPXZTeCKtm34qlT4A= </ShapeRaw>
         </Glyph>
+
+<!--
+    TODO see bugzilla 19619, apparently there are weird characters in the rest of this font
+    definition which cause the XSL transform to fail. I didn't investigate, just commented them out
+
         <Glyph char="{" advance="342" xmin="29" ymin="-745" xmax="318" ymax="216">
 
             <ShapeRaw>EDVk+ov2U7MjLMAbyc3eJgCDOAEH+hFL3bazsuo7RLSty5lhMMl4A17QJ0lCIiA6UgNYAMx+yn6E
@@ -1037,6 +1048,7 @@
             <ShapeRaw>EDVn3vb582Q5NwLHcQy6FmErLhK1QGuN12+1XrZiNbDtpek2jd7pIq583vZsMPEbk02k73KPhFov
                 EcbK2FoFYeqP7C9ss2xRbM0CsmlH9he2WbYotmaA </ShapeRaw>
         </Glyph>
+        -->
     </Font>
     <Text id="2" name="content" xmin="-2300" xmax="3000" ymin="-40"
         ymax="442" selectable="yes" leftmargin="0.0" rightmargin="0.0"
