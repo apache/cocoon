@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.sitemap.SitemapParameters;
-import org.apache.cocoon.util.Tokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 
@@ -184,7 +184,7 @@ import org.apache.regexp.RESyntaxException;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.10 2004/03/16 21:46:27 joerg Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.11 2004/03/28 21:01:21 antonio Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -948,7 +948,7 @@ public abstract class AbstractValidatorAction
         String[] rparams = null;
         Set set = new HashSet(20);
         if (!"*".equals(valstr.trim())) {
-            rparams = Tokenizer.tokenize(valstr, ",", false);
+            rparams = StringUtils.split(valstr, ",");
             if (rparams != null) {
                 for (int i = rparams.length - 1; i >= 0; i--) {
                     set.add(desc.get(rparams[i]));

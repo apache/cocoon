@@ -27,13 +27,14 @@ import java.util.Map;
 
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.cocoon.environment.Request;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.7 2004/03/08 14:03:30 cziegeler Exp $
+ * @version CVS $Id: NetUtils.java,v 1.8 2004/03/28 21:01:20 antonio Exp $
  */
 
 public class NetUtils {
@@ -304,14 +305,14 @@ public class NetUtils {
             return absoluteResource.substring(path.length());
         } else {
             // resource is not direct descendant
-            int index = StringUtils.matchStrings(path, absoluteResource);
+            int index = StringUtils.indexOfDifference(path, absoluteResource);
             if (index > 0 && path.charAt(index-1) != '/') {
                 index = path.substring(0, index).lastIndexOf('/');
                 index++;
             }
             String pathDiff = path.substring(index);
             String resource = absoluteResource.substring(index);
-            int levels = StringUtils.count(pathDiff, '/');
+            int levels = StringUtils.countMatches(pathDiff, "/");
             StringBuffer b = new StringBuffer();
             for (int i = 0; i < levels; i++) {
                 b.append("../");

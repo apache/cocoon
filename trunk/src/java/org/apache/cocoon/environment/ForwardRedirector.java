@@ -25,7 +25,7 @@ import org.apache.cocoon.ProcessingException;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.18 2004/03/08 14:02:42 cziegeler Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.19 2004/03/28 21:01:21 antonio Exp $
  */
 public abstract class ForwardRedirector 
 extends AbstractLogEnabled 
@@ -97,7 +97,7 @@ implements Redirector, PermanentRedirector {
         this.hasRedirected = true;
     }
 
-    protected abstract void cocoonRedirect(String uri) throws IOException, ProcessingException;;
+    protected abstract void cocoonRedirect(String uri) throws IOException, ProcessingException;
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Redirector#hasRedirected()

@@ -23,7 +23,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.cprocessor.AbstractNode;
-import org.apache.cocoon.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>

@@ -26,6 +26,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -45,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.9 2004/03/08 14:03:30 cziegeler Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.10 2004/03/28 21:01:21 antonio Exp $
  * 
  * @avalon.component
  * @avalon.service type=Generator
@@ -87,7 +88,7 @@ implements Generator, CacheableProcessingComponent, Serviceable {
         public Part(String uri, Element element, String stripRoot) {
             this.uri = uri;
             this.element = element;
-            this.stripRootElement = (stripRoot.equals("yes") || stripRoot.equals("true"));
+            this.stripRootElement = BooleanUtils.toBoolean(stripRoot);
         }
     }
 

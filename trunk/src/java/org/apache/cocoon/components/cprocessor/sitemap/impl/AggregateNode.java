@@ -35,7 +35,7 @@ import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ContentAggregator;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -55,7 +55,7 @@ import org.apache.cocoon.util.StringUtils;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.2 2004/03/08 13:57:38 cziegeler Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.3 2004/03/28 21:01:21 antonio Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

@@ -37,7 +37,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.Tokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 import org.xml.sax.SAXException;
@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.10 2004/03/08 21:21:10 joerg Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.11 2004/03/28 21:01:21 antonio Exp $
  * 
  * @avalon.component
  * @avalon.service type=Generator
@@ -240,9 +240,9 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
             for (int i = 0; i < children.length; i++) {
                 String pattern = children[i].getValue();
                 try {
-                    Tokenizer t = new Tokenizer(pattern, ", ");
-                    while (t.hasMoreTokens()) {
-                        String tokenized_pattern = t.nextToken();
+                    String params[] = StringUtils.split(pattern, ", ");
+                    for (int index = 0; index < params.length; index++) {
+                        String tokenized_pattern = params[index];
                         this.includeCrawlingURL.add(new RE(tokenized_pattern));
                     }
                 } catch (RESyntaxException rese) {
@@ -258,9 +258,9 @@ public class LinkStatusGenerator extends ServiceableGenerator implements Recycla
             for (int i = 0; i < children.length; i++) {
                 String pattern = children[i].getValue();
                 try {
-                    Tokenizer t = new Tokenizer(pattern, ", ");
-                    while (t.hasMoreTokens()) {
-                        String tokenized_pattern = t.nextToken();
+                    String params[] = StringUtils.split(pattern, ", ");
+                    for (int index = 0; index < params.length; index++) {
+                        String tokenized_pattern = params[index];
                         this.excludeCrawlingURL.add(new RE(tokenized_pattern));
                     }
                 } catch (RESyntaxException rese) {
