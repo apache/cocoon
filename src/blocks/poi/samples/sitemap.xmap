@@ -12,7 +12,7 @@
   </map:transformers>
   <map:readers default="resource"/>
   <map:serializers default="html">
-    <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer" mime-type="application/vnd.ms-excel"/>
+    <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer"/>
   </map:serializers>
   <map:matchers default="wildcard"/>
   <map:selectors default="browser"/>
