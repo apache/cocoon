@@ -9,6 +9,7 @@ echo -------------------
 set ANT_HOME=.\lib
 set ANT=.\lib\ant.jar
 set JAVAC=%JAVA_HOME%\lib\tools.jar
+set JAXP=.\lib\jaxp_1_0_1.jar
 set XERCES=.\lib\xerces_1_1_1.jar
 set XALAN=.\lib\xalan_1_0_1.jar
 set FOP=.\lib\fop_0_13_0.jar
@@ -16,7 +17,7 @@ set SVG=.\lib\svgv_0_8.jar
 set JS=./lib/js.jar
 set JSTYLE=./lib/jstyle.jar
 set SERVLETS=.\lib\servlet_2_2.jar
-set LOCALCLASSPATH=%ANT%;%JAVAC%;%XERCES%;%XALAN%;%FOP%;%SVG%;%JS%;%JSTYLE%;%SERVLETS%;%CLASSPATH%
+set LOCALCLASSPATH=%ANT%;%JAVAC%;%JAXP%;%XERCES%;%XALAN%;%FOP%;%SVG%;%JS%;%JSTYLE%;%SERVLETS%;%CLASSPATH%
 
 echo.
 echo Building with classpath %LOCALCLASSPATH%
@@ -38,6 +39,7 @@ echo "location of the Java Virtual Machine you want to use."
 :end
 
 set LOCALCLASSPATH=
+set JAXP=
 set XERCES=
 set XALAN=
 set FOP=
