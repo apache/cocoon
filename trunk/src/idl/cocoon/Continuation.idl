@@ -54,80 +54,12 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
  * <p>
- *   The <code>Cocoon</code> interface defines the main Cocoon liaison
- *   available to flow scripts.
+ *   <b>(TODO)</b> The <code>Continuation</code> object.
  * </p>
  */
-interface Cocoon {
+interface Continuation {
 
-    /**
-     * The current <b>Log</b> instance used for logging.
-     * <i>(suggested by Jeremy Quinn)</i>.
-     */
-    readonly attribute cocoon::Log log;
-
-    /**
-     * The current <b>Request</b> instance associated with this script.
-     * <i>(suggested by Stefano Mazzocchi)</i>
-     */
-    readonly attribute cocoon::Request request;
-
-    /**
-     * The current <b>Context</b> instance.
-     * <i>(suggested by Stefano Mazzocchi)</i>
-     * <p><b>NOTE: &quot;<code>context</code>&quot; is a reserved word in
-     * IDL (at least it seems so). This name has been mangled accordingly
-     * to allow IDLDoc to produce the documentation.</b></p>
-     */
-    readonly attribute cocoon::Context contxt;
-
-    /**
-     * <p>
-     *   Passes control to the Cocoon sitemap to generate the output page.
-     * </p>
-     * <p>
-     *   TODO: What happens when the control returns to a script which (for
-     *   example) calls again <code>sendPage(AndWait)</code>???
-     * </p>
-     *
-     * @param uri the relative URL of the page to be sent back to the client.
-     * @param bean a context object which can be accessed inside this page to
-     *             extract various values and place them in the generated page.
-     * @exception java::Exception If an error occurred attempting to send the
-     *                            specified page.
-     */
-    void sendPage(in string url, in Object bean)
-    raises (java::Exception);
-
-    /**
-     * <p>
-     *   Passes control to the Cocoon sitemap to generate the output page,
-     *   interrupting the execution until another request comes in.
-     * </p>
-     * <p>
-     *   The flow script is suspended after the page is generated and the
-     *   whole execution stack saved in a <code>Continuation</code>. This
-     *   instance is returned to the caller once the next request triggers
-     *   the continuation of the current execution stack.
-     * </p>
-     * <p>
-     *   TODO: Explain in better English what exactly goes on here.
-     * </p>
-     *
-     * @param uri the relative URL of the page to be sent back to the client.
-     * @param bean a context object which can be accessed inside this page to
-     *             extract various values and place them in the generated page.
-     * @param ttl The time to leave in milliseconds of the newly created
-     *            <code>Continuation</code> instance.
-     * @exception java::Exception If an error occurred attempting to send the
-     *                            specified page, or creating a new
-     *                            <code>Continuation</code> instance.
-     * @return The <code>Continuation</code> instance associated with this
-     *         current execution stack.
-     */
-    cocoon::Continuation sendPageAndWait(in string url, in Object bean,
-                                         in long ttl)
-    raises (java::Exception);
 };
