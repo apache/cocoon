@@ -79,13 +79,13 @@ import org.xml.sax.SAXException;
  *     &lt;source:source&gt;webdav://localhost/webdav/step1/repo/contentA.xml&lt;/source:source&gt;
  *     &lt;source:prop name="author" namespace="meta"&gt;me&lt;/source:prop&gt;
  *     &lt;source:prop name="category" namespace="meta"&gt;catA&lt;/source:prop&gt;
- *   &lt;/source:write&gt;
+ *   &lt;/source:patch&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SourcepropsWritingTransformer.java,v 1.1 2003/08/22 13:02:01 gcasper Exp $
+ * @version CVS $Id: SourcepropsWritingTransformer.java,v 1.2 2003/08/27 08:33:42 stephan Exp $
  */
 public class SourcepropsWritingTransformer
     extends AbstractSAXTransformer {
