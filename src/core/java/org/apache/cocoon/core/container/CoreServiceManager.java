@@ -778,6 +778,7 @@ public class CoreServiceManager
         }
         return WildcardHelper.match(null, uri, parsedPattern);      
     }
+
     /**
      * Release the source resolver that may have been created by the first call to
      * loadConfiguration().

@@ -181,5 +181,5 @@
   </categories>
   
   <!-- Include logging confs from different blocks -->
-  <include dir="context://WEB-INF/logkitconf" postfix=".logkit"/>
+  <include dir="context://WEB-INF/xconf" pattern="*.logkit"/>
 </logkit>
