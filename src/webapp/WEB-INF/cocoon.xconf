@@ -575,6 +575,8 @@
         |                          MIN:  corresponds to Thread#MIN_PRIORITY
         |                          NORM: corresponds to Thread#NORM_PRIORITY (default)
         |                          MAX:  corresponds to Thread#MAX_PRIORITY
+        | daemon:                whether newly created Threads should run in 
+        |                        daemon mode or not. Default to false.
         | queue-size:            optional size of a queue to hold Runnables if the 
         |                        pool is full. Possible values are:
         |                          less than 0:    unbounded (default)
@@ -626,6 +628,7 @@
       <thread-pool>  
         <name>default</name>
         <priority>NORM</priority>
+        <daemon>false</daemon>
         <queue-size>-1</queue-size>
         <max-pool-size>5</max-pool-size>
         <min-pool-size>5</min-pool-size>
