@@ -143,7 +143,7 @@
 
  <s1 title="Where do I get it?">
   <p>
-   The official distribution site is <link href="http://xml.apache.org/cocoon/dist/">here</link>.
+   The official distribution site is <link href="http://cocoon.apache.org/mirror.cgi">here</link>.
   </p>
   <note>
    Since Cocoon requires many different packages to work (Xerces, Xalan, FOP, etc...)

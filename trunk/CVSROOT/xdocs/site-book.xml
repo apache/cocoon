@@ -3,7 +3,7 @@
 <book title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
   <external href="../index.html"  label="Back"/>
 <separator/>
-  <external href="./dist"  label="Download"/>
+  <external href="../mirror.cgi"  label="Download"/>
 <separator/>
   <page id="index" label="Index" source="index.xml"/>
   <page id="license" label="License" source="license.xml"/>
