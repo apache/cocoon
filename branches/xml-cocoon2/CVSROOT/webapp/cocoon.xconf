@@ -35,24 +35,24 @@
           <parameter name="uri" value="http://apache.org/xsp/response"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
         </builtin-logicsheet>
+<!--
+		<builtin-logicsheet>
+	  	  <parameter name="prefix" value="session"/>
+	  	  <parameter name="uri" value="http://apache.org/xsp/session"/>
+	  	  <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
+		</builtin-logicsheet>
+-->
+   		<builtin-logicsheet>
+          <parameter name="prefix" value="esql"/>
+          <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>
+        </builtin-logicsheet>
 
-	<builtin-logicsheet>
-	  <parameter name="prefix" value="session"/>
-	  <parameter name="uri" value="http://apache.org/xsp/session"/>
-	  <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session.xsl"/>
-	</builtin-logicsheet>
-
-    <builtin-logicsheet>
-      <parameter name="prefix" value="esql"/>
-      <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
-      <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>
-    </builtin-logicsheet>
-
-    <builtin-logicsheet>
-      <parameter name="prefix" value="log"/>
-      <parameter name="uri" value="http://apache.org/xsp/log"/>
-      <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
-    </builtin-logicsheet>
+        <builtin-logicsheet>
+          <parameter name="prefix" value="log"/>
+          <parameter name="uri" value="http://apache.org/xsp/log"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
+        </builtin-logicsheet>
       </target-language>
     </component-instance>
 
