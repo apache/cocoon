@@ -65,7 +65,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * tables, and can update more than one row to a table at a time.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseUpdateAction.java,v 1.1 2003/03/09 00:03:04 pier Exp $
+ * @version CVS $Id: DatabaseUpdateAction.java,v 1.2 2003/07/01 11:23:19 haul Exp $
  */
 public class DatabaseUpdateAction extends DatabaseAction {
 
@@ -126,21 +126,24 @@ public class DatabaseUpdateAction extends DatabaseAction {
                 fillModes( values, false, defaultModeNames, modeTypes, queryData );
 
                 StringBuffer queryBuffer = new StringBuffer("UPDATE ");
-                queryBuffer.append(table.getAttribute("name")).append(" SET ");
+                queryBuffer.append(table.getAttribute("name"));
 
-
-                int cols = 0;
-                for (int i = 0; i < queryData.columns.length; i++) {
-                    if ( !queryData.columns[i].isKey ) {
-                        if ( cols > 0 ) {
-                            queryBuffer.append(", ");
+                if (values.length > 0){
+                    queryBuffer.append(" SET ");
+                    int cols = 0;
+                    for (int i = 0; i < queryData.columns.length; i++) {
+                        if ( !queryData.columns[i].isKey ) {
+                            if ( cols > 0 ) {
+                                queryBuffer.append(", ");
+                            }   
+                            cols++;
+                            queryBuffer
+                                .append( queryData.columns[i].columnConf.getAttribute( "name" ) )
+                                .append( "= ?" );
                         }
-                        cols++;
-                        queryBuffer
-                            .append( queryData.columns[i].columnConf.getAttribute( "name" ) )
-                            .append( "= ?" );
                     }
                 }
+                
                 queryBuffer.append(" WHERE ");
                 for (int i = 0; i < queryData.columns.length; i++) {
                     if ( queryData.columns[i].isKey ) {
