@@ -9,6 +9,7 @@
     <xsp:logic>
       String empID = request.getParameter("employee");
       String depID = request.getParameter("department");
+      String name = request.getParameter("name");
       String message = (String) request.getAttribute("message");
       System.err.println("message is "+message);
     </xsp:logic>
@@ -25,14 +26,15 @@
                 <esql:query>select id, department_id, name from employee_table order by name</esql:query>
                 <esql:results>
                   <esql:row-results>
-                    <option>
-                      <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
-                      <xsp:attribute name="selected"><xsp:expr>(<esql:get-string column="id"/>.equals(empID)?"true":"false")</xsp:expr></xsp:attribute>
                       <xsp:logic>
                         if (<esql:get-string column="id"/>.equals(empID)) {
                             depID = <esql:get-string column="department_id"/>;
+			    name = <esql:get-string column="name"/>;
+			    xspAttr.addAttribute("", "selected", "selected", "CDATA", "");
                         }
                       </xsp:logic>
+                    <option>
+                      <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
                       <esql:get-string column="name"/>
                     </option>
                   </esql:row-results>
@@ -44,13 +46,11 @@
       <form action="" method="POST" name="EmployeeEntry">
         <script>document.forms["EmployeeEntry"].action = window.location.pathname</script>
         <input type="hidden" name="employee"/>
-        <script>document.forms["EmployeeEntry"].employee.value = document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value</script>
-        <para>Employee Name: <input name="name" type="text"/>
-          <script>
-            if (document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value != -1)
-              document.forms["EmployeeEntry"].name.value = document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].text
-          </script>
-        </para>
+        <para>Employee Name:
+	  <input name="name" type="text">
+	   <xsp:attribute name="value"><xsp:expr>name</xsp:expr></xsp:attribute>
+	  </input>
+	</para>
         <para>Department:
           <select name="department">
             <esql:connection>
@@ -59,9 +59,13 @@
                 <esql:query>select id, name from department_table order by name</esql:query>
                 <esql:results>
                   <esql:row-results>
+                      <xsp:logic>
+                        if (<esql:get-string column="id"/>.equals(depID)) {
+			    xspAttr.addAttribute("", "selected", "selected", "CDATA", "");
+                        }
+                      </xsp:logic>
                     <option>
                       <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
-                      <xsp:attribute name="selected"><xsp:expr>(<esql:get-string column="id"/>.equals(depID)?"true":"false")</xsp:expr></xsp:attribute>
                       <esql:get-string column="name"/>
                     </option>
                   </esql:row-results>
