@@ -460,7 +460,7 @@
       | application operation.
       | BUT: The heap size of the memory of the JVM is a little bit less than
       |      the value you specify for -Xmx, so you have to set the heapsize
-      |      for the store janitor to a value which is lower (2% less thems
+      |      for the store janitor to a value which is lower (2% less seems
       |      to be a working value).
       +-->
   <store-janitor logger="core.store.janitor">
