@@ -2,7 +2,7 @@
 <xsl:stylesheet
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:wi="http://cocoon.apache.org/woody/instance/1.0">
+  xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
 
   <xsl:template match="wi:field">
 

@@ -58,17 +58,17 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public final class Constants {
     /** Namespace for Woody Template elements */
-    public static final String WT_NS = "http://cocoon.apache.org/woody/template/1.0";
+    public static final String WT_NS = "http://apache.org/cocoon/woody/template/1.0";
     public static final String WT_PREFIX = "wt";
     public static final String WT_PREFIX_COLON = "wt:";
 
     /** Namespace for Woody Instance elements */
-    public static final String WI_NS = "http://cocoon.apache.org/woody/instance/1.0";
+    public static final String WI_NS = "http://apache.org/cocoon/woody/instance/1.0";
     public static final String WI_PREFIX = "wi";
     public static final String WI_PREFIX_COLON = "wi:";
 
     /** Namespace for Woody Definition elements */
-    public static final String WD_NS = "http://cocoon.apache.org/woody/definition/1.0";
+    public static final String WD_NS = "http://apache.org/cocoon/woody/definition/1.0";
     public static final String WD_PREFIX = "wd";
     public static final String WD_PREFIX_COLON = "wd:";
 
