@@ -21,7 +21,7 @@ CATALOG "w3c/catalog"
 
 -- Web Application Definitions --
 PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" 
-       "web-app_2_2.dtd"
+       "web-app_2_3.dtd" -- Note the deliberate avoidance of license issues --
 PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
        "web-app_2_3.dtd"
 
