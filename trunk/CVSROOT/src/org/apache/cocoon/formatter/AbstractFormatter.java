@@ -1,4 +1,4 @@
-/*-- $Id: AbstractFormatter.java,v 1.5 2001-03-07 22:32:16 greenrd Exp $ -- 
+/*-- $Id: AbstractFormatter.java,v 1.6 2001-03-26 00:20:46 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,13 +59,14 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2001-03-07 22:32:16 $
+ * @version $Revision: 1.6 $ $Date: 2001-03-26 00:20:46 $
  */
 
 public abstract class AbstractFormatter 
 implements Configurable, Formatter, Status, Cacheable {
  
     protected String statusMessage = "Abstract Formatter";
+    protected String omitXMLDeclaration;
     protected String MIMEtype;
     protected String encoding;
     protected String doctypePublic;
@@ -88,6 +89,9 @@ implements Configurable, Formatter, Status, Cacheable {
         encoding = (String) conf.get("encoding");
         if (encoding != null) {
             format.setEncoding(encoding);
+        }
+        else {
+            encoding = format.getEncoding ();
         }
 
         doctypePublic = (String) conf.get("doctype-public");
@@ -114,7 +118,7 @@ implements Configurable, Formatter, Status, Cacheable {
     }
 
     public String getEncoding() {
-        return encoding;
+        return format.getEncoding ();
     }
 
     public String getMIMEType() {
@@ -157,6 +161,11 @@ implements Configurable, Formatter, Status, Cacheable {
         if (lineWidth != null) {
             message.append("[ Line Width:  ");
             message.append(lineWidth);
+            message.append(" ]<br>");
+        }
+        if (omitXMLDeclaration != null) {
+            message.append("[ Omit XML Declaration:  ");
+            message.append(omitXMLDeclaration);
             message.append(" ]<br>");
         }
         message.append("<br>");
