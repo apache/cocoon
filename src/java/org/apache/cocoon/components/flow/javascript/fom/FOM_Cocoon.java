@@ -82,7 +82,6 @@ import org.apache.cocoon.environment.http.HttpResponse;
 import org.apache.cocoon.util.ClassUtils;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
-import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -96,7 +95,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.27 2004/01/28 05:46:21 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.28 2004/01/28 16:07:17 vgritsenko Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -297,7 +296,7 @@ public class FOM_Cocoon extends ScriptableObject {
 
     public FOM_WebContinuation jsFunction_sendPage(String uri,
                                                    Object obj,
-                                                   Object wk) 
+                                                   Object wk)
         throws Exception {
         FOM_WebContinuation fom_wk = (FOM_WebContinuation)unwrap(wk);
         if (fom_wk != null) {
@@ -1551,16 +1550,16 @@ public class FOM_Cocoon extends ScriptableObject {
      * continuation of sendPageAndWait as its parent.
      * PageLocal variables will be shared with the continuation of
      * the next call to sendPageAndWait().
-     * @param k The JS continuation 
+     * @param k The JS continuation
      * @param ttl Lifetime for this continuation (zero means no limit)
      */
     public FOM_WebContinuation jsFunction_makeWebContinuation(Object k,
-                                                              Object ttl) 
+                                                              Object ttl)
         throws Exception {
         double d = org.mozilla.javascript.Context.toNumber(ttl);
-        FOM_WebContinuation result = 
-            makeWebContinuation((Continuation)unwrap(k), 
-                                jsGet_continuation(), 
+        FOM_WebContinuation result =
+            makeWebContinuation((Continuation)unwrap(k),
+                                jsGet_continuation(),
                                 (int)d);
         result.setPageLocal(pageLocal.getDelegate());
         currentCall.setLastContinuation(result);
