@@ -24,7 +24,7 @@ import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.tools.PortalToolManager;
-import org.apache.cocoon.portal.tools.service.UserrightsService;
+import org.apache.cocoon.portal.tools.service.UserRightsService;
 
 /**
  * Check whether the current user is allowed to access the given page.
@@ -47,9 +47,9 @@ implements ThreadSafe {
         String url = parameters.getParameter("url");
         PortalToolManager ptm = (PortalToolManager) this.manager.lookup(PortalToolManager.ROLE);
         try {
-            UserrightsService userrightsService = ptm.getUserRightsService();
+            UserRightsService userRightsService = ptm.getUserRightsService();
             // FIXME: replace the throw with something else
-            if (!userrightsService.userIsAllowed(url, ptm.getPortalObjects().getPortalService().getComponentManager().getProfileManager().getUser())) {
+            if (!userRightsService.userIsAllowed(url, ptm.getPortalObjects().getPortalService().getComponentManager().getProfileManager().getUser())) {
                 throw new ProcessingException(
                     "You are not allowed to request this page.");
             }

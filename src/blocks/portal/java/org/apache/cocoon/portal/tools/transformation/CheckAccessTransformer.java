@@ -19,7 +19,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.tools.PortalToolManager;
-import org.apache.cocoon.portal.tools.service.UserrightsService;
+import org.apache.cocoon.portal.tools.service.UserRightsService;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.w3c.dom.DocumentFragment;
@@ -39,7 +39,7 @@ implements Disposable {
     public static final String ACCESS_TAG = "access";
     public static final String RIGHT_ID = "id";
     
-    private UserrightsService urs;
+    private UserRightsService urs;
     private PortalToolManager ptm;
     
    /* (non-Javadoc)
