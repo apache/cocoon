@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.55 2003/05/01 12:49:34 stephan Exp $
+  CVS $Id: gump.xml,v 1.56 2003/05/06 08:49:59 bdelacretaz Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -758,6 +758,24 @@
 
     <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
   </project>
+
+  <project name="cocoon-block-qdox" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="qdox"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/qdox-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+    </project>
 
   <project name="cocoon-block-xmlform">
     <package>org.apache.cocoon</package>
