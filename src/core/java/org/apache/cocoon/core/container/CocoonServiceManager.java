@@ -607,6 +607,7 @@ implements ServiceManager, Configurable {
         if (handler != null) {
             // Overloaded component: we only allow selectors to be overloaded
             ServiceInfo info = handler.getInfo();
+            // FIXME - info should not contain the class, we need to get it from somewhere else
             if (!DefaultServiceSelector.class.isAssignableFrom(component) ||
                 !DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
                 throw new ServiceException(role, "Component declared at " + info.getLocation() + " is redefined at " +

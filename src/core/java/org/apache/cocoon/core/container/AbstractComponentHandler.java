@@ -77,6 +77,7 @@ implements ComponentHandler {
     throws Exception {
         int numInterfaces = 0;
 
+        // FIXME we don't need the class but a classloader
         final ServiceInfo info = new ServiceInfo();
         info.setServiceClass(componentClass);
         info.setServiceClassName(componentClass.getName());

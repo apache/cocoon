@@ -201,7 +201,7 @@ public class DefaultServiceSelector extends AbstractLogEnabled implements Thread
         
         public Object newInstance()
         throws Exception {
-            final DefaultServiceSelector component = (DefaultServiceSelector)this.serviceInfo.getServiceClass().newInstance();
+            final DefaultServiceSelector component = (DefaultServiceSelector)this.serviceClass.newInstance();
 
             ContainerUtil.enableLogging(component, this.environment.logger);
             ContainerUtil.contextualize(component, this.environment.context);
