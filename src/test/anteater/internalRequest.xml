@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="internal-request-test" default="internal-request-test">
+
+  <group id="default">
+    <property name="usetidy" value="false"/>
+  </group>
+
+  <!-- Simulate the behavior of a user that opens a browser, starts
+  the calculator example, and goes back in the processing several
+  times. -->
+  <target name="internal-request-test">
+    <property name="internal-request-test" value="${cocoon}/samples/test/simpletest"/>
+
+      <httpRequest href="${internal-request-test}"
+		   description="Test the internal request handling">
+        <match>
+          <xpath select="test/test/@file" value="c"/>
+        </match>
+      </httpRequest>
+  </target>
+</project>
