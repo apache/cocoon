@@ -24,7 +24,7 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-03-23 13:48:53 $
+ * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-03-23 19:38:18 $
  */
 
 public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
@@ -63,9 +63,8 @@ public class WildcardURIMatcherFactory implements CodeFactory, Loggable {
      */
     public String generateMethodSource (NodeList conf)
     throws ConfigurationException {
-               //"String uri = ((org.apache.cocoon.environment.http.HttpRequest) objectModel.get(Constants.REQUEST_OBJECT)).getRequestURI();" +
         return "HashMap map = new HashMap();" +
-               "String uri = ((HttpRequest) objectModel.get(Constants.REQUEST_OBJECT)).getRequestURI();" +
+               "String uri = XSPRequestHelper.getUri(objectModel);" +
                "if (uri.startsWith(\"/\")) uri = uri.substring(1);" +
                "if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (map, uri, pattern)) {" +
                "return map;" +

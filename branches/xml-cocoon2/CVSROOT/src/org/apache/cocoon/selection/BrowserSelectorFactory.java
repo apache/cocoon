@@ -26,7 +26,7 @@ import org.apache.cocoon.CodeFactory;
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-23 13:48:55 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-23 19:38:19 $
 */
 
 
@@ -73,10 +73,8 @@ public class BrowserSelectorFactory implements CodeFactory {
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer();
          sb.append("if (pattern != null && objectModel.get(Constants.REQUEST_OBJECT) != null) {")
-          .append("HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);")
-          .append("String userAgent = request.getHeader(\"User-Agent\");")
-          .append("HttpResponse response = (HttpResponse) objectModel.get(Constants.RESPONSE_OBJECT);")
-          .append("response.addHeader(\"Vary\", \"User-Agent\");")
+          .append("String userAgent = XSPRequestHelper.getHeader(objectModel,\"User-Agent\");")
+          .append("XSPResponseHelper.addHeader(objectModel, \"Vary\", \"User-Agent\");")
           .append("for (int i = 0; i < pattern.length; i++) {")
           .append("if (userAgent.indexOf(pattern[i]) != -1) return true;}");
         return sb.append("} return false;").toString();

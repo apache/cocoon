@@ -7,6 +7,10 @@
           xmlns:xsp-response="http://apache.org/xsp/response"
       xmlns:log="http://apache.org/xsp/log"
 >
+  <xsp:structure>
+   <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
+  </xsp:structure>
+
   <page>
    <title>This form allows you upload files</title>
    <content>
@@ -19,7 +23,7 @@
      <para>
      <ul>
        <xsp:logic>
-         File workDir = (File) this.context.getAttribute("javax.servlet.context.tempdir");
+         File workDir = (File) XSPUtil.getContextAttribute(objectModel, "javax.servlet.context.tempdir");
          File uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
          String[] filelist = uploadDir.list();
          for (int i = 0; i &lt; filelist.length; i++) {

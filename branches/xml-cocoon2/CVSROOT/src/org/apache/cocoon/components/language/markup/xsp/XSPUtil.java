@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -32,6 +33,7 @@ import org.xml.sax.SAXException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.util.IOUtils;
@@ -42,11 +44,13 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
+import javax.servlet.ServletContext;
+
 /**
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version $Revision: 1.1.2.8 $ $Date: 2001-03-12 05:55:19 $
+ * @version $Revision: 1.1.2.9 $ $Date: 2001-03-23 19:38:08 $
  */
 public class XSPUtil {
     public static String pathComponent(String filename) {
@@ -97,17 +101,14 @@ public class XSPUtil {
         return buffer.toString();
     }
 
-    public static String relativeFilename(String filename, HttpServletRequest request,
-        ServletContext context) throws IOException {
+    public static String relativeFilename(String filename, Map objectModel) 
+        throws IOException {
+            ServletContext context = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
             File file = new File(filename);
             if (file.isAbsolute()) {
                 return filename;
             }
             return NetUtils.getPath(context.getResource(filename).toExternalForm());
-    }
-
-    public static String relativeFilename(String filename, HttpServletRequest request) throws IOException {
-        return relativeFilename(filename, request, null);
     }
 
     public static boolean isAlphaNumeric(char c) {
@@ -276,5 +277,11 @@ public class XSPUtil {
         session.setAttribute("util.counter",
             new Integer(cnt));
         return cnt;
+    }
+
+    public static Object getContextAttribute(Map objectModel, String name)
+    {
+        ServletContext context = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
+        return context.getAttribute(name);
     }
 }

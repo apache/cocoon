@@ -26,7 +26,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-23 13:48:53 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-23 19:38:18 $
  */
 
 public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
@@ -102,7 +102,7 @@ public class RegexpURIMatcherFactory implements CodeFactory, Loggable {
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("HashMap map = new HashMap ();")
-          .append("String uri = ((HttpRequest)objectModel.get(Constants.REQUEST_OBJECT)).getRequestURI();")
+          .append("String uri = XSPRequestHelper.getUri(objectModel);")
           .append("if(uri.startsWith(\"/\")) uri = uri.substring(1);")
           .append("if(pattern.match(uri)) {");
           /* Handle parenthesised subexpressions. XXX: could be faster if we count

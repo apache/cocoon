@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-16 16:13:27 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-23 19:38:10 $
 -->
 
 <!-- XSP Request logicsheet for the Java language -->
@@ -32,13 +32,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (this.request.getRequestURI())
+          (XSPRequestHelper.getUri(objectModel))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
     <!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getUri(request, this.contentHandler);
+          XSPRequestHelper.getUri(objectModel, this.contentHandler);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -70,12 +70,12 @@
     <xsl:choose>
        <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (XSPRequestHelper.getSessionAttribute(request, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
+          (XSPRequestHelper.getSessionAttribute(objectModel, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
         <xsp:logic>
-          XSPRequestHelper.getSessionAttribute(request, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
+          XSPRequestHelper.getSessionAttribute(objectModel, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -107,13 +107,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (XSPRequestHelper.getParameter(request, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
+          (XSPRequestHelper.getParameter(objectModel, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
     <!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getParameter(request, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
+          XSPRequestHelper.getParameter(objectModel, this.contentHandler, <xsl:copy-of select="$name"/>, <xsl:copy-of select="$default"/>);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -125,13 +125,13 @@
     </xsl:variable>
 
      <xsp:logic>
-        XSPRequestHelper.getParameterValues(request, this.contentHandler, <xsl:copy-of select="$name"/>);
+        XSPRequestHelper.getParameterValues(objectModel, this.contentHandler, <xsl:copy-of select="$name"/>);
      </xsp:logic>
   </xsl:template>
 
   <xsl:template match="xsp-request:get-parameter-names">
      <xsp:logic>
-        XSPRequestHelper.getParameterNames(request, this.contentHandler);
+        XSPRequestHelper.getParameterNames(objectModel, this.contentHandler);
      </xsp:logic>
   </xsl:template>
 
@@ -149,13 +149,13 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          (XSPRequestHelper.getHeader(request, <xsl:copy-of select="$name"/>))
+          (XSPRequestHelper.getHeader(objectModel, <xsl:copy-of select="$name"/>))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
     <!-- <xsp-request:uri> -->
         <xsp:logic>
-          XSPRequestHelper.getHeader(request, this.contentHandler, <xsl:copy-of select="$name"/>);
+          XSPRequestHelper.getHeader(objectModel, this.contentHandler, <xsl:copy-of select="$name"/>);
         </xsp:logic>
       </xsl:when>
     </xsl:choose>
@@ -163,7 +163,7 @@
 
   <xsl:template match="xsp-request:get-header-names">
      <xsp:logic>
-        XSPRequestHelper.getHeaderNames(request, this.contentHandler);
+        XSPRequestHelper.getHeaderNames(objectModel, this.contentHandler);
      </xsp:logic>
   </xsl:template>
 
@@ -181,18 +181,18 @@
     <xsl:choose>
       <xsl:when test="$as = 'string'">
         <xsp:expr>
-          String.valueOf(request.getAttribute(<xsl:copy-of select="$name"/>))
+          String.valueOf(XSPRequestHelper.getAttribute(objectModel,<xsl:copy-of select="$name"/>))
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'object'">
         <xsp:expr>
-          request.getAttribute(<xsl:copy-of select="$name"/>)
+          XSPRequestHelper.getAttribute(objectModel,<xsl:copy-of select="$name"/>)
         </xsp:expr>
       </xsl:when>
       <xsl:when test="$as = 'xml'">
         <xsp:element name="xsp-request:attribute">
           <xsp:expr>
-            request.getAttribute(<xsl:copy-of select="$name"/>)
+            XSPRequestHelper.getAttribute(objectModel,<xsl:copy-of select="$name"/>)
           </xsp:expr>
         </xsp:element>
       </xsl:when>
@@ -205,7 +205,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      request.removeAttribute(<xsl:value-of select="$name"/>);
+      XSPRequestHelper.removeAttribute(objectModel,<xsl:value-of select="$name"/>);
     </xsp:logic>
   </xsl:template>
 
@@ -218,11 +218,11 @@
 
     <xsl:choose>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>new StringBuffer((request.isSecure()) ? "https://" : "http://").append(request.getServerName()).append(":").append(request.getServerPort()).append("/").append(request.getRequestURI()).toString()</xsp:expr>
+          <xsp:expr>new StringBuffer((XSPRequestHelper.isSecure(objectModel)) ? "https://" : "http://").append(XSPRequestHelper.getServerName(objectModel)).append(":").append(XSPRequestHelper.getServerPort(objectModel)).append("/").append(XSPRequestHelper.getUri(objectModel)).toString()</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'xml'">
           <xsp-request:requested-url>
-            <xsp:expr>new StringBuffer((request.isSecure()) ? "https://" : "http://").append(request.getServerName()).append(":").append(request.getServerPort()).append("/").append(request.getRequestURI()).toString()</xsp:expr>
+            <xsp:expr>new StringBuffer((XSPRequestHelper.isSecure(objectModel)) ? "https://" : "http://").append(XSPRequestHelper.getServerName(objectModel)).append(":").append(XSPRequestHelper.getServerPort(objectModel)).append("/").append(XSPRequestHelper.getUri(objectModel)).toString()</xsp:expr>
           </xsp-request:requested-url>
         </xsl:when>
     </xsl:choose>

@@ -15,12 +15,15 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import org.apache.avalon.Poolable;
 
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.http.HttpRequest;
+
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-22 17:10:34 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-23 19:38:15 $
  */
 public class RequestGenerator extends ServletGenerator implements Poolable {
 
@@ -32,11 +35,13 @@ public class RequestGenerator extends ServletGenerator implements Poolable {
      */
     public void generate()
     throws SAXException {
+        
+        HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping("",URI);
         AttributesImpl attr=new AttributesImpl();
 
-        this.attribute(attr,"target",this.request.getRequestURI());
+        this.attribute(attr,"target",request.getRequestURI());
         this.attribute(attr,"source",this.source);
         this.start("request",attr);
         this.data("\n");
@@ -45,13 +50,13 @@ public class RequestGenerator extends ServletGenerator implements Poolable {
         this.data("  ");
         this.start("requestHeaders",attr);
         this.data("\n");
-        Enumeration headers=this.request.getHeaderNames();
+        Enumeration headers=request.getHeaderNames();
         while (headers.hasMoreElements()) {
             String header=(String)headers.nextElement();
             this.attribute(attr,"name",header);
             this.data("    ");
             this.start("header",attr);
-            this.data(this.request.getHeader(header));
+            this.data(request.getHeader(header));
             this.end("header");
             this.data("\n");
         }
@@ -63,14 +68,14 @@ public class RequestGenerator extends ServletGenerator implements Poolable {
         this.data("  ");
         this.start("requestParameters",attr);
         this.data("\n");
-        Enumeration parameters=this.request.getParameterNames();
+        Enumeration parameters=request.getParameterNames();
         while (parameters.hasMoreElements()) {
             String parameter=(String)parameters.nextElement();
             this.attribute(attr,"name",parameter);
             this.data("    ");
             this.start("parameter",attr);
             this.data("\n");
-            String values[]=this.request.getParameterValues(parameter);
+            String values[]=request.getParameterValues(parameter);
             if (values!=null) for (int x=0; x<values.length; x++) {
                 this.data("      ");
                 this.start("value",attr);

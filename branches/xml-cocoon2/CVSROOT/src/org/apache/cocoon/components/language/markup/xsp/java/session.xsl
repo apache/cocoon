@@ -75,11 +75,11 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
 	  <xsp:element name="session:attribute">
-	    <xsp:expr>request.getSession().getAttribute(String.valueOf(<xsl:copy-of select="$name"/>))</xsp:expr>
+	    <xsp:expr>XSPRequestHelper.getSessionAttribute(objectModel, String.valueOf(<xsl:copy-of select="$name"/>))</xsp:expr>
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'object'">
-          <xsp:expr>request.getSession().getAttribute(
+          <xsp:expr>XSPRequestHelper.getSessionAttribute(objectModel,
             String.valueOf(<xsl:copy-of select="$name"/>)
           )</xsp:expr>
         </xsl:when>
@@ -94,15 +94,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      Vector v = new Vector();
-      Enumeration e = request.getSession().getAttributeNames();
-
-      while (e.hasMoreElements()) {
-          v.addElement(request.getSession().getAttribute((String) e.nextElement()));
-      }
-
-      String[] attributeNames = new String[v.size()];
-      v.copyInto(attributeNames);
+      Vector v = XSPRequestHelper.getSessionAttributeNames(objectModel);
     </xsp:logic>
 
       <xsl:choose>
@@ -133,14 +125,14 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
 	  <xsp:element name="session:creation-time">
-	    <xsp:expr>new Date(request.getSession().getCreationTime())</xsp:expr>
+	    <xsp:expr>new Date(XSPRequestHelper.getSessionCreationTime(objectModel))</xsp:expr>
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>new Date(request.getSession().getCreationTime())</xsp:expr>
+          <xsp:expr>new Date(XSPRequestHelper.getSessionCreationTime(objectModel))</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'long'">
-          <xsp:expr>request.getSession().getCreationTime()</xsp:expr>
+          <xsp:expr>XSPRequestHelper.getSessionCreationTime(objectModel)</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -155,11 +147,11 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
           <xsp:element name="session:id">
-	    <xsp:expr>request.getSession().getId()</xsp:expr>
+	    <xsp:expr>XSPRequestHelper.getSessionId(objectModel)</xsp:expr>
 	  </xsp:element>
 	</xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>request.getSession().getId()</xsp:expr>
+          <xsp:expr>XSPRequestHelper.getSessionId(objectModel)</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -174,14 +166,14 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
           <xsp:element name="session:last-accessed-time">
-	    <xsp:expr>new Date(request.getSession().getLastAccessedTime())</xsp:expr>
+	    <xsp:expr>new Date(XSPRequestHelper.getSessionLastAccessedTime(objectModel))</xsp:expr>
 	  </xsp:element>
 	</xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>new Date(request.getSession().getLastAccessedTime())</xsp:expr>
+          <xsp:expr>new Date(XSPRequestHelper.getSessionLastAccessedTime(objectModel))</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'long'">
-          <xsp:expr>request.getSession().getLastAccessedTime()</xsp:expr>
+          <xsp:expr>XSPRequestHelper.getSessionLastAccessedTime(objectModel)</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
@@ -196,21 +188,21 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
 	  <xsp:element name="session:max-inactive-interval">
-	    <xsp:expr>request.getSession().getMaxInactiveInterval()</xsp:expr>
+	    <xsp:expr>XSPRequestHelper.getSessionMaxInactiveInterval(objectModel)</xsp:expr>
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>String.valueOf(request.getSession().getMaxInactiveInterval())</xsp:expr>
+          <xsp:expr>String.valueOf(XSPRequestHelper.getSessionMaxInactiveInterval(objectModel))</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'int'">
-          <xsp:expr>request.getSession().getMaxInactiveInterval()</xsp:expr>
+          <xsp:expr>XSPRequestHelper.getSessionMaxInactiveInterval(objectModel)</xsp:expr>
         </xsl:when>
       </xsl:choose>
   </xsl:template>
 
   <xsl:template match="session:invalidate">
     <xsp:logic>
-      request.getSession().invalidate();
+      XSPRequestHelper.invalidateSession(objectModel);
     </xsp:logic>
   </xsl:template>
 
@@ -225,14 +217,14 @@
       <xsl:choose>
         <xsl:when test="$as = 'xml'">
 	  <xsp:element name="session:is-new">
-            <xsp:expr>request.getSession().isNew()</xsp:expr>
+            <xsp:expr>XSPRequestHelper.isSessionNew(objectModel)</xsp:expr>
 	  </xsp:element>
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          <xsp:expr>String.valueOf(request.getSession().isNew())</xsp:expr>
+          <xsp:expr>String.valueOf(XSPRequestHelper.isSessionNew(objectModel))</xsp:expr>
         </xsl:when>
         <xsl:when test="$as = 'boolean'">
-          <xsp:expr>request.getSession().isNew()</xsp:expr>
+          <xsp:expr>XSPRequestHelper.isSessionNew(objectModel)</xsp:expr>
         </xsl:when>
       </xsl:choose>
     </xsp:expr>
@@ -244,7 +236,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      request.getSession().removeAttribute(
+      XSPRequestHelper.removeSessionAttribute(objectModel,
         String.valueOf(<xsl:copy-of select="$name"/>)
       );
     </xsp:logic>
@@ -262,7 +254,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      request.getSession().setAttribute(
+      XSPRequestHelper.setSessionAttribute(objectModel,
         String.valueOf(<xsl:copy-of select="$name"/>),
         <xsl:copy-of select="$content"/>
       );
@@ -300,7 +292,7 @@
 
     <xsp:element name="a">
        <xsp:attribute name="href">
-          <xsp:expr>response.encodeURL(String.valueOf(<xsl:copy-of select="$href"/>))</xsp:expr>
+          <xsp:expr>XSPResponseHelper.encodeURL(objectModel, String.valueOf(<xsl:copy-of select="$href"/>))</xsp:expr>
        </xsp:attribute>
        <xsl:value-of select="."/>
     </xsp:element>
@@ -321,7 +313,7 @@
 
     <xsp:element name="form">
        <xsp:attribute name="action">
-          <xsp:expr>response.encodeURL(String.valueOf(<xsl:copy-of select="$action"/>))</xsp:expr>
+          <xsp:expr>XSPResponseHelper.encodeURL(objectModel,String.valueOf(<xsl:copy-of select="$action"/>))</xsp:expr>
        </xsp:attribute>
        <xsp:attribute name="method">
          <xsp:expr><xsl:copy-of select="$method"/></xsp:expr>

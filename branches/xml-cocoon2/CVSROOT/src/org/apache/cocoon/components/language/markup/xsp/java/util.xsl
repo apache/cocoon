@@ -175,9 +175,8 @@
                       new FileReader(
                          XSPUtil.relativeFilename(
                            <xsl:copy-of select="$name"/>,
-                           this.request,
-                           this.context
-                         )
+                           objectModel
+                        )
                       )
                   );
 
@@ -243,8 +242,7 @@
       XSPUtil.getFileContents(
     XSPUtil.relativeFilename(
           String.valueOf(<xsl:copy-of select="$name"/>),
-      this.request,
-      this.context
+      this.objectModel
     ), "<xsl:value-of select="@encoding"/>"
       )
     </xsp:expr>

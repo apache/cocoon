@@ -86,15 +86,15 @@
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
     import org.apache.cocoon.sitemap.Manager;
-    import org.apache.cocoon.environment.http.HttpRequest;
-    import org.apache.cocoon.environment.http.HttpResponse;
+    import org.apache.cocoon.components.language.markup.xsp.XSPRequestHelper;
+    import org.apache.cocoon.components.language.markup.xsp.XSPResponseHelper;
 
     /**
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.92 2001-03-23 13:48:52 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.93 2001-03-23 19:38:04 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";

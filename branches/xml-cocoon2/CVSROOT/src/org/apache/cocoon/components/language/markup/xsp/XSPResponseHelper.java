@@ -9,8 +9,9 @@ package org.apache.cocoon.components.language.markup.xsp;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
+import org.apache.cocoon.environment.http.HttpResponse;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
@@ -24,7 +25,7 @@ import org.apache.log.LogKit;
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-15 20:28:57 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-23 19:38:07 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
@@ -38,34 +39,68 @@ public class XSPResponseHelper extends XSPObjectHelper {
   /**
    * Set the content header for a given response
    *
-   * @param response The <code>HttpServletResponse</code>
+   * @param objectModel The Map objectModel
    * @param name The header name
    * @param value The header value
    */
-  public static void setHeader(HttpServletResponse response, String name, String value) {
+  public static void setHeader(Map objectModel, String name, String value) {
+    HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
     response.setHeader(name, value);
+  }
+
+  /**
+   * Set the content header for a given response
+   *
+   * @param objectModel The Map objectModel
+   * @param name The parameter name
+   * @param value The parameter value
+   */
+  public static void addHeader(
+    Map objectModel,
+    String name,
+    String value
+  ) {
+    HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+    response.addHeader(name, value);
   }
 
   /**
    * Set the content type for a given response
    *
-   * @param response The <code>HttpServletResponse</code>
+   * @param objectModel The Map objectModel
    * @param type The content type
    */
-  public static void setContentType(HttpServletResponse response, String type) {
+  public static void setContentType(Map objectModel, String type) {
+    HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
     response.setContentType(type);
   }
 
   /**
    * Send an HTTP redirect
    *
-   * @param response The <code>HttpServletResponse</code>
+   * @param objectModel The Map objectModel
    * @param location The location URL
    */
-  public static void sendRedirect(HttpServletResponse response, String location) {
+  public static void sendRedirect(Map objectModel, String location) {
     try {
+      HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
       response.sendRedirect(response.encodeRedirectURL(location));
     }
     catch (IOException e) {LogKit.getLoggerFor("cocoon").warn("XSPResponseHelper.sendRedirect", e);}
   }
+
+  /**
+   * Encode the URL
+   *
+   * @param objectModel The Map objectModel
+   * @param name The input url string
+   */
+  public static String encodeURL(
+    Map objectModel,
+    String input
+  ) {
+      HttpResponse response = (HttpResponse)objectModel.get(Constants.RESPONSE_OBJECT);
+      return response.encodeURL(input);
+  }
+
 }

@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-16 17:03:47 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-23 19:38:11 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -47,7 +47,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      XSPResponseHelper.setHeader(response, <xsl:value-of select="$name"/>, <xsl:value-of select="$value"/>);
+      XSPResponseHelper.setHeader(objectModel, <xsl:value-of select="$name"/>, <xsl:value-of select="$value"/>);
     </xsp:logic>
   </xsl:template>
 
@@ -64,7 +64,7 @@
     </xsl:variable>
 
     <xsp:logic>
-      XSPResponseHelper.setContentType(response, <xsl:value-of select="$type"/>);
+      XSPResponseHelper.setContentType(objectModel, <xsl:value-of select="$type"/>);
     </xsp:logic>
   </xsl:template>
 
@@ -80,7 +80,7 @@
       </xsl:choose>
     </xsl:variable>
     <xsp:logic>
-      XSPResponseHelper.sendRedirect(response, <xsl:value-of select="$location"/>);
+      XSPResponseHelper.sendRedirect(objectModel, <xsl:value-of select="$location"/>);
     </xsp:logic>
   </xsl:template>
 
