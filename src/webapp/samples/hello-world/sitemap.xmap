@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.12 2003/07/29 03:15:47 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.13 2003/11/18 07:12:10 tony Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -119,6 +119,12 @@
     <map:generate src="content/hello.xml"/>
     <map:transform src="style/xsl/page2sxd.xsl"/>
     <map:serialize type="sxd"/>
+   </map:match>
+   
+   <map:match pattern="hello-worldml.doc">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/page2wordml.xsl"/>
+    <map:serialize type="xml"/>
    </map:match>
 
    <map:match pattern="hello.zip">
