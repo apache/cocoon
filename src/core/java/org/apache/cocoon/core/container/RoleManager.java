@@ -36,13 +36,13 @@ extends AbstractLogEnabled
 implements Configurable {
     
     /** Map for shorthand to role mapping */
-    private Map shorthands = new HashMap();
+    private final Map shorthands = new HashMap();
 
     /** Map for role to default classname mapping */
-    private Map classNames = new HashMap();
+    private final Map classNames = new HashMap();
 
     /** Map for role->key to classname mapping */
-    private Map keyClassNames = new HashMap();
+    private final Map keyClassNames = new HashMap();
 
     /** Parent role manager for nested resolution */
     private final RoleManager parent;
@@ -200,7 +200,7 @@ implements Configurable {
                         throw new ConfigurationException("Invalid redeclaration: default class already set to " + info.getServiceClassName() +
                                 " for role " + roleName + " at " + role.getLocation());
                     }
-                    //FIXME: should check also other ServiceInfo members, but they're currently not used
+                    //FIXME: should check also other ServiceInfo members
                 }
             }
 
@@ -236,7 +236,7 @@ implements Configurable {
                             throw new ConfigurationException("Invalid redeclaration: class already set to " + info.getServiceClassName() +
                                     " for hint " + shortHand + " at " + key.getLocation());
                         }
-                        //FIXME: should check also other ServiceInfo members, but they're currently not used
+                        //FIXME: should check also other ServiceInfo members
                     }
                 }
             }

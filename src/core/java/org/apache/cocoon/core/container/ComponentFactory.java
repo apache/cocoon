@@ -43,7 +43,7 @@ public class ComponentFactory {
     
     /** The parameters for this component
      */
-    protected Parameters parameters;
+    protected final Parameters parameters;
     
     protected final Class serviceClass;
     protected final Method initMethod;
@@ -54,10 +54,8 @@ public class ComponentFactory {
     /**
      * Construct a new component factory for the specified component.
      *
-     * @param componentClass the class to instantiate (must have a default constructor).
-     * @param configuration the <code>Configuration</code> object to pass to new instances.
-     * @param seerviceManager the service manager to pass to <code>Serviceable</code>s.
-     * @param context the <code>Context</code> to pass to <code>Contexutalizable</code>s.
+     * @param environment Describes the environment for the component.
+     * @param info Describes the configuration/settings for the component.
      *
      */
     public ComponentFactory( final ComponentEnvironment environment,
@@ -66,17 +64,30 @@ public class ComponentFactory {
         this.environment = environment;
         this.serviceInfo = info;
         
+        // this is our default logger:
         Logger actualLogger = this.environment.logger;
-        // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
-        if( this.environment.loggerManager != null && this.serviceInfo.getConfiguration() != null) {
-            final String category = this.serviceInfo.getConfiguration().getAttribute("logger", null);
-            if (category != null) {
-                actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
+        final String category = this.serviceInfo.getLoggerCategory();
+        if ( category != null ) {
+            if ( info.getLoggingSystem() == ComponentInfo.LOGGING_SYSTEM_LOGKIT ) {
+                // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
+                if( this.environment.loggerManager != null ) {
+                    actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
+                }
+            } else if ( info.getLoggingSystem() == ComponentInfo.LOGGING_SYSTEM_LOG4J ) {
+                // FIXME - activate me
+                // actualLogger = new Log4JLogger(org.apache.log4j.Logger.getLogger(category));
+            } else if ( info.getLoggingSystem() == ComponentInfo.LOGGING_SYSTEM_COMMONSLOGGING ) {
+                // FIXME - we don't have a wrapper for this
             }
         }
         this.componentLogger = actualLogger;
         
         this.serviceClass = this.environment.loadClass(this.serviceInfo.getServiceClassName());
+        if ( Parameterizable.class.isAssignableFrom(this.serviceClass) ) {
+            this.parameters = Parameters.fromConfiguration( this.serviceInfo.getConfiguration() );            
+        } else {
+            this.parameters = null;
+        }
         if ( this.serviceInfo.getDestroyMethodName() != null ) {
             this.destroyMethod = this.serviceClass.getMethod(this.serviceInfo.getDestroyMethodName(), null);
         } else {
@@ -127,9 +138,6 @@ public class ComponentFactory {
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
 
         if( component instanceof Parameterizable ) {
-            if ( this.parameters == null ) {
-                this.parameters = Parameters.fromConfiguration( this.serviceInfo.getConfiguration() );
-            }
             ContainerUtil.parameterize( component, this.parameters );
         }
 
