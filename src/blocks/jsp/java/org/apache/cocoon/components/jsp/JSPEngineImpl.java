@@ -75,13 +75,15 @@ import java.util.Locale;
  * functionality - overrides the output method and returns the byte(s).
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.6 2003/07/10 23:38:04 joerg Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.7 2003/07/12 13:30:02 joerg Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
 
-    /** The Servlet Include Path */
+    /** The servlet include path. */
     public static final String INC_SERVLET_PATH = "javax.servlet.include.servlet_path";
+    /** The servlet request uri, needed for Resin. */
+    public static final String INC_REQUEST_URI = "javax.servlet.include.request_uri";
 
     /** The Default Servlet Class Name for Tomcat 3.X and 4.X*/
     public static final String DEFAULT_SERVLET_CLASS = "org.apache.jasper.servlet.JspServlet";
@@ -179,8 +181,9 @@ public class JSPEngineImpl extends AbstractLogEnabled
         /** @deprecated use isRequestedSessionIdFromURL instead. */
         public boolean isRequestedSessionIdFromUrl(){ return request.isRequestedSessionIdFromUrl(); }
         public Object getAttribute(String s){
-            if(s != null && s.equals(INC_SERVLET_PATH))
+            if (s != null && (s.equals(INC_SERVLET_PATH) || s.equals(INC_REQUEST_URI))) {
                 return jspFile;
+            }
             return request.getAttribute(s);
         }
         public Enumeration getAttributeNames(){ return request.getAttributeNames(); }

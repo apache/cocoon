@@ -74,13 +74,15 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.3 2003/07/10 23:38:04 joerg Exp $
+ * @version CVS $Id: JSPEngineImplNamedDispatcherInclude.java,v 1.4 2003/07/12 13:30:02 joerg Exp $
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
 
-    /** The Servlet Include Path */
+    /** The servlet include path. */
     public static final String INC_SERVLET_PATH = "javax.servlet.include.servlet_path";
+    /** The servlet request uri, needed for Resin. */
+    public static final String INC_REQUEST_URI = "javax.servlet.include.request_uri";
 
     /** config-parameter name for specifying the jsp servlet-name.
       ie. servlet-name
@@ -123,11 +125,13 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         // start JSPServlet.
         javax.servlet.RequestDispatcher rd = context.getNamedDispatcher( servletName );
         if (rd != null) {
-          rd.include( request, response );
-          response.flushBuffer();
-          bytes = response.toByteArray();
+            rd.include( request, response );
+            response.flushBuffer();
+            bytes = response.toByteArray();
         } else {
-          getLogger().error( "Specify a correct " + CONFIG_SERVLET_NAME + " " + servletName );
+            // FIXME: I guess it's better to throw a more specific exception.
+            throw new Exception("No RequestDispatcher found. Specify a correct '"
+                                + CONFIG_SERVLET_NAME + "': " + servletName);
         }
         return bytes;
     }
@@ -170,8 +174,9 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
         /** @deprecated use isRequestedSessionIdFromURL instead. */
         public boolean isRequestedSessionIdFromUrl(){ return request.isRequestedSessionIdFromUrl(); }
         public Object getAttribute(String s){
-            if(s != null && s.equals(INC_SERVLET_PATH))
+            if (s != null && (s.equals(INC_SERVLET_PATH) || s.equals(INC_REQUEST_URI))) {
                 return jspFile;
+            }
             return request.getAttribute(s);
         }
         public Enumeration getAttributeNames(){ return request.getAttributeNames(); }
