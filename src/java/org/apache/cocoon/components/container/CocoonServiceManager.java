@@ -23,6 +23,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
@@ -54,10 +55,10 @@ public class CocoonServiceManager extends CoreServiceManager {
         this.info = new ProcessorComponentInfo(parentInfo);
     }
     
-    public void addComponent(String role, String clazz, Configuration config) throws ConfigurationException {
+    public void addComponent(String role, String clazz, Configuration config, ComponentInfo i) throws ConfigurationException {
         this.info.prepareConfig(role, clazz, config);
 
-        super.addComponent(role, clazz, config);
+        super.addComponent(role, clazz, config, i);
         // Let's ProcessorComponentInfo do its stuff.
         // Note: if more behaviours of this kind are needed, we may setup an
         // event listener mechanism on the core service manager

@@ -232,7 +232,8 @@ implements ServiceSelector, Serviceable, Configurable {
         for (int i = 0; i < instances.length; i++) {
 
             Configuration instance = instances[i];
-
+            ComponentInfo info = null;
+            
             String key = instance.getAttribute("name").trim();
 
             String classAttr = instance.getAttribute(getClassAttributeName(), null);
@@ -241,7 +242,7 @@ implements ServiceSelector, Serviceable, Configurable {
             if (compInstanceName == null) {
                 // component-instance implicitly defined by the presence of the 'class' attribute
                 if (classAttr == null) {
-                    final ComponentInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
                     className = info.getServiceClassName();
                 } else {
                     className = classAttr.trim();
@@ -252,7 +253,7 @@ implements ServiceSelector, Serviceable, Configurable {
                 if (compInstanceName.equals(instance.getName())) {
                     className = (classAttr == null) ? null : classAttr.trim();
                 } else {
-                    final ComponentInfo info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
+                    info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
                     className = info.getServiceClassName();
                 }
             }
@@ -265,7 +266,7 @@ implements ServiceSelector, Serviceable, Configurable {
                 throw new ConfigurationException(message);
             }
             
-            this.addComponent( className, key, instance );
+            this.addComponent( className, key, instance, info );
         }
     }
 
@@ -336,7 +337,8 @@ implements ServiceSelector, Serviceable, Configurable {
      */
     public void addComponent( final String key,
                               final Class component,
-                              final Configuration configuration )
+                              final Configuration configuration,
+                              final ComponentInfo info)
     throws ServiceException {
         if( this.initialized ) {
             throw new ServiceException( key,
@@ -347,7 +349,8 @@ implements ServiceSelector, Serviceable, Configurable {
             final ComponentHandler handler = getComponentHandler( null,
                                                                   component,
                                                                   configuration,
-                                                                  this.serviceManager);
+                                                                  this.serviceManager,
+                                                                  info);
 
             handler.initialize();
             this.componentHandlers.put( key, handler );

@@ -100,14 +100,20 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
     protected ComponentHandler getComponentHandler( final String role,
                                                     final Class componentClass,
                                                     final Configuration configuration,
-                                                    final ServiceManager serviceManager)
+                                                    final ServiceManager serviceManager,
+                                                    final ComponentInfo  baseInfo)
     throws Exception {
         if (this.componentEnv == null) {
             this.componentEnv = new ComponentEnvironment(null, getLogger(), this.roleManager,
                     this.loggerManager, this.context, serviceManager);
         }
-        
-        ComponentInfo info = new ComponentInfo();
+        // FIXME - we should always get an info here
+        ComponentInfo info;
+        if ( baseInfo != null ) {
+            info = baseInfo.duplicate();
+        } else {
+            info = new ComponentInfo();
+        }
         info.setConfiguration(configuration);
         info.setServiceClassName(componentClass.getName());
         
@@ -118,7 +124,8 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
 
     protected void addComponent(String className,
                                 String role,
-                                Configuration configuration) 
+                                Configuration configuration,
+                                ComponentInfo info) 
     throws ConfigurationException {
         // check for old excalibur class names - we only test against the selector
         // implementation
@@ -132,7 +139,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
             }
             // FIXME - use different classloader
             final Class clazz = this.getClass().getClassLoader().loadClass( className );
-            this.addComponent( role, clazz, configuration );
+            this.addComponent( role, clazz, configuration, info );
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
                                  + role + " at " + configuration.getLocation();
@@ -160,7 +167,10 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
         }        
     }
     
-    protected abstract void addComponent(String role, Class clazz, Configuration config)
+    protected abstract void addComponent(String role, 
+                                         Class clazz, 
+                                         Configuration config,
+                                         ComponentInfo info)
     throws ServiceException;
     
     

@@ -171,4 +171,17 @@ public final class ComponentInfo {
         this.setInitMethodName(attr.getAttribute("init", null));
         this.setDestroyMethodName(attr.getAttribute("destroy", null));
     }
+    
+    public ComponentInfo duplicate() {
+        ComponentInfo info = new ComponentInfo();
+        info.model = this.model;
+        info.initMethodName = this.initMethodName;
+        info.destroyMethodName = this.destroyMethodName;
+        info.poolInMethodName = this.poolInMethodName;
+        info.poolOutMethodName = this.poolOutMethodName;
+        info.serviceClassName = this.serviceClassName;
+        info.configuration = this.configuration;
+
+        return info;
+    }
 }
