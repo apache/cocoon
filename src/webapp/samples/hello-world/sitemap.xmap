@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.14 2004/03/06 02:26:07 antonio Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.15 2004/06/04 00:12:30 tcurdt Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -93,6 +93,10 @@
     <map:generate src="content/hello.xml"/>
     <map:transform src="style/xsl/page2svg.xsl"/>
     <map:serialize type="svgxml"/>
+   </map:match>
+
+   <map:match pattern="hello.swf">
+    <map:read src="style/swf/hello.swf"/>
    </map:match>
 
    <map:match pattern="hello.wrl">

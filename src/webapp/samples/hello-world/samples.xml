@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.15 2004/04/05 12:34:23 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.16 2004/06/04 00:12:30 tcurdt Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -59,6 +59,11 @@
     from your content. Here is an example that renders to  SVG (Scalable Vector
     Graphics). (You need an SVG plugin, or an SVG-capable browser to see this.)
    </sample>   
+   <sample name="SWF" href="hello.swf">
+    Flash is everywhere. In fact many people have the plugin installed.
+    Let Cocoon configure your flash movie. A little action script and you set.
+    See this sample how it works.
+   </sample>
    <sample name="Plain Text" href="hello.txt">
     Sometimes you don't need to be very fancy, so here is a plain text
     version of your content.

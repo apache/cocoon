@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.219 2004/05/28 12:45:00 vgritsenko Exp $
+    | CVS $Id: jars.xml,v 1.220 2004/06/04 00:12:30 tcurdt Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -710,17 +710,6 @@
     <used-by>Control flow</used-by>
     <lib>core/javacImpl-0.9.jar</lib>
     <homepage>ftp://ftp.primaryinterface.com/pub/javacAPI</homepage>
-  </file>
-
-  <file>
-    <title>Spark</title>
-    <description>
-      Spark is a Java library that converts data in Macromedias SWF ("Flash")
-      data format to XML conforming to a specialized DTD and vice versa
-    </description>
-    <used-by>SWF Serializer (swf block)</used-by>
-    <lib>swf/lib/spark-0.2.jar</lib>
-    <homepage>http://www.tivano.de/software/spark/</homepage>
   </file>
 
   <file>
