@@ -131,11 +131,11 @@ servlet.cocoon.initArgs=configurations=[path-to-cocoon]/conf/cocoon.xconf</sourc
     add the following lines to your <code>jserv.conf</code> file:
    </p>
 
-<source>Action cocoon /servlet/cocoon
+<source><![CDATA[Action cocoon /servlet/cocoon
 
 <location /cocoon>
  SetHandler cocoon
-</location>
+</location>]]>
 </source>
 
    <p>
