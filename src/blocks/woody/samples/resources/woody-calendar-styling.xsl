@@ -43,7 +43,7 @@
     </xsl:variable>
     
     <!-- regular input -->
-    <input id="{@id}" name="{@id}" value="{wi:value}" type="text">
+    <input id="{@id}" name="{@id}" value="{wi:value}" title="{normalize-space(wi:hint)}" type="text">
       <xsl:apply-templates select="." mode="styling"/>
     </input>
     
