@@ -55,7 +55,7 @@
         <p>The <strong>fd:validation</strong> element contains a number of
         child elements, each child element signifies a validation rule.
         The supported validation rules are documented in the
-        <link href="validationrules.html">Validation Rule Reference</link>.</p>
+        <link href="validation.html">Validation Rule Reference</link>.</p>
       </s2>
 
       <s2 title="Convertors">

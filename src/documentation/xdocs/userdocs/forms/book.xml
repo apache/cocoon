@@ -45,9 +45,9 @@
     <menu-item label="messages" href="widget_messages.html"/>
   </menu>
   
-  <menu label="Misc">
+  <menu label="Widget concepts">
+    <menu-item label="Validation" href="validation.html"/>
     <menu-item label="Datatypes" href="datatypes.html"/>
-    <menu-item label="Validation Rules" href="validationrules.html"/>
   </menu>
 
   <menu label="Form Publishing">
