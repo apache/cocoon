@@ -5,5 +5,6 @@
   <woody-expression logger="woody.expression">
     <function name="Null" class="org.apache.cocoon.woody.expression.NullFunction"/>
     <function name="IsNull" class="org.apache.cocoon.woody.expression.IsNullFunction"/>
+    <function name="String" class="org.apache.cocoon.woody.expression.StringFunction"/>
   </woody-expression>
 </xconf>
