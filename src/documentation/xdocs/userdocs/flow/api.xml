@@ -106,8 +106,8 @@
     <p> <em>Function</em> <code>createSession()</code></p>
     <p>  
        Associate the current set of JavaScript global variables with the user's session. This means that all invocations from the
-       sitemap of a JavaScript function (using the &lt;map:call
-       function="..."&gt;), will share global JavaScript variables.
+       sitemap of a JavaScript function (using the <link href="sitemap.html#callFunction">&lt;map:call
+       function="..."&gt;</link>), will share global JavaScript variables.
     </p> 
 
     </s4>
@@ -118,7 +118,8 @@
     <p>
        Dissociate global JavaScript variables from the user's session.
     </p>
-
+    </s4>
+    <s4 title="load">
     <p><em>Function</em> <code>load([String] uri)</code></p>
     <p>
       Load the JavaScript script specified by <code>uri</code>. The Cocoon
