@@ -39,6 +39,7 @@ import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.IOUtils;
@@ -59,7 +60,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.55 $ $Date: 2001-02-14 05:08:42 $
+ * @version CVS $Revision: 1.1.4.56 $ $Date: 2001-02-14 18:20:14 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -326,8 +327,7 @@ public class CocoonServlet extends HttpServlet {
                 uri = uri.substring(1);
             }
 
-            HttpEnvironment env = new HttpEnvironment(uri, req, res, (ServletContext) this.appContext.get(Constants.CONTEXT_SERVLET_CONTEXT));
-            env.setLogger(this.log);
+            Environment env = this.getEnvironment(uri, req, res);
 
             if (!this.cocoon.process(env)) {
 
@@ -392,6 +392,22 @@ public class CocoonServlet extends HttpServlet {
         }
 
         out.flush();
+    }
+
+    /**
+     * Create the environment for the request
+     */
+    private Environment getEnvironment(String uri,
+                                       HttpServletRequest req,
+                                       HttpServletResponse res)
+    throws Exception {
+        HttpEnvironment env;
+        env = new HttpEnvironment(uri,
+                                  req,
+                                  res,
+                                  (ServletContext) this.appContext.get(Constants.CONTEXT_SERVLET_CONTEXT));
+        env.setLogger(this.log);
+        return env;
     }
 
     /**

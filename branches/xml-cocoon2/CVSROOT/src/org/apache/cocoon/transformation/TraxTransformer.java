@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-12 13:30:46 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-14 18:20:11 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Recyclable, Configurable {
@@ -73,8 +73,8 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
     /** The trax TransformerHandler */
     private TransformerHandler transformerHandler = null;
 
-    /** Is the cache turned on? (default is on) */
-    private boolean useCache = true;
+    /** Is the store turned on? (default is on) */
+    private boolean useStore = true;
 
     TransformerHandler getTransformerHandler(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException, TransformerConfigurationException
@@ -86,23 +86,23 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
         InputSource src = resolver.resolveEntity(null, xsluri);
         String      systemID = src.getSystemId();
 
-        if (this.useCache == true)
+        if (this.useStore == true)
         {
             // Is this a local file
             if (systemID.startsWith(FILE) == true) {
-                // Cached is an array of the template and the caching time
+                // Stored is an array of the template and the caching time
                 if (store.containsKey(xsluri) == true) {
                     Object[] templateAndTime = (Object[])store.get(xsluri);
                     File xslFile = new File(systemID.substring(FILE.length()));
-                    long cachedTime = ((Long)templateAndTime[1]).longValue();
-                    if (cachedTime < xslFile.lastModified()) {
+                    long storedTime = ((Long)templateAndTime[1]).longValue();
+                    if (storedTime < xslFile.lastModified()) {
                         templates = null;
                     } else {
                         templates = (Templates)templateAndTime[0];
                     }
                 }
             } else {
-                // only the template is cached
+                // only the template is stored
                 if (store.containsKey(xsluri) == true) {
                    templates = (Templates)store.get(xsluri);
                 }
@@ -111,11 +111,11 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
         if(templates == null)
         {
             templates = tfactory.newTemplates(new SAXSource(new InputSource(systemID)));
-            if (this.useCache == true)
+            if (this.useStore == true)
             {
                 // Is this a local file
                 if (systemID.startsWith(FILE) == true) {
-                    // Cached is an array of the template and the current time
+                    // Stored is an array of the template and the current time
                     Object[] templateAndTime = new Object[2];
                     templateAndTime[0] = templates;
                     templateAndTime[1] = new Long(System.currentTimeMillis());
@@ -134,8 +134,8 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
     public void configure(Configuration conf)
     throws ConfigurationException {
         if (conf != null) {
-            Configuration child = conf.getChild("use-cache");
-            this.useCache = child.getValueAsBoolean(true);
+            Configuration child = conf.getChild("use-store");
+            this.useStore = child.getValueAsBoolean(true);
         }
     }
 
