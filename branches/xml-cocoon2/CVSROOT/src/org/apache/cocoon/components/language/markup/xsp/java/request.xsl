@@ -9,12 +9,17 @@
  ***************************************************************************** 
 -->
 
+<!--
+ * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 15:52:37 $
+-->
+
 <!-- XSP Request logicsheet for the Java language -->
+
 <xsl:stylesheet
   version="1.0"
-  xmlns:xsp="http://xml.apache.org/cocoon/xsp"
-  xmlns:xsp-request="http://xml.apache.org/cocoon/xsp/request"
-
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp-request="http://apache.org/xsp/request"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
   <xsl:template match="xsp-request:get-uri">

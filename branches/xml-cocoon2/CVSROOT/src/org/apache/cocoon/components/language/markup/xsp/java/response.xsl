@@ -9,11 +9,16 @@
  ***************************************************************************** 
 -->
 
+<!--
+ * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-31 15:52:36 $
+-->
+
 <!-- XSP Response logicsheet for the Java language -->
 <xsl:stylesheet
   version="1.0"
-  xmlns:xsp="http://xml.apache.org/cocoon/xsp"
-  xmlns:xsp-response="http://xml.apache.org/cocoon/xsp/response"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp-response="http://apache.org/xsp/response"
 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
