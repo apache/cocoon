@@ -5,11 +5,5 @@
     shorthand="slide-repository"
     default-class="org.apache.cocoon.components.slide.impl.SlideRepositoryImpl"
   />
-
-  <role name="org.apache.cocoon.components.slide.PrincipalProviderSelector"
-      shorthand="principal-provider"
-      default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
-    <hint shorthand="slide" class="org.apache.cocoon.components.slide.impl.SlidePrincipalProvider"/>
-  </role>
   
 </xroles>

@@ -10,23 +10,5 @@
     logger="slide.repository"
     file="context://WEB-INF/slide.xconf"
   />
-
-  <!--+
-      | Principal providers:
-      | The principal providers handles principals/users, should be used for 
-      | user management.
-      +-->
-  <principal-provider
-      class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"
-      logger="slide.principalprovider" 
-      default="slide">
-      
-    <!-- Default implementation via Jakarta Slide -->
-    <slide
-      name="slide" 
-      logger="slide.principalprovider"
-      namespace="cocoon"
-    />
-  </principal-provider>
   
 </xconf>
