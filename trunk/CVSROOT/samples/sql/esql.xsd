@@ -29,8 +29,8 @@
                     <choice>
                       <any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
                       <element name="esql:get-columns" minOccurs="0" maxOccurs="unbounded"/>
-                      <element name="esql:get-string" minOccurs="0" maxOccurs="unbounded"/>
-                      <element name="esql:get-date" minOccurs="0" maxOccurs="unbounded"/>
+                      <element name="esql:get-string" minOccurs="0" maxOccurs="unbounded" type="EsqlColumnFunction"/>
+                      <element name="esql:get-date" minOccurs="0" maxOccurs="unbounded" type="EsqlFormattedColumnFunction"/>
                       <element name="esql:get-time" minOccurs="0" maxOccurs="unbounded"/>
                       <element name="esql:get-timestamp" minOccurs="0" maxOccurs="unbounded"/>
                       <element name="esql:get-boolean" minOccurs="0" maxOccurs="unbounded"/>
@@ -60,5 +60,17 @@
     </element>
   </complexType>
 </element>
+
+<complexType name="EsqlColumnFunction">
+  <attribute name="column" type="string"/>
+</complexType>
+
+<complexType name="EsqlFormattedColumnFunction">
+  <complexContent>
+    <extension base="EsqlColumnFunction">
+      <attribute name="format" type="string"/>
+    </extension>
+  </complexContent>
+</complexType>
 
 </schema>
