@@ -1132,7 +1132,7 @@
   </project>
 
   <project name="cocoon-block-ojb" status="unstable">
-    <package>org.apache.c/>ocoon</package>
+    <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
       <property name="block-name" value="ojb"/>
