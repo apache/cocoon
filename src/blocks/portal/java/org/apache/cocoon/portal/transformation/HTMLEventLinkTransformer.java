@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Current we only support POSTing of forms.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.8 2004/04/01 10:25:42 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.9 2004/04/02 00:05:50 joerg Exp $
  */
 public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
@@ -157,12 +157,10 @@ extends AbstractCopletTransformer {
         return v;
     }
 
-
     /**
      * Determine if the element is an url and if the url points to some
      * remote source.
      *
-     * @param name the name of the element
      * @param attributes the attributes of the element
      * @return true if the href url is an anchor pointing to a remote source
      */
