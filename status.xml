@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.200 2003/11/20 15:40:25 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.201 2003/11/24 12:20:53 antonio Exp $:-->
 
 <status>
  <developers>
@@ -182,6 +182,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Update libs Xerces to 2.6.0 and xml-apis.jar
+   </action>
    <action dev="SW" type="add">
      The "cocoon" object in flowscript has a new setup(object) method that honors the various Avalon lifecycle
      interfaces implemented by an object. This allows Java classes instanciated by a flowscript to access e.g.

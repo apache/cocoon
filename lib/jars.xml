@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.125 2003/11/21 22:32:57 ghoward Exp $
+    | CVS $Id: jars.xml,v 1.126 2003/11/24 12:20:53 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -321,7 +321,7 @@
     <description>Xerces is an XML parser.</description>
     <used-by>Cocoon</used-by>
     <ant-target>jars</ant-target>
-    <lib>endorsed/xercesImpl-2.5.0.jar</lib>
+    <lib>endorsed/xercesImpl-2.6.0.jar</lib>
     <homepage>http://xml.apache.org/xerces-j/</homepage>
   </file>
 
@@ -902,7 +902,7 @@
 	    for Java Objects against relational databases.
 	</description>
 	<used-by>OJB</used-by>
-	<lib>ojb/lib/db-ojb-1.0.rc4-20031102.jar</lib>
+	<lib>ojb/lib/db-ojb-1.0.rc4-20031120.jar</lib>
 	<homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
