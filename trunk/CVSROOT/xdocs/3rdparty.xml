@@ -64,6 +64,18 @@
     <th>Contact</th>
    </tr>
    <tr>
+    <td><link href="http://www.plenix.com/dbprism/">DB Prism</link></td>
+    <td>Servlet/CMS</td>
+    <td>"A Servlet which emulates Oracle Web Application Server plsql Cartridge or the newest Oracle IAS mod_plsql.
+DB Prism provides Java Stored Procedures, and it is 100% compatible with OWS 3.x/OAS 4.x and IAS 1.0. It supports
+UTF-8 database encoding, Oracle 7, 8, and Oracle Lite. It includes DB Producer for the Cocoon framework so that it can
+integrate with XML technology from http://xml.apache.org/ . It also includes the DB Prism/Cocoon Content Management
+System (CMS), based on Oracle CMS."</td>
+    <td>?</td>
+    <td>Freeware</td>
+    <td><link href="mailto:mochoa@ieee.org">Marcelo F. Ochoa</link></td>
+   </tr>
+   <tr>
     <td><link href="http://perso.club-internet.fr/pedron/ejb/index.html">EJB Taglib</link></td>
     <td>Logicsheet</td>
     <td>An experimental logicsheet to faciliate the use of Enterprise Java Beans from an XSP page</td>
@@ -113,6 +125,14 @@
    </tr>
 
    <tr>
+    <td><link href="http://www.suranyami.com/XSPtutorial/">XSP Tutorial</link></td>
+    <td>Documentation</td>
+    <td>A "beginner's guide" to XSP.</td>
+    <td></td>
+    <td>N/A</td>
+    <td><link href="mailto:XSPtutorial@suranyami.com">David Parry</link></td>
+   </tr>
+   <tr>
     <td><link href="http://www.suranyami.com/cocoon1">UML Docs for Cocoon 1.8</link></td>
     <td>Documentation</td>
     <td>Complete UML diagrams for Cocoon 1.8. UML appears in top pane, javadoc in bottom right.
@@ -125,7 +145,7 @@
     <td><link href="http://feersumendjinns.com/cocoon/sessions.zip">
      Session toy and number-guessing game</link></td>
     <td>Examples</td>
-    <td>Demonstrates use of session variables</td>
+    <td>Demonstrates use of session variables (but not session taglib)</td>
     <td>?</td>
     <td>Freeware</td>
     <td><link href="mailto:od@feersumendjinns.com">OD</link></td>
