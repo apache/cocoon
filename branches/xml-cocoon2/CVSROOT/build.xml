@@ -284,8 +284,9 @@ NOTE: the "site" target is only useful for site mantainers.
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" 
           classpath="${java.class.path}:${doc.generator.package}" 
-          classname="${doc.generator}"
-          args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+          classname="${doc.generator}">
+     <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+    </java>
   </target>
 
   <!-- =================================================================== -->
@@ -296,8 +297,9 @@ NOTE: the "site" target is only useful for site mantainers.
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" 
           classpath="${java.class.path}:${doc.generator.package}" 
-          classname="${doc.generator}"
-          args="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
+          classname="${doc.generator}">
+     <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${printer.skin}"/>
+    </java>
   </target>
 
   <!-- =================================================================== -->
@@ -308,8 +310,9 @@ NOTE: the "site" target is only useful for site mantainers.
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" 
           classpath="${java.class.path}:${doc.generator.package}" 
-          classname="${doc.generator}"
-          args="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
+          classname="${doc.generator}">
+     <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
+    </java>
   </target>
 
   <!-- =================================================================== -->
