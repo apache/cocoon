@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.173 2001-01-12 20:45:16 greenrd Exp $ 
+  $Id: changes.xml,v 1.174 2001-01-12 22:23:39 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,7 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="RDG" type="add" due-to="michele bianchi" due-to-email="mic@pow2.com">
+  <action dev="RDG" type="fix" due-to="Steve Coffman" due-to-email="SCoffman@CBSInc.com">
+   Fixed first and third XSL:FO examples for FOP 0.15 conformance. Second example still needs fixing.
+  </action>
+  <action dev="RDG" type="add" due-to="Michele Bianchi" due-to-email="mic@pow2.com">
    Added installation instructions for Inprise Application Server and Dynamo.
   </action>
   <action dev="RDG" type="fix">

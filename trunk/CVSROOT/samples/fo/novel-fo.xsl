@@ -7,7 +7,7 @@
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
       <fo:layout-master-set>
       <fo:simple-page-master
-        page-master-name="right"
+        master-name="right"
         margin-top="75pt"
         margin-bottom="25pt"
         margin-left="100pt"
@@ -16,7 +16,7 @@
         <fo:region-after extent="25pt"/>
       </fo:simple-page-master>
       <fo:simple-page-master
-        page-master-name="left"
+        master-name="left"
         margin-top="75pt"
         margin-bottom="25pt"
         margin-left="50pt"
@@ -24,22 +24,24 @@
         <fo:region-body margin-bottom="50pt"/>
         <fo:region-after extent="25pt"/>
       </fo:simple-page-master>
+      <fo:page-sequence-master master-name="psmOddEven">
+        <fo:repeatable-page-master-alternatives>
+          <fo:conditional-page-master-reference master-name="right" page-position="first"/>
+          <fo:conditional-page-master-reference master-name="right" odd-or-even="even"/>
+          <fo:conditional-page-master-reference master-name="left" odd-or-even="odd"/>
+          <!-- recommended fallback procedure -->
+          <fo:conditional-page-master-reference master-name="right"/>
+        </fo:repeatable-page-master-alternatives>
+      </fo:page-sequence-master>
       </fo:layout-master-set>
 
-      <fo:page-sequence>
+      <fo:page-sequence master-name="psmOddEven">
 
-        <fo:sequence-specification>
-          <fo:sequence-specifier-alternating
-            page-master-first="right"
-            page-master-odd="right"
-            page-master-even="left"/>
-        </fo:sequence-specification>
-
-        <fo:static-content flow-name="xsl-after">
-          <fo:block text-align-last="centered" font-size="10pt"><fo:page-number/></fo:block>
+        <fo:static-content flow-name="xsl-region-after">
+          <fo:block text-align-last="center" font-size="10pt"><fo:page-number/></fo:block>
         </fo:static-content>
 
-        <fo:flow>
+        <fo:flow flow-name="xsl-region-body">
           <xsl:apply-templates/>
         </fo:flow>
       </fo:page-sequence>
@@ -48,11 +50,11 @@
   </xsl:template>
 
   <xsl:template match="front/title">
-    <fo:block font-size="36pt" text-align-last="centered" space-before.optimum="24pt"><xsl:apply-templates/></fo:block>
+    <fo:block font-size="36pt" text-align-last="center" space-before.optimum="24pt"><xsl:apply-templates/></fo:block>
   </xsl:template>
 
   <xsl:template match="author">
-    <fo:block font-size="24pt" text-align-last="centered" space-before.optimum="24pt"><xsl:apply-templates/></fo:block>
+    <fo:block font-size="24pt" text-align-last="center" space-before.optimum="24pt"><xsl:apply-templates/></fo:block>
   </xsl:template>
 
   <xsl:template match="revision-list">
@@ -63,10 +65,10 @@
   </xsl:template>
 
   <xsl:template match="chapter/title">
-    <fo:block font-size="24pt" text-align-last="centered" space-before.optimum="24pt"><xsl:apply-templates/></fo:block>
+    <fo:block font-size="24pt" text-align-last="center" space-before.optimum="24pt"><xsl:apply-templates/></fo:block>
   </xsl:template>
 
   <xsl:template match="paragraph">
-    <fo:block font-size="12pt" space-before.optimum="12pt" text-align="justified"><xsl:apply-templates/></fo:block>
+    <fo:block font-size="12pt" space-before.optimum="12pt" text-align="justify"><xsl:apply-templates/></fo:block>
   </xsl:template>
 </xsl:stylesheet>
