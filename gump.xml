@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.66 2003/07/10 23:51:49 reinhard Exp $
+  CVS $Id: gump.xml,v 1.67 2003/07/11 08:40:51 cziegeler Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -832,7 +832,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-databases"/>
-    <depend project="cocoon-block-hsql"/>
+    <depend project="cocoon-block-hsqldb"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
