@@ -25,7 +25,7 @@
 
 <page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
 
-    <title>Flow example: Guess a number</title>
+    <title>Flow example: multi-page form</title>
 
     <content>
         <h2>Multi-page form: page 2</h2>
