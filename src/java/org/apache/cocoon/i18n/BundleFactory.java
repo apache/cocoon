@@ -17,6 +17,7 @@ package org.apache.cocoon.i18n;
 
 import java.util.Locale;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 
@@ -26,9 +27,9 @@ import org.apache.avalon.framework.component.ComponentSelector;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: BundleFactory.java,v 1.8 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.9 2004/07/13 16:00:12 sylvain Exp $
  */
-public interface BundleFactory extends ComponentSelector {
+public interface BundleFactory extends Component {
 
     /**
      * Bundle factory ROLE name
@@ -100,4 +101,6 @@ public interface BundleFactory extends ComponentSelector {
      * @exception     ComponentException if a bundle is not found
      */
     Bundle select(String bundleName, Locale locale) throws ComponentException;
+    
+    void release(Bundle bundle);
 }
