@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.269 2004/03/09 11:06:53 reinhard Exp $:-->
+<!-- CVS $Id: status.xml,v 1.270 2004/03/09 11:32:41 bdelacretaz Exp $:-->
 
 <status>
  <developers>
@@ -210,6 +210,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BD" type="update">
+     Licenses changed to ASF 2.0 in all source files which had a license, using
+     the ReplaceLicense tool from the committers CVS module.
+   </action>  
    <action dev="RP" type="add">
      Ant task (correctLinefeed) that corrects linefeed characters according to 
      our standard (LF).
