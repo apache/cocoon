@@ -51,6 +51,7 @@
 package org.apache.cocoon.components.xpointer;
 
 import org.xml.sax.SAXException;
+import org.apache.cocoon.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -71,7 +72,7 @@ public class XPointer {
         pointerParts.add(part);
     }
 
-    public void process(XPointerContext context) throws SAXException {
+    public void process(XPointerContext context) throws SAXException, ResourceNotFoundException {
         Iterator pointerPartsIt = pointerParts.iterator();
         while (pointerPartsIt.hasNext()) {
             PointerPart part = (PointerPart)pointerPartsIt.next();
