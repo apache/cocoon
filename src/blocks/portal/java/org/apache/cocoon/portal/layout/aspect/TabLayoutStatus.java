@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.layout.aspect;
 
 import org.apache.cocoon.portal.aspect.AspectStatus;
 
@@ -57,22 +57,30 @@ import org.apache.cocoon.portal.aspect.AspectStatus;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameStatus.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: TabLayoutStatus.java,v 1.1 2003/05/08 13:38:10 cziegeler Exp $
  */
-public class FrameStatus 
+public class TabLayoutStatus 
 implements AspectStatus {
 
-    protected String link;
+    protected int selectedItem;
 
-    public FrameStatus() {
+    public TabLayoutStatus() {
     }
     
-    public String getLink() {
-        return this.link;
+    /**
+     * Returns the selectedTab.
+     * @return int
+     */
+    public int getSelectedItem() {
+        return selectedItem;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    /**
+     * Sets the selectedTab.
+     * @param selectedTab The selectedTab to set
+     */
+    public void setSelectedItem(int selectedTab) {
+        this.selectedItem = selectedTab;
     }
 
 }

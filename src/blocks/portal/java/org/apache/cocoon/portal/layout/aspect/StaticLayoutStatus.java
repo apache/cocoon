@@ -48,39 +48,37 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.renderer.aspect.impl;
+package org.apache.cocoon.portal.layout.aspect;
 
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.aspect.TabLayoutStatus;
-import org.apache.cocoon.portal.layout.impl.CompositeLayout;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.aspect.AspectStatus;
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * Is this layout static?
  * 
- * @version CVS $Id: TabMaxPageAspect.java,v 1.2 2003/05/08 13:38:11 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: StaticLayoutStatus.java,v 1.1 2003/05/08 13:38:10 cziegeler Exp $
  */
-public class TabMaxPageAspect 
-    extends MaxPageAspect {
+public class StaticLayoutStatus 
+implements AspectStatus {
+
+    protected boolean _static;
+
+    public StaticLayoutStatus() {
+    }
+    
+    /**
+     * @return
+     */
+    public boolean isStatic() {
+        return _static;
+    }
 
     /**
-     * @return Layout
+     * @param b
      */
-    public Layout getMaxpageLayout(CompositeLayout layout) {
-        TabLayoutStatus status = (TabLayoutStatus) this.getStatus( null, ProfileManager.SESSION_STATUS, layout.getId() ); 
-        int selected = (status == null ? 0 : status.getSelectedItem());
-
-        Item item = (Item) layout.getItem(selected);
-        Layout child = item.getLayout();
-        if (child.isStatic() == false && child instanceof CompositeLayout) {
-            return this.getMaxpageLayout( (CompositeLayout)child );
-        }
-
-        return null;
-    
-	}
+    public void setStatic(boolean b) {
+        _static = b;
+    }
 
 }

@@ -58,8 +58,8 @@ import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.aspect.TabLayoutStatus;
 import org.apache.cocoon.portal.layout.impl.TabLayout;
-import org.apache.cocoon.portal.layout.impl.TabLayoutStatus;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
@@ -67,7 +67,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.1 2003/05/07 06:22:29 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutEventSubscriber.java,v 1.2 2003/05/08 13:38:11 cziegeler Exp $
  */
 public final class DefaultLayoutEventSubscriber 
     implements Subscriber {
