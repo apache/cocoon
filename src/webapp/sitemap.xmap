@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.37 2003/10/29 13:35:47 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.38 2003/10/31 11:30:41 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -286,6 +286,7 @@
    <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
    <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
    <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
+   <map:action logger="sitemap.action.serverpages" name="serverpages" pool-grow="2" pool-max="32" pool-min="4" src="org.apache.cocoon.acting.ServerPagesAction"/>
   </map:actions>
 
   <!--+

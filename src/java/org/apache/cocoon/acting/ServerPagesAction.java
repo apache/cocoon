@@ -97,14 +97,14 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  *
  * Example :
  * <pre>
- *   &lt;action type="xsp-action" src="myAction.xsp"&gt;
+ *   &lt;action type="serverpages" src="myAction.xsp"&gt;
  *     &lt;map:param name="output-attribute" value="xsp-action-result"/&gt;
  *     ...
  *   &lt;/action&gt;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.3 2003/10/31 11:30:41 vgritsenko Exp $
  */
 public class ServerPagesAction
         extends ConfigurableComposerAction
