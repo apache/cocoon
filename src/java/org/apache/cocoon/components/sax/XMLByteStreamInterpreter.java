@@ -62,12 +62,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.4 2003/09/24 21:26:51 cziegeler Exp $
+ * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.5 2003/11/19 01:48:12 tcurdt Exp $
  */
 
-public final class XMLByteStreamInterpreter
-extends AbstractXMLProducer
-implements XMLDeserializer, Recyclable {
+public final class XMLByteStreamInterpreter extends AbstractXMLProducer implements XMLDeserializer, Recyclable {
 
     private static final int START_DOCUMENT         = 0;
     private static final int END_DOCUMENT           = 1;
@@ -98,8 +97,7 @@ implements XMLDeserializer, Recyclable {
         this.input = null;
     }
 
-    public void deserialize(Object saxFragment)
-    throws SAXException {
+    public void deserialize(Object saxFragment) throws SAXException {
         if (!(saxFragment instanceof byte[])) {
             throw new SAXException("XMLDeserializer needs byte array for deserialization.");
         }
@@ -224,12 +222,16 @@ implements XMLDeserializer, Recyclable {
     }
 
     private String readString() throws SAXException {
-        int length = this.readLength();
+        int length = this.readWord();
         int index = length & 0x00007FFF;
         if (length >= 0x00008000) {
             return (String) list.get(index);
-        } else {
-            char[] chars = this.readChars(index);
+        }
+        else {
+            if (length == 0x00007FFF) {
+                length = this.readLong();
+            }
+            char[] chars = this.readChars(length);
             int len = chars.length;
             if (len > 0) {
                 while (chars[len-1]==0) len--;
@@ -250,7 +252,11 @@ implements XMLDeserializer, Recyclable {
      * at the end
      */
     private char[] readChars() throws SAXException {
-        return this.readChars(this.readLength());
+        int length = this.readWord();
+        if (length == 0x00007FFF) {
+            length = this.readLong();
+        }
+        return this.readChars(length);
     }
 
     private int read() throws SAXException {
@@ -302,8 +308,7 @@ implements XMLDeserializer, Recyclable {
         return str;
     }
 
-    private void readBytes(byte[] b)
-    throws SAXException {
+    private void readBytes(byte[] b) throws SAXException {
         if (this.currentPos + b.length > this.input.length) {
             // TC:
             // >= prevents getting the last byte
@@ -319,9 +324,17 @@ implements XMLDeserializer, Recyclable {
         this.currentPos += b.length;
     }
 
-    private int readLength() throws SAXException {
+    private int readWord() throws SAXException {
         int ch1 = this.read();
         int ch2 = this.read();
         return ((ch1 << 8) + (ch2 << 0));
+    }
+
+    private int readLong() throws SAXException {
+        int ch1 = this.read();
+        int ch2 = this.read();
+        int ch3 = this.read();
+        int ch4 = this.read();
+        return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
     }
 }

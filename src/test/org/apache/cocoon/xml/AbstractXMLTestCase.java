@@ -69,14 +69,32 @@ import java.io.ByteArrayOutputStream;
  * general functions for XML related Testcases
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @version
  */
 
 public abstract class AbstractXMLTestCase extends XMLTestCase {
+
     public AbstractXMLTestCase(String s) {
         super(s);
     }
 
-    protected void generateSAX( ContentHandler consumer ) throws SAXException {
+    protected void generateLargeSAX( ContentHandler consumer ) throws SAXException {
+        AttributesImpl atts = new AttributesImpl();
+
+        final int size = 65000;
+        char[] large = new char[size];
+        for(int i=0;i<size;i++) {
+            large[i] = 'x';
+        }
+
+        consumer.startDocument();
+        consumer.startElement("", "root", "root", atts);
+        consumer.characters(large,0,size);
+        consumer.endElement("", "root", "root");
+        consumer.endDocument();
+    }
+
+    protected void generateSmallSAX( ContentHandler consumer ) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
 
         consumer.startDocument();
@@ -88,7 +106,7 @@ public abstract class AbstractXMLTestCase extends XMLTestCase {
 
     protected byte[] generateByteArray() throws Exception {
         DOMBuilder in = new DOMBuilder();
-        generateSAX(in);
+        generateSmallSAX(in);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer t = tFactory.newTransformer();
