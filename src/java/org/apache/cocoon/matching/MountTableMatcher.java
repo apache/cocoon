@@ -107,7 +107,7 @@ import org.apache.excalibur.source.SourceValidity;
  * table, but not fail if it does not exist.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MountTableMatcher.java,v 1.5 2004/02/10 14:45:15 sylvain Exp $
+ * @version CVS $Id: MountTableMatcher.java,v 1.6 2004/03/03 12:38:25 cziegeler Exp $
  */
 public class MountTableMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Parameterizable {
 
@@ -171,7 +171,14 @@ public class MountTableMatcher extends AbstractLogEnabled implements Matcher, Th
         for (int i = 0; i < children.length; i++) {
             Configuration child = children[i];
             if ("mount".equals(child.getName())) {
-                mounts.put(children[i].getAttribute("uri-prefix"), children[i].getAttribute("src"));
+                String prefix = children[i].getAttribute("uri-prefix");
+                // Append a '/' at the end of the prefix
+                // this avoids flat uri matching which would cause
+                // exceptions in the sub sitemap!
+                if (!prefix.endsWith("/")) {
+                    prefix = prefix + '/';
+                }
+                mounts.put(prefix, children[i].getAttribute("src"));
             } else {
                 throw new PatternException(
                     "Unexpected element '" + child.getName() + "' (awaiting 'mount'), at " + child.getLocation());
