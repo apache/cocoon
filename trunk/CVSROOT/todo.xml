@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.26 2000-04-18 12:52:58 stefano Exp $
+  $Id: todo.xml,v 1.27 2000-04-26 13:45:01 stefano Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -14,6 +14,12 @@
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
+
+ <actions priority="high">
+  <action context="code">
+   Make href relative in stylesheet PIs.
+  </action>
+ </actions>
 
  <actions priority="low">
   <action context="docs">
