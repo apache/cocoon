@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.2 2003/03/12 09:10:07 jefft Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.3 2003/05/30 09:23:14 cziegeler Exp $
  */
 public interface ProcessingPipeline
        extends   Component, Recomposable {
@@ -182,5 +182,12 @@ public interface ProcessingPipeline
      * Otherwise return <code>null</code>
      */
     SourceValidity getValidityForEventPipeline();
-
+    
+    /**
+     * Return the key for the event pipeline
+     * If the "event pipeline" (= the complete pipeline without the
+     * serializer) is cacheable and valid, return a key.
+     * Otherwise return <code>null</code>
+     */
+    String getKeyForEventPipeline();
 }

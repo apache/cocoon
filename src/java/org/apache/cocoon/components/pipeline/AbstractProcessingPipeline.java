@@ -86,7 +86,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.3 2003/05/18 18:37:09 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.4 2003/05/30 09:23:14 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -760,6 +760,13 @@ public abstract class AbstractProcessingPipeline
         }
 
         return expires;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getKeyForEventPipeline()
+     */
+    public String getKeyForEventPipeline() {
+        return null;
     }
 
 }
