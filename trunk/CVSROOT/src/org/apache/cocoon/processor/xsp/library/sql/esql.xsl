@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.88 2001-08-10 11:51:15 dims Exp $-->
+<!-- $Id: esql.xsl,v 1.89 2001-08-10 16:18:53 dims Exp $-->
 <!--
 
  ============================================================================
@@ -636,8 +636,6 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
           </xsl:otherwise>
         </xsl:choose>
       } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>_2) {}
-    } catch(java.io.UnsupportedEncodingException e) {
-      throw new RuntimeException(e.toString());
     }
     if (_esql_queries.empty()) {
       _esql_query = null;
