@@ -74,14 +74,6 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
 
             try {
-//                Map values = new HashMap(3);
-//                values.put("widget", widget);
-//                values.put("jxpathPointer", pointer);
-//                if (pointer.getNode() != null) {
-//                    values.put("jxpathContext", jctx.getRelativeContext(pointer));
-//                }
-//                values.put("childBindings", this.childBindings);
-                
                 JXPathContext newCtx = pointer.getNode() == null ? null :
                 	    jctx.getRelativeContext(pointer);
 
@@ -110,13 +102,6 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
             try {
                 Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-
-//                Map values = new HashMap();
-//                values.put("widget", widget);
-//                values.put("jxpathContext", widgetCtx);
-//                values.put("jxpathPointer", pointer);
-//                values.put("childBindings", this.childBindings);
-
                 JavaScriptHelper.callFunction(this.saveScript, frmModel,
                 		new Object[] {widget, pointer, widgetCtx, this.childBindings}, objectModel);
 
