@@ -262,7 +262,8 @@
    <p>
     Some servlet engines, such as Tomcat, construct a CLASSPATH automatically based on
     all the jar files in a lib directory. In this case, you may need to rename the jar file
-    containing the DOM Level 1 to something like zzz.jar to force it to come last, or even
+    containing the DOM Level 1 (<code>xml.jar</code> or <code>parser.jar</code>)
+    to something like <code>zzz.jar</code> to force it to come last, or even
     move it out of the lib directory altogether.
    </p>
 
