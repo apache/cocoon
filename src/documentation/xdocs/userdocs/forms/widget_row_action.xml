@@ -37,19 +37,22 @@
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>
   <fd:hint>...</fd:hint>
-  <fd:on-activate>
+  <fd:on-action>
     ...
-  </fd:on-activate>
+  </fd:on-action>
 </fd:row-action>]]></source>
 
       <p>The <strong>action-command</strong> attribute should have either the
       value <code>add-after</code>, <code>delete</code>, <code>move-up</code>
       or <code>move-down</code>.</p>
 
-      <p><strong>fd:on-activate</strong> allows additional event handlers to
+      <p><strong>fd:on-action</strong> allows additional event handlers to
       be defined, see also <link href="eventhandling.html">Event Handling</link>. The interface to be implemented
       for Java event listeners is <code>org.apache.cocoon.forms.event.ActionListener</code>.
-      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.</p>
+      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ActionEvent</code>.
+	  The event handlers are called <em>after</em> the action is performed except for the
+	  <code>delete</code> row action where event handlers are called <em>before</em> the
+	  row is deleted.</p>
 
       <p>Where all you want to do is submit a specific row on a repeater,
       simply add a fd:submit element to the widgets for the repeater.</p>
