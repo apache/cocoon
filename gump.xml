@@ -18,7 +18,6 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | $Id$
     +-->
 <module name="cocoon">
   <url href="http://cocoon.apache.org/"/>
@@ -742,6 +741,7 @@
     <depend project="daisy-htmlcleaner"/>
     <depend project="jakarta-oro"/>
     <depend project="cocoon-block-xsp" type="samples"/>
+    <depend project="cocoon-block-conversion"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/forms/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
@@ -1226,13 +1226,32 @@
     </ant>
     
     <depend project="cocoon" inherit="all"/>
+    <depend project="commons-beanutils" inherit="all"/>
     <depend project="commons-jexl"/>
+    <depend project="commons-jxpath"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/template/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/template-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+  <project name="cocoon-block-conversion" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="conversion"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/conversion-block.jar"/>
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
