@@ -65,7 +65,7 @@ import java.util.Locale;
  * functionality in sending a response.  For example, it has methods
  * to access HTTP headers and cookies.
  * @author ?
- * @version CVS $Id: HttpResponse.java,v 1.1 2003/03/09 00:09:30 pier Exp $
+ * @version CVS $Id: HttpResponse.java,v 1.2 2003/06/24 15:20:28 upayavira Exp $
  */
 
 public final class HttpResponse implements Response {
@@ -131,6 +131,10 @@ public final class HttpResponse implements Response {
         this.res.sendRedirect(location);
     }
 
+    public void sendPermanentRedirect(String location) throws IOException {
+        this.res.setHeader("location", location);
+        this.res.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+    }
     public void setDateHeader(String name, long date) {
         this.res.setDateHeader(name, date);
     }
