@@ -359,6 +359,7 @@ public class StatusGenerator
         this.addValue(Settings.KEY_FORM_ENCODING, s.getFormEncoding());
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
+        this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());
     }
 
     private void genProperties() throws SAXException {

@@ -31,7 +31,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.SAXException;
 
 import com.sun.image.codec.jpeg.ImageFormatException;

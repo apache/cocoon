@@ -24,7 +24,6 @@ import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
