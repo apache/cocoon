@@ -164,7 +164,7 @@
   <target name="custom-conf" depends="init-tasks" description="Uses Cocoon's xpatch task to customize runtime configuration">
     <xpatch file="${build.webapp}/sitemap.xmap" srcdir="">
        <include name="${customconf}/*.xmap" />
-       <include name="src/confpatch/*.xpipe" />
+       <include name="${customconf}/*.xpipe" />
     </xpatch>
     <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf" srcdir="">
        <include name="${customconf}/*.xconf" />
