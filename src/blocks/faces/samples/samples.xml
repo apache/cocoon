@@ -31,7 +31,7 @@
     </note>
     <note>
       Faces block comes with MyFaces JSF implementation with this small patch
-      applied. Cocoon Faces block can also be run with Sun (JSF 1.1_01) and
+      applied. Cocoon Faces block can also be run with Sun (JSF 1.1) and
       IBM implementations (WSAD 5.1.2) if those implementations are patched
       appropriately.
     </note>
