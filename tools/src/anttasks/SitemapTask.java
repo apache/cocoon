@@ -321,7 +321,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             final String htmlName = docFile.getName().substring(0, docFile.getName().length()-3) + "html";
             Node oldEntry = XPathAPI.selectSingleNode(sectionNode, "menu-item[@href='"+htmlName+"']");
             Node newEntry = indexDoc.createElement("menu-item");
-            ((Element)newEntry).setAttribute("href", htmlName);  
+            ((Element)newEntry).setAttribute("href", htmlName);
             final String label = capitalize(component.getName()) + " " + capitalize(component.getType());
             ((Element)newEntry).setAttribute("label", label);
             if ( oldEntry != null ) {
@@ -715,7 +715,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
         }
     
-}
+    }
     
     // Class Constants
     private static final String LOG_ENABLED = "org.apache.avalon.framework.logger.LogEnabled";

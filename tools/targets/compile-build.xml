@@ -73,12 +73,11 @@
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
-
   </target>
 
   <!-- compiles deprecated code -->
   <target name="compile-deprecated" depends="prepare"
-      unless="internal.exclude.deprecated">
+          unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
 <!--
@@ -154,6 +153,16 @@
         </jar>
       </then>
     </if>
+    <if>
+      <istrue value="${include.sources-jars}"/>
+      <then>
+        <jar jarfile="${build}/${name}.src.jar">
+          <fileset dir="${java}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </then>
+    </if>
   </target>
 
   <!-- package deprecated code -->
@@ -173,6 +182,16 @@
         </jar>
       </then>
     </if>
+    <if>
+      <istrue value="${include.sources-jars}"/>
+      <then>
+        <jar jarfile="${build}/${name}-deprecated.src.jar" update="yes">
+          <fileset dir="${deprecated.src}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </then>
+    </if>
   </target>
 
   <!-- package testcase code -->
@@ -185,6 +204,16 @@
       <istrue value="${include.sources-in-jars}"/>
       <then>
         <jar jarfile="${build}/${name}-testcase.jar" update="yes">
+          <fileset dir="${test}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </then>
+    </if>
+    <if>
+      <istrue value="${include.sources-jars}"/>
+      <then>
+        <jar jarfile="${build}/${name}-testcase.src.jar">
           <fileset dir="${test}">
             <include name="**/*.java"/>
           </fileset>
