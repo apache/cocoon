@@ -876,23 +876,23 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_2_3.jar
     and then the additional general instructions for having the webserver
     pass requests to Cocoon.</p>
 
-   <s3 title="JRun version 2.3">
+   <s3 title="JRun version 2.3.3">
     <p>
      For the JRun portion, you must add all Cocoon jars to the java.classpath
-     in [jrun-home]/jsm-default/properties.
+     in [jrun-home]/jsm-default/properties/jsm.properties.
     </p>
 
    <p>
     Here is an example: <strong>This is an EXAMPLE only and may not be
     up to date. If you get errors, first check that all the required jar files
     <jump anchor="jars">(see top of page)</jump>
-    from cocoon/lib are on your CLASSPATH.</strong>
+    from cocoon/lib are on your CLASSPATH, and ensure that xerces.jar comes first.</strong>
    </p>
                                                                                                                             
-<source>java.classpath=[previous jrun jars]:[cocoon-home]/lib/xerces.jar:
+<source>java.classpath=[cocoon-home]/lib/xerces.jar:
 [cocoon-home]/lib/stylebook.jar:[cocoon-home]/lib/fop.jar:
 [cocoon-home]/bin/cocoon.jar:[cocoon-home]/lib/xalan.jar:
-[cocoon-home]/lib/turbine-pool.jar</source>
+[cocoon-home]/lib/turbine-pool.jar:[previous-jrun-jars]</source>
     <p>
      Note that all newlines are added for readability and should not
      actually be in the configuration file.  All jars should be listed
@@ -911,9 +911,9 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_2_3.jar
      add the lines:
     </p>
 
-<source>servlets.properties:servlet.org.apache.cocoon.Cocoon.code=org.apache.cocoon.Cocoon
-servlets.properties:servlet.org.apache.cocoon.Cocoon.args=properties=[cocoon-home]/conf/cocoon.properties
-servlets.properties:servlet.org.apache.cocoon.Cocoon.preload=false</source>
+<source>servlet.org.apache.cocoon.Cocoon.code=org.apache.cocoon.Cocoon
+servlet.org.apache.cocoon.Cocoon.args=properties=[cocoon-home]/conf/cocoon.properties
+servlet.org.apache.cocoon.Cocoon.preload=false</source>
 
     <p>
      And finally, change the defaultdocs line in
@@ -1217,7 +1217,7 @@ You could also make these three configuration changes via
   <tr>
    <td>Windows 98 SE</td>
    <td colspan="2">Tomcat 3.2.1</td>
-   <td>JDK 1.3</td>
+   <td>JDK 1.3/1.2.2</td>
   </tr>
   <tr>
    <td>Windows NT 4.0</td>
