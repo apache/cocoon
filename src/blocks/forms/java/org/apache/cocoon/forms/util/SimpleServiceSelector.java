@@ -74,7 +74,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
             }
 
             if (!componentClass.isAssignableFrom(clazz))
-                throw new ConfigurationException("The class \"" + src + "\" is of an incorrect type, it should implement or exted " + componentClass.getName());
+                throw new ConfigurationException("The class \"" + src + "\" is of an incorrect type, it should implement or extend " + componentClass.getName());
 
             Object component = null;
             try {
