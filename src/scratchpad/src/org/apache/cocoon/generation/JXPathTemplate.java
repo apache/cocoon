@@ -1,4 +1,4 @@
-/*
+/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,10 +53,20 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.xml.*;
 import java.io.*;
 import java.util.*;
 import org.xml.sax.*;
+import org.xml.sax.ext.*;
 import org.xml.sax.helpers.*;
 import org.apache.commons.jxpath.*;
 
@@ -64,6 +74,74 @@ public class JXPathTemplate extends AbstractGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
+
+    static class MyVariables implements Variables {
+
+        Map myVariables = new HashMap();
+
+        static final String[] VARIABLES = new String[] {
+            "continuation",
+            "flowContext",
+            "request",
+            "response",
+            "context",
+            "session",
+            "parameters"
+        };
+
+        Object bean, kont, request, response,
+            session, context, parameters;
+
+        MyVariables(Object bean, WebContinuation kont,
+                    Request request, Response response,
+                    org.apache.cocoon.environment.Context context,
+                    Parameters parameters) {
+            this.bean = bean;
+            this.kont = kont;
+            this.request = request;
+            this.session = request.getSession(false);
+            this.response = response;
+            this.context = context;
+            this.parameters = parameters;
+        }
+
+        public boolean isDeclaredVariable(String varName) {
+            for (int i = 0; i < VARIABLES.length; i++) {
+                if (varName.equals(VARIABLES[i])) {
+                    return true;
+                }
+            }
+            return myVariables.containsKey(varName);
+        }
+        
+        public Object getVariable(String varName) {
+            if (varName.equals("continuation")) {
+                return kont;
+            } else if (varName.equals("flowContext")) {
+                return bean;
+            } else if (varName.equals("request")) {
+                return request;
+            } else if (varName.equals("response")) {
+                return response;
+            } else if (varName.equals("session")) {
+                return session;
+            } else if (varName.equals("context")) {
+                return context;
+            } else if (varName.equals("parameters")) {
+                return parameters;
+            }
+            return myVariables.get(varName);
+        }
+        
+        public void declareVariable(String varName, Object value) {
+            myVariables.put(varName, value);
+        }
+        
+        public void undeclareVariable(String varName) {
+            myVariables.remove(varName);
+        }
+    }
+
 
     final static String JXPATH_NS = 
         "http://cocoon.apache.org/transformation/jxpath/1.0";
@@ -75,482 +153,720 @@ public class JXPathTemplate extends AbstractGenerator {
     final static String OTHERWISE = "otherwise";
     final static String VALUE_OF = "value-of";
 
+    // get XPath expression (optionally contained in {})
+    private String getExpr(String inStr) {
+        try {
+            inStr = inStr.trim();
+            if (inStr.length() == 0 || inStr.charAt(0) != '{') {
+                return inStr;
+            }
+            StringReader in = new StringReader(inStr);
+            int ch;
+            StringBuffer expr = new StringBuffer();
+            in.read(); // '{'
+            while ((ch = in.read()) != -1) {
+                char c = (char)ch;
+                if (c == '}') {
+                    break;
+                } else if (c == '\\') {
+                    ch = in.read();
+                    if (ch == -1) {
+                        expr.append('\\');
+                    } else {
+                        expr.append((char)ch);
+                    }
+                } else {
+                    expr.append(c);
+                }
+            } 
+            return expr.toString();
+        } catch (IOException ignored) {
+            ignored.printStackTrace();
+        }
+        return inStr;
+    }
+
     class Event {
-	final Locator location;
-	Event next;
-	Event(Locator location) {
-	    this.location = new LocatorImpl(location);
-	}
+        final Locator location;
+        Event next;
+        Event(Locator location) {
+            this.location = new LocatorImpl(location);
+        }
+
+        public String locationString() {
+            String result = "";
+            String systemId = location.getSystemId();
+            if (systemId != null) {
+                result += systemId + ", ";
+            }
+            result += "Line " + location.getLineNumber();
+            int col = location.getColumnNumber();
+            if (col > 0) {
+                result += "." + col;
+            }
+            return result;
+        }
     }
 
     class TextEvent extends Event {
-	TextEvent(Locator location, 
-		  char[] chars, int start, int length) {
-	    super(location);
-	    this.chars = new char[this.length = length];
-	    System.arraycopy(chars, start, this.chars, 
-			     this.start = 0, length);
-	}
-	final char[] chars;
-	final int start;
-	final int length;
+        TextEvent(Locator location, 
+                  char[] chars, int start, int length) {
+            super(location);
+            this.chars = new char[this.length = length];
+            System.arraycopy(chars, start, this.chars, 
+                             this.start = 0, length);
+        }
+        final char[] chars;
+        final int start;
+        final int length;
+        public String toString() {
+            return new String(chars, start, length) + 
+                "("+super.locationString()+")";
+        }
     }
 
     class Characters extends TextEvent {
-	Characters(Locator location, 
-		  char[] chars, int start, int length) {
-	    super(location, chars, start, length);
-	}
+        Characters(Locator location, 
+                  char[] chars, int start, int length) {
+            super(location, chars, start, length);
+        }
+
     }
 
     class StartDocument extends Event {
-	long compileTime;
-	StartDocument(Locator location, long compileTime) {
-	    super(location);
-	    this.compileTime = compileTime;
-	}
+        StartDocument(Locator location) {
+            super(location);
+        }
+        long compileTime;
+        EndDocument endDocument; // null if document fragment
     }
 
     class EndDocument extends Event {
-	EndDocument(Locator location) {
-	    super(location);
-	}
+        EndDocument(Locator location) {
+            super(location);
+        }
+    }
+
+    class EndElement extends Event {
+        StartElement startElement;
+        EndElement(Locator location, StartElement startElement) {
+            super(location);
+            this.startElement = startElement;
+        }
+        public String toString() {
+            String ns = "";
+            if (startElement.namespaceURI != null) {
+                ns = "{"+startElement.namespaceURI+"}";
+            }
+            return 
+                "</"+ns+startElement.localName+">(" + super.locationString() + ")";
+        }
     }
 
     class EndPrefixMapping extends Event {
-	EndPrefixMapping(Locator location, String prefix) {
-	    super(location);
-	    this.prefix = prefix;
-	}
-	final String prefix;
+        EndPrefixMapping(Locator location, String prefix) {
+            super(location);
+            this.prefix = prefix;
+        }
+        final String prefix;
     }
     
     class IgnorableWhitespace extends TextEvent {
-	IgnorableWhitespace(Locator location, 
-			    char[] chars, int start, int length) {
-	    super(location, chars, start, length);
-	}
+        IgnorableWhitespace(Locator location, 
+                            char[] chars, int start, int length) {
+            super(location, chars, start, length);
+        }
+    }
+
+    class ProcessingInstruction extends Event {
+        ProcessingInstruction(Locator location,
+                              String target, String data) {
+            super(location);
+            this.target = target;
+            this.data = data;
+        }
+        final String target;
+        final String data;
     }
 
     class SkippedEntity extends Event {
-	SkippedEntity(Locator location, String name) {
-	    super(location);
-	    this.name = name;
-	}
-	final String name;
+        SkippedEntity(Locator location, String name) {
+            super(location);
+            this.name = name;
+        }
+        final String name;
     }
 
     abstract class AttributeEvent {
-	AttributeEvent(String name, String namespaceURI,
-		       String type) {
-	    this.name = name;
-	    this.namespaceURI = namespaceURI;
-	    this.type = type;
-	}
-	final String name;
-	final String namespaceURI;
-	final String type;
+        AttributeEvent(String namespaceURI, String localName, String raw,
+                       String type) {
+            this.namespaceURI = namespaceURI;
+            this.localName = localName;
+            this.raw = raw;
+            this.type = type;
+        }
+        final String namespaceURI;
+        final String localName;
+        final String raw;
+        final String type;
     }
     
     class CopyAttribute extends AttributeEvent {
-	CopyAttribute(String name, String namespaceURI,
-		      String type, String value) {
-	    super(name, namespaceURI, type);
-	    this.value = value;
-	}
-	final String value;
+        CopyAttribute(String namespaceURI, 
+                      String localName,
+                      String raw,
+                      String type, String value) {
+            super(namespaceURI, localName, raw, type);
+            this.value = value;
+        }
+        final String value;
     }
     
     class Subst {
     }
     
     class Literal extends Subst {
-	Literal(String val) {
-	    this.value = val;
-	}
-	String value;
+        Literal(String val) {
+            this.value = val;
+        }
+        final String value;
     }
     
     class Expression extends Subst {
-	Expression(CompiledExpression expr) {
-	    this.expr = expr;
-	}
-	CompiledExpression expr;
+        Expression(CompiledExpression expr) {
+            this.compiledExpression = expr;
+        }
+        final CompiledExpression compiledExpression;
     }
 
     class SubstituteAttribute extends AttributeEvent {
-	List substitutions = new LinkedList();
+        SubstituteAttribute(String namespaceURI,
+                            String localName,
+                            String raw,
+                            String type, List substs) {
+            super(namespaceURI, localName, raw, type);
+            this.substitutions = substs;
+        }
+        final List substitutions;
     }
 
     class StartElement extends Event {
-	StartElement(Locator location, String namespaceURI,
-		     String localName, String raw,
-		     Attributes attrs) throws SAXException {
-	    super(location);
-	    this.namespaceURI = namespaceURI;
-	    this.localName = localName;
-	    this.raw = raw;
-	    StringBuffer buf = new StringBuffer();
-	    for (int i = 0, len = attrs.getLength();
-		 i < len; i++) {
-		String uri = attrs.getURI(i);
-		String localName = attrs.getLocalName(i);
-		String raw = attrs.getQName(i);
-		String type = attrs.getType(i);
-		String value = attrs.getValue(i);
-		StringReader in = new StringReader(value);
-		int ch;
-		buf.setLength(0);
-		boolean inExpr = false;
-		while ((ch = in.read()) != -1) {
-		    char c = (char)ch;
-		    if (inExpr) {
-			if (c == '}') {
-			    String str = buf.toString();
-			    buf.setLength(0);
-			    CompiledExpression compiledExpression = 
-				JXPathContext.compile(str);
-			    attributeEvents.add(new Expression(compiledExpression));
-			    inExpr = false;
-			} else if (c == '\\') {
-			    ch = in.read();
-			    if (ch == -1) {
-				buf.append('\\');
-			    } else {
-				buf.append((char)ch);
-			    }
-			} else {
-			    buf.append(c);
-			}
-		    } else {
-			if (c == '\\') {
-			    ch = in.read();
-			    if (ch == -1) {
-				buf.append('\\');
-			    } else {
-				buf.append((char)ch);
-			    }
-			} else {
-			    if (c == '{') {
-				ch = in.read();
-				if (ch != -1) {
-				    if (buf.getLength() > 0) {
-					attributeEvents.add(new Literal(buf.toString()));
-					buf.setLength(0);
-				    }
-				    buf.append((char)ch);
-				    inExpr = true;
-				    continue;
-				}
-				buf.append('{');
-			    }
-			    if (ch != -1) {
-				buf.append((char)ch);
-			    }
-			}
-		    }
-		}
-		if (buf.getLength() > 0) {
-		    attributeEvents.add(new Literal(buf.toString()));
-		}
-	    }
-	}
-	final String namespaceURI;
-	final String localName;
-	final String raw;
-	final List attributeEvents = new LinkedList();
+        StartElement(Locator location, String namespaceURI,
+                     String localName, String raw,
+                     Attributes attrs) throws SAXException {
+            super(location);
+            this.namespaceURI = namespaceURI;
+            this.localName = localName;
+            this.raw = raw;
+            StringBuffer buf = new StringBuffer();
+            for (int i = 0, len = attrs.getLength();
+                 i < len; i++) {
+                String uri = attrs.getURI(i);
+                String local = attrs.getLocalName(i);
+                String qname = attrs.getQName(i);
+                String type = attrs.getType(i);
+                String value = attrs.getValue(i);
+                StringReader in = new StringReader(value);
+                int ch;
+                buf.setLength(0);
+                boolean inExpr = false;
+                List substEvents = new LinkedList();
+                try {
+                    while ((ch = in.read()) != -1) {
+                        char c = (char)ch;
+                        if (inExpr) {
+                            if (c == '}') {
+                                String str = buf.toString();
+                                CompiledExpression compiledExpression = 
+                                    JXPathContext.compile(str);
+                                substEvents.add(new Expression(compiledExpression));
+                                buf.setLength(0);
+                                inExpr = false;
+                            } else if (c == '\\') {
+                                ch = in.read();
+                                if (ch == -1) {
+                                    buf.append('\\');
+                                } else {
+                                    buf.append((char)ch);
+                                }
+                            } else {
+                                buf.append(c);
+                            }
+                        } else {
+                            if (c == '\\') {
+                                ch = in.read();
+                                if (ch == -1) {
+                                    buf.append('\\');
+                                } else {
+                                    buf.append((char)ch);
+                                }
+                            } else {
+                                if (c == '{') {
+                                    ch = in.read();
+                                    if (ch != -1) {
+                                        if (buf.length() > 0) {
+                                            substEvents.add(new Literal(buf.toString()));
+                                            buf.setLength(0);
+                                        }
+                                        buf.append((char)ch);
+                                        inExpr = true;
+                                        continue;
+                                    }
+                                    buf.append('{');
+                                }
+                                if (ch != -1) {
+                                    buf.append((char)ch);
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException ignored) {
+                    ignored.printStackTrace();
+                }
+                if (buf.length() > 0) {
+                    if (substEvents.size() == 0) {
+                        attributeEvents.add(new CopyAttribute(uri,
+                                                              local,
+                                                              qname,
+                                                              type,
+                                                              value));
+                    } else {
+                        substEvents.add(new Literal(buf.toString()));
+                        attributeEvents.add(new SubstituteAttribute(uri,
+                                                                    local,
+                                                                    qname,
+                                                                    type,
+                                                                    substEvents));
+                    }
+                } else {
+                    if (substEvents.size() > 0) {
+                        attributeEvents.add(new SubstituteAttribute(uri,
+                                                                    local,
+                                                                    qname,
+                                                                    type,
+                                                                    substEvents));
+                    } else {
+                        attributeEvents.add(new CopyAttribute(uri, local,
+                                                              qname, type,
+                                                               ""));
+                    }
+                }
+            }
+        }
+        final String namespaceURI;
+        final String localName;
+        final String raw;
+        final List attributeEvents = new LinkedList();
+        public String toString() {
+            String ns = "";
+            if (namespaceURI != null) {
+                ns = "{"+namespaceURI+"}";
+            }
+            return "<"+ns+localName+"> ("+super.locationString()+")";
+        }
     }
 
     class StartForEach extends Event {
-	StartForEach(Locator location, CompiledExpression select) {
-	    super(location);
-	    this.select = select;
-	}
-	CompiledExpression select;
-	EndForEach endForEach;
+        StartForEach(Locator location, CompiledExpression select) {
+            super(location);
+            this.select = select;
+        }
+        CompiledExpression select;
+        EndForEach endForEach;
     }
     
     class EndForEach extends Event {
-	EndForEach(Locator location) {
-	    super(location);
-	}
+        EndForEach(Locator location) {
+            super(location);
+        }
     }
 
     class StartIf extends Event {
-	StartIf(Locator location, CompiledExpression test) {
-	    super(location);
-	    this.test = test;
-	}
-	final CompiledExpression test;
-	EndIf endIf;
+        StartIf(Locator location, CompiledExpression test) {
+            super(location);
+            this.test = test;
+        }
+        final CompiledExpression test;
+        EndIf endIf;
     }
 
     class EndIf extends Event {
-	EndIf(Locator location) {
-	    super(location);
-	}
+        EndIf(Locator location) {
+            super(location);
+        }
     }
 
     class StartChoose extends Event {
-	StartChoose(Locator location) {
-	    super(location);
-	}
-	StartWhen firstChoice;
-	StartOtherwise otherwise;
-	EndChoose endChoose;
+        StartChoose(Locator location) {
+            super(location);
+        }
+        StartWhen firstChoice;
+        StartOtherwise otherwise;
+        EndChoose endChoose;
     }
 
     class EndChoose extends Event {
-	EndChoose(Locator location) {
-	    super(location);
-	}
+        EndChoose(Locator location) {
+            super(location);
+        }
     }
 
     class StartWhen extends Event {
-	StartWhen(Locator location, CompiledExpression test) {
-	    super(location);
-	    this.test = test;
-	}
-	final CompiledExpression test;
-	StartWhen nextChoice;
-	EndWhen endWhen;
+        StartWhen(Locator location, CompiledExpression test) {
+            super(location);
+            this.test = test;
+        }
+        final CompiledExpression test;
+        StartWhen nextChoice;
+        EndWhen endWhen;
     }
 
     class EndWhen extends Event {
-	EndWhen(Locator location) {
-	    super(location);
-	}
+        EndWhen(Locator location) {
+            super(location);
+        }
     }
 
     class StartOtherwise extends Event {
-	StartOtherwise(Locator location) {
-	    super(location);
-	}
-	EndOtherwise endOtherwise;
+        StartOtherwise(Locator location) {
+            super(location);
+        }
+        EndOtherwise endOtherwise;
     }
 
     class EndOtherwise extends Event {
-	EndOtherwise(Locator location) {
-	    super(location);
-	}
+        EndOtherwise(Locator location) {
+            super(location);
+        }
     }
 
     class StartPrefixMapping extends Event {
-	StartPrefixMapping(Locator location, String prefix,
-			   String uri) {
-	    super(location);
-	    this.prefix = prefix;
-	    this.uri = uri;
-	}
-	String prefix;
-	String uri;
+        StartPrefixMapping(Locator location, String prefix,
+                           String uri) {
+            super(location);
+            this.prefix = prefix;
+            this.uri = uri;
+        }
+        String prefix;
+        String uri;
     }
 
     class Comment extends TextEvent {
-	Comment(Locator location, char[] chars,
-		int start, int length) {
-	    super(location, chars, start, length);
-	}
+        Comment(Locator location, char[] chars,
+                int start, int length) {
+            super(location, chars, start, length);
+        }
     }
 
     class EndCDATA extends Event {
-	EndCDATA(Locator location) {
-	    super(location);
-	}
+        EndCDATA(Locator location) {
+            super(location);
+        }
     }
 
     class EndDTD extends Event {
-	EndDTD(Locator location) {
-	    super(location);
-	}
+        EndDTD(Locator location) {
+            super(location);
+        }
     }
 
     class EndEntity extends Event {
-	EndEntity(Locator location, String name) {
-	    super(location);
-	    this.name = name;
-	}
-	final String name;
+        EndEntity(Locator location, String name) {
+            super(location);
+            this.name = name;
+        }
+        final String name;
+    }
+
+    class StartCDATA extends Event {
+        StartCDATA(Locator location) {
+            super(location);
+        }
     }
 
     class StartDTD extends Event {
-	StartDTD(Locator location, String name, 
-		 String publicId, String systemId) {
-	    super(location);
-	    this.name = name;
-	    this.publicId = publicId;
-	    this.systemId = systemId;
-	}
-	final String name;
-	final String publicId;
-	final String SystemId;
+        StartDTD(Locator location, String name, 
+                 String publicId, String systemId) {
+            super(location);
+            this.name = name;
+            this.publicId = publicId;
+            this.systemId = systemId;
+        }
+        final String name;
+        final String publicId;
+        final String systemId;
     }
     
     class StartEntity extends Event {
-	public StartEntity(Locator location, String name) {
-	    super(location);
-	    this.name = name;
-	}
-	final String name;
+        public StartEntity(Locator location, String name) {
+            super(location);
+            this.name = name;
+        }
+        final String name;
     }
 
+    class StartValueOf extends Event {
+        StartValueOf(Locator location, CompiledExpression expr) {
+            super(location);
+            this.compiledExpression = expr;
+        }
+        CompiledExpression compiledExpression;
+    }
+
+    class EndValueOf extends Event {
+        EndValueOf(Locator location) {
+            super(location);
+        }
+    }
 
     class Parser implements LexicalHandler, ContentHandler {
 
-	Event lastEvent;
-	Stack stack = new Stack();
-	Locator locator;
+        StartDocument startEvent;
+        Event lastEvent;
+        Stack stack = new Stack();
+        Locator locator;
 
-	private void addEvent(Event ev) {
-	    lastEvent.next = ev;
-	    lastEvent = ev;
-	}
+        StartDocument getStartEvent() {
+            return startEvent;
+        }
+        
+        private void addEvent(Event ev) {
+            if (ev == null) {
+                throw new NullPointerException("null event");
+            }
+            if (lastEvent == null) {
+                lastEvent = startEvent = new StartDocument(locator);
+            }
+            lastEvent.next = ev;
+            lastEvent = ev;
+        }
 
-	public void characters(char[] ch, int start, int length) {
-	    Characters chars = new Characters(locator,
-					      ch, start, length);
-	    addEvent(chars);
-	}
+        public void characters(char[] ch, int start, int length) {
+            Characters chars = new Characters(locator,
+                                              ch, start, length);
+            addEvent(chars);
+        }
 
-	public void endDocument() {
-	    StartDocument startDoc = (StartDocument)stack.pop();
-	    EndDocument endDoc = new EndDocument(locator);
-	    addEvent(endDoc);
-	}
+        public void endDocument() {
+            StartDocument startDoc = (StartDocument)stack.pop();
+            EndDocument endDoc = new EndDocument(locator);
+            startDoc.endDocument = endDoc;
+            addEvent(endDoc);
+        }
 
-	public void endElement(String namespaceURI,
-			       String localName,
-			       String raw) 
-	    throws SAXException {
-	    Event start = (Event)stack.pop();
-	    Event newEvent = null;
-	    if (JXPATH_NS.equals(namespaceURI)) {
-		if (start instanceof StartForEach) {
-		    StartForeach startForEach = 
-			(StartForEach)start;
-		    newEvent = startForEach.endForEach = 
-			new EndForEach(locator);
-		    
-		} else if (start instanceof StartIf) {
-		    StartIf startIf = (StartIf)start;
-		    newEvent = startIf.endIf = 
-			new EndIf(locator);
-		} else if (start instanceof StartWhen) {
-		    StartWhen startWhen = (StartWhen)start;
-		    StartChoose startChoose = (StartChoose)stack.peek();
-		    if (startChoose.firstWhen != null) {
-			StartWhen w = startChoose.firstWhen;
-			while (w.nextWhen != null) {
-			    w = w.nextWhen;
-			}
-			w.nextWhen = startWhen;
-		    } else {
-			startChoose.firstWhen = startWhen;
-		    }
-		    newEvent = startWhen.endWhen = 
-			new EndWhen(locator);
-		} else if (start instanceof StartOtherwise) {
-		    StartOtherwise startOtherwise = 
-			(StartOtherwise)start;
-		    StartChoose startChoose = (StartChoose)stack.peek();
-		    newEvent = startOtherwise.endOtherwise = 
-			new EndOtherwise(locator);
-		    startChoose.otherwise = startOtherwise;
-		}
-	    } else {
-		StartElement startElement = (StartElement)start;
-		newEvent = new EndElement(locator, startElement);
-	    }
-	    addEvent(newEvent);
-	}
-	
-	public void endPrefixMapping(String prefix) {
-	    EndPrefixMapping endPrefixMapping = 
-		new EndPrefixMapping(locator, prefix);
-	    addEvent(endPrefixMapping);
-	}
+        public void endElement(String namespaceURI,
+                               String localName,
+                               String raw) 
+            throws SAXException {
+            Event start = (Event)stack.pop();
+            Event newEvent = null;
+            if (JXPATH_NS.equals(namespaceURI)) {
+                if (start instanceof StartForEach) {
+                    StartForEach startForEach = 
+                        (StartForEach)start;
+                    newEvent = startForEach.endForEach = 
+                        new EndForEach(locator);
+                    
+                } else if (start instanceof StartIf) {
+                    StartIf startIf = (StartIf)start;
+                    newEvent = startIf.endIf = 
+                        new EndIf(locator);
+                } else if (start instanceof StartWhen) {
+                    StartWhen startWhen = (StartWhen)start;
+                    StartChoose startChoose = (StartChoose)stack.peek();
+                    if (startChoose.firstChoice != null) {
+                        StartWhen w = startChoose.firstChoice;
+                        while (w.nextChoice != null) {
+                            w = w.nextChoice;
+                        }
+                        w.nextChoice = startWhen;
+                    } else {
+                        startChoose.firstChoice = startWhen;
+                    }
+                    newEvent = startWhen.endWhen = 
+                        new EndWhen(locator);
+                } else if (start instanceof StartOtherwise) {
+                    StartOtherwise startOtherwise = 
+                        (StartOtherwise)start;
+                    StartChoose startChoose = (StartChoose)stack.peek();
+                    newEvent = startOtherwise.endOtherwise = 
+                        new EndOtherwise(locator);
+                    startChoose.otherwise = startOtherwise;
+                } else if (start instanceof StartValueOf) {
+                    newEvent = new EndValueOf(locator);
+                } else {
+                    throw new SAXParseException("unrecognized tag: " + localName, locator, null);
+                }
+            } else {
+                StartElement startElement = (StartElement)start;
+                newEvent = new EndElement(locator, startElement);
+            }
+            addEvent(newEvent);
+        }
+        
+        public void endPrefixMapping(String prefix) {
+            EndPrefixMapping endPrefixMapping = 
+                new EndPrefixMapping(locator, prefix);
+            addEvent(endPrefixMapping);
+        }
 
-	public void ignorableWhitespace(char[] ch, int start, int length) {
-	    Event chars = new IgnorableWhitespace(locator,
-						  ch, start, length);
-	    addEvent(chars);
-	}
+        public void ignorableWhitespace(char[] ch, int start, int length) {
+            Event chars = new IgnorableWhitespace(locator,
+                                                  ch, start, length);
+            addEvent(chars);
+        }
 
-	public void processingInstruction(String target,
-					  String data) {
-	    Event pi = new ProcessingInstruction(locator, target,
-						 data);
-	    addEvent(pi);
-	}
+        public void processingInstruction(String target,
+                                          String data) {
+            Event pi = new ProcessingInstruction(locator, target,
+                                                 data);
+            addEvent(pi);
+        }
 
-	public void setDocumentLocator(Locator locator) {
-	    this.locator = locator;
-	}
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
+        }
 
-	public void skippedEntity(String name) {
-	    addEvent(new SkippedEntity(locator, name));
-	}
+        public void skippedEntity(String name) {
+            addEvent(new SkippedEntity(locator, name));
+        }
 
 
-	public void startDocument() {
-	    startEvent = new StartDocument(locator);
-	    lastEvent = startEvent;
-	    stack.push(lastEvent);
-	}
+        public void startDocument() {
+            startEvent = new StartDocument(locator);
+            lastEvent = startEvent;
+            stack.push(lastEvent);
+        }
 
-	public void startElement(String namespaceURI,
-				 String localName,
-				 String raw,
-				 Attributes attrs) 
-	    throws SAXException {
-	    Event newEvent = null;
-	    if (JXPATH_NS.equals(namespaceURI)) {
-		if (localName.equals(FOR_EACH)) {
-		    String select = attrs.getValue("select");
-		    if (select == null) {
-			throw new SAXParseException("for-each: \"select\" is rrequired", locator, null);
-		    }
-		    CompiledExpression expr = 
-			JXPathContext.compile(select);
-		    StartForEach startForEach = 
-			new StartForEach(locator, expr);
-		    newEvent = startForEach;
-		} else if (localName.equals(CHOOSE)) {
-		} else if (localName.equals(WHEN)) {
-		} else if (localName.equals(OTHERWISE)) {
-		} else if (localName.equals(IF)) {
-		    String test = attrs.getValue("test");
-		    if (test == null) {
-			throw new SAXParseException("if: \"test\" is rrequired", locator, null);
-		    }
-		    CompiledExpression expr = 
-			JXPathContext.compile(test);
-		    StartIf startIf = 
-			new StartIf(locator, expr);
-		    newEvent = startIf;
-		} else if (localName.equals(VALUE_OF)) {
-		}
-	    } else {
-		StartElement startElem = 
-		    new StartElement(locator, namespaceURI,
-				     localName, raw, attrs);
-		newEvent = startElem;
-		stack.push(startElem);
-	    }
-	    addEvent(newEvent);
-	}
-	
-	void startPrefixMapping(String prefix, String uri) {
-	    addEvent(new StartPrefixMapping(locator, prefix, uri));
-	}
+        public void startElement(String namespaceURI,
+                                 String localName,
+                                 String raw,
+                                 Attributes attrs) 
+            throws SAXException {
+            Event newEvent = null;
+            if (JXPATH_NS.equals(namespaceURI)) {
+                if (localName.equals(FOR_EACH)) {
+                    String select = attrs.getValue("select");
+                    if (select == null) {
+                        throw new SAXParseException("for-each: \"select\" is required", locator, null);
+                    }
+                    CompiledExpression expr = 
+                        JXPathContext.compile(getExpr(select));
+                    StartForEach startForEach = 
+                        new StartForEach(locator, expr);
+                    newEvent = startForEach;
+                } else if (localName.equals(CHOOSE)) {
+                    StartChoose startChoose = new StartChoose(locator);
+                    newEvent = startChoose;
+                } else if (localName.equals(WHEN)) {
+                    if (!(stack.peek() instanceof StartChoose)) {
+                        throw new SAXParseException("<when> must be within <choose>", locator, null);
+                    }
+                    String test = attrs.getValue("test");
+                    if (test == null) {
+                        throw new SAXParseException("choose: \"test\" is required", locator, null);
+                    }
+                    CompiledExpression expr;
+                    try {
+                        expr = JXPathContext.compile(getExpr(test));
+                    } catch (Exception e) {
+                        throw new SAXParseException("choose: \"test\": " + e.getMessage(), locator, null);
+                    }
+                    StartWhen startWhen = new StartWhen(locator, expr);
+                    newEvent = startWhen;
+                } else if (localName.equals(VALUE_OF)) {
+                    String select = attrs.getValue("select");
+                    if (select == null) {
+                        throw new SAXParseException("value-of: \"select\" is required", locator, null);
+                    }
+                    CompiledExpression expr;
+                    try {
+                        expr = JXPathContext.compile(getExpr(select));
+                    } catch (Exception e) {
+                        throw new SAXParseException("value-of: \"select\": " + e.getMessage(), locator, null);
+                    }
+                    newEvent = new StartValueOf(locator, expr);
+                } else if (localName.equals(OTHERWISE)) {
+                    if (!(stack.peek() instanceof StartChoose)) {
+                        throw new SAXParseException("<otherwise> must be within <choose>", locator, null);
+                    }
+                    StartOtherwise startOtherwise = 
+                        new StartOtherwise(locator);
+                    newEvent = startOtherwise;
+                } else if (localName.equals(IF)) {
+                    String test = attrs.getValue("test");
+                    if (test == null) {
+                        throw new SAXParseException("if: \"test\" is required", locator, null);
+                    }
+                    CompiledExpression expr;
+                    try {
+                        expr = 
+                            JXPathContext.compile(getExpr(test));
+                    } catch (Exception e) {
+                        throw new SAXParseException("if: \"test\": " + e.getMessage(), locator, null);
+                    }
+                    StartIf startIf = 
+                        new StartIf(locator, expr);
+                    newEvent = startIf;
+                } else {
+                    throw new SAXParseException("unrecognized tag: " + localName, locator, null);
+                }
+            } else {
+                StartElement startElem = 
+                    new StartElement(locator, namespaceURI,
+                                     localName, raw, attrs);
+                newEvent = startElem;
+            }
+            stack.push(newEvent);
+            addEvent(newEvent);
+        }
+        
+        public void startPrefixMapping(String prefix, String uri) {
+            addEvent(new StartPrefixMapping(locator, prefix, uri));
+        }
+
+        public void comment(char ch[], int start, int length) {
+            addEvent(new Comment(locator, ch, start, length));
+        }
+
+        public void endCDATA() {
+            addEvent(new EndCDATA(locator));
+        }
+
+        public void endDTD() {
+            addEvent(new EndDTD(locator));
+        }
+
+        public void endEntity(String name) {
+            addEvent(new EndEntity(locator, name));
+        }
+
+        public void startCDATA() {
+            addEvent(new StartCDATA(locator));
+        }
+
+        public void startDTD(String name, String publicId, String systemId) {
+            addEvent(new StartDTD(locator, name, publicId, systemId));
+        }
+        
+        public void startEntity(String name) {
+            addEvent(new StartEntity(locator, name));
+        }
     }
 
-    private StartDocument startEvent;
     private XMLConsumer consumer;
     private JXPathContext rootContext;
     private Variables variables;
     private static Map cache = new HashMap();
     private Source inputSource;
+
+    public void recycle() {
+        super.recycle();
+        consumer = null;
+        rootContext = null;
+        variables = null;
+        inputSource = null;
+    }
 
     public void setup(SourceResolver resolver, Map objectModel,
                       String src, Parameters parameters)
@@ -564,18 +880,18 @@ public class JXPathTemplate extends AbstractGenerator {
                 throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
         }
-	String uri = inputSource.getURI();
-	int lastMod = inputSource.getLastModified();
-	synchronized (cache) {
-	    StartDocument startEvent = (StartDocument)cache.get(uri);
-	    if (startEvent != null &&
-		lastMod > startEvent.compileTime) {
-		cache.remove(uri);
-	    }
-	}
+        String uri = inputSource.getURI();
+        long lastMod = inputSource.getLastModified();
+        synchronized (cache) {
+            StartDocument startEvent = (StartDocument)cache.get(uri);
+            if (startEvent != null &&
+                lastMod > startEvent.compileTime) {
+                cache.remove(uri);
+            }
+        }
         // FIX ME: When we decide proper way to pass "bean" and "kont"
         Object bean = ((Environment)resolver).getAttribute("bean-dict");
-        kont =
+        WebContinuation kont =
             (WebContinuation)((Environment)resolver).getAttribute("kont");
         variables = new MyVariables(bean, 
                                     kont,
@@ -583,187 +899,233 @@ public class JXPathTemplate extends AbstractGenerator {
                                     ObjectModelHelper.getResponse(objectModel),
                                     ObjectModelHelper.getContext(objectModel),
                                     parameters);
-	rootContext = jxpathContextFactory.newContext(null, bean);
-	rootContext.setVariables(variables);
+        rootContext = jxpathContextFactory.newContext(null, bean);
+        rootContext.setVariables(variables);
     }
 
     public void setConsumer(XMLConsumer consumer) {
-	this.consumer = consumer;
+        this.consumer = consumer;
     }
 
     public void generate() 
         throws IOException, SAXException, ProcessingException {
-	StartDocument startEvent;
-	synchronized (cache) {
-	    startEvent = cache.get(inputSource.getURI());
-	}
-	if (startEvent == null) {
-	    long compileTime = inputSource.getLastModified();
-	    Parser parser = new Parser();
-	    this.resolver.toSAX(this.inputSource, parser);
-	    startEvent = parser.startEvent;
-	    startEvent.compileTime = compileTime;
-	    synchronized (cache) {
-		cache.put(inputSource.getURI(), startEvent);
-	    }
-	}
-	execute(rootContext, startEvent, null);
+        StartDocument startEvent;
+        synchronized (cache) {
+            startEvent = (StartDocument)cache.get(inputSource.getURI());
+        }
+        if (startEvent == null) {
+            long compileTime = inputSource.getLastModified();
+            Parser parser = new Parser();
+            this.resolver.toSAX(this.inputSource, parser);
+            startEvent = parser.getStartEvent();
+            startEvent.compileTime = compileTime;
+            synchronized (cache) {
+                cache.put(inputSource.getURI(), startEvent);
+            }
+        }
+        execute(rootContext, startEvent, null);
     }
 
     private void execute(JXPathContext context,
-			 Event startEvent, Event endEvent) 
-	throws SAXException {
-	Event ev = startEvent;
-	while (ev != endEvent) {
-	    consumer.setDocumentLocator(ev.location);
-	    if (ev instanceof Characters) {
-		TextEvent text = (Text)ev;
-		consumer.characters(text.chars, text.start,
-				    text.length);
-	    } else if (ev instanceof EndDocument) {
-		consumer.startDocument();
-	    } else if (ev instanceof EndElement) {
-		EndElement endElement = (EndElement)ev;
-		StartElement startElement = (StartElement)endElement.startElement;
-		consumer.endElement(startElement.namespaceURI,
-				    startElement.localName,
-				    startElement.raw);
-	    } else if (ev instanceof EndPrefixMapping) {
-		EndPrefixMapping endPrefixMapping = 
-		    (EndPrefixMapping)ev;
-		consumer.endPrefixMapping(endPrefixMapping.prefix);
-	    } else if (ev instanceof IgnorableWhitespace) {
-		TextEvent text = (Text)ev;
-		consumer.ignorableWhitespace(text.chars, text.start,
-					     text.length);
-	    } else if (ev instanceof ProcessingInstruction) {
-		ProcessingInstruction pi = (ProcessingInstruction)ev;
-		consumer.processingInstruction(pi.target, pi.data);
-	    } else if (ev instanceof SkippedEntity) {
-		SkippedEntity skippedEntity = (SkippedEntity)event;
-		consumer.skippedEntity(skippedEntity.name);
-	    } else if (ev instanceof StartDocument) {
-		consumer.startDocument();
-	    } else if (ev instanceof StartIf) {
-		StartIf startIf = (StartIf)ev;
-		Object val = startIf.test.getValue(context);
-		boolean result = false;
-		if (val instanceof Boolean) {
-		    result = ((Boolean)val).booleanValue();
-		}
-		if (!result) {
-		    ev = startIf.endIf.next;
-		    continue;
-		}
-	    } else if (ev instanceof StartForeach) {
-		StartForEach startForEach = (StartForEach)ev;
-		Iterator iter = 
-		    startForEach.select.iteratePointers(context);
-		while (iter.hasNext()) {
-		    Object contextObject = iter.next();
-		    JXPathContext newContext = 
-			jxpathContextFactory.newContext(null, 
-							contextObject);
-		    newContext.setVariables(variables);
-		    execute(newContext,
-			    startForEach.startEvent,
-			    startForEach.endForEach);
-		}
-		ev = startForEach.endForEach.next;
-		continue;
-	    } else if (ev instanceof StartChoose) {
-		StartChoose choose = (StartChoose)ev;
-		StartWhen when = choose.firstWhen; 
-		for (;when != null; when = when.nextChoice) {
-		    Object val = when.test.getValue(context);
-		    boolean result = false;
-		    if (val instanceof Boolean) {
-			result = ((Boolean)val).booleanValue();
-		    }
-		    if (result) {
-			execute(context, when.next, when.endWhen);
-			break;
-		    }
-		}
-		if (when == null) {
-		    if (startChoose.otherwise != null) {
-			execute(context, startChoose.otherwise.next,
-				startChoose.otherwise.endOtherwise);
-		    }
-		}
-		ev = choose.endChoose.next;
-		continue;
-	    } else if (ev instanceof StartElement) {
-		StartElement startElement = (StartElement)ev;
-		Iterator i = startElement.attributeEvents.iterator();
-		AttributesImpl attrs = new AttributesImpl();
-		while (i.hasNext()) {
-		    AttributeEvent attrEvent = (AttributeEvent)
-			i.next();
-		    if (attrEvent instanceof CopyAttribute) {
-			CopyAttribute copy =
-			    (CopyAttribute)attrEvent;
-			attrs.addAttribute(copy.name,
-					   copy.namespaceURI,
-					   copy.type,
-					   copy.value);
-		    } else if (attrEvent instanceof 
-			       SubstituteAttribute) {
-			StringBuffer buf = new StringBuffer();
-			SubstituteAttribute substEvent =
-			    (SubstituteAttribute)attrEvent;
-			Iterator ii = substEvent.substitutions.iterator();
-			while (ii.hasNext()) {
-			    Subst subst = (Subst)ii.next();
-			    if (subst instanceof Literal) {
-				Literal lit = (Literal)subst;
-				buf.append(lit);
-			    } else if (subst instanceof Expression) {
-				Expression expr = (Expression)subst;
-				Object val = 
-				    expr.compiledExpression.getValue(getContext());
-				if (val == null) {
-				    val = "";
-				}
-				buf.append(val.toString());
-			    }
-			}
-			attrs.addAttribute(subst.name,
-					   subst.namespaceURI,
-					   subst.type,
-					   buf.toString());
-		    }
-		}
-		consumer.startElement(startElement.namespaceURI,
-				      startElement.localName,
-				      startElement.raw,
-				      attrs); 
-	    } else if (ev instanceof StartPrefixMapping) {
-		StartPrefixMapping startPrefixMapping = 
-		    (StartPrefixMapping)ev;
-		consumer.startPrefixMapping(ev.prefix, ev.uri);
-	    } else if (ev instanceof Comment) {
-		TextEvent text = (Text)ev;
-		consumer.comment(text.chars, text.start,
-				 text.length);
-	    } else if (ev instanceof EndCDATA) {
-		consumer.endCDATA();
-	    } else if (ev instanceof EndDTD) {
-		consumer.endDTD();
-	    } else if (ev instanceof EndEntity) {
-		consumer.endEntity(((EndEntity)ev).name);
-	    } else if (ev instanceof startCDATA) {
-		consumer.startCDATA();
-	    } else if (ev instanceof StartDTD) {
-		StartDTD startDTD = (StartDTD)ev;
-		consumer.startDTD(startDTD.name,
-				  startDTD.publicId,
-				  startDTD.systemId);
-	    } else if (ev instanceof StartEntity) {
-		consumer.startEntity(((StartEntity)ev).name);
-	    }
-	    ev = ev.next;
-	}
+                         Event startEvent, Event endEvent) 
+        throws SAXException {
+        Event ev = startEvent;
+        while (ev != endEvent) {
+            consumer.setDocumentLocator(ev.location);
+            if (ev instanceof Characters) {
+                TextEvent text = (TextEvent)ev;
+                consumer.characters(text.chars, text.start,
+                                    text.length);
+            } else if (ev instanceof EndDocument) {
+                consumer.endDocument();
+            } else if (ev instanceof EndElement) {
+                EndElement endElement = (EndElement)ev;
+                StartElement startElement = (StartElement)endElement.startElement;
+                consumer.endElement(startElement.namespaceURI,
+                                    startElement.localName,
+                                    startElement.raw);
+            } else if (ev instanceof EndPrefixMapping) {
+                EndPrefixMapping endPrefixMapping = 
+                    (EndPrefixMapping)ev;
+                consumer.endPrefixMapping(endPrefixMapping.prefix);
+            } else if (ev instanceof IgnorableWhitespace) {
+                TextEvent text = (TextEvent)ev;
+                consumer.ignorableWhitespace(text.chars, text.start,
+                                             text.length);
+            } else if (ev instanceof ProcessingInstruction) {
+                ProcessingInstruction pi = (ProcessingInstruction)ev;
+                consumer.processingInstruction(pi.target, pi.data);
+            } else if (ev instanceof SkippedEntity) {
+                SkippedEntity skippedEntity = (SkippedEntity)ev;
+                consumer.skippedEntity(skippedEntity.name);
+            } else if (ev instanceof StartDocument) {
+                StartDocument startDoc = (StartDocument)ev;
+                if (startDoc.endDocument != null) {
+                    // if this isn't a document fragment
+                    consumer.startDocument();
+                }
+            } else if (ev instanceof StartIf) {
+                StartIf startIf = (StartIf)ev;
+                Object val;
+                try {
+                    val = startIf.test.getValue(context);
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(),
+                                                ev.location,
+                                                e);
+                }
+                boolean result = false;
+                if (val instanceof Boolean) {
+                    result = ((Boolean)val).booleanValue();
+                }
+                if (!result) {
+                    ev = startIf.endIf.next;
+                    continue;
+                }
+            } else if (ev instanceof StartForEach) {
+                StartForEach startForEach = (StartForEach)ev;
+                Iterator iter = 
+                    startForEach.select.iteratePointers(context);
+                while (iter.hasNext()) {
+                    Pointer ptr = (Pointer)iter.next();
+                    Object contextObject = ptr.getNode();
+                    JXPathContext newContext = 
+                        jxpathContextFactory.newContext(null, 
+                                                        contextObject);
+                    newContext.setVariables(variables);
+                    execute(newContext,
+                            startForEach.next,
+                            startForEach.endForEach);
+                }
+                ev = startForEach.endForEach.next;
+                continue;
+            } else if (ev instanceof StartChoose) {
+                StartChoose startChoose = (StartChoose)ev;
+                StartWhen startWhen = startChoose.firstChoice; 
+                for (;startWhen != null; startWhen = startWhen.nextChoice) {
+                    Object val;
+                    try {
+                        val = startWhen.test.getValue(context);
+                    } catch (Exception e) {
+                        throw new SAXParseException(e.getMessage(),
+                                                    ev.location,
+                                                    e);
+                    }
+                    boolean result = false;
+                    if (val instanceof Boolean) {
+                        result = ((Boolean)val).booleanValue();
+                    }
+                    if (result) {
+                        execute(context, startWhen.next, startWhen.endWhen);
+                        break;
+                    }
+                }
+                if (startWhen == null) {
+                    if (startChoose.otherwise != null) {
+                        execute(context, startChoose.otherwise.next,
+                                startChoose.otherwise.endOtherwise);
+                    }
+                }
+                ev = startChoose.endChoose.next;
+                continue;
+            } else if (ev instanceof StartElement) {
+                StartElement startElement = (StartElement)ev;
+                Iterator i = startElement.attributeEvents.iterator();
+                AttributesImpl attrs = new AttributesImpl();
+                while (i.hasNext()) {
+                    AttributeEvent attrEvent = (AttributeEvent)
+                        i.next();
+                    if (attrEvent instanceof CopyAttribute) {
+                        CopyAttribute copy =
+                            (CopyAttribute)attrEvent;
+                        attrs.addAttribute(copy.namespaceURI,
+                                           copy.localName,
+                                           copy.raw,
+                                           copy.type,
+                                           copy.value);
+                    } else if (attrEvent instanceof 
+                               SubstituteAttribute) {
+                        StringBuffer buf = new StringBuffer();
+                        SubstituteAttribute substEvent =
+                            (SubstituteAttribute)attrEvent;
+                        Iterator ii = substEvent.substitutions.iterator();
+                        while (ii.hasNext()) {
+                            Subst subst = (Subst)ii.next();
+                            if (subst instanceof Literal) {
+                                Literal lit = (Literal)subst;
+                                buf.append(lit.value);
+                            } else if (subst instanceof Expression) {
+                                Expression expr = (Expression)subst;
+                                Object val;
+                                try {
+                                    val = 
+                                        expr.compiledExpression.getValue(context);
+                                } catch (Exception e) {
+                                    throw new SAXParseException(e.getMessage(),
+                                                                ev.location,
+                                                                e);
+                                }
+                                if (val == null) {
+                                    val = "";
+                                }
+                                buf.append(val.toString());
+                            }
+                        }
+                        attrs.addAttribute(attrEvent.namespaceURI,
+                                           attrEvent.localName,
+                                           attrEvent.raw,
+                                           attrEvent.type,
+                                           buf.toString());
+                    }
+                }
+                consumer.startElement(startElement.namespaceURI,
+                                      startElement.localName,
+                                      startElement.raw,
+                                      attrs); 
+            } else if (ev instanceof StartPrefixMapping) {
+                StartPrefixMapping startPrefixMapping = 
+                    (StartPrefixMapping)ev;
+                consumer.startPrefixMapping(startPrefixMapping.prefix, 
+                                            startPrefixMapping.uri);
+            } else if (ev instanceof Comment) {
+                TextEvent text = (TextEvent)ev;
+                consumer.comment(text.chars, text.start,
+                                 text.length);
+            } else if (ev instanceof EndCDATA) {
+                consumer.endCDATA();
+            } else if (ev instanceof EndDTD) {
+                consumer.endDTD();
+            } else if (ev instanceof EndEntity) {
+                consumer.endEntity(((EndEntity)ev).name);
+            } else if (ev instanceof StartCDATA) {
+                consumer.startCDATA();
+            } else if (ev instanceof StartDTD) {
+                StartDTD startDTD = (StartDTD)ev;
+                consumer.startDTD(startDTD.name,
+                                  startDTD.publicId,
+                                  startDTD.systemId);
+            } else if (ev instanceof StartEntity) {
+                consumer.startEntity(((StartEntity)ev).name);
+            } else if (ev instanceof StartValueOf) {
+                StartValueOf startValueOf = (StartValueOf)ev;
+                Object val;
+                try {
+                    val = startValueOf.compiledExpression.getValue(context);
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(),
+                                                ev.location,
+                                                e);
+                }
+                if (val == null) {
+                    val = "";
+                }
+                char[] ch = val.toString().toCharArray();
+                
+                consumer.characters(ch, 0, ch.length);
+            }
+            ev = ev.next;
+        }
     }
+
 
 }
