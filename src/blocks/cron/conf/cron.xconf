@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.components.cron.JobScheduler']">
 
     <component role="org.apache.cocoon.components.cron.JobScheduler"
@@ -81,19 +82,19 @@
                 <months>*</months>
                 <weekdays>SUN-FRI</weekdays>
             </trigger>
-						<trigger name="pipeline-test"
-								 target="org.apache.cocoon.components.cron.CronJob/pipeline-test"
-								 concurrent-runs="true">
-							<minutes>0</minutes>
-							<hours>12</hours>
-							<days>?</days>
-							<months>*</months>
-							<weekdays>MON-FRI</weekdays>
-						</trigger>
+			<trigger name="pipeline-test"
+					 target="org.apache.cocoon.components.cron.CronJob/pipeline-test"
+					 concurrent-runs="true">
+				<minutes>0</minutes>
+				<hours>12</hours>
+				<days>?</days>
+				<months>*</months>
+				<weekdays>MON-FRI</weekdays>
+			</trigger>
             -->
         </triggers>
     </component>
-  
+
     <!-- sample definition of cron job -->
     <component role="org.apache.cocoon.components.cron.CronJob/test"
                class="org.apache.cocoon.components.cron.TestCronJob"
@@ -101,12 +102,11 @@
         <msg>I'm here</msg>
         <sleep>23000</sleep>
     </component>
-  
+
     <!-- sample definition of CocoonPipelineCronJob
     <component role="org.apache.cocoon.components.cron.CronJob/pipeline-test"
                class="org.apache.cocoon.components.cron.CocoonPipelineCronJob"
                logger="cron.pipeline">
         <pipeline>samples/hello-world/hello.xhtml</pipeline>
     </component> -->
-    
 </xconf>
