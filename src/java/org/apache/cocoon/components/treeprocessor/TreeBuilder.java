@@ -61,7 +61,7 @@ import java.util.List;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.2 2003/07/28 12:55:45 cziegeler Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.3 2003/08/07 08:42:20 sylvain Exp $
  */
 
 public interface TreeBuilder extends Component {
@@ -139,4 +139,14 @@ public interface TreeBuilder extends Component {
      * Return the sitemap component manager
      */
     ComponentManager getSitemapComponentManager();
+    
+    /**
+     * Add an attribute. Useful to transmit information between distant (in the tree) node builders
+     */
+    void setAttribute(String name, Object value);
+    
+    /**
+     * Get the value of an attribute.
+     */
+    Object getAttribute(String name);
 }
