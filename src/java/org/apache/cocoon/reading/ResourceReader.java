@@ -302,7 +302,7 @@ public class ResourceReader extends AbstractReader
         try {
             if (expires > 0) {
                 response.setDateHeader("Expires", System.currentTimeMillis() + expires);
-            } else {
+            } else if (expires == 0) {
                 // See Bug #14048
                 response.addHeader("Vary", "Host");
             }
