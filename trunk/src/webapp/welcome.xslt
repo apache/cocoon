@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: welcome.xslt,v 1.6 2003/03/29 01:08:38 ghoward Exp $ -->
+<!-- CVS $Id: welcome.xslt,v 1.7 2003/05/08 00:05:04 vgritsenko Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <xsl:param name="contextPath" select="'/cocoon'"/>
 
   <xsl:template match="welcome">
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -17,7 +19,7 @@
              stream 
          --> 
         <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8"/>
-        <link href="styles/main.css" type="text/css" rel="stylesheet"/>
+        <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
         <link href="favicon.ico" rel="SHORTCUT ICON" />
       </head>
       <body>
@@ -27,7 +29,7 @@
          Copyright © @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
         </p>
         <p class="block">
-          <a href="http://cocoon.apache.org/"><img src="images/powered.gif" alt="Powered by Apache Cocoon"/></a>
+          <a href="http://cocoon.apache.org/"><img src="{$contextPath}/images/powered.gif" alt="Powered by Apache Cocoon"/></a>
         </p>
       </body>
     </html>
