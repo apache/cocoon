@@ -88,12 +88,12 @@ public class WoodyGenerator extends AbstractGenerator {
         try {
             formAttribute = parameters.getParameter("attribute-name");
         } catch (ParameterException e) {
-            throw new ProcessingException("Missing 'attribute-name' parameter for WoodyTemplateTransformer.");
+            throw new ProcessingException("Missing 'attribute-name' parameter for WoodyGenerator.");
         }
         Request request = ObjectModelHelper.getRequest(objectModel);
         form = (Form)request.getAttribute(formAttribute);
         if (form == null) {
-            throw new ProcessingException("WoodyTemplateTransformer cannot find a form in the request attribute named " + formAttribute);
+            throw new ProcessingException("WoodyGenerator cannot find a form in the request attribute named " + formAttribute);
         }
     }
 
