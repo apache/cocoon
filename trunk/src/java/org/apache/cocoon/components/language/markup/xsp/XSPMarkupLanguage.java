@@ -50,15 +50,14 @@
 */
 package org.apache.cocoon.components.language.markup.xsp;
 
+import java.util.Stack;
+
 import org.apache.cocoon.components.language.markup.CocoonMarkupLanguage;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.util.Stack;
 
 /**
  * This class implements <code>MarkupLanguage</code> for Cocoon's
@@ -67,7 +66,12 @@ import java.util.Stack;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSPMarkupLanguage.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
+ * @version CVS $Id: XSPMarkupLanguage.java,v 1.3 2003/12/29 13:31:33 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=MarkupLanguage
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=xsp-markup
  */
 public class XSPMarkupLanguage extends CocoonMarkupLanguage {
 

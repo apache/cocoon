@@ -50,43 +50,47 @@
 */
 package org.apache.cocoon.components.language.programming.java;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.logger.LogEnabled;
-
-import org.apache.cocoon.components.classloader.ClassLoaderManager;
-import org.apache.cocoon.components.language.LanguageException;
-import org.apache.cocoon.components.language.programming.LanguageCompiler;
-import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
-import org.apache.cocoon.components.language.programming.CompiledProgrammingLanguage;
-import org.apache.cocoon.components.language.programming.CompilerError;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.JavaArchiveFilter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.components.classloader.ClassLoaderManager;
+import org.apache.cocoon.components.language.LanguageException;
+import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
+import org.apache.cocoon.components.language.programming.CompiledProgrammingLanguage;
+import org.apache.cocoon.components.language.programming.CompilerError;
+import org.apache.cocoon.components.language.programming.LanguageCompiler;
+import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.JavaArchiveFilter;
+
 /**
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: JavaLanguage.java,v 1.3 2003/10/07 15:13:20 tcurdt Exp $
+ * @version CVS $Id: JavaLanguage.java,v 1.4 2003/12/29 13:31:33 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProgrammingLanguage
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=java-language
  */
 public class JavaLanguage extends CompiledProgrammingLanguage
-        implements Initializable, ThreadSafe, Composable, Disposable {
+        implements ProgrammingLanguage, Initializable, Serviceable, Disposable {
 
     /** The class loader */
     private ClassLoaderManager classLoaderManager;
 
     /** The component manager */
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
     /** Classpath */
     private String classpath;
@@ -136,7 +140,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage
      *
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
         if (this.classLoaderManager == null) {
             try {

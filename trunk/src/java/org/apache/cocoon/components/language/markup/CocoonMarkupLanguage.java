@@ -82,7 +82,12 @@ import java.util.Set;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonMarkupLanguage.java,v 1.4 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: CocoonMarkupLanguage.java,v 1.5 2003/12/29 13:31:33 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=MarkupLanguage
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=sitemap-markup
  */
 public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
 {

@@ -73,7 +73,12 @@ import java.util.ArrayList;
  * The class specified will be used as a Java wrapper interpreting javascript program.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavascriptLanguage.java,v 1.2 2003/10/07 15:13:20 tcurdt Exp $
+ * @version CVS $Id: JavascriptLanguage.java,v 1.3 2003/12/29 13:31:33 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProgrammingLanguage
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=javascript-language
  */
 public class JavascriptLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {
 
