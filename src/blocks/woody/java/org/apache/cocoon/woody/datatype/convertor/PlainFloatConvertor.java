@@ -51,18 +51,17 @@
 package org.apache.cocoon.woody.datatype.convertor;
 
 import java.util.Locale;
-import java.math.BigDecimal;
 
 /**
  * Convertor for {@link Float}s that does not do any (locale-dependent)
  * formatting.
  *
- * @version CVS $Id: PlainFloatConvertor.java,v 1.1 2004/01/04 04:37:37 vgritsenko Exp $
+ * @version CVS $Id: PlainFloatConvertor.java,v 1.2 2004/01/30 00:40:34 joerg Exp $
  */
 public class PlainFloatConvertor implements Convertor {
     public Object convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
         try {
-            return new BigDecimal(value);
+            return new Float(value);
         } catch (NumberFormatException e) {
             return null;
         }
@@ -73,6 +72,6 @@ public class PlainFloatConvertor implements Convertor {
     }
 
     public Class getTypeClass() {
-        return BigDecimal.class;
+        return Float.class;
     }
 }
