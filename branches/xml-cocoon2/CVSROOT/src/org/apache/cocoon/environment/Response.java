@@ -16,7 +16,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-18 12:05:54 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-19 13:59:30 $
  *
  */
 
@@ -89,8 +89,6 @@ public interface Response {
      *					(for example, a comma, space, or semicolon)
      *					or it is one of the tokens reserved for use
      *					by the cookie protocol
-     * @see #setValue
-     * @see #setVersion
      *
      */
     Cookie createCookie(String name, String value);
