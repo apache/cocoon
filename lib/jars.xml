@@ -708,7 +708,7 @@
     <title>Jakarta Commons Transaction</title>
     <description>Utility classes commonly used in transactional Java programming</description>
     <used-by>WebDAV block</used-by>
-    <lib>optional/commons-transaction-1.0.jar</lib>
+    <lib>optional/commons-transaction-1.0.1.jar</lib>
     <homepage>http://jakarta.apache.org/commons/transaction/</homepage>
   </file>
 
