@@ -83,5 +83,8 @@ public final class Constants {
     public static final String WD_PREFIX = "wd";
     public static final String WD_PREFIX_COLON = "wd:";
 
+    /** I18n catalogue containing the built-in Woody messages. */
+    public static final String I18N_CATALOGUE = "woody";
+
     public static final Attributes EMPTY_ATTRS = new AttributesImpl();
 }
