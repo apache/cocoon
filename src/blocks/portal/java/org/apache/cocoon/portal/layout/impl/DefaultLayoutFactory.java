@@ -50,12 +50,19 @@
 */
 package org.apache.cocoon.portal.layout.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.layout.*;
+import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 
@@ -64,12 +71,14 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.3 2003/05/19 12:50:58 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
     implements ThreadSafe, Component, LayoutFactory, Configurable {
 
+    protected Map layouts = new HashMap();
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -78,7 +87,7 @@ public class DefaultLayoutFactory
         final Configuration[] layoutsConf = configuration.getChild("layouts").getChildren("layout");
         if ( layoutsConf != null ) {
             for(int i=0; i < layoutsConf.length; i++ ) {
-                LayoutDescription desc = new LayoutDescription();
+                DefaultLayoutDescription desc = new DefaultLayoutDescription();
                 // TODO unique name test
                 desc.setName(layoutsConf[i].getAttribute("name"));
                 desc.setClassName(layoutsConf[i].getAttribute("class"));        
@@ -88,20 +97,46 @@ public class DefaultLayoutFactory
                 final Configuration[] aspectsConf = layoutsConf[i].getChild("aspects").getChildren("aspect");
                 if (aspectsConf != null) {
                     for(int m=0; m < aspectsConf.length; m++) {
-                        LayoutAspectDescription adesc = new LayoutAspectDescription();
+                        DefaultLayoutAspectDescription adesc = new DefaultLayoutAspectDescription();
                         adesc.setClassName(aspectsConf[m].getAttribute("class"));
                         adesc.setName(aspectsConf[m].getAttribute("name"));
                         adesc.setPersistence(aspectsConf[m].getAttribute("persistence"));
+                        desc.addAspect( adesc );
                     }
                 }
+                LayoutAspectDataHandler handler = new LayoutAspectDataHandler(desc);
+                this.layouts.put(desc.getName(), new Object[] {desc, handler});
             }
         }
     }
 
-    public void prepareLayout(Layout layout) {
+    public void prepareLayout(Layout layout) 
+    throws ProcessingException {
         if ( layout != null ) {
+     
+            final String layoutName = layout.getName();
+            if ( layoutName == null ) {
+                throw new ProcessingException("Layout "+layout.getId()+" has no associated name.");
+            }
+            Object[] o = (Object[]) this.layouts.get( layoutName );
+            
+            if ( o == null ) {
+                throw new ProcessingException("LayoutDescription with name " + layoutName + " not found.");
+            }
+            DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)o[0];
+
             // TODO do something here 
             // we have to set the aspect data handler
+            layout.setAspectDataHandler((LayoutAspectDataHandler)o[1]);
+            
+            // recursive
+            if ( layout instanceof CompositeLayout ) {
+                CompositeLayout composite = (CompositeLayout)layout;
+                Iterator items = composite.getItems().iterator();
+                while ( items.hasNext() ) {
+                    this.prepareLayout( ((Item)items.next()).getLayout() );
+                }
+            }
         }
     }
 

@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -50,16 +50,82 @@
 */
 package org.apache.cocoon.portal.layout.impl;
 
-import org.apache.cocoon.portal.layout.CompositeLayout;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.cocoon.portal.aspect.AspectDataHandler;
+import org.apache.cocoon.portal.aspect.Aspectalizable;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ColumnLayout.java,v 1.2 2003/05/19 12:50:58 cziegeler Exp $
+ * @version CVS $Id: LayoutAspectDataHandler.java,v 1.1 2003/05/19 12:50:58 cziegeler Exp $
  */
-public final class ColumnLayout
-	extends CompositeLayout {
+public class LayoutAspectDataHandler 
+    implements AspectDataHandler {
+
+    protected DefaultLayoutDescription description;
+    
+    // TODO - Implement persistence
+    
+    protected Map stati;
+    
+    /**
+     * Constructor
+     */
+    public LayoutAspectDataHandler(DefaultLayoutDescription desc) {
+        this.description = desc;
+        this.stati = new HashMap();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectData(org.apache.cocoon.portal.aspect.Aspectalizable, java.lang.String)
+     */
+    public Object getAspectData(Aspectalizable owner, String aspectName) {
+        // is this aspect allowed?
+        DefaultLayoutAspectDescription aspectDesc = (DefaultLayoutAspectDescription)this.description.getAspect( aspectName );
+        if ( aspectDesc == null ) return null;
+        
+        Map datas = (Map)this.stati.get(owner);
+        if ( datas == null ) {
+            datas = new HashMap();
+            this.stati.put( owner, datas );
+        }
+        Object data = datas.get( aspectName );
+        if ( data == null ) {
+            data = aspectDesc.createNewInstance();
+            datas.put( aspectName, data );
+        }
+        return data;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#getAspectDatas(org.apache.cocoon.portal.aspect.Aspectalizable)
+     */
+    public List getAspectDatas(Aspectalizable owner) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.aspect.AspectDataHandler#setAspectData(org.apache.cocoon.portal.aspect.Aspectalizable, java.lang.String, java.lang.Object)
+     */
+    public void setAspectData(Aspectalizable owner,
+                               String aspectName,
+                               Object data) {
+        // is this aspect allowed?
+        DefaultLayoutAspectDescription aspectDesc = (DefaultLayoutAspectDescription)this.description.getAspect( aspectName );
+        if ( aspectDesc == null ) return;
+
+        Map datas = (Map)this.stati.get(owner);
+        if ( datas == null ) {
+            datas = new HashMap();
+            this.stati.put( owner, datas );
+        }
+        datas.put( aspectName, data );
+        
+    }
 
 }

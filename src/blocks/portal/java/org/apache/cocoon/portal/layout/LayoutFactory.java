@@ -50,16 +50,22 @@
 */
 package org.apache.cocoon.portal.layout;
 
+import org.apache.cocoon.ProcessingException;
+
 /**
  * This factory is for creating and managing layout objects
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutFactory.java,v 1.1 2003/05/07 13:27:29 cziegeler Exp $
+ * @version CVS $Id: LayoutFactory.java,v 1.2 2003/05/19 12:50:59 cziegeler Exp $
  */
 public interface LayoutFactory  {
+    
+    String ROLE = LayoutFactory.class.getName();
+    
 	// TODO - define the interface
     
-    void prepareLayout(Layout layout);
+    void prepareLayout(Layout layout)
+    throws ProcessingException;
 }

@@ -48,66 +48,43 @@
  Software Foundation, please see <http://www.apache.org/>.
 
  */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.layout;
+
+import java.util.List;
 
 
 
 /**
- * A configured layout aspect
+ * A configured layout
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutAspectDescription.java,v 1.1 2003/05/07 13:28:00 cziegeler Exp $
+ * @version CVS $Id: LayoutDescription.java,v 1.1 2003/05/19 12:50:59 cziegeler Exp $
  */
-public class LayoutAspectDescription  {
+public interface LayoutDescription  {
 
-    protected String name;
+    /**
+     * @return
+     */
+    List getAspects();
+
+    /**
+     * Return the description for an aspect
+     */
+    LayoutAspectDescription getAspect(String name);
     
-    protected String className;
-    
-    protected String persistence;
+    /**
+     * @return
+     */
+    String getClassName();
 
     /**
      * @return
      */
-    public String getClassName() {
-        return className;
-    }
+    String getName();
 
     /**
      * @return
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param string
-     */
-    public void setClassName(String string) {
-        className = string;
-    }
-
-    /**
-     * @param string
-     */
-    public void setName(String string) {
-        name = string;
-    }
-
-    /**
-     * @return
-     */
-    public String getPersistence() {
-        return persistence;
-    }
-
-    /**
-     * @param string
-     */
-    public void setPersistence(String string) {
-        persistence = string;
-    }
-
+    String getRendererName();
 }

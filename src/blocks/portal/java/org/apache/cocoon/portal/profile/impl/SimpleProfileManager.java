@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -65,9 +66,10 @@ import org.apache.cocoon.portal.aspect.AspectStatus;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.status.SizeableStatus;
 import org.apache.cocoon.portal.layout.AbstractLayout;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CompositeLayout;
+import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.util.DeltaApplicable;
@@ -83,13 +85,13 @@ import org.exolab.castor.mapping.Mapping;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.2 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: SimpleProfileManager.java,v 1.3 2003/05/19 12:51:00 cziegeler Exp $
  */
 public class SimpleProfileManager 
     extends AbstractLogEnabled 
     implements Composable, ProfileManager, ThreadSafe {
 
-    protected ComponentManager componentManager;
+    protected ComponentManager manager;
 
     private Mapping layoutMapping;
 
@@ -99,7 +101,7 @@ public class SimpleProfileManager
      * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
      */
     public void compose(ComponentManager componentManager) throws ComponentException {
-        this.componentManager = componentManager;
+        this.manager = componentManager;
     }
 
     /**
@@ -107,8 +109,11 @@ public class SimpleProfileManager
      */
     public Layout getPortalLayout(String key) {
         PortalService service = null;
+        LayoutFactory factory = null;
+        
         try {
-            service = (PortalService) this.componentManager.lookup(PortalService.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            factory = (LayoutFactory) this.manager.lookup(LayoutFactory.ROLE);
             
             if ( null == key ) {
                 Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT");
@@ -172,13 +177,15 @@ public class SimpleProfileManager
 			} else {
 				resolveParents(layout, null, null);
 			}
-
+            factory.prepareLayout( layout );
+             
             return layout;
         } catch (Exception ce) {
             // TODO
             throw new CascadingRuntimeException("Arg", ce);
         } finally {
-            this.componentManager.release(service);
+            this.manager.release(service);
+            this.manager.release((Component)factory);
         }
     }
     
@@ -277,7 +284,7 @@ public class SimpleProfileManager
 			MapSourceAdapter adapter = null;
 			try {
 				// TODO could one perhaps simply copy the file to increase performance??
-				adapter = (MapSourceAdapter) this.componentManager.lookup(MapSourceAdapter.ROLE);
+				adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 				map.put("type", "user");
 				
                 // FIXME - disabled saving for testing
@@ -293,7 +300,7 @@ public class SimpleProfileManager
                     service.setAttribute(SimpleProfileManager.class.getName()+location+"-user-"+map.get("user"), objects);
 				}
 			} finally {
-				this.componentManager.release(adapter);
+				this.manager.release(adapter);
 			}
 		}
 		
@@ -312,7 +319,7 @@ public class SimpleProfileManager
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
-			adapter = (MapSourceAdapter) this.componentManager.lookup(MapSourceAdapter.ROLE);
+			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
 			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName() + location);
 			
@@ -339,7 +346,7 @@ public class SimpleProfileManager
 
 			return new Object[]{object, Boolean.TRUE};
 		} finally {
-			this.componentManager.release(adapter);
+			this.manager.release(adapter);
 		}
 	}
 	
@@ -352,7 +359,7 @@ public class SimpleProfileManager
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
-			adapter = (MapSourceAdapter) this.componentManager.lookup(MapSourceAdapter.ROLE);
+			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
 			// check whether still valid
 			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName() + location);
@@ -374,7 +381,7 @@ public class SimpleProfileManager
 
 			return new Object[]{object, Boolean.TRUE};
 		} finally {
-			this.componentManager.release(adapter);
+			this.manager.release(adapter);
 		}
 	}
 
@@ -385,7 +392,7 @@ public class SimpleProfileManager
 	throws Exception {
 		MapSourceAdapter adapter = null;
 		try {
-			adapter = (MapSourceAdapter) this.componentManager.lookup(MapSourceAdapter.ROLE);
+			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
 			if (newValidity == null)
 				newValidity = adapter.getValidity(key);
@@ -397,7 +404,7 @@ public class SimpleProfileManager
 
 			return object;
 		} finally {
-			this.componentManager.release(adapter);
+			this.manager.release(adapter);
 		}
 	}
 
@@ -410,7 +417,7 @@ public class SimpleProfileManager
 	throws Exception { 
 		MapSourceAdapter adapter = null;
 		try {
-			adapter = (MapSourceAdapter) this.componentManager.lookup(MapSourceAdapter.ROLE);
+			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 
 			Object[] objects = (Object[]) service.getAttribute(SimpleProfileManager.class.getName() + location);
 			SourceValidity sourceValidity = null;
@@ -419,7 +426,7 @@ public class SimpleProfileManager
 			
 			return this.getValidity(key, location, sourceValidity, adapter);
 		} finally {
-			this.componentManager.release(adapter);
+			this.manager.release(adapter);
 		}
 	}
 
@@ -456,7 +463,7 @@ public class SimpleProfileManager
         PortalService service = null;
         String attribute = null;
         try {
-            service = (PortalService) this.componentManager.lookup(PortalService.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
 			// TODO Change to KeyManager usage
 			UserHandler handler = RequestState.getState().getHandler();
@@ -504,19 +511,19 @@ public class SimpleProfileManager
             e.printStackTrace();
             throw new CascadingRuntimeException("CE", e);
         } finally {
-            this.componentManager.release(service);
+            this.manager.release(service);
         }
     }
 
     public void setDefaultLayout(Layout object) {
         PortalService service = null;
         try {
-            service = (PortalService) this.componentManager.lookup(PortalService.ROLE);
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
             service.setTemporaryAttribute("DEFAULT_LAYOUT", object);
         } catch (ComponentException e) {
             throw new CascadingRuntimeException("Unable to lookup service manager.", e);
         } finally {
-            this.componentManager.release(service);
+            this.manager.release(service);
         }
     }
 
@@ -564,13 +571,13 @@ public class SimpleProfileManager
         if ( ProfileManager.REQUEST_STATUS.equals( mode )) {
             PortalService service = null;
             try {
-                service = (PortalService) this.componentManager.lookup(PortalService.ROLE);
+                service = (PortalService) this.manager.lookup(PortalService.ROLE);
                 return (AspectStatus)service.getTemporaryAttribute(type.getName()+"."+key);
             } catch (ComponentException ce) {
                 // ignore
                 return null;
             } finally {
-                this.componentManager.release( service );
+                this.manager.release( service );
             }
         } else {
             // FIXME implement session mode
@@ -586,7 +593,7 @@ public class SimpleProfileManager
         if ( ProfileManager.REQUEST_STATUS.equals( mode )) {
             PortalService service = null;
             try {
-                service = (PortalService) this.componentManager.lookup(PortalService.ROLE);
+                service = (PortalService) this.manager.lookup(PortalService.ROLE);
                 final String attribute = status.getClass().getName() + "." + key;
                 if (null == status) {
                     service.removeTemporaryAttribute(attribute);
@@ -596,7 +603,7 @@ public class SimpleProfileManager
             } catch (ComponentException ce) {
                 // ignore
             } finally {
-                this.componentManager.release( service );
+                this.manager.release( service );
             }
         } else {
             // FIXME implement session mode

@@ -13,6 +13,9 @@
         <field name="rendererName" type="java.lang.String">
             <bind-xml name="renderer-name" node="attribute" />
         </field>
+        <field name="name" type="java.lang.String">
+            <bind-xml name="name" node="attribute" />
+        </field>
         <field name="static" type="boolean">
             <bind-xml name="static" node="attribute" />
         </field>
@@ -27,7 +30,7 @@
         </field>
     </class>
 
-    <class name="org.apache.cocoon.portal.layout.impl.CompositeLayout"
+    <class name="org.apache.cocoon.portal.layout.CompositeLayout"
            extends="org.apache.cocoon.portal.layout.AbstractLayout">
         <field name="items" type="org.apache.cocoon.portal.layout.Item" collection="collection">
             <bind-xml auto-naming="deriveByClass" />
@@ -35,7 +38,7 @@
     </class>
 
     <class name="org.apache.cocoon.portal.layout.impl.ColumnLayout"
-           extends="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+           extends="org.apache.cocoon.portal.layout.CompositeLayout">
         <map-to xml="column-layout" />
     </class>
 
@@ -71,7 +74,7 @@
     </class>
 
     <class name="org.apache.cocoon.portal.layout.impl.RowLayout"
-           extends="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+           extends="org.apache.cocoon.portal.layout.CompositeLayout">
         <map-to xml="row-layout" />
     </class>
 
@@ -83,7 +86,7 @@
     </class>
 
     <class name="org.apache.cocoon.portal.layout.impl.TabLayout"
-           extends="org.apache.cocoon.portal.layout.impl.CompositeLayout">
+           extends="org.apache.cocoon.portal.layout.CompositeLayout">
         <map-to xml="tab-layout" />
     </class>
 

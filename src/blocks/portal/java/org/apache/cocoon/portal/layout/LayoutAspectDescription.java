@@ -47,19 +47,33 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
-package org.apache.cocoon.portal.layout.impl;
+ */
+package org.apache.cocoon.portal.layout;
 
-import org.apache.cocoon.portal.layout.CompositeLayout;
+
+
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * A configured layout aspect
  * 
- * @version CVS $Id: ColumnLayout.java,v 1.2 2003/05/19 12:50:58 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: LayoutAspectDescription.java,v 1.1 2003/05/19 12:50:59 cziegeler Exp $
  */
-public final class ColumnLayout
-	extends CompositeLayout {
+public interface LayoutAspectDescription  {
 
+    /**
+     * @return
+     */
+    String getClassName();
+
+    /**
+     * @return
+     */
+    String getName();
+
+    /**
+     * @return
+     */
+    String getPersistence();
 }
