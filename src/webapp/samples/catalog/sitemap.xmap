@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.3 2003/07/08 02:10:38 crossley Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.4 2003/07/08 02:11:42 crossley Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -42,7 +42,7 @@
    <!-- ========================= Resources ================================ -->
 
    <map:match pattern="images/**.gif">
-    <map:read src="context://samples/resources/images/{1}.gif" mime-type="image/gif"/>
+    <map:read src="context://resources/images/{1}.gif" mime-type="image/gif"/>
    </map:match>
 
    <!-- delegate to parent sitemap 
