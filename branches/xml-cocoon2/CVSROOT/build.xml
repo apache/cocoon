@@ -201,6 +201,7 @@ These are the meaningful targets for this build file:
     <copydir src="${conf.dir}" dest="${build.war}" filtering="on"/>
     <copydir src="${samples.dir}" dest="${build.war.samples}" filtering="on"/>
     <delete file="${build.dir}/${name}.war"/>
+    <delete file="${build.war.samples}/README"/>
     <jar jarfile="${build.dir}/${name}.war"
          basedir="${build.war}"
          includes="**"/>

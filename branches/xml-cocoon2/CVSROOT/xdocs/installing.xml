@@ -170,12 +170,27 @@ servlet.cocoon.initArgs=configurations=[path-to-cocoon]/conf/cocoon.xconf</sourc
 	  <code>[path-to-Tomcat]/lib</code>, as well.  Note that if you are running 
           Tomcat on a Windows operating system you have to adjust the classpath to 
           include all jar files copied so far in the 
-          <code>[path-to-Tomcat]/bin/tomcat.bat</code> file. On unix like operating 
-          systems Tomcat will automatically handle the loading of these classes, and 
-          they don't need to be placed in a classpath. If you use a newer version of Tomcat 
+          <code>[path-to-Tomcat]/bin/tomcat.bat</code> file. Add the following lines 
+          right after the line <code>set CLASSPATH=.</code>
+        </p>
+
+        <source>
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_0_3.jar
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\fop_0_12_1.jar
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\js.jar
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jstyle.jar
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\svgv_0_8.jar
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
+          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\cocoon.jar
+        </source>
+
+        <p>
+          On unix like operating 
+          systems Tomcat will automatically handle the setup of the classpath based 
+          on alphabetical order.  If you use a newer version of Tomcat 
           (i.e. current CVS version) that requires jaxp.jar and parser.jar instead 
-          of xml.jar make sure parser.jar comes last in the classpath (on unix OS 
-          simply rename it to zparser.jar).
+          of xml.jar you should rename parser.jar to zparser.jar to make it appear 
+          as last.
 	</p>
 	<p>Copy <code>[path-to-Cocoon]/build/cocoon.war</code> to 
           <code>[path-to-Tomcat]/webapps</code>.  The new Context for Cocoon2 will be 
