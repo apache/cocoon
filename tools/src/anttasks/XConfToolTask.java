@@ -52,7 +52,6 @@
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.xpath.XPathAPI;
@@ -68,18 +67,13 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -91,7 +85,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.9 $ $Date: 2003/11/17 15:40:33 $
+ * @version CVS $Revision: 1.10 $ $Date: 2003/11/23 10:13:11 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -219,7 +213,10 @@ public final class XConfToolTask extends MatchingTask {
         } catch (ParserConfigurationException e) {
             throw new BuildException("ParserConfigurationException: "+e);
         } catch (UnknownHostException e) {
-            throw new BuildException("UnknownHostException.  Probable cause: The parser is " +                "trying to resolve a dtd from the internet and no connection exists.\n" +                "You can either connect to the internet during the build, or patch \n" +                "XConfToolTask.java to ignore DTD declarations when your parser is in use.");
+            throw new BuildException("UnknownHostException.  Probable cause: The parser is " +
+                "trying to resolve a dtd from the internet and no connection exists.\n" +
+                "You can either connect to the internet during the build, or patch \n" +
+                "XConfToolTask.java to ignore DTD declarations when your parser is in use.");
         } catch (IOException ioe) {
             throw new BuildException("IOException: "+ioe);
         }
@@ -249,8 +246,13 @@ public final class XConfToolTask extends MatchingTask {
             return false;
         }
 
+        String replacePropertiesStr = elem.getAttribute("replace-properties");
+
+        boolean replaceProperties = !("no".equalsIgnoreCase(replacePropertiesStr) ||
+                                      "false".equalsIgnoreCase(replacePropertiesStr));
+
         // Get 'root' node were 'component' will be inserted into
-        String xpath = elem.getAttribute("xpath");
+        String xpath = getAttribute(elem, "xpath", replaceProperties);
 
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
@@ -263,15 +265,15 @@ public final class XConfToolTask extends MatchingTask {
         Node root = nodes.item(0);
 
         // Test that 'root' node satisfies 'component' insertion criteria
-        String testPath = component.getDocumentElement().getAttribute("unless-path");
+        String testPath = getAttribute(elem, "unless-path", replaceProperties);
         if (testPath == null || testPath.length()==0) {
             // only look for old "unless" attr if unless-path is not present
-            testPath = component.getDocumentElement().getAttribute("unless");
+            testPath = getAttribute(elem, "unless", replaceProperties);
         }
         // Is if-path needed?
-        String ifProp = component.getDocumentElement().getAttribute("if-prop");
+        String ifProp = getAttribute(elem, "if-prop", replaceProperties);
         boolean ifValue = Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
-     
+
         if (ifProp != null && (ifProp.length()>0) && !ifValue ) {
             log("Skipping: " + file, Project.MSG_DEBUG);
             return false;
@@ -281,7 +283,7 @@ public final class XConfToolTask extends MatchingTask {
             return false;
         } else {
             // Test if component wants us to remove a list of nodes first
-            xpath = component.getDocumentElement().getAttribute("remove");
+            xpath = getAttribute(elem, "remove", replaceProperties);
 
             Node remove = null;
 
@@ -297,8 +299,8 @@ public final class XConfToolTask extends MatchingTask {
             }
 
             // Test for an attribute that needs to be added to an element
-            String name = component.getDocumentElement().getAttribute("add-attribute");
-            String value = component.getDocumentElement().getAttribute("value");
+            String name = getAttribute(elem, "add-attribute", replaceProperties);
+            String value = getAttribute(elem, "value", replaceProperties);
 
             if ((name!=null) && (name.length()>0)) {
                 if (value==null) {
@@ -311,7 +313,7 @@ public final class XConfToolTask extends MatchingTask {
             }
 
             // Test if 'component' provides desired insertion point
-            xpath = component.getDocumentElement().getAttribute("insert-before");
+            xpath = getAttribute(elem, "insert-before", replaceProperties);
             Node before = null;
 
             if ((xpath!=null) && (xpath.length()>0)) {
@@ -324,7 +326,7 @@ public final class XConfToolTask extends MatchingTask {
                 }
                 before = nodes.item(0);
             } else {
-                xpath = component.getDocumentElement().getAttribute("insert-after");
+                xpath = getAttribute(elem, "insert-after", replaceProperties);
                 if ((xpath!=null) && (xpath.length()>0)) {
                     nodes = XPathAPI.selectNodeList(root, xpath);
                     if (nodes.getLength()!=1) {
@@ -340,11 +342,6 @@ public final class XConfToolTask extends MatchingTask {
             // Add 'component' data into 'root' node
             log("Processing: "+file);
             NodeList componentNodes = component.getDocumentElement().getChildNodes();
-
-            String replacePropertiesStr = component.getDocumentElement().getAttribute("replace-properties");
-
-            boolean replaceProperties = "yes".equalsIgnoreCase(replacePropertiesStr) ||
-                                        "true".equalsIgnoreCase(replacePropertiesStr);
 
             if (this.addComments) {
                 root.appendChild(configuration.createComment("..... Start configuration from '"+basename+"' "));
@@ -371,8 +368,19 @@ public final class XConfToolTask extends MatchingTask {
         }
     }
 
+    private String getAttribute(Element elem, String attrName, boolean replaceProperties) {
+        String attr = elem.getAttribute(attrName);
+        if (attr == null) {
+            return null;
+        } else if (replaceProperties) {
+            return getProject().replaceProperties(attr);
+        } else {
+            return attr;
+        }
+    }
+
     private void replaceProperties(Node n) throws DOMException {
-        
+
         NamedNodeMap attrs = n.getAttributes();
         if (attrs!=null) {
             for (int i = 0; i< attrs.getLength(); i++) {
