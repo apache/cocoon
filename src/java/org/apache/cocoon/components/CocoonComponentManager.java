@@ -592,7 +592,7 @@ final class EnvironmentDescription {
      * All RequestLifecycleComponents and autoreleaseComponents are
      * released.
      */
-    void release() {
+    synchronized void release() {
         if (this.requestLifecycleComponents != null) {
             final Iterator iter = this.requestLifecycleComponents.values().iterator();
             while (iter.hasNext()) {
@@ -686,7 +686,7 @@ final class EnvironmentDescription {
     /**
      * Add an automatically released component
      */
-    void addToAutoRelease(final ComponentSelector selector,
+    synchronized void addToAutoRelease(final ComponentSelector selector,
                                        final Component         component,
                                        final ComponentManager  manager) {
         this.autoreleaseComponents.add(new Object[] {component, selector, manager});
@@ -695,7 +695,7 @@ final class EnvironmentDescription {
     /**
      * Add an automatically released component
      */
-    void addToAutoRelease(final ComponentManager manager,
+    synchronized void addToAutoRelease(final ComponentManager manager,
                                        final Component        component) {
         this.autoreleaseComponents.add(new Object[] {component, manager});
     }
@@ -703,7 +703,7 @@ final class EnvironmentDescription {
     /**
      * Remove from automatically released components
      */
-    void removeFromAutoRelease(final Component component)
+    synchronized void removeFromAutoRelease(final Component component)
     throws ProcessingException {
         int i = 0;
         boolean found = false;
