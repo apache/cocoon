@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.11 2003/07/19 14:26:11 joerg Exp $
+:: $Id: cocoon.bat,v 1.12 2003/07/21 05:08:57 upayavira Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -103,12 +103,17 @@ goto end
 :: ----- Cli -------------------------------------------------------------------
 
 :doCli
-if not "%OS%" == "Windows_NT" goto noNT
+set param=
 shift
-%JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=lib\endorsed -Dloader.jar.repositories=%COCOON_LIB% -Dloader.main.class=org.apache.cocoon.Main Loader %1 %2 %3 %4 %5 %6 %7 %8 %9
-goto end
-:noNT
-%JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=lib\endorsed -Dloader.jar.repositories=%COCOON_LIB% -Dloader.main.class=org.apache.cocoon.Main Loader %2 %3 %4 %5 %6 %7 %8 %9
+:cliLoop
+if "%1"=="" goto cliLoopEnd
+if not "%1"=="" set param=%param% %1
+shift
+goto cliLoop
+
+:cliLoopEnd
+
+%JAVA_HOME%\bin\java.exe %JAVA_OPTIONS% -classpath %CP% -Djava.endorsed.dirs=lib\endorsed -Dloader.jar.repositories=%COCOON_LIB% -Dloader.main.class=org.apache.cocoon.Main Loader %param%
 goto end
 
 :: ----- Servlet ---------------------------------------------------------------
