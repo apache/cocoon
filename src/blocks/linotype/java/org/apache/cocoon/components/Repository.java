@@ -85,7 +85,7 @@ public class Repository {
 
     private static File getDir(String dirName) {
         File dir = new File(dirName);
-        if (!dir.isDirectory()) throw new RuntimeException("'dir' is not a directory!");
+        if (!dir.isDirectory()) throw new RuntimeException("'"+ dirName + "' is not a directory!");
         return dir;
     }
 
