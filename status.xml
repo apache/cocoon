@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.236 2004/02/04 22:19:25 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.237 2004/02/06 10:10:14 ugo Exp $:-->
 
 <status>
  <developers>
@@ -199,6 +199,9 @@
    <action dev="SW" type="add">
    	 Woody block: every widget can now have a validator. This allows for example repeaters to perform
    	 inter-row validation or overall form-level validation.
+   </action>
+   <action dev="UC" type="add">
+   	 Woody block: added support for rich text editing using InteractiveTools' HTMLArea.
    </action>
    <action dev="SW" type="update">
      Batik block: a &lt;svg:image xlink:href="..."/> can now use any of the protocols handled

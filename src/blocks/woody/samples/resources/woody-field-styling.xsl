@@ -14,6 +14,11 @@
     <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" type="text/javascript"/>
     <script src="{$resources-uri}/woody-lib.js" type="text/javascript"/>
+    <script type="text/javascript">
+      _editor_url = "resources/htmlarea/";
+      _editor_lang = "en";
+    </script>
+    <script type="text/javascript" src="{$resources-uri}/htmlarea/htmlarea.js"></script>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/woody.css"/>
   </xsl:template>
 
@@ -232,6 +237,19 @@
       <xsl:copy-of select="translate(wi:value/node(), '&#13;', '')"/>
     </textarea>
     <xsl:apply-templates select="." mode="common"/>
+  </xsl:template>
+  
+  <!--
+    wi:field with @type 'htmlarea'
+  -->
+  <xsl:template match="wi:field[wi:styling[@type='htmlarea']]">
+    <textarea id="{@id}" name="{@id}" title="{wi:hint}">
+      <xsl:apply-templates select="." mode="styling"/>
+      <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
+      <xsl:copy-of select="translate(wi:value/node(), '&#13;', '')"/>
+    </textarea>
+    <xsl:apply-templates select="." mode="common"/>
+    <script language="JavaScript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>
   </xsl:template>
 
   <!--+

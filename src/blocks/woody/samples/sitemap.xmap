@@ -72,6 +72,7 @@
     <map:script src="flow/customvalidationdemo.js"/>
     <map:script src="flow/bindings.js"/>
     <map:script src="flow/form_model_gui.js"/>
+    <map:script src="flow/htmlarea.js"/>
   </map:flow>
 
  <map:pipelines>
@@ -307,6 +308,47 @@
 
      <map:match pattern="customvalidationdemo">
        <map:call function="customValidationDemo"/>
+     </map:match>
+
+     <!--
+        | HTMLArea example
+        -->
+
+     <map:match pattern="htmlarea">
+       <map:call function="htmlarea"/>
+     </map:match>
+
+     <map:match pattern="htmlarea/**">
+       <map:read src="resources/{0}"/>
+     </map:match>
+     
+     <map:match pattern="htmlarea-display-pipeline">
+       <map:generate src="forms/htmlarea_template.xml"/>
+       <map:transform type="woody"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="en-US"/>
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/htmlarea_template.xml"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:transform src="resources/woody-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="htmlarea-success-pipeline">
+       <map:generate type="jx" src="forms/htmlarea_success.jx"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/htmlarea_success.jx"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:serialize/>
      </map:match>
 
      <map:match pattern="resources/**">
