@@ -9,13 +9,16 @@
   The Cocoon development team understands the importance of reliable
   software as well protecting user investments through the creation of
   a solid development platform that doesn't change. On the other hand, 
-  the Cocoon project is a pioneer in many fields. Most of the technologies 
-  it uses are at a "working draft" phase only. Thus, reliability cannot be 
-  guaranteed before the software achieves its "final" status.
+  the Cocoon project is a pioneer in many fields. Many of the technologies 
+  it uses in this version are at a "working draft" phase only. Thus,
+  reliability cannot be guaranteed before the software achieves its "final"
+  status.
   
   Until then, no effort will be provided to guarantee backward compatibility
   for any parts considered alpha.
-  
+
+  Stable versions such as Cocoon-2.1 should be used in the meantime.
+
   You have been warned.
 
 *****************************  W A R N I N G  **********************************
