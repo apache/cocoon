@@ -6,6 +6,7 @@
      |-->
   <woody-formmanager>
     <widgets>
+      <widget name="form" src="org.apache.cocoon.woody.formmodel.FormDefinitionBuilder"/>
       <widget name="field" src="org.apache.cocoon.woody.formmodel.FieldDefinitionBuilder"/>
       <widget name="repeater" src="org.apache.cocoon.woody.formmodel.RepeaterDefinitionBuilder"/>
       <widget name="booleanfield" src="org.apache.cocoon.woody.formmodel.BooleanFieldDefinitionBuilder"/>
