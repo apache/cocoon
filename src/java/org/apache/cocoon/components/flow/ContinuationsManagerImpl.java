@@ -75,7 +75,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.5 2003/03/20 02:46:32 vgritsenko Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.6 2003/06/19 07:27:47 crossley Exp $
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
@@ -116,7 +116,13 @@ public class ContinuationsManagerImpl
 
 
     public ContinuationsManagerImpl() throws Exception {
-        random = SecureRandom.getInstance("SHA1PRNG");
+        try {
+            random = SecureRandom.getInstance("SHA1PRNG");
+        }
+        catch(java.security.NoSuchAlgorithmException nsae) {
+            // maybe we are on IBM's SDK
+            random = SecureRandom.getInstance("IBMSecureRandom");
+        }
         random.setSeed(System.currentTimeMillis());
         bytes = new byte[CONTINUATION_ID_LENGTH];
     }
