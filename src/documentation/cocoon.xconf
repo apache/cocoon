@@ -92,7 +92,7 @@
 
   <!-- Entity resolution catalogs -->
   <entity-resolver logger="core.resolver">
-    <parameter name="catalog" value="/WEB-INF/entities/catalog"/>
+    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
     <parameter name="verbosity" value="1"/>
   </entity-resolver>
 

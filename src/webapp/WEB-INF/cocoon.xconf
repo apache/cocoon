@@ -206,11 +206,11 @@
   <!--+
       | Entity resolution catalogs
       |
-      | The default catalog is distributed at /WEB-INF/entities/catalog
+      | The default catalog is distributed at WEB-INF/entities/catalog
       | This is the contextual pathname for Cocoon resources.
       | You can override this path, if necessary, using the "catalog" parameter:
       |
-      |    <parameter name="catalog" value="/WEB-INF/entities/catalog"/>
+      |    <parameter name="catalog" value="WEB-INF/entities/catalog"/>
       |
       | However, it is probably desirable to leave this default catalog config
       | and declare your own local catalogs, which are loaded in addition to
@@ -238,7 +238,7 @@
       |     <parameter name="verbosity" value="2"/>
       +-->
   <entity-resolver logger="core.resolver">
-   <parameter name="catalog" value="/WEB-INF/entities/catalog"/>
+   <parameter name="catalog" value="WEB-INF/entities/catalog"/>
    <parameter name="verbosity" value="1"/>
   </entity-resolver>
 
