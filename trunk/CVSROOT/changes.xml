@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.115 2000-09-26 06:45:59 balld Exp $
+  $Id: changes.xml,v 1.116 2000-09-27 23:35:43 greenrd Exp $
 -->
 
 <changes title="History of Changes">
@@ -17,9 +17,16 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="DB" type="update" due-to="Ugo Cei" due-to-email="ugo@fuoriorario.it">
-   improvements to mail logicsheet - specifically, now you can retrieve a set of messages by index, you can get the sent date, and some bugs were fixed.
+  <action dev="RDG" type="update" due-to="Marco Pauck" due-to-email="?">
+   Changed default WML output encoding to iso-8859-1.
   </action>
+  <action dev="DB" type="update" due-to="Ugo Cei" due-to-email="ugo@fuoriorario.it">
+   improvements to mail logicsheet - specifically, now you can retrieve a set of messages by
+index, you can get the sent date, and some bugs were fixed.
+  </action>
+ </release>
+
+ <release version="1.8" date="September 22 2000">
   <action dev="RDG" type="update">
    Cleaned up docs, especially how-it-works and FAQ; added new questions
    and answers to FAQ.
