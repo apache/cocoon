@@ -18,6 +18,7 @@ import net.php.servlet;
 import org.apache.cocoon.components.parser.Parser;
 
 import org.apache.avalon.Poolable;
+import org.apache.cocoon.Roles;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -28,7 +29,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-03 20:14:47 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-09 15:56:51 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 
@@ -78,7 +79,7 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             try {
                 output.write(data.getBytes());
             } catch (IOException e) {
-                getLogger().debug("PhpGenerator.write()", e);
+                PhpGenerator.this.getLogger().debug("PhpGenerator.write()", e);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -91,14 +92,14 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
             try {
                 service(request, response, input);
             } catch (ServletException e) {
-                getLogger().error("PhpGenerator.run()", e);
+                PhpGenerator.this.getLogger().error("PhpGenerator.run()", e);
                 this.exception = e;
             }
 
             try {
                 output.close();
             } catch (IOException e) {
-                getLogger().error("PhpGenerator.run():SHOULD NEVER HAPPEN", e);
+                PhpGenerator.this.getLogger().error("PhpGenerator.run():SHOULD NEVER HAPPEN", e);
                 // should never happen
             }
         }
@@ -122,15 +123,15 @@ public class PhpGenerator extends ServletGenerator implements Poolable {
 
             // start PHP producing results into the pipe
             PhpServlet php = new PhpServlet();
-            php.init(new config(context));
+            php.init(new config((ServletContext)context));
             php.setInput(systemId.substring(6));
             php.setOutput(new PipedOutputStream(input));
-            php.setRequest(request);
-            php.setResponse(response);
+            php.setRequest((HttpServletRequest)request);
+            php.setResponse((HttpServletResponse)response);
             new Thread(php).start();
 
             // pipe the results into the parser
-            Parser parser=(Parser)this.manager.getComponent("org.apache.cocoon.components.parser.Parser");
+            Parser parser=(Parser)this.manager.lookup(Roles.PARSER);
             parser.setContentHandler(this.contentHandler);
             parser.setLexicalHandler(this.lexicalHandler);
             parser.parse(new InputSource(input));
