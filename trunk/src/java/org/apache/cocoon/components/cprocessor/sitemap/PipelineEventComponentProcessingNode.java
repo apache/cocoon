@@ -67,7 +67,7 @@ import org.apache.cocoon.util.StringUtils;
 /**
  *
  * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.3 2004/01/27 10:33:05 unico Exp $
+ * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.4 2004/01/28 00:29:42 crossley Exp $
  */
 public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode
 implements Initializable {
@@ -109,7 +109,7 @@ implements Initializable {
                 }
                 else {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("view '" + name + "' not applicable " +                            "to statement at '" + getLocation() + "'");
+                        getLogger().debug("view '" + name + "' not applicable " +                            "to statement at '" + getLocation() + "'");
                     }
                     view = null;
                 }
