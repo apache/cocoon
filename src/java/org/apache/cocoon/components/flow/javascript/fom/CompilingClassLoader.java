@@ -332,14 +332,17 @@ public class CompilingClassLoader extends ClassLoader {
                              errorHandler);
             List errorList = errorHandler.getErrorList();
             if (errorList.size() > 0) {
-                String msg = "Failed to compile Java class " + className +": ";
+                StringBuffer msg = new StringBuffer();
+                msg.append("Failed to compile Java class ");
+                msg.append(className);
+                msg.append(": ");
                 Iterator iter = errorList.iterator();
                 while (iter.hasNext()) {
-                    msg += "\n";
-                    msg += (String)iter.next();
+                    msg.append("\n");
+                    msg.append((String)iter.next());
                 }
-                notifyListeners(src, msg);
-                throw new ClassCompilationException(msg);
+                notifyListeners(src, msg.toString());
+                throw new ClassCompilationException(msg.toString());
             }
 
             return classRepository.getCompiledClass(className);
