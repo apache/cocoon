@@ -22,7 +22,7 @@
   <init-param>
    <param-name>classpath-attribute</param-name>
    <!-- This is for Tomcat -->
-   <param-value>org.apache.tomcat.jsp_classpath<param-value>
+   <param-value>org.apache.tomcat.jsp_classpath</param-value>
 
    <!-- Alternatively you can choose one of these:
         Catalina: org.apache.tomcat.jsp_classpath
