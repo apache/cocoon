@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-08-17 17:07:36 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-21 17:35:31 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -59,31 +59,28 @@ public class SitemapManager implements Configurable, Composer {
     public boolean invoke (Environment environment, String uri_prefix, 
                            String source, boolean check_reload) 
     throws Exception {
-        SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get (source);
+        SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get(source);
+        
         if (sitemapHandler != null) {
-            sitemapHandler.throwEventualException();
             if (sitemapHandler.available()) {
                 if (check_reload 
                  && sitemapHandler.hasChanged()
                  && !sitemapHandler.isRegenerating()) {
                     sitemapHandler.regenerateAsynchronously(environment);
                 }
-                environment.changeContext (uri_prefix, source);
-                return sitemapHandler.process (environment);
             } else {
                 sitemapHandler.regenerate(environment);
             }
-            environment.changeContext (uri_prefix, source);
-            return sitemapHandler.process (environment);
         } else {
             sitemapHandler = new SitemapHandler(source, check_reload);
-            if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager (this.manager);
-            if (sitemapHandler instanceof Configurable) sitemapHandler.setConfiguration (this.conf); 
+            if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager(this.manager);
+            if (sitemapHandler instanceof Configurable) sitemapHandler.setConfiguration(this.conf); 
             sitemaps.put(source, sitemapHandler);
             sitemapHandler.regenerate(environment); 
-            environment.changeContext (uri_prefix, source);
-            return sitemapHandler.process (environment);
         }
+        
+        environment.changeContext(uri_prefix, source);
+        return sitemapHandler.process(environment);
     }
 
     public boolean hasChanged () {

@@ -20,7 +20,6 @@ import org.apache.avalon.Configuration;
 import org.apache.cocoon.ProcessingException; 
 import org.apache.cocoon.Processor; 
 import org.apache.cocoon.environment.Environment; 
-import org.apache.cocoon.sitemap.patterns.PatternException;
 
 import org.xml.sax.SAXException; 
 
@@ -28,7 +27,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:11 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-21 17:35:30 $
  */
 public abstract class AbstractSitemap
          implements Sitemap {      
@@ -73,7 +72,7 @@ public abstract class AbstractSitemap
      *//*
     public boolean hasContentChanged(HttpServletRequest resuest) {
         return true;
-    }*/
+    }
 
      /** 
       * Loads a class specified in a sitemap component definition and

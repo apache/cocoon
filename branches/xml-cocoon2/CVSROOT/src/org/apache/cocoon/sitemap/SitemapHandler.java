@@ -31,7 +31,7 @@ import org.apache.avalon.ComponentManager;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-17 17:07:36 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-21 17:35:31 $
  */
 public class SitemapHandler implements Runnable, Configurable, Composer, Processor {
 
@@ -86,23 +86,6 @@ public class SitemapHandler implements Runnable, Configurable, Composer, Process
         }
     }
 
-    protected void throwEventualException () 
-    throws ProcessingException, SAXException, IOException, InterruptedException {
-        if (exception == null) return; // No exception was caught
-        
-        if (exception instanceof ProcessingException) {
-            throw (ProcessingException) exception;
-        } else if (exception instanceof SAXException) {
-            throw (SAXException) exception;
-        } else if (exception instanceof IOException) {
-            throw (IOException) exception;
-        } else if (exception instanceof InterruptedException) {
-            throw (InterruptedException) exception;
-        } else {
-            throw new ProcessingException ("Unknown Exception raised: " + exception.toString());
-        }
-    }
- 
     protected boolean available () {
         return (sitemap != null);
     }
@@ -122,7 +105,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer, Process
     }
 
     protected synchronized void regenerateAsynchronously (Environment environment)
-    throws ProcessingException, SAXException, IOException, InterruptedException { 
+    throws Exception { 
         if (!this.isRegenerationRunning) {
             isRegenerationRunning = true;
             regeneration = new Thread (this);
@@ -132,16 +115,15 @@ public class SitemapHandler implements Runnable, Configurable, Composer, Process
     }
 
     protected synchronized void regenerate (Environment environment) 
-    throws ProcessingException, SAXException, IOException, InterruptedException { 
+    throws Exception { 
         regenerateAsynchronously(environment);
         regeneration.join();
-        throwEventualException();
     }
 
     public boolean process (Environment environment) 
     throws Exception {
         throwEventualException();
-        return sitemap.process (environment);
+        return sitemap.process(environment);
     }
 
     public void setBasePath (String basePath) {
@@ -172,5 +154,9 @@ public class SitemapHandler implements Runnable, Configurable, Composer, Process
             this.environment = null;
             this.isRegenerationRunning = false;
         }
+    }
+    
+    public void throwEventualException() throws Exception {
+        if (this.exception != null) throw this.exception;
     }
 } 
