@@ -46,9 +46,9 @@
             and its design and future evolution will stay targeted to small glue modules.
         </p>
 
-        <h2>Independent java code</h2>
+        <h2>Independent Java code</h2>
         <p>
-            As we'll see in our example, it is very easy to access java
+            As we'll see in our example, it is very easy to access Java
             objects from Flowscript code.
             Such objects do not necessarily need to know about Cocoon or
             Avalon classes, which means that legacy code could be easily integrated,
@@ -64,7 +64,7 @@
             and Cocoon.
         </p>
 
-        <h2>Avalon-based java code</h2>
+        <h2>Avalon-based Java code</h2>
         <p>
             The next step would be to write first-class Cocoon components based on
             the Avalon framework, allowing your components to use all of the Avalon

@@ -25,7 +25,7 @@
 
     <toc-section name="Introduction">
         <toc-item id="toc" name="Supersonic Tour of Apache Cocoon" href="intro/docs/index"/>
-        <toc-item name="What is Cocoon" href="intro/docs/what-is-cocoon"/>
+        <toc-item name="What is Cocoon?" href="intro/docs/what-is-cocoon"/>
         <toc-item name="Use cases" href="intro/docs/use-cases"/>
         <toc-item name="Facts" href="intro/docs/facts"/>
         <toc-item name="Resources" href="intro/docs/resources"/>
