@@ -205,6 +205,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix" fixes-bug="28485">
+     Mail block: Support multiple SMTP servers, not only default one.
+   </action>
+   <action dev="VG" type="fix" fixes-bug="24760">
+     Mail block: Add support for authenticated SMTP server connections.
+   </action>
    <action dev="VG" type="fix">
      Cron block: JobScheduler's fireJob method now supports jobs calling Cocoon
      pipelines.
