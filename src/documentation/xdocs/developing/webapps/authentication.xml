@@ -744,7 +744,7 @@
       &lt;map:parameter name="handler" value="myhandler"/&gt;
 
       &lt;map:generate src="getinfofromcontext.xml"/&gt;
-      &lt;map:transform src="session"/&gt;
+      &lt;map:transform type="session"/&gt;
       &lt;map:transform src="toHTML"/&gt;
       &lt;map:serialize/&gt;
     &lt;/map:act&gt;
