@@ -19,7 +19,7 @@
    of concerns between content, logic, and style. To top this all off, 
    Cocoon's centralized configuration system and sophisticated caching help
    you to create, deploy, and maintain rock-solid XML server applications.
- </p>
+      </p>
       <p>
    Cocoon interacts with most data sources, including filesystems, RDBMS,
    LDAP, native XML databases, and network-based data sources. It adapts
@@ -28,7 +28,7 @@
    through a powerful, commandline interface. The deliberate design of its abstract 
    environment gives you the freedom to extend its functionality to meet your 
    special needs in a highly modular fashion.
- </p> 
+      </p> 
     </s1>
     <s1 title="Where can I find it?">
       <p>
@@ -37,13 +37,13 @@
       </p>
       <p>
    If you are looking for a past generation of Cocoon (no longer supported but still available), 
-   go to the <link href="http://xml.apache.org/cocoon1/">Cocoon 1.x area</link>.  
-          </p>
+   go to the <link href="http://cocoon.apache.org/1.x/">Cocoon 1.x area</link>.  
+      </p>
     </s1>
     <s1 title="More News about Cocoon">
       <p>
 Check out our <link href="http://cocoon.apache.org/news/">news page</link> for more up-to-date news about Cocoon.
-          </p>
+      </p>
     </s1>
     <figure src="images/cocoon-built.gif" alt="Built with Apache Cocoon"/>
   </body>
