@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
 
-<xconf xpath="/cocoon" unless="comment()[contains(., 'Experimental JCS Store implementation')]">
+<xconf xpath="/cocoon" unless="persistent-store[@class='org.apache.cocoon.components.store.JCSStore']">
 
   <!-- Experimental JCS Store implementation -->
-  <!--
-  <persistent-store class="org.apache.cocoon.components.store.JCSPersistentStore" 
+  <persistent-store class="org.apache.cocoon.components.store.JCSStore" 
                     logger="core.store.persistent">
-    <parameter name="region-name" value="indexedRegion1"/>
-    <parameter name="group-name" value="indexedDiskCache"/>
-    <parameter name="config-file" value="/TestDiskCache.ccf"/> 
+    <parameter name="region-name" value="indexedRegion4"/>
+    <parameter name="group-name" value="indexedDiskCache2"/>
+    <parameter name="config-file" value="context://WEB-INF/cache.ccf"/>
   </persistent-store>
-  -->
+  
 </xconf>
