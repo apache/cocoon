@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.Request;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.7 2003/11/16 00:52:08 vgritsenko Exp $
+ * @version CVS $Id: NetUtils.java,v 1.8 2003/11/17 03:00:13 vgritsenko Exp $
  */
 
 public class NetUtils {
@@ -460,7 +460,7 @@ public class NetUtils {
         }
         
         StringBuffer buffer = new StringBuffer(uri);
-        if (uri.indexOf('&') != -1) {
+        if (uri.indexOf('?') == -1) {
             buffer.append('?');
         } else {
             buffer.append('&');
