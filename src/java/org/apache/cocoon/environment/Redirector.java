@@ -57,7 +57,7 @@ import java.io.IOException;
  * Interface for an redirector abstraction
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: Redirector.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: Redirector.java,v 1.2 2003/11/14 18:57:44 unico Exp $
  */
 
 public interface Redirector {
@@ -72,5 +72,12 @@ public interface Redirector {
      * Was one of the redirection methods called ?
      */
     boolean hasRedirected();
+    
+    /**
+     * Send an content-less response with the given status code.
+     * 
+     * @param sc  an http status code.
+     */
+    void sendStatus(int sc);
 }
 
