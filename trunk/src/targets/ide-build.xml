@@ -48,7 +48,9 @@
       <!-- main libs -->
       <fileset dir="${lib}">
         <include name="core/*.jar"/>
-        <include name="core/jvm${target.vm}/*.jar"/>
+        <!-- Currently, we have no JVM dependent libraries       
+          <include name="core/jvm${target.vm}/*.jar"/>
+        -->
         <include name="optional/*.jar"/>
         <include name="local/*.jar"/>
         <include name="endorsed/*.jar"/>
