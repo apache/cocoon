@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.69 $ $Date: 2000-12-08 20:38:59 $
+     * @version CVS $Revision: 1.1.2.70 $ $Date: 2000-12-11 06:17:25 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -667,7 +667,7 @@
 
   <!-- collect parameter definitions -->
   <xsl:template match="map:pipeline//parameter">
-    param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@value"/>");
+    param.setParameter ("<xsl:value-of select="@name"/>", substitute(listOfLists, "<xsl:value-of select="@value"/>"));
   </xsl:template>
 
   <!-- FIXME:(GP) is this still valid? -->
