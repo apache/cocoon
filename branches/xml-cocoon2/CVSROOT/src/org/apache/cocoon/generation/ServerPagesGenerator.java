@@ -46,7 +46,7 @@ import org.xml.sax.ext.LexicalHandler;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-05-04 13:38:03 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-05-07 09:38:56 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -102,10 +102,13 @@ public class ServerPagesGenerator
    */
   public CacheValidity generateValidity() {
     CacheValidity genValidity = generator.generateValidity();
-    HashMap map = new HashMap (1);
-    map.put("source", this.source);
-    ParametersCacheValidity pcv = new ParametersCacheValidity(map);
-    return new CompositeCacheValidity(genValidity, pcv);
+    if (genValidity != null) {
+        HashMap map = new HashMap (1);
+        map.put("source", this.source);
+        ParametersCacheValidity pcv = new ParametersCacheValidity(map);
+        return new CompositeCacheValidity(genValidity, pcv);
+    }
+    return null;
   }
 
   /**
