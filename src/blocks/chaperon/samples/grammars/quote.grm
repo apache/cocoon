@@ -1,7 +1,7 @@
 %ignore          "^#(.*)";
 %token Comma     "\,";
 %token Value     "[^\n\r\,]+";
-%token Break "\r(\n?) | \n";
+%token Break     "\r(\n?) | \n";
 
 %start document;
 
@@ -11,6 +11,7 @@
 document
   : rows Break
   | rows
+  | /* empty */
   ;
 
 // each row seprated with one break
@@ -22,6 +23,13 @@ rows
                                                                                                                                                                                
 // values separated by spaces
 row
-  : row Comma Value
-  | Value
+  : row Comma column
+  | column
   ;
+
+// allow empty columns
+column
+  : Value
+  | /* empty */
+  ;
+

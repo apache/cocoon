@@ -39,8 +39,11 @@
  </group>
 
  <group name="Comma-Separated Values (CSV)">
-  <sample name="Stock Quote" href="quote.html">
+  <sample name="Stock Quote" href="quote1.html">
    This example processes a CSV file and generates a table from it.
+  </sample>
+  <sample name="Excel output" href="quote2.html">
+   This example processes a CSV file generate by MS Excel.
   </sample>
  </group>
 
