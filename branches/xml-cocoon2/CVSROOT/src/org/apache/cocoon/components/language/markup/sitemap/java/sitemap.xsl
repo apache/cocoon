@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.66 $ $Date: 2000-12-05 17:28:12 $
+     * @version CVS $Revision: 1.1.2.67 $ $Date: 2000-12-05 22:03:29 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -90,9 +90,18 @@
       private Parameters emptyParam = new Parameters();
 
       <!-- Generate matchers which implements CodeFactory -->
-      <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher[@src]">
-        <xsl:if test="java:isFactory($factory-loader, string(@src))">
-          <xsl:variable name="src" select="@src"/>
+      <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher">
+        <xsl:variable name="src">
+          <xsl:choose>
+            <xsl:when test="@src">
+              <xsl:value-of select="@src"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="@factory"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:if test="java:isFactory($factory-loader, string($src))">
           <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
           <xsl:variable name="default" select="$type = ../@default"/>
           <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
@@ -113,36 +122,25 @@
         </xsl:if>
       </xsl:for-each>
 
-      /** The generated matchers (for backward compatability. Should be removed in the future) */
-      <xsl:for-each select="/map:sitemap/map:components/map:matchers/map:matcher[@factory]">
-        <xsl:variable name="factory" select="@factory"/>
-        <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
-        <xsl:variable name="default" select="$type = ../@default"/>
-        <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
-       private List <xsl:value-of select="$type"/>Match (<xsl:value-of select="java:getParameterSource($factory-loader, string($factory),$config)"/> pattern, Map objectModel) {
-           <xsl:value-of select="java:getMethodSource($factory-loader, string($factory),$config)"/>
-       }
-        <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:match[@type=$type or (not(@type) and $default)]">
-          <xsl:variable name="matcher-name">
-            <xsl:call-template name="generate-name">
-              <xsl:with-param name="prefix">matcher_</xsl:with-param>
-              <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
-        </xsl:for-each>
-      </xsl:for-each>
-
       <!-- Generate selectors which implements CodeFactory -->
-      <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector[@src]">
-        <xsl:if test="java:isFactory($factory-loader, string(@src))">
-          <xsl:variable name="factory" select="@src"/>
+      <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector">
+        <xsl:variable name="src">
+          <xsl:choose>
+            <xsl:when test="@src">
+              <xsl:value-of select="@src"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="@factory"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:if test="java:isFactory($factory-loader, string($src))">
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
           <xsl:variable name="default" select="@name = ../@default"/>
           <xsl:variable name="config" select="descendant-or-self::*"/>
-          private boolean <xsl:value-of select="$name"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($factory),$config)"/> pattern, Map objectModel) {
-            <xsl:value-of select="java:getMethodSource($factory-loader, string($factory),$config)"/>
+          private boolean <xsl:value-of select="$name"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($src),$config)"/> pattern, Map objectModel) {
+            <xsl:value-of select="java:getMethodSource($factory-loader, string($src),$config)"/>
           }
           <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant::map:select[@type=$name or (not(@type) and $default)]/map:when">
             <xsl:variable name="selector-name">
@@ -155,35 +153,9 @@
               <xsl:value-of select="@test"/>
             </xsl:variable>
             <!-- produce a definition for this test string -->
-            <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($selector-name),string(@test),$config)"/>
+            <xsl:value-of select="java:getClassSource($factory-loader,string($src),string($selector-name),string(@test),$config)"/>
           </xsl:for-each>
         </xsl:if>
-      </xsl:for-each>
-
-      /** The generated selectors (for backward compatability. Should be removed in the future) */
-      <xsl:for-each select="/map:sitemap/map:components/map:selectors/map:selector[@factory]">
-        <xsl:variable name="factory" select="@factory"/>
-        <xsl:variable name="name" select="@name"/>
-        <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
-        <xsl:variable name="default" select="@name = ../@default"/>
-        <xsl:variable name="config" select="descendant-or-self::*"/>
-        <xsl:variable name="pos"><xsl:value-of select="string(position())"/></xsl:variable>
-        private boolean <xsl:value-of select="$name"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($factory),$config)"/> pattern, Map objectModel) {
-          <xsl:value-of select="java:getMethodSource($factory-loader, string($factory),$config)"/>
-        }
-        <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant::map:select[@type=$name or (not(@type) and $default)]/map:when">
-          <xsl:variable name="selector-name">
-            <xsl:call-template name="generate-name">
-              <xsl:with-param name="prefix">selector_</xsl:with-param>
-              <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name="this-test">
-            <xsl:value-of select="@test"/>
-          </xsl:variable>
-          <!-- produce a definition for this test string -->
-          <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($selector-name),string(@test),$config)"/>
-        </xsl:for-each>
       </xsl:for-each>
 
       /**
