@@ -107,7 +107,7 @@ import org.apache.excalibur.source.Source;
  * <tr><td>object     </td><td>Object      </td><td>        </td><td>Object       </td></tr>
  * </table></p>
  *
- * @version CVS $Id: JDBCTypeConversions.java,v 1.3 2003/04/04 13:19:07 stefano Exp $
+ * @version CVS $Id: JDBCTypeConversions.java,v 1.4 2003/07/01 11:29:55 haul Exp $
  */
 public class JDBCTypeConversions {
     public static final Map typeConstants;
@@ -322,7 +322,7 @@ public class JDBCTypeConversions {
                 length = (int)((Source) value).getContentLength();
                 clob = new ClobHelper(asciiStream, length);
             } else {
-                String asciiText = (String) value;
+                String asciiText = value.toString();
                 asciiStream = new ByteArrayInputStream(asciiText.getBytes());
                 length = asciiText.length();
                 clob = new ClobHelper(asciiStream, length);
@@ -350,7 +350,7 @@ public class JDBCTypeConversions {
                 length = (int) anyFile.getSize();
                 clob = new ClobHelper(asciiStream, length);
             } else {
-                String asciiText = (String) value;
+                String asciiText = value.toString();
                 asciiStream = new BufferedInputStream(new ByteArrayInputStream(asciiText.getBytes()));
                 length = asciiText.length();
             }
@@ -366,7 +366,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Number) {
                 bd = BigDecimal.valueOf(((Number)value).longValue());
             } else {
-                bd = new BigDecimal((String) value);
+                bd = new BigDecimal(value.toString());
             }
             
             statement.setBigDecimal(position, bd);
@@ -380,7 +380,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Number) {
                 b = new Byte(((Number) value).byteValue());
             } else {
-                b = new Byte((String) value);
+                b = new Byte(value.toString());
             }
             
             statement.setByte(position, b.byteValue());
@@ -396,7 +396,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Calendar) {
                 d = new Date(((Calendar) value).getTime().getTime());
             } else {
-                d = Date.valueOf(String.valueOf(value));
+                d = Date.valueOf(value.toString());
             }
             
             statement.setDate(position, d);
@@ -408,7 +408,7 @@ public class JDBCTypeConversions {
             if (value instanceof Number) {
                 db = (((Number) value).doubleValue());
             } else {
-                db = Double.parseDouble(String.valueOf(value));
+                db = Double.parseDouble(value.toString());
             }
             statement.setDouble(position, db);
             break;
@@ -419,7 +419,7 @@ public class JDBCTypeConversions {
             if (value instanceof Number) {
                 f = (((Number) value).floatValue());
             } else {
-                f = Float.parseFloat(String.valueOf(value));
+                f = Float.parseFloat(value.toString());
             }
             statement.setFloat(position, f);
             break;
@@ -430,7 +430,7 @@ public class JDBCTypeConversions {
             if (value instanceof Number) {
                 l = (((Number) value).longValue());
             } else {
-                l = Long.parseLong(String.valueOf(value));
+                l = Long.parseLong(value.toString());
             }
             
             statement.setLong(position, l);
@@ -444,7 +444,7 @@ public class JDBCTypeConversions {
             } else if (value instanceof Number) {
                 s = new Short(((Number) value).shortValue());
             } else {
-                s = new Short((String) value);
+                s = new Short(value.toString());
             }
             
             statement.setShort(position, s.shortValue());
@@ -493,7 +493,7 @@ public class JDBCTypeConversions {
             break;
         case Types.VARCHAR:
             //System.out.println("VARCHAR");
-            statement.setString(position, (String) value);
+            statement.setString(position, value.toString());
             break;
         case Types.BLOB:
             //System.out.println("BLOB");
