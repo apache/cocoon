@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
 /**
  * test case for NonCachingProcessingPipeline.
  * 
- * @version CVS $Id: NonCachingProcessingPipelineTestCase.java,v 1.8 2004/07/26 22:44:18 ugo Exp $
+ * @version CVS $Id$
  */
 public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
     
@@ -81,6 +81,8 @@ public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
             }
             public boolean shouldSetContentLength() {
                 return false;
+            }
+            public void setObjectModel(Map objectModel) {
             }
         }; 
         
@@ -133,6 +135,7 @@ public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
             public boolean shouldSetContentLength() {
                 return false;
             }
+            public void setObjectModel(Map objectModel) {}
         };
         
         // Set up real compponents
