@@ -42,10 +42,10 @@ import java.util.List;
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
 
-	/** The processor that wraps us */
-	private TreeProcessor wrappingProcessor;
+    /** The processor that wraps us */
+    private TreeProcessor wrappingProcessor;
 
-    	/** Processing nodes that need to be disposed with this processor */
+        /** Processing nodes that need to be disposed with this processor */
     private List disposableNodes;
 
     /** Root node of the processing tree */
@@ -62,10 +62,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     /** The sitemap executor */
     private SitemapExecutor sitemapExecutor;
 
-	/**
+    /**
      * Builds a concrete processig, given the wrapping processor
      */
-	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor,
+    public ConcreteTreeProcessor(TreeProcessor wrappingProcessor,
                                  SitemapExecutor sitemapExecutor,
                                  ProcessorComponentInfo componentInfo) {
         // Store our wrapping processor
@@ -76,25 +76,25 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         // Get the sitemap executor - we use the same executor for each sitemap
         this.sitemapExecutor = sitemapExecutor;
-	}
+    }
 
-	/** Set the processor data, result of the treebuilder job */
-	public void setProcessorData(ProcessingNode rootNode, List disposableNodes) {
-	    if (this.rootNode != null) {
-			throw new IllegalStateException("setProcessorData() can only be called once");
-		}
+    /** Set the processor data, result of the treebuilder job */
+    public void setProcessorData(ProcessingNode rootNode, List disposableNodes) {
+        if (this.rootNode != null) {
+            throw new IllegalStateException("setProcessorData() can only be called once");
+        }
 
-		this.rootNode = rootNode;
-		this.disposableNodes = disposableNodes;
+        this.rootNode = rootNode;
+        this.disposableNodes = disposableNodes;
 
-   	}
+       }
 
     /** Get the component info for this processor */
     public ProcessorComponentInfo getComponentInfo() {
         return this.componentInfo;
     }
 
-	/** Set the sitemap component configurations (called as part of the tree building process) */
+    /** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
         this.componentConfigurations = componentConfigurations;
     }
@@ -121,25 +121,25 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
      * Mark this processor as needing to be disposed. Actual call to {@link #dispose()} will occur when
      * all request processings on this processor will be terminated.
      */
-	public void markForDisposal() {
-		// Decrement the request count (negative number means dispose)
-		synchronized(this) {
-			this.requestCount--;
-		}
+    public void markForDisposal() {
+        // Decrement the request count (negative number means dispose)
+        synchronized(this) {
+            this.requestCount--;
+        }
 
-		if (this.requestCount < 0) {
-			// No more users : dispose right now
-			dispose();
-		}
-	}
+        if (this.requestCount < 0) {
+            // No more users : dispose right now
+            dispose();
+        }
+    }
 
-	public TreeProcessor getWrappingProcessor() {
-		return this.wrappingProcessor;
-	}
+    public TreeProcessor getWrappingProcessor() {
+        return this.wrappingProcessor;
+    }
 
-	public Processor getRootProcessor() {
-		return this.wrappingProcessor.getRootProcessor();
-	}
+    public Processor getRootProcessor() {
+        return this.wrappingProcessor.getRootProcessor();
+    }
 
     /**
      * Process the given <code>Environment</code> producing the output.
@@ -283,7 +283,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         return result;
     }
 
-	public void dispose() {
+    public void dispose() {
         if (this.disposableNodes != null) {
             // we must dispose the nodes in reverse order
             // otherwise selector nodes are freed before the components node
@@ -296,7 +296,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         // Ensure it won't be used anymore
         this.rootNode = null;
         this.sitemapExecutor = null;
-	}
+    }
 
     private class TreeProcessorRedirector extends ForwardRedirector {
         private InvokeContext context;
@@ -322,12 +322,12 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     }
 
     public SourceResolver getSourceResolver() {
-		return wrappingProcessor.getSourceResolver();
-	}
+        return wrappingProcessor.getSourceResolver();
+    }
 
-	public String getContext() {
-		return wrappingProcessor.getContext();
-	}
+    public String getContext() {
+        return wrappingProcessor.getContext();
+    }
 
     /**
      * Return the sitemap executor
