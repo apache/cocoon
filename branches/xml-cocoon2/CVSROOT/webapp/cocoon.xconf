@@ -89,7 +89,7 @@
   </datasources>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
-  <pool-controller class="org.apache.cocoon.components.ComponentPoolController"/>
+  <pool-controller class="org.apache.avalon.component.DefaultComponentPoolController"/>
 
   <sax-connector class="org.apache.cocoon.components.saxconnector.NullSAXConnector"/>
 
@@ -124,11 +124,11 @@
 
  <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
        shorthand="markup-languages"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
        shorthand="programming-languages"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.components.language.generator.ProgramGenerator"
        shorthand="program-generator"
@@ -140,7 +140,7 @@
 
  <role name="org.apache.avalon.util.pool.PoolController"
        shorthand="pool-controller"
-       default-class="org.apache.cocoon.components.ComponentPoolController"/>
+       default-class="org.apache.avalon.component.DefaultComponentPoolController"/>
 
  <role name="org.apache.cocoon.components.saxconnector.SAXConnector"
        shorthand="sax-connector"
@@ -151,7 +151,7 @@
 
  <role name="org.apache.avalon.util.datasource.DataSourceComponentSelector"
        shorthand="datasources"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.components.url.URLFactory"
        shorthand="url-factory"
@@ -167,23 +167,23 @@
 
  <role name="org.apache.cocoon.acting.ActionSelector"
        shorthand="action"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.selection.SelectorSelector"
        shorthand="selector"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.matching.MatcherSelector"
        shorthand="matcher"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.generation.GeneratorSelector"
        shorthand="generator"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.transformation.TransformerSelector"
        shorthand="transformer"
-       default-class="org.apache.cocoon.components.ComponentSelector"/>
+       default-class="org.apache.avalon.component.DefaultComponentSelector"/>
 
  <role name="org.apache.cocoon.serialization.SerializerSelector"
        shorthand="serializer"

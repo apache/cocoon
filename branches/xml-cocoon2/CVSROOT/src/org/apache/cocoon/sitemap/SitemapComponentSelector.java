@@ -17,16 +17,16 @@ import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
-import org.apache.cocoon.components.ComponentSelector;
+import org.apache.avalon.component.DefaultComponentSelector;
 
 import org.apache.cocoon.components.url.URLFactory;
 
 /** Default component manager for Cocoon's sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: SitemapComponentSelector.java,v 1.1.2.6 2001-04-05 15:40:37 giacomo Exp $
+ * @version CVS $Id: SitemapComponentSelector.java,v 1.1.2.7 2001-04-05 20:15:36 bloritsch Exp $
  */
-public class SitemapComponentSelector extends ComponentSelector {
+public class SitemapComponentSelector extends DefaultComponentSelector {
     HashMap mime_types;
 
     /** The conctructors (same as the Avalon ComponentManager)
