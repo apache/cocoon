@@ -54,7 +54,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2000-11-14 21:52:05 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2000-11-29 22:35:41 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -179,11 +179,13 @@ implements Transformer, Composer, Poolable, Configurable {
 
         if (request != null) {
             Enumeration parameters = request.getParameterNames();
-            while (parameters.hasMoreElements()) {
-                String name = (String) parameters.nextElement();
-                if (isValidXSLTParameterName(name)) {
-                    String value = request.getParameter(name);
-                    transformerHandler.getTransformer().setParameter(name,value);
+            if ( parameters != null ) {
+                while (parameters.hasMoreElements()) {
+                    String name = (String) parameters.nextElement();
+                    if (isValidXSLTParameterName(name)) {
+                        String value = request.getParameter(name);
+                        transformerHandler.getTransformer().setParameter(name,value);
+                    }
                 }
             }
         }
