@@ -20,6 +20,7 @@ import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,6 +44,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
@@ -113,9 +115,9 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.46 2004/06/26 07:31:18 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.47 2004/06/26 08:41:18 antonio Exp $
  */
-public class JXTemplateGenerator extends ServiceableGenerator {
+public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
     private static final JXPathContextFactory
         jxpathContextFactory = JXPathContextFactory.newInstance();
@@ -711,7 +713,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     final static String PARAMETER = "parameter";
     final static String FORMAT_NUMBER = "formatNumber";
     final static String FORMAT_DATE = "formatDate";
-
+    final static String CACHE_KEY = "cache-key";
+    final static String VALIDITY = "cache-validity";
 
     /**
      * Compile a single Jexl expr (contained in ${}) or XPath expression
@@ -1116,9 +1119,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     static class StartDocument extends Event {
         StartDocument(Locator location) {
             super(location);
+            templateProperties = new HashMap();
         }
         SourceValidity compileTime;
         EndDocument endDocument; // null if document fragment
+        Map templateProperties;
     }
 
     static class EndDocument extends Event {
@@ -2182,8 +2187,18 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         public void startElement(String namespaceURI, String localName,
                           String qname, Attributes attrs) throws SAXException {
             Event newEvent = null;
+            AttributesImpl elementAttributes = new AttributesImpl( attrs );
+            int attributeCount = elementAttributes.getLength();
+            for (int i = 0; i < attributeCount; i++) {
+            	String attributeURI = elementAttributes.getURI(i);
+            	if (StringUtils.equals(attributeURI, NS)) {
+            		getStartEvent().templateProperties.put(elementAttributes.getLocalName(i), 
+								compileExpr(elementAttributes.getValue(i), null, locator));
+            		elementAttributes.removeAttribute(i--);
+            	}
+            }
             StartElement startElement = new StartElement(locator, namespaceURI,
-                                                     localName, qname, attrs);
+                                                     localName, qname, elementAttributes);
             if (NS.equals(namespaceURI)) {
                 if (localName.equals(FOR_EACH)) {
                     String items = attrs.getValue("items");
@@ -2596,8 +2611,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         "Error during resolving of '" + src + "'.", se);
             }
             final String uri = inputSource.getURI();
+            boolean regenerate = false;
+            StartDocument startEvent = null;
             synchronized (cache) {
-                StartDocument startEvent = (StartDocument)cache.get(uri);
+                startEvent = (StartDocument)cache.get(uri);
                 if (startEvent != null) {
                     int valid = SourceValidity.UNKNOWN;
                     if (startEvent.compileTime != null) {
@@ -2609,7 +2626,19 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     if (valid != SourceValidity.VALID) {
                         cache.remove(uri);
+                        regenerate = true;
                     }
+                } else {
+                    regenerate = true;
+                }
+            }
+            if (regenerate) {
+                Parser parser = new Parser();
+                SourceUtil.parse(this.manager, this.inputSource, parser);
+                startEvent = parser.getStartEvent();
+                startEvent.compileTime = this.inputSource.getValidity();
+                synchronized (cache) {
+                    cache.put(uri, startEvent);
                 }
             }
         }
@@ -2725,15 +2754,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         StartDocument startEvent;
         synchronized (cache) {
             startEvent = (StartDocument)cache.get(cacheKey);
-        }
-        if (startEvent == null) {
-            Parser parser = new Parser();
-            SourceUtil.parse(this.manager, this.inputSource, parser);
-            startEvent = parser.getStartEvent();
-            startEvent.compileTime = this.inputSource.getValidity();
-            synchronized (cache) {
-                cache.put(cacheKey, startEvent);
-            }
         }
         performGeneration(this.xmlConsumer, globalJexlContext, jxpathContext,
                 null, startEvent, null);
@@ -3693,4 +3713,40 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             ev = ev.next;
         }
     }
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+	 */
+	public Serializable getKey() {
+    	JXTExpression cacheKeyExpr = (JXTExpression)getCurrentTemplateProperty(CACHE_KEY);
+        try {
+			return (Serializable) getValue(cacheKeyExpr, globalJexlContext, jxpathContext);
+		} catch (Exception e) {
+			getLogger().error("error evaluating cache key", e);
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
+	 */
+	public SourceValidity getValidity() {
+    	JXTExpression validityExpr = (JXTExpression)getCurrentTemplateProperty(VALIDITY);
+        try {
+			return (SourceValidity) getValue(validityExpr, globalJexlContext, jxpathContext);
+		} catch (Exception e) {
+			getLogger().error( "error evaluating cache key", e );
+			return null;
+		}
+	}
+	
+	private Object getCurrentTemplateProperty(String propertyName) {
+    	final String uri = inputSource.getURI();
+    	StartDocument startEvent;
+        synchronized (cache) {
+            startEvent = (StartDocument)cache.get(uri);
+        }
+        if (startEvent == null)
+        	return null;
+        return startEvent.templateProperties.get(propertyName);
+	}
 }
