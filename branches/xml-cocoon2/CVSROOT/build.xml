@@ -281,18 +281,24 @@ by the main ones.
   <!-- =================================================================== -->
   <target name="prepare-src" depends="prepare-src-22"/>
 
+  <!-- =================================================================== -->
+  <!-- Set a variable if the generated java code is already up-to-date.    -->
+  <!-- =================================================================== -->
+  <target name="generate-java-code-check" depends="init">
+    <uptodate property="generate-java-code.notrequired"
+        targetfile="${build.src}/org/apache/cocoon/components/browser/BrowserImpl.java" >
+      <srcfiles dir="${src.dir}/org/apache/cocoon/components/browser"
+          includes="BrowserImpl.xml,BrowserImpl.xsl"/>
+    </uptodate>
+  </target>
 
   <!-- =================================================================== -->
   <!-- Generate the Java code from XML using XSLT                          -->
   <!-- =================================================================== -->
-  <target name="generate-java-code" depends="init">
-    <delete>
-      <fileset dir="${src.dir}/org/apache/cocoon/components/browser">
-        <include name="BrowserImpl.java"/>
-      </fileset>
-    </delete>
+  <target name="generate-java-code" depends="generate-java-code-check"
+          unless="generate-java-code.notrequired">
     <style basedir="${src.dir}/org/apache/cocoon/components/browser"
-           destdir="${src.dir}/org/apache/cocoon/components/browser"
+           destdir="${build.src}/org/apache/cocoon/components/browser"
            includes="BrowserImpl.xml"
            extension=".java"
            style="BrowserImpl.xsl"/>
@@ -542,7 +548,7 @@ by the main ones.
       <srcfiles dir="${docs.dir}" includes="*.xml" excludes="${browser.projfile}"/>
     </uptodate>
   </target>
- 
+
   <!-- =================================================================== -->
   <!-- If generated site is already up-to-date, print a message saying so. -->
   <!-- =================================================================== -->
