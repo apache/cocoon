@@ -50,9 +50,12 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -61,14 +64,14 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.Redirector;
 
-import java.util.Map;
-
 /**
  * Handles &lt;map:pipelines&gt;
  *
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNode.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.2 2003/04/11 13:14:51 cziegeler Exp $
  */
 
 public final class PipelinesNode extends SimpleParentProcessingNode
@@ -77,14 +80,18 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     private static final String REDIRECTOR_ATTR = "sitemap:redirector";
 
     private ComponentManager manager;
+    
+	private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
     private Processor processor;
 
+	private ProcessingNode errorHandler;
+
     /**
      * Constructor
-     * @param processor               The processor for this sitemap
+     * @param processor The processor for this sitemap
      */
-    public PipelinesNode(Processor       processor) {
+    public PipelinesNode(Processor processor) {
         this.processor = processor;
     }
 
@@ -94,8 +101,20 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      */
     public void compose(ComponentManager manager) {
         this.manager = manager;
+        errorHandlerHelper.compose(manager);
     }
 
+	public void enableLogging(Logger logger)
+	{
+		super.enableLogging(logger);
+		errorHandlerHelper.enableLogging(logger);
+	}
+
+	public void setErrorHandler(ProcessingNode node)
+	{
+		errorHandler = node;
+	}
+    
     public void setChildren(ProcessingNode[] nodes)
     {
         // Mark the last pipeline so that it can throw a ResourceNotFoundException
@@ -141,9 +160,15 @@ public final class PipelinesNode extends SimpleParentProcessingNode
             //         such as the URI of the mount point ?
 
             return invokeNodes(this.children, env, context);
-
+        } catch (Exception ex) {
+			if (errorHandler != null) {
+				// Invoke pipelines handler
+				return errorHandlerHelper.invokeErrorHandler(errorHandler, ex, env);
+			} else {
+				// No handler : propagate
+				throw ex;
+			}
         } finally {
-
             // Restore old redirector and resolver
             env.setAttribute(REDIRECTOR_ATTR, oldRedirector);
             objectModel.put(OBJECT_SOURCE_RESOLVER, oldResolver);

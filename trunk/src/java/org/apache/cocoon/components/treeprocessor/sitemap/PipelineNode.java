@@ -50,30 +50,29 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ConnectionResetException;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
 
 /**
  * Handles &lt;map:pipeline&gt;
  *
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.3 2003/04/07 08:21:30 sylvain Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.4 2003/04/11 13:14:51 cziegeler Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode
@@ -87,6 +86,8 @@ public class PipelineNode
     private ProcessingNode error404;
 
     private ProcessingNode error500;
+    
+    private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
     
     private ComponentManager manager;
 
@@ -114,7 +115,14 @@ public class PipelineNode
      */
     public void compose(ComponentManager manager) {
         this.manager = manager;
+        errorHandlerHelper.compose(manager);
     }
+
+	public void enableLogging(Logger logger)
+	{
+		super.enableLogging(logger);
+		errorHandlerHelper.enableLogging(logger);
+	}
 
     public void setChildren(ProcessingNode[] nodes) {
         this.children = nodes;
@@ -171,11 +179,11 @@ public class PipelineNode
                 
             } else if (error404 != null && ex instanceof ResourceNotFoundException) {
 			    // Invoke 404-specific handler
-			    return invokeErrorHandler(error404, ex, env);
+			    return errorHandlerHelper.invokeErrorHandler(error404, ex, env);
 			    
 			} else if (error500 != null) {
                 // Invoke global handler
-                return invokeErrorHandler(error500, ex, env);
+                return errorHandlerHelper.invokeErrorHandler(error500, ex, env);
                 
 			} else {
 			    // No handler : propagate
@@ -183,49 +191,5 @@ public class PipelineNode
 			}
         }
     }
-
-    private boolean invokeErrorHandler(ProcessingNode node, Exception ex, Environment env)
-    throws Exception {
-        InvokeContext errorContext = null;
-
-        try {
-            // Try to reset the response to avoid mixing already produced output
-            // and error page.
-            env.tryResetResponse();
-
-            // Build a new context
-            errorContext = new InvokeContext();
-            errorContext.enableLogging(getLogger());
-            errorContext.compose(this.manager);
-
-            // Create a Notifying
-            NotifyingBuilder notifyingBuilder= (NotifyingBuilder)this.manager.lookup(NotifyingBuilder.ROLE);
-            Notifying currentNotifying = null;
-            try {
-                currentNotifying = notifyingBuilder.build(this, ex);
-            } finally {
-                this.manager.release(notifyingBuilder);
-            }
-
-			Map objectModel = env.getObjectModel();
-            // Add it to the object model
-            objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
-            
-            // Also add the exception
-            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
-
-            // <notifier> is added in HandleErrorsNode
-            return node.invoke(env, errorContext);
-        } catch (Exception subEx) {
-            getLogger().error("An exception occured in while handling errors at " + node.getLocation(), subEx);
-            // Rethrow it : it will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
-            throw subEx;
-        } finally {
-            if (errorContext != null) {
-                errorContext.dispose();
-            }
-        }
-    }
-
 }
 
