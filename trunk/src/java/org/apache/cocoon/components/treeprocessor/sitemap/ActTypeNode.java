@@ -75,7 +75,7 @@ import org.apache.avalon.framework.component.ComponentManager;
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.1 2003/03/09 00:09:20 pier Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.2 2003/08/07 08:42:20 sylvain Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -95,10 +95,13 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
     protected ComponentManager manager;
 
-    public ActTypeNode(String type, VariableResolver source, String name) throws PatternException {
+    protected boolean inActionSet;
+
+    public ActTypeNode(String type, VariableResolver source, String name, boolean inActionSet) throws PatternException {
         super(type);
         this.source = source;
         this.name = name;
+        this.inActionSet = inActionSet;
     }
 
     public void setParameters(Map parameterMap) {
@@ -131,13 +134,12 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
         // If action is ThreadSafe, avoid select() and try/catch block (faster !)
         if (this.threadSafeAction != null) {
             actionResult = this.threadSafeAction.act(
-                redirector, resolver, objectModel, resolvedSource, resolvedParams );
-
+                redirector, resolver, objectModel, resolvedSource, resolvedParams);
         } else {
             Action action = (Action)this.selector.select(this.componentName);
             try {
                 actionResult = action.act(
-                redirector, resolver, objectModel, resolvedSource, resolvedParams );
+                redirector, resolver, objectModel, resolvedSource, resolvedParams);
 
             } finally {
                 this.selector.release(action);
@@ -155,7 +157,21 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
         } else {
             // Action succeeded : process children if there are some, with the action result
             if (this.children != null) {
-                return this.invokeNodes(this.children, env, context, name, actionResult);
+                boolean result = this.invokeNodes(this.children, env, context, name, actionResult);
+                
+                if (inActionSet) {
+                    // Merge child action results, if any
+                    Map childMap = (Map)env.getAttribute(ActionSetNode.ACTION_RESULTS);
+                    if (childMap != null) {
+                        childMap.putAll(actionResult);
+                    } else {
+                        // No previous results
+                        env.setAttribute(ActionSetNode.ACTION_RESULTS, actionResult);
+                    }
+                }
+                
+                return result;
+
 
             } else {
                 // Return false to continue sitemap invocation

@@ -50,69 +50,62 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.acting.Action;
-
+import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-
-import java.util.*;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNodeBuilder.java,v 1.1 2003/03/09 00:09:20 pier Exp $
+ * @version CVS $Id: ActionSetNodeBuilder.java,v 1.2 2003/08/07 08:42:20 sylvain Exp $
  */
 
-public class ActionSetNodeBuilder extends AbstractProcessingNodeBuilder implements ThreadSafe {
+public class ActionSetNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
+    
+    /** The TreeBuilder attribute indicating that an ActionSet is being built */
+    public static final String IN_ACTION_SET = ActionSetNodeBuilder.class.getName() + "/inActionSet";
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
         String actionSetName = config.getAttribute("name");
 
-        // Lists of action types, names and sources for each map:act
-        List actionTypes  = new ArrayList();
+        // Lists of action types and nodes for each map:act
         List actionNames  = new ArrayList();
-        List actionSources = new ArrayList();
-        List actionParameters = new ArrayList();
-
+        List actionNodes = new ArrayList();
+        
         Configuration[] childrenConfig = config.getChildren();
+        // Inform other builders that we're in an action-set
+        this.treeBuilder.setAttribute(IN_ACTION_SET, Boolean.TRUE);
+        
+        // Get the child actions
+        ProcessingNode[] nodes = this.buildChildNodes(config);
+        
+        // And get their names
+        String[] actions = new String[nodes.length];
         for (int i = 0; i < childrenConfig.length; i++) {
-
             Configuration childConfig = childrenConfig[i];
             String name = childConfig.getName();
 
             if ("act".equals(name)) {
-
-                checkNamespace(childConfig);
-                String type = this.treeBuilder.getTypeForStatement(childConfig, Action.ROLE + "Selector");
-
-                actionTypes.add(type);
-                actionNames.add(childConfig.getAttribute("action", null));
-                actionSources.add(VariableResolverFactory.getResolver(
-                    childConfig.getAttribute("src", null), this.manager));
-                actionParameters.add(this.getParameters(childConfig));
-
+                actions[i] = childConfig.getAttribute("action", null);
             } else {
                 // Unknown element
                 String msg = "Unknown element " + name + " in action-set at " + childConfig.getLocation();
                 throw new ConfigurationException(msg);
-            }
+            }            
         }
 
-        String[] types   = (String[])actionTypes.toArray(new String[actionTypes.size()]);
-        String[] actions = (String[])actionNames.toArray(new String[actionNames.size()]);
-        Map[]    parameters = (Map[])actionParameters.toArray(new Map[actionParameters.size()]);
-        VariableResolver[] sources =
-            (VariableResolver[])actionSources.toArray(new VariableResolver[actionSources.size()]);
-
-        ActionSetNode node = new ActionSetNode(actionSetName, types, actions, sources, parameters);
+        ActionSetNode node = new ActionSetNode(actionSetName, nodes, actions);
         this.treeBuilder.setupNode(node, config);
+
+        // Inform other builders that we're no more in an action-set
+        this.treeBuilder.setAttribute(IN_ACTION_SET, null);
 
         return node;
     }
