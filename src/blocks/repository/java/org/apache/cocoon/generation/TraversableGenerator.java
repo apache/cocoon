@@ -127,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.1 2003/10/23 07:55:49 gcasper Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.2 2003/10/28 14:09:49 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -243,23 +243,21 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             rePattern = par.getParameter("root", null);
             this.cacheKeyParList.add(rePattern);
             this.rootRE = (rePattern == null) ? null : new RE(rePattern);
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("root pattern: " + rePattern);
-            }
 
             rePattern = par.getParameter("include", null);
             this.cacheKeyParList.add(rePattern);
             this.includeRE = (rePattern == null) ? null : new RE(rePattern);
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("include pattern: " + rePattern);
-            }
 
             rePattern = par.getParameter("exclude", null);
             this.cacheKeyParList.add(rePattern);
             this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
+
             if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("root pattern: " + rePattern);
+                this.getLogger().debug("include pattern: " + rePattern);
                 this.getLogger().debug("exclude pattern: " + rePattern);
             }
+            
         } catch (RESyntaxException rese) {
             throw new ProcessingException("Syntax error in regexp pattern '" 
             			                  + rePattern + "'", rese);
