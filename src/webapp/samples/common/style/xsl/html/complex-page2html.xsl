@@ -6,7 +6,7 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: complex-page2html.xsl,v 1.1 2003/05/07 16:50:39 stephan Exp $
+    | CVS $Id: complex-page2html.xsl,v 1.2 2003/05/12 13:19:27 stephan Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -149,6 +149,12 @@
    <xsl:apply-templates/>
   </table>
  </xsl:template> -->
+
+  <xsl:template match="para">
+   <p>
+     <xsl:apply-templates/>
+   </p>
+  </xsl:template>
 
  <xsl:template match="*|@*|node()|text()" priority="-1">
   <xsl:copy><xsl:apply-templates select="*|@*|node()|text()"/></xsl:copy>
