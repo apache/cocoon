@@ -59,13 +59,20 @@ import org.apache.excalibur.source.Source;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import org.apache.cocoon.woody.datatype.convertor.DefaultFormatCache;
+import org.w3c.dom.Element;
 
 import java.util.Locale;
 
 /**
  * SelectionList implementation that always reads its content from the source
  * each time it is requested.
+ *
+ * <p>Note: the class {@link SelectionListBuilder} also interprets the same wd:selection-list XML, so if
+ * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;
@@ -107,8 +114,15 @@ public class DynamicSelectionList implements SelectionList {
      */
     public class SelectionListHandler extends AbstractXMLPipe {
         private Object currentValue;
+        private String currentValueAsString;
         private boolean hasLabel;
         private Locale locale;
+        /** The convertor used to parse the values in the selection list. */
+        private Convertor convertor;
+        private DOMBuilder convertorConfigDOMBuilder;
+        private int convertorConfigNestingLevel = 0;
+        private Convertor.FormatCache fromFormatCache = new DefaultFormatCache();
+        private Convertor.FormatCache toFormatCache = new DefaultFormatCache();
 
         public SelectionListHandler(Locale locale) {
             this.locale = locale;
@@ -132,25 +146,36 @@ public class DynamicSelectionList implements SelectionList {
 
         public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
                 throws SAXException {
-            if (namespaceURI.equals(Constants.WD_NS)) {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigNestingLevel++;
+                convertorConfigDOMBuilder.startElement(namespaceURI, localName,  qName, attributes);
+            } else if (namespaceURI.equals(Constants.WD_NS)) {
                 if (localName.equals("item")) {
+                    if (convertor == null) {
+                        // if no convertor was explicitely configured, use the default one of the datatype
+                        convertor = datatype.getConvertor();
+                    }
                     hasLabel = false;
                     String unparsedValue = attributes.getValue("value");
                     if (unparsedValue == null)
                         throw new SAXException("Missing value attribute on " + qName + " element.");
-                    currentValue = datatype.convertFromString(unparsedValue);
+                    currentValue = convertor.convertFromString(unparsedValue, locale, fromFormatCache);
                     if (currentValue == null)
                         throw new SAXException("Could not interpret the following value: \"" + unparsedValue + "\".");
                     AttributesImpl attrs = new AttributesImpl();
-                    // currently the duo convertFromString and convertToString here seems meaningless,
-                    // but in the future the formats of input and output could change
-                    attrs.addCDATAAttribute("value", datatype.convertToString(currentValue));
+                    currentValueAsString = datatype.getConvertor().convertToString(currentValue, locale, toFormatCache);
+                    attrs.addCDATAAttribute("value", currentValueAsString);
                     super.startElement(Constants.WI_NS, localName, Constants.WI_PREFIX_COLON + localName, attrs);
                 } else if (localName.equals("label")) {
                     hasLabel = true;
                     super.startElement(Constants.WI_NS, localName, Constants.WI_PREFIX_COLON + localName, attributes);
                 } else if (localName.equals("selection-list")) {
                     super.startElement(Constants.WI_NS, localName, Constants.WI_PREFIX_COLON + localName, attributes);
+                } else if (convertor == null && localName.equals("convertor")) {
+                    // record the content of this element in a dom-tree
+                    convertorConfigDOMBuilder = new DOMBuilder();
+                    convertorConfigDOMBuilder.startElement(namespaceURI, localName, qName, attributes);
+                    convertorConfigNestingLevel++;
                 } else {
                     super.startElement(namespaceURI, localName, qName, attributes);
                 }
@@ -163,13 +188,23 @@ public class DynamicSelectionList implements SelectionList {
 
         public void endElement(String namespaceURI, String localName, String qName)
                 throws SAXException {
-            if (namespaceURI.equals(Constants.WD_NS)) {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigNestingLevel--;
+                convertorConfigDOMBuilder.endElement(namespaceURI, localName, qName);
+                if (convertorConfigNestingLevel == 0) {
+                    Element convertorElement = convertorConfigDOMBuilder.getDocument().getDocumentElement();
+                    try {
+                        convertor = datatype.getBuilder().buildConvertor(convertorElement);
+                    } catch (Exception e) {
+                        throw new SAXException("Error building convertor from convertor configuration embedded in selection list XML.", e);
+                    }
+                }
+            } else if (namespaceURI.equals(Constants.WD_NS)) {
                 if (localName.equals("item")) {
                     if (!hasLabel) {
                         // make the label now
                         super.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, new AttributesImpl());
-                        String label = datatype.convertToStringLocalized(currentValue, locale);
-                        super.characters(label.toCharArray(), 0, label.length());
+                        super.characters(currentValueAsString.toCharArray(), 0, currentValueAsString.length());
                         super.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
                     }
                     super.endElement(Constants.WI_NS, localName, Constants.WI_PREFIX_COLON + localName);
@@ -184,6 +219,93 @@ public class DynamicSelectionList implements SelectionList {
                 super.endElement(namespaceURI, localName, qName);
             }
         }
-    }
 
+        public void comment(char ch[], int start, int len)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.comment(ch, start, len);
+            } else
+                super.comment(ch, start, len);
+        }
+
+        public void startPrefixMapping(String prefix, String uri)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.startPrefixMapping(prefix, uri);
+            } else
+                super.startPrefixMapping(prefix, uri);
+        }
+
+        public void endPrefixMapping(String prefix)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.endPrefixMapping(prefix);
+            } else
+                super.endPrefixMapping(prefix);
+        }
+
+        public void characters(char c[], int start, int len)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.characters(c, start, len);
+            } else
+                super.characters(c, start, len);
+        }
+
+        public void ignorableWhitespace(char c[], int start, int len)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.ignorableWhitespace(c, start, len);
+            } else
+                super.ignorableWhitespace(c, start, len);
+        }
+
+        public void processingInstruction(String target, String data)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.processingInstruction(target, data);
+            } else
+                super.processingInstruction(target, data);
+        }
+
+        public void skippedEntity(String name)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.skippedEntity(name);
+            } else
+                super.skippedEntity(name);
+        }
+
+        public void startEntity(String name)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.startEntity(name);
+            } else
+                super.startEntity(name);
+        }
+
+        public void endEntity(String name)
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.endEntity(name);
+            } else
+                super.endEntity(name);
+        }
+
+        public void startCDATA()
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.startCDATA();
+            } else
+                super.startCDATA();
+        }
+
+        public void endCDATA()
+                throws SAXException {
+            if (convertorConfigNestingLevel > 0) {
+                convertorConfigDOMBuilder.endCDATA();
+            } else
+                super.endCDATA();
+        }
+    }
 }
