@@ -46,7 +46,7 @@ import org.apache.cocoon.sitemap.impl.DefaultExecutor;
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
  *
- * @version CVS $Id: ConcreteTreeProcessor.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
 
@@ -344,7 +344,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         if (facade != null) {
             // Change the facade delegate
-            facade.setDelegate((EnvironmentWrapper)newEnv);
+            facade.setDelegate((ForwardEnvironmentWrapper)newEnv);
             newEnv = facade;
         }
 
@@ -359,7 +359,12 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         // Process the redirect
 // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
 //        context.reset();
-        return processor.process(newEnv, context);
+        // The following is a fix for bug #26854 and #26571
+        final boolean result = processor.process(newEnv, context);
+        if ( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() != null ) {
+            environment.redirect( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL(), false, false);
+        }
+        return result;
     }
 
 	public void dispose() {
