@@ -81,11 +81,23 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.4 2003/03/17 00:32:35 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
 {
+    /**
+     * LAST_EXEC_TIME
+     * A long value is stored under this key in each top level JavaScript 
+     * thread scope object. When you enter a context any scripts whose
+     * modification time is later than this value will be recompiled and reexecuted,
+     * and this value will be updated to the current time.
+     */
+    private final static String LAST_EXEC_TIME = "__PRIVATE_LAST_EXEC_TIME__";
+
+    /**
+     * Key for storing a JavaScript global scope object in the Cocoon session
+     */
     public static final String USER_GLOBAL_SCOPE = "JavaScript GLOBAL SCOPE";
 
     // This is the only optimization level that supports continuations
@@ -93,18 +105,60 @@ public class JavaScriptInterpreter extends AbstractInterpreter
     static int OPTIMIZATION_LEVEL = -2;
 
     /**
-     * List of <code>Source</code> objects that represent files to be
-     * read in by the JavaScript interpreter.
-     */
-    protected List scripts = new ArrayList();
-
-    /**
      * When was the last time we checked for script modifications. Used
      * only if {@link #reloadScripts} is true.
      */
     protected long lastTimeCheck = 0;
+
+    /**
+     * Shared global scope for scripts and other immutable objects
+     */
     JSGlobal scope;
-    List compiledScripts = Collections.synchronizedList(new ArrayList());
+
+    /**
+     * List of <code>String</code> objects that represent files to be
+     * read in by the JavaScript interpreter.
+     */
+    List topLevelScripts = new ArrayList();
+
+    class ScriptSourceEntry {
+	final private Source source;
+	private Script script;
+	private long compileTime;
+
+	public ScriptSourceEntry(Source source) {
+	    this.source = source;
+	}
+
+	public ScriptSourceEntry(Source source, Script script, long t) {
+	    this.source = source;
+	    this.script = script;
+	    this.compileTime = t;
+	}
+
+	public Source getSource() {
+	    return source;
+	}
+
+	public Script getScript(Context context, Scriptable scope,
+					     boolean refresh) 
+	    throws Exception {
+	    if (refresh) {
+		source.refresh();
+	    }
+	    if (script == null || compileTime < source.getLastModified()) {
+		script = compileScript(context, scope, source);
+		compileTime = source.getLastModified();
+	    }
+	    return script;
+	}
+    }
+    /**
+     * Mapping of String objects (source uri's) to ScriptSourceEntry's
+     *
+     */
+    Map compiledScripts = new HashMap();
+
     JSErrorReporter errorReporter;
     boolean enableDebugger = false;
     org.mozilla.javascript.tools.debugger.Main debugger;
@@ -153,6 +207,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
 
         Context context = Context.enter();
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
+        context.setCompileFunctionsWithDynamicScope(true);
         context.setGeneratingDebug(true);
         // add support for Rhino objects to JXPath
         JXPathIntrospector.registerDynamicClass(org.mozilla.javascript.Scriptable.class,
@@ -285,9 +340,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      * @return a <code>Scriptable</code> value
      * @exception Exception if an error occurs
      */
-    protected Scriptable enterContext(Environment environment, 
-                                      boolean needsExec,
-                                      List sourcesToBeCompiled)
+    protected Scriptable enterContext(Environment environment)
         throws Exception
     {
         Context context = Context.enter();
@@ -297,7 +350,6 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         context.setErrorReporter(errorReporter);
         Scriptable thrScope = null;
 
-        compileScripts(context, environment, sourcesToBeCompiled);
 
         // Try to retrieve the scope object from the session instance. If
         // no scope is found, we create a new one, but don't place it in
@@ -312,7 +364,12 @@ public class JavaScriptInterpreter extends AbstractInterpreter
 
         // The Cocoon object exported to JavaScript needs to be setup here
         JSCocoon cocoon;
+	boolean newScope = false;
+	long lastExecTime = 0;
         if (thrScope == null) {
+
+	    newScope = true;
+
             thrScope = context.newObject(scope);
 
             thrScope.setPrototype(scope);
@@ -325,26 +382,65 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             // to the interpreter object, and some Cocoon objects. See
             // JSCocoon for more details.
             Object args[] = {};
-            cocoon = (JSCocoon)context.newObject(scope, "Cocoon", args);
-            ((JSCocoon)cocoon).setInterpreter(this);
-            ((JSCocoon)cocoon).setScope(thrScope);
+            cocoon = (JSCocoon)context.newObject(thrScope, "Cocoon", args);
+            cocoon.setInterpreter(this);
+            cocoon.setParentScope(thrScope);
             thrScope.put("cocoon", thrScope, cocoon);
-            needsExec = true;
+	    ((ScriptableObject)thrScope).defineProperty(LAST_EXEC_TIME,
+							new Long(0),
+							ScriptableObject.DONTENUM |
+							ScriptableObject.PERMANENT);
+
         } else {
             cocoon = (JSCocoon)thrScope.get("cocoon", thrScope);
+	    lastExecTime = ((Long)thrScope.get(LAST_EXEC_TIME,
+					       thrScope)).longValue();
+
         }
         // We need to setup the JSCocoon object according to the current
         // request. Everything else remains the same.
         cocoon.setContext(manager, environment);
 
-        if (needsExec) {
-            for (int i = 0; i < compiledScripts.size(); i++) {
-                Script compiledScript = (Script)compiledScripts.get(i);
-                compiledScript.exec(context, thrScope);
-            }
+	// Check if we need to compile and/or execute scripts
+	List execList = new ArrayList();
+	boolean needsRefresh = false;
+	synchronized (this) {
+	    if (reloadScripts) {
+		long now = System.currentTimeMillis();
+		if (now >= lastTimeCheck + checkTime) {
+		    needsRefresh = true;
+		}
+		lastTimeCheck = now;
+	    }
+	    if (needsRefresh || needResolve.size() > 0) {
+		topLevelScripts.addAll(needResolve);
+		if (!newScope && !needsRefresh) {
+		    execList.addAll(needResolve);
+		} else {
+		    execList.addAll(topLevelScripts);
+		}
+		needResolve.clear();
+	    }
+	}
+	thrScope.put(LAST_EXEC_TIME, thrScope, 
+		     new Long(System.currentTimeMillis()));
+	for (int i = 0; i < execList.size(); i++) {
+	    String sourceURI = (String)execList.get(i);
+	    ScriptSourceEntry entry = 
+		(ScriptSourceEntry)compiledScripts.get(sourceURI);
+	    if (entry == null) {
+		Source src = environment.resolveURI(sourceURI);
+		entry = new ScriptSourceEntry(src);
+		compiledScripts.put(sourceURI, entry);
+	    }
+	    // Compile the script if necessary
+	    Script script = entry.getScript(context, thrScope, needsRefresh);
+	    long lastMod = entry.getSource().getLastModified();
+	    // Execute the script if necessary
+	    if (lastExecTime == 0 || lastMod > lastExecTime) {
+		script.exec(context, thrScope);
+	    } 
         }
-
-
         return thrScope;
     }
 
@@ -363,18 +459,6 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         Context.exit();
     }
 
-    private void compileScripts(Context cx, Environment environment, List sources)
-        throws Exception
-    {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Reading scripts");
-        }
-        Iterator iter = sources.iterator();
-        while (iter.hasNext()) {
-            Source src = (Source)iter.next();
-            compileScript(cx, src);
-        }
-    }
 
     /**
      * Compile filename as JavaScript code
@@ -385,90 +469,32 @@ public class JavaScriptInterpreter extends AbstractInterpreter
      */
 
     public Script compileScript(Context cx, 
+				Scriptable scope,
                                 Environment environment, 
                                 String fileName) throws Exception {
         Source src = environment.resolveURI(fileName);
         if (src == null) {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
-        return compileScript(cx, src);
+	ScriptSourceEntry entry = 
+	    (ScriptSourceEntry)compiledScripts.get(src.getURI());
+	Script compiledScript = null;
+	if (entry == null) {
+	    compiledScripts.put(src.getURI(),
+				entry = new ScriptSourceEntry(src));
+	} 
+	compiledScript = entry.getScript(cx, this.scope, false);
+	return compiledScript;
     }
 
-    private Script compileScript(Context cx, Source src) throws Exception {
+    private Script compileScript(Context cx, Scriptable scope, 
+				 Source src) throws Exception {
         InputStream is = src.getInputStream();
         Reader reader = new BufferedReader(new InputStreamReader(is));
-        Script compiledScript = cx.compileReader(scope, reader,
+        Script compiledScript = cx.compileReader(this.scope, reader,
                                                  src.getURI(), 
                                                  1, null);
-        compiledScripts.add(compiledScript);
-        return compiledScript;
-    }
-
-    /**
-     * Reloads any modified script files.
-     *
-     * <p>It checks to see if any of the files already read in (those
-     * present in the <code>scripts</code> hash map) have been
-     * modified.
-     *
-     * <p>It also checks to see if any script files have been registered
-     * with the interpreter since the last call to
-     * <code>checkForModifiedScripts</code>. These files are stored in
-     * the temporary array <code>needResolve</code>. If any such files
-     * are found, they are read in.
-     *
-     * @param environment an <code>Environment</code> value
-     * @param toBeCompiled output parameter: the list of <code>Source</code> objects to be compiled
-     * @return true if any existing Source script has changed
-     */
-    public boolean checkForModifiedScripts(Environment environment, 
-                                           List toBeCompiled)
-        throws Exception
-    {
-        boolean needsRefresh = false;
-        if (reloadScripts
-            && System.currentTimeMillis() >= lastTimeCheck + checkTime) {
-            // FIXME: should we worry about synchronization?
-            for (int i = 0, size = scripts.size(); i < size; i++) {
-                Source src = (Source)scripts.get(i);
-                src.refresh();
-                getLogger().debug("Checking " + src.getURI()
-                                  + ", source " + src
-                                  + ", last modified " + src.getLastModified()
-                                  + ", last time check " + lastTimeCheck);
-                if (src.getLastModified() > lastTimeCheck) {
-                    needsRefresh = true;
-                    break;
-                }
-            }
-        }
-        
-        // FIXME: remove the need for synchronization
-        synchronized (this) {
-            int size = needResolve.size();
-            
-            // If there's no need to re-read any file, and no files
-            // have been requested to be read since the last time,
-            // don't do anything.
-            if (!needsRefresh && size == 0) {
-                lastTimeCheck = System.currentTimeMillis();
-                return false;
-            }
-            
-            for (int i = 0; i < size; i++) {
-                String source = (String)needResolve.get(i);
-                Source src = environment.resolveURI(source);
-                scripts.add(src);
-                toBeCompiled.add(src);
-            }
-            needResolve.clear();
-        }
-        
-        // Update the time of the last check. If an exception occurs, this
-        // is not executed, so the next request will force a reparse of
-        // the script files because of an old time stamp.
-        lastTimeCheck = System.currentTimeMillis();
-        return needsRefresh;
+	return compiledScript;
     }
     
     /**
@@ -487,14 +513,11 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         throws Exception
     {
         Scriptable thrScope = null;
-        List toBeCompiled = new ArrayList(); 
-        boolean needsRefresh = checkForModifiedScripts(environment, toBeCompiled);
         try {
-            thrScope = enterContext(environment, needsRefresh, toBeCompiled);
+            thrScope = enterContext(environment);
 
             Context context = Context.getCurrentContext();
             JSCocoon cocoon = (JSCocoon)thrScope.get("cocoon", thrScope);
-          
             if (enableDebugger) {
                 final Scriptable s = thrScope;
                 debugger.setScopeProvider(
@@ -504,18 +527,6 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 if (!debugger.isVisible())
                     debugger.setVisible(true);
             }
-          
-            Object callFunction = thrScope.get("callFunction", thrScope);
-            if (callFunction == Scriptable.NOT_FOUND)
-                throw new RuntimeException("Cannot find 'callFunction' "
-                                           + "(system.js not loaded?)");
-          
-            Object fun = thrScope.get(funName, thrScope);
-            if (fun == Scriptable.NOT_FOUND)
-                throw new RuntimeException("'" + funName + "' is undefined!");
-            if (!(fun instanceof Function))
-                throw new RuntimeException("'" + funName + "' is not a function!");
-          
             int size = (params != null ? params.size() : 0);
             Object[] funArgs = new Object[size];
             NativeArray parameters = new NativeArray(size);
@@ -523,13 +534,22 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 for (int i = 0; i < size; i++) {
                     Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
                     funArgs[i] = arg.value;
+		    if (arg.name == null) arg.name = "";
                     parameters.put(arg.name, parameters, arg.value);
                 }
             }
             cocoon.setParameters(parameters);
             NativeArray funArgsArray = new NativeArray(funArgs);
+	    Object fun = ScriptableObject.getProperty(thrScope, funName);
+            if (fun == Scriptable.NOT_FOUND) {
+                fun = "funName";
+	    }
             Object callFunArgs[] = { fun, funArgsArray };
-            ((Function) callFunction).call(context, thrScope, thrScope, callFunArgs);
+            Object callFun = ScriptableObject.getProperty(thrScope, "callFunction");
+            if (callFun == Scriptable.NOT_FOUND) {
+                callFun = "callFunction";
+	    }
+            ScriptRuntime.call(context, callFun, thrScope, callFunArgs, thrScope);
         }
         catch (JavaScriptException ex) {
             Context.reportError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
@@ -565,7 +585,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         JSWebContinuation jswk = (JSWebContinuation)wk.getUserObject();
         JSCocoon cocoon = jswk.getJSCocoon();
         cocoon.setContext(manager, environment);
-        final Scriptable kScope = cocoon.getScope();
+        final Scriptable kScope = cocoon.getParentScope();
 
         if (enableDebugger) {
             debugger.setScopeProvider(

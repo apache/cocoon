@@ -85,13 +85,12 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.4 2003/03/16 18:03:53 vgritsenko Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.5 2003/03/17 00:32:35 coliver Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
     protected static String OBJECT_SOURCE_RESOLVER = "source-resolver";
     protected JavaScriptInterpreter interpreter;
-    protected Scriptable scope;
     protected NativeArray parameters;
     protected Environment environment;
     protected ComponentManager manager;
@@ -103,15 +102,6 @@ public class JSCocoon extends ScriptableObject
         return "Cocoon";
     }
 
-    public void setScope(Scriptable scope)
-    {
-        this.scope = scope;
-    }
-
-    public Scriptable getScope()
-    {
-        return scope;
-    }
 
     public void setParameters(NativeArray parameters)
     {
@@ -208,8 +198,9 @@ public class JSCocoon extends ScriptableObject
         org.mozilla.javascript.Context cx =
             org.mozilla.javascript.Context.getCurrentContext();
         try {
-            Script script = interpreter.compileScript(cx, environment, filename);
-            return script.exec(cx, ScriptableObject.getTopLevelScope(this));
+	    Scriptable scope = getParentScope();
+            Script script = interpreter.compileScript(cx, scope, environment, filename);
+            return script.exec(cx, scope);
         } catch (JavaScriptException e) {
             throw e;
         } catch (Exception e) {
@@ -273,7 +264,7 @@ public class JSCocoon extends ScriptableObject
     */
     public void jsFunction_createSession()
     {
-        interpreter.setSessionScope(environment, scope);
+        interpreter.setSessionScope(environment, getParentScope());
     }
 
     /**
