@@ -1,6 +1,4 @@
 /*
-$Id: EventImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
-<License>
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -24,7 +22,7 @@ $Id: EventImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
 
- 4. The names "Apache Lenya" and  "Apache Software Foundation"  must  not  be
+ 4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
     used to  endorse or promote  products derived from  this software without
     prior written permission. For written permission, please contact
     apache@apache.org.
@@ -46,12 +44,9 @@ $Id: EventImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
 
  This software  consists of voluntary contributions made  by many individuals
  on  behalf of the Apache Software  Foundation and was  originally created by
- Michael Wechner <michi@apache.org>. For more information on the Apache Soft-
- ware Foundation, please see <http://www.apache.org/>.
+ Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
+ Software Foundation, please see <http://www.apache.org/>.
 
- Lenya includes software developed by the Apache Software Foundation, W3C,
- DOM4J Project, BitfluxEditor, Xopus, and WebSHPINX.
-</License>
 */
 package org.apache.cocoon.workflow.impl;
 
@@ -62,7 +57,7 @@ import org.apache.cocoon.workflow.Event;
  * Implementation of an event.
  *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: EventImpl.java,v 1.1 2004/03/01 12:30:49 cziegeler Exp $
+ * @version $Id: EventImpl.java,v 1.2 2004/03/01 20:11:17 joerg Exp $
  */
 public class EventImpl implements Event {
     
@@ -84,8 +79,8 @@ public class EventImpl implements Event {
         return getName();
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * @see Object#equals(Object)
      */
     public boolean equals(Object otherObject) {
         boolean equals = false;
@@ -100,15 +95,15 @@ public class EventImpl implements Event {
         return equals;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /** 
+     * @see Object#hashCode()
      */
     public int hashCode() {
         return getName().hashCode();
     }
 
     /**
-     * @see org.apache.lenya.cms.workflow.Event#getName()
+     * @see Event#getName()
      */
     public String getName() {
         return name;
