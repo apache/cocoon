@@ -231,26 +231,53 @@
   </xsl:template>
 
   <!--
-    wi:mutivaluefield : produce a list of checkboxes
-    TODO : add other representations existing for selection-lists.
+    wi:multivaluefield : produce a list of checkboxes or a multiple selection-lists
   -->
   <xsl:template match="wi:multivaluefield">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
+    <xsl:variable name="liststyle" select="wi:styling/@list-type"/>
+
     <span title="{wi:help}">
-    <xsl:for-each select="wi:selection-list/wi:item">
-      <xsl:variable name="value" select="@value"/>
-      <input type="checkbox" value="{@value}" name="{$id}">
-        <xsl:if test="wi:styling/@submit-on-change='true'">
-          <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
-        </xsl:if>
-        <xsl:if test="$values[.=$value]">
-          <xsl:attribute name="checked">true</xsl:attribute>
-        </xsl:if>
-      </input>
-      <xsl:copy-of select="wi:label/node()"/>
-      <br/>
-    </xsl:for-each>
+      <xsl:choose>
+        <!-- checkbox -->
+        <xsl:when test="$liststyle = 'checkbox'">
+          <xsl:for-each select="wi:selection-list/wi:item">
+            <xsl:variable name="value" select="@value"/>
+            <input type="checkbox" value="{@value}" name="{$id}">
+              <xsl:if test="$values[. = $value]">
+                <xsl:attribute name="checked">true</xsl:attribute>
+              </xsl:if>
+            </input>
+            <xsl:copy-of select="wi:label/node()"/>
+            <br/>
+          </xsl:for-each>
+        </xsl:when>
+        <!-- listbox -->
+        <xsl:otherwise>
+          <select name="{$id}" multiple="multiple">
+            <xsl:attribute name="size">
+              <xsl:choose>
+                <xsl:when test="wi:styling/@listbox-size">
+                  <xsl:value-of select="wi:styling/@listbox-size"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>5</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:attribute>
+            <xsl:for-each select="wi:selection-list/wi:item">
+              <xsl:variable name="value" select="@value"/>
+              <option value="{$value}">
+                <xsl:if test="$values[. = $value]">
+                  <xsl:attribute name="selected">selected</xsl:attribute>
+                </xsl:if>
+                <xsl:copy-of select="wi:label/node()"/>
+              </option>
+            </xsl:for-each>
+          </select>
+        </xsl:otherwise>
+      </xsl:choose>
     </span>
     <xsl:call-template name="woody-field-common"/>
   </xsl:template>
