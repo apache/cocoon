@@ -27,6 +27,30 @@
           force="true"/>
   </target>
 
+  <!-- Format source code -->
+  <target name="format" depends="compile">
+                                                                                                                                                                               
+    <taskdef name="jalopy"
+             classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
+     <classpath>
+      <fileset dir="tools/jalopy/lib">
+        <include name="*.jar" />
+      </fileset>
+     </classpath>
+    </taskdef>
+                                                                                                                                                                               
+    <jalopy convention="tools/jalopy/conf/convention.xml"
+            history="file"
+            historymethod="adler32"
+            loglevel="info"
+            threads="2">
+     <fileset dir="${java}">
+<!--      <include name="**/*.java"/>-->
+      <include name="org/apache/cocoon/*.java"/>
+     </fileset>
+    </jalopy>
+  </target>
+
 <!-- === Gump Targets ====================================================== -->
 
   <!-- compiles and packages the core classes and the deprecated classes -->
