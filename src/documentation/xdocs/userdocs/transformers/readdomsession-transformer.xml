@@ -17,26 +17,26 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Read DOM Session Transformer</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-			<person name="Sven Beauprez" email="Sven.Beauprez@the-ecorp.com"/>
-			<person name="Davanum Srinivas" email="dims@yahoo.com"/>
-		 </authors>
-		 <abstract>This document describes the read dom session transformer of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Read DOM Session Transformer">
-			<p>With this transformer, a DOM-object that is stored in the session, can be inserted
+  <header>
+    <title>Read DOM Session Transformer</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+      <person name="Sven Beauprez" email="Sven.Beauprez@the-ecorp.com"/>
+      <person name="Davanum Srinivas" email="dims@yahoo.com"/>
+     </authors>
+     <abstract>This document describes the read dom session transformer of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Read DOM Session Transformer">
+      <p>With this transformer, a DOM-object that is stored in the session, can be inserted
   in the SAX stream at a given position.</p>
-			<ul>
-				<li>Name : readDOMsession</li>
-				<li>Class: org.apache.cocoon.transformation.ReadDOMSessionTransformer</li>
-				<li>Cacheable: no.</li>
-			</ul>
+      <ul>
+        <li>Name : readDOMsession</li>
+        <li>Class: org.apache.cocoon.transformation.ReadDOMSessionTransformer</li>
+        <li>Cacheable: no.</li>
+      </ul>
 <p>
 Simply transforms a DOM to SAX-events, which can be used further on in the 
 pipeline. Once you stored the result of a query in the session with the 
@@ -79,6 +79,6 @@ DOM-tree just after it has forwarded the end-element 'users'.
 The ReadDOMSessionTransformer is a standalone component, you don't need to use 
 it in combination with the WriteDOMSessionTransformer.
 </p>
-		</s1>
-	</body>
+    </s1>
+  </body>
 </document>

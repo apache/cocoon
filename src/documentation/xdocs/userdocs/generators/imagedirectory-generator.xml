@@ -30,7 +30,7 @@
   <body>
     <s1 title="Image Directory Generator">
       <p>The Image Directory provides all the functionality of the
-      	<link href="directory-generator.html">Directory Generator</link>. Additionally it
+        <link href="directory-generator.html">Directory Generator</link>. Additionally it
         ensures that the files are images and adds their dimensions (<code>width</code>
         and <code>height</code>) to the attributes. It is configured in the same way as the
         Directory Generator.</p>

@@ -46,42 +46,42 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
   <body>
     <s1 title="Description">
       <p>The Sendmail logicsheet (taglib) is a XSP logicsheet that
-	wraps XML tags around the operation of sending an email
-	message. Specifically, the Sendmail logicsheet provides an XML
-	interface to the primary methods of the Java Mail API for
-	sending an internet mail including the ability to attach any
-	binary data files to the message (see the
-	<link
-	  href="http://java.sun.com/products/javamail/">Java
-	  Mail API</link> ) for more
-	information.</p>
+  wraps XML tags around the operation of sending an email
+  message. Specifically, the Sendmail logicsheet provides an XML
+  interface to the primary methods of the Java Mail API for
+  sending an internet mail including the ability to attach any
+  binary data files to the message (see the
+  <link
+    href="http://java.sun.com/products/javamail/">Java
+    Mail API</link> ) for more
+  information.</p>
 
       <p>The Sendmail logicsheet is an alternative to the <link
-	  href="../actions/sendmail-action.html">Sendmail
-	  action</link>.</p>
+    href="../actions/sendmail-action.html">Sendmail
+    action</link>.</p>
     </s1>
 
     <s1 title="Usage">
       <p>As an XSP logicsheet, the Sendmail logicsheet can only be used
-	in an XSP page. It may be helpful to be familiar with <link
-	  href="xsp.html">XSP</link> before working with this (or any)
-	logicsheet.</p>
+  in an XSP page. It may be helpful to be familiar with <link
+    href="xsp.html">XSP</link> before working with this (or any)
+  logicsheet.</p>
 
       <p>Since the Sendmail logicsheet is not activated in the default
-	Cocoon setup, a couple of steps must be taken before an email
-	can be send.</p>
+  Cocoon setup, a couple of steps must be taken before an email
+  can be send.</p>
 
       <p>First of all Cocoon must have been compiled with the required
-	Java Mail API libraries. The libraries <code>mail.jar</code>
-	from the Java Mail distribution and the library
-	<code>activation.jar</code> from the Java Activation Framework
-	have to be copied to the location <code>lib/local</code> of
-	Cocoon's source distribution. Cocoon must then be recompiled.
+  Java Mail API libraries. The libraries <code>mail.jar</code>
+  from the Java Mail distribution and the library
+  <code>activation.jar</code> from the Java Activation Framework
+  have to be copied to the location <code>lib/local</code> of
+  Cocoon's source distribution. Cocoon must then be recompiled.
       </p>
 
       <p>Before the Sendmail logicsheet can be used, some setup in
-	<code>cocoon.xconf</code> is required. See, if the following
-	fragment is already existing.</p>
+  <code>cocoon.xconf</code> is required. See, if the following
+  fragment is already existing.</p>
 
       <source>
 <![CDATA[
@@ -95,17 +95,17 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
       </source>
 
       <p>If it is not present, it is easiest to simply locate the
-	entry <code>xsp-response</code> for the Response logicsheet
-	and put the above fragment before the
-	<code>&lt;builtin-logicsheet&gt;</code> of the Response
-	logicsheet entry. This can either be done before recompilation
-	or later, when Cocoon is already deployed. If done later,
-	Cocoon must be reloaded.</p>
+  entry <code>xsp-response</code> for the Response logicsheet
+  and put the above fragment before the
+  <code>&lt;builtin-logicsheet&gt;</code> of the Response
+  logicsheet entry. This can either be done before recompilation
+  or later, when Cocoon is already deployed. If done later,
+  Cocoon must be reloaded.</p>
 
       <p>To use the Sendmail logicsheet, you must first declare the
-	<em>sendmail</em> namespace, mapping it to the uri
-	<em>http://apache.org/cocoon/sendmail/1.0</em>. These
-	steps will result in code like this:</p>
+  <em>sendmail</em> namespace, mapping it to the uri
+  <em>http://apache.org/cocoon/sendmail/1.0</em>. These
+  steps will result in code like this:</p>
 
       <source>
 <![CDATA[
@@ -120,16 +120,16 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
       </source>
 
       <p>You may then use any of the elements in the <em>sendmail</em>
-	namespace described in the <link
-	  href="sendmail.html#elements">Elements Reference</link>
-	section below.</p>
+  namespace described in the <link
+    href="sendmail.html#elements">Elements Reference</link>
+  section below.</p>
     </s1>
 
     <s1 title="Example Code">
       <p>The following code shows an example of using the Sendmail
-	logicsheet. A HTML form is used, to post information about
-	updated documentation to some imaginary mailing list. The XSP
-	page is invoked from a HTML form like this.</p>
+  logicsheet. A HTML form is used, to post information about
+  updated documentation to some imaginary mailing list. The XSP
+  page is invoked from a HTML form like this.</p>
 
       <source>
 <![CDATA[
@@ -154,16 +154,16 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
       </source>
 
       <p>Since the form allows to attach upto two arbitrary files, it
-	is important, that <code>enctype="multipart/form-data"</code>
-	is used. This is the XSP code, that is invoked:</p>
+  is important, that <code>enctype="multipart/form-data"</code>
+  is used. This is the XSP code, that is invoked:</p>
 
       <source>
 <![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsp:page language="java"
-	  xmlns:xsp="http://apache.org/xsp"
-	  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
-	  xmlns:sendmail="http://apache.org/cocoon/sendmail/1.0">
+    xmlns:xsp="http://apache.org/xsp"
+    xmlns:xsp-request="http://apache.org/xsp/request/2.0"
+    xmlns:sendmail="http://apache.org/cocoon/sendmail/1.0">
   <email>
     <xsp:logic>
       StringBuffer body = new StringBuffer();
@@ -200,9 +200,9 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
          </p>
       </sendmail:on-success>
       <sendmail:on-error>
-   		 <p style="color:red;">
+        <p style="color:red;">
            An error occurred: <sendmail:error-message/>
-   		 </p>
+        </p>
       </sendmail:on-error>
     </sendmail:send-mail>
  </email>
@@ -211,24 +211,24 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
       </source>
 
       <p>Cocoons feature to automatically disassemble the incoming
-	request puts the uploaded files automatically into the upload
-	directory and the files are accessible through the
-	<code>uploaded_file[12]</code> request parameters (make sure,
-	that <code>autosave-uploads</code> is set to <code>true</code>
-	in the <code>WEB-INF/web.xml</code> file of the Cocoon
-	context). By using
-	<code>&lt;xsp:expr&gt;request.get("req-param")&lt;/xsp:expr&gt;</code>
-	you actually get an object of class
-	<code>org.apache.cocoon.servlet.multipart.Part</code>.
-	The <code>&lt;sendmail:send-mail&gt;</code> fragment is
-	replaced with an <code>&lt;error&gt;</code> element, if an
-	error occurs during the sending of the message.</p>
+  request puts the uploaded files automatically into the upload
+  directory and the files are accessible through the
+  <code>uploaded_file[12]</code> request parameters (make sure,
+  that <code>autosave-uploads</code> is set to <code>true</code>
+  in the <code>WEB-INF/web.xml</code> file of the Cocoon
+  context). By using
+  <code>&lt;xsp:expr&gt;request.get("req-param")&lt;/xsp:expr&gt;</code>
+  you actually get an object of class
+  <code>org.apache.cocoon.servlet.multipart.Part</code>.
+  The <code>&lt;sendmail:send-mail&gt;</code> fragment is
+  replaced with an <code>&lt;error&gt;</code> element, if an
+  error occurs during the sending of the message.</p>
 
       <p>Another noteworthy item is the formatting of the body text
-	through a Java <code>StringBuffer</code>. Any formatting, that
-	would be placed inside the <code>&lt;sendmail:body&gt;</code>
-	element would be lost due to the internal workings of the
-	Sendmail logicsheet.</p>
+  through a Java <code>StringBuffer</code>. Any formatting, that
+  would be placed inside the <code>&lt;sendmail:body&gt;</code>
+  element would be lost due to the internal workings of the
+  Sendmail logicsheet.</p>
 
     </s1>
 
@@ -253,14 +253,14 @@ http://issues.apache.org/bugzilla/show_bug.cgi?id=15005
           <td>sendmail:attachment</td>
 
           <td>
-	  </td>
+    </td>
 
           <td>Sets the attachment for this email. Attributes for setting name,
               mime-type, or an URL (e.g. using cocoon:-protocol!). Parameters
 can be set dynamically using &lt;sendmail:param/&gt; syntax. If an object is
 to be attached, it must be set this way. Use the following
-	    expression to obtain the correct object from the request:
-	    <code>&lt;xsp:expr&gt;request.get("req-param")&lt;/xsp:expr&gt;</code>.
+      expression to obtain the correct object from the request:
+      <code>&lt;xsp:expr&gt;request.get("req-param")&lt;/xsp:expr&gt;</code>.
           </td>
         </tr>
 
@@ -271,8 +271,8 @@ to be attached, it must be set this way. Use the following
           </td>
 
           <td>Sets the recipients of a blind carbon copy of the
-	    email. This can be a list of comma separated email
-	    addresses.</td>
+      email. This can be a list of comma separated email
+      addresses.</td>
         </tr>
 
         <tr>
@@ -293,7 +293,7 @@ to be attached, it must be set this way. Use the following
           </td>
 
           <td>Sets the recipients of a carbon copy of this email. This
-	    can be a list of comma separated email addresses.</td>
+      can be a list of comma separated email addresses.</td>
         </tr>
 
         <tr>
@@ -303,7 +303,7 @@ to be attached, it must be set this way. Use the following
           </td>
 
           <td>Sets the character set for encoding the message. This
-	    tag has only an effect, if no attachments are send.</td>
+      tag has only an effect, if no attachments are send.</td>
         </tr>
 
         <tr>
@@ -322,8 +322,8 @@ to be attached, it must be set this way. Use the following
           </td>
 
           <td>The IP-address or the name of the host, which should
-	    deliver the email message. Better known as the mail
-	    transfer agent or short MTA.</td>
+      deliver the email message. Better known as the mail
+      transfer agent or short MTA.</td>
         </tr>
 
         <tr>
@@ -341,8 +341,8 @@ to be attached, it must be set this way. Use the following
           <td></td>
 
           <td>Sets the destination/to address of the email message.
-	    This can be a list of comma separated email
-	    addresses.</td>
+      This can be a list of comma separated email
+      addresses.</td>
         </tr>
 
       </table>
@@ -350,8 +350,8 @@ to be attached, it must be set this way. Use the following
 
     <s1 title="Hint">
       <p>Please read this <link
-	  href="../actions/sendmail-action.html#hint">hint</link>,
-	since it applies here as well.</p>
+    href="../actions/sendmail-action.html#hint">hint</link>,
+  since it applies here as well.</p>
     </s1>
   </body>
 </document>

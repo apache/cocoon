@@ -17,25 +17,25 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>XML:DB Collection Generator</title>
-		<version>0.1</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
-		 </authors>
-		 <abstract>This document describes the XML:DB
+  <header>
+    <title>XML:DB Collection Generator</title>
+    <version>0.1</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
+     </authors>
+     <abstract>This document describes the XML:DB
      Collection generator of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Warning!">
+  </header>
+  <body>
+    <s1 title="Warning!">
       <p>
         The XML:DB generators are currently unmaintained and going to be 
         deprecated soon. Please use the XML:DB pseudo-protocol instead.
       </p>  
     </s1>
-		<s1 title="XML:DB Collection Generator">
-			<p>
+    <s1 title="XML:DB Collection Generator">
+      <p>
         As for the filesystem there are two generators provided (a file
         generator and a directory generator), so is for XML:DB, which 
         can roughly be tought as an XML filesystem, where Collections
@@ -72,5 +72,5 @@
          end of the <code>base</code> tag.
       </p>
     </s1>
-	</body>
+  </body>
 </document>

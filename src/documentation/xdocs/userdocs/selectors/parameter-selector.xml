@@ -82,9 +82,9 @@
     <map:selectors>
      ...
      <map:selector
-	    name="parameter"
-      	logger="sitemap.selector.parameter"
-      	src="org.apache.cocoon.selection.ParameterSelector"/>
+      name="parameter"
+        logger="sitemap.selector.parameter"
+        src="org.apache.cocoon.selection.ParameterSelector"/>
      ...]]></source>
    
    <p>
@@ -153,8 +153,8 @@
 
         <map:when test="aggregate">
             <map:aggregate element="site">
-        	<map:part src="cocoon:/{1}/sidebar-{1}/{2}.xml"/>
-        	<map:part src="cocoon:/body-{1}/{2}.xsp"/>
+          <map:part src="cocoon:/{1}/sidebar-{1}/{2}.xml"/>
+          <map:part src="cocoon:/body-{1}/{2}.xsp"/>
             </map:aggregate>
             <map:transform src="stylesheets/aggregate2xhtml.xsl"/>
             <map:serialize/>

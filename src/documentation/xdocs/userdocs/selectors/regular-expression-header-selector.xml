@@ -136,8 +136,8 @@
           <code>&lt;map:when&gt;</code> clause must be declared in a 
           <code>pattern</code> name attribute.
         </p>
-	<p>The header-name can be overridden by a parameter element.
-	</p>
+  <p>The header-name can be overridden by a parameter element.
+  </p>
       </s2>
       <s2 title="Effect on Object Model and Sitemap Parameters">
         <p>

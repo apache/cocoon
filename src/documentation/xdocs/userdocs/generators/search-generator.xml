@@ -48,7 +48,7 @@
 <p>or</p>
 <source><![CDATA[
 <map:generate type="search">
-	<query>your query string</query>
+  <query>your query string</query>
 </map:generate>
 ]]></source>
     </s1>

@@ -17,26 +17,26 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Filter Transformer</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-			<person name="Sven Beauprez" email="Sven.Beauprez@the-ecorp.com"/>
-			<person name="Davanum Srinivas" email="dims@yahoo.com"/>
-		 </authors>
-		 <abstract>This document describes the Filter transformer of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Filter Transformer">
-			<p>The filter transformer can be used to let only an amount of elements 
+  <header>
+    <title>Filter Transformer</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+      <person name="Sven Beauprez" email="Sven.Beauprez@the-ecorp.com"/>
+      <person name="Davanum Srinivas" email="dims@yahoo.com"/>
+     </authors>
+     <abstract>This document describes the Filter transformer of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Filter Transformer">
+      <p>The filter transformer can be used to let only an amount of elements 
                      through in a given block.</p>
-			<ul>
-				<li>Name : filter</li>
-				<li>Class: org.apache.cocoon.transformation.FilterTransformer</li>
-				<li>Cacheable: no.</li>
-			</ul>
+      <ul>
+        <li>Name : filter</li>
+        <li>Class: org.apache.cocoon.transformation.FilterTransformer</li>
+        <li>Cacheable: no.</li>
+      </ul>
 <p>
 When you for example query a database and it returns too many rows too process at once, you 
 might want to take a block of elements, process this block and ignore the rest 
@@ -128,6 +128,6 @@ request and they can be passed to the sitemap with an action.
 The FilterTransformer is a standalone component, you don't need to use it in 
 combination with the SQLTransformer.
 </p>
-		</s1>
-	</body>
+    </s1>
+  </body>
 </document>

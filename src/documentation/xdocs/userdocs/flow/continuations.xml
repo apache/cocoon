@@ -107,20 +107,20 @@ function calculator()
 
       <s2 title="What are continuations?">
 
-	<p>A continuation is exactly the type of object that we need.
-	Think of a continuation as an object that, for a given point
-	in your program, contains a snapshot of the stack trace,
-	including all the local variables, and the program
-	counter. You can not only store these things in the
-	continuation object, but also restore the execution of the
-	program from a continuation object. This means that the stack
-	trace and the program counter of the running program become
-	the ones stored in a continuation.</p>
+  <p>A continuation is exactly the type of object that we need.
+  Think of a continuation as an object that, for a given point
+  in your program, contains a snapshot of the stack trace,
+  including all the local variables, and the program
+  counter. You can not only store these things in the
+  continuation object, but also restore the execution of the
+  program from a continuation object. This means that the stack
+  trace and the program counter of the running program become
+  the ones stored in a continuation.</p>
 
-	<p>Continuations are powerful concepts from the world of
-	functional languages, like <link
-	href="http://www.schemers.org/">Scheme</link>, but they are
-	becoming popular in other languages as well.</p>
+  <p>Continuations are powerful concepts from the world of
+  functional languages, like <link
+  href="http://www.schemers.org/">Scheme</link>, but they are
+  becoming popular in other languages as well.</p>
 
     </s2>
 

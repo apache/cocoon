@@ -108,7 +108,7 @@
     <!-- This will turn on attribute generation for this invocation only. -->
     <map:match pattern="request">
         <map:generate type="request">
-	    <map:parameter name="generate-attributes" value="true"/>
+      <map:parameter name="generate-attributes" value="true"/>
         </map:generate>
     </map:match>
 

@@ -725,11 +725,11 @@ The name of the parent element which contains the merged XML content from each p
   </map:resource>
 
   <map:resource name="transform-data2svg" >
-    <map:transform src="xsl/data2svg.xsl" />    	
+    <map:transform src="xsl/data2svg.xsl" />      
   </map:resource>
 
   <map:resource name="transform-data2html" >
-    <map:transform src="xsl/data2html.xsl" />    	
+    <map:transform src="xsl/data2html.xsl" />      
   </map:resource>
   
   <map:resource name="pipe-data-raw">

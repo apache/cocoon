@@ -235,7 +235,7 @@
             argument does not contain a colon, the argument names a request
             parameter which is a file upload through a HTML form (internally an
             <code>org.apache.cocoon.components.request.multipart.FilePart</code>
-	          object).
+            object).
           </td>
         </tr>
 <!-- [CH] I believe deleting attachments should be handled at a different place

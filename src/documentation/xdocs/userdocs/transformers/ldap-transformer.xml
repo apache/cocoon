@@ -17,29 +17,29 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>LDAP Transformer</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-		 </authors>
-		 <abstract>This document describes the LDAP transformer of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="LDAP Transformer">
-			<p>
+  <header>
+    <title>LDAP Transformer</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+     </authors>
+     <abstract>This document describes the LDAP transformer of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="LDAP Transformer">
+      <p>
                    The <code>LDAPTransformer</code> is a class that can be plugged into a pipeline
                    to transform the SAX events which passes through this transformer into queries
                    to an ldap interface and transforms the response to SAX events which are passed
                    on in the pipeline.
                   </p>
-			<ul>
-				<li>Name : ldap</li>
-				<li>Class: org.apache.cocoon.transformation.LDAPTransformer</li>
-				<li>Cacheable: no.</li>
-			</ul>
-			<p>This transformer is optional and not available in the binary distribution.
+      <ul>
+        <li>Name : ldap</li>
+        <li>Class: org.apache.cocoon.transformation.LDAPTransformer</li>
+        <li>Cacheable: no.</li>
+      </ul>
+      <p>This transformer is optional and not available in the binary distribution.
                      However if you want to use it, you have to retrieve the jndi package,
                      copy the jar file into the lib directory of Cocoon and rebuild.
                   </p>
@@ -78,6 +78,6 @@
  &lt;!ELEMENT debug (TRUE  | FALSE)&gt;* (default: FALSE)<br/> 
 can also be defined as parameter in the sitemap.
 </p>
-		</s1>
-	</body>
+    </s1>
+  </body>
 </document>
