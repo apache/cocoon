@@ -50,14 +50,11 @@
 */
 package org.apache.cocoon.woody.event.impl;
 
-import java.io.StringReader;
-
 import org.apache.cocoon.woody.event.ActionListener;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.event.WidgetListener;
 import org.apache.cocoon.woody.event.WidgetListenerBuilder;
-import org.apache.cocoon.woody.event.ValueChangedEvent;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.mozilla.javascript.Context;
+import org.apache.cocoon.woody.util.JavaScriptHelper;
 import org.mozilla.javascript.Script;
 import org.w3c.dom.Element;
 
@@ -79,25 +76,16 @@ import org.w3c.dom.Element;
 public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder {
 
     public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
-        String jsText = DomHelper.getElementText(element);
         
-        String sourceName = DomHelper.getSystemIdLocation(element);
+        Script script = JavaScriptHelper.buildScript(element);
         
-        Context ctx = Context.enter();
-        Script script = ctx.compileReader(
-            JavaScriptWidgetListener.getRootScope(), //scope
-            new StringReader(jsText), // in
-            sourceName == null ? "<unknown>" : sourceName, // sourceName
-            DomHelper.getLineLocation(element), // lineNo
-            null // securityDomain
-         );
-         
-         if (listenerClass == ActionListener.class) {
-             return new JavaScriptWidgetListener.JSActionListener(script);
-         } else if (listenerClass == ValueChangedEvent.class) {
-             return new JavaScriptWidgetListener.JSValueChangedListener(script);
-         } else {
-             throw new Exception("Unkonwn event class: " + listenerClass);
-         }
+        if (listenerClass == ActionListener.class) {
+            return new JavaScriptWidgetListener.JSActionListener(script);
+        } else if (listenerClass == ValueChangedEvent.class) {
+            return new JavaScriptWidgetListener.JSValueChangedListener(script);
+        } else {
+            throw new Exception("Unkonwn event class: " + listenerClass);
+        }
     }
+    
 }

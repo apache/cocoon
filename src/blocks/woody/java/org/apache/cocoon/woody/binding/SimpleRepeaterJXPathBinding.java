@@ -72,20 +72,25 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
+    private final boolean clearOnLoad;
     private final JXPathBindingBase rowBinding;
 
     public SimpleRepeaterJXPathBinding(
-      String repeaterId, String repeaterPath, String rowPath, JXPathBindingBase rowBinding) {
+      String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, JXPathBindingBase rowBinding) {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.rowBinding = rowBinding;
+        this.clearOnLoad = clearOnLoad;
     }
 
     public void loadFormFromModel(Widget frmModel, JXPathContext jctx) {
         // Find the repeater and clear it
         Repeater repeater = (Repeater) frmModel.getWidget(this.repeaterId);
-        repeater.removeRows();
+        
+        if (this.clearOnLoad) {
+            repeater.removeRows();
+        }
 
         // Move to repeater context
         Pointer ptr = jctx.getPointer(this.repeaterPath);
@@ -97,11 +102,18 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
             Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
 
             //iterate through it
+            int rowNum = 0;
             while (rowPointers.hasNext()) {
-                // create a new row, take that as the frmModelSubContext
-                Repeater.RepeaterRow thisRow = repeater.addRow();
-    
-                // make a jxpath ObjectModelSubcontext on the iterated element
+                // Get a row. It is created if needed (depends on clearOnLoad)
+                Repeater.RepeaterRow thisRow;
+                if (repeater.getSize() > rowNum) {
+                    thisRow = repeater.getRow(rowNum);
+                } else {
+                    thisRow = repeater.addRow();
+                }
+                rowNum++;
+     
+                // make a jxpath sub context on the iterated element
                 Pointer jxp = (Pointer) rowPointers.next();
                 JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
     

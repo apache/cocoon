@@ -50,43 +50,68 @@
 */
 package org.apache.cocoon.woody.binding;
 
+import org.apache.cocoon.woody.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.util.JavaScriptHelper;
+import org.mozilla.javascript.Script;
 import org.w3c.dom.Element;
 
 /**
- * A simple repeater binding that will replace (i.e. delete then re-add all) its
- * content.
+ * Builds a {@link Binding} based on two JavaScript snippets, respectively for loading and saving the form.
+ * <p>
+ * The syntax for this binding is as follows :
  * <pre>
- * &lt;wb:simple-repeater
- *   id="contacts"
- *   parent-path="contacts"&gt;
- *   &lt;<em>... child bindings ...</em>
- * &lt;/wb:simple-repeater&gt;
+ *   &lt;wb:javascript id="foo" path="@foo"&gt;
+ *     &lt;wb:load-form&gt;
+ *       var appValue = jxpathPointer.getValue();
+ *       var formValue = doLoadConversion(appValue);
+ *       widget.setValue(formValue);
+ *     &lt;/wb:load-form&gt;
+ *     &lt;wb:save-form&gt;
+ *       var formValue = widget.getValue();
+ *       var appValue = doSaveConversion(formValue);
+ *       jxpathPointer.setValue(appValue);
+ *     &lt;/wb:save-form&gt;
+ *   &lt;/wb:javascript&gt;
  * </pre>
+ * This example is rather trivial and could be replaced by a simple &lt;wb:value&gt;, but
+ * it shows the available variables in the script:
+ * <ul>
+ * <li><code>widget</code>: the widget identified by the "id" attribute,
+ * <li><code>jxpathPointer</code>: the JXPath pointer corresponding to the "path" attribute,
+ * <li><code>jxpathContext</code> (not shown): the JXPath context corresponding to the "path" attribute
+ * </ul>
+ * The &lt;wb:save-form&gt; snippet should be ommitted if the "read-only" attribute is present.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.1 2003/10/03 13:40:41 sylvain Exp $
  */
-public class SimpleRepeaterJXPathBindingBuilder
-    extends JXpathBindingBuilderBase {
+public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
-    public JXPathBindingBase buildBinding(
-        Element bindingElem,
-        JXPathBindingManager.Assistant assistant) throws BindingException {
-
+    public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
-            String repeaterId = DomHelper.getAttribute(bindingElem, "id");
-            String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
-            String rowPath = DomHelper.getAttribute(bindingElem, "row-path");
-            boolean clearOnLoad = DomHelper.getAttributeAsBoolean(bindingElem, "clear-before-load", true);
+            String id = DomHelper.getAttribute(element, "id");
+            String path = DomHelper.getAttribute(element, "path");
+            
+            boolean readOnly = DomHelper.getAttributeAsBoolean(element, "read-only", false);
+        
 
-            JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElem);
+            Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
+            Script loadScript = JavaScriptHelper.buildScript(loadElem);
+            
+            Script saveScript;
+            if (readOnly) {
+                saveScript = null;
+            } else {
+                Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
+                saveScript = JavaScriptHelper.buildScript(saveElem);
+            }
 
-            return new SimpleRepeaterJXPathBinding(repeaterId, parentPath, rowPath, clearOnLoad,
-                new ComposedJXPathBindingBase(childBindings));
-        } catch (BindingException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BindingException("Error building repeater binding defined at " + DomHelper.getLocation(bindingElem), e);
+            return new JavaScriptJXPathBinding(id, path, loadScript, saveScript);
+
+        } catch(Exception e) {
+            throw new BindingException("Cannot build binding at " + DomHelper.getLocation(element), e);
         }
     }
+
 }
