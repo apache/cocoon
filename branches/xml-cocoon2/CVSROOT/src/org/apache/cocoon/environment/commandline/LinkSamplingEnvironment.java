@@ -71,22 +71,32 @@ public class LinkSamplingEnvironment extends AbstractEnvironment {
      */
     class LineLister extends ByteArrayOutputStream {
 
-        private List links = Collections.synchronizedList(new ArrayList());
+        private boolean linkable = false;
+        
+        private List links = new ArrayList();
         
         public void write(int c) {
-            super.write(c);
-            if (c == '\n') {
-                synchronized (links) {
-                    links.add(this.toString());
-                    this.reset();
-                }
+            if (!linkable && (c == '+')) {
+                linkable = true;
+                return;
             }
+            if (linkable && (c == ' ')) {
+                return;
+            }
+            if (c == '\n') {
+                if (linkable) links.add(this.toString());
+                reset();
+            }
+            super.write(c);
         }
         
         public Collection list() {
-            synchronized (links) {
-                return links;
-            }
+            return links;
+        }
+        
+        public void reset() {
+            super.reset();
+            linkable = false;
         }
     }
 }
