@@ -49,10 +49,12 @@
 */
 package org.apache.cocoon.components.source.impl;
 
-import org.apache.excalibur.xml.xpath.XPathProcessor;
+import java.io.IOException;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -62,35 +64,32 @@ import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.xml.dom.DOMParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
-
 /**
  * This source inspector inspects XML files with a xpath expression
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.2 2003/10/23 16:57:57 unico Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $Id: XPathSourceInspector.java,v 1.3 2003/10/27 09:30:07 unico Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
-    SourceInspector, ThreadSafe, Parameterizable {
+    SourceInspector, Composable, Parameterizable, ThreadSafe {
 
     /**
-     * The default namespace uri of the property
-     * exposed by this SourceInspector.
+     * The default namespace uri of the property exposed by this SourceInspector.
      * <p>
-     * The value is <code>http://apache.org/cocoon/inspector/xpath/1.0</code> .
+     * The value is <code>http://apache.org/cocoon/inspector/xpath/1.0</code>.
      * </p>
      */
-    public static final String DEFAULT_PROPERTY_NS = 
-        "http://apache.org/cocoon/inspector/xpath/1.0";
+    public static final String DEFAULT_PROPERTY_NS = "http://apache.org/cocoon/inspector/xpath/1.0";
         
     /**
-     * The default property name exposed by this
-     * SourceInspector.
+     * The default property name exposed by this SourceInspector.
      * <p>
      * The value is <code>result</code> .
      * </p>
@@ -107,21 +106,21 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
     public void compose(ComponentManager manager) {
         this.manager = manager;
     }
-
+    
     public void parameterize(Parameters params)  {
         this.propertynamespace = params.getParameter("namespace", DEFAULT_PROPERTY_NS);
         this.propertyname = params.getParameter("name", DEFAULT_PROPERTY_NAME);
         this.extension = params.getParameter("extension", ".xml");
         this.xpath = params.getParameter("xpath", "/*");
     }
-
+    
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException {
 
         if ((namespace.equals(propertynamespace)) && (name.equals(propertyname)) && 
             (source.getURI().endsWith(extension))) {
 
-                DOMParser parser = null;
+            DOMParser parser = null;
             Document doc = null;
             try { 
                 parser = (DOMParser)manager.lookup(DOMParser.ROLE);
@@ -170,9 +169,6 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
         return null;
     }
     
-    public String[] getExposedSourcePropertyTypes() {
-        return new String[] {propertynamespace + "#" + propertyname};
-    }
 
 }
 

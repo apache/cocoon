@@ -56,10 +56,12 @@ import org.apache.excalibur.source.SourceException;
 /**
  * A source descriptor handles modifiable source properties.
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public interface SourceDescriptor extends SourceInspector {
 
+    public static final String ROLE = SourceDescriptor.class.getName();
+    
     /**
      * Set a property on a Source.
      * 

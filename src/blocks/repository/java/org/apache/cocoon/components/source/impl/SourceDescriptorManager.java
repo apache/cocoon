@@ -50,10 +50,8 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -70,36 +68,25 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * This source descriptor acts as container for a list registered 
- * source inspectors.
- * 
- * TODO  the manager currently assumes a ThreadSafe lifestyle for
- * the contained inspectors. Consider supporting other lifstyles as well.
+ * This source descriptor acts as container for a set of source inspectors.
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceDescriptorManager.java,v 1.2 2003/10/24 08:47:33 cziegeler Exp $
+ * @version CVS $Id: SourceDescriptorManager.java,v 1.3 2003/10/27 09:30:07 unico Exp $
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 
-implements SourceDescriptor, ThreadSafe, Contextualizable, Composable, 
-Configurable, Initializable, Disposable {
-    
-    public static final String ROLE = SourceDescriptorManager.class.getName();
+implements SourceDescriptor, Contextualizable, Composable, 
+Configurable, Initializable, Disposable, ThreadSafe {
     
     // the registered inspectors
-    private Map m_inspectors;
-    
-    // cached list of all supported property types
-    private String[] m_types;
+    private Set m_inspectors;
     
     private Context m_context;
     private ComponentManager m_manager;
@@ -124,8 +111,7 @@ Configurable, Initializable, Disposable {
     }
     
     public void initialize() throws Exception {
-
-        m_inspectors = new HashMap();
+        m_inspectors = new HashSet();
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         final Configuration[] children = m_configuration.getChildren();
         
@@ -148,18 +134,12 @@ Configurable, Initializable, Disposable {
             ContainerUtil.enableLogging(inspector,getLogger());
             ContainerUtil.contextualize(inspector,m_context);
             ContainerUtil.compose(inspector,m_manager);
+            ContainerUtil.configure(inspector,children[i]);
             ContainerUtil.parameterize(inspector,
                 Parameters.fromConfiguration(children[i]));
             ContainerUtil.initialize(inspector);
             
-            String[] types = inspector.getExposedSourcePropertyTypes();
-            for (int j = 0; j < types.length; j++) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Registering " + inspector 
-                        + " to handle property " + types[j]);
-                }
-                m_inspectors.put(types[j],inspector);
-            }
+            m_inspectors.add(inspector);
         }
         // done with these
         m_configuration = null;
@@ -168,81 +148,78 @@ Configurable, Initializable, Disposable {
     }
     
     public void dispose() {
-        Iterator iter = m_inspectors.values().iterator();
+        Iterator iter = m_inspectors.iterator();
         while(iter.hasNext()) {
             ContainerUtil.dispose(iter.next());
         }
         m_inspectors = null;
-        m_types = null;
     }
     
+    
+    // ---------------------------------------------------- SourceDescriptor implementation
+    
+    /**
+     * Loops over the registered inspectors until it finds the property.
+     */
     public SourceProperty getSourceProperty(Source source, String namespace, String name) 
             throws SourceException {
 
-        String propname = namespace + "#" + name;
-        SourceInspector inspector = (SourceInspector) m_inspectors.get(propname);
-        if (inspector != null) {
-            return inspector.getSourceProperty(source,namespace,name);
-        } 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("No inspector registered for property " + propname);
+        final Iterator inspectors = m_inspectors.iterator();
+        while (inspectors.hasNext()) {
+            SourceInspector inspector = (SourceInspector) inspectors.next();
+            SourceProperty property = inspector.getSourceProperty(source,namespace,name);
+            if (property != null) {
+                return property;
+            }
         }
         return null;
     }
-
+    
+    /**
+     * Aggregate all properties of all registered inspectors.
+     */
     public SourceProperty[] getSourceProperties(Source source) throws SourceException {
-        
-        Set result = new HashSet(getExposedSourcePropertyTypes().length);
-        
+        final Set result = new HashSet();
         SourceInspector inspector;
         SourceProperty[] properties;
-        
-        Iterator inspectors = m_inspectors.values().iterator();
-        while(inspectors.hasNext()) {
+        final Iterator inspectors = m_inspectors.iterator();
+        while (inspectors.hasNext()) {
             inspector = (SourceInspector) inspectors.next();
             properties = inspector.getSourceProperties(source);
             if (properties != null) {
                 result.addAll(Arrays.asList(properties));
             }
         }
-
         return (SourceProperty[]) result.toArray(new SourceProperty[result.size()]);
     }
     
-    public String[] getExposedSourcePropertyTypes() {
-        if (m_types == null) {
-            Set types = m_inspectors.keySet();
-            m_types = (String[]) types.toArray(new String[types.size()]);
-        }
-        return m_types;
-    }
-    
+    /**
+     * Loops over the registered descriptors and delegates the call.
+     */
     public void removeSourceProperty(Source source, String ns, String name) throws SourceException {
-        String prop = ns + "#" + name;
-        SourceInspector inspector = (SourceInspector) m_inspectors.get(prop);
-        if (inspector == null) {
-            throw new SourceException("No descriptor registered for property " + prop);
+        SourceInspector inspector;
+        final Iterator inspectors = m_inspectors.iterator();
+        while (inspectors.hasNext()) {
+            inspector = (SourceInspector) inspectors.next();
+            if (inspector instanceof SourceDescriptor) {
+                ((SourceDescriptor) inspector).removeSourceProperty(source,ns,name);
+            }
         }
-        if (!(inspector instanceof SourceDescriptor)) {
-            throw new SourceException("Cannot modify a read-only property.");
-        }
-        ((SourceDescriptor) inspector).removeSourceProperty(source,ns,name);
     }
-
+    
+    /**
+     * Loops over the registered descriptors and calls delegates the call.
+     */
     public void setSourceProperty(Source source, SourceProperty property) throws SourceException {
-        
-        String prop = property.getNamespace() + "#" + property.getName();
-        SourceInspector inspector = (SourceInspector) m_inspectors.get(prop);
-        if (inspector == null) {
-            throw new SourceException("No descriptor registered for property " + prop);
+        SourceInspector inspector;
+        final Iterator inspectors = m_inspectors.iterator();
+        while (inspectors.hasNext()) {
+            inspector = (SourceInspector) inspectors.next();
+            if (inspector instanceof SourceDescriptor) {
+                ((SourceDescriptor) inspector).setSourceProperty(source,property);
+            }
         }
-        if (!(inspector instanceof SourceDescriptor)) {
-            throw new SourceException("Cannot modify a read-only property.");
-        }
-        ((SourceDescriptor) inspector).setSourceProperty(source,property);
     }
     
-    
-
 }
 
