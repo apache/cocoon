@@ -70,12 +70,12 @@ import java.util.HashMap;
  * parameter named 'url' (this is old syntax).
  *
  * You might want to test the parameter <code>resouce-exists</code> in a
- * following <code>&ltmap:select type="parameter"&gt;</code> in the sitemap.
+ * following <code>&lt;map:select type="parameter"&gt;</code> in the sitemap.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
  *
- * @version CVS $Id: ExtendedResourceExistsAction.java,v 1.1 2003/03/09 00:10:08 pier Exp $
+ * @version CVS $Id: ExtendedResourceExistsAction.java,v 1.2 2003/05/13 16:59:23 stephan Exp $
  * @since 2.1
  */
 public class ExtendedResourceExistsAction extends ComposerAction implements ThreadSafe {
