@@ -457,6 +457,10 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="RG" type="fix" fixes-bug="33091">
+      Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
+      now be configured to contain the data required to generated the required events.
+   </action>
    <action dev="RG" type="fix" fixes-bug="32838" due-to="Roy Huang" due-to-email="lingererhuang@hotmail.com">
      PageLabel url's were not properly encoded.
    </action>

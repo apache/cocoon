@@ -80,6 +80,13 @@ public class PortalManagerImpl
             contentHandler.endDocument();
         } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup portal service.", ce);
+        } catch (Exception e) {
+            getLogger().error("Caught exception", e);
+            throw new SAXException(e);
+        } catch (Error e) {
+            getLogger().error("Caught error", e);
+            e.printStackTrace();
+            throw e;
         } finally {
             this.manager.release(service);
         }

@@ -39,6 +39,9 @@
     <aspect name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
     <aspect name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
     <aspect name="link"  class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect" />    
+    <aspect name="page-label" class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"/>
+    <aspect name="convertable" class="org.apache.cocoon.portal.event.aspect.impl.ConvertableEventAspect"/>
+
     <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
 
     <!-- This aspect sets headers on the response that tell the client to not cache the response: -->
@@ -47,11 +50,22 @@
 
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
     <event-aspects>
+        <!-- Uncomment this aspect when marshalling JSR168 portlet events 
+        <aspect type="convertable"/>
+        -->
+        <!-- Remove action-counter when using PageLabels -->
         <aspect type="action-counter"/>
         <aspect type="frame"/>
         <aspect type="link"/>
         <aspect type="full-screen-coplet"/>
-        <aspect type="request-parameter"/>
+	<!-- Uncomment the following when using PageLabels
+        <aspect type="page-label"/>
+        -->
+        <aspect type="request-parameter">
+          <!-- Uncomment the following when marshalling JSR168 portlet events
+          <parameter name="parameter-name" value="cocoon-portal-event,url"/>
+          -->
+        </aspect>
     </event-aspects>
     <!-- add a new instance of each class as a subscriber: -->
     <subscriber-classes>
@@ -64,6 +78,13 @@
         <!-- <role name="AVALON-ROLE"/> -->
     </subscriber-roles>
  </component>
+ 
+ <!-- Event Factory configuration -->
+ <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.ConvertableEventFactorySelector">
+   <!-- The events that can be marshalled. The name must match the Event's request parameter. -->
+   <factory name="cocoon-portal-fs" class="org.apache.cocoon.portal.event.impl.FullScreenCopletEventFactory"/>
+   <factory name="url" class="org.apache.cocoon.portal.pluto.PortletURLProviderFactory"/>
+ </component>
 
   <!-- This is the portal manager.
        If you don't need the JSR-168 support uncomment the following line and comment out 
@@ -75,9 +96,21 @@
   <component class="org.apache.cocoon.portal.impl.PortletPortalManager" 
              logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
 
+ <!-- To enable PageLabels change DefaultLinkService to PageLabelLinkService -->
  <component class="org.apache.cocoon.portal.impl.DefaultLinkService" logger="portal" role="org.apache.cocoon.portal.LinkService"/>
 
+  <!-- To enable PageLabels change DefaultEventConverter to PageLabelEventConverter -->
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventConverter" logger="portal" role="org.apache.cocoon.portal.event.EventConverter">
+ </component>
+  
+ <!-- Page Label Manager -->
+ <component class="org.apache.cocoon.portal.impl.PageLabelManager" logger="portal" role="org.apache.cocoon.portal.impl.PageLabelManager">
+   <!-- Uncomment to marshall JSR-168 portlet events
+   <marshallEvents>true</marshallEvents>
+   -->
+   <!-- Uncomment to enable non sticky tabs
+   <nonStickyTabs>true</nonStickyTabs>
+   -->
  </component>
 
   <!-- Coplet Adapter configuration -->
