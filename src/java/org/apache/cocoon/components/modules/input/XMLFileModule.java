@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.9 2003/05/20 09:17:57 jefft Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.10 2003/09/23 12:35:43 vgritsenko Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
@@ -147,43 +147,48 @@ public class XMLFileModule extends AbstractJXPathModule
         public synchronized Document getDocument(ComponentManager manager, 
                                                  SourceResolver resolver, 
                                                  Logger logger) throws Exception {
-
             Source src = null;
-            SourceValidity valid = null;
             Document dom = null;
-
-            if (this.document == null) {
-                if (logger.isDebugEnabled())
-                    logger.debug("document not cached... reloading uri "+this.uri);
-                src = resolver.resolveURI(this.uri);
-                this.srcVal = src.getValidity();
-                this.document = SourceUtil.toDOM(src);
-                dom = this.document;
-                resolver.release(src);
-            } else {
-                if (this.reloadable) {
-                    if (logger.isDebugEnabled())
-                        logger.debug("document cached... checking validity of uri "+this.uri);
-                    src = resolver.resolveURI(this.uri);
-                    valid = src.getValidity();
-                    if (srcVal != null && this.srcVal.isValid(valid) != 1) {
-                        if (logger.isDebugEnabled())
-                            logger.debug("reloading document... uri "+this.uri);
-                        this.srcVal = valid;
-                        this.document = SourceUtil.toDOM(src);
+            try {
+                if (this.document == null) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Document not cached... reloading uri " + this.uri);
                     }
-                    resolver.release(src);
+                    src = resolver.resolveURI(this.uri);
+                    this.srcVal = src.getValidity();
+                    this.document = SourceUtil.toDOM(src);
+                    dom = this.document;
+                } else {
+                    if (this.reloadable) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Document cached... checking validity of uri " + this.uri);
+                        }
+                        src = resolver.resolveURI(this.uri);
+                        SourceValidity valid = src.getValidity();
+                        if (srcVal != null && this.srcVal.isValid(valid) != 1) {
+                            if (logger.isDebugEnabled())
+                                logger.debug("reloading document... uri "+this.uri);
+                            this.srcVal = valid;
+                            this.document = SourceUtil.toDOM(src);
+                        }
+                    }
+                    dom = this.document;
                 }
-                dom = this.document;
+            } finally {
+                resolver.release(src);
             }
+
             if (!this.cacheable) {
-                if (logger.isDebugEnabled())
-                    logger.debug("not caching document cached... uri "+this.uri);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Not caching document cached... uri " + this.uri);
+                }
                 this.srcVal = null;
                 this.document = null;
             }
-            if (logger.isDebugEnabled())
-                logger.debug("done with document... uri "+this.uri);
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("Done with document... uri " + this.uri);
+            }
             return dom;
         }
     }
