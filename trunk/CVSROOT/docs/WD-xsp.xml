@@ -4,9 +4,8 @@
 
 <spec>
  <header>
-  <title>XSP Layer 1</title>
-  <subtitle>eXtensible Server Pages</subtitle>
-  <version>1999-12-28</version>
+  <title>eXtensible Server Pages</title>
+  <version>2000-01-09</version>
   <type>Working Draft</type>
   <authors>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
@@ -196,8 +195,8 @@
 
 <source><![CDATA[
 <!DOCTYPE page PUBLIC 
-   "-//Apache//DTD XSP Layer 1//EN" 
-   "http://apache.org/1999/XSP/Layer1"
+   "-//Apache//DTD XSP//EN" 
+   "http://www.apache.org/1999/XSP/Core"
 >
 ]]></source>
 
@@ -225,7 +224,7 @@
 <!ATTLIST xsp:page
   language CDATA #REQUIRED
   indent-result (yes|no) "no"
-  xmlns:xsp CDATA #FIXED "http://apache.org/1999/XSP/Layer1"
+  xmlns:xsp CDATA #FIXED "http://www.apache.org/1999/XSP/Core"
   xml:space (default|preserve) "preserve"
 >
 
@@ -287,8 +286,8 @@
 <source><![CDATA[
 <?xml version="1.0"?>
 <xsl:transform
- xmlns:xsl="http://www.w3.org/1999/XSL/tranform" 
- xmlns:xsp="http://apache.org/1999/XSP/Layer1"
+ xmlns:xsl="http://www.w3.org/1999/XSL/Tranform" 
+ xmlns:xsp="http://www.apache.org/1999/XSP/Core"
 >
    
  <xsl:template match="page">
