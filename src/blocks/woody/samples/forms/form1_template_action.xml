@@ -8,15 +8,14 @@
       <table align="center">
         <tr>
           <td>
-          
-            <!-- artificial widget needed to keep tab state. Work still needed on that -->
-            <wt:widget id="tab-state">
-              <wi:styling type="hidden"/>
-            </wt:widget>
-            
+                      
             <!-- group with tabs. Each of the children of <items> will constitute a tab -->
-            <wi:group state-widget="tab-state">
+            <wi:group>
               <wi:styling type="tabs"/>
+              <wi:label>Choose a panel: </wi:label>
+              <wi:state>
+                <wt:widget id="tab-state"/>
+              </wi:state>
               
               <wi:items>
                 <!-- group with automatic two-column layout -->
@@ -56,7 +55,7 @@
               </wi:items>
             </wi:group>
             
-            <br/>
+            <p>Checkout the <a href="form1.flow">form1 flow page</a> for another way of formatting panels</p>
             
             <!-- Group of type 'fieldset' will have a surrounding frame -->
             <wi:group>
@@ -65,10 +64,10 @@
               <wi:items>
                 <wt:widget id="visa"/>
                 <wt:widget id="ipaddress"/>
+                <wt:widget id="altbirthdate"/>
                 <wt:widget id="birthdate">
                   <wi:styling type="date" format="dd/MM/yyyy"/>
                 </wt:widget>
-                <wt:widget id="altbirthdate"/>
                 <wt:widget id="dieselprice"/>
               </wi:items>
             </wi:group>
