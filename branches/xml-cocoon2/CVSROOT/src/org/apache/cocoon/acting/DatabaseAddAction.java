@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-27 19:13:32 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-27 19:28:07 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -74,9 +74,9 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                 Configuration key = (Configuration) keys.next();
                 if ("manual".equals(key.getAttribute("mode", "automatic"))) {
                     String selectQuery = this.getSelectQuery(key);
-                    getLogger().info("Select query is: " + selectQuery);
 
                     ResultSet set = conn.createStatement().executeQuery(selectQuery);
+                    set.next();
                     int value = set.getInt("maxid") + 1;
 
                     getLogger().info("Assigning column " + currentIndex + "'" + key.getAttribute("dbcol") + "' to: " + value);
@@ -150,7 +150,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                         }
 
                         queryBuffer.append(key.getAttribute("dbcol"));
-                        this.setSelectQuery(conf, key);
+                        this.setSelectQuery(table.getAttribute("name"), key);
                         numKeys++;
                     }
                 }
@@ -196,16 +196,13 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
      * mapped to the Configuration object itself, so if it doesn't exist,
      * it will be created.
      */
-    private final synchronized void setSelectQuery(Configuration conf, Configuration entry) throws ConfigurationException {
-        Configuration table = conf.getChild("table");
-        Iterator values = table.getChild("values").getChildren("value");
-
+    private final synchronized void setSelectQuery(String tableName, Configuration entry) throws ConfigurationException {
         StringBuffer queryBuffer = new StringBuffer("SELECT max(");
         queryBuffer.append(entry.getAttribute("dbcol"));
         queryBuffer.append(") AS maxid FROM ");
-        queryBuffer.append(table.getAttribute("name"));
+        queryBuffer.append(tableName);
 
-        DatabaseAddAction.addStatements.put(entry, queryBuffer.toString());
+        DatabaseAddAction.selectStatements.put(entry, queryBuffer.toString());
     }
 
     private final synchronized String getSelectQuery(Configuration entry) throws ConfigurationException {
