@@ -201,11 +201,14 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="32011" due-to="wchao@yahoo.com" due-to-email="wchao@yahoo.com">
+     Fix: buildList() in AbstractDatabaseAction generates incorrect parameter list.
+   </action>
    <action dev="AG" type="fix" fixes-bug="32124" due-to="Leo Leonid" due-to-email="tek@leonid.de">
-     Fix: Webmail sample broken
+     Fix: Webmail sample broken.
    </action>
    <action dev="AG" type="fix" fixes-bug="32214" due-to="Rick Tessner" due-to-email="rick@apache.org">
-     Fix: Context directory not required to be writable by the CLI
+     Fix: Context directory not required to be writable by the CLI.
    </action>
    <action dev="CZ" type="fix" fixes-bug="32199">
      Portal: If a coplet has an error, the error-uri has been called twice. This is fixed now.

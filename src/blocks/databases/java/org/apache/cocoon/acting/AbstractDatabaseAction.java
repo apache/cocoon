@@ -169,7 +169,7 @@ import org.apache.cocoon.util.ImageUtils;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: AbstractDatabaseAction.java,v 1.5 2004/03/30 05:50:48 antonio Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
     protected Map files = new HashMap();
@@ -728,6 +728,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplementaryConfig
                 buffer.append(", ");
             }
             buffer.append(values[i].getAttribute("dbcol"));
+            begin++;
         }
         return buffer;
     }
