@@ -29,7 +29,7 @@
 	  <p>
 		Basically, there are three different approaches available:
 		<link href="actions.html">Actions,</link> <link
-		  href="../xsp/logicsheet-concepts.html">logicsheets,</link>
+		  href="../advanced/xsp/logicsheet-concepts.html">logicsheets,</link>
 		and <link href="../user/sitemap/preface.html">transformers.</link> Each approach has
 		its pros and cons. 
 	  </p>
@@ -98,7 +98,7 @@
 	  </p>
 	  <p>
 		For more detailed information, read:  <link
-		  href="../xsp/esql.html">ESQL Taglib</link>.
+		  href="../advanced/xsp/esql.html">ESQL Taglib</link>.
 	  </p>
 	</s1>
 
@@ -121,7 +121,7 @@
 	  </p>
 	  <p>
 		For more detailed information, read: <link
-		  href="../transformers/sql-transformer.html">SQL Transformer</link>.
+		  href="../components/transformers/sql-transformer.html">SQL Transformer</link>.
 	  </p>
 	</s1>
 

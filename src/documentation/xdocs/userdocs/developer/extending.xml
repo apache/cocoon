@@ -172,7 +172,7 @@
 		<s1 title="About XSP">
 			<anchor id="xsp"/>
 			<p>XSP stands for "eXtensible Server Pages". It is the idea to program <code>Generator</code>s by means of XML. The basic idea is to put XML tags like <code><![CDATA[<xsp:logic>]]></code> in your XML file, with in those tags Java code.</p>
-			<note>This is not the proper way to use XSP's. I just mentioned them here so you wouldn't forget their existence. Look to the <link href="../userdocs/xsp/xsp.html">XSP page</link> for more information.</note>
+			<note>This is not the proper way to use XSP's. I just mentioned them here so you wouldn't forget their existence. Look to the <link href="../advanced/xsp/xsp.html">XSP page</link> for more information.</note>
 		</s1>
 	</body>
 </document>

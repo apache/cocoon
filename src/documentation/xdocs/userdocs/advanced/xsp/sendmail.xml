@@ -43,7 +43,7 @@ http://nagoya.apache.org/bugzilla/show_bug.cgi?id=15005
 	information.</p>
 
       <p>The Sendmail logicsheet is an alternative to the <link
-	  href="../actions/sendmail-action.html">Sendmail
+	  href="../../components/actions/sendmail-action.html">Sendmail
 	  action</link>.</p>
     </s1>
 
@@ -333,7 +333,7 @@ to be attached, it must be set this way. Use the following
 
     <s1 title="Hint">
       <p>Please read this <link
-	  href="../actions/sendmail-action.html#hint">hint</link>,
+	  href="../../components/actions/sendmail-action.html#hint">hint</link>,
 	since it applies here as well.</p>
     </s1>
   </body>
