@@ -110,7 +110,7 @@
        <xsl:value-of select="$text"/>
       </link>
      </xsl:when>
-     <xsl:when test="starts-with($href,'http') or contains($href,'.')">
+     <xsl:when test="contains($href,':') or contains($href,'.')">
       <link href="{$href}">
        <xsl:value-of select="$text"/>
       </link>
@@ -135,7 +135,7 @@
      <xsl:when test="contains($href,'.png') or contains($href,'.jpg') or contains($href,'.gif')">
       <img src="{$href}" alt="{$href}"/>
      </xsl:when>
-     <xsl:when test="starts-with($href,'http') or contains($href,'.')">
+     <xsl:when test="contains($href,':') or contains($href,'.')">
       <link href="{$href}">
        <xsl:value-of select="$href"/>
       </link>
