@@ -50,22 +50,23 @@
  */
 package org.apache.cocoon.environment.commandline;
 
-import org.apache.avalon.framework.logger.Logger;
-
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.ObjectModelHelper;
-
 import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSamplingEnvironment.java,v 1.3 2003/08/10 19:58:09 upayavira Exp $
+ * @version CVS $Id: LinkSamplingEnvironment.java,v 1.4 2003/08/17 13:43:00 upayavira Exp $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
@@ -101,7 +102,7 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
      * Indicates if other links are present.
      */
     public Collection getLinks() throws IOException {
-        ArrayList list = new ArrayList();
+        HashSet set = new HashSet();
         if (!skip) {
             BufferedReader buffer = null;
             try {
@@ -110,13 +111,9 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                                 new ByteArrayInputStream(
                                         ((ByteArrayOutputStream) super.outputStream).toByteArray())));
 
-                while (true) {
-                    String line = buffer.readLine();
-                    if (line == null)
-                        break;
-                    if (!list.contains(line)) {
-                        list.add(line);
-                    }
+                String line;
+                while ((line = buffer.readLine()) !=null) {
+                    set.add(line);
                 }
             } finally {
                 // explictly close the input
@@ -129,6 +126,6 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                 }
             }
         }
-        return list;
+        return set;
     }
 }
