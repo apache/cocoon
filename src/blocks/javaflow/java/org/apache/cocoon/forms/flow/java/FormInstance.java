@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.10 2004/05/07 17:47:55 joerg Exp $
+ * @version CVS $Id$
  */
 public class FormInstance extends AbstractContinuable {
 
@@ -88,7 +88,6 @@ public class FormInstance extends AbstractContinuable {
     public FormInstance(Element formDefinition) {
         FormManager formMgr = null;
         SourceResolver resolver = null;
-        Source src = null;
         try {
             formMgr = (FormManager)getComponent(FormManager.ROLE);
             resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
@@ -98,7 +97,6 @@ public class FormInstance extends AbstractContinuable {
             throw new CascadingRuntimeException("Could not create form instance", e);
         } finally {
             releaseComponent(formMgr);
-            if (src != null) resolver.release(src);
             releaseComponent(resolver);
         }
     }
