@@ -53,9 +53,9 @@ package org.apache.cocoon.acting;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.ProcessingException;
@@ -71,7 +71,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * Multiple actions for to add, to removing and to modify principals or principal groups.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalMultiAction.java,v 1.1 2003/03/09 00:06:16 pier Exp $
+ * @version CVS $Id: PrincipalMultiAction.java,v 1.2 2003/11/15 13:26:00 joerg Exp $
  */ 
 public class PrincipalMultiAction extends AbstractMultiAction implements ThreadSafe {
 
@@ -114,10 +114,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
         String principal_password = parameters.getParameter(PRINCIPAL_PASSWORD,
             request.getParameter(PRINCIPAL_PASSWORD));
 
-        ComponentSelector principalproviders = null;
+        ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(principal_provider);
 
@@ -126,10 +126,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
 
             principalprovider.addPrincipal(caller, principal);
  
-        } catch (ComponentException ce) {
+        } catch (ServiceException se) {
             if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", ce);
-            throw new ProcessingException("Could not lookup for component.", ce);
+                getLogger().debug("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -164,10 +164,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
         String principal_name = parameters.getParameter(PRINCIPAL_NAME,
             request.getParameter(PRINCIPAL_NAME));
 
-        ComponentSelector principalproviders = null;
+        ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(principal_provider);
 
@@ -176,10 +176,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
 
             principalprovider.removePrincipal(caller, principal);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException se) {
             if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", ce);
-            throw new ProcessingException("Could not lookup for component.", ce);
+                getLogger().debug("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -214,10 +214,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
         String principal_group_name = parameters.getParameter(PRINCIPAL_GROUP_NAME,
             request.getParameter(PRINCIPAL_GROUP_NAME));
 
-        ComponentSelector principalproviders = null;
+            ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(principal_provider);
 
@@ -226,10 +226,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
 
             principalprovider.addPrincipalGroup(caller, principalgroup);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException se) {
             if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", ce);
-            throw new ProcessingException("Could not lookup for component.", ce);
+                getLogger().debug("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -264,10 +264,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
         String principal_group_name = parameters.getParameter(PRINCIPAL_GROUP_NAME,
             request.getParameter(PRINCIPAL_GROUP_NAME));
 
-        ComponentSelector principalproviders = null;
+            ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(principal_provider);
 
@@ -276,10 +276,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
 
             principalprovider.removePrincipalGroup(caller, principalgroup);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException se) {
             if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", ce);
-            throw new ProcessingException("Could not lookup for component.", ce);
+                getLogger().debug("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -317,10 +317,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
         String principal_name = parameters.getParameter(PRINCIPAL_NAME,
             request.getParameter(PRINCIPAL_NAME));
 
-        ComponentSelector principalproviders = null;
+            ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(principal_provider);
 
@@ -330,10 +330,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
 
             principalprovider.addMember(caller, principalgroup, principal);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException se) {
             if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", ce);
-            throw new ProcessingException("Could not lookup for component.", ce);
+                getLogger().debug("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);
@@ -371,10 +371,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
         String principal_name = parameters.getParameter(PRINCIPAL_NAME,
             request.getParameter(PRINCIPAL_NAME));
 
-        ComponentSelector principalproviders = null;
+            ServiceSelector principalproviders = null;
         PrincipalProvider principalprovider = null;
         try {
-            principalproviders = (ComponentSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
+            principalproviders = (ServiceSelector)this.manager.lookup(PrincipalProvider.ROLE+"Selector");
 
             principalprovider = (PrincipalProvider)principalproviders.select(principal_provider);
 
@@ -384,10 +384,10 @@ public class PrincipalMultiAction extends AbstractMultiAction implements ThreadS
 
             principalprovider.removeMember(caller, principalgroup, principal);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException se) {
             if (getLogger().isDebugEnabled())
-                getLogger().debug("Could not lookup for component.", ce);
-            throw new ProcessingException("Could not lookup for component.", ce);
+                getLogger().debug("Could not lookup for component.", se);
+            throw new ProcessingException("Could not lookup for component.", se);
         } finally {
             if (principalprovider!=null)
                 principalproviders.release(principalprovider);

@@ -49,15 +49,13 @@
 */
 package org.apache.cocoon.components.repository;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * This interface represents a repository from a CMS.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: Repository.java,v 1.3 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: Repository.java,v 1.4 2003/11/15 13:26:00 joerg Exp $
  */
-public interface Repository extends Component {
+public interface Repository {
 
     /** Role for the component */
     public final static String ROLE = "org.apache.cocoon.components.repository.Repository";
