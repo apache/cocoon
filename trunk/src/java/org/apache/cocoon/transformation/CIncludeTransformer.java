@@ -146,7 +146,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.8 2003/10/21 12:45:12 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.9 2003/10/23 07:57:24 cziegeler Exp $
  */
 public class CIncludeTransformer
 extends AbstractSAXTransformer
@@ -253,7 +253,7 @@ implements Disposable, CacheableProcessingComponent {
     /**
      * Recycle the component
      */
-    public void recycle() {
+    public void reset() {
         if ( null != this.cachingSession ) {
             this.cacheManager.terminateSession( this.cachingSession );
         }
@@ -262,7 +262,7 @@ implements Disposable, CacheableProcessingComponent {
             this.manager.release( this.recorder );
             this.recorder = null;
         }
-        super.recycle();
+        super.reset();
         this.configurationParameters = null;
         this.resourceParameters = null;
         if (this.getLogger().isErrorEnabled()) {
