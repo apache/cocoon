@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 21:15:36 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-26 21:16:39 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -56,7 +56,7 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
 
         try {
             Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
-            String query = this.getDeleteQuery(conf);
+            String query = this.getUpdateQuery(conf);
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
