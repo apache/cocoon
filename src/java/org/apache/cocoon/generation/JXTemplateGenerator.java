@@ -1,4 +1,4 @@
-/* 
+/*
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -127,12 +127,12 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
- * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> 
+ * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a>
  * and <a href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>).</p>
  * <p>Uses the namespace <code>http://apache.org/cocoon/templates/jx/1.0</code></p>
- * <p>Provides a generic page template with embedded JSTL and XPath 
+ * <p>Provides a generic page template with embedded JSTL and XPath
  * expression substitution to access data sent by Cocoon Flowscripts.</p>
- * The embedded expression language allows a page author to access an 
+ * The embedded expression language allows a page author to access an
  * object using a simplified syntax such as
  *
  *  <p><pre>
@@ -141,10 +141,10 @@ import org.xml.sax.helpers.LocatorImpl;
  *
  * <p>Embedded JSTL expressions are contained in <code>${}</code>.</p>
  * <p>Embedded XPath expressions are contained in <code>#{}</code>.</p>
- * <p>Note that since this generator uses 
- * <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a> 
- * and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the 
- * referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects from 
+ * <p>Note that since this generator uses
+ * <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a>
+ * and <a href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the
+ * referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects from
  * a Flowscript. In addition the following implicit objects are available as
  * both XPath and JSTL variables:</p>
  * <p>
@@ -163,15 +163,15 @@ import org.xml.sax.helpers.LocatorImpl;
  * </dl>
  * </p>
  *
- * The current Web Continuation from the Flowscript 
- * is also available as a variable named <code>continuation</code>. You would 
+ * The current Web Continuation from the Flowscript
+ * is also available as a variable named <code>continuation</code>. You would
  * typically access its <code>id</code>:
  *
  * <p><pre>
  *    &lt;form action="${continuation.id}"&gt;
  * </pre></p>
  *
- * <p>You can also reach previous continuations by using the 
+ * <p>You can also reach previous continuations by using the
  * <code>getContinuation()</code> function:</p>
  *
  * <p><pre>
@@ -185,17 +185,17 @@ import org.xml.sax.helpers.LocatorImpl;
  *    &lt;/template&gt;
  * </pre></p>
  *
- * <p>The <code>import</code> tag allows you to include another template 
- * within the current template. The content of the imported template is 
+ * <p>The <code>import</code> tag allows you to include another template
+ * within the current template. The content of the imported template is
  * compiled and will be executed in place of the <code>import</code> tag:</p><pre>
  *    &lt;import uri="URI" [context="Expression"]/&gt;
- * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>. 
- * If <code>context</code> is present, then its value is used as the context 
- * for evaluating the imported template, otherwise the current context is 
+ * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>.
+ * If <code>context</code> is present, then its value is used as the context
+ * for evaluating the imported template, otherwise the current context is
  * used.</p>
- * <p>The <code>set</code> tag creates a local alias of an object. The 
- * <code>var</code> attribute specifies the name of a variable to assign the 
- * object to. The <code>value</code> attribute specifies the object (defaults 
+ * <p>The <code>set</code> tag creates a local alias of an object. The
+ * <code>var</code> attribute specifies the name of a variable to assign the
+ * object to. The <code>value</code> attribute specifies the object (defaults
  * to <code>body</code> if not present):</p>
  *
  * <pre>
@@ -204,10 +204,10 @@ import org.xml.sax.helpers.LocatorImpl;
  *    &lt;/set&gt;
  * </pre></p>
  *
- * <p>If used within a <code>macro</code> definition (see below) 
- * variables created by <code>set</code> are only visible within the body of 
+ * <p>If used within a <code>macro</code> definition (see below)
+ * variables created by <code>set</code> are only visible within the body of
  * the <code>macro</code>.</p>
- * <p>The <code>if</code> tag allows the conditional execution of its body 
+ * <p>The <code>if</code> tag allows the conditional execution of its body
  * according to value of a <code>test</code> attribute:</p>
  *
  * <p><pre>
@@ -216,11 +216,11 @@ import org.xml.sax.helpers.LocatorImpl;
  *   &lt;/if&gt;
  * </pre></p>
  *
- * <p>The <code>choose</code> tag performs conditional block execution by the 
- * embedded <code>when</code> sub tags. It renders the body of the first 
- * <code>when</code> tag whose <code>test</code> condition evaluates to true. 
+ * <p>The <code>choose</code> tag performs conditional block execution by the
+ * embedded <code>when</code> sub tags. It renders the body of the first
+ * <code>when</code> tag whose <code>test</code> condition evaluates to true.
  * If none of the <code>test</code> conditions of nested <code>when</code> tags
- * evaluate to <code>true</code>, then the body of an <code>otherwise</code> 
+ * evaluate to <code>true</code>, then the body of an <code>otherwise</code>
  * tag is evaluated, if present:</p>
  *
  * <p><pre>
@@ -234,40 +234,43 @@ import org.xml.sax.helpers.LocatorImpl;
  *  &lt;/choose&gt;
  * </pre></p>
  *
- * <p>The <code>out</code> tag evaluates an expression and outputs 
+ * <p>The <code>out</code> tag evaluates an expression and outputs
  * the result of the evaluation:</p>
  *
  * <p><pre>
  * &lt;out value="Expression"/&gt;
  * </pre></p>
  *
- * <p>The <code>forEach</code> tag allows you to iterate over a collection 
+ * <p>The <code>forEach</code> tag allows you to iterate over a collection
  * of objects:<p>
  *
  * <p><pre>
- *   &lt;forEach [var="Name"] [items="Expression"] 
+ *   &lt;forEach [var="Name"] [items="Expression"]
                  [begin="Number"] [end="Number"] [step="Number"]&gt;
  *     body
  *  &lt;/forEach&gt;
  * </pre></p>
  *
- * <p>The <code>items</code> attribute specifies the list of items to iterate 
- * over. The <code>var</code> attribute specifies the name of a variable to 
- * hold the current item. The <code>begin</code> attribute specifies the 
- * element to start with (<code>0</code> = first item, 
- * <code>1</code> = second item, ...). 
- * If unspecified it defaults to <code>0</code>. The <code>end</code> 
- * attribute specifies the item to end with (<code>0</code> = first item, 
- * <code>1</code> = second item, ...). If unspecified it defaults to the last 
+ * <p>The <code>items</code> attribute specifies the list of items to iterate
+ * over. The <code>var</code> attribute specifies the name of a variable to
+ * hold the current item. The <code>begin</code> attribute specifies the
+ * element to start with (<code>0</code> = first item,
+ * <code>1</code> = second item, ...).
+ * If unspecified it defaults to <code>0</code>. The <code>end</code>
+ * attribute specifies the item to end with (<code>0</code> = first item,
+ * <code>1</code> = second item, ...). If unspecified it defaults to the last
  * item in the list. Every <code>step</code> items are
- * processed (defaults to <code>1</code> if <code>step</code> is absent). 
- * Either <code>items</code> or both <code>begin</code> and <code>end</code> 
+ * processed (defaults to <code>1</code> if <code>step</code> is absent).
+ * Either <code>items</code> or both <code>begin</code> and <code>end</code>
  * must be present.<p>
  *
  *
- *
  * <p>
- * The <code>formatNumber</code> tag is used to display numeric data, including currencies and percentages, in a locale-specific manner. The <code>formatNumber</code>> action determines from the locale, for example, whether to use a period or a comma for delimiting the integer and decimal portions of a number. Here is its syntax: 
+ * The <code>formatNumber</code> tag is used to display numeric data, including
+ * currencies and percentages, in a locale-specific manner. The
+ * <code>formatNumber</code>> action determines from the locale, for example,
+ * whether to use a period or a comma for delimiting the integer and decimal
+ * portions of a number. Here is its syntax:
  * </p>
  * <p>
  * &lt;formatNumber value="Expression"
@@ -279,11 +282,11 @@ import org.xml.sax.helpers.LocatorImpl;
  *     [var="Name"] [locale="Expression"]&gt;
  * </p>
  *
- * <p>The <code>formatDate</code> tag provides facilities to format Date values:</p> 
- *<p>
- * &lt;formatDate value="Expression" [dateStyle="Style"] 
- [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"] 
- [locale="Expression"]&gt;
+ * <p>The <code>formatDate</code> tag provides facilities to format Date values:</p>
+ * <p>
+ * &lt;formatDate value="Expression" [dateStyle="Style"]
+ *   [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"]
+ *   [locale="Expression"]&gt;
  * </p>
  *
  * <p>The <code>macro</code> tag allows you define a new custom tag.</p>
@@ -295,7 +298,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt/macro&gt;
  * </pre></p>
  *
- *<p> For example:</p>
+ *<p>For example:</p>
  *
  *<p><pre>
  * &lt;c:macro name="d"&gt;
@@ -303,17 +306,17 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/c:macro&gt;
  * </pre></p>
  *
- * <p>The tag being defined in this example is <code>&lt;d&gt;</code> and it 
+ * <p>The tag being defined in this example is <code>&lt;d&gt;</code> and it
  * can be used like any other tag:</p>
  *
  * <p><pre>
  *   &lt;d/&gt;
  * </pre></p>
  *
- * <p>However, when this tag is used it will be replaced with a row containing 
+ * <p>However, when this tag is used it will be replaced with a row containing
  * a single empty data cell.</p>
- * <p> When such a tag is used, the attributes and content of the tag become 
- * available as variables in the body of the <code>macro</code>'s definition, 
+ * <p> When such a tag is used, the attributes and content of the tag become
+ * available as variables in the body of the <code>macro</code>'s definition,
  * for example:</p>
  *
  * <p><pre>
@@ -326,10 +329,10 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/c:macro&gt;
  * </pre></p>
  *
- * <p>The <code>parameter</code> tags in the macro definition define formal 
- * parameters, which are replaced with the actual attribute values of the 
- * tag when it is used. The content of the tag is also available as a special 
- * variable <code>${content}</code>.</p><p>Assuming you had this code in your 
+ * <p>The <code>parameter</code> tags in the macro definition define formal
+ * parameters, which are replaced with the actual attribute values of the
+ * tag when it is used. The content of the tag is also available as a special
+ * variable <code>${content}</code>.</p><p>Assuming you had this code in your
  * flowscript:</p>
  * <code>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</code>
  * </p><p><code> sendPage(uri, {greatlakes: greatlakes});</code>
@@ -341,7 +344,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * <p>When the <code>tablerows</code> tag is used in this situation the 
+ * <p>When the <code>tablerows</code> tag is used in this situation the
  * following output would be generated:
  * </p>
  *<p><pre>
@@ -353,12 +356,12 @@ import org.xml.sax.helpers.LocatorImpl;
  *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
  * &lt;/table&gt;
  * </pre></p>
- * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.31 2004/01/27 11:39:53 gianugo Exp $
+ *
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.32 2004/01/27 21:04:43 vgritsenko Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
-    private static final JXPathContextFactory 
+    private static final JXPathContextFactory
         jxpathContextFactory = JXPathContextFactory.newInstance();
 
     private static final char[] EMPTY_CHARS = "".toCharArray();
@@ -377,20 +380,19 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         };
 
     private static final Iterator NULL_ITER = new Iterator() {
-            public boolean hasNext() {
-                return true;
-            }
-            public Object next() {
-                return null;
-            }
-            public void remove() {
-            }
-        };
-    
+        public boolean hasNext() {
+            return true;
+        }
+        public Object next() {
+            return null;
+        }
+        public void remove() {
+        }
+    };
+
     private static final Locator NULL_LOCATOR = new LocatorImpl();
 
-    private XMLConsumer getConsumer()
-    {
+    private XMLConsumer getConsumer() {
         return this.xmlConsumer;
     }
 
@@ -400,53 +402,53 @@ public class JXTemplateGenerator extends ServiceableGenerator {
      */
     public class LocatorFacade implements Locator {
         private Locator locator;
-   
+
         public LocatorFacade(Locator initialLocator) {
             this.locator = initialLocator;
         }
-        
+
         public void setDocumentLocator(Locator newLocator) {
             this.locator = newLocator;
         }
-       
+
         public int getColumnNumber() {
             return this.locator.getColumnNumber();
         }
-        
+
         public int getLineNumber() {
             return this.locator.getLineNumber();
         }
-        
+
         public String getPublicId() {
             return this.locator.getPublicId();
         }
-        
+
         public String getSystemId() {
             return this.locator.getSystemId();
         }
     }
-   
+
     /**
      * Jexl Introspector that supports Rhino JavaScript objects
      * as well as Java Objects
      */
     static class JSIntrospector extends UberspectImpl {
-        
+
         static class JSMethod implements VelMethod {
-            
+
             Scriptable scope;
             String name;
-            
+
             public JSMethod(Scriptable scope, String name) {
                 this.scope = scope;
                 this.name = name;
             }
-            
+
             public Object invoke(Object thisArg, Object[] args)
                 throws Exception {
                 Context cx = Context.enter();
                 try {
-                    Object result; 
+                    Object result;
                     Scriptable thisObj;
                     if (!(thisArg instanceof Scriptable)) {
                         thisObj = Context.toObject(thisArg, scope);
@@ -460,7 +462,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         int len = args.length;
                         for (int i = 0; i < len; i++) {
                             newArgs[i] = args[i];
-                            if (args[i] != null && 
+                            if (args[i] != null &&
                                 !(args[i] instanceof Number) &&
                                 !(args[i] instanceof Boolean) &&
                                 !(args[i] instanceof String) &&
@@ -469,12 +471,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             }
                         }
                     }
-                    result = ScriptRuntime.call(cx, result, thisObj, 
+                    result = ScriptRuntime.call(cx, result, thisObj,
                                                 newArgs, scope);
                     if (result == Undefined.instance ||
                         result == Scriptable.NOT_FOUND) {
                         result = null;
-                        
+
                     } else {
                         if (!(result instanceof NativeJavaClass)) {
                             while (result instanceof Wrapper) {
@@ -489,31 +491,31 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Context.exit();
                 }
             }
-            
+
             public boolean isCacheable() {
                 return false;
             }
-            
+
             public String getMethodName() {
                 return name;
             }
-            
+
             public Class getReturnType() {
                 return Object.class;
             }
-            
+
         }
-        
+
         static class JSPropertyGet implements VelPropertyGet {
-            
+
             Scriptable scope;
             String name;
-            
+
             public JSPropertyGet(Scriptable scope, String name) {
                 this.scope = scope;
                 this.name = name;
             }
-            
+
             public Object invoke(Object thisArg) throws Exception {
                 org.mozilla.javascript.Context cx = Context.enter();
                 try {
@@ -529,14 +531,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         if (result != Scriptable.NOT_FOUND &&
                             result instanceof Function) {
                             try {
-                                result = ((Function)result).call(cx, 
+                                result = ((Function)result).call(cx,
                                                                  ScriptableObject.getTopLevelScope(thisObj), thisObj, new Object[] {});
                             } catch (JavaScriptException exc) {
                                 exc.printStackTrace();
                                 result = null;
                             }
                         }
-                    } 
+                    }
                     if (result == Scriptable.NOT_FOUND ||
                         result == Undefined.instance) {
                         result = null;
@@ -550,27 +552,27 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Context.exit();
                 }
             }
-            
+
             public boolean isCacheable() {
                 return false;
             }
-            
+
             public String getMethodName() {
                 return name;
             }
-            
+
         }
-        
+
         static class JSPropertySet implements VelPropertySet {
-            
+
             Scriptable scope;
             String name;
-            
+
             public JSPropertySet(Scriptable scope, String name) {
                 this.scope = scope;
                 this.name = name;
             }
-            
+
             public Object invoke(Object thisArg, Object rhs) throws Exception {
                 Context.enter();
                 try {
@@ -581,7 +583,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     } else {
                         thisObj = (Scriptable)thisArg;
                     }
-                    if (arg != null && 
+                    if (arg != null &&
                         !(arg instanceof Number) &&
                         !(arg instanceof Boolean) &&
                         !(arg instanceof String) &&
@@ -594,30 +596,30 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Context.exit();
                 }
             }
-            
+
             public boolean isCacheable() {
                 return false;
             }
-            
+
             public String getMethodName() {
-                return name;        
+                return name;
             }
         }
-        
+
         static class NativeArrayIterator implements Iterator {
-            
+
             NativeArray arr;
             int index;
-            
+
             public NativeArrayIterator(NativeArray arr) {
                 this.arr = arr;
                 this.index = 0;
             }
-            
+
             public boolean hasNext() {
                 return index < (int)arr.jsGet_length();
             }
-            
+
             public Object next() {
                 Context.enter();
                 try {
@@ -637,33 +639,33 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Context.exit();
                 }
             }
-            
+
             public void remove() {
                 arr.delete(index);
             }
         }
-        
+
         static class ScriptableIterator implements Iterator {
-            
+
             Scriptable scope;
             Object[] ids;
             int index;
-            
+
             public ScriptableIterator(Scriptable scope) {
                 this.scope = scope;
                 this.ids = scope.getIds();
                 this.index = 0;
             }
-            
+
             public boolean hasNext() {
                 return index < ids.length;
             }
-            
+
             public Object next() {
                 Context.enter();
                 try {
-                    Object result = 
-                        ScriptableObject.getProperty(scope, 
+                    Object result =
+                        ScriptableObject.getProperty(scope,
                                                      ids[index++].toString());
                     if (result == Undefined.instance ||
                         result == Scriptable.NOT_FOUND) {
@@ -680,7 +682,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Context.exit();
                 }
             }
-            
+
             public void remove() {
                 Context.enter();
                 try {
@@ -690,7 +692,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 }
             }
         }
-        
+
         public Iterator getIterator(Object obj, Info i)
             throws Exception {
             if (!(obj instanceof Scriptable)) {
@@ -720,8 +722,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             return new ScriptableIterator((Scriptable)obj);
         }
-        
-        public VelMethod getMethod(Object obj, String methodName, 
+
+        public VelMethod getMethod(Object obj, String methodName,
                                    Object[] args, Info i)
             throws Exception {
             if (!(obj instanceof Scriptable)) {
@@ -729,8 +731,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             return new JSMethod((Scriptable)obj, methodName);
         }
-        
-        public VelPropertyGet getPropertyGet(Object obj, String identifier, 
+
+        public VelPropertyGet getPropertyGet(Object obj, String identifier,
                                              Info i)
             throws Exception {
             if (!(obj instanceof Scriptable)) {
@@ -738,8 +740,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             return new JSPropertyGet((Scriptable)obj, identifier);
         }
-        
-        public VelPropertySet getPropertySet(Object obj, String identifier, 
+
+        public VelPropertySet getPropertySet(Object obj, String identifier,
                                              Object arg, Info i)
             throws Exception {
             if (!(obj instanceof Scriptable)) {
@@ -749,7 +751,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
-    static class MyJexlContext 
+    static class MyJexlContext
         extends HashMap implements JexlContext {
 
         private MyJexlContext closure;
@@ -814,7 +816,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             "session",
             "parameters"
         };
-        
+
         Object cocoon;
 
         // backward compatibility
@@ -822,7 +824,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             session, context, parameters;
 
         MyVariables(Object cocoon,
-                    Object bean, 
+                    Object bean,
                     WebContinuation kont,
                     Object request,
                     Object session,
@@ -856,7 +858,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             return false;
         }
-        
+
         public Object getVariable(String varName) {
             Object result = localVariables.get(varName);
             if (result != null) {
@@ -884,11 +886,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             return null;
         }
-        
+
         public void declareVariable(String varName, Object value) {
             localVariables.put(varName, value);
         }
-        
+
         public void undeclareVariable(String varName) {
             localVariables.remove(varName);
         }
@@ -897,7 +899,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     static {
         // Hack: there's no _nice_ way to add my introspector to Jexl right now
         try {
-            Field field = 
+            Field field =
                 org.apache.commons.jexl.util.Introspector.class.getDeclaredField("uberSpect");
             field.setAccessible(true);
             field.set(null, new JSIntrospector());
@@ -929,10 +931,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     /**
      * Compile a single Jexl expr (contained in ${}) or XPath expression
-     * (contained in #{}) 
+     * (contained in #{})
      */
 
-    private static Expression compileExpr(String expr, String errorPrefix, 
+    private static Expression compileExpr(String expr, String errorPrefix,
                                    Locator location) throws SAXParseException {
         try {
             return compileExpr(expr);
@@ -1000,7 +1002,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         return new Expression(inStr, null);
     }
-    
+
     /*
      * Compile an integer expression (returns either a Compiled Expression
      * or an Integer literal)
@@ -1012,7 +1014,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             if (res.compiledExpression == null) {
                 res.compiledExpression = Integer.valueOf(res.raw);
             }
-            return res;    
+            return res;
         }
         return null;
     }
@@ -1024,12 +1026,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             if (res.compiledExpression == null) {
                 res.compiledExpression = Boolean.valueOf(res.raw);
             }
-            return res;    
+            return res;
         }
         return null;
     }
 
-    private static Expression compile(final String variable, boolean xpath) 
+    private static Expression compile(final String variable, boolean xpath)
                 throws Exception {
         Object compiled;
         if (xpath) {
@@ -1041,7 +1043,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static private Object getValue(Expression expr, JexlContext jexlContext,
-                            JXPathContext jxpathContext, Boolean lenient) 
+                            JXPathContext jxpathContext, Boolean lenient)
         throws Exception {
         if (expr != null) {
             Object compiled = expr.compiledExpression;
@@ -1058,7 +1060,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         jxpathContext.setLenient(oldLenient);
                     }
                 } else if (compiled instanceof org.apache.commons.jexl.Expression) {
-                    org.apache.commons.jexl.Expression e = 
+                    org.apache.commons.jexl.Expression e =
                         (org.apache.commons.jexl.Expression)compiled;
                     return e.evaluate(jexlContext);
                 }
@@ -1074,7 +1076,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             return null;
         }
     }
-    
+
     static private Object getValue(Expression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         return getValue(expr, jexlContext, jxpathContext, null);
     }
@@ -1113,7 +1115,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static private Boolean getBooleanValue(Expression expr, JexlContext jexlContext,
-                                    JXPathContext jxpathContext) 
+                                    JXPathContext jxpathContext)
         throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
         if (res instanceof Boolean) {
@@ -1124,7 +1126,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     // Hack: try to prevent JXPath from converting result to a String
     private Object getNode(Expression expr, JexlContext jexlContext,
-                           JXPathContext jxpathContext, Boolean lenient) 
+                           JXPathContext jxpathContext, Boolean lenient)
         throws Exception {
         try {
             Object compiled = expr.compiledExpression;
@@ -1138,7 +1140,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     jxpathContext.setLenient(oldLenient);
                 }
             } else if (compiled instanceof org.apache.commons.jexl.Expression) {
-                org.apache.commons.jexl.Expression e = 
+                org.apache.commons.jexl.Expression e =
                     (org.apache.commons.jexl.Expression)compiled;
                 return e.evaluate(jexlContext);
             }
@@ -1151,7 +1153,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             throw (Error)t;
         }
     }
-    
+
     private Object getNode(Expression expr, JexlContext jexlContext, JXPathContext jxpathContext) throws Exception {
         return getNode(expr, jexlContext, jxpathContext, null);
     }
@@ -1160,7 +1162,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final Locator location;
         Event next; // in document order
         Event(Locator locator) {
-            this.location = 
+            this.location =
                 locator == null ? NULL_LOCATOR : new LocatorImpl(locator);
         }
 
@@ -1181,7 +1183,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
 
     static class TextEvent extends Event {
-        TextEvent(Locator location, char[] chars, int start, int length) 
+        TextEvent(Locator location, char[] chars, int start, int length)
                                                           throws SAXException {
             super(location);
             StringBuffer buf = new StringBuffer();
@@ -1191,11 +1193,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             int ch;
             boolean inExpr = false;
             boolean xpath = false;
-//            int line = this.location.getLineNumber();
-            int column = this.location.getColumnNumber();
+            // int line = this.location.getLineNumber();
+            // int column = this.location.getColumnNumber();
             try {
                 top: while ((ch = in.read()) != -1) {
-                    column++;
+                    // column++;
                     char c = (char)ch;
                     processChar: while (true) {
                         if (inExpr) {
@@ -1205,16 +1207,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     buf.append('\\');
                                 } else {
                                     buf.append((char)ch);
-                                } 
+                                }
                             } else if (c == '}') {
                                 String str = buf.toString();
                                 Object compiledExpression;
                                 try {
                                     if (xpath) {
-                                        compiledExpression = 
+                                        compiledExpression =
                                             JXPathContext.compile(str);
                                     } else {
-                                        compiledExpression = 
+                                        compiledExpression =
                                             ExpressionFactory.createExpression(str);
                                     }
                                 } catch (Exception exc) {
@@ -1243,9 +1245,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     xpath = c == '#';
                                     inExpr = true;
                                     if (buf.length() > 0) {
-                                        char[] charArray = 
+                                        char[] charArray =
                                             new char[buf.length()];
-                                        
+
                                         buf.getChars(0, buf.length(),
                                                      charArray, 0);
                                         substitutions.add(charArray);
@@ -1281,7 +1283,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 buf.insert(0, str);
             }
             if (buf.length() > 0) {
-                char[] charArray = 
+                char[] charArray =
                     new char[buf.length()];
                 buf.getChars(0, buf.length(), charArray, 0);
                 substitutions.add(charArray);
@@ -1294,7 +1296,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class Characters extends TextEvent {
-        Characters(Locator location, char[] chars, int start, int length) 
+        Characters(Locator location, char[] chars, int start, int length)
                                                           throws SAXException {
             super(location, chars, start, length);
         }
@@ -1329,7 +1331,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         final String prefix;
     }
-    
+
     static class IgnorableWhitespace extends TextEvent {
         IgnorableWhitespace(Locator location, char[] chars,
                                    int start, int length) throws SAXException {
@@ -1368,7 +1370,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final String raw;
         final String type;
     }
-    
+
     static class CopyAttribute extends AttributeEvent {
         CopyAttribute(String namespaceURI, String localName, String raw,
                                                    String type, String value) {
@@ -1377,17 +1379,17 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
         final String value;
     }
-    
+
     static class Subst {
     }
-    
+
     static class Literal extends Subst {
         Literal(String val) {
             this.value = val;
         }
         final String value;
     }
-    
+
     static class Expression extends Subst {
         Expression(String raw, Object expr) {
             this.raw = raw;
@@ -1454,7 +1456,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                         throw new SAXParseException(
                                                 err.getMessage(), location,
                                                 null);
-                                    } 
+                                    }
                                     substEvents.add(compiledExpression);
                                     buf.setLength(0);
                                     inExpr = false;
@@ -1491,7 +1493,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                 }
                             }
                             break;
-                        } 
+                        }
                     }
                 } catch (IOException ignored) {
                     ignored.printStackTrace();
@@ -1580,7 +1582,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartDTD extends Event {
-        StartDTD(Locator location, String name, 
+        StartDTD(Locator location, String name,
                  String publicId, String systemId) {
             super(location);
             this.name = name;
@@ -1591,7 +1593,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final String publicId;
         final String systemId;
     }
-    
+
     static class StartEntity extends Event {
         public StartEntity(Locator location, String name) {
             super(location);
@@ -1608,7 +1610,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final StartElement startElement;
         EndInstruction endInstruction;
     }
-    
+
     static class EndInstruction extends Event {
         EndInstruction(Locator locator, StartInstruction startInstruction) {
             super(locator);
@@ -1639,7 +1641,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final Expression step;
         final Boolean lenient;
     }
-    
+
     static class StartIf extends StartInstruction {
         StartIf(StartElement raw, Expression test) {
             super(raw);
@@ -1733,7 +1735,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     if (!params) {
                         throw new SAXParseException("<parameter> not allowed here: \""+startParam.name +"\"", startParam.location, null);
                     }
-                    Object prev = 
+                    Object prev =
                         parameters.put(startParam.name, startParam);
                     if (prev != null) {
                         throw new SAXParseException("duplicate parameter: \""+startParam.name +"\"", location, null);
@@ -1827,25 +1829,25 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return ret;
     }
 
-    private static final String NUMBER = "number";    
+    private static final String NUMBER = "number";
     private static final String CURRENCY = "currency";
     private static final String PERCENT = "percent";
 
     static class StartFormatNumber extends StartInstruction {
 
-        Expression value;                   
-        Expression type;                    
-        Expression pattern;                 
-        Expression currencyCode;            
-        Expression currencySymbol;          
-        Expression isGroupingUsed;         
-        Expression maxIntegerDigits;           
-        Expression minIntegerDigits;           
-        Expression maxFractionDigits;          
-        Expression minFractionDigits;          
+        Expression value;
+        Expression type;
+        Expression pattern;
+        Expression currencyCode;
+        Expression currencySymbol;
+        Expression isGroupingUsed;
+        Expression maxIntegerDigits;
+        Expression minIntegerDigits;
+        Expression maxFractionDigits;
+        Expression minFractionDigits;
         Expression locale;
-        
-        Expression var;                        
+
+        Expression var;
 
         private static Class currencyClass;
 
@@ -1859,33 +1861,33 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
         public StartFormatNumber(StartElement raw,
                                  Expression var,
-                                 Expression value,                   
-                                 Expression type,                   
-                                 Expression pattern,                 
-                                 Expression currencyCode,            
-                                 Expression currencySymbol,          
-                                 Expression isGroupingUsed,         
-                                 Expression maxIntegerDigits,           
-                                 Expression minIntegerDigits,           
-                                 Expression maxFractionDigits,          
+                                 Expression value,
+                                 Expression type,
+                                 Expression pattern,
+                                 Expression currencyCode,
+                                 Expression currencySymbol,
+                                 Expression isGroupingUsed,
+                                 Expression maxIntegerDigits,
+                                 Expression minIntegerDigits,
+                                 Expression maxFractionDigits,
                                  Expression minFractionDigits,
                                  Expression locale) {
             super(raw);
-            this.var = var;                   
-            this.value = value;                   
-            this.type = type;                    
-            this.pattern = pattern;                 
-            this.currencyCode = currencyCode;            
-            this.currencySymbol = currencySymbol;          
-            this.isGroupingUsed = isGroupingUsed;         
-            this.maxIntegerDigits = maxIntegerDigits;           
-            this.minIntegerDigits = minIntegerDigits;           
-            this.maxFractionDigits = maxFractionDigits;          
-            this.minFractionDigits = minFractionDigits;          
+            this.var = var;
+            this.value = value;
+            this.type = type;
+            this.pattern = pattern;
+            this.currencyCode = currencyCode;
+            this.currencySymbol = currencySymbol;
+            this.isGroupingUsed = isGroupingUsed;
+            this.maxIntegerDigits = maxIntegerDigits;
+            this.minIntegerDigits = minIntegerDigits;
+            this.maxFractionDigits = maxFractionDigits;
+            this.minFractionDigits = minFractionDigits;
             this.locale = locale;
         }
 
-        String format(JexlContext jexl, JXPathContext jxp) 
+        String format(JexlContext jexl, JXPathContext jxp)
             throws Exception {
             // Determine formatting locale
             String var = getStringValue(this.var, jexl, jxp);
@@ -1893,17 +1895,17 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             String type = getStringValue(this.type, jexl, jxp);
             String pattern = getStringValue(this.pattern, jexl, jxp);
             String currencyCode = getStringValue(this.currencyCode, jexl, jxp);
-            String currencySymbol = getStringValue(this.currencySymbol, 
+            String currencySymbol = getStringValue(this.currencySymbol,
                                                  jexl, jxp);
-            Boolean isGroupingUsed = getBooleanValue(this.isGroupingUsed, 
+            Boolean isGroupingUsed = getBooleanValue(this.isGroupingUsed,
                                                      jexl, jxp);
-            Number maxIntegerDigits = getNumberValue(this.maxIntegerDigits, 
+            Number maxIntegerDigits = getNumberValue(this.maxIntegerDigits,
                                                      jexl, jxp);
-            Number minIntegerDigits = getNumberValue(this.minIntegerDigits, 
+            Number minIntegerDigits = getNumberValue(this.minIntegerDigits,
                                                      jexl, jxp);
-            Number maxFractionDigits = getNumberValue(this.maxFractionDigits, 
+            Number maxFractionDigits = getNumberValue(this.maxFractionDigits,
                                                       jexl, jxp);
-            Number minFractionDigits = getNumberValue(this.minFractionDigits, 
+            Number minFractionDigits = getNumberValue(this.minFractionDigits,
                                                       jexl, jxp);
             String localeStr = getStringValue(this.locale,
                                               jexl, jxp);
@@ -1915,7 +1917,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             String formatted;
             if (loc != null) {
-                // Create formatter 
+                // Create formatter
                 NumberFormat formatter = null;
                 if ((pattern != null) && !pattern.equals("")) {
                     // if 'pattern' is specified, 'type' is ignored
@@ -1951,9 +1953,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             return formatted;
         }
-        
+
         private NumberFormat createFormatter(Locale loc,
-                                             String type) 
+                                             String type)
             throws Exception {
             NumberFormat formatter = null;
             if ((type == null) || NUMBER.equalsIgnoreCase(type)) {
@@ -1990,7 +1992,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             if (minFractionDigits != null)
                 formatter.setMinimumFractionDigits(minFractionDigits.intValue());
         }
-        
+
         /*
          * Override the formatting locale's default currency symbol with the
          * specified currency code (specified via the "currencyCode" attribute) or
@@ -2015,7 +2017,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
          * >=1.4       EUR            ---         Locale's currency symbol for Euro
          *
          * all         ---           \u20AC       \u20AC
-         * 
+         *
          * <1.4        EUR           \u20AC       \u20AC
          * >=1.4       EUR           \u20AC       Locale's currency symbol for Euro
          */
@@ -2024,7 +2026,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                  String currencySymbol) throws Exception {
             String code = null;
             String symbol = null;
-            
+
             if ((currencyCode == null) && (currencySymbol == null)) {
                 return;
             }
@@ -2045,7 +2047,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             if (code != null) {
                 Object[] methodArgs = new Object[1];
-                
+
                 /*
                  * java.util.Currency.getInstance()
                  */
@@ -2054,7 +2056,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
                 methodArgs[0] = code;
                 Object currency = m.invoke(null, methodArgs);
-                
+
                 /*
                  * java.text.NumberFormat.setCurrency()
                  */
@@ -2114,11 +2116,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             this.locale = locale;
         }
 
-        String format(JexlContext jexl, JXPathContext jxp) 
+        String format(JexlContext jexl, JXPathContext jxp)
             throws Exception {
             String var = getStringValue(this.var, jexl, jxp);
             Object value = getValue(this.value, jexl, jxp);
-            Object locVal = getValue(this.locale, 
+            Object locVal = getValue(this.locale,
                                      jexl, jxp);
             String pattern = getStringValue(this.pattern,
                                             jexl, jxp);
@@ -2167,7 +2169,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else {
                     throw new IllegalArgumentException("Illegal timeZone value: \""+timeZone+"\"");
                 }
-            } 
+            }
             if (tz != null) {
                 formatter.setTimeZone(tz);
             }
@@ -2184,7 +2186,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         private DateFormat createFormatter(Locale loc,
                                            String type,
                                            String dateStyle,
-                                           String timeStyle) 
+                                           String timeStyle)
             throws Exception {
             DateFormat formatter = null;
             if ((type == null) || DATE.equalsIgnoreCase(type)) {
@@ -2273,7 +2275,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
         }
 
-        public void characters(char[] ch, int start, int length) 
+        public void characters(char[] ch, int start, int length)
             throws SAXException {
             if (charBuf == null) {
                 charBuf = new StringBuffer();
@@ -2295,14 +2297,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
         public void endElement(String namespaceURI,
                                String localName,
-                               String raw) 
+                               String raw)
             throws SAXException {
             Event start = (Event)stack.pop();
             Event newEvent = null;
             if (NS.equals(namespaceURI)) {
-                StartInstruction startInstruction = 
+                StartInstruction startInstruction =
                     (StartInstruction)start;
-                EndInstruction endInstruction = 
+                EndInstruction endInstruction =
                     new EndInstruction(locator, startInstruction);
                 newEvent = endInstruction;
                 if (start instanceof StartWhen) {
@@ -2318,14 +2320,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         startChoose.firstChoice = startWhen;
                     }
                 } else if (start instanceof StartOtherwise) {
-                    StartOtherwise startOtherwise = 
+                    StartOtherwise startOtherwise =
                         (StartOtherwise)start;
                     StartChoose startChoose = (StartChoose)stack.peek();
                     startChoose.otherwise = startOtherwise;
-                } 
+                }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = startElement.endElement = 
+                newEvent = startElement.endElement =
                     new EndElement(locator, startElement);
             }
             addEvent(newEvent);
@@ -2335,20 +2337,20 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
         }
 
-        
+
         public void endPrefixMapping(String prefix) throws SAXException {
-            EndPrefixMapping endPrefixMapping = 
+            EndPrefixMapping endPrefixMapping =
                 new EndPrefixMapping(locator, prefix);
             addEvent(endPrefixMapping);
         }
 
-        public void ignorableWhitespace(char[] ch, int start, int length) 
+        public void ignorableWhitespace(char[] ch, int start, int length)
             throws SAXException {
             Event ev = new IgnorableWhitespace(locator, ch, start, length);
             addEvent(ev);
         }
 
-        public void processingInstruction(String target, String data) 
+        public void processingInstruction(String target, String data)
             throws SAXException {
             Event pi = new ProcessingInstruction(locator, target, data);
             addEvent(pi);
@@ -2388,7 +2390,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         compileExpr(attrs.getValue("var"), null, locator);
                     Expression varStatus =
                         compileExpr(attrs.getValue("varStatus"),
-                                null, locator);           
+                                null, locator);
                     if (items == null) {
                         if (select == null && (begin == null || end == null)) {
                             throw new SAXParseException("forEach: \"select\", \"items\", or both \"begin\" and \"end\" must be specified", locator, null);
@@ -2396,7 +2398,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     } else if (select != null) {
                         throw new SAXParseException("forEach: only one of \"select\" or \"items\" may be specified", locator, null);
                     }
-                    Expression expr = 
+                    Expression expr =
                         compileExpr(items == null ? select : items,
                                 null, locator);
                     String lenientValue = attrs.getValue("lenient");
@@ -2436,7 +2438,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     null, locator);
                     Expression locale = compileExpr(attrs.getValue("locale"),
                                     null, locator);
-                    StartFormatNumber startFormatNumber = 
+                    StartFormatNumber startFormatNumber =
                         new StartFormatNumber(startElement,
                                               var,
                                               value,
@@ -2452,7 +2454,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                               locale);
                     newEvent = startFormatNumber;
                 } else if (localName.equals(FORMAT_DATE)) {
-                    Expression var = compileExpr(attrs.getValue("var"), 
+                    Expression var = compileExpr(attrs.getValue("var"),
                                     null, locator);
                     Expression value = compileExpr(attrs.getValue("value"),
                                     null, locator);
@@ -2466,11 +2468,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         compileExpr(attrs.getValue("dateStyle"),
                                     null, locator);
                     Expression timeStyle =
-                        compileExpr(attrs.getValue("timeStyle"), 
+                        compileExpr(attrs.getValue("timeStyle"),
                                     null, locator);
                     Expression locale =
                         compileExpr(attrs.getValue("locale"), null, locator);
-                    StartFormatDate startFormatDate = 
+                    StartFormatDate startFormatDate =
                         new StartFormatDate(startElement,
                                             var,
                                             value,
@@ -2516,7 +2518,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(OTHERWISE)) {
                     if (stack.size() != 0 &&
                             (stack.peek() instanceof StartChoose)) {
-                        StartOtherwise startOtherwise = 
+                        StartOtherwise startOtherwise =
                             new StartOtherwise(startElement);
                         newEvent = startOtherwise;
                     } else {
@@ -2527,9 +2529,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(IF)) {
                     String test = attrs.getValue("test");
                     if (test != null) {
-                        Expression expr = 
+                        Expression expr =
                             compileExpr(test, "if: \"test\": ", locator);
-                        StartIf startIf = 
+                        StartIf startIf =
                             new StartIf(startElement, expr);
                         newEvent = startIf;
                     } else {
@@ -2546,8 +2548,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     String name = attrs.getValue("name");
                     if (name != null) {
-                        StartDefine startDefine = 
-                            new StartDefine(startElement, namespace, name); 
+                        StartDefine startDefine =
+                            new StartDefine(startElement, namespace, name);
                         newEvent = startDefine;
                     } else {
                         throw new SAXParseException(
@@ -2574,30 +2576,26 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         throw new SAXParseException("<parameter> not allowed here", locator, null);
                     }
                 } else if (localName.equals(EVALBODY)) {
-                    StartEvalBody startEval = 
-                        new StartEvalBody(startElement);
-                    newEvent = startEval;
+                    newEvent = new StartEvalBody(startElement);
                 } else if (localName.equals(EVAL)) {
                     String value = attrs.getValue("select");
-                    Expression valueExpr = 
+                    Expression valueExpr =
                             compileExpr(value, "eval: \"select\":", locator);
-                    StartEval startEval = 
-                        new StartEval(startElement, valueExpr);
-                    newEvent = startEval;
+                    newEvent = new StartEval(startElement, valueExpr);
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
                     String value = attrs.getValue("value");
                     Expression varExpr = null;
                     Expression valueExpr = null;
                     if (var != null) {
-                        varExpr = 
+                        varExpr =
                             compileExpr(var, "set: \"var\":", locator);
-                    } 
+                    }
                     if (value != null) {
-                        valueExpr = 
+                        valueExpr =
                             compileExpr(value, "set: \"value\":", locator);
-                    } 
-                    StartSet startSet = new StartSet(startElement, 
+                    }
+                    StartSet startSet = new StartSet(startElement,
                                                      varExpr, valueExpr);
                     newEvent = startSet;
                 } else if (localName.equals(IMPORT)) {
@@ -2617,11 +2615,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         String select = attrs.getValue("context");
                         Expression expr = null;
                         if (select != null) {
-                            expr = 
+                            expr =
                                 compileExpr(select, "import: \"context\": ",
                                             locator);
                         }
-                        StartImport startImport = 
+                        StartImport startImport =
                             new StartImport(startElement, uri, expr);
                         newEvent = startImport;
                     } else {
@@ -2640,13 +2638,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             stack.push(newEvent);
             addEvent(newEvent);
         }
-        
-        public void startPrefixMapping(String prefix, String uri) 
+
+        public void startPrefixMapping(String prefix, String uri)
             throws SAXException {
             addEvent(new StartPrefixMapping(locator, prefix, uri));
         }
 
-        public void comment(char ch[], int start, int length) 
+        public void comment(char ch[], int start, int length)
             throws SAXException {
             addEvent(new Comment(locator, ch, start, length));
         }
@@ -2667,11 +2665,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             addEvent(new StartCDATA(locator));
         }
 
-        public void startDTD(String name, String publicId, String systemId) 
+        public void startDTD(String name, String publicId, String systemId)
             throws SAXException {
             addEvent(new StartDTD(locator, name, publicId, systemId));
         }
-        
+
         public void startEntity(String name) throws SAXException {
             addEvent(new StartEntity(locator, name));
         }
@@ -2679,7 +2677,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     /**
      * Adapter that makes this generator usable as a transformer
-     * (Note there is a performance penalty for this however: 
+     * (Note there is a performance penalty for this however:
      * you effectively recompile the template for every instance document)
      */
 
@@ -2687,7 +2685,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         static class TemplateConsumer extends Parser implements XMLConsumer {
 
             public TemplateConsumer(SourceResolver resolver, Map objectModel,
-                                    String src, Parameters parameters) 
+                                    String src, Parameters parameters)
                 throws ProcessingException, SAXException, IOException {
                 this.gen = new JXTemplateGenerator();
                 this.gen.setup(resolver, objectModel, null, parameters);
@@ -2747,7 +2745,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
      */
     public void recycle() {
         if ( this.resolver != null) {
-            this.resolver.release(this.inputSource);            
+            this.resolver.release(this.inputSource);
         }
         this.inputSource = null;
         this.jxpathContext = null;
@@ -2777,13 +2775,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 StartDocument startEvent = (StartDocument)cache.get(uri);
                 if (startEvent != null) {
                     int valid = SourceValidity.UNKNOWN;
-                    if (startEvent.compileTime != null) 
-                        valid = startEvent.compileTime.isValid();                    
-                    if ( valid == SourceValidity.UNKNOWN && startEvent.compileTime != null ) {
+                    if (startEvent.compileTime != null) {
+                        valid = startEvent.compileTime.isValid();
+                    }
+                    if (valid == SourceValidity.UNKNOWN && startEvent.compileTime != null) {
                         SourceValidity validity = inputSource.getValidity();
                         valid = startEvent.compileTime.isValid(validity);
                     }
-                    if ( valid != SourceValidity.VALID) {
+                    if (valid != SourceValidity.VALID) {
                         cache.remove(uri);
                     }
                 }
@@ -2799,7 +2798,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         if (contextObject != null) {
             // Hack: I use jxpath to populate the context object's properties
             // in the jexl context
-            final JXPathBeanInfo bi = 
+            final JXPathBeanInfo bi =
                 JXPathIntrospector.getBeanInfo(contextObject.getClass());
             if (bi.isDynamic()) {
                 Class cl = bi.getDynamicPropertyHandlerClass();
@@ -2807,7 +2806,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     DynamicPropertyHandler h =
                         (DynamicPropertyHandler) cl.newInstance();
                     String[] result = h.getPropertyNames(contextObject);
-                    int len = result.length; 
+                    int len = result.length;
                     for (int i = 0; i < len; i++) {
                         try {
                             map.put(result[i], h.getProperty(contextObject, result[i]));
@@ -2825,7 +2824,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     try {
                         Method read = props[i].getReadMethod();
                         if (read != null) {
-                            map.put(props[i].getName(), 
+                            map.put(props[i].getName(),
                                     read.invoke(contextObject, null));
                         }
                     } catch (Exception ignored) {
@@ -2842,13 +2841,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final Object session = request.getSession(false);
         final Object app =  ObjectModelHelper.getContext(objectModel);
         cocoon = new HashMap();
-        cocoon.put("request", 
+        cocoon.put("request",
                    FOM_JavaScriptFlowHelper.getFOM_Request(objectModel));
         if (session != null) {
-            cocoon.put("session", 
+            cocoon.put("session",
                        FOM_JavaScriptFlowHelper.getFOM_Session(objectModel));
         }
-        cocoon.put("context", 
+        cocoon.put("context",
                    FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
         cocoon.put("continuation", kont);
         cocoon.put("parameters", Parameters.toProperties(parameters));
@@ -2893,10 +2892,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     /* (non-Javadoc)
      * @see org.apache.cocoon.generation.Generator#generate()
      */
-    public void generate() 
+    public void generate()
     throws IOException, SAXException, ProcessingException {
         final String cacheKey = this.inputSource.getURI();
-        
+
         StartDocument startEvent;
         synchronized (cache) {
             startEvent = (StartDocument)cache.get(cacheKey);
@@ -2913,7 +2912,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         performGeneration(this.xmlConsumer, globalJexlContext, jxpathContext,
                 null, startEvent, null);
     }
-    
+
     void performGeneration(final XMLConsumer consumer,
                 MyJexlContext jexlContext, JXPathContext jxpathContext,
                 StartElement macroCall, Event startEvent, Event endEvent)
@@ -2959,7 +2958,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
 /*    private void executeRaw(final XMLConsumer consumer,
-                            Event startEvent, Event endEvent) 
+                            Event startEvent, Event endEvent)
     throws SAXException {
         Event ev = startEvent;
         LocatorFacade loc = new LocatorFacade(ev.location);
@@ -2972,7 +2971,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } else if (ev instanceof EndDocument) {
                 consumer.endDocument();
             } else if (ev instanceof StartElement) {
-                StartElement startElement = 
+                StartElement startElement =
                     (StartElement)ev;
                 consumer.startElement(startElement.namespaceURI,
                                       startElement.localName,
@@ -2985,7 +2984,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     startElement.localName,
                                     startElement.raw);
             } else if (ev instanceof EndPrefixMapping) {
-                EndPrefixMapping endPrefixMapping = 
+                EndPrefixMapping endPrefixMapping =
                     (EndPrefixMapping)ev;
                 consumer.endPrefixMapping(endPrefixMapping.prefix);
             } else if (ev instanceof IgnorableWhitespace) {
@@ -3004,9 +3003,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     consumer.startDocument();
                 }
             } else if (ev instanceof StartPrefixMapping) {
-                StartPrefixMapping startPrefixMapping = 
+                StartPrefixMapping startPrefixMapping =
                     (StartPrefixMapping)ev;
-                consumer.startPrefixMapping(startPrefixMapping.prefix, 
+                consumer.startPrefixMapping(startPrefixMapping.prefix,
                                             startPrefixMapping.uri);
             } else if (ev instanceof Comment) {
                 TextEvent text = (TextEvent)ev;
@@ -3035,7 +3034,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                       startElement.attributes);
             } else if (ev instanceof EndInstruction) {
                 EndInstruction endInstruction = (EndInstruction)ev;
-                StartInstruction startInstruction = 
+                StartInstruction startInstruction =
                     endInstruction.startInstruction;
                 StartElement startElement = startInstruction.startElement;
                 consumer.endElement(startElement.namespaceURI,
@@ -3044,7 +3043,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             }
             ev = ev.next;
         }
-    } 
+    }
 */
     private void executeDOM(final XMLConsumer consumer,
             MyJexlContext jexlContext, JXPathContext jxpathContext,
@@ -3055,7 +3054,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     private void call(Locator location, StartElement macroCall,
             final XMLConsumer consumer, MyJexlContext jexlContext,
-            JXPathContext jxpathContext, Event startEvent, Event endEvent) 
+            JXPathContext jxpathContext, Event startEvent, Event endEvent)
             throws SAXException {
         try {
             execute(consumer, jexlContext, jxpathContext, macroCall,
@@ -3075,7 +3074,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         int begin;
         int end;
         int step;
-        
+
         public Object getCurrent() {
             return current;
         }
@@ -3101,7 +3100,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             return step;
         }
     }
-    
+
     private void execute(final XMLConsumer consumer,
             MyJexlContext jexlContext, JXPathContext jxpathContext,
             StartElement macroCall, Event startEvent, Event endEvent)
@@ -3174,10 +3173,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 consumer.endPrefixMapping(endPrefixMapping.prefix);
             } else if (ev instanceof IgnorableWhitespace) {
                 TextEvent text = (TextEvent)ev;
-                characters(jexlContext, jxpathContext, text, 
+                characters(jexlContext, jxpathContext, text,
                            new CharHandler() {
                                public void characters(char[] ch, int offset,
-                                                      int len) 
+                                                      int len)
                                    throws SAXException {
                                    consumer.ignorableWhitespace(ch, offset, len);
                                }
@@ -3227,9 +3226,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     if (items != null) {
                         Expression expr = (Expression)items;
                         if (expr.compiledExpression instanceof CompiledExpression) {
-                            CompiledExpression compiledExpression = 
+                            CompiledExpression compiledExpression =
                                 (CompiledExpression)expr.compiledExpression;
-                            Object val = 
+                            Object val =
                                 compiledExpression.getPointer(jxpathContext,
                                                               expr.raw).getNode();
                             // FIXME: workaround for JXPath bug
@@ -3239,7 +3238,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                 iter = compiledExpression.iteratePointers(jxpathContext);
                             }
                         } else if (expr.compiledExpression instanceof org.apache.commons.jexl.Expression) {
-                            org.apache.commons.jexl.Expression e = 
+                            org.apache.commons.jexl.Expression e =
                                 (org.apache.commons.jexl.Expression)expr.compiledExpression;
                             Object result = e.evaluate(jexlContext);
                             if (result != null) {
@@ -3276,15 +3275,15 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     begin = startForEach.begin == null ? 0 :
                         getIntValue(startForEach.begin, jexlContext, jxpathContext);
-                    end = startForEach.end == null ? Integer.MAX_VALUE : 
-                            getIntValue(startForEach.end, jexlContext, 
+                    end = startForEach.end == null ? Integer.MAX_VALUE :
+                            getIntValue(startForEach.end, jexlContext,
                                     jxpathContext);
-                    step = startForEach.step == null ? 1 : 
+                    step = startForEach.step == null ? 1 :
                             getIntValue(startForEach.step, jexlContext,
                                     jxpathContext);
-                    var = getStringValue(startForEach.var, jexlContext, 
+                    var = getStringValue(startForEach.var, jexlContext,
                                             jxpathContext);
-                    varStatus = getStringValue(startForEach.varStatus, 
+                    varStatus = getStringValue(startForEach.varStatus,
                                                jexlContext, jxpathContext);
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(),
@@ -3293,9 +3292,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     throw new SAXParseException(err.getMessage(),
                                                 ev.location, null);
                 }
-                MyJexlContext localJexlContext = 
+                MyJexlContext localJexlContext =
                     new MyJexlContext(jexlContext);
-                MyVariables localJXPathVariables = 
+                MyVariables localJXPathVariables =
                     new MyVariables((MyVariables)jxpathContext.getVariables());
                 int i = 0;
                 // Move to the begin row
@@ -3319,7 +3318,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     Object value = iter.next();
                     if (value instanceof Pointer) {
                         Pointer ptr = (Pointer)value;
-                        localJXPathContext = 
+                        localJXPathContext =
                             jxpathContext.getRelativeContext(ptr);
                         try {
                             value = ptr.getNode();
@@ -3329,7 +3328,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         }
                     } else {
                         localJXPathContext =
-                            jxpathContextFactory.newContext(jxpathContext, 
+                            jxpathContextFactory.newContext(jxpathContext,
                                                             value);
                     }
                     localJXPathContext.setVariables(localJXPathVariables);
@@ -3359,7 +3358,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 continue;
             } else if (ev instanceof StartChoose) {
                 StartChoose startChoose = (StartChoose)ev;
-                StartWhen startWhen = startChoose.firstChoice; 
+                StartWhen startWhen = startChoose.firstChoice;
                 while (startWhen != null) {
                     Object val;
                     try {
@@ -3399,7 +3398,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 String var = null;
                 try {
                     if (startSet.var != null) {
-                        var = getStringValue(startSet.var, jexlContext, 
+                        var = getStringValue(startSet.var, jexlContext,
                                              jxpathContext);
                     }
                     if (startSet.value != null) {
@@ -3437,7 +3436,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 continue;
             } else if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement)ev;
-                StartDefine def = 
+                StartDefine def =
                     (StartDefine)definitions.get(startElement.qname);
                 if (def != null) {
                     Map attributeMap = new HashMap();
@@ -3450,12 +3449,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         if (attrEvent instanceof CopyAttribute) {
                             CopyAttribute copy = (CopyAttribute)attrEvent;
                             attributeValue = copy.value;
-                        } else if (attrEvent instanceof 
+                        } else if (attrEvent instanceof
                                    SubstituteAttribute) {
                             SubstituteAttribute substEvent =
                                 (SubstituteAttribute)attrEvent;
                             if (substEvent.substitutions.size() == 1 &&
-                                    substEvent.substitutions.get(0) instanceof 
+                                    substEvent.substitutions.get(0) instanceof
                                     Expression) {
                                 Expression expr = (Expression)
                                     substEvent.substitutions.get(0);
@@ -3504,10 +3503,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         }
                         attributeMap.put(attributeName, attributeValue);
                     }
-                    MyVariables parent = 
+                    MyVariables parent =
                         (MyVariables)jxpathContext.getVariables();
                     MyVariables vars = new MyVariables(parent);
-                    MyJexlContext localJexlContext = 
+                    MyJexlContext localJexlContext =
                         new MyJexlContext(jexlContext);
                     HashMap macro = new HashMap();
                     macro.put("body", startElement);
@@ -3518,7 +3517,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     while (iter.hasNext()) {
                         Map.Entry e = (Map.Entry)iter.next();
                         String key = (String)e.getKey();
-                        StartParameter startParam = 
+                        StartParameter startParam =
                             (StartParameter)e.getValue();
                         Object default_ = startParam.default_;
                         Object val = attributeMap.get(key);
@@ -3565,7 +3564,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                  jxpathContext);
                                 } catch (Exception e) {
                                     throw new SAXParseException(e.getMessage(),
-                                                                ev.location, e); 
+                                                                ev.location, e);
                                }
                                 if (val == null) {
                                     val = "";
@@ -3579,8 +3578,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                 }
                 consumer.startElement(startElement.namespaceURI,
-                              startElement.localName, startElement.raw, attrs); 
-                
+                              startElement.localName, startElement.raw, attrs);
+
             } else if (ev instanceof StartFormatNumber) {
                 StartFormatNumber startFormatNumber = (StartFormatNumber)ev;
                 try {
@@ -3614,7 +3613,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } else if (ev instanceof Comment) {
                 TextEvent text = (TextEvent)ev;
                 final StringBuffer buf = new StringBuffer();
-                characters(jexlContext, jxpathContext, text, 
+                characters(jexlContext, jxpathContext, text,
                            new CharHandler() {
                                public void characters(char[] ch, int offset,
                                               int len) throws SAXException {
@@ -3798,7 +3797,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     try {
                         Object obj = getValue(startImport.select,
                                               jexlContext, jxpathContext);
-                        selectJXPath = 
+                        selectJXPath =
                             jxpathContextFactory.newContext(null, obj);
                         selectJXPath.setVariables(variables);
                         selectJexl = new MyJexlContext(jexlContext);
