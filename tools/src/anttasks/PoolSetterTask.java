@@ -15,17 +15,11 @@
  * limitations under the License.
  */
 
+import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -40,18 +34,18 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/01 10:49:41 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/05/01 13:20:09 $
  */
 public final class PoolSetterTask extends Task {
 
-    private String file;
+    private File file;
     private String element;
     private boolean isSitemap = true;
-    private int poolMax = 32;
-    private int poolMin = 16;
-    private int poolGrow = 4;
+    private String poolMax = "32";
+    private String poolMin = "16";
+    private String poolGrow = "4";
 
-    public void setFile(String file) {
+    public void setFile(File file) {
         this.file = file;
     }
 
@@ -64,15 +58,15 @@ public final class PoolSetterTask extends Task {
     }
 
     public void setPoolMax(int value) {
-        this.poolMax = value;
+        this.poolMax = String.valueOf(value);
     }
 
     public void setPoolMin(int value) {
-        this.poolMin = value;
+        this.poolMin = String.valueOf(value);
     }
 
     public void setPoolGrow(int value) {
-        this.poolGrow = value;
+        this.poolGrow = String.valueOf(value);
     }
 
     public void execute() throws BuildException {
@@ -85,13 +79,9 @@ public final class PoolSetterTask extends Task {
         }
 
         try {
-            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-
             // load xml
-            String fileName = this.getProject().resolveFile(this.file).getCanonicalPath();
-            System.out.println("Reading: " + fileName);
-            final Document configuration = builder.parse(fileName);
+            final String fileName = this.file.toURL().toExternalForm();
+            final Document configuration = DocumentCache.getDocument(fileName, this);
 
             // process recursive
             boolean changed = false;
@@ -108,9 +98,9 @@ public final class PoolSetterTask extends Task {
                 if (nodes != null && nodes.getLength() > 0) {
                     for(int i=0; i < nodes.getLength(); i++) {
                         final Element e = (Element)nodes.item(i);
-                        e.setAttributeNS(null, "pool-max", ""+this.poolMax);
-                        e.setAttributeNS(null, "pool-min", ""+this.poolMin);
-                        e.setAttributeNS(null, "pool-grow", ""+this.poolGrow);
+                        e.setAttributeNS(null, "pool-max", this.poolMax);
+                        e.setAttributeNS(null, "pool-min", this.poolMin);
+                        e.setAttributeNS(null, "pool-grow", this.poolGrow);
                         changed = true;
                     }
                 } else {
@@ -120,17 +110,13 @@ public final class PoolSetterTask extends Task {
 
             if ( changed ) {
                 // save xml
-                System.out.println("Writing: " + file);
-                transformer.transform(new DOMSource(configuration), new StreamResult(file));
-            } else {
-                System.out.println("No Changes: " + file);
+                DocumentCache.writeDocument(this.file, configuration, this);
             }
-        } catch (TransformerException e) {
+            DocumentCache.storeDocument(fileName, configuration, this);
+       } catch (TransformerException e) {
             throw new BuildException("TransformerException: " + e);
         } catch (SAXException e) {
             throw new BuildException("SAXException: " + e);
-        } catch (ParserConfigurationException e) {
-            throw new BuildException("ParserConfigurationException: " + e);
         } catch (IOException ioe) {
             throw new BuildException("IOException: " + ioe);
         }
