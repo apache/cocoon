@@ -92,15 +92,6 @@
    maintain a dynamic page.
   </sample>
 
-  <sample name="DCP using Java" url="dcp/java/sample-page.xml">
-   This page shows how you can use Cocoon to generate dynamic content using
-   XML processing instructions to trigger Java logic execution.
-  </sample>
-
-  <!--<sample name="DCP using ECMAScript" url="dcp/ecmascript/sample-page.xml">
-   This page shows how you can use Cocoon to generate dynamic content using
-   XML processing instructions to trigger ECMAScript logic execution.
-  </sample>-->
  </group>
 
  <!-- 
