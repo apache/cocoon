@@ -1160,10 +1160,8 @@
     <depend project="cocoon-block-session-fw"/>
     <depend project="cocoon-block-databases"/>
     <depend project="concurrent"/>
-    <depend project="pizza"/>
     <depend project="jdtcore"/>
 
-    <library name="pizza"/>
     <library name="jdtcore"/>
 
     <work nested="tools/anttasks"/>
@@ -1308,16 +1306,6 @@
     ********  COCOON SUPPLIED PROJECTS  ********
     ********************************************
   -->
-
-  <project name="pizza">
-    <url href="http://pizzacompiler.sourceforge.net/"/>
-    <package>net.sf.pizzacompiler</package>
-    <description>
-      Java Compiler
-    </description>
-    <home nested="lib/optional"/>
-    <jar name="pizza-1.1.jar"/>
-  </project>
 
   <project name="deli">
     <url href="http://sourceforge.net/projects/delicon/"/>
