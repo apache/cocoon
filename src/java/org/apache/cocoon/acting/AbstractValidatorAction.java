@@ -219,7 +219,7 @@ import java.util.Vector;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.2 2003/08/15 15:53:20 haul Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.3 2003/08/15 20:00:57 vgritsenko Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -245,12 +245,11 @@ public abstract class AbstractValidatorAction
     /*
      * main method
      */
-    public Map act(
-        Redirector redirector,
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters parameters) {
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String src,
+                   Parameters parameters) throws Exception {
 
         Configuration conf = this.getDescriptor(resolver, objectModel, parameters);
         if (conf == null)
