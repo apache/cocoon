@@ -15,9 +15,13 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
-  <!-- depends on the repository block -->
-  <include src="cocoon-repository.xconf"/>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-repository.xconf"/>
   
   <component role="org.apache.cocoon.components.repository.RepositoryManager"
              class="org.apache.cocoon.components.repository.RepositoryManager"

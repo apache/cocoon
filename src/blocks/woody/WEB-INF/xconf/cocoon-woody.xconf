@@ -15,7 +15,15 @@
   limitations under the License.
 -->
 
+<!--+
+    |
+    | SVN $Id$
+    +-->
 <components>
+  <!-- Include dependencies -->
+  <include src="context://WEB-INF/xconf/cocoon-xsp.xconf"/>
+
+  <!-- Include roles -->
   <include src="resource://org/apache/cocoon/woody/woody.roles"/>
   
   <woody-binding logger="woody.binding">
