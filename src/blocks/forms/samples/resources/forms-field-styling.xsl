@@ -121,7 +121,7 @@
   <!--+
       |
       +-->
-  <xsl:template match="fi:validation-message">
+  <xsl:template match="fi:validation-message | fi:validation-error">
     <a href="#" class="forms-validation-message" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
   </xsl:template>
 
