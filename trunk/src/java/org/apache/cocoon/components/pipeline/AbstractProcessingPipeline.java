@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.26 2004/01/30 09:47:59 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.27 2004/01/31 13:08:49 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -430,7 +430,8 @@ public abstract class AbstractProcessingPipeline
         // If this is an internal request, lastConsumer was reset!
         if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
-        } else {
+        }
+        if (null != this.lastConsumer || this.reader != null) {
             this.preparePipeline(environment);
         }
         
@@ -635,6 +636,7 @@ public abstract class AbstractProcessingPipeline
         this.serializer = null;
         this.parameters = null;
         this.processor = null;
+        this.lastConsumer = null;
     }
 
     /**
