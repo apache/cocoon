@@ -169,7 +169,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: LinkRewriterTransformer.java,v 1.4 2003/03/26 10:36:57 jefft Exp $
+ * @version CVS $Id: LinkRewriterTransformer.java,v 1.5 2003/05/03 11:22:55 jefft Exp $
  */
 public class LinkRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
@@ -341,10 +341,14 @@ public class LinkRewriterTransformer
         try {
             String modValue = (String)modHelper.getAttribute(this.objectModel, getConf(scheme), scheme, addr, (badLinkStr!=null?badLinkStr:scheme+":"+addr));
             newAttrs.setValue(linkIndex, modValue);
-        } catch (Exception e) {
-            // Swallow IM errors, usually prefixes like 'http' that aren't
-            // bound to an InputModule.
-            getLogger().warn("## IM error: "+e, e);
+        } catch (org.apache.avalon.framework.CascadingRuntimeException e) {
+            // Rethrow Configuration errors
+            if (e.getCause() instanceof ConfigurationException) throw e;
+
+            // Swallow IM errors, usually prefixes like 'telnet' that aren't
+            // bound to an InputModule. These should really be declared in
+            // 'exclude-schemes', hence the 'error' classification of this log.
+            getLogger().error("Error rewriting link '"+scheme+":"+addr+"': "+e.getMessage());
         }
         return newAttrs;
     }
