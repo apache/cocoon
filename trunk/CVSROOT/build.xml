@@ -284,6 +284,11 @@ a Java 1.2 compatible JVM is required for this target.
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}"/>
+    <copy todir="${build.dest}" filtering="on">
+      <fileset dir="${src.dir}">
+	    <include name="**/*.xsl"/>
+	  </fileset>
+	</copy>
   </target>
 
   <!-- =================================================================== -->
