@@ -40,7 +40,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.23 $ $Date: 2000-10-06 21:25:31 $
+ * @version CVS $Revision: 1.1.4.24 $ $Date: 2000-10-30 19:01:08 $
  */
  
 public class CocoonServlet extends HttpServlet {
@@ -158,8 +158,21 @@ public class CocoonServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
         if (pathInfo != null) uri += pathInfo;
 
+        if (uri.length() == 0) {
+            /* empty relative URI
+                 -> HTTP-redirect from /cocoon to /cocoon/ to avoid 
+                    StringIndexOutOfBoundsException when calling 
+                    "".charAt(0)
+               else process URI normally
+            */
+            res.sendRedirect(req.getRequestURI()+"/");
+            return;
+        }
+
         try {
-            if (uri.charAt(0) == '/') uri = uri.substring(1);
+            if (uri.charAt(0) == '/') {
+                uri = uri.substring(1);
+            }
 
             HttpEnvironment env = new HttpEnvironment(uri, req, res, context);
 
