@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-23 21:36:37 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-03 17:17:21 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -132,7 +132,12 @@ public class ResourceReader extends AbstractReader implements Composer {
             byte[] buffer = new byte[(int)len];
             is.read(buffer);
             is.close();
-            res.setContentType(this.getMimeType());
+            
+            String mimeType = this.getMimeType();
+            if (mimeType != null) {
+                res.setContentType(mimeType);
+            }
+            
             res.setContentLength(buffer.length);
             long expires = parameters.getParameterAsInteger("expires", -1);
 
