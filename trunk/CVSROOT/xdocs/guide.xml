@@ -232,6 +232,134 @@ browser.5=netscape=Mozilla
   more browsers may contain the same string.</p>
 </s1>
 
+<s1 title="Using query parameters during XSL transformation">
+
+   <p>Quite often you want to create pages that depend on some
+   user-supplied data. One way to do this is using HTML forms. 
+   Cocoon provides you with a simple way to use this data. Let's
+   assume you've got the following list and you want the user
+   to choose a country code and be shown the name of the corresponding
+   country.
+   </p>
+   
+ <source><![CDATA[
+ <?xml version="1.0"?>
+ <?cocoon-process type="xslt"?>
+ <?xml-stylesheet href="page.xsl" type="text/xsl"?>
+ <page>
+   <country code="ca">Canada</country>
+   <country code="de">Germany</country>
+   <country code="fr">France</country>
+   <country code="uk">United Kingdom</country>
+   <country code="us">United States</country>
+   <country code="es">Spain</country>
+ </page>
+ ]]></source>
+ 
+   <p>You now use the following XSL stylesheet with it</p>
+   
+ <source xml:space="preserve"><![CDATA[
+ <?xml version="1.0"?>
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 version="1.0">
+ 
+   <xsl:param name="countrycode"/>
+ 
+   <xsl:template match="page">
+     <html>
+       <body>
+         <xsl:choose>
+ 
+           <xsl:when test="not($countrycode)">
+             <p>Choose a country:</p>
+             <form action="countries.xml" method="get">
+               <select name="countrycode" size="1">
+                 <xsl:apply-templates select="country" mode="form"/>
+               </select>
+               <input type="submit"/>
+             </form>
+           </xsl:when>
+ 
+           <xsl:when test="country[@code=$countrycode]">
+             <xsl:apply-templates select="country[@code=$countrycode]" 
+               mode="selected"/>
+           </xsl:when>
+ 
+           <xsl:otherwise>
+             <p>Unknown country code 
+                <em><xsl:value-of select="$countrycode"/></em>.
+             </p>
+           </xsl:otherwise>
+ 
+         </xsl:choose>
+       </body>
+     </html>
+   </xsl:template>
+ 
+   <xsl:template match="country" mode="form">
+     <option><xsl:value-of select="@code"/></option>
+   </xsl:template>
+ 
+   <xsl:template match="country" mode="selected">
+     <p><em><xsl:value-of select="@code"/></em> stands for
+        <xsl:value-of select="text()"/></p>
+   </xsl:template>
+ 
+ </xsl:stylesheet>
+ ]]></source>
+ 
+   <p>Viewing <code>countries.xml</code> now will yield different
+   results. When no parameter is given (i.e. using the URL 
+   <code>countries.xml</code>) the browser will receive the following page:
+   </p>
+   
+ <source><![CDATA[
+ <html>
+   <body>
+     <p>Choose a country:</p>
+     <form action="countries.xml" method="get">
+       <select name="countrycode" size="1">
+         <option>ca</option>
+         <option>de</option>
+         <option>fr</option>
+         <option>uk</option>
+         <option>us</option>
+         <option>es</option>
+       </select>
+       <input type="submit">
+     </form>
+   </body>
+ </html>
+ ]]></source>
+ 
+   <p>Choosing one of the options in the list will result in a request
+   for a URL like <code>countries.xml?countrycode=fr</code> and this page
+   will look like:
+   </p>
+   
+ <source><![CDATA[
+ <html>
+   <body>
+     <p><em>fr</em> stands for France</p>
+   </body>
+ </html>
+ ]]></source>
+ 
+   <p>If for some reason no country element matching the
+   <code>countrycode</code> parameter is found (e.g. 
+   <code>countries.xml?countrycode=foo</code>, you will get the following
+   page:</p>
+   
+ <source><![CDATA[
+ <html>
+   <body>
+     <p>Unknown country code <em>foo</em>.</p>
+   </body>
+ </html>
+ ]]></source>
+ 
+ </s1>
+  
  <s1 title="Cocoon Internals">
   <p>The Cocoon publishing system has an engine based on the <em>reactor</em> design
   pattern which is described in the picture below:</p>
