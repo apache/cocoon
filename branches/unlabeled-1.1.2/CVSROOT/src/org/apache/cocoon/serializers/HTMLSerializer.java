@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Hashtable;
+import org.apache.cocoon.framework.ConfigurationException;
+import org.apache.cocoon.framework.Configurations;
 import org.apache.cocoon.sitemap.Request;
 import org.apache.cocoon.sitemap.Response;
 import org.apache.cocoon.sax.XMLConsumer;
@@ -25,10 +27,10 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 15:02:03 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-11 15:02:03 $
  * @since Cocoon 2.0
  */
-public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
+public class HTMLSerializer extends AbstractSerializer implements XMLConsumer {
     /** The PrintStream used for output */
     private OutputStreamWriter out=null;
     /** The current locator */
@@ -41,25 +43,33 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
     private boolean openElement=false;
     /** A flag telling wether we're processing the DTD */
     private boolean dtd=false;
-    /** A flag telling wether we're processing a CDATA section */
-    private boolean cdata=false;
-    /** The declared encoding */
-    private String enc=null;
 
     /**
      * Return a new instance of this <code>XMLSerializer</code>.
      */
     public XMLConsumer getXMLConsumer(Request req, Response res, OutputStream out)
     throws IOException {
-        String c=this.configurations.getParameter("contentType","text/xml");
-        this.enc=this.configurations.getParameter("encoding","UTF-8");
+        String c=this.configurations.getParameter("contentType","text/html");
+        String e=this.configurations.getParameter("encoding","UTF-8");
         res.setContentType(c);
-        XMLSerializer s=new XMLSerializer();
-        s.out=new OutputStreamWriter(new BufferedOutputStream(out),this.enc);
-        s.enc=this.enc;
+        HTMLSerializer s=new HTMLSerializer();
+        s.out=new OutputStreamWriter(new BufferedOutputStream(out),e);
         s.namespacesUriPrefix=new Hashtable();
         s.namespacesPrefixUri=new Hashtable();
         return(s);
+    }
+
+    /**
+     * Configure this <code>XMLSerializer</code>.
+     * <br>
+     * By default this method only store configurations.
+     */
+    public void configure(Configurations conf)
+    throws ConfigurationException {
+        super.configure(conf);
+        String c=this.configurations.getParameter("contentType","text/html");
+        if((!c.equals("text/html"))&&(!c.equals("text/plain")))
+            throw new ConfigurationException("Unsupported contentType '"+c+"'");
     }
 
     /**
@@ -77,13 +87,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startDocument()
     throws SAXException {
-        if (this.enc==null) this.print("<?xml version=\"1.0\"?>");
-        else {
-            this.print("<?xml version=\"1.0\" encoding=\"");
-            this.print(this.enc);
-            this.print("\"?>");
-        }
-        this.print('\n');
     }
 
     /**
@@ -91,7 +94,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void endDocument()
     throws SAXException {
-        this.closeElement();
         try {
             this.out.flush();
         } catch (IOException e) {
@@ -142,20 +144,34 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        this.closeElement();
         this.print('<');
 
-        this.print(this.qualify(uri,loc,raw));
+        this.print(this.qualify(uri,loc,raw).toUpperCase());
         for (int x=0; x<a.getLength(); x++) {
-            this.print(' ');
-            this.print(this.qualify(a.getURI(x),a.getLocalName(x),
-                                    a.getRawName(x)));
-            this.print('=');
-            this.print('\"');
-            this.printSafe(a.getValue(x));
-            this.print('\"');
+            String name=this.qualify(a.getURI(x),a.getLocalName(x),
+                                     a.getRawName(x)).toLowerCase();
+            String value=a.getValue(x);
+            if ((name.equals("checked"))  || (name.equals("compact"))  ||
+                (name.equals("declare"))  || (name.equals("defer"))    ||
+                (name.equals("disabled")) || (name.equals("ismap"))    ||
+                (name.equals("multiple")) || (name.equals("nohref"))   ||
+                (name.equals("noresize")) || (name.equals("noshade"))  ||
+                (name.equals("nowrap"))   || (name.equals("readonly")) ||
+                (name.equals("selected"))) {
+                if(name.equals(value)) {
+                    this.print(' ');
+                    this.print(name);
+                }
+            } else {
+                this.print(' ');
+                this.print(name);
+                this.print('=');
+                this.print('\"');
+                this.print(value);
+                this.print('\"');
+            }
         }
-        this.openElement=true;
+        this.print('>');
     }
         
 
@@ -172,16 +188,18 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void endElement (String uri, String loc, String raw)
     throws SAXException {
-        if (this.openElement) {
-            this.print('/');
-            this.closeElement();
-            return;
-        }
-        
+        String name=this.qualify(uri,loc,raw).toUpperCase();
+        if ((name.equals("AREA"))     || (name.equals("BASE"))     ||        
+            (name.equals("BASEFONT")) || (name.equals("BR"))       ||          
+            (name.equals("COL"))      || (name.equals("FRAME"))    ||       
+            (name.equals("HR"))       || (name.equals("IMG"))      ||         
+            (name.equals("INPUT"))    || (name.equals("ISINDEX"))  ||     
+            (name.equals("LINK"))     || (name.equals("META"))     ||        
+            (name.equals("PARA"))) return;
         this.print('<');
         this.print('/');
-        this.print(this.qualify(uri,loc,raw));
-        this.closeElement();
+        this.print(name);
+        this.print('>');
     }
 
     /**
@@ -193,9 +211,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void characters (char ch[], int start, int len)
     throws SAXException {
-        this.closeElement();
-        if(this.cdata) this.print(ch,start,len);
-        else this.printSafe(ch,start,len);
+        this.printSafe(ch,start,len);
     }
 
     /**
@@ -207,9 +223,7 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void ignorableWhitespace (char ch[], int start, int len)
     throws SAXException {
-        this.closeElement();
-        if(this.cdata) this.print(ch,start,len);
-        else this.printSafe(ch,start,len);
+        this.printSafe(ch,start,len);
     }
 
     /**
@@ -221,12 +235,11 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void processingInstruction (String target, String data)
     throws SAXException {
-        this.closeElement();
-        this.print("<?");
+        this.print("<!-- Processing Instruction: Target=\"");
         this.print(target);
-        this.print(' ');
+        this.print("\" Data=\"");
         this.print(data);
-        this.print("?>");
+        this.print("\" -->");
     }
 
     /**
@@ -237,7 +250,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void skippedEntity (String name)
     throws SAXException {
-        this.closeElement();
         this.print('&');
         this.print(name);
         this.print(';');
@@ -254,26 +266,8 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startDTD (String name, String publicId, String systemId)
     throws SAXException {
-        this.closeElement();
-        this.print("<!DOCTYPE ");
-        this.print(name);
-        if (publicId!=null) {
-            this.print(" PUBLIC \"");
-            this.print(publicId);
-            this.print('\"');
-            if (systemId!=null) {
-                this.print(' ');
-                this.print('\"');
-                this.print(systemId);
-                this.print('\"');
-            }
-        } else if (systemId!=null) {
-            this.print(" SYSTEM \"");
-            this.print(systemId);
-            this.print('\"');
-        }
-        this.print('>');
-        this.print('\n');
+        //<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+        //                      "http://www.w3.org/TR/REC-html40/loose.dtd">
         // Set the DTD flag now, to avoid output
         this.dtd=true;
     }        
@@ -294,7 +288,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startEntity (String name)
     throws SAXException {
-        this.closeElement();
     }        
 
     /**
@@ -304,7 +297,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void endEntity (String name)
     throws SAXException {
-        this.closeElement();
     }        
 
     /**
@@ -312,9 +304,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void startCDATA ()
     throws SAXException {
-        this.closeElement();
-        this.print("<![CDATA[");
-        this.cdata=true;
     }
 
     /**
@@ -322,9 +311,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void endCDATA ()
     throws SAXException {
-        this.cdata=false;
-        this.closeElement();
-        this.print("]]>");
     }
     
 
@@ -337,7 +323,6 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
      */
     public void comment (char ch[], int start, int len)
     throws SAXException {
-        this.closeElement();
         this.print("<!--");
         this.print(ch,start,len);
         this.print("-->");
@@ -413,13 +398,5 @@ public class XMLSerializer extends AbstractSerializer implements XMLConsumer {
             return(loc);
         }
         throw new SAXException("Cannot qualify namespaced name");
-    }
-
-    /** Close an element, if required */
-    private void closeElement()
-    throws SAXException {
-        if(!this.openElement) return;
-        this.print('>');
-        this.openElement=false;
     }
 }

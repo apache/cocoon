@@ -8,6 +8,7 @@
 package org.apache.cocoon.serializers;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.framework.ConfigurationException;
 import org.apache.cocoon.framework.Configurations;
 
 /**
@@ -16,7 +17,7 @@ import org.apache.cocoon.framework.Configurations;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-11 13:15:30 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-11 15:02:03 $
  * @since Cocoon 2.0
  */
 public abstract class AbstractSerializer implements Serializer {
@@ -30,7 +31,8 @@ public abstract class AbstractSerializer implements Serializer {
      * <br>
      * By default this method only store configurations.
      */
-    public void configure(Configurations conf) {
+    public void configure(Configurations conf)
+    throws ConfigurationException {
         this.configurations=conf;
     }
     
