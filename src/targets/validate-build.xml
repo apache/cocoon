@@ -57,7 +57,7 @@
   <target name="validate-config" depends="prepare" unless="exclude.validate.config">
     <echo message="Validating configuration files"/>
 
-    <echo message="Validating cocoon.xconf using RELAX NG ..."/>
+    <echo message="Validating cocoon.xconf using a very basic RELAX NG grammar ..."/>
     <jing rngfile="${build.webapp}/WEB-INF/entities/any.rng">
       <fileset dir="${build.webapp}/WEB-INF" includes="cocoon.xconf"/>
     </jing>
@@ -76,7 +76,7 @@
     <xmlvalidate failonerror="true" lenient="no" warn="yes">
       <!-- FIXME: we can use xmlcatalog with Ant-1.6 -->
       <fileset dir="${build.context}/xdocs" includes="**/*.xml"
-               excludes="drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml,tabs.xml"/>
+               excludes="status.xml,drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml,tabs.xml"/>
     </xmlvalidate>
 
     <echo message="Validating the documentation sitemap.xmap using RELAX NG ..."/>
