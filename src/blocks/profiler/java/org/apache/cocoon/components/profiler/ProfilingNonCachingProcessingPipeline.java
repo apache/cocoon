@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.6 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.7 2004/03/23 19:48:43 stephan Exp $
  */
 public class ProfilingNonCachingProcessingPipeline
   extends NonCachingProcessingPipeline implements Disposable {
@@ -270,6 +270,55 @@ public class ProfilingNonCachingProcessingPipeline
             return super.process(environment);
         }
     }
+
+    /**
+     * Process the SAX event pipeline
+     */
+    protected boolean processXMLPipeline(Environment environment) throws ProcessingException {
+        this.index = 0;
+        if (this.data!=null) {
+            // Capture environment info
+            this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
+
+            // Execute pipeline
+            long time = System.currentTimeMillis();
+            boolean result = super.processXMLPipeline(environment);
+
+            this.data.setTotalTime(System.currentTimeMillis()-time);
+
+            // Report
+            profiler.addResult(environment.getURI(), this.data);
+            return result;
+        } else {
+            getLogger().warn("Profiler Data havn't any components to measure");
+            return super.processXMLPipeline(environment);
+        }
+    }    
+    
+    /**
+     * Process the pipeline using a reader.
+     */
+    protected boolean processReader(Environment environment) throws ProcessingException {
+        this.index = 0;
+         if (this.data!=null) {
+             // Capture environment info
+             this.data.setEnvironmentInfo(new EnvironmentInfo(environment));
+
+             // Execute pipeline
+             long time = System.currentTimeMillis();
+             boolean result = super.processReader(environment);
+
+             this.data.setTotalTime(System.currentTimeMillis()-time);
+
+             // Report
+             profiler.addResult(environment.getURI(), this.data);
+             return result;
+         } else {
+             getLogger().warn("Profiler Data havn't any components to measure");
+             return super.processReader(environment);
+         }        
+    }
+
 
     /**
      * Connect the next component
