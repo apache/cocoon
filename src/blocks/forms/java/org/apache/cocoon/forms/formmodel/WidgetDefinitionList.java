@@ -27,7 +27,7 @@ import java.util.Map;
  * Helper class for the Definition implementation of widgets containing
  * other widgets.
  * 
- * @version $Id: WidgetDefinitionList.java,v 1.2 2004/05/07 16:43:42 mpo Exp $
+ * @version $Id$
  */
 public class WidgetDefinitionList {
     private List widgetDefinitions = new ArrayList();
@@ -102,11 +102,12 @@ public class WidgetDefinitionList {
         } else {
             // Non-terminating recursion detection
             if (resolving == true) {
-               // Search up parent list in hopes of finding a "Union" before finding previous "New" for this "Class".
+               // Search up parent list in hopes of finding a "Union" or "Repeater" before finding previous "New" for this "Class".
                 ListIterator parentsIt = parents.listIterator(parents.size());
                 while(parentsIt.hasPrevious()) {
                     WidgetDefinition widgetDefinition = (WidgetDefinition)parentsIt.previous();
                     if (widgetDefinition instanceof UnionDefinition) break;
+                    if (widgetDefinition instanceof RepeaterDefinition) break;
                     if (widgetDefinition == definition) {
                         String location = definition.getLocation();
                         if (parent instanceof FormDefinition) {
