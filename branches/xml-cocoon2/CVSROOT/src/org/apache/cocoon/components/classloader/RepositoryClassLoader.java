@@ -33,7 +33,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-18 15:00:59 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-12-19 13:00:59 $
  */
 class RepositoryClassLoader extends URLClassLoader {
   /**
@@ -75,7 +75,7 @@ class RepositoryClassLoader extends URLClassLoader {
    */
   public void addDirectory(File repository) throws IOException {
       try {
-          this.addURL(repository.toURL());
+          this.addURL(repository.getCanonicalFile().toURL());
       } catch (MalformedURLException mue) {
           log.error("The repository had a bad URL", mue);
           throw new IOException("Could not add repository");
