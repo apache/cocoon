@@ -15,14 +15,20 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.8 2004/04/05 12:34:23 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.9 2004/05/24 01:48:24 crossley Exp $ -->
 
-<samples>
+<samples name="Other Cocoon Flow Samples">
 
   <group name="Back">
-   <sample name="Back" href="../">
-   Back to the samples home page.
+   <sample name="Back" href="../">to Cocoon Samples main page</sample>
+   <sample name="Back" href="../blocks/">
+     to Cocoon Blocks Samples main page
    </sample>
+   <note>
+     Since the Cocoon Control Flow is a core technology you find more examples
+     that make use of it e.g. Cocoon Forms block, Petstore block, and
+     Supersonic Tour block.
+   </note>      
   </group>
 
   <group name="Cocoon Control Flow">
