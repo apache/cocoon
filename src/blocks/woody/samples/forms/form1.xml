@@ -59,7 +59,8 @@
   </wd:field>
 
   <wd:field id="number1" required="true">
-    <wd:label>Please enter a number:</wd:label>
+    <wd:label>Please enter a number<br/>
+    <small>(will automatically set a correct value below if needed)</small>:</wd:label>
     <wd:datatype base="long"/>
     <wd:on-value-changed>
       <javascript>
@@ -105,7 +106,7 @@
   <wd:aggregatefield id="visa" required="true">
     <wd:label>Enter your (16-digit) visa number (without spaces)
       <br/>Your credit card will be billed.
-      <br/>Valid test number is: 4111111111111111</wd:label>
+      <br/><small>Valid test number is: 4111111111111111</small></wd:label>
     <wd:split pattern="([0-9]{4})([0-9]{4})([0-9]{4})([0-9]{4})">
       <wd:map group="1" field="part1"/>
       <wd:map group="2" field="part2"/>

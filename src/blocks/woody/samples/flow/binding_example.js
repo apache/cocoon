@@ -101,7 +101,6 @@ function form2bean(form) {
     form.save(bean);
 
     cocoon.sendPage("form2bean-success-pipeline", { "form2bean": bean });
-    form.finish();
 }
 
 /**

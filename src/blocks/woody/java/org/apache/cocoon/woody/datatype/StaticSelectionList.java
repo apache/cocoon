@@ -76,10 +76,6 @@ public class StaticSelectionList implements SelectionList {
     private List items = new ArrayList();
     private XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
 
-    private static final String SELECTION_LIST_EL = "selection-list";
-    private static final String ITEM_EL = "item";
-    private static final String LABEL_EL = "label";
-
     public StaticSelectionList(Datatype datatype) {
         this.datatype = datatype;
     }

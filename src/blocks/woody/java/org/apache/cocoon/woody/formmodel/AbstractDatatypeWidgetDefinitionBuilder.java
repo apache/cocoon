@@ -70,6 +70,10 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
      * @return true if a selectionlist has actually been build.
      */
     protected boolean buildSelectionList(Element widgetElement, AbstractDatatypeWidgetDefinition widget) throws Exception {
+        // FIXME: pass the manager to the definition as a side effect. Should be removed
+        // when definition are managed like components.
+        widget.service(this.serviceManager);
+
         Element selectionListElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "selection-list");
         if (selectionListElement != null) {
             SelectionList selectionList;

@@ -75,7 +75,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.10 2003/09/24 20:47:06 sylvain Exp $
+ * @version CVS $Id: Field.java,v 1.11 2003/09/25 17:37:30 sylvain Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -164,8 +164,12 @@ public class Field extends AbstractWidget {
                "\" (expected " + definition.getDatatype().getTypeClass() + ", got " + newValue.getClass() + ".");
 
         Object oldValue = this.value;
-        // Do something only if value is different
-        if (! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue) ) {
+        
+        boolean changed = ! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue);
+        
+        // Do something only if value is different or null
+        // (null allows to reset validation error)
+        if (changed || newValue == null) {
         
             this.value = newValue;
     
@@ -176,7 +180,9 @@ public class Field extends AbstractWidget {
 
             this.enteredValue = definition.getDatatype().convertToString(newValue, getForm().getLocale());
     
-            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
+            if (changed) {
+                getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
+            }
         }
     }
 
@@ -287,9 +293,17 @@ public class Field extends AbstractWidget {
     }
 
     public void setSelectionList(SelectionList selectionList) {
-        if (selectionList != null && selectionList.getDatatype() != definition.getDatatype())
+        if (selectionList != null &&
+            selectionList.getDatatype() != null &&
+            selectionList.getDatatype() != definition.getDatatype()) {
+
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
+        }
         this.selectionList = selectionList;
+    }
+    
+    public void setSelectionList(String uri) {
+        setSelectionList(this.definition.buildSelectionList(uri));
     }
 
     public Datatype getDatatype() {

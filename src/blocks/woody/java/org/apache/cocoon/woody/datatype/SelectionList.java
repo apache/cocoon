@@ -60,6 +60,10 @@ import java.util.Locale;
  */
 public interface SelectionList {
     
+    public static final String SELECTION_LIST_EL = "selection-list";
+    public static final String ITEM_EL = "item";
+    public static final String LABEL_EL = "label";
+
     Datatype getDatatype();
 
     void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException;

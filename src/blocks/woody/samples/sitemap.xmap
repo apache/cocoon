@@ -286,7 +286,7 @@
      <map:match pattern="cars">
        <map:generate src="forms/car-db.xml"/>
        <map:transform src="xsl/carfilter.xsl">
-         <map:parameter name="type" value="makes"/>
+         <map:parameter name="list" value="makes"/>
        </map:transform>
        <map:serialize type="xml"/>
      </map:match>
@@ -294,8 +294,18 @@
      <map:match pattern="cars/*">
        <map:generate src="forms/car-db.xml"/>
        <map:transform src="xsl/carfilter.xsl">
-         <map:parameter name="type" value="models"/>
+         <map:parameter name="list" value="types"/>
          <map:parameter name="make" value="{1}"/>
+       </map:transform>
+       <map:serialize type="xml"/>
+     </map:match>
+     
+     <map:match pattern="cars/*/*">
+       <map:generate src="forms/car-db.xml"/>
+       <map:transform src="xsl/carfilter.xsl">
+         <map:parameter name="list" value="models"/>
+         <map:parameter name="make" value="{1}"/>
+         <map:parameter name="type" value="{2}"/>
        </map:transform>
        <map:serialize type="xml"/>
      </map:match>
@@ -303,13 +313,15 @@
      <map:match pattern="carselector">
        <map:select type="request-method">
          <map:when test="GET">
-           <map:act type="woody-make-form">
+           <map:call function="selectCar"/>
+           <!--map:act type="woody-make-form">
              <map:parameter name="form-definition" value="forms/carselector_form.xml"/>
              <map:parameter name="attribute-name" value="carselectorform"/>
-           </map:act>
+           </map:act-->
          </map:when>
          <map:when test="POST">
-           <map:act type="woody-handle-form-submit">
+           <map:call continuation="{request-param:continuation-id}"/>
+           <!--map:act type="woody-handle-form-submit">
              <map:parameter name="form-definition" value="forms/carselector_form.xml"/>
              <map:parameter name="attribute-name" value="carselectorform"/>
              <map:parameter name="formhandler" value="org.apache.cocoon.woody.samples.CarSelectorHandler"/>
@@ -323,21 +335,33 @@
                <map:parameter name="remove" value="{../0}"/>
              </map:transform>
              <map:serialize/>
-           </map:act>
+           </map:act-->
          </map:when>
          <map:otherwise>
            <!-- todo: do something here -->
          </map:otherwise>
        </map:select>
-
+     </map:match>
+     
+     <map:match pattern="carselector-view">
        <map:generate src="forms/carselector_template.xml"/>
-       <map:transform type="woody">
-         <map:parameter name="attribute-name" value="carselectorform"/>
-       </map:transform>
+       <map:transform type="woody"/>
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
-       <map:transform src="xsl/html/woody-default.xsl"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_success.xsp"/>
+         <map:parameter name="remove" value="{0}"/>
+       </map:transform>
+       <map:transform src="resources/woody-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+     
+     <map:match pattern="carselector-success">
+       <map:generate type="serverpages" src="forms/carselector_success.xsp"/>
        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>

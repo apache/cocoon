@@ -64,6 +64,8 @@ public class ValueChangedEvent extends WidgetEvent {
     
     public ValueChangedEvent(Widget source, Object oldValue, Object newValue) {
         super(source);
+        this.oldValue = oldValue;
+        this.newValue = newValue;
     }
     
     public Object getOldValue() {
