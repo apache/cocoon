@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.profile.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,11 +32,11 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.persistence.CastorSourceConverter;
 import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
@@ -192,7 +193,11 @@ public class MapProfileLS
             converter.storeObject(writer, parameters, profile);
 
             buffer.append("&content=");
-            buffer.append(SourceUtil.encode(writer.toString()));
+            try {
+                buffer.append(NetUtils.encode(writer.toString(), "utf-8"));
+            } catch (UnsupportedEncodingException uee) {
+                // ignore this as utf-8 is always supported
+            }
 
             source = resolver.resolveURI(buffer.toString());
 
