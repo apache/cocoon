@@ -65,7 +65,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
- * @version CVS $Id: SourceProperty.java,v 1.4 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: SourceProperty.java,v 1.5 2003/09/08 20:50:42 gcasper Exp $
  */
 public class SourceProperty implements XMLizable {
 
@@ -191,7 +191,6 @@ public class SourceProperty implements XMLizable {
 
             attrs.addAttribute(XMLNS_NS, NS_PREFIX, "xmlns:"+NS_PREFIX,
                                "NMTOKEN", namespace);
-            attrs.addAttribute("", "foo", "foo", "NMTOKEN", "bar");
 
             builder.startElement(namespace, name, D_PREFIX+name, attrs);
 
