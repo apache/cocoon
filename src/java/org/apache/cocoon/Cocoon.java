@@ -115,7 +115,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.18 2003/10/15 20:01:59 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.19 2003/10/24 13:00:16 vgritsenko Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -294,13 +294,15 @@ public class Cocoon
         // first check for deprecated property to be compatible:
         String parser = System.getProperty(Constants.DEPRECATED_PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         if ( !Constants.DEFAULT_PARSER.equals( parser ) ) {
-            this.getLogger().warn("Deprecated property " +Constants.DEPRECATED_PARSER_PROPERTY+ " is used. Please use "+Constants.PARSER_PROPERTY+" instead.");
+            getLogger().warn("Deprecated property " +
+                             Constants.DEPRECATED_PARSER_PROPERTY + " is used. Please use " +
+                             Constants.PARSER_PROPERTY + " instead.");
             if ( "org.apache.cocoon.components.parser.XercesParser".equals(parser) ) {
                 parser = XercesParser.class.getName();
             } else {
-                this.getLogger().warn("Unknown value for deprecated property: " +
-                                      Constants.DEPRECATED_PARSER_PROPERTY + ", value: " + parser +
-                                      ". If you experience problems during startup, check the parser configuration section of the documentation.");
+                getLogger().warn("Unknown value for deprecated property: " +
+                                 Constants.DEPRECATED_PARSER_PROPERTY + ", value: " + parser +
+                                 ". If you experience problems during startup, check the parser configuration section of the documentation.");
             }
         } else {
             parser = System.getProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
@@ -520,7 +522,6 @@ public class Cocoon
         }
         
         this.context = null;
-        
         this.disposed = true;
     }
 
@@ -640,7 +641,7 @@ public class Cocoon
                                                 this);
         try {
             boolean result;
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
                 this.debug(environment, false);
             }
@@ -667,12 +668,12 @@ public class Cocoon
         } finally {
             CocoonComponentManager.leaveEnvironment();
             CocoonComponentManager.endProcessing(environment, key);
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
             
             // TODO (CZ): This is only for testing - remove it later on
-            CocoonComponentManager.checkEnvironment(this.getLogger());
+            CocoonComponentManager.checkEnvironment(getLogger());
         }
     }
 
@@ -688,7 +689,7 @@ public class Cocoon
         }
 
         try {
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 ++activeRequestCount;
                 this.debug(environment, true);
             }
@@ -706,7 +707,7 @@ public class Cocoon
             }
 
         } finally {
-            if (this.getLogger().isDebugEnabled()) {
+            if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
         }
