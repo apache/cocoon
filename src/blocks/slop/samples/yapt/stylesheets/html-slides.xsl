@@ -2,7 +2,7 @@
 
 <!--
     Generate the HTML for one or many slides
-    $Id: html-slides.xsl,v 1.1 2003/09/26 14:42:36 bdelacretaz Exp $
+    $Id: html-slides.xsl,v 1.2 2003/09/26 15:02:41 bdelacretaz Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -119,8 +119,16 @@
             <div class="singleSlideHeading">
                 <xsl:apply-templates mode="content" select="slide-head/*"/>
             </div>
-            <!-- use style hints if any -->
-            <div class="{concat('slideHint',slide-hints/style)}">
+
+            <!-- use style hints if any (but not if generating multiple slides for printing) -->
+            <xsl:variable name="hintClass">
+                <xsl:choose>
+                    <xsl:when test="$slideCount &gt; 1">slideHint</xsl:when>
+                    <xsl:otherwise><xsl:value-of select="concat('slideHint',slide-hints/style)"/></xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+
+            <div class="{$hintClass}">
                 <div class="singleSlideContent">
                     <xsl:apply-templates mode="content" select="slide-content/*"/>
                 </div>
