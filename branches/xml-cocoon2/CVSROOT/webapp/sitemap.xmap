@@ -78,6 +78,13 @@
    <map:matcher name="regexp" factory="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
   </map:matchers>
 
+  <map:actions>
+   <map:action name="employee" src="org.apache.cocoon.acting.EmployeeAction"/>
+   <map:action name="add-employee" src="org.apache.cocoon.acting.AddEmployeeAction"/>
+   <map:action name="del-employee" src="org.apache.cocoon.acting.DelEmployeeAction"/>
+   <map:action name="upd-employee" src="org.apache.cocoon.acting.UpdEmployeeAction"/>
+  </map:actions>
+
  </map:components>
 
 <!-- =========================== Views =================================== -->
@@ -92,6 +99,7 @@
   </map:view>
 
  </map:views>
+
 <!-- =========================== Resources ================================= -->
 
  <map:resources>
@@ -102,6 +110,20 @@
    <map:serialize/>
   </map:resource>
  </map:resources>
+
+<!-- ========================== Action sets ================================ -->
+
+ <map:action-sets>
+  <map:action-set name="employee">
+   <map:act type="employee" src="foo"/>
+   <map:act type="add-employee" action="Add"/>
+   <map:act type="del-employee" action="Delete" src="bar">
+    <parameter name="foo" value="bar"/>
+   </map:act>
+   <map:act type="upd-employee" action="Update"/>
+   <map:act type="employee"/>
+  </map:action-set>
+ </map:action-sets>
 
 <!-- =========================== Pipelines ================================= -->
 
@@ -114,6 +136,19 @@
 
    <map:match pattern="welcome">
     <map:generate src="docs/samples/samples.xml"/>
+    <!--
+    <map:select>
+      <map:when test="wap">
+        <map:transform src="stylesheets/simple-samples2html.xsl"/>
+      </map:when>
+      <map:when test="netscape">
+        <map:transform src="stylesheets/simple-samples2html.xsl"/>
+      </map:when>
+      <map:otherwise>
+        <map:transform src="stylesheets/simple-samples2html.xsl"/>
+      </map:otherwise>
+    </map:select>
+    -->
     <map:transform src="stylesheets/simple-samples2html.xsl"/>
     <map:serialize/>
    </map:match>
@@ -223,8 +258,8 @@
    <map:match pattern="sql/*">
     <map:generate src="docs/samples/sql/{1}.xml"/>
     <map:transform type="sql">
-      <parameter name="driver"   value="org.gjt.mm.mysql.Driver"/>
-      <parameter name="dburl"    value="jdbc:mysql://localhost/test"/>
+      <parameter name="driver"   value="postgresql.Driver"/>
+      <parameter name="dburl"    value="jdbc:postgresql://localhost/test"/>
       <parameter name="username" value="test"/>
       <parameter name="password" value="test"/>
     </map:transform>
@@ -233,6 +268,13 @@
    </map:match>
 
    <!-- ========================== Forms ================================= -->
+   <map:match pattern="forms/employee">
+     <map:act set="employee"/>
+     <map:generate type="serverpages" src="docs/samples/forms/employee.xsp"/>
+     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+     <map:serialize/>
+   </map:match>
+
    <map:match pattern="forms/*">
      <map:generate type="serverpages" src="docs/samples/forms/{1}.xsp"/>
      <map:transform src="stylesheets/dynamic-page2html.xsl"/>

@@ -52,7 +52,7 @@
     Simple XSP example.
    </sample>
    <sample name="Simple SQL" href="sql/sql-page" xlink:role="dynamic">
-    Simple SQL example. You should make sure that you have a database and 
+    Simple SQL example. You should make sure that you have a database and
     table according to the conf/sitemap.xmap and the
     docs/samples/sql/sql-page.sql definitions.
    </sample>
@@ -64,6 +64,11 @@
   </group>
 
   <group name="Sample Forms">
+    <sample name="Manage Employees" href="forms/employee" xlink:role="dynamic">
+      Adds, updates and deletes Employees to the employees table.  You should make sure
+      that you have a database and table according to the docs/samples/sql/sql-page.sql
+      definitions.  Don't forget to change the driver information...
+    </sample>
     <sample name="Insert Department" href="forms/add-department" xlink:role="dynamic">
       Adds new Departments to the department table.  You should make sure
       that you have a database and table according to the docs/samples/sql/sql-page.sql
