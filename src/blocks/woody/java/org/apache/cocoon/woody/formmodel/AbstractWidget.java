@@ -67,21 +67,15 @@ public abstract class AbstractWidget implements Widget {
     public void setParent(Widget widget) {
         this.parent = widget;
     }
-    
+
     public Form getForm() {
         if (this.form == null) {
-            // Find the form
-            Widget current = this;
-            Widget parent;
-        
-            while((parent = current.getParent()) != null) {
-                current = parent;
+            if (parent == null) {
+                this.form = (Form)this;
+            } else {
+                this.form = parent.getForm();
             }
-            
-            // And keep it locally
-            this.form = (Form)current;
         }
-        
         return this.form;
     }
 
