@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: gallery.xsl,v 1.1 2003/12/12 13:46:13 cziegeler Exp $ 
+<!-- $Id: gallery.xsl,v 1.2 2003/12/12 15:53:20 cziegeler Exp $ 
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -68,10 +68,10 @@
 
   <p>Picture <xsl:value-of select="$showpicindex"/> of <xsl:value-of select="$maxp"/>
     <xsl:if test="$showpicindex &gt; 1">
-      - <cl:link path="attributes/picture" value="{$picp}">&lt;Previous&gt;</cl:link>
+      - <cl:link path="attributes/picture" value="{$picp}">&#xAB; Previous</cl:link>
     </xsl:if>
     <xsl:if test="$showpicindex &lt; $maxp">
-      - <cl:link path="attributes/picture" value="{$picn}">&lt;Next&gt;</cl:link>
+      - <cl:link path="attributes/picture" value="{$picn}">Next &#xBB;</cl:link>
     </xsl:if>
     </p>
     <p><cl:link path="attributes/picture" value="{picture[position()=$showpicindex]}" coplet="GalleryViewer-1">Push to Viewer</cl:link></p>
