@@ -171,9 +171,9 @@ a Java 1.2 compatible JVM is required for this target.
 
     <property name="site" value="../xml-site/targets/cocoon"/>
 
-    <available property="xt.present" class="com.jclark.xsl.sax.XSLProcessor"/>
-    <available property="fesi.present" class="FESI.jslib.JSGlobalObject"/>
-    <available property="jndi.present" class="javax.naming.Name"/>
+    <available property="xt.present" classname="com.jclark.xsl.sax.XSLProcessor"/>
+    <available property="fesi.present" classname="FESI.jslib.JSGlobalObject"/>
+    <available property="jndi.present" classname="javax.naming.Name"/>
 
     <filter token="year" value="${year}"/>
     <filter token="version" value="${version}"/>
@@ -289,7 +289,7 @@ a Java 1.2 compatible JVM is required for this target.
   <target name="docs" depends="prepare-docs">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" class="${doc.generator}"
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
           args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}"/>
   </target>
 
@@ -299,7 +299,7 @@ a Java 1.2 compatible JVM is required for this target.
   <target name="site" depends="prepare-docs">
     <mkdir dir="${site}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" class="${doc.generator}"
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" classname="${doc.generator}"
           args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
   </target>
 
