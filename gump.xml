@@ -1256,7 +1256,7 @@
       Java Development Tools from the Eclipse IDE Project
     </description>
     <home nested="lib/optional"/>
-    <jar name="jdtcore-2.1.3.jar"/>
+    <jar name="jdtcore-3.0.0.jar"/>
   </project>
 
   <project name="spark">
@@ -1274,7 +1274,7 @@
       An expression language interpreter.
     </description>
     <home nested="lib/optional"/>
-    <jar name="xreporter-expression-20030725.jar"/>
+    <jar name="xreporter-expression-20040701.jar"/>
   </project>
 
   <project name="qdox">
@@ -1284,7 +1284,7 @@
       definitions from java source files.
     </description>
     <home nested="src/blocks/qdox/lib"/>
-    <jar name="qdox-1.3.jar"/>
+    <jar name="qdox-1.5.jar"/>
   </project>
 
   <project name="joost">
