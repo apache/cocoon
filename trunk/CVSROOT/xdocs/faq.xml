@@ -5,6 +5,24 @@
 <faqs title="Frequently Asked Questions">
 
 <faq>
+ <question>I get the message "Publishing engine could not be initialized"
+  and a NullPointerException when upgrading from an older version, what's wrong?</question>
+ <answer>
+  <p>
+    This is probably due to incompatibilities with the <code>cocoon.properties</code>
+    configuration file between the old version and the new one. Since Cocoon
+    is a very modular framework and it's architecture is not yet stable, we
+    always suggest to replace your old configuration file with the new one
+    shipped with the new release.
+  </p>
+  <p>
+    We are working to make sure that this won't be required anymore in the
+    Cocoon2 generation, for now, we apologize for the inconvenience.
+  </p>
+ </answer>
+</faq>
+
+<faq>
  <question>I get the exception <em>java.lang.NoClassDefFoundError: sun/tools/javac/Main</em></question>
  <answer>
   <p>
@@ -128,6 +146,14 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
   to your <code>jserv.conf</code> file to set the response timeout to 60 seconds, 
   or increase that number if your machine is very slow and the compilers takes
   more than that time to compile the XSP page the first time you hit it.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>is there a way to fake the requesting UserAgent from my browser? that would ease debugging.</question>
+ <answer>
+  <p>Yes, just append <code>?user-agent="xxx"</code> to your requested URI and Cocoon will neglect the userAgent
+  description that your browser is sending and use the one you imposed.</p>
  </answer>
 </faq>
 

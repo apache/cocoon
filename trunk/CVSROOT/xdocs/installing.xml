@@ -219,7 +219,7 @@ AddHandler cocoon xml</source>
     </p>
 
     <note>
-     from this version of Cocoon the <code>cocoon.jar</code>
+     the <code>cocoon.jar</code>
      package should be added to the servlet engine classpath as any other
      required package (as shown above).
     </note>
@@ -253,7 +253,25 @@ AddHandler cocoon xml</source>
 
     <p>
      Make sure you replaced the path to the Cocoon.properties file with the
-     actual location of that file on your system.
+     location of that file on your system, 
+     <strong>relative to the context root</strong>. Even if you start the
+     filename with a / it will still be relative to the context root.
+    </p>
+
+    <note>
+      Because Cocoon now (since version 1.7.3) uses getResource () in the
+      Servlet API to read cocoon.properties, and has different instances for
+      each servlet context, you need to put a copy of cocoon.properties in all
+      of your servlet contexts that use Cocoon. (It is recommended to put it
+      in the context's WEB-INF directory,
+      or a password-protected directory, to prevent anyone from being able
+      to read it over the web.)
+      However, you <strong>cannot</strong> use symbolic
+      links on Unix to point to a file outside of the current context, because
+      Tomcat does not allow it for security reasons.
+    </note>
+
+    <p>
      Note that you should not need to change anything from the template
      properties file found in the distribution, but you must edit it for
      more complex operation. Please refer directly to the file that contains
@@ -270,20 +288,25 @@ AddHandler cocoon xml</source>
    </p>
 
    <p>
-    Everything should be configured fine. Restart both Apache and Tomcat
+    If you have upgraded Cocoon from an older version and Cocoon won't
+    initialize, either ensure that
+    you are using the latest cocoon.properties - or, if you are have some
+    non-standard properties in cocoon.properties which you need to keep,
+    refer to the latest cocoon.properties to find out what changes need to
+    be made, if any.
+   </p>
+
+   <p>
+    Everything should now be configured fine. Restart both Apache and Tomcat
     and try accessing the samples contained in the distribution to see
     Cocoon in action or the <code>/Cocoon.xml</code> page for Cocoon internal
     status.
    </p>
 
-    <note>
-     Tomcat 3.0 has a bug that prevents Cocoon operation. In order to make
-     Cocoon work under Tomcat you need to download a newer version or, if
-     none is yet avaiable, build it from the latest source code found in the
-     <code>jakarta-tomcat</code> CVS module under <em>jakarta.apache.org</em>.
-     We apologize for this, but it's not something we can control or work
-     around.
-    </note>
+   <note>
+    Tomcat 3.0 has a bug that prevents Cocoon operation, please download
+    a later version.
+   </note>
   </s2>
 
   <s2 title="Installing Cocoon on BEA WebLogic">
