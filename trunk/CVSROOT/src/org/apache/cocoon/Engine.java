@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.26 2000-05-06 11:13:00 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.27 2000-05-07 16:04:27 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.26 $ $Date: 2000-05-06 11:13:00 $
+ * @version $Revision: 1.27 $ $Date: 2000-05-07 16:04:27 $
  */
 
 public class Engine implements Defaults {
@@ -182,7 +182,7 @@ public class Engine implements Defaults {
     /**
      * This will return a new instance of the Engine class, and handle
      *   pooling of instances.  In this implementation, one instance is
-     *   shared across the JVM.  This replaces using the constructor
+     *   created per servlet context.  This replaces using the constructor
      *   directly, because now the Cocoon servlet can initialize the
      *   Engine, and other servlets and classes can use the same engine,
      *   in order to funnel requests through Cocoon.
