@@ -26,10 +26,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.Sink;
 import org.apache.excalibur.event.command.RepeatedCommand;
-import org.apache.excalibur.instrument.CounterInstrument;
-import org.apache.excalibur.instrument.Instrument;
-import org.apache.excalibur.instrument.Instrumentable;
-import org.apache.excalibur.instrument.ValueInstrument;
 
 import java.security.SecureRandom;
 import java.util.Collections;
@@ -54,7 +50,7 @@ import java.util.TreeSet;
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
         implements ContinuationsManager, Configurable,
-                   ThreadSafe, Contextualizable, Instrumentable {
+                   ThreadSafe, Contextualizable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -94,11 +90,6 @@ public class ContinuationsManagerImpl
     protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
     private String instrumentableName;
-    private ValueInstrument continuationsCount;
-    private ValueInstrument forestSize;
-    private ValueInstrument expirationsSize;
-    private CounterInstrument continuationsCreated;
-    private CounterInstrument continuationsInvalidated;
 
 
     public ContinuationsManagerImpl() throws Exception {
@@ -110,12 +101,6 @@ public class ContinuationsManagerImpl
         }
         random.setSeed(System.currentTimeMillis());
         bytes = new byte[CONTINUATION_ID_LENGTH];
-
-        continuationsCount = new ValueInstrument("count");
-        forestSize = new ValueInstrument("forest-size");
-        expirationsSize = new ValueInstrument("expirations-size");
-        continuationsCreated = new CounterInstrument("creates");
-        continuationsInvalidated = new CounterInstrument("invalidates");
     }
 
     /**
@@ -138,27 +123,6 @@ public class ContinuationsManagerImpl
         }
     }
 
-    public void setInstrumentableName(String instrumentableName) {
-        this.instrumentableName = instrumentableName;
-    }
-
-    public String getInstrumentableName() {
-        return instrumentableName;
-    }
-
-    public Instrument[] getInstruments() {
-        return new Instrument[]{
-            continuationsCount,
-            continuationsCreated,
-            continuationsInvalidated,
-            forestSize
-        };
-    }
-
-    public Instrumentable[] getChildInstrumentables() {
-        return Instrumentable.EMPTY_INSTRUMENTABLE_ARRAY;
-    }
-
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
@@ -170,7 +134,6 @@ public class ContinuationsManagerImpl
 
         if (parent == null) {
             forest.add(wk);
-            forestSize.setValue(forest.size());
         } else {
             // REVISIT: This places only the "leaf" nodes in the expirations Sorted Set.
             // do we really want to do this?
@@ -180,7 +143,6 @@ public class ContinuationsManagerImpl
         }
 
         expirations.add(wk);
-        expirationsSize.setValue(expirations.size());
 
         // No need to add the WebContinuation in idToWebCont as it was
         // already done during its construction.
@@ -235,13 +197,11 @@ public class ContinuationsManagerImpl
                 if (!idToWebCont.containsKey(id)) {
                     wk = new WebContinuation(id, kont, parent, ttl, disposer);
                     idToWebCont.put(id, wk);
-                    continuationsCount.setValue(idToWebCont.size());
                     break;
                 }
             }
         }
 
-        continuationsCreated.increment();
         return wk;
     }
 
@@ -256,7 +216,6 @@ public class ContinuationsManagerImpl
         }
         disposeContinuation(wk);
         expirations.remove(wk);
-        expirationsSize.setValue(expirations.size());
 
         // Invalidate all the children continuations as well
         List children = wk.getChildren();
@@ -276,7 +235,6 @@ public class ContinuationsManagerImpl
         WebContinuation parent = wk.getParentContinuation();
         if (parent == null) {
             forest.remove(wk);
-            forestSize.setValue(forest.size());
         } else {
             List parentKids = parent.getChildren();
             parentKids.remove(wk);
@@ -291,9 +249,7 @@ public class ContinuationsManagerImpl
      */
     private void disposeContinuation(WebContinuation wk) {
         idToWebCont.remove(wk.getId());
-        continuationsCount.setValue(idToWebCont.size());
         wk.dispose();
-        continuationsInvalidated.increment();
     }
 
     /**
@@ -383,7 +339,6 @@ public class ContinuationsManagerImpl
             removeContinuation(wk);
             count++;
         }
-        expirationsSize.setValue(expirations.size());
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK Cleaned up " + count + " continuations in " +
