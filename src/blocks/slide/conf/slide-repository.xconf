@@ -15,7 +15,7 @@
       | user management.
       +-->
   <principal-provider role="org.apache.cocoon.components.repository.PrincipalProviderSelector" 
-                      class="org.apache.avalon.framework.service.DefaultServiceSelector"
+                      class="org.apache.cocoon.components.ExtendedComponentSelector"
                       logger="core.principalprovider" default="slide">
 
     <!-- Default implementation via Jakarta Slide -->
