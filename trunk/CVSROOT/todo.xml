@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.74 2001-03-08 10:24:19 greenrd Exp $
+  $Id: todo.xml,v 1.75 2001-03-22 16:34:02 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -49,8 +49,8 @@
   <action context="code" bugid="30">
    Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
   </action>
-  <action context="code" bugid="74">
-   Better support for not applying stylesheets for e.g. IE5.5.
+  <action context="code">
+   Allow configuring of formatters in PIs.
   </action>
   <action context="design">
    Need better exception-handling architecture - converting exceptions to strings
@@ -192,6 +192,10 @@
   </action>
   <action context="code" bugid="694">
    Support XSLT-style Attribute Value Templates in XSP as suggested in XSP documentation.
+  </action>
+  <action context="code" bugid="74">
+   Better support for not applying stylesheets for e.g. IE6
+   - but note, we can't currently detect whether the dll on the client supports XSLT 1.0!
   </action>
  </actions>
 
