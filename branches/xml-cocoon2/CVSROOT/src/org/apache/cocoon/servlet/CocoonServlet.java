@@ -53,16 +53,16 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.40 $ $Date: 2000-12-18 16:55:22 $
+ * @version CVS $Revision: 1.1.4.41 $ $Date: 2000-12-29 16:55:19 $
  */
 
 public class CocoonServlet extends HttpServlet {
 
     private Logger log;
 
-    final long second = 1000;
-    final long minute = 60 * second;
-    final long hour   = 60 * minute;
+    static final long second = 1000;
+    static final long minute = 60 * second;
+    static final long hour   = 60 * minute;
 
     private long creationTime = 0;
     private Cocoon cocoon;
@@ -145,6 +145,10 @@ public class CocoonServlet extends HttpServlet {
      * For other servlet containers, please consult your manuals or
      * put Cocoon in the System Classpath.
      *
+     * If you need to do this for more than one classpath attribute, then
+     * separate each entry with whitespace, a comma, or a semi-colon.
+     * Cocoon will strip any whitespace from the entry.
+     *
      * @param classpathAttribute The classpath attribute to lookup.
      * @param context            The ServletContext to perform the lookup.
      *
@@ -152,16 +156,35 @@ public class CocoonServlet extends HttpServlet {
      */
      private void setClassPath(final String classpathAttribute, final ServletContext context)
      throws ServletException {
+        StringBuffer buildClassPath = new StringBuffer();
+
         if (classpathAttribute != null) {
-            this.classpath = (String) context.getAttribute(classpathAttribute.trim());
-        } else {
-            this.classpath = System.getProperty("java.class.path");
+            StringTokenizer classpathTokenizer = new StringTokenizer(classpathAttribute, " \t\r\n\f;,", false);
+
+            while (classpathTokenizer.hasMoreTokens()) {
+                final String localClasspath = classpathTokenizer.nextToken().trim();
+
+                if (localClasspath != null) {
+	                if (buildClassPath.length() > 0) {
+	                    buildClassPath.append(";");
+	                }
+	
+	                log.debug("Using attribute: " + localClasspath.trim());
+	                buildClassPath.append((String) context.getAttribute(localClasspath.trim()));
+                }
+            }
         }
+
+        if (buildClassPath.length() == 0) {
+            buildClassPath.append(System.getProperty("java.class.path"));
+        }
+
+        this.classpath = buildClassPath.toString();
      }
 
     /**
      * Set up the log level and path.  The default log level is
-     * Priority.DEBUG, although it can be overwritten by the parameter
+     * Priority.ERROR, although it can be overwritten by the parameter
      * "log-level".  The log system goes to both a file and the Servlet
      * container's log system.  Only messages that are Priority.ERROR
      * and above go to the servlet context.  The log messages can
@@ -181,7 +204,7 @@ public class CocoonServlet extends HttpServlet {
         if (logLevel != null) {
             logPriority = LogKit.getPriorityForName(logLevel);
         } else {
-            logPriority = Priority.DEBUG;
+            logPriority = Priority.ERROR;
         }
 
         try {
@@ -210,17 +233,22 @@ public class CocoonServlet extends HttpServlet {
      */
     private void setConfigFile(final String configFileName, final ServletContext context)
     throws ServletException {
+        final String usedFileName;
         if (configFileName == null) {
-            throw new ServletException("Servlet initialization argument 'configurations' not specified");
+            log.warn("Servlet initialization argument 'configurations' not specified, attempting to use '/cocoon.xconf'");
+            usedFileName = "/cocoon.xconf";
+            // throw new ServletException("Servlet initialization argument 'configurations' not specified");
+        } else {
+            usedFileName = configFileName;
         }
 
-        log.info("Using configuration file: " + configFileName);
+        log.debug("Using configuration file: " + usedFileName);
 
         try {
-            this.configFile = this.context.getResource(configFileName);
+            this.configFile = this.context.getResource(usedFileName);
         } catch (Exception mue) {
-            log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
-            throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
+            log.error("Servlet initialization argument 'configurations' not found at " + usedFileName, mue);
+            throw new ServletException("Servlet initialization argument 'configurations' not found at " + usedFileName);
         }
     }
 
@@ -232,27 +260,26 @@ public class CocoonServlet extends HttpServlet {
      * set "force-load" to "com.ibm.servlet.classloader.Handler".
      *
      * If you need to force more than one class to load, then
-     * separate each entry with a comma.  Cocoon will strip any
-     * whitespace from the entry.
+     * separate each entry with whitespace, a comma, or a semi-colon.
+     * Cocoon will strip any whitespace from the entry.
      *
      * @param forceLoading The array of fully qualified classes to force loading.
      *
      * @throws ServletException
      */
-    private void forceLoad(final String forceLoading)
-    throws ServletException {
+    private void forceLoad(final String forceLoading) {
         if (forceLoading != null) {
-            StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoading, ",", false);
+            StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoading, " \t\r\n\f;,", false);
 
             while (fqcnTokenizer.hasMoreTokens()) {
                 final String fqcn = fqcnTokenizer.nextToken().trim();
 
                 try {
+                    log.debug("Trying to load class: " + fqcn);
                     ClassUtils.loadClass(fqcn);
                 } catch (Exception e) {
-                    log.error("Could not force-load class: " + fqcn, e);
-                    throw new ServletException("Could not force-load the required class: " +
-                              fqcn + "\n" + e.getMessage(), e);
+                    log.warn("Could not force-load class: " + fqcn, e);
+                    // Do not throw an exception, because it is not a fatal error.
                 }
             }
         }

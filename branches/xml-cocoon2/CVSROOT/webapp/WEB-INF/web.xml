@@ -21,28 +21,32 @@
   </init-param>
   <init-param>
    <param-name>classpath-attribute</param-name>
-   <!-- This is for Tomcat -->
-   <param-value>org.apache.tomcat.jsp_classpath</param-value>
 
-   <!-- Alternatively you can choose one of these:
-        Catalina: org.apache.catalina.jsp_classpath
-        Resin:    caucho.class.path
-        IBM:      com.ibm.websphere.servlet.application.classpath
-   -->
+   <!-- Remove the ones you don't need. -->
+   <param-value>
+     <!-- This is for Tomcat 3.x -->
+     org.apache.tomcat.jsp_classpath
+
+     <!-- This is for Tomcat 4.x -->
+     org.apache.catalina.jsp_classpath
+
+     <!-- This is for Coucho Resin -->
+     caucho.class.path
+
+     <!-- This is for IBM WebSphere -->
+     com.ibm.websphere.servlet.application.classpath
+   </param-value>
   </init-param>
   <init-param>
    <param-name>log-level</param-name>
    <param-value>DEBUG</param-value>
   </init-param>
-  <!-- Only uncomment this if you need it!  Otherwise Cocoon will
-       not start because it can't load a class!
-
-       For IBM WebSphere:
     <init-param>
       <param-name>force-load</param-name>
+
+      <!-- For IBM WebSphere: -->
       <param-value>com.ibm.servlet.classloader.Handler</param-value>
     </init-param>
-  -->
  </servlet>
  <servlet-mapping>
   <servlet-name>Cocoon2</servlet-name>

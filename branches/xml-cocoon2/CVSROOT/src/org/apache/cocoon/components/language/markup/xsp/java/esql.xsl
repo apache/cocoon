@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.17 2000-12-22 14:59:25 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.18 2000-12-29 16:55:17 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -249,14 +249,14 @@
       try {
           esqlSession.maxRows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$max-rows"/>).trim());
       } catch (Exception esqlE) {
-          cocoonLogger.debug("Row retrieval is not limited", esqlE);
+          cocoonLogger.debug("Row retrieval is not limited");
           esqlSession.maxRows = -1;
       }
 
       try {
            esqlSession.skipRows = Integer.parseInt(String.valueOf(<xsl:copy-of select="$skip-rows"/>).trim());
       } catch (Exception esqlE) {
-          cocoonLogger.debug("We are not skipping any rows", esqlE);
+          cocoonLogger.debug("We are not skipping any rows");
           esqlSession.skipRows = 0;
       }
 
