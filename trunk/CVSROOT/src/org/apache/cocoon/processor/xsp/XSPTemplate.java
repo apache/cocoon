@@ -1,4 +1,4 @@
-/*-- $Id: XSPTemplate.java,v 1.4 2000-01-08 13:03:45 stefano Exp $ -- 
+/*-- $Id: XSPTemplate.java,v 1.5 2000-01-08 16:27:05 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-08 13:03:45 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-08 16:27:05 $
  */
 public class XSPTemplate {
   protected String languageName;
@@ -69,10 +69,12 @@ public class XSPTemplate {
   
   private Transformer transformer;
   private Parser parser;
+  private String templateBase;
 
-  public XSPTemplate(Transformer transformer, Parser parser) {
+  public XSPTemplate(Transformer transformer, Parser parser, String templateBase) {
     this.transformer = transformer;
     this.parser = parser;
+    this.templateBase = templateBase;
   }
 
   public void setLanguageName(String languageName) {
@@ -112,6 +114,12 @@ System.err.println(XSPUtil.toMarkup(this.transformer.transform(document, stylesh
 
     // FIXME: we should change these nulls to something meaningful to allow
     // the transformers to do includes and imports.
-    return this.transformer.transform(document, null, stylesheet, null, this.parser.createEmptyDocument());
+    return this.transformer.transform(
+      document,
+      (String) parameters.get("filename"),
+      stylesheet,
+      this.templateBase,
+      this.parser.createEmptyDocument()
+    );
   }
 }

@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.4 2000-01-05 16:12:23 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.5 2000-01-08 16:27:09 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -71,7 +71,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-05 16:12:23 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-08 16:27:09 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -151,7 +151,7 @@ public class XSPProcessor extends AbstractActor
         this.languages.put(languageName, languageProcessor);
 
         // Do template
-        XSPTemplate template = new XSPTemplate(transformer, parser);
+        XSPTemplate template = new XSPTemplate(transformer, parser, null);
         template.setLanguageName(languageName);
 
         String templateName = languageElement.getAttribute("template");
@@ -244,7 +244,7 @@ public class XSPProcessor extends AbstractActor
         library.setNamespace(namespace);
       }
 
-      XSPTemplate template = new XSPTemplate(transformer, parser);
+      XSPTemplate template = new XSPTemplate(transformer, parser, location);
       template.setLanguageName(language);
 
       try {
