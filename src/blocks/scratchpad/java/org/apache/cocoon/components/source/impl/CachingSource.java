@@ -20,11 +20,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -41,6 +42,7 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -69,7 +71,7 @@ import org.xml.sax.SAXException;
  * always. <code>0</code> can be used to achieve the exact opposite. That is to say, 
  * the cached contents will be thrown out and updated immediately and unconditionally.
  * <p>
- * @version CVS $Id: CachingSource.java,v 1.7 2004/03/22 17:38:25 unico Exp $
+ * @version CVS $Id: CachingSource.java,v 1.8 2004/03/23 16:28:54 unico Exp $
  */
 public class CachingSource extends AbstractLogEnabled
 implements Source, Serviceable, Initializable, XMLizable {
@@ -83,6 +85,9 @@ implements Source, Serviceable, Initializable, XMLizable {
     /** The current cache */
     protected Cache cache;
     
+    /** The refresher for asynchronous updates */
+    protected Refresher refresher;
+    
     /** The source object for the real content */
     protected Source source;
     
@@ -95,9 +100,6 @@ implements Source, Serviceable, Initializable, XMLizable {
     /** The full location string */
     final protected String uri;
     
-    /** The wrapped source uri */
-    final protected String sourceURI;
-    
     /** The used protocol */
     final protected String protocol;
     
@@ -107,11 +109,8 @@ implements Source, Serviceable, Initializable, XMLizable {
     /** number of seconds before cached object becomes invalid */
     final protected int expires;
     
-    /** key name extension */
-    final protected String cacheName;
-    
-    /** additional source parameters */
-    final protected Map parameters;
+    /** Parameters */
+    final protected Parameters parameters;
     
     /** asynchronic refresh strategy ? */
     final protected boolean async;
@@ -122,39 +121,24 @@ implements Source, Serviceable, Initializable, XMLizable {
     public CachingSource(final String protocol,
                          final String uri,
                          final Source source,
-                         final String cacheName,
+                         final Parameters parameters,
                          final int expires,
-                         final Map parameters,
-                         final boolean async) {
-        this(protocol, uri, source.getURI(), cacheName, expires, parameters, async);
-        this.source = source;
-    }
-    
-    /**
-     * Construct a new object.
-     */
-    public CachingSource(final String protocol,
-                         final String uri,
-                         final String sourceURI,
-                         final String cacheName,
-                         final int expires,
-                         final Map parameters,
                          final boolean async) {
         this.protocol = protocol;
         this.uri = uri;
-        this.sourceURI = sourceURI;
-        this.cacheName = cacheName;
+        this.source = source;
         this.expires = expires;
-        this.parameters = parameters;
         this.async = async;
+        this.parameters = parameters;
         
-        String key = "source:" + sourceURI;
+        String key = "source:" + source.getURI();
+        String cacheName = parameters.getParameter("cache-name", null);
         if (cacheName != null) {
             key += ":" + cacheName;
         }
         this.cacheKey = new SimpleCacheKey(key, false);
     }
-    
+        
     /**
      * Set the ServiceManager.
      */
@@ -180,6 +164,13 @@ implements Source, Serviceable, Initializable, XMLizable {
                     this.cache.remove(this.cacheKey);
                 }
             }
+        }
+        if (this.async && expires > 0) {
+            // schedule it with the refresher
+            this.refresher.refresh(this.cacheKey,
+                                   getSourceURI(),
+                                   this.parameters.getParameter("cache-role", null),
+                                   this.parameters);
         }
     }
     
@@ -210,7 +201,7 @@ implements Source, Serviceable, Initializable, XMLizable {
             storeResponse = true;
         }
         if (response.getExtra() == null || refresh) {
-            response.setExtra(readMeta());
+            response.setExtra(readMeta(this.source));
             this.freshMeta = true;
         }
         if (storeResponse) {
@@ -239,10 +230,10 @@ implements Source, Serviceable, Initializable, XMLizable {
             storeResponse = true;
         }
         if (response.getBinaryResponse() == null || refresh) {
-            response.setBinaryResponse(readBinaryResponse());
+            response.setBinaryResponse(readBinaryResponse(this.source));
             if (!this.freshMeta) {
                 /* always refresh meta in this case */
-                response.setExtra(readMeta());
+                response.setExtra(readMeta(this.source));
             }
         }
         if (storeResponse) {
@@ -273,10 +264,11 @@ implements Source, Serviceable, Initializable, XMLizable {
             storeResponse = true;
         }
         if (response.getXMLResponse() == null || refresh) {
-            response.setXMLResponse(readXMLResponse());
+            byte[] binary = response.getBinaryResponse();
+            response.setXMLResponse(readXMLResponse(this.source, binary, this.manager));
             if (!this.freshMeta) {
                 /* always refresh meta in this case */
-                response.setExtra(readMeta());
+                response.setExtra(readMeta(this.source));
             }
         }
         if (storeResponse) {
@@ -358,12 +350,7 @@ implements Source, Serviceable, Initializable, XMLizable {
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
-    	try {
-			return this.getSource().exists();
-    	}
-    	catch (IOException e) {
-    		return true;
-    	}
+		return this.source.exists();
     }
     
     /**
@@ -386,11 +373,7 @@ implements Source, Serviceable, Initializable, XMLizable {
      */
     public void refresh() {
         this.response = null;
-        try {
-            getSource().refresh();
-        }
-        catch (IOException ignore) {
-        }
+        this.source.refresh();
     }
     
     // ---------------------------------------------------- XMLizable implementation
@@ -426,17 +409,7 @@ implements Source, Serviceable, Initializable, XMLizable {
      * Return the uri of the cached source.
      */
     protected String getSourceURI() {
-        return this.sourceURI;
-    }
-
-    /**
-     * Return the cached source itself.
-     */
-    protected Source getSource() throws MalformedURLException, IOException {
-        if (this.source == null) {
-            this.source = resolver.resolveURI(sourceURI, null, parameters);
-        }
-        return this.source;
+        return this.source.getURI();
     }
     
     /**
@@ -461,25 +434,22 @@ implements Source, Serviceable, Initializable, XMLizable {
 	 * @throws IOException
 	 * @throws CascadingIOException
 	 */
-	protected byte[] readXMLResponse() throws SAXException, IOException, CascadingIOException {
+	protected static byte[] readXMLResponse(Source source, byte[] binary, ServiceManager manager) 
+    throws SAXException, IOException, CascadingIOException {
         XMLSerializer serializer = null;
         XMLizer xmlizer = null;
         byte[] result = null;
 		try {
-		    serializer = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
+		    serializer = (XMLSerializer) manager.lookup(XMLSerializer.ROLE);
             
-            if (this.source instanceof XMLizable) {
-                ((XMLizable) this.source).toSAX(serializer);
+            if (source instanceof XMLizable) {
+                ((XMLizable) source).toSAX(serializer);
             }
             else {
-				byte[] binary = null;
-            	if (this.response != null) {
-            		binary = this.response.getBinaryResponse();
-            	}
                 if (binary == null) {
-                    binary = readBinaryResponse();
+                    binary = readBinaryResponse(source);
                 }
-                final String mimeType = this.source.getMimeType();
+                final String mimeType = source.getMimeType();
                 if (mimeType != null) {
                     xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
                     xmlizer.toSAX(new ByteArrayInputStream(binary),
@@ -490,10 +460,10 @@ implements Source, Serviceable, Initializable, XMLizable {
             }
 		    result = (byte[]) serializer.getSAXFragment();
 		} catch (ServiceException se) {
-		    throw new CascadingIOException("Missing service dependencyj.", se);
+		    throw new CascadingIOException("Missing service dependency.", se);
 		} finally {
-            this.manager.release(xmlizer);
-		    this.manager.release(serializer);
+            manager.release(xmlizer);
+		    manager.release(serializer);
 		}
 		return result;
 	}
@@ -505,10 +475,11 @@ implements Source, Serviceable, Initializable, XMLizable {
 	 * @throws IOException
 	 * @throws SourceNotFoundException
 	 */
-	protected byte[] readBinaryResponse() throws IOException, SourceNotFoundException {
+	protected static byte[] readBinaryResponse(Source source) 
+    throws IOException, SourceNotFoundException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final byte[] buffer = new byte[2048];
-		final InputStream inputStream = this.source.getInputStream();
+		final InputStream inputStream = source.getInputStream();
 		int length;
 		while ((length = inputStream.read(buffer)) > -1) {
 		    baos.write(buffer, 0, length);
@@ -524,14 +495,47 @@ implements Source, Serviceable, Initializable, XMLizable {
      * @return source meta data
      * @throws IOException
      */
-    protected SourceMeta readMeta() throws IOException {
-        SourceMeta meta = new SourceMeta();
-        long lastModified = getSource().getLastModified();
-        if (lastModified <= 0) {
-            lastModified = System.currentTimeMillis();
+    protected static SourceMeta readMeta(Source source) throws IOException {
+        SourceMeta meta;
+        
+        if (source instanceof TraversableSource) {
+            
+            final TraversableSourceMeta tmeta = new TraversableSourceMeta();
+            final TraversableSource tsource = (TraversableSource) source;
+            
+            tmeta.setName(tsource.getName());
+            tmeta.setIsCollection(tsource.isCollection());
+            
+            if (tmeta.isCollection()) {
+                final Collection children = tsource.getChildren();
+                if (children != null) {
+                    final String[] names = new String[children.size()];
+                    final Iterator iter = children.iterator();
+                    int count = 0;
+                    while(iter.hasNext()) {
+                        TraversableSource child = (TraversableSource) iter.next();
+                        names[count] = child.getName();
+                        count++;
+                    }
+                    tmeta.setChildren(names);
+                }
+            }
+            
+            meta = tmeta;
         }
-        meta.setLastModified(lastModified);
-        meta.setMimeType(getSource().getMimeType());
+        else {
+            meta = new SourceMeta();
+        }
+        
+        final long lastModified = source.getLastModified();
+        if (lastModified > 0) {
+            meta.setLastModified(lastModified);
+        }
+        else {
+            meta.setLastModified(System.currentTimeMillis());
+        }
+        meta.setMimeType(source.getMimeType());
+        
         return meta;
     }
     
@@ -568,6 +572,36 @@ implements Source, Serviceable, Initializable, XMLizable {
             m_exists = exists;
         }
         
+    }
+    
+    protected static class TraversableSourceMeta extends SourceMeta {
+        private String   m_name;
+        private boolean  m_isCollection;
+        private String[] m_children;
+        
+        protected String getName() {
+            return m_name;
+        }
+        
+        protected void setName(String name) {
+            m_name = name;
+        }
+        
+        protected boolean isCollection() {
+            return m_isCollection;
+        }
+        
+        protected void setIsCollection(boolean isCollection) {
+            m_isCollection = isCollection;
+        }
+        
+        protected String[] getChildren() {
+            return m_children;
+        }
+        
+        protected void setChildren(String[] children) {
+            m_children = children;
+        }
     }
 
 }
