@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.2 2004/04/23 11:42:58 mpo Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.3 2004/04/23 23:34:57 joerg Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
@@ -108,7 +108,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * @param id of the childWidget to find, if this is <code>null</code> then the parent is returned.
      * @return the selected widget
      * 
-     * @throws a {@link RuntimeException} if the id is not null and points to a 
+     * @throws RuntimeException  if the id is not null and points to a 
      *   child-widget that cannot be found. 
      */
     protected Widget selectWidget(Widget parent, String id) {
