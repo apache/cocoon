@@ -451,12 +451,16 @@
       |    -Xmx200000000
       | store-janitor settings:
       |    <parameter name="freememory" value="5000000"/>
-      |    <parameter name="heapsize" value="150000000"/>
+      |    <parameter name="heapsize" value="196000000"/>
       |
       | It is recommended to have heapsize equal to -Xmx, especially on Sun's
       | JVM which are unable to shrink its heap once it grows above minimum.
       | Freememory should be greater than amount of memory necessary for normal
       | application operation.
+      | BUT: The heap size of the memory of the JVM is a little bit less than
+      |      the value you specify for -Xmx, so you have to set the heapsize
+      |      for the store janitor to a value which is lower (2% less thems
+      |      to be a working value).
       +-->
   <store-janitor logger="core.store.janitor">
      <!-- How much free memory shall be available in the jvm -->
@@ -474,6 +478,8 @@
      <!-- How much percent of the elements of each registered Store
           shall be removed when low on memory. Default 10% -->
      <parameter name="percent_to_free" value="10"/>
+     <!-- Invoke the garbage collector when low memory is reached -->
+     <parameter name="invokegc" value="false"/>
   </store-janitor>
 
 <!-- ========================= Protocol Handlers =========================== -->
