@@ -72,7 +72,7 @@ import org.tempuri.javacImpl.eclipse.JavaCompilerImpl;
 
 /*
  * CompilingClassLoader
- * CVS $Id: CompilingClassLoader.java,v 1.5 2003/12/31 05:50:12 antonio Exp $
+ * CVS $Id: CompilingClassLoader.java,v 1.6 2004/01/28 17:48:59 coliver Exp $
  */
 public class CompilingClassLoader extends ClassLoader {
 
@@ -166,6 +166,11 @@ public class CompilingClassLoader extends ClassLoader {
     }
 
     private Source getSource(String className) {
+        int dollar = className.indexOf('$');
+        if (dollar > 0) {
+            // inner class: use the parent
+            className = className.substring(0, dollar);
+        }
         synchronized (sourcePath) {
             Iterator iter = sourcePath.iterator();
             while (iter.hasNext()) {
