@@ -66,7 +66,7 @@ import java.io.InputStream;
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
  * @author ?
- * @version CVS $Id: CommandLineContext.java,v 1.1 2003/05/12 13:26:17 stephan Exp $
+ * @version CVS $Id: CommandLineContext.java,v 1.2 2003/05/25 09:00:30 jefft Exp $
  */
 
 public class CommandLineContext extends AbstractLogEnabled implements Context {
@@ -121,6 +121,7 @@ public class CommandLineContext extends AbstractLogEnabled implements Context {
         }
         // rely on File to build correct File and URL
         File f = new File( contextDir, path );
+        if (!f.exists()) return null;
         return f.toURL();
     }
 
