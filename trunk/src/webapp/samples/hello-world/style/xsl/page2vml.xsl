@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 
-<!-- Written by Theodore B. Achacoso, MD 991122 ted@groupserve.com -->
-
 <!--
     The code is based on Motorola's VoxML (Version 1.2) implementation of
     the emerging VoiceXML standard (version 0.9 as of 17 August '99).
@@ -14,6 +12,9 @@
     If user says "repeat" then the computer repeats the prompt.
     If the user says "goodbye" then the computer says "Goodbye" and ends the
     session.
+
+    Written by Theodore B. Achacoso, MD 991122 ted@groupserve.com
+    CVS $Id: page2vml.xsl,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

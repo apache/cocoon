@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: error-giving-page.xml,v 1.1 2003/03/26 21:21:37 stefano Exp $ -->
+<!-- CVS $Id: error-giving-page.xml,v 1.2 2003/05/07 04:57:12 vgritsenko Exp $ -->
 
 <!DOCTYPE page [
  <!ELEMENT page (title?, content)>

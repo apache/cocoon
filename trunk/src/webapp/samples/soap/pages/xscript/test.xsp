@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: test.xsp,v 1.1 2003/03/27 17:55:46 stefano Exp $ -->
-
 <!--
   Author: Vadim Gritsenko "vgritsenko@apache.org"
+  CVS $Id: test.xsp,v 1.2 2003/05/07 04:57:14 vgritsenko Exp $
  -->
+
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
           xmlns:xscript="http://apache.org/xsp/xscript/1.0"

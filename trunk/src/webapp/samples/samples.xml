@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.13 2003/05/06 19:23:51 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.14 2003/05/07 04:57:12 vgritsenko Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -13,7 +13,10 @@
    </sample>
    <sample name="XML-ized web sites" href="sites/">
     A couple of existing web sites have been xml-ized to show you
-    how easier it is to handle content-pure markup.
+    how easier it is to handle pure-content markup.
+   </sample>   
+   <sample name="Presentation Slides" href="slides/slides">
+    An example of more complex use of XSLT for navigation and content filtering.
    </sample>   
    <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
     Since XML is based on Unicode, it can be used to encode all types of
@@ -25,9 +28,6 @@
     in different ways, but also to syndicate, aggregate or otherwise transform
     content provided by other web sites.
    </sample>
-   <sample name="Slides" href="slides/slides">
-    An example of more complex use of XSLT for navigation and content filtering.
-   </sample>   
    <sample name="Resource Catalog" href="catalog/">
     XML is handy but also very complex. Cocoon integrates a number of 
     facilities to help you during your journey thru XML-land. One of these
@@ -37,11 +37,14 @@
    </sample>
   </group>
  
-  <group name="Web Services">
+  <group name="Web Services and B2B">
    <sample name="SOAP" href="soap/">
      Cocoon ships with facilities for immediate connection to SOAP resources.
      These examples show you how to connect to any web service with a few
      lines of XML markup.
+   </sample>
+   <sample name="Order Page" href="stream/order" xlink:role="dynamic">
+     An example of B2B processing.
    </sample>
   </group>
   
@@ -66,9 +69,12 @@
   
 -->
    
-  <group name="Input Modules">
+  <group name="The Power of Sitemap">
    <sample name="Input Modules" href="modules/">
     This example shows the usage of Input Modules in sitemap attribute expressions.
+   </sample>
+   <sample name="Sources" href="sources/">
+    This example shows the usage of sources in the sitemap.
    </sample>
   </group>
   
@@ -78,45 +84,12 @@
    </sample>
   </group>
   
-  <group name="System Tools And Pages">
-   <sample name="Status Page" href="status.html">
-    This page shows the current internal status of cocoon, along with
-    information on the cache and the object stores.
-   </sample>
-   <sample name="Clear Cache" href="clearcache.html">
-    Empties the Cocoon cache.
-   </sample>
-   <sample name="Clear Persistent Store" href="clearpersistentstore.html">
-    Empties the Cocoon persistent store.
-   </sample>
-   <sample name="Request Page" href="request.html">
-    This example shows the usage of the RequestGenerator.
-   </sample>
-   <sample name="Error Page" href="generror.html">
-    This example shows what happens if an error is triggered in the pipeline.
-   </sample>
-  <sample name="Link Status" href="linkstatus">
-    Verify that there are no broken hyperlinks in the local Cocoon
-    documentation. This sample will start at the home page of the local
-    documentation webapp and traverse each internal link, reporting its status
-    in a colour-coded table. Be patient - this process will take a while.
-    NOTE: this will work only if you have included the documentation when 
-    you built the web application
-  </sample>
-  </group>
-
   <group name="Extensible Server Pages">
    <sample name="XSP" href="xsp/">
      Extensible Server Pages.
    </sample>
   </group>
 
-  <group name="B2B">
-   <sample name="Order Page" href="stream/order" xlink:role="dynamic">
-     An example 
-   </sample>
-  </group>
-         
   <group name="Web Applications">
    <sample name="Protected Area" href="protected/login">
      An example web-application built around db-authenticator,
@@ -150,11 +123,35 @@
    </sample>
   </group>
  
-  <group name="Error handling">
-    <sample name="Error handling" href="errorhandling/main">
-    	An example page producing exceptions and handling them. Demonstrates the 
-    	handler hierarchy and the exception selectors.
-    </sample>
+  <group name="System Tools And Pages">
+   <sample name="Status Page" href="status.html">
+    This page shows the current internal status of cocoon, along with
+    information on the cache and the object stores.
+   </sample>
+   <sample name="Clear Cache" href="clearcache.html">
+    Empties the Cocoon cache.
+   </sample>
+   <sample name="Clear Persistent Store" href="clearpersistentstore.html">
+    Empties the Cocoon persistent store.
+   </sample>
+   <sample name="Request Page" href="request.html">
+    This example shows the usage of the RequestGenerator.
+   </sample>
+   <sample name="Error Page" href="generror.html">
+    This example shows what happens if an error is triggered in the pipeline.
+   </sample>
+   <sample name="Error handling" href="errorhandling/main">
+    An example page producing exceptions and handling them. Demonstrates the 
+    handler hierarchy and the exception selectors.
+   </sample>
+   <sample name="Link Status" href="linkstatus">
+    Verify that there are no broken hyperlinks in the local Cocoon
+    documentation. This sample will start at the home page of the local
+    documentation webapp and traverse each internal link, reporting its status
+    in a colour-coded table. Be patient - this process will take a while.
+    NOTE: this will work only if you have included the documentation when 
+    you built the web application
+   </sample>
   </group>
 
 </samples>

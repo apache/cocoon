@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: page2wml.xsl,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $ -->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
  <xsl:template match="page">

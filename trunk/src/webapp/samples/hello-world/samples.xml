@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.2 2003/03/30 12:48:57 ghoward Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:13 vgritsenko Exp $ -->
 
-<samples>
+<samples name="Hello, World!">
+
+  <group name="Back">
+   <sample name="Back" href="../">
+    Back to the samples home page.
+   </sample>
+  </group>
+
+  <group name="About">
+   <note>All examples on this page has been created using single data source,
+   hello.xml file.
+   </note>
+   <sample name="XML" href="hello.xml">
+    Hello world XML document.
+   </sample>
+  </group>
 
   <group name="Multichannel Hello World!">
    <sample name="HTML" href="hello.html">

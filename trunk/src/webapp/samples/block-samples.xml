@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: block-samples.xml,v 1.4 2003/04/24 12:54:13 stevenn Exp $ -->
+<!-- CVS $Id: block-samples.xml,v 1.5 2003/05/07 04:57:12 vgritsenko Exp $ -->
 
-<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="blocks">
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Blocks Samples">
   
  <group name="Main examples page">
   <sample name="Back" href="../samples/">to Cocoon examples main page</sample>
