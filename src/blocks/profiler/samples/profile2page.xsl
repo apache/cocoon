@@ -99,7 +99,7 @@
        <td align="left"><b>NN</b></td>
        <td align="left"><b>Components(Role)</b></td>
        <td align="left"><b>Average time</b></td>
-       <td align="left"><b>Lastest times</b></td>
+       <td align="left"><b>Last time</b></td>
       </tr>
 
       <xsl:for-each select="profile:average/profile:component">
