@@ -115,6 +115,23 @@
 	// Make session object readily available
         HttpSession session = request.getSession(<xsl:value-of select="$create-session"/>);
 
+        <xsl:for-each select="//xsp:variable">
+          <xsl:value-of select="@type"/>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="@name"/>
+          <xsl:text> = </xsl:text>
+          <xsl:choose>
+            <xsl:when test="@value">
+              <xsl:value-of select="@value"/>
+            </xsl:when>
+            <xsl:otherwise>
+              null
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:text>;
+</xsl:text>
+        </xsl:for-each>
+
         <xsl:for-each select="//processing-instruction()[not(starts-with(name(.),'xml-logicsheet') or (starts-with(name(.),'cocoon-process') and contains(.,'xsp')))]">
           document.appendChild(
             document.createProcessingInstruction(
@@ -260,10 +277,77 @@
 
     ((Element) xspCurrentNode).setAttribute(
       "<xsl:value-of select="$attribute-name"/>",
-      "<xsl:value-of select="."/>"
+      "<xsl:apply-templates select="." mode="Escape"/>"
     );
   </xsl:template>
 
+  <xsl:template match="@*" mode="Escape">
+    <xsl:variable name="backslashEscaped">
+      <xsl:call-template name="replace-string">
+        <xsl:with-param name="text" select="."/>
+        <xsl:with-param name="replace" select="'\'"/>
+        <xsl:with-param name="with" select="'\\'"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="backslashAndQuotesEscaped">
+      <xsl:call-template name="replace-string">
+        <xsl:with-param name="text" select="$backslashEscaped"/>
+        <xsl:with-param name="replace" select="'&quot;'"/>
+        <xsl:with-param name="with" select="'\&quot;'"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:value-of select="$backslashAndQuotesEscaped"/>
+  </xsl:template>
+
+  <xsl:template name="replace-string">
+    <xsl:param name="text"/>
+    <xsl:param name="replace"/>
+    <xsl:param name="with"/>
+    <xsl:choose>
+      <xsl:when test="contains($text,$replace)">
+        <xsl:value-of select="substring-before($text,$replace)"/>
+        <xsl:value-of select="$with"/>
+        <xsl:call-template name="replace-string">
+          <xsl:with-param name="text" select="substring-after($text,$replace)"/>
+          <xsl:with-param name="replace" select="$replace"/>
+          <xsl:with-param name="with" select="$with"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$text"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="xsp:variable"/>
+
+  <xsl:template match="xsp:generate-method-header">
+    private <xsl:value-of select="@returns"/>
+    <xsl:text> </xsl:text>
+    <xsl:value-of select="@name"/> (
+      Node xspParentNode,
+      Node xspCurrentNode,
+      Stack xspNodeStack,
+      Document document <xsl:for-each select="//xsp:variable">
+        <xsl:text>, </xsl:text>
+        <xsl:value-of select="@type"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="@name"/>
+        <xsl:if test="@value">
+          <xsl:text> = </xsl:text>
+          <xsl:value-of select="@value"/>
+        </xsl:if>
+      </xsl:for-each>
+      ) throws Exception 
+  </xsl:template>
+
+  <xsl:template match="xsp:call-method">
+    this.<xsl:value-of select="@name"/>(xspParentNode,xspCurrentNode,xspNodeStack,document
+    <xsl:for-each select="//xsp:variable">
+      ,<xsl:value-of select="@name"/>
+    </xsl:for-each>
+    )
+  </xsl:template>
 
   <!-- *** Dynamic Tag Support *** -->
 
