@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.63 2001-02-06 16:07:57 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.64 2001-02-06 18:59:59 balld Exp $-->
 <!--
 
  ============================================================================
@@ -245,7 +245,7 @@
   </xsp:page>
 </xsl:template>
 
-<xsl:template match="xsp:page/*[not(starts-with(name(.),'xsp:'))]">
+<xsl:template match="xsp:page/*[not(self::xsp:*)]">
   <xsl:copy>
     <xsl:apply-templates select="@*"/>
     <xsp:logic>
@@ -593,7 +593,7 @@
                   <xsp:expr>_esql_tagname.toUpperCase()</xsp:expr>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+                  <xsp:expr>_esql_tagname</xsp:expr>
                 </xsl:otherwise>
               </xsl:choose>
             </xsp:param>
