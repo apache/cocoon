@@ -17,6 +17,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -64,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.14 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.15 2004/04/29 07:00:49 cziegeler Exp $
  */
 public class TabContentAspect 
     extends CompositeContentAspect {
@@ -106,6 +107,13 @@ public class TabContentAspect
                     ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, config.aspectName, new Integer(j));
                     attributes.addCDATAAttribute("parameter", service.getComponentManager().getLinkService().getLinkURI(event));
                 }
+                // add parameters
+                final Iterator iter = tab.getParameters().entrySet().iterator();
+                while ( iter.hasNext() ) {
+                    final Map.Entry entry = (Map.Entry) iter.next();
+                    attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+                }
+                
                 XMLUtils.startElement(handler, "named-item", attributes);
                 if (j == selected) {
                     this.processLayout(tab.getLayout(), service, handler);
