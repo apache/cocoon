@@ -71,7 +71,7 @@ import org.apache.cocoon.webapps.session.SessionConstants;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.4 2003/07/04 10:44:17 cziegeler Exp $
+ * @version CVS $Id: StandardSessionContextProvider.java,v 1.5 2003/07/04 10:46:29 cziegeler Exp $
 */
 public final class StandardSessionContextProvider
 extends AbstractLogEnabled
@@ -122,12 +122,6 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Composable, Com
             if ( name.equals(SessionConstants.REQUEST_CONTEXT)) {
                 RequestSessionContext r = (RequestSessionContext)context;
                 if (!(r.getRequest() == ObjectModelHelper.getRequest( objectModel))) {
-                    context = null;
-                    objectModel.remove(this.getClass().getName()+name);
-                }
-            } else {
-                ResponseSessionContext r = (ResponseSessionContext)context;
-                if (!(r.getResponse() == ObjectModelHelper.getResponse( objectModel))) {
                     context = null;
                     objectModel.remove(this.getClass().getName()+name);
                 }
