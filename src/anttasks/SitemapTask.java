@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.9 $ $Date: 2004/05/03 11:56:28 $
+ * @version CVS $Revision: 1.10 $ $Date: 2004/05/03 11:57:10 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -491,9 +491,6 @@ public final class SitemapTask extends AbstractQdoxTask {
                 this.addRow(tableNode, "Block", blockName);
             }
             
-            // Info - Class
-            this.addRow(tableNode, "Class", this.javaClass.getFullyQualifiedName());
-
             // Info - Cacheable
             if ( this.javaClass.isA(GENERATOR)
                  || this.javaClass.isA(TRANSFORMER)
@@ -527,6 +524,9 @@ public final class SitemapTask extends AbstractQdoxTask {
                 this.addRow(tableNode, "Mime-Type", value);
             }
             
+            // Info - Class
+            this.addRow(tableNode, "Class", this.javaClass.getFullyQualifiedName());
+
             // merge with old doc
             this.merge(body, docFile);
             
