@@ -2,6 +2,8 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:param name="view-source"/>
+
   <xsl:template match="page">
    <html>
     <head>
@@ -17,7 +19,16 @@
 
   <xsl:template match="title">
    <h2 style="color: navy; text-align: center">
-    <xsl:apply-templates/>
+      <xsl:if test="not($view-source)">
+         <xsl:apply-templates/>
+      </xsl:if>     
+      <xsl:if test="$view-source">
+      <A>
+         <xsl:attribute name="HREF">../view-source?filename=/<xsl:value-of select="$view-source"/></xsl:attribute>
+ 		 <xsl:attribute name="TARGET">_blank</xsl:attribute>
+         <xsl:apply-templates/>
+      </A>
+      </xsl:if>     
    </h2>
   </xsl:template>
 

@@ -279,15 +279,6 @@
     <map:redirect-to resource="slides"/>
    </map:match>
 
-   <map:match pattern="slides/view-source/*">
-    <map:read src="docs/samples/slides/{1}" mime-type="text/plain"/>
-   </map:match>
-
-   <map:match pattern="slides/view-source">
-    <map:generate type="serverpages" src="docs/samples/slides/view-source.xsp"/>
-    <map:serialize/>
-   </map:match>
-
    <map:match pattern="slides/">
     <map:redirect-to resource="slides"/>
    </map:match>
@@ -311,7 +302,9 @@
    <!-- =========================== Dynamic ================================ -->
    <map:match pattern="xsp/*">
     <map:generate type="serverpages" src="docs/samples/xsp/{1}.xsp"/>
-    <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+    <map:transform src="stylesheets/dynamic-page2html.xsl">
+        <parameter name="view-source" value="docs/samples/xsp/{1}.xsp"/>
+    </map:transform>
     <map:serialize/>
    </map:match>
 
@@ -334,14 +327,18 @@
      <map:act set="employee">
        <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
        <map:generate type="serverpages" src="docs/samples/forms/employee.xsp"/>
-       <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+       <map:transform src="stylesheets/dynamic-page2html.xsl">
+          <parameter name="view-source" value="docs/samples/forms/employee.xsp"/>
+       </map:transform>
        <map:serialize/>
      </map:act>
    </map:match>
 
    <map:match pattern="forms/*">
      <map:generate type="serverpages" src="docs/samples/forms/{1}.xsp"/>
-     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+     <map:transform src="stylesheets/dynamic-page2html.xsl">
+        <parameter name="view-source" value="docs/samples/forms/{1}.xsp"/>
+     </map:transform>
      <map:serialize/>
    </map:match>
 
@@ -352,8 +349,20 @@
 
    <map:match pattern="session/*.xsp*">
      <map:generate type="serverpages" src="docs/samples/session/{1}.xsp"/>
-     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+     <map:transform src="stylesheets/dynamic-page2html.xsl">
+        <parameter name="view-source" value="docs/samples/session/{1}.xsp"/>
+     </map:transform>
      <map:serialize/>
+   </map:match>
+
+   <!-- ========================== XSP Sources ============================== -->
+   <map:match pattern="view-source/*">
+    <map:read src="docs/samples/slides/{1}" mime-type="text/plain"/>
+   </map:match>
+
+   <map:match pattern="view-source">
+    <map:generate type="serverpages" src="docs/samples/slides/view-source.xsp"/>
+    <map:serialize/>
    </map:match>
 
    <!-- ========================= Server ================================ -->

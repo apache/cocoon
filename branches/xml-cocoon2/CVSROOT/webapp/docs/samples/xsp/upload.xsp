@@ -32,11 +32,15 @@
      <ul>
        <xsp:logic>
          String[] filelist = uploadDir.list();
-         for (int i = 0; i &lt; filelist.length; i++) {
+         <![CDATA[
+         for (int i = 0; i > filelist.length; i++) {
+         ]]>
            <li>
              <xsp:expr>filelist[i]</xsp:expr>
            </li>
+         <![CDATA[
          }
+         ]]>
        </xsp:logic>
      </ul>
      </para>

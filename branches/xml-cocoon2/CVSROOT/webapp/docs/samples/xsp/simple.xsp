@@ -24,11 +24,15 @@
 
    <ul>
      <xsp:logic>
-       for (int i = 0; i &lt; 3; i++) {
+       <![CDATA[
+       for (int i=0; i<3; i++) {
+       ]]>
          <li>
            Item <xsp:expr>i</xsp:expr>
          </li>
-       }
+       <![CDATA[
+       } 
+       ]]>
      </xsp:logic>
    </ul>
 

@@ -319,17 +319,17 @@
    <slide>
     <title>Possible different scenarios</title>
     <ul>
-     <li><link uri="view-source?filename=/docs/samples/slides/page.xml">integrated xsp tags</link></li>
-     <li><link uri="view-source?filename=/docs/samples/slides/clean-page.xml">custom tags transformed by your stylesheets</link></li>
-     <li><link uri="view-source?filename=/docs/samples/slides/lib-page.xml">use of cocoon taglibs</link></li>
+     <li><link uri="../view-source?filename=/docs/samples/slides/page.xml">integrated xsp tags</link></li>
+     <li><link uri="../view-source?filename=/docs/samples/slides/clean-page.xml">custom tags transformed by your stylesheets</link></li>
+     <li><link uri="../view-source?filename=/docs/samples/slides/lib-page.xml">use of cocoon taglibs</link></li>
     </ul>
    </slide>
 
    <slide>
     <title>Other dynamic possibilities</title>
     <ul>
-     <li><link uri="view-source?filename=/docs/samples/slides/database-page.xml">SQLProcessor</link></li>
-     <li><link uri="view-source?filename=/docs/samples/slides/ldap.xml">LDAPProcessor</link></li>
+     <li><link uri="../view-source?filename=/docs/samples/slides/database-page.xml">SQLProcessor</link></li>
+     <li><link uri="../view-source?filename=/docs/samples/slides/ldap.xml">LDAPProcessor</link></li>
      <li>... add yours</li>
     </ul>
    </slide>

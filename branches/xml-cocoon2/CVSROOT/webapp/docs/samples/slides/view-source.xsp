@@ -253,6 +253,12 @@
               newParser.parse(is);
 
               this.colorize(builder.getDocument(), document, this.contentHandler);    
+          } catch (SAXException e){
+              getLogger().debug("SAXException in colorize", e);
+              throw e;
+          } catch (org.w3c.dom.DOMException e){
+              getLogger().debug("DOMException in colorize", e);
+              throw e;
           } catch (Exception e) {
               getLogger().error("Could not include page", e);
           } finally {

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: page.xml,v 1.1.2.2 2000-09-08 15:42:15 giacomo Exp $ -->
+<!-- Version: $Id: page.xml,v 1.1.2.3 2001-04-16 17:59:44 dims Exp $ -->
 
 <?cocoon-process type="xsp"?>
 <?cocoon-process type="xslt"?>
@@ -124,7 +124,7 @@
   </xsp:logic>
   
   <p>All right, the first XSP page is over, but you can see the 
-  <link href="view-source.xml?filename=page.xml">dynamically syntax highlighted</link>
+  <link href="../view-source.xml?filename=page.xml">dynamically syntax highlighted</link>
   source of this page provided to you by another XSP page.</p>
   
   <p>Enjoy XSP!</p>

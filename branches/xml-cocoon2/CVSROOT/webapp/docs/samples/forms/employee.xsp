@@ -78,7 +78,9 @@
           </select>
         </para>
         <xsp:logic>
-          if (empID != null &amp;&amp; !empID.equals("-1")) {
+          <![CDATA[
+          if (empID != null && !empID.equals("-1")) {
+          ]]>
             <input type="submit" name="cocoon-action" value="Update"/>
             <input type="submit" name="cocoon-action" value="Delete"/>
           } else {
