@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-     This is the web-app configurations that allow Cocoon to work under
-     Apache Tomcat. Please, follow the installation section of the
-     documentation for more information about installing Cocoon on Tomcat
+  This is the web-app configurations that allow Cocoon to work under
+  Apache Tomcat. Please, follow the installation section of the
+  documentation for more information about installing Cocoon on Tomcat
 -->
 
 <!DOCTYPE web-app
@@ -11,32 +11,62 @@
     "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
 
 <web-app>
- <display-name>Cocoon2 Demo</display-name>
- <description>Demo application for Cocoon2</description>
- <servlet>
-  <servlet-name>Cocoon2</servlet-name>
-  <display-name>Cocoon2</display-name>
-  <description>The main Cocoon2 servlet</description>
-  <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
-  <init-param>
-  <param-name>configurations</param-name>
-   <!-- CHANGE PATH BELOW -->
-   <param-value>/cocoon.xconf</param-value>
-  </init-param>
-  <init-param>
-   <param-name>log-level</param-name>
-   <param-value>DEBUG</param-value>
-  </init-param>
-  
-  <!-- Allow reinstantiating (reloading) of the cocoon instance. If this is
-       set to yes, a new cocoon instance can be created using
-       the request parameter "cocoon-reload".
-    -->
-  <init-param>
-   <param-name>allow-reload</param-name>
-   <param-value>yes</param-value>
-  </init-param>
+  <display-name>Cocoon2 Demo</display-name>
+  <description>Demo application for Cocoon2</description>
+  <servlet>
+    <servlet-name>Cocoon2</servlet-name>
+    <display-name>Cocoon2</display-name>
+    <description>The main Cocoon2 servlet</description>
 
+    <!--
+      In cases you're facing class loader problems you can alternatively 
+      use the following servlet-class instead of the normal one
+
+      <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
+  
+    -->
+    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+
+    <!--
+      This parameter points to the main configuration file for Cocoon.
+      Note that the path is specified in absolute notation but it will be
+      resolved relative to the servlets webapp context path
+    -->
+    <init-param>
+      <param-name>configurations</param-name>
+      <param-value>/cocoon.xconf</param-value>
+    </init-param>
+
+    <!--
+      This parameter indicates the log level to use throughout the system
+
+      Available levels are:
+        DEBUG:        prints all level of log messages.
+        INFO:         prints all level of log messages except DEBUG ones.
+        WARN:         prints all level of log messages except DEBUG and INFO ones.
+        ERROR:        prints all level of log messages except DEBUG, INFO and WARN ones.
+        FATAL-ERRROR: prints only log messages of this level
+    -->
+    <init-param>
+      <param-name>log-level</param-name>
+      <param-value>DEBUG</param-value>
+    </init-param>
+  
+    <!-- 
+      Allow reinstantiating (reloading) of the cocoon instance. If this is
+      set to yes, a new cocoon instance can be created using
+      the request parameter "cocoon-reload".
+    -->
+    <init-param>
+      <param-name>allow-reload</param-name>
+      <param-value>yes</param-value>
+    </init-param>
+  
+    <!-- 
+      This parameter is used to list classes that should be loaded
+      at initialization time of the servlet.
+      Usually this classes are JDBC Drivers used
+    -->
     <init-param>
       <param-name>load-class</param-name>
       <param-value>
@@ -47,10 +77,10 @@
         @database-driver@
       </param-value>
     </init-param>
- </servlet>
- <servlet-mapping>
-  <servlet-name>Cocoon2</servlet-name>
-  <url-pattern>/</url-pattern>
- </servlet-mapping>
-</web-app>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>Cocoon2</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+</web-app>
