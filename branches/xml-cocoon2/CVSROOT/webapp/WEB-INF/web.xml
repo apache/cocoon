@@ -15,7 +15,7 @@
   <servlet-name>Cocoon2</servlet-name>
   <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
   <init-param>
-   <param-name>configurations</param-name>
+  <param-name>configurations</param-name>
    <!-- CHANGE PATH BELOW -->
    <param-value>/cocoon.xconf</param-value>
   </init-param>

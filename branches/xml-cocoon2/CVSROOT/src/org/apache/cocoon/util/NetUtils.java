@@ -18,7 +18,7 @@ import java.net.MalformedURLException;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-06 21:25:32 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-18 15:01:21 $
  */
 
 public class NetUtils {
@@ -36,7 +36,7 @@ public class NetUtils {
         if (location.indexOf("://") < 0) {
             return (new File(location)).toURL();
         } else if (location.startsWith("resource://")) {
-            URL u = ClassUtils.getClassLoader().getResource(location.substring("resource://".length()));
+            URL u = ClassUtils.getResource(location.substring("resource://".length()));
             if (u != null) return u;
             else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
         } else {

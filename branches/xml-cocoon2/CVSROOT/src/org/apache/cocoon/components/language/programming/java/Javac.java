@@ -11,12 +11,13 @@ package org.apache.cocoon.components.language.programming.java;
 import java.io.*;
 import java.util.*;
 import org.apache.cocoon.components.language.programming.*;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.7 $ $Date: 2000-12-08 20:39:17 $
+ * @version $Revision: 1.1.2.8 $ $Date: 2000-12-18 15:01:09 $
  * @since 2.0
  */
 
@@ -31,14 +32,14 @@ public class Javac extends AbstractJavaCompiler {
 
     // Use reflection to be able to build on all JDKs
     try {
-        Class.forName(MODERN_CLASS);
+        ClassUtils.loadClass(MODERN_CLASS);
         modern = true;
-    } catch (ClassNotFoundException e) {
+    } catch (Exception e) {
         log.warn("Javac()", e);
         try {
-            Class.forName(CLASSIC_CLASS);
+            ClassUtils.loadClass(CLASSIC_CLASS);
             modern = false;
-        } catch (ClassNotFoundException ex) {
+        } catch (Exception ex) {
             log.warn("No compiler found in your classpath. Make sure you added 'tools.jar'", ex);
             throw new RuntimeException("No compiler found in your classpath. Make sure you added 'tools.jar'");
         }

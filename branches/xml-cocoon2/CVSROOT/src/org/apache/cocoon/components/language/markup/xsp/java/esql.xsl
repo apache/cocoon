@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.8 2000-12-08 20:39:11 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.9 2000-12-18 15:01:03 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -261,7 +261,7 @@
           <!-- FIXME - need to do avalon pooling here maybe? -->
          </xsl:when>
          <xsl:otherwise>
-          Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
+          ClassUtils.newInstance(String.valueOf(<xsl:copy-of select="$driver"/>));
           <xsl:choose>
            <xsl:when test="esql:username">
             _esql_session.connection = DriverManager.getConnection(

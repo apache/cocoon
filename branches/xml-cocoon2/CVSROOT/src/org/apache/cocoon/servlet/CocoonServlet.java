@@ -36,6 +36,7 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.util.ClassUtils;
 
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
@@ -52,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.38 $ $Date: 2000-12-08 20:40:25 $
+ * @version CVS $Revision: 1.1.4.39 $ $Date: 2000-12-18 15:01:15 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -102,6 +103,8 @@ public class CocoonServlet extends HttpServlet {
         this.setConfigFile(conf.getInitParameter("configurations"), this.context);
 
         this.root = this.context.getRealPath("/");
+
+        ClassUtils.setClassLoader(this.getClass().getClassLoader());
 
         this.createCocoon();
     }
@@ -214,7 +217,7 @@ public class CocoonServlet extends HttpServlet {
         log.info("Using configuration file: " + configFileName);
 
         try {
-            this.configFile = context.getResource(configFileName);
+            this.configFile = this.context.getResource(configFileName);
         } catch (Exception mue) {
             log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
             throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
@@ -245,7 +248,7 @@ public class CocoonServlet extends HttpServlet {
                 final String fqcn = fqcnTokenizer.nextToken().trim();
 
                 try {
-                    Class.forName(fqcn);
+                    ClassUtils.loadClass(fqcn);
                 } catch (Exception e) {
                     log.error("Could not force-load class: " + fqcn, e);
                     throw new ServletException("Could not force-load the required class: " +

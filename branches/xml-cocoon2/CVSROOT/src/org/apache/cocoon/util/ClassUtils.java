@@ -5,23 +5,31 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.util;
 
 import java.io.File;
 import java.net.URL;
+import java.net.MalformedURLException;
 
 import java.io.IOException;
+
+import javax.servlet.ServletContext;
 
 /**
  * A collection of class management utility methods.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-08 21:10:51 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-18 15:01:20 $
  */
 public class ClassUtils {
-    
+
+    /**
+     * Reference for global ClassLoader that Cocoon uses throughout.
+     */
+    private static ClassLoader loader = null;
+
     /**
      * Create a new instance given a class name
      *
@@ -30,30 +38,62 @@ public class ClassUtils {
      * @exception Exception If an instantiation error occurs
      */
     public static Object newInstance(String className) throws Exception {
-        return loadClass(className).newInstance();
+        return ClassUtils.loadClass(className).newInstance();
     }
 
     /**
-     * Load a class given its name
+     * Load a class given its name.
+     * BL: We wan't to use a known ClassLoader--hopefully the heirarchy
+     *     is set correctly.
      *
      * @param className A class name
      * @return The class pointed to by <code>className</code>
      * @exception Exception If a loading error occurs
      */
     public static Class loadClass(String className) throws Exception {
-        // return getClassLoader().loadClass(className);
         return Class.forName(className);
     }
 
     /**
-     * Return the context classloader
+     * Return a resource URL.
+     * BL: if this is command line operation, the classloading issues
+     *     are more sane.  During servlet execution, we explicitly set
+     *     the ClassLoader.
+     *
+     * @return The context classloader.
+     * @exception Exception If a loading error occurs
+     */
+    public static URL getResource(String resource) throws MalformedURLException {
+        return ClassUtils.getClassLoader().getResource(resource);
+    }
+
+    /**
+     * Return the context classloader.
+     * BL: if this is command line operation, the classloading issues
+     *     are more sane.  During servlet execution, we explicitly set
+     *     the ClassLoader.
      *
      * @return The context classloader.
      * @exception Exception If a loading error occurs
      */
     public static ClassLoader getClassLoader() {
-        // return Thread.currentThread().getContextClassLoader();
-        return ClassUtils.class.getClassLoader();
+        if (ClassUtils.loader == null) {
+            setClassLoader(ClassUtils.class.getClassLoader());
+        }
+
+        return loader;
+    }
+
+    /**
+     * Set the context classloader
+     * BL: if this is command line operation, the classloading issues
+     *     are more sane.  During servlet execution, we explicitly set
+     *     the ClassLoader.
+     */
+    public static void setClassLoader(ClassLoader loader) {
+        if (ClassUtils.loader == null) {
+            ClassUtils.loader = loader;
+        }
     }
 
     /**
@@ -62,8 +102,8 @@ public class ClassUtils {
      * @return true if class implements given interface.
      */
     public static boolean implementsInterface(String className, String iface) throws Exception {
-        Class class1 = loadClass (className);
-        Class class2 = loadClass (iface);
+        Class class1 = ClassUtils.loadClass (className);
+        Class class2 = ClassUtils.loadClass (iface);
         if (class2.isAssignableFrom (class1)) {
             return true;
         }

@@ -26,10 +26,14 @@ import org.apache.log.Logger;
 import org.apache.log.LogKit;
 
 /**
- * A class loader with a growable list of path search directories
+ * A class loader with a growable list of path search directories.
+ * BL: Changed to extend URLClassLoader for both maintenance and
+ *     compatibility reasons.  It doesn't hurt that it runs quicker
+ *     now as well.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-15 17:57:54 $
+ * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-18 15:00:59 $
  */
 class RepositoryClassLoader extends URLClassLoader {
   /**
