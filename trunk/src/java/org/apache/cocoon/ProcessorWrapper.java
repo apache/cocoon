@@ -57,12 +57,13 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.4 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.5 2003/10/19 16:06:32 cziegeler Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Component, Disposable, ThreadSafe {
@@ -109,6 +110,13 @@ implements Processor, Component, Disposable, ThreadSafe {
      */
     public Processor getRootProcessor() {
         return this.processor.getRootProcessor();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getSourceResolver()
+     */
+    public SourceResolver getSourceResolver() {
+        return this.processor.getSourceResolver();
     }
 
 }

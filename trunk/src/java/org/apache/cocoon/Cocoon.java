@@ -60,7 +60,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ComponentContext;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -84,7 +83,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.20 2003/10/17 22:03:42 bloritsch Exp $
+ * @version CVS $Id: Cocoon.java,v 1.21 2003/10/19 16:06:32 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -458,8 +457,8 @@ public class Cocoon
             }
 
             programGenerator = (ProgramGenerator) this.serviceManager.lookup(ProgramGenerator.ROLE);
-/*            source = environment.resolveURI(fileName);
-            CompiledComponent xsp = programGenerator.load(this.serviceManager,
+            source = this.sourceResolver.resolveURI(fileName);
+          /*  CompiledComponent xsp = programGenerator.load(this.serviceManager,
                     source,
                     markupLanguage, programmingLanguage, environment);
             if (getLogger().isDebugEnabled()) {
@@ -467,7 +466,7 @@ public class Cocoon
             }
             */
         } finally {
-            //environment.release(source);
+            this.sourceResolver.release(source);
             this.serviceManager.release(programGenerator);
         }
     }
@@ -479,9 +478,17 @@ public class Cocoon
         return activeRequestCount;
     }
 
-    public ServiceManager getServiceManager()
-    {
+    public ServiceManager getServiceManager() {
         return serviceManager;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getSourceResolver()
+     */
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+        // TODO (CZ) Implement me
+        return null;
+    }
+
 }
 

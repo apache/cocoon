@@ -91,7 +91,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.15 2003/10/15 18:03:52 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.16 2003/10/19 16:06:32 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -585,6 +585,14 @@ public class TreeProcessor
         public String getContentType() {
             return environment.getContentType();
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#getSourceResolver()
+     */
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
