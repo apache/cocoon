@@ -72,7 +72,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.5 2003/09/18 14:43:48 vgritsenko Exp $
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
@@ -85,8 +85,8 @@ implements CacheableProcessingComponent {
      * All instance variables are set to <code>null</code>.
      */
     public void recycle() {
-        if ( null != this.inputSource ) {
-            super.resolver.release( this.inputSource );
+        if (null != this.inputSource) {
+            super.resolver.release(this.inputSource);
             this.inputSource = null;
         }
         super.recycle();
@@ -98,9 +98,10 @@ implements CacheableProcessingComponent {
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
+
         super.setup(resolver, objectModel, src, par);
         try {
-            this.inputSource = resolver.resolveURI(src);
+            this.inputSource = super.resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
@@ -130,25 +131,29 @@ implements CacheableProcessingComponent {
      * Generate XML data.
      */
     public void generate()
-    throws IOException, SAXException, ProcessingException {
+        throws IOException, SAXException, ProcessingException {
+
         try {
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("processing file " + super.source);
-                this.getLogger().debug("file resolved to " + this.inputSource.getURI());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Source " + super.source +
+                                  " resolved to " + this.inputSource.getURI());
             }
-            SourceUtil.parse( this.manager, this.inputSource, super.xmlConsumer);
+            SourceUtil.parse(this.manager, this.inputSource, super.xmlConsumer);
 
         } catch (SAXException e) {
             final Exception cause = e.getException();
-            if( cause != null ) {
-                if ( cause instanceof ProcessingException )
+            if (cause != null) {
+                if (cause instanceof ProcessingException) {
                     throw (ProcessingException)cause;
-                if ( cause instanceof IOException )
+                }
+                if (cause instanceof IOException) {
                     throw (IOException)cause;
-                if ( cause instanceof SAXException )
+                }
+                if (cause instanceof SAXException) {
                     throw (SAXException)cause;
-                throw new ProcessingException("Could not read resource "
-                                              + this.inputSource.getURI(), cause);
+                }
+                throw new ProcessingException("Could not read resource " +
+                                              this.inputSource.getURI(), cause);
             }
             throw e;
         }
