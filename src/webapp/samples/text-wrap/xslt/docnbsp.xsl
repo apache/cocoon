@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" 
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:str="http://exslt.org/strings"
-                extension-element-prefixes="str">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:str="http://exslt.org/strings"
+  extension-element-prefixes="str">
 
-<!-- doc.xsl - text line wrapping
-  This stylesheet does not do any line wrapping.
+<!-- doc2nbsp.xsl - text line wrapping
+  This stylesheet uses exslt extension for strings to add non-breaking spaces.
 -->
 
   <xsl:template match="document">
@@ -13,7 +14,7 @@
         <title><xsl:value-of select="header/title"/></title>
       </head>
       <xsl:apply-templates/>
-      </html>
+    </html>
   </xsl:template>
 
   <xsl:template match="body">
