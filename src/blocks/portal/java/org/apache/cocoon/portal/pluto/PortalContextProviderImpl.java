@@ -23,6 +23,7 @@ import java.util.Vector;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.pluto.services.information.PortalContextProvider;
@@ -32,7 +33,7 @@ import org.apache.pluto.services.information.PortalContextProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortalContextProviderImpl.java,v 1.4 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id: PortalContextProviderImpl.java,v 1.5 2004/03/10 12:57:48 cziegeler Exp $
  */
 public class PortalContextProviderImpl 
 implements PortalContextProvider {
@@ -70,7 +71,7 @@ implements PortalContextProvider {
         // these are the minimum states that the portal needs to support        
         this.states = this.getDefaultStates(); 
         // set info       
-        this.info = "Apache Cocoon/1.0";
+        this.info = "Apache Cocoon/" + Constants.VERSION;
         this.properties = new HashMap();
         this.init(objectModel);
     }
