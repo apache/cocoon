@@ -13,29 +13,19 @@
   >
   
   <document>
-
     <header>
-      <title>Calculator example</title>
-      <authors>
-        <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
-      </authors>
+      <title>Calculator</title>
     </header>
-
     <body>
       <s1 title="Calculator">
-
-        <form action="../../calc/">
-
+        <form action="../calc/">
           <p>a = <strong><jpath:value-of select="a"/></strong></p>
           <p>b = <strong><jpath:value-of select="b"/></strong></p>
           <p>Operator = <strong><jpath:value-of select="operator"/></strong></p>
           <p>Result = <strong><jpath:value-of select="result"/></strong></p>
           <input type="submit" name="submit" value="Start over"/>
-
         </form>
-       </s1>
+      </s1>
     </body>
-
   </document>
-
 </xsp:page>

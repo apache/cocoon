@@ -18,18 +18,12 @@
   >
   
   <document>
-
     <header>
       <title><jpath:value-of select="title"/></title>
-      <authors>
-        <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
-      </authors>
     </header>
-
     <body>
       <s1>
         <xsp:attribute name="title"><jpath:value-of select="title"/></xsp:attribute>
-
         <jpath:choose>
           <jpath:when test="errorMsg">
             <p><strong><jpath:value-of select="errorMsg"/></strong></p>
@@ -122,7 +116,7 @@
           </jpath:if>
 
         </form>
-       </s1>
+      </s1>
     </body>
 
   </document>

@@ -13,19 +13,12 @@
   >
   
   <document>
-
     <header>
-      <title>Calculator example</title>
-      <authors>
-        <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
-      </authors>
+      <title>Calculator</title>
     </header>
-
     <body>
       <s1 title="Calculator">
-
         <form><xsp:attribute name="action"><xsp:expr><jpath:continuation/></xsp:expr></xsp:attribute>
-
           <p>a = <strong><jpath:value-of select="a"/></strong></p>
           <p>b = <strong><jpath:value-of select="b"/></strong></p>
           <p>Enter operator
@@ -38,11 +31,7 @@
           </p>
           <input type="submit" name="submit" value="Do it!"/>
         </form>
-
-       </s1>
+      </s1>
     </body>
-
   </document>
-
 </xsp:page>
-
