@@ -18,12 +18,13 @@ import org.apache.excalibur.pool.Recyclable;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 17:06:20 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-27 15:14:28 $
  */
 public interface EventPipeline extends Component, Composable, Recyclable, Processor {
     public void setGenerator (String role, String source, Parameters param, Exception e) throws Exception;
     public void setGenerator (String role, String source, Parameters param) throws Exception;
     public Generator getGenerator ();
     public void addTransformer (String role, String source, Parameters param) throws Exception;
+    public void setSitemap(Sitemap sitemap);
     public boolean process(Environment environment) throws Exception;
 }

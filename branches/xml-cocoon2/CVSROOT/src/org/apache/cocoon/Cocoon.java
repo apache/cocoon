@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.79 $ $Date: 2001-04-26 21:12:02 $
+ * @version CVS $Revision: 1.4.2.80 $ $Date: 2001-04-27 15:14:11 $
  */
 public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -212,7 +212,6 @@ public class Cocoon extends AbstractLoggable implements ThreadSafe, Component, I
         getLogger().debug("Sitemap location = " + this.sitemapFileName);
         getLogger().debug("Checking sitemap reload = " + this.checkSitemapReload);
         getLogger().debug("Reloading sitemap asynchron = " + this.reloadSitemapAsynchron);
-        this.componentManager.addComponentInstance(Roles.SITEMAP_MANAGER, this.sitemapManager);
     }
 
     /** Queries the class to estimate its ergodic period termination. */

@@ -16,7 +16,13 @@ import org.xml.sax.XMLFilter;
 /**
  * Provides a connection between SAX components.
  * @author <a href="mailto:prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 18:20:37 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-27 15:14:36 $
  */
 public interface SAXConnector extends XMLPipe, Component, SitemapModelComponent {
+    /**
+     * Pass reference to containing Sitemap.
+     * This is a temporary hack until something better
+     * comes along.
+     */
+    void setSitemap(Sitemap sitemap);
 }

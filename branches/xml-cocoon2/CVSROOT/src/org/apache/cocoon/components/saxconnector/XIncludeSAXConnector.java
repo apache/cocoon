@@ -25,7 +25,7 @@ import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.Manager;
+import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -40,12 +40,15 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-26 21:12:07 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-27 15:14:37 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 
     /** Stacks namespaces during processing */
     private ArrayList currentNS = new ArrayList();
+
+    /** The sitemap we manipulate */
+    private Sitemap sitemap;
 
     /** The current <code>ComponentManager</code>. */
     protected ComponentManager manager = null;
@@ -66,7 +69,11 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         environment = (Environment) resolver;
     }
 
-    public void compose(ComponentManager manager) {
+    public final void setSitemap(final Sitemap sitemap) {
+        this.sitemap = sitemap;
+    }
+
+    public final void compose(final ComponentManager manager) {
         this.manager = manager;
     }
 
@@ -154,7 +161,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
     protected void processXIncludeElement(String src, String element, String ns, String prefix)
         throws SAXException,MalformedURLException,IOException {
 
-        Manager sitemap = null;
         EventPipeline eventPipeline = null;
         StreamPipeline pipeline = null;
         if (element == null) element="";
@@ -162,9 +168,8 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         if (prefix == null) prefix="";
 
         try {
-            sitemap = (Manager) manager.lookup(Roles.SITEMAP_MANAGER);
             getLogger().debug("Processing XInclude element: src=" + src
-                                + ", sitemap=" + sitemap
+                                + ", sitemap=" + this.sitemap
                                 + ", element=" + element
                                 + ", ns=" + ns
                                 + ", prefix=" + prefix);
@@ -181,8 +186,7 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             ((XMLProducer)eventPipeline).setConsumer(consumer);
 
             this.environment.pushURI(src);
-            sitemap.invoke(this.environment, "", src, true, true, pipeline, eventPipeline);
-            //sitemap.process(this.environment, pipeline, eventPipeline);
+            this.sitemap.process(this.environment, pipeline, eventPipeline);
             eventPipeline.process(this.environment);
             this.environment.popURI();
 
@@ -191,8 +195,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         } catch (Exception e) {
             getLogger().error("Error selecting sitemap",e);
         } finally {
-            if (sitemap != null)
-                this.manager.release((Component)sitemap);
             if(eventPipeline != null)
                 this.manager.release((Component)eventPipeline);
             if(pipeline != null)
@@ -208,5 +210,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
      */
     public void recycle () {
         this.currentNS.clear();
+        this.sitemap = null;
     }
 }

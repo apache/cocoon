@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.108 2001-04-25 07:55:46 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.109 2001-04-27 15:14:20 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -307,6 +307,7 @@
         private boolean resource_<xsl:value-of select="translate(@name, '- ', '__')"/> (StreamPipeline pipeline,
             EventPipeline eventPipeline, List listOfMaps, Environment environment, String cocoon_view, boolean internalRequest)
         throws Exception {
+          eventPipeline.setSitemap(this);
           Map map = null;
           Parameters param = null;
           <xsl:apply-templates select="./*"/>
@@ -327,6 +328,7 @@
         private boolean view_<xsl:value-of select="translate(@name, '- ', '__')"/> (StreamPipeline pipeline,
             EventPipeline eventPipeline, List listOfMaps, Environment environment, boolean internalRequest)
         throws Exception {
+          eventPipeline.setSitemap(this);
           Map map = null;
           Parameters param = null;
           <xsl:apply-templates select="./*"/>
@@ -377,6 +379,7 @@
            components and the &lt;code&gt;StreamPipeline&lt;/code&gt; to produce the requested resource */
         EventPipeline eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
         StreamPipeline pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
+        eventPipeline.setSitemap(this);
         pipeline.setEventPipeline(eventPipeline);
         boolean result = false;
         try {
@@ -411,6 +414,7 @@
            XPath kind expressions in values of src attribute used with
            generate and transform elements */
         List listOfMaps = (List) new ArrayList();
+        eventPipeline.setSitemap(this);
         Map map;
         Parameters param;
         Map objectModel = environment.getObjectModel();
@@ -463,6 +467,7 @@
             try {
               eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
               pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
+              eventPipeline.setSitemap(this);
               pipeline.setEventPipeline(eventPipeline);
               List listOfMaps = (List)(new ArrayList());
               Map map;

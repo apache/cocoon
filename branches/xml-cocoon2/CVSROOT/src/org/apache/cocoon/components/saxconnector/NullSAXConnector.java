@@ -20,9 +20,14 @@ import org.xml.sax.SAXException;
 /**
  * Null implementation of the SAXConnector. Simply sends events on to the next component in the pipeline.
  * @author <a href="prussell@apache.org">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-25 18:20:37 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-27 15:14:34 $
  */
 public class NullSAXConnector extends AbstractXMLPipe implements Poolable, SAXConnector {
+    /** Set the sitemap
+     */
+    public final void setSitemap(Sitemap sitemap) {
+        // do nothing.
+    }
 
     /** Setup this SAXConnector.
      */

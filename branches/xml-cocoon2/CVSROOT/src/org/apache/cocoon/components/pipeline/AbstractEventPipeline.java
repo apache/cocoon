@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-25 17:06:16 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-27 15:14:25 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -62,6 +62,10 @@ implements EventPipeline, Disposable {
         this.manager = manager;
         generatorSelector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
         transformerSelector = (ComponentSelector)this.manager.lookup(Roles.TRANSFORMERS);
+    }
+
+    public final void setSitemap(final Sitemap sitemap) {
+        this.sitemap = sitemap;
     }
 
     public void setGenerator (String role, String source, Parameters param, Exception e)
@@ -192,6 +196,7 @@ implements EventPipeline, Disposable {
                 // connect SAXConnector
                 SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
                 connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
+                connect.setSitemap(this.sitemap);
                 this.connectors.add(connect);
                 next = (XMLConsumer) connect;
                 prev.setConsumer(next);
@@ -207,6 +212,7 @@ implements EventPipeline, Disposable {
             // insert SAXConnector
             SAXConnector connect = (SAXConnector) this.manager.lookup(Roles.SAX_CONNECTOR);
             connect.setup((EntityResolver)environment,environment.getObjectModel(),null,null);
+            connect.setSitemap(this.sitemap);
             this.connectors.add(connect);
             next = (XMLConsumer) connect;
             prev.setConsumer(next);
@@ -242,6 +248,9 @@ implements EventPipeline, Disposable {
 
     public void recycle() {
         super.recycle();
+
+        this.sitemap = null;
+
         try {
             // Release generator.
             if ( this.generatorSelector != null ) {
