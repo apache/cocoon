@@ -64,9 +64,18 @@ import org.apache.cocoon.webapps.session.SessionManager;
 
 /**
  * This action creates and terminates a session.
+ * The action is controlled via parameters. The action parameter defines
+ * the action (creating or terminating).
+ * The value "create" creates a new session (if not already available)
+ * The value "terminate" terminates the session. The termination can be controlled
+ * with a second parameter "mode": The default value "immediately" terminates
+ * the session, the value "if-unused" terminates the session only if no
+ * session context is available anymore. This means the user must not have
+ * any own session context and must not be authenticated anymore using
+ * the uthentication framework.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionAction.java,v 1.2 2003/05/04 20:19:42 cziegeler Exp $
+ * @version CVS $Id: SessionAction.java,v 1.3 2003/07/18 08:37:15 cziegeler Exp $
 */
 public final class SessionAction
 extends ComposerAction
@@ -82,17 +91,24 @@ implements ThreadSafe {
         try {
             sessionManager = (SessionManager)this.manager.lookup(SessionManager.ROLE);
             final String action = par.getParameter("action", "create");
-            if ( action.equals("create") == true ) {
+          
+            if ( action.equals("create") ) {
+                
+                // create a session
                 sessionManager.createSession();
-            } else if ( action.equals("terminate") == true ) {
+                
+            } else if ( action.equals("terminate") ) {
+                
+                // terminate a session
                 final String mode = par.getParameter("mode", "immediately");
-                if ( mode.equals("immediately") == true) {
+                if ( mode.equals("immediately") ) {
                     sessionManager.terminateSession(true);
-                } else if ( mode.equals("if-unused") == true ) {
+                } else if ( mode.equals("if-unused")  ) {
                     sessionManager.terminateSession(false);
                 } else {
                     throw new ProcessingException("Unknown mode " + mode + " for action " + action);
                 }
+                
             } else {
                 throw new ProcessingException("Unknown action: " + action);
             }
