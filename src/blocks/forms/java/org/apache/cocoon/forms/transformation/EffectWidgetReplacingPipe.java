@@ -97,6 +97,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private final DocHandler                 docHandler             = new DocHandler();
     private final FormHandler                formHandler            = new FormHandler();
     private final NestedHandler              nestedHandler          = new NestedHandler();
+    private final SkipHandler                skipHandler            = new SkipHandler();
     private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
     private final WidgetHandler              widgetHandler          = new WidgetHandler();
     private final RepeaterSizeHandler        repeaterSizeHandler    = new RepeaterSizeHandler();
@@ -361,6 +362,22 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    protected class SkipHandler extends Handler {
+        public Handler process() throws SAXException {
+            switch(event) {
+            case EVENT_START_ELEMENT:
+                return this;
+            case EVENT_ELEMENT:
+                return nestedTemplate();
+            case EVENT_END_ELEMENT:
+                return this;
+            default:
+                out.copy();
+                return this;
+            }
+        }
+    }
+
     protected class WidgetLabelHandler extends Handler {
         public Handler process() throws SAXException {
             switch (event) {
@@ -522,14 +539,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 }
                 contextWidgets.addFirst(contextWidget);
                 contextWidget = widget;
-                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "struct");
-                out.attributes();
-                out.startElement();
                 return this;
             case EVENT_ELEMENT:
                 return nestedTemplate();
             case EVENT_END_ELEMENT:
-                out.copy();
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 return this;
             default:
@@ -553,8 +566,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 // Choose does not change the context widget like Union does:
                 //    contextWidget = widget;
                 chooseWidgets.addFirst(widget);
-                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "choose");
-                out.startElement();
                 return this;
             case EVENT_ELEMENT:
                 if (Constants.TEMPLATE_NS.equals(input.uri)) {
@@ -563,7 +574,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         if (testValue == null) throwSAXException("Element \"when\" missing required \"value\" attribute.");
                         String value = (String)((Widget)chooseWidgets.get(0)).getValue();
                         if (testValue.equals(value)) {
-                            return nestedHandler;
+                            return skipHandler;
                         } else {
                             return nullHandler;
                         }
@@ -576,7 +587,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     return choosePassThruHandler;
                 }
             case EVENT_END_ELEMENT:
-                out.endElement();
                 chooseWidgets.removeFirst();
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 return this;
@@ -597,7 +607,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         if (testValue == null) throwSAXException("Element \"when\" missing required \"value\" attribute.");
                         String value = (String)((Widget)chooseWidgets.get(0)).getValue();
                         if (testValue.equals(value)) {
-                            return nestedHandler;
+                            return skipHandler;
                         } else {
                             return nullHandler;
                         }
@@ -627,8 +637,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 }
                 contextWidgets.addFirst(contextWidget);
                 contextWidget = widget;
-                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
-                out.startElement();
                 return this;
             case EVENT_ELEMENT:
                 if (Constants.TEMPLATE_NS.equals(input.uri)) {
@@ -637,7 +645,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         if (id == null) throwSAXException("Element \"case\" missing required \"id\" attribute.");
                         String value = (String)contextWidget.getValue();
                         if (id.equals(value != null ? value : "")) {
-                            return nestedHandler;
+                            return skipHandler;
                         } else {
                             return nullHandler;
                         }
@@ -650,7 +658,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     return unionPassThruHandler;
                 }
             case EVENT_END_ELEMENT:
-                out.endElement();
                 contextWidget = (Widget)contextWidgets.removeFirst();
                 return this;
             default:
@@ -667,7 +674,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 if (Constants.TEMPLATE_NS.equals(input.uri)) {
                     if ("case".equals(input.loc)) {
                         if (contextWidget.getValue().equals(input.attrs.getValue("id"))) {
-                            return nestedHandler;
+                            return skipHandler;
                         } else {
                             return nullHandler;
                         }
