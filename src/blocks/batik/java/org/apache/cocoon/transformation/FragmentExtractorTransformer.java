@@ -87,7 +87,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This transformer sieves an incoming stream of xml
  * and replaces fragments with an xlink locator pointing to the fragments.
  * <p>
- * The extracted fragments are idendified by their element name and namespace URI.
+ * The extracted fragments are identified by their element name and namespace URI.
  * The default is to extract SVG images ("svg" elements in namespace
  * "http://www.w3.org/2000/svg"), but this can be overriden in the configuration:
  * <pre>
@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.6 2003/11/20 15:13:54 joerg Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.7 2003/11/24 19:23:51 joerg Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
