@@ -66,11 +66,15 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -163,13 +167,13 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.8 2003/10/28 19:53:57 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.9 2004/02/07 08:59:57 bdelacretaz Exp $
  */
 public class TraxTransformer extends AbstractTransformer
-implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
+implements Transformer, Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
-    /** The component manager (protected because used by subclasses) */
-    protected ComponentManager manager;
+    /** The service manager instance (protected because used by subclasses) */
+    protected ServiceManager manager;
 
     /** The object model (protected because used by subclasses) */
     protected Map objectModel;
@@ -267,7 +271,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
             if (traxFactory != null) {
                 this.xsltProcessor.setTransformerFactory(traxFactory);
             }
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new ConfigurationException("Cannot load XSLT processor", e);
         }
 
@@ -283,10 +287,10 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     }
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -529,11 +533,12 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      * Disposable
      */
     public void dispose() {
-        this.manager.release(this.xsltProcessor);
-        this.xsltProcessor = null;
-        this.manager = null;
+        if ( this.manager != null ) {
+            this.manager.release(this.xsltProcessor);
+            this.xsltProcessor = null;
+            this.manager = null;
+        }
     }
-
 
     /**
      * Recyclable
