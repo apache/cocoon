@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.thread;
 
-import java.util.Date;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.easymock.MockControl;
 
