@@ -64,7 +64,7 @@ import java.util.Iterator;
  * <code>Source.getLastModified()</code> which can be a costly operation.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DelayedRefreshSourceWrapper.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: DelayedRefreshSourceWrapper.java,v 1.3 2003/10/15 18:08:35 cziegeler Exp $
  */
 public final class DelayedRefreshSourceWrapper
     implements Source {
@@ -89,7 +89,14 @@ public final class DelayedRefreshSourceWrapper
         this.source = source;
         this.delay = delay;
     }
-
+    
+    /**
+     * Get the real source
+     */
+    public Source getSource() {
+        return this.source;
+    }
+    
     public final InputStream getInputStream()
     throws SourceException, IOException {
         return this.source.getInputStream();
