@@ -105,7 +105,7 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.15 2003/12/22 15:44:42 gcasper Exp $
+ *  @version $Id: WebDAVSource.java,v 1.16 2004/01/15 13:26:39 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -185,6 +185,7 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         try {
             source = new WebDAVSource(location, principal, password, protocol, false);
         }  catch (HttpException he) {
+            he.printStackTrace();
             try {
                 source = new WebDAVSource(location, principal, password, protocol, true);
             } catch (HttpException finalHe) {
@@ -242,7 +243,7 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
                 BufferedInputStream bi = null;
                 bi = new BufferedInputStream(this.resource.getMethodData());
                 if (!this.resource.exists()) {
-                    throw new HttpException(this.systemId + "does not exist");
+                    throw new HttpException(this.systemId + " does not exist");
                 }
                 return bi;
             }
@@ -425,7 +426,7 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
     public void setSourceCredential(SourceCredential sourcecredential)
         throws SourceException {
         this.sourcecredential = sourcecredential;
-
+        if (sourcecredential == null) return;
         try {
             HttpURL httpURL = new HttpURL(this.systemId);
             httpURL.setUserInfo(
@@ -476,6 +477,11 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
             try {
                 this.resource.putMethod(toByteArray());
             } catch (HttpException he) {
+                final String message =
+                    "Unable to close output stream. Server responded " +
+                    he.getReasonCode() + " (" + he.getReason() + ") - " 
+                    + he.getMessage();
+                getLogger().debug(message);
                 throw new IOException(he.getMessage());
             }
         }
@@ -613,35 +619,15 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
      * @see org.apache.excalibur.source.TraversableSource#getChild(java.lang.String)
      */
     public Source getChild(String childName) throws SourceException {    	
-        Source child = null;
-        try {
-            WebdavResource[] resources = this.resource.listWebdavResources();
-            for (int i = 0; i < resources.length; i++) {
-                if (childName.equals(resources[i].getDisplayName())) {
-                	String childLocation = this.location + "/" + childName;
-					WebDAVSource source = WebDAVSource.newWebDAVSource(
-                        childLocation, 
-                        this.principal, 
-                        this.password, 
-                        this.protocol, 
-                        this.getLogger());
-					source.setSourceCredential(this.getSourceCredential());
-					return source;
-                }
-            }
-        } catch (HttpException e) {
-            if (getLogger().isDebugEnabled()) {
-                final String message =
-                    "Unable to get WebDAV children. Server responded " +
-                    e.getReasonCode() + " (" + e.getReason() + ") - " 
-                    + e.getMessage();
-                getLogger().debug(message);
-            }
-            throw new SourceException("Failed to get WebDAV collection child.",e);
-        } catch (IOException e) {
-            throw new SourceException("Failed to get WebDAV collection child.",e);
-        }
-        return child;
+    	String childLocation = this.location + "/" + childName;
+    	WebDAVSource source = WebDAVSource.newWebDAVSource(
+            childLocation, 
+            this.principal, 
+            this.password, 
+            this.protocol, 
+            this.getLogger());
+    	source.setSourceCredential(this.getSourceCredential());
+    	return source;
     }
 
     /**
@@ -852,6 +838,13 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
                    new PropertyName(sourceproperty.getNamespace(),sourceproperty.getName()),
                    prop, true);
 
+        } catch(HttpException e) {
+            final String message =
+                "Unable to set property. Server responded " +
+                e.getReasonCode() + " (" + e.getReason() + ") - " 
+                + e.getMessage();
+            getLogger().debug(message);
+            throw new SourceException("Could not set property ", e);
         } catch (Exception e) {
             throw new SourceException("Could not set property ", e);
         }
