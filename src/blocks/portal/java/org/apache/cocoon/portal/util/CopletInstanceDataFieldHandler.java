@@ -56,19 +56,15 @@ import java.util.Vector;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.profile.impl.CopletInstanceDataManager;
-import org.exolab.castor.mapping.FieldHandler;
 
 /**
  * Field handler for CopletInstanceData instances.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataFieldHandler.java,v 1.3 2003/07/10 13:16:56 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
  */
-public class CopletInstanceDataFieldHandler implements FieldHandler {
-
-    public void checkValidity(Object object) {
-    }
+public class CopletInstanceDataFieldHandler extends AbstractFieldHandler {
 
     public Object getValue(Object object) {
         Map map = ((CopletInstanceDataManager) object).getCopletInstanceData();

@@ -53,16 +53,14 @@ package org.apache.cocoon.portal.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exolab.castor.mapping.FieldHandler;
-
 /**
  * Field handler superclass for external references.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: ReferenceFieldHandler.java,v 1.3 2003/07/10 13:16:56 cziegeler Exp $
+ * @version CVS $Id: ReferenceFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
  */
-public abstract class ReferenceFieldHandler implements FieldHandler {
+public abstract class ReferenceFieldHandler extends AbstractFieldHandler {
     /**
      * Used to pass resolvable objects to the field handler.
      */

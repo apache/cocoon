@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
@@ -60,7 +57,6 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -70,7 +66,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: WindowAspect.java,v 1.4 2003/06/17 20:10:39 cziegeler Exp $
+ * @version CVS $Id: WindowAspect.java,v 1.5 2003/08/19 14:09:34 cziegeler Exp $
  */
 public final class WindowAspect extends AbstractAspect {
 
@@ -85,14 +81,7 @@ public final class WindowAspect extends AbstractAspect {
         final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         final CopletInstanceData copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
 
-        AttributesImpl attributes = new AttributesImpl();
-        Map parameter = layout.getParameters();
-		Map.Entry entry;
-		for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
-			entry = (Map.Entry) iter.next();
-			attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
-		}
-        XMLUtils.startElement(contenthandler, config.tagName, attributes);
+        XMLUtils.startElement(contenthandler, config.tagName);
         XMLUtils.createElement(contenthandler, "title", copletInstanceData.getCopletData().getTitle());
 
         context.invokeNext( layout, service, contenthandler );

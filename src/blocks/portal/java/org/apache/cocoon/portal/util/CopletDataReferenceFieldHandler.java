@@ -58,12 +58,9 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.3 2003/07/10 13:16:56 cziegeler Exp $
+ * @version CVS $Id: CopletDataReferenceFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
  */
 public class CopletDataReferenceFieldHandler extends ReferenceFieldHandler {
-
-    public void checkValidity(Object object) {
-    }
 
     public Object getValue(Object object) {
         CopletData copletData = ((CopletInstanceData) object).getCopletData();

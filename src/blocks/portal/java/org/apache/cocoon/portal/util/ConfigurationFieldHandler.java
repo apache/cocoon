@@ -55,7 +55,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.exolab.castor.mapping.FieldHandler;
 import org.exolab.castor.mapping.MapItem;
 
 /**
@@ -63,13 +62,10 @@ import org.exolab.castor.mapping.MapItem;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: ConfigurationFieldHandler.java,v 1.3 2003/07/10 13:16:56 cziegeler Exp $
+ * @version CVS $Id: ConfigurationFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
  */
-public class ConfigurationFieldHandler implements FieldHandler {
+public class ConfigurationFieldHandler extends AbstractFieldHandler {
     
-    public void checkValidity(Object object) {
-    }
-
     public Object getValue(Object object) {
         HashMap map = new HashMap();
         Iterator iterator =
