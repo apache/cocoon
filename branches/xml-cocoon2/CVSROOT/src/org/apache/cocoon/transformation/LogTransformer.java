@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-22 17:10:55 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-11 20:35:50 $
  *
  */
 public class LogTransformer extends AbstractTransformer implements Poolable {
@@ -57,9 +57,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
 
     /** true if filename is valid and writeable */
     private boolean isValid = true;
-    /** filename for log file	*/
+    /** filename for log file */
     private String logfilename = null;
-    /** log file	*/
+    /** log file */
     private FileWriter logfile = null;
     /** should we append content to the log file */
     private boolean append = false;
@@ -104,8 +104,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
      */
     public void setDocumentLocator(Locator locator) {
         log("setDocumentLocator","");
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.setDocumentLocator(locator);
+        }
     }
 
     /**
@@ -114,8 +115,10 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void startDocument()
     throws SAXException {
         log("startDocument", "");
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.startDocument();
+        }
+
         this.canReset=false;
     }
 
@@ -125,8 +128,10 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void endDocument()
     throws SAXException {
         log ("endDocument", "");
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.endDocument();
+        }
+
         this.canReset=true;
     }
 
@@ -136,8 +141,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
         log ("startPrefixMapping", "prefix="+prefix+",uri="+uri);
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.startPrefixMapping(prefix,uri);
+        }
     }
 
     /**
@@ -146,6 +152,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void endPrefixMapping(String prefix)
     throws SAXException {
         log ("endPrefixMapping", "prefix="+prefix);
+        if (super.contentHandler!=null) {
+            super.contentHandler.endPrefixMapping(prefix);
+        }
     }
 
     /**
@@ -162,8 +171,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
                  +",type="+a.getType(i)
                  +",value="+a.getValue(i));
         }
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.startElement(uri,loc,raw,a);
+        }
     }
 
 
@@ -173,8 +183,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void endElement(String uri, String loc, String qname)
     throws SAXException {
         log ("endElement", "uri="+uri+",local="+loc+",qname="+qname);
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.endElement(uri,loc,qname);
+        }
     }
 
     /**
@@ -183,8 +194,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void characters(char ch[], int start, int len)
     throws SAXException {
         log ("characters", new String(ch,start,len));
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.characters(ch,start,len);
+        }
     }
 
     /**
@@ -193,8 +205,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void ignorableWhitespace(char ch[], int start, int len)
     throws SAXException {
         log ("ignorableWhitespace", new String(ch,start,len));
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.ignorableWhitespace(ch,start,len);
+        }
     }
 
     /**
@@ -203,8 +216,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void processingInstruction(String target, String data)
     throws SAXException {
         log ("processingInstruction", "target="+target+",data="+data);
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.processingInstruction(target,data);
+        }
     }
 
     /**
@@ -213,8 +227,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void skippedEntity(String name)
     throws SAXException {
         log ("skippedEntity", "name="+name);
-        if (super.contentHandler!=null)
+        if (super.contentHandler!=null) {
             super.contentHandler.skippedEntity(name);
+        }
     }
 
     /**
@@ -223,8 +238,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void startDTD(String name, String publicId, String systemId)
     throws SAXException {
         log ("startDTD", "name="+name+",publicId="+publicId+",systemId="+systemId);
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.startDTD(name,publicId,systemId);
+        }
     }
 
     /**
@@ -233,8 +249,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void endDTD()
     throws SAXException {
         log ("endDTD", "");
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.endDTD();
+        }
     }
 
     /**
@@ -243,8 +260,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void startEntity(String name)
     throws SAXException {
         log ("startEntity", "name="+name);
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.startEntity(name);
+        }
     }
 
     /**
@@ -253,8 +271,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void endEntity(String name)
     throws SAXException {
         log ("endEntity", "name="+name);
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.endEntity(name);
+        }
     }
 
     /**
@@ -263,8 +282,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void startCDATA()
     throws SAXException {
         log ("startCDATA", "");
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.startCDATA();
+        }
     }
 
     /**
@@ -273,8 +293,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void endCDATA()
     throws SAXException {
         log ("endCDATA", "");
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.endCDATA();
+        }
     }
 
     /**
@@ -283,8 +304,9 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
     public void comment(char ch[], int start, int len)
     throws SAXException {
         log ("comment", new String(ch,start,len));
-        if (super.lexicalHandler!=null)
+        if (super.lexicalHandler!=null) {
             super.lexicalHandler.comment(ch,start,len);
+        }
     }
 
     /**
@@ -298,6 +320,7 @@ public class LogTransformer extends AbstractTransformer implements Poolable {
             logEntry.append ( "] " );
             logEntry.append ( description );
             logEntry.append ( lf );
+            getLogger().info(logEntry.toString());
             synchronized (logfile) {
                 try {
                     logfile.write( logEntry.toString(), 0, logEntry.length());
