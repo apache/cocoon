@@ -106,7 +106,7 @@ import java.util.HashMap;
  * @deprecated Use the avalon excalibur xslt processor instead.
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: XSLTProcessorImpl.java,v 1.1 2003/03/09 00:07:12 pier Exp $
+ * @version CVS $Id: XSLTProcessorImpl.java,v 1.2 2003/04/27 15:16:15 cziegeler Exp $
  * @version 1.0
  * @since   July 11, 2001
  */
@@ -287,7 +287,7 @@ public class XSLTProcessorImpl
 
             if (getLogger().isDebugEnabled())
                 this.getLogger().debug("XSLTProcessorImpl: starting transform");
-            // FIXME (VG): Is it possible to use Source's toSAX method?
+            // Is it possible to use Source's toSAX method?
             handler.setResult(result);
             source.toSAX(handler);
 
@@ -335,7 +335,7 @@ public class XSLTProcessorImpl
         _factory.setErrorListener(this.errorHandler);
         _factory.setURIResolver(this);
 
-        // FIXME (SM): implementation-specific parameter passing should be
+        // implementation-specific parameter passing should be
         // made more extensible.
         if (_factory.getClass().getName().equals("org.apache.xalan.processor.TransformerFactoryImpl")) {
             _factory.setAttribute("http://xml.apache.org/xalan/features/incremental",

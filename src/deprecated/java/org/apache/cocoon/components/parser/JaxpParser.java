@@ -105,7 +105,7 @@ import java.io.IOException;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: JaxpParser.java,v 1.1 2003/03/09 00:06:57 pier Exp $
+ * @version CVS $Id: JaxpParser.java,v 1.2 2003/04/27 15:16:16 cziegeler Exp $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, Composable, Parameterizable, Disposable, Poolable {
@@ -182,8 +182,6 @@ implements Parser, ErrorHandler, Composable, Parameterizable, Disposable, Poolab
                 throw new ParameterException("Cannot load SAXParserFactory class " + className, e);
             }
         }
-        // FIXME(VG): This always prints "SAXParserFactory: null"
-        // getLogger().debug("SAXParserFactory: " + ClassUtils.which(factory.getClass()));
         factory.setNamespaceAware(true);
         factory.setValidating(validate);
 
@@ -200,8 +198,6 @@ implements Parser, ErrorHandler, Composable, Parameterizable, Disposable, Poolab
                 throw new ParameterException("Cannot load DocumentBuilderFactory class " + className, e);
             }
         }
-        // FIXME(VG): This always prints "DocumentBuilderFactory: null"
-        // getLogger().debug("DocumentBuilderFactory: " + ClassUtils.which(docFactory.getClass()));
 
         docFactory.setNamespaceAware(true);
         docFactory.setValidating(validate);
