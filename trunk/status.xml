@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.74 2003/07/04 08:59:23 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.75 2003/07/04 11:20:51 cziegeler Exp $:-->
 <status>
 
   <developers>
@@ -183,7 +183,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
-  <action dev="NN" type="add">Dummy action</action>
+  <action dev="CZ" type="fix" fixes-bug="20115" due-to="Tim Goodwin" due-to-email="tjg@star.le.ac.uk">
+    Applied patch for implementing exists for the xmldb source.
+  </action>
  </release>
  <release version="2.1m3" date="July 5 2003">
   <action dev="JH" type="update">
