@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,53 +83,61 @@ public final class SourceUtil {
     }
 
     /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
+     * Generates SAX events from the given source.
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX( Source source,
-                              ContentHandler handler)
+    static public void toSAX(Source source,
+                             ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+        toSAX(CocoonComponentManager.getSitemapComponentManager(),
               source, null, handler);
     }
 
     /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
+     * Generates SAX events from the given source by using XMLizer.
+     * Current sitemap manager will be used to lookup XMLizer.
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX( Source source,
-                                String mimeTypeHint,
-                              ContentHandler handler)
+    static public void toSAX(Source source,
+                             String mimeTypeHint,
+                             ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+        toSAX(CocoonComponentManager.getSitemapComponentManager(),
               source, mimeTypeHint, handler);
     }
 
     /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care
-     * should be taken that <code>handler</code> can actually directly implement
-     * the LexicalHandler interface!
+     * Generates SAX events from the given source by using XMLizer.
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      * @deprecated Use the {@link #toSAX(ServiceManager, Source, String, ContentHandler)}
      *             method instead.
      */
-    static public void toSAX(ComponentManager manager, Source source,
+    static public void toSAX(ComponentManager manager,
+                             Source source,
                              String mimeTypeHint,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
+        if (source instanceof XMLizable) {
             try {
-                ((XMLizable)source).toSAX( handler );
+                ((XMLizable) source).toSAX(handler);
             } catch (SAXException e) {
                 // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
                 // See also FileGenerator.generate()
@@ -149,130 +157,140 @@ public final class SourceUtil {
             }
         } else {
             String mimeType = source.getMimeType();
-            if ( null == mimeType) mimeType = mimeTypeHint;
+            if (null == mimeType) {
+                mimeType = mimeTypeHint;
+            }
             XMLizer xmlizer = null;
             try {
-                xmlizer = (XMLizer) manager.lookup( XMLizer.ROLE);
-                xmlizer.toSAX( source.getInputStream(),
-                               mimeType,
-                               source.getURI(),
-                               handler );
+                xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
+                xmlizer.toSAX(source.getInputStream(),
+                              mimeType,
+                              source.getURI(),
+                              handler);
             } catch (SourceException se) {
                 throw SourceUtil.handle(se);
             } catch (ComponentException ce) {
                 throw new ProcessingException("Exception during streaming source.", ce);
             } finally {
-                manager.release( (Component)xmlizer );
+                manager.release((Component) xmlizer);
             }
         }
     }
 
     /**
      * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX( ServiceManager manager, Source source,
-                                String mimeTypeHint,
-                                ContentHandler handler)
+    static public void toSAX(ServiceManager manager,
+                             Source source,
+                             String mimeTypeHint,
+                             ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
-            ((XMLizable)source).toSAX( handler );
+        if (source instanceof XMLizable) {
+            ((XMLizable) source).toSAX(handler);
         } else {
             String mimeType = source.getMimeType();
-            if ( null == mimeType) mimeType = mimeTypeHint;
+            if (null == mimeType) mimeType = mimeTypeHint;
             XMLizer xmlizer = null;
             try {
-                xmlizer = (XMLizer) manager.lookup( XMLizer.ROLE);
-                xmlizer.toSAX( source.getInputStream(),
-                               mimeType,
-                               source.getURI(),
-                               handler );
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ServiceException ce) {
-                throw new ProcessingException("Exception during streaming source.", ce);
+                xmlizer = (XMLizer) manager.lookup(XMLizer.ROLE);
+                xmlizer.toSAX(source.getInputStream(),
+                              mimeType,
+                              source.getURI(),
+                              handler);
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            } catch (ServiceException e) {
+                throw new ProcessingException("Exception during streaming source.", e);
             } finally {
-                manager.release( xmlizer );
+                manager.release(xmlizer);
             }
         }
     }
 
     /**
      * Generates SAX events from the given source by parsing it.
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      * @deprecated Use {@link #parse(ServiceManager, Source, ContentHandler)}.
      */
-    static public void parse( ComponentManager manager, 
-                                Source source,
-                                ContentHandler handler)
+    static public void parse(ComponentManager manager,
+                             Source source,
+                             ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
-            ((XMLizable)source).toSAX( handler );
+        if (source instanceof XMLizable) {
+            ((XMLizable) source).toSAX(handler);
         } else {
             SAXParser parser = null;
             try {
-                parser = (SAXParser) manager.lookup( SAXParser.ROLE);
-                parser.parse( getInputSource( source ), handler );
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ComponentException ce) {
-                throw new ProcessingException("Exception during parsing source.", ce);
+                parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+                parser.parse(getInputSource(source), handler);
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            } catch (ComponentException e) {
+                throw new ProcessingException("Exception during parsing source.", e);
             } finally {
-                manager.release( (Component)parser );
+                manager.release((Component) parser);
             }
         }
     }
 
     /**
      * Generates SAX events from the given source by parsing it.
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void parse( ServiceManager manager, 
-                              Source source,
-                              ContentHandler handler)
+    static public void parse(ServiceManager manager,
+                             Source source,
+                             ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
-            ((XMLizable)source).toSAX( handler );
+        if (source instanceof XMLizable) {
+            ((XMLizable) source).toSAX(handler);
         } else {
             SAXParser parser = null;
             try {
-                parser = (SAXParser) manager.lookup( SAXParser.ROLE);
-                parser.parse( getInputSource( source ), handler );
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ServiceException ce) {
-                throw new ProcessingException("Exception during parsing source.", ce);
+                parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+                parser.parse(getInputSource(source), handler);
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            } catch (ServiceException e) {
+                throw new ProcessingException("Exception during parsing source.", e);
             } finally {
-                manager.release( parser );
+                manager.release(parser);
             }
         }
     }
 
     /**
      * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * 
+     *
+     * <p><b>NOTE</b>: If the implementation can produce lexical events,
+     * care should be taken that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!</p>
+     *
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX( Source         source,
-                              ContentHandler   handler,
-                              Parameters       typeParameters,
-                              boolean         filterDocumentEvent)
+    static public void toSAX(Source source,
+                             ContentHandler handler,
+                             Parameters typeParameters,
+                             boolean filterDocumentEvent)
     throws SAXException, IOException, ProcessingException {
         // Test for url rewriting
         if (typeParameters != null
@@ -315,7 +333,7 @@ public final class SourceUtil {
 
         return document;
     }
-    
+
     /**
      * Generates a DOM from the given source
      * @param source The data
@@ -365,14 +383,13 @@ public final class SourceUtil {
 
         return document;
     }
-    
+
     /**
-     * Make a ProcessingException from a SourceException
-     * If the exception is a SourceNotFoundException than a
-     * ResourceNotFoundException is thrown
+     * Make a ProcessingException from a SourceException.
+     * If the exception is a SourceNotFoundException then a
+     * ResourceNotFoundException is thrown.
      *
      * @param se Source exception
-     *
      * @return Created processing exception.
      */
     static public ProcessingException handle(SourceException se) {
@@ -384,13 +401,12 @@ public final class SourceUtil {
     }
 
     /**
-     * Make a ProcessingException from a SourceException
-     * If the exception is a SourceNotFoundException than a
-     * ResourceNotFoundException is thrown
+     * Make a ProcessingException from a SourceException.
+     * If the exception is a SourceNotFoundException then a
+     * ResourceNotFoundException is thrown.
      *
      * @param message Additional exception message.
      * @param se Source exception.
-     *
      * @return Created processing exception.
      */
     static public ProcessingException handle(String message,
@@ -399,6 +415,31 @@ public final class SourceUtil {
             return new ResourceNotFoundException(message, se);
         }
         return new ProcessingException(message, se);
+    }
+
+    /**
+     * Handle SAXException catched in Generator's generate method.
+     *
+     * @param source Generator's source
+     * @param e SAXException happened in the generator's generate method.
+     */
+    static public void handleSAXException(String source, SAXException e)
+    throws ProcessingException, IOException, SAXException {
+        final Exception cause = e.getException();
+        if (cause != null) {
+            if (cause instanceof ProcessingException) {
+                throw (ProcessingException)cause;
+            }
+            if (cause instanceof IOException) {
+                throw (IOException)cause;
+            }
+            if (cause instanceof SAXException) {
+                throw (SAXException)cause;
+            }
+            throw new ProcessingException("Could not read resource " +
+                                          source, cause);
+        }
+        throw e;
     }
 
     /**
@@ -440,33 +481,31 @@ public final class SourceUtil {
      * @throws SAXException If a SAX exception occurs.
      * @throws SourceException If the source an exception throws.
      */
-    static public Source getSource( String           uri,
-                                    Parameters       typeParameters,
-                                    SourceParameters resourceParameters,
-                                    SourceResolver   resolver)
+    static public Source getSource(String uri,
+                                   Parameters typeParameters,
+                                   SourceParameters resourceParameters,
+                                   SourceResolver resolver)
     throws IOException, SAXException, SourceException {
 
         // first step: encode parameters which are already appended to the url
         int queryPos = uri.indexOf('?');
-
-        if (queryPos!=-1) {
+        if (queryPos != -1) {
             String queryString = uri.substring(queryPos+1);
             SourceParameters queries = new SourceParameters(queryString);
 
             if (queries.hasParameters()) {
-                StringBuffer buffer;
-
-                buffer = new StringBuffer(uri.substring(0, queryPos));
-                String current;
-                Iterator iter = queries.getParameterNames();
+                StringBuffer buffer = new StringBuffer(uri.substring(0, queryPos));
                 char separator = '?';
-                Iterator values;
 
+                Iterator iter = queries.getParameterNames();
                 while (iter.hasNext()==true) {
-                    current = (String) iter.next();
-                    values = queries.getParameterValues(current);
+                    String current = (String) iter.next();
+                    Iterator values = queries.getParameterValues(current);
                     while (values.hasNext()) {
-                        buffer.append(separator).append(current).append('=').append(org.apache.excalibur.source.SourceUtil.encode((String) values.next()));
+                        buffer.append(separator)
+                                .append(current)
+                                .append('=')
+                                .append(org.apache.excalibur.source.SourceUtil.encode((String) values.next()));
                         separator = '&';
                     }
                 }
@@ -482,8 +521,8 @@ public final class SourceUtil {
                 !resourceParameters.hasParameters())) {
             method = "GET";
         }
-        if (uri.startsWith("cocoon:") && (resourceParameters!=null) &&
-            resourceParameters.hasParameters()) {
+        if (uri.startsWith("cocoon:") && resourceParameters != null &&
+                resourceParameters.hasParameters()) {
             int pos = uri.indexOf(";jsessionid=");
 
             if (uri.startsWith("cocoon:")==false) {
@@ -512,8 +551,8 @@ public final class SourceUtil {
         if (typeParameters != null) {
             String encoding = typeParameters.getParameter("encoding",
                  System.getProperties().getProperty("file.encoding", "ISO-8859-1"));
-            if ( encoding != null && !"".equals(encoding) ) {
-                resolverParameters.put(SourceResolver.URI_ENCODING, encoding);                
+            if (encoding != null && !"".equals(encoding)) {
+                resolverParameters.put(SourceResolver.URI_ENCODING, encoding);
             }
         }
         resolverParameters.put(SourceResolver.URI_PARAMETERS,
@@ -536,7 +575,7 @@ public final class SourceUtil {
      * May be <code>null</code>
      * @param frag DOM fragment to serialize to the Source
      * @param resolver Resolver for the source.
-     * @param serializerName
+     * @param serializerName The serializer to use
      *
      * @throws ProcessingException
      */
@@ -547,7 +586,6 @@ public final class SourceUtil {
                                 SourceResolver resolver,
                                 String serializerName)
     throws ProcessingException {
-
         Source source = null;
 
         try {
@@ -558,51 +596,51 @@ public final class SourceUtil {
 
                 frag.normalize();
 
-                if ( null != serializerName) {
-					ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+                if (null != serializerName) {
+                    ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
 
-	                ComponentSelector selector = null;
-	                Serializer serializer = null;
-	                OutputStream oStream = null;
-	                try {
-	                     selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
-	                     serializer = (Serializer)selector.select(serializerName);
-	                     oStream = ws.getOutputStream();
-	                     serializer.setOutputStream(oStream);
-                         serializer.startDocument();
-	                     DOMStreamer streamer = new DOMStreamer(serializer);
-	                     streamer.stream(frag);
-                         serializer.endDocument();
-	                } catch (ComponentException e) {
-	                	throw new ProcessingException("Unable to lookup serializer.", e);
-					} finally {
-	                    if (oStream != null) {
-	                        oStream.flush();
-	                        try {
-	                            oStream.close();
-	                        } catch (Exception ignore) {
+                    ComponentSelector selector = null;
+                    Serializer serializer = null;
+                    OutputStream oStream = null;
+                    try {
+                        selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+                        serializer = (Serializer)selector.select(serializerName);
+                        oStream = ws.getOutputStream();
+                        serializer.setOutputStream(oStream);
+                        serializer.startDocument();
+                        DOMStreamer streamer = new DOMStreamer(serializer);
+                        streamer.stream(frag);
+                        serializer.endDocument();
+                    } catch (ComponentException e) {
+                        throw new ProcessingException("Unable to lookup serializer.", e);
+                    } finally {
+                        if (oStream != null) {
+                            oStream.flush();
+                            try {
+                                oStream.close();
+                            } catch (Exception ignore) {
                             }
                         }
-						if ( selector != null ) {
-							selector.release( serializer );
-							manager.release( selector );
-						}
-	                }
+                        if (selector != null) {
+                            selector.release(serializer);
+                            manager.release(selector);
+                        }
+                    }
                 } else {
                     Properties props = XMLUtils.createPropertiesForXML(false);
                     props.put(OutputKeys.ENCODING, "ISO-8859-1");
-	                final String content = XMLUtils.serializeNode(frag, props);
-	                OutputStream oStream = ws.getOutputStream();
-	
-	                oStream.write(content.getBytes());
-	                oStream.flush();
-	                oStream.close();
+                    final String content = XMLUtils.serializeNode(frag, props);
+                    OutputStream oStream = ws.getOutputStream();
+
+                    oStream.write(content.getBytes());
+                    oStream.flush();
+                    oStream.close();
                 }
             } else {
-            	String content;
-				if ( null != serializerName) {
-					ComponentManager  manager = CocoonComponentManager.getSitemapComponentManager();
-                    
+                String content;
+                if (null != serializerName) {
+                    ComponentManager  manager = CocoonComponentManager.getSitemapComponentManager();
+
                     ComponentSelector selector = null;
                     Serializer serializer = null;
                     ByteArrayOutputStream oStream = new ByteArrayOutputStream();
@@ -614,8 +652,8 @@ public final class SourceUtil {
                         DOMStreamer streamer = new DOMStreamer(serializer);
                         streamer.stream(frag);
                         serializer.endDocument();
-					} catch (ComponentException e) {
-						throw new ProcessingException("Unable to lookup serializer.", e);
+                    } catch (ComponentException e) {
+                        throw new ProcessingException("Unable to lookup serializer.", e);
                     } finally {
                         if (oStream != null) {
                             oStream.flush();
@@ -624,24 +662,25 @@ public final class SourceUtil {
                             } catch (Exception ignore) {
                             }
                         }
-						if ( selector != null ) {
-							selector.release( serializer );
-							manager.release( selector );
-						}
+                        if (selector != null) {
+                            selector.release(serializer);
+                            manager.release(selector);
+                        }
                     }
-					content = oStream.toString();
-				} else {
+                    content = oStream.toString();
+                } else {
                     Properties props = XMLUtils.createPropertiesForXML(false);
                     props.put(OutputKeys.ENCODING, "ISO-8859-1");
                     content = XMLUtils.serializeNode(frag, props);
-				}
-				
-                if (parameters==null) {
+                }
+
+                if (parameters == null) {
                     parameters = new SourceParameters();
                 } else {
                     parameters = (SourceParameters) parameters.clone();
                 }
                 parameters.setSingleParameterValue("content", content);
+
                 source = SourceUtil.getSource(location, typeParameters,
                                               parameters, resolver);
                 SourceUtil.toSAX(source, new DefaultHandler());
@@ -652,8 +691,6 @@ public final class SourceUtil {
             throw new ProcessingException(ce);
         } catch (SAXException ce) {
             throw new ProcessingException(ce);
-            // } catch (ComponentException ce) {
-            // throw new ProcessingException("Exception during lookup of component.", ce);
         } finally {
             resolver.release(source);
         }
@@ -704,8 +741,8 @@ public final class SourceUtil {
     }
 
     /**
-     * Return the scheme of a URI. Just as there are many different methods 
-     * of access to resources, there are a variety of schemes for identifying 
+     * Return the scheme of a URI. Just as there are many different methods
+     * of access to resources, there are a variety of schemes for identifying
      * such resources.
      * (see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>).
      *
@@ -746,8 +783,8 @@ public final class SourceUtil {
     }
 
     /**
-     * Return the path of a URI. The path contains data, specific to the 
-     * authority (or the scheme if there is no authority component), 
+     * Return the path of a URI. The path contains data, specific to the
+     * authority (or the scheme if there is no authority component),
      * identifying the resource within the scope of that scheme and authority
      * (see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>).
      *
@@ -767,7 +804,7 @@ public final class SourceUtil {
     }
 
     /**
-     * Return the path of a URI, if the URI can't contains a authority. 
+     * Return the path of a URI, if the URI can't contains a authority.
      * This implementation differ to the RFC 2396.
      *
      * @param uri Uniform resource identifier.
@@ -786,7 +823,7 @@ public final class SourceUtil {
     }
 
     /**
-     * Return the query of a URI. The query is a string of information to 
+     * Return the query of a URI. The query is a string of information to
      * be interpreted by the resource
      * (see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>).
      *
@@ -806,10 +843,10 @@ public final class SourceUtil {
     }
 
     /**
-     * Return the fragment of a URI. When a URI reference is used to perform 
-     * a retrieval action on the identified resource, the optional fragment 
-     * identifier, consists of additional reference information to be 
-     * interpreted by the user agent after the retrieval action has been 
+     * Return the fragment of a URI. When a URI reference is used to perform
+     * a retrieval action on the identified resource, the optional fragment
+     * identifier, consists of additional reference information to be
+     * interpreted by the user agent after the retrieval action has been
      * successfully completed
      * (see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>).
      *
