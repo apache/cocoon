@@ -59,7 +59,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
-import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -87,7 +86,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.18 2003/10/09 07:09:59 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.19 2003/10/21 13:37:42 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -103,9 +102,6 @@ implements SourceResolver
 
     /** The configured {@link SourceResolver} */
     private SourceResolver sourceResolver;
-
-    /** The {@link RoleManager} */
-    private RoleManager roleManager;
 
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
@@ -288,14 +284,6 @@ implements SourceResolver
         return null;
     }
     
-    /**
-     * Configure the RoleManager
-     */
-    public void setRoleManager( final RoleManager roles ) {
-        super.setRoleManager( roles );
-        this.roleManager = roles;
-    }
-
     /**
      * Return an instance of a component based on a Role.  The Role is usually the Interface's
      * Fully Qualified Name(FQN)--unless there are multiple Components for the same Role.  In that
