@@ -62,6 +62,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * RequestAttributeModule accesses request attributes. If the
@@ -71,7 +73,7 @@ import java.util.Map;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestAttributeModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: RequestAttributeModule.java,v 1.2 2003/04/23 13:37:35 haul Exp $
  */
 public class RequestAttributeModule extends AbstractInputModule implements ThreadSafe {
 
@@ -121,15 +123,22 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
             } else {
                 suffix = "";
             }
-            List values = new LinkedList();
-            Enumeration names = request.getAttributeNames();
+            SortedSet names = new TreeSet();
+            Enumeration allNames = request.getAttributeNames();
 
-            while (names.hasMoreElements()) {
-                String pname = (String) names.nextElement();
-                if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
-                    values.add( request.getAttribute( pname ) );
-                }
-            }
+           while (allNames.hasMoreElements()) {
+               String pname = (String) allNames.nextElement();
+               if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
+                   names.add(pname);
+               }
+           }
+
+           List values = new LinkedList();
+           Iterator j = names.iterator();
+           while (j.hasNext()){
+               String pname = (String) j.next();
+               values.add( request.getAttribute( pname ) );
+           }
 
             return values.toArray();
 
