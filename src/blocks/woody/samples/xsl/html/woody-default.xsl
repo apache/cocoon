@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
+<!--
+   | WARNING: this XSL is not maintained anymore. Please use instead the XSL's
+   |          found in the woody/samples/resources directory, which provide
+   |          much more features. This XSL will be removed in the future.
+   -->
 <xsl:stylesheet
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

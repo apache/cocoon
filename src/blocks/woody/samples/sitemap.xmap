@@ -201,7 +201,6 @@
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
-       <map:transform src="xsl/html/woody-default.xsl"/>
        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>
@@ -209,6 +208,7 @@
          <map:parameter name="file" value="forms/form1_template.xml"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform> 
+       <map:transform src="resources/woody-samples-styling.xsl"/>
        <map:serialize/>
      </map:match>
 
@@ -258,7 +258,6 @@
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
-       <map:transform src="xsl/html/woody-default.xsl"/>
        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="servletPath" value="{request:servletPath}"/>
@@ -266,6 +265,7 @@
          <map:parameter name="file" value="forms/registration_template.xml"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
+       <map:transform src="resources/woody-samples-styling.xsl"/>
        <map:serialize/>
      </map:match>
 
