@@ -131,7 +131,7 @@
       </p>
       <p>
         If the tag contains child elements it will scope the setting for the enclosed
-        elements, otherwise it is a global setting. You can't nest <jpath:set-lenient>
+        elements, otherwise it is a global setting. You can't nest &lt;jpath:set-lenient&gt;
         tags.
       </p>
       <source>
