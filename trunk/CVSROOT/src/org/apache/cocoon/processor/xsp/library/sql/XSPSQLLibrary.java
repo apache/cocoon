@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.4 $ $Date: 2000-05-01 06:27:36 $
+ * @version $Revision: 1.5 $ $Date: 2000-05-01 19:42:48 $
  */
 
 public class XSPSQLLibrary {
@@ -182,10 +182,23 @@ public class XSPSQLLibrary {
                 }
                 for (int i=0; i<columns.length; i++) {
 					Object value = rs.getObject(i+1);
-					System.err.println(value.toString());
-					System.err.println("CLASS: "+value.getClass().getName());
+					String formatted_value;
+					Format format = (Format)column_formats.get(columns[i].name);
+					if (value == null) {
+						formatted_value = "";
+					} else if (format == null) {
+						if (value instanceof byte[]) {
+							formatted_value = new String((byte[])value);
+						} else if (value instanceof char[]) {
+							formatted_value = new String((char[])value);
+						} else {
+							formatted_value = value.toString();
+						}
+					} else {
+						formatted_value = format.format(value);
+					}
                     if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
-                        row_element.setAttribute(id_attribute,value.toString());
+                        row_element.setAttribute(id_attribute,formatted_value);
                         continue;
                     }
                     if (value == null && !indicate_nulls) {
@@ -196,13 +209,6 @@ public class XSPSQLLibrary {
                         column_element.setAttribute("NULL","YES");
                         column_element.appendChild(document.createTextNode(""));
                     } else {
-						Format format = (Format)column_formats.get(columns[i].name);
-						String formatted_value;
-						if (format == null) {
-							formatted_value = value.toString();
-						} else {
-							formatted_value = format.format(value);
-						}
 						column_element.appendChild(document.createTextNode(formatted_value));
                     }
                     row_node.appendChild(column_element);
