@@ -79,10 +79,20 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="wi:styling/@type | wi:styling/@list-type |
-                       wi:styling/@list-orientation | wi:styling/@listbox-size"
+  <xsl:template match="wi:styling/@list-type | wi:styling/@list-orientation |
+                       wi:styling/@listbox-size"
                 mode="styling">
     <!-- They are just markers for the stylesheet and don't go through to HTML. -->
+  </xsl:template>
+
+  <xsl:template match="wi:styling/@type" priority="2">
+    <!--+ Do we have a duplicate semantic usage of @type??
+        | @type is only a marker for the stylesheet in general, but for
+        | value 'password' we need to copy it.
+        +-->
+    <xsl:if test=". = 'password'">
+      <xsl:copy-of select="."/>      
+    </xsl:if>
   </xsl:template>
 
   <!--+
