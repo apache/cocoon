@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page
+          language="java"
+          xmlns:xsp="http://apache.org/xsp"
+	  xmlns:esql="http://apache.org/cocoon/SQL/v2"
+>
+  <page>
+    <title>Add an Employee</title>
+    <content>
+      <form action="process-employee" method="POST">
+        <input name="process" type="hidden" value="Add"/>
+        <para>Employee Name: <input name="name" type="text"/></para>
+        <para>Department:
+          <select name="department">
+      <esql:execute-query inner-method="no">
+        <esql:driver>postgresql.Driver</esql:driver>
+        <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+        <esql:username>test</esql:username>
+        <esql:password>test</esql:password>
+        <esql:query>select id, name from department_table order by name</esql:query>
+        <esql:results>
+	  <option>
+            <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
+            <esql:get-string column="name"/>
+          </option>
+        </esql:results>
+      </esql:execute-query>
+          </select>
+        </para>
+        <input type="submit" value="Add"/>
+      </form>
+    </content>
+  </page>
+</xsp:page>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page
+          language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:xsp-request="http://apache.org/xsp/request"
+>
+  <xsp:logic>
+    String process = null;
+    String name = null;
+    int currId = -1;
+  </xsp:logic>
+  <page>
+    <xsp:logic>
+      process = <xsp-request:get-parameter name="process"/>;
+      name = <xsp-request:get-parameter name="name"/>;
+    </xsp:logic>
+    <title><xsp:expr>process</xsp:expr> Department Processed</title>
+    <content>
+      <esql:execute-query inner-method="no">
+        <esql:driver>postgresql.Driver</esql:driver>
+        <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+        <esql:username>test</esql:username>
+        <esql:password>test</esql:password>
+        <esql:query>
+	   select max(id) as maxid from department_table
+	</esql:query>
+        <esql:results>
+	  <xsp:logic>
+            currId = <esql:get-int column="maxid"/>;
+	  </xsp:logic>
+          <esql:execute-query inner-method="yes">
+            <esql:statement>
+              insert into department_table (id, name) values (
+                (<esql:parameter><xsp:expr>currId</xsp:expr></esql:parameter> + 1),
+                <esql:parameter><xsp:expr>name</xsp:expr></esql:parameter>
+              )
+            </esql:statement>
+          </esql:execute-query>
+        </esql:results>
+      </esql:execute-query>
+
+      <para><xsp:expr>name</xsp:expr> added</para>
+      <a href="../welcome">Back to the welcome page</a>
+    </content>
+  </page>
+</xsp:page>
