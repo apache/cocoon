@@ -80,10 +80,10 @@ public class RepeaterDefinition extends AbstractWidgetDefinition {
     }
 
     public Widget createInstance() {
-        Repeater result = new Repeater(this);
-        for (int i = 0; i < this.initialSize; i++) {
-            result.addRow();
-        }
-        return result;
+        return new Repeater(this);
+    }
+    
+    public int getInitialSize() {
+        return this.initialSize;
     }
 }
