@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.83 2000-06-07 19:47:46 balld Exp $
+  $Id: changes.xml,v 1.84 2000-06-13 22:28:34 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Matthias Brunner" due-to-email="mb@blumenstrasse.vol.at">
+   Fixed typo on util.xsl that generated XSP compilation problems for the util taglib.
+  </action>
   <action dev="DB" type="fix" due-to="Peter Seiderer" due-to-email="Peter.Seiderer@ciselant.de">
    Patched sql processor documentation to be fully up to date! Hoorah!
   </action>
