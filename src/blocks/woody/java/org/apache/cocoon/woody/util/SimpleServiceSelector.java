@@ -107,7 +107,7 @@ public class SimpleServiceSelector extends AbstractLogEnabled implements Service
                 LifecycleHelper lifecycleHelper = new LifecycleHelper(getLogger(), null, serviceManager, null, null, componentConfs[i]);
                 lifecycleHelper.setupComponent(component);
             } catch (Exception e) {
-                throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i], e);
+                throw new ConfigurationException("Error creating " + hintShortHand + " declared at " + componentConfs[i].getLocation(), e);
             }
 
             components.put(name, component);
