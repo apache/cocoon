@@ -28,6 +28,15 @@
     new version removes these bottlenecks and gives more flexibility, usability and performance.
    </p>
  </s1>
+  <s1 title="Sitemap">
+  <p>There are some changes in the sitemap and the configuration of some components in
+     the sitemap.</p>
+  <s2 title="FOP Serializer">
+  <p>FOP serializer's &lt;user-config&gt; relative path now resolves relative
+    to sitemap's directory. All Cocoon URIs are supported too.
+  </p>
+  </s2>
+  </s1>
   <s1 title="Components">
   <p>
     The Cocoon architecture has had some significant changes. However, great care has been
