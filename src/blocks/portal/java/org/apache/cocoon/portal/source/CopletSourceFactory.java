@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -36,13 +39,14 @@ import org.apache.excalibur.source.SourceFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.6 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: CopletSourceFactory.java,v 1.7 2004/04/19 14:47:31 cziegeler Exp $
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
-    implements SourceFactory, Serviceable, ThreadSafe {
+    implements SourceFactory, Serviceable, ThreadSafe, Contextualizable {
 
     protected ServiceManager manager;
+    protected Context context;
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -51,6 +55,13 @@ public class CopletSourceFactory
         this.manager = serviceManager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+    
 	/**
 	 * @see org.apache.excalibur.source.SourceFactory#getSource(String, Map)
 	 */
@@ -74,8 +85,11 @@ public class CopletSourceFactory
             CopletSource copletSource =
                 new CopletSource(uri, protocol,
                                  coplet);
+            copletSource.contextualize(this.context);
             copletSource.service(this.manager);
             return copletSource;
+        } catch (ContextException ce) {
+            throw new SourceException("Unable to lookup profile manager.", ce);
         } catch (ServiceException ce) {
             throw new SourceException("Unable to lookup profile manager.", ce);
         } finally {
