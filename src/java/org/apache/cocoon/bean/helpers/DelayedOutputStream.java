@@ -60,7 +60,7 @@ import java.io.OutputStream;
  *
  * @author    huber@apache.org
  * @author    uv@upaya.co.uk
- * @version CVS $Id: DelayedOutputStream.java,v 1.4 2003/09/18 12:11:50 upayavira Exp $
+ * @version CVS $Id: DelayedOutputStream.java,v 1.5 2003/10/07 09:59:17 upayavira Exp $
  */
 public class DelayedOutputStream extends OutputStream {
     /**
@@ -250,6 +250,7 @@ public class DelayedOutputStream extends OutputStream {
             throw new IOException("No outputstream available!");
         }
     }
+
     /**
      * Gets the size of the content of the current output stream
      */
@@ -258,5 +259,16 @@ public class DelayedOutputStream extends OutputStream {
             return baos.size();
         }
         return 0;
+    }
+
+    /**
+     * Return the contents of the stream as a byte array
+     */
+    public byte[] getContent() {
+        if (baos != null) {
+            return baos.toByteArray();
+        } else {
+            return null;
+        }
     }
 }

@@ -82,7 +82,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.19 2003/09/26 17:08:08 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.20 2003/10/07 09:59:17 upayavira Exp $
  */
 public class Main {
 
@@ -144,7 +144,8 @@ public class Main {
     private static final String NODE_WORK_DIR = "work-dir";
     private static final String NODE_CONFIG_FILE = "config-file";
     private static final String NODE_URI_FILE = "uri-file";
-
+    private static final String NODE_CHECKSUMS_URI = "checksums-uri";
+ 
     private static final String NODE_BROKEN_LINKS = "broken-links";
     private static final String ATTR_BROKEN_LINK_REPORT_TYPE = "type";
     private static final String ATTR_BROKEN_LINK_REPORT_FILE = "file";
@@ -471,7 +472,6 @@ public class Main {
             if (Main.hasAttribute(root, ATTR_CONFIRM_EXTENSIONS)) {
                 cocoon.setConfirmExtensions(Main.getBooleanAttributeValue(root, ATTR_CONFIRM_EXTENSIONS));
             }
-
             if (destDir == null || destDir.length() == 0) {
                 destDir = getNodeValue(root, NODE_DEST_DIR);
             }
@@ -502,6 +502,9 @@ public class Main {
                     } else if (nodeName.equals(NODE_WORK_DIR)) {
                         cocoon.setWorkDir(getNodeValue(node));
 
+                    } else if (nodeName.equals(NODE_CHECKSUMS_URI)) {
+                        cocoon.setChecksumURI(getNodeValue(node));
+                        
                     } else if (nodeName.equals(NODE_AGENT)) {
                         cocoon.setAgentOptions(getNodeValue(node));
 
