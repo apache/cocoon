@@ -55,10 +55,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceFactory;
-import org.apache.excalibur.source.SourceResolver;
+
+import org.apache.excalibur.source.*;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -77,11 +75,11 @@ import org.apache.cocoon.environment.Context;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.3 2003/06/07 21:19:36 bruno Exp $
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, Composable, Disposable, Contextualizable, ThreadSafe
+    implements SourceFactory, Composable, Disposable, Contextualizable, ThreadSafe, URIAbsolutizer
 {
 
     /** The context */
@@ -178,5 +176,8 @@ public class ContextSourceFactory
             this.resolver.release( source );
         }
     }
-    
+
+    public String absolutize(String baseURI, String location) {
+        return SourceUtil.absolutize(baseURI, location, true);
+    }
 }
