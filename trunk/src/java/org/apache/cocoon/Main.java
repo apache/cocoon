@@ -50,11 +50,17 @@
 */
 package org.apache.cocoon;
 
-import java.io.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -81,7 +87,7 @@ import org.apache.cocoon.bean.BeanListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.8 2003/06/27 13:50:37 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.9 2003/06/27 18:31:41 upayavira Exp $
  */
 public class Main {
 
