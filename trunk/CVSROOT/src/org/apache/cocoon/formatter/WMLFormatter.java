@@ -1,4 +1,4 @@
-/*-- $Id: WMLFormatter.java,v 1.4 2000-01-06 17:57:50 stefano Exp $ -- 
+/*-- $Id: WMLFormatter.java,v 1.5 2000-01-17 19:00:14 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.apache.cocoon.framework.*;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-06 17:57:50 $
+ * @version $Revision: 1.5 $ $Date: 2000-01-17 19:00:14 $
  */
 
 public class WMLFormatter extends AbstractFormatter implements Status {
@@ -75,6 +75,7 @@ public class WMLFormatter extends AbstractFormatter implements Status {
         format.setMethod(Method.XML);
         format.setOmitXMLDeclaration(false);
         format.setPreserveSpace(false);
+        format.setEncoding(null);
         format.setDoctype("-//WAPFORUM//DTD WML 1.1//EN", "http://www.wapforum.org/DTD/wml_1.1.xml");
         Serializer serializer = this.factory.makeSerializer(writer, format);
         serializer.asDOMSerializer().serialize(document);
