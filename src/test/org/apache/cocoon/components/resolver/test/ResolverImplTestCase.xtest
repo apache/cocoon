@@ -95,7 +95,7 @@
        </stream>
      </targets>
      <categories>
-       <category name="test" log-level="DEBUG">
+       <category name="test" log-level="WARN">
          <log-target id-ref="root"/>
        </category>
      </categories>

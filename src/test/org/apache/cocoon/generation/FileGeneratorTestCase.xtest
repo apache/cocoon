@@ -18,17 +18,9 @@
    </stream>
   </targets>
   <categories>
-   <category name="test" log-level="DEBUG">
+   <category name="test" log-level="WARN">
     <log-target id-ref="root"/>
    </category>
-   <!-- Uncomment for ComponentManager and RoleManager debug
-   <category name="cm" log-level="DEBUG">
-    <log-target id-ref="root"/>
-   </category>
-   <category name="rm" log-level="DEBUG">
-    <log-target id-ref="root"/>
-   </category>
-   -->
   </categories>
  </logkit>
 
