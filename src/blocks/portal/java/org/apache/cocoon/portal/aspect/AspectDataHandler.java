@@ -48,47 +48,25 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.renderer.aspect.impl;
+package org.apache.cocoon.portal.aspect;
 
-import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.xml.XMLUtils;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import java.util.List;
 
 /**
- * This aspect streams a cinclude statement into the stream that
- * will include the coplet using the coplet protocol.
+ * This interface is able to get a stored aspect
+ * 
+ * TODO - check if this is ok
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CIncludeCopletAspect.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: AspectDataHandler.java,v 1.1 2003/05/07 20:24:02 cziegeler Exp $
  */
-public class CIncludeCopletAspect 
-    extends AbstractCIncludeAspect {
+public interface AspectDataHandler {
 
-    /* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
-	 */
-	public void toSAX(RendererAspectContext context,
-                		Layout layout,
-                		PortalService service,
-                		ContentHandler handler)
-	throws SAXException {
+    Object getAspectData(String objectId, String aspectName);
+    
+    void setAspectData(String objectId, String aspectName, Object data);
 
-        CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
-        
-        XMLUtils.startElement(handler, "content");
-
-        this.createCInclude("coplet://" + cid.getCopletId(), handler);
-
-        XMLUtils.endElement(handler, "content");
-        
-        context.invokeNext(layout, service, handler);
-	}
-
+    List getAspectDatas(String objectId);
 }

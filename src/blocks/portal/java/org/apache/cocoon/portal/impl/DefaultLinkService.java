@@ -73,14 +73,12 @@ import org.apache.cocoon.portal.event.RequestEvent;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.1 2003/05/07 06:22:26 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
     implements ThreadSafe, LinkService, Composable, Disposable {
 
-// FIXME - make public and use it in RequestParameter..
-    protected static final String REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
 
     class Info {
         StringBuffer  linkBase = new StringBuffer();
@@ -118,7 +116,7 @@ public class DefaultLinkService
                         buffer.append('?');
                     }
                     hasParams = true;
-                    String parameterName = REQUEST_EVENT_PARAMETER_NAME;
+                    String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
                     if (ce instanceof RequestEvent) {
                         parameterName = ((RequestEvent)ce).getRequestParameterName();
                     }
@@ -135,7 +133,7 @@ public class DefaultLinkService
         } else {
             buffer.append('?');
         }
-        String parameterName = REQUEST_EVENT_PARAMETER_NAME;
+        String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
         if (event instanceof RequestEvent) {
             parameterName = ((RequestEvent)event).getRequestParameterName();
         }
@@ -160,7 +158,7 @@ public class DefaultLinkService
                 buffer.append('?');
             }
             hasPars = true;
-            String parameterName = REQUEST_EVENT_PARAMETER_NAME;
+            String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
             if (current instanceof RequestEvent) {
                 parameterName = ((RequestEvent)current).getRequestParameterName();
             }

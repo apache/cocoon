@@ -50,15 +50,18 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import org.apache.cocoon.portal.aspect.Aspectalizable;
+
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.1 2003/05/07 06:22:24 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
  */
-public interface Layout extends Parameters {
+public interface Layout 
+    extends Parameters, Aspectalizable {
 
     /**
      * Get the name of the {@link Renderer} to draw this layout.

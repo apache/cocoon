@@ -50,15 +50,21 @@
 */
 package org.apache.cocoon.portal.layout;
 
+import java.util.List;
+
+import org.apache.cocoon.portal.aspect.AspectDataHandler;
+
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.1 2003/05/07 06:22:24 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
  */
-public abstract class AbstractLayout extends AbstractParameters implements Layout {
+public abstract class AbstractLayout 
+    extends AbstractParameters 
+    implements Layout {
     
     protected String rendererName;
     
@@ -68,6 +74,7 @@ public abstract class AbstractLayout extends AbstractParameters implements Layou
     
     protected boolean _static;
     
+    transient protected AspectDataHandler aspectDataHandler;
     
     /**
      * @see org.apache.cocoon.portal.layout.Layout#getRendererName()
@@ -117,4 +124,24 @@ public abstract class AbstractLayout extends AbstractParameters implements Layou
 		this._static = value;
 
 	}
+    
+    public Object getAspectData(String aspectName) {
+        return this.aspectDataHandler.getAspectData(this.getId(), aspectName);
+    }
+    
+    public void setAspectData(String aspectName, Object data) {
+        this.aspectDataHandler.setAspectData(this.getId(), aspectName, data);
+    }
+    
+    public List getAspectDatas() {
+        return this.aspectDataHandler.getAspectDatas(this.getId());
+    }
+    
+    /**
+     * This method is invoked once to set the handler
+     */
+    public void setAspectDataHandler(AspectDataHandler handler) {
+        this.aspectDataHandler = handler;
+    }
+    
 }

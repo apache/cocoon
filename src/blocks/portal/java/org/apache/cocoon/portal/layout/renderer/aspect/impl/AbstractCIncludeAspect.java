@@ -50,45 +50,38 @@
 */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.transformation.CIncludeTransformer;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This aspect streams a cinclude statement into the stream that
- * will include the coplet using the coplet protocol.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CIncludeCopletAspect.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: AbstractCIncludeAspect.java,v 1.1 2003/05/07 20:24:02 cziegeler Exp $
  */
-public class CIncludeCopletAspect 
-    extends AbstractCIncludeAspect {
+public abstract class AbstractCIncludeAspect 
+    extends AbstractAspect {
 
-    /* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
-	 */
-	public void toSAX(RendererAspectContext context,
-                		Layout layout,
-                		PortalService service,
-                		ContentHandler handler)
-	throws SAXException {
+    protected static final String PREFIX = "cinclude";
+    protected static final String NAMESPACE = CIncludeTransformer.CINCLUDE_NAMESPACE_URI;
+    protected static final String ELEMENT = CIncludeTransformer.CINCLUDE_INCLUDE_ELEMENT;
+    protected static final String QELEMENT= PREFIX + ":" + ELEMENT;
+    protected static final String ATTRIBUTE = CIncludeTransformer.CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE; 
 
-        CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
-        
-        XMLUtils.startElement(handler, "content");
-
-        this.createCInclude("coplet://" + cid.getCopletId(), handler);
-
-        XMLUtils.endElement(handler, "content");
-        
-        context.invokeNext(layout, service, handler);
-	}
+    /**
+     * Create the cinclude statement
+     */
+    protected void createCInclude(String source, ContentHandler handler)
+    throws SAXException {
+        handler.startPrefixMapping(PREFIX, NAMESPACE);
+        AttributesImpl attributes = new AttributesImpl();
+        attributes.addCDATAAttribute("src", source);
+        handler.startElement(NAMESPACE, ELEMENT, QELEMENT, attributes);
+        handler.endElement(NAMESPACE, ELEMENT, QELEMENT);
+        handler.endPrefixMapping(NAMESPACE);
+    }
 
 }

@@ -57,11 +57,14 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
+ * The renderer aspect context is passed to every renderer aspect.
+ * Using this context, a renderer aspect can get it's configuration
+ * and it can invoke (if wanted) the next aspect in the aspect chain.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectContext.java,v 1.1 2003/05/07 06:22:28 cziegeler Exp $
+ * @version CVS $Id: RendererAspectContext.java,v 1.2 2003/05/07 20:24:03 cziegeler Exp $
  */
 public interface RendererAspectContext {
     

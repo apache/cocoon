@@ -56,8 +56,6 @@ import org.apache.cocoon.portal.layout.impl.FrameLayout;
 import org.apache.cocoon.portal.layout.impl.FrameStatus;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.transformation.CIncludeTransformer;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -66,16 +64,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: FrameAspect.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
  */
-public class FrameAspect extends AbstractAspect {
-
-    // FIXME needs to be shared with CInludeCopletAspect
-    protected static final String PREFIX = "cinclude";
-    protected static final String NAMESPACE = CIncludeTransformer.CINCLUDE_NAMESPACE_URI;
-    protected static final String ELEMENT = CIncludeTransformer.CINCLUDE_INCLUDE_ELEMENT;
-    protected static final String QELEMENT = PREFIX + ":" + ELEMENT;
-    protected static final String ATTRIBUTE = CIncludeTransformer.CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE;
+public class FrameAspect extends AbstractCIncludeAspect {
 
     public void toSAX(RendererAspectContext context, Layout layout, PortalService service, ContentHandler handler)
         throws SAXException {
@@ -90,20 +81,7 @@ public class FrameAspect extends AbstractAspect {
         if (source == null) {
             source = ((FrameLayout) layout).getSource();
         }
-        /*
-        AttributesImpl attributes = new AttributesImpl();
-        handler.startPrefixMapping("portal", "urn:apache:cocoon:portal");
-        attributes.addCDATAAttribute("id", source);
-        handler.startElement("urn:apache:cocoon:portal", "content-source", "portal:content-source", attributes);
-        handler.endElement("urn:apache:cocoon:portal", "content-source", "portal:content-source");
-        handler.endPrefixMapping("portal");
-        */
-
-        handler.startPrefixMapping(PREFIX, NAMESPACE);
-        AttributesImpl attributes = new AttributesImpl();
-        attributes.addCDATAAttribute("src", source);
-        handler.startElement(NAMESPACE, ELEMENT, QELEMENT, attributes);
-        handler.endElement(NAMESPACE, ELEMENT, QELEMENT);
-        handler.endPrefixMapping(NAMESPACE);
+        
+        this.createCInclude(source, handler);
     }
 }

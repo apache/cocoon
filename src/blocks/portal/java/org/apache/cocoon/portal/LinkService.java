@@ -60,11 +60,13 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LinkService.java,v 1.1 2003/05/07 06:22:28 cziegeler Exp $
+ * @version CVS $Id: LinkService.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
  */
 public interface LinkService extends Component {
 
     String ROLE = LinkService.class.getName();
+    
+    String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
     
     String getLinkURI(Event event);
 

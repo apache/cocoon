@@ -52,11 +52,12 @@ package org.apache.cocoon.portal.aspect;
 
 /**
  * Marker interface for a status of an aspect
+ * TODO - remove this
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectStatus.java,v 1.1 2003/05/07 06:22:26 cziegeler Exp $
+ * @version CVS $Id: AspectStatus.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
  */
 public interface AspectStatus {
 

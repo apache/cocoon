@@ -50,17 +50,30 @@
 */
 package org.apache.cocoon.portal.aspect;
 
+import java.util.List;
+
 
 /**
- *
+ * This interface marks an object that can be used by aspects.
+ * An aspect can store any arbitrary information in an aspectalizable object.
+ * 
+ * TODO - check if this is ok
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.2 2003/05/07 13:28:35 cziegeler Exp $
+ * @version CVS $Id: Aspectalizable.java,v 1.3 2003/05/07 20:24:02 cziegeler Exp $
  */
 public interface Aspectalizable {
 
     Object getAspectData(String aspectName);
     
     void setAspectData(String aspectName, Object data);
+    
+    List getAspectDatas();
+    
+    /**
+     * This method is invoked once to set the handler
+     */
+    void setAspectDataHandler(AspectDataHandler handler);
 }
