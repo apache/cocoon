@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  *
  * <p>Once all events have been pushed into this buffer, you need to call
- * {@link #processParams()}.
+ * {@link #processParams()}.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
@@ -185,7 +185,7 @@ public class ParamSaxBuffer extends SaxBuffer {
         }
 
         public void dump(Writer writer) throws IOException {
-            writer.write("[ParamSaxBuffer.Parameter] name=" + name);
+            writer.write("[Parameter] name=" + name);
         }
     }
 }
