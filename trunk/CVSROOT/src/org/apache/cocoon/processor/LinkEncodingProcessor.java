@@ -1,4 +1,4 @@
-/*-- $Id: LinkEncodingProcessor.java,v 1.6 2000-12-14 15:53:11 greenrd Exp $ --
+/*-- $Id: LinkEncodingProcessor.java,v 1.7 2000-12-16 15:15:31 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * Xalan-specific features in your stylesheet.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.6 $ $Date: 2000-12-14 15:53:11 $
+ * @version $Revision: 1.7 $ $Date: 2000-12-16 15:15:31 $
  */
 
 public class LinkEncodingProcessor implements Processor, Status {
@@ -88,13 +88,15 @@ public class LinkEncodingProcessor implements Processor, Status {
         NodeList nl = e.getElementsByTagName ("*"); // all elements, recursively
         int n = nl.getLength ();
         for (int j = 0; j < n; j++) {
-            NamedNodeMap atts = e.getAttributes ();
-            int m = atts.getLength ();
-            for (int i = 0; i < m; i++) {
-                Attr att = (Attr) atts.item (i);
-                if (linkPredicate.matches (att)) {
-                    // Have to use deprecated method for servlet-2.1 API compatibility
-                    att.setValue (response.encodeUrl (att.getValue ()));
+            NamedNodeMap atts = nl.item (j).getAttributes ();
+            if (atts != null) {
+                int m = atts.getLength ();
+                for (int i = 0; i < m; i++) {
+                    Attr att = (Attr) atts.item (i);
+                    if (linkPredicate.matches (att)) {
+                        // Have to use deprecated method for servlet-2.1 API compatibility
+                        att.setValue (response.encodeUrl (att.getValue ()));
+                    }
                 }
             }
         }
@@ -120,7 +122,7 @@ public class LinkEncodingProcessor implements Processor, Status {
              Attr attr = (Attr) x;
              String name = attr.getName ();
              if (!name.equalsIgnoreCase ("href") 
-                 || !name.equalsIgnoreCase ("action")) {
+                 && !name.equalsIgnoreCase ("action")) {
                return false;
              }
              String href = attr.getValue ();
