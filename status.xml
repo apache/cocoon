@@ -204,6 +204,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="29369" due-to="Juan Jose Pablos">
+     Move commons-logging-1.0.4.jar to lib/core as jcs.jar depends on it.
+   </action>
    <action dev="VG" type="update">
      Cron block: Add support for persistent job stores, type "tx" and "cmt".
    </action>
