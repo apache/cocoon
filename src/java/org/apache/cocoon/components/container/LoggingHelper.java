@@ -59,22 +59,12 @@ public class LoggingHelper {
     protected Logger log;
     protected LoggerManager loggerManager;
 
-    /**
-     * Set up the log level and path.  The default log level is
-     * Priority.ERROR, although it can be overwritten by the parameter
-     * "log-level".  The log system goes to both a file and the Servlet
-     * container's log system.  Only messages that are Priority.ERROR
-     * and above go to the servlet context.  The log messages can
-     * be as restrictive (Priority.FATAL_ERROR and above) or as liberal
-     * (Priority.DEBUG and above) as you want that get routed to the
-     * file.
-     */
     public LoggingHelper(Settings settings, 
                          LogTarget defaultTarget, 
                          Context context) {
-        final String logLevel = settings.get(settings.getLogLevel(), "INFO");
+        final String logLevel = settings.get(settings.getBootstrapLogLevel(), "INFO");
         
-        final String accesslogger = settings.get(settings.getServletLogger(), "cocoon");
+        final String accesslogger = settings.get(settings.getAccessLogger(), "cocoon");
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
@@ -159,6 +149,10 @@ public class LoggingHelper {
                         // finally remove include
                         ((DefaultConfiguration)conf).removeChild(children[i]);
                     }
+                    // override log level?
+                    if ( settings.getOverrideLogLevel() != null ) {
+                        this.overrideLogLevel(conf.getChild("categories"), settings.getOverrideLogLevel());
+                    }
                     ContainerUtil.configure(loggerManager, conf);
                 } finally {
                     resolver.release(source);
@@ -204,6 +198,14 @@ public class LoggingHelper {
         }
     }
 
+    protected void overrideLogLevel(Configuration root, String value) {
+        Configuration[] c = root.getChildren("category");
+        for(int i=0;i<c.length;i++) {
+            ((DefaultConfiguration)c[i]).setAttribute("log-level", value);
+            this.overrideLogLevel(c[i], value);
+        }
+        
+    }
     /**
      * @return Returns the log.
      */
