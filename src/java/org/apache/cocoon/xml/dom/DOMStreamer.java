@@ -61,12 +61,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.15 2004/03/28 23:57:41 antonio Exp $
+ * @version CVS $Id$
  */
 public class DOMStreamer implements XMLProducer {
 
     /** Default value for normalizeNamespaces. */
-    private final boolean DEFAULT_NORMALIZE_NAMESPACES = true;
+    private final static boolean DEFAULT_NORMALIZE_NAMESPACES = true;
 
     /** Indicates whether namespace normalization should happen. */
     protected boolean normalizeNamespaces = DEFAULT_NORMALIZE_NAMESPACES;
