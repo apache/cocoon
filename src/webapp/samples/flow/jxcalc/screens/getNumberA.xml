@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS: $Id: getNumberA.xml,v 1.2 2003/10/22 16:56:21 joerg Exp $
+    | CVS: $Id: getNumberA.xml,v 1.3 2003/12/10 01:57:09 coliver Exp $
     | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
     | Date: March 23, 2002
     +-->
@@ -12,7 +12,7 @@
     </resources>
     <title>Calculator</title>
     <content>
-      <form method="post" action="continue.#{$continuation/id}">
+      <form method="post" action="continue.#{$cocoon/continuation/id}">
         <para>Enter value of <strong>a</strong>: <input type="text" name="a"/></para>
         <input type="submit" name="submit" value="Enter"/>
       </form>
