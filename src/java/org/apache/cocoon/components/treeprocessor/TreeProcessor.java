@@ -81,18 +81,16 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.components.source.impl.SitemapSourceEnvironment;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ForwardRedirector;
-import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
+import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.excalibur.source.Source;
 
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.11 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.12 2003/08/16 13:42:40 sylvain Exp $
  */
 
 public class TreeProcessor

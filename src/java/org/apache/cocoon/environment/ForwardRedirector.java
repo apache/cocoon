@@ -50,27 +50,21 @@
 */
 package org.apache.cocoon.environment;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.component.ComponentException;
+import java.io.IOException;
+
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.source.impl.SitemapSourceEnvironment;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  * A <code>Redirector</code> that handles forward redirects, i.e. internal
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.6 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.7 2003/08/16 13:42:40 sylvain Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
@@ -165,93 +159,8 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
 
     private void cocoonRedirect(boolean sessionMode, String uri)
     throws IOException, ProcessingException {
+        // Simply notify the Processor.
         this.env.setAttribute(TreeProcessor.COCOON_REDIRECT_ATTR, uri);
-//        Processor actualProcessor = null;
-//        try {
-//            boolean rawMode = false;
-//            String prefix;
-//
-//            // remove the protocol
-//            int protocolEnd = uri.indexOf(':');
-//            if (protocolEnd != -1) {
-//                uri = uri.substring(protocolEnd + 1);
-//                // check for subprotocol
-//                if (uri.startsWith("raw:")) {
-//                    uri = uri.substring(4);
-//                    rawMode = true;
-//                }
-//            }
-//
-//            Processor usedProcessor;
-//
-//            // Does the uri point to this sitemap or to the root sitemap?
-//            if (uri.startsWith("//")) {
-//                uri = uri.substring(2);
-//                prefix = ""; // start at the root
-//                try {
-//                    actualProcessor = (Processor)this.manager.lookup(Processor.ROLE);
-//                    usedProcessor = actualProcessor;
-//                } catch (ComponentException e) {
-//                    throw new ProcessingException("Cannot get Processor instance", e);
-//                }
-//
-//            } else if (uri.startsWith("/")) {
-//                prefix = null; // means use current prefix
-//                uri = uri.substring(1);
-//                usedProcessor = this.processor;
-//
-//            } else {
-//                throw new ProcessingException("Malformed cocoon URI.");
-//            }
-//
-//            // create the queryString (if available)
-//            String queryString = null;
-//            int queryStringPos = uri.indexOf('?');
-//            if (queryStringPos != -1) {
-//                queryString = uri.substring(queryStringPos + 1);
-//                uri = uri.substring(0, queryStringPos);
-//            }
-//
-//            // build the request uri which is relative to the context
-//            String requestURI = (prefix == null ? env.getURIPrefix() + uri : uri);
-//
-//            ForwardEnvironmentWrapper newEnv =
-//                new ForwardEnvironmentWrapper(env, requestURI, queryString, getLogger(), rawMode);
-//            newEnv.setURI(prefix, uri);
-//
-//            boolean processingResult;
-//
-//            // FIXME - What to do here?
-//            Object processKey = CocoonComponentManager.startProcessing(newEnv);
-//            try {
-//                
-//                if ( !this.internal ) {
-//                    processingResult = usedProcessor.process(newEnv);
-//                } else {
-//                    ProcessingPipeline pp = usedProcessor.buildPipeline(newEnv);
-//                    if (pp != null) pp.release();
-//                    processingResult = pp != null;
-//                }
-//            } finally {
-//                CocoonComponentManager.endProcessing(newEnv, processKey);
-//            }
-//
-//
-//            if (!processingResult) {
-//                throw new ProcessingException("Couldn't process URI " + requestURI);
-//            }
-//
-//        } catch(IOException ioe) {
-//            throw ioe;
-//        } catch(ProcessingException pe) {
-//            throw pe;
-//        } catch(Exception e) {
-//            String msg = "Error while redirecting to " + uri;
-//            getLogger().error(msg, e);
-//            throw new ProcessingException(msg, e);
-//        } finally {
-//            this.manager.release( actualProcessor );
-//        }
     }
 
     /**
@@ -259,32 +168,5 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
      */
     public boolean hasRedirected() {
         return this.hasRedirected;
-    }
-    
-    /**
-     * Local extension of EnvironmentWrapper to propagate otherwise blocked
-     * methods to the actual environment.
-     */
-    public static final class ForwardEnvironmentWrapper extends SitemapSourceEnvironment {
-
-        public ForwardEnvironmentWrapper(SitemapSourceEnvironment.WrapperData data) throws MalformedURLException {
-            super(data);
-        }
-
-        public void setStatus(int statusCode) {
-            environment.setStatus(statusCode);
-        }
-
-        public void setContentLength(int length) {
-            environment.setContentLength(length);
-        }
-
-        public void setContentType(String contentType) {
-            environment.setContentType(contentType);
-        }
-
-        public String getContentType() {
-            return environment.getContentType();
-        }
     }
 }
