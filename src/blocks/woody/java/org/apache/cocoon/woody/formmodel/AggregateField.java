@@ -59,7 +59,8 @@ import java.util.Map;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
 import org.apache.cocoon.woody.datatype.ValidationRule;
 import org.apache.cocoon.woody.formmodel.AggregateFieldDefinition.SplitMapping;
 import org.apache.cocoon.woody.util.I18nMessage;
@@ -89,18 +90,19 @@ import org.xml.sax.SAXException;
  *
  * <p>Currently the child widgets should always be field widgets whose datatype is string.
  * 
- * @version CVS $Id: AggregateField.java,v 1.13 2003/12/31 10:27:18 antonio Exp $
+ * @version CVS $Id: AggregateField.java,v 1.14 2004/02/04 17:25:57 sylvain Exp $
  *
  */
-public class AggregateField extends AbstractWidget {
-    private AggregateFieldDefinition definition;
+public class AggregateField extends AbstractWidget implements ValidationErrorAware {
+    private AggregateFieldDefinition aggregateDefinition;
     private String enteredValue;
     private List fields = new ArrayList();
     private Map fieldsById = new HashMap();
     private ValidationError validationError;
 
     protected AggregateField(AggregateFieldDefinition definition) {
-        this.definition = definition;
+        super.setDefinition(definition);
+        this.aggregateDefinition = definition;
         setLocation(definition.getLocation());
     }
 
@@ -136,9 +138,9 @@ public class AggregateField extends AbstractWidget {
             if (enteredValue != null) {
                 // try to split it
                 PatternMatcher matcher = new Perl5Matcher();
-                if (matcher.matches(enteredValue, definition.getSplitPattern())) {
+                if (matcher.matches(enteredValue, aggregateDefinition.getSplitPattern())) {
                     MatchResult matchResult = matcher.getMatch();
-                    Iterator iterator = definition.getSplitMappingsIterator();
+                    Iterator iterator = aggregateDefinition.getSplitMappingsIterator();
                     while (iterator.hasNext()) {
                         SplitMapping splitMapping = (SplitMapping)iterator.next();
                         String result = matchResult.group(splitMapping.getGroup());
@@ -167,7 +169,7 @@ public class AggregateField extends AbstractWidget {
         if (fieldsHaveValues()) {
             String value;
             try {
-                value = (String)definition.getCombineExpression().evaluate(new ExpressionContextImpl(this, true));
+                value = (String)aggregateDefinition.getCombineExpression().evaluate(new ExpressionContextImpl(this, true));
             } catch (ExpressionException e) {
                 return "#ERROR evaluating combine expression: " + e.getMessage();
             } catch (ClassCastException e) {
@@ -203,11 +205,11 @@ public class AggregateField extends AbstractWidget {
             }
             return true;
         } else if (!fieldsHaveValues()) {
-            XMLizable splitFailMessage = definition.getSplitFailMessage();
+            XMLizable splitFailMessage = aggregateDefinition.getSplitFailMessage();
             if (splitFailMessage != null) {
                 validationError = new ValidationError(splitFailMessage);
             } else {
-                validationError = new ValidationError(new I18nMessage("aggregatedfield.split-failed", new String[] { definition.getSplitRegexp()}, Constants.I18N_CATALOGUE));
+                validationError = new ValidationError(new I18nMessage("aggregatedfield.split-failed", new String[] { aggregateDefinition.getSplitRegexp()}, Constants.I18N_CATALOGUE));
             }
             return false;
         } else {
@@ -221,7 +223,7 @@ public class AggregateField extends AbstractWidget {
                 }
             }
             // validate against my own validation rules
-            Iterator validationRuleIt = definition.getValidationRuleIterator();
+            Iterator validationRuleIt = aggregateDefinition.getValidationRuleIterator();
             ExpressionContextImpl exprCtx = new ExpressionContextImpl(this, true);
             while (validationRuleIt.hasNext()) {
                 ValidationRule validationRule = (ValidationRule)validationRuleIt.next();
@@ -230,11 +232,11 @@ public class AggregateField extends AbstractWidget {
                     return false;
             }
         }
-        return validationError == null;
+        return validationError == null ? super.validate(formContext) : false;
     }
 
     public boolean isRequired() {
-        return definition.isRequired();
+        return aggregateDefinition.isRequired();
     }
 
     private static final String AGGREGATEFIELD_EL = "aggregatefield";
@@ -245,7 +247,7 @@ public class AggregateField extends AbstractWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl aggregatedFieldAttrs = new AttributesImpl();
         aggregatedFieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(definition.isRequired()));
+        aggregatedFieldAttrs.addCDATAAttribute("required", String.valueOf(aggregateDefinition.isRequired()));
 
         contentHandler.startElement(Constants.WI_NS, AGGREGATEFIELD_EL, Constants.WI_PREFIX_COLON + AGGREGATEFIELD_EL, aggregatedFieldAttrs);
 
@@ -274,5 +276,13 @@ public class AggregateField extends AbstractWidget {
 
     public Widget getWidget(String id) {
         return (Widget)fieldsById.get(id);
+    }
+
+    public ValidationError getValidationError() {
+        return this.validationError;
+    }
+
+    public void setValidationError(ValidationError error) {
+        this.validationError = error;
     }
 }

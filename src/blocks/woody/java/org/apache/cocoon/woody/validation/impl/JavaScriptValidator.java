@@ -48,45 +48,64 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.validation.impl;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.event.ValueChangedListener;
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.util.JavaScriptHelper;
+import org.apache.cocoon.woody.validation.WidgetValidator;
+import org.mozilla.javascript.Function;
 
 /**
- * Builds {@link MultiValueFieldDefinition}s.
+ * A {@link org.apache.cocoon.woody.validation.WidgetValidator} implemented as a JavaScript snippet.
+ * This snippet must return a boolean value. If it returns <code>false</code>, it <strong>must</strong> have
+ * set a validation error on the validated widget or one of its children.
+ * <p>
+ * The JavaScript snippet has the "this" variable set to the validated widget, and, if the form is used in a
+ * flowscript, can use the flow's global values and fonctions and the <code>cocoon</code> object.
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: JavaScriptValidator.java,v 1.1 2004/02/04 17:25:58 sylvain Exp $
  */
-public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
-        setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
+public class JavaScriptValidator implements WidgetValidator {
+    
+    private final Function function;
+    private final Context avalonContext;
+    
+    public JavaScriptValidator(Context context, Function function) {
+        this.function = function;
+        this.avalonContext = context;
+    }
 
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.woody.validation.Validator#validate(org.apache.cocoon.woody.formmodel.Widget, org.apache.cocoon.woody.FormContext)
+     */
+    public final boolean validate(Widget widget, FormContext context) {
 
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
-        definition.setDatatype(datatype);
+        Request request = ContextHelper.getRequest(this.avalonContext);
 
-        boolean hasSelectionList = buildSelectionList(widgetElement, definition);
-        if (!hasSelectionList)
-            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
-
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        definition.setRequired(required);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addValueChangedListener((ValueChangedListener)iter.next());
+        Object result;
+            
+        try {
+            result = JavaScriptHelper.callFunction(this.function, widget, new Object[] {widget}, request);
+        } catch(RuntimeException re) {
+            throw re; // rethrow
+        } catch(Exception e) {
+            throw new CascadingRuntimeException("Error invoking JavaScript event handler", e);
         }
-        return definition;
+
+        if (result == null) {
+            throw new RuntimeException("Validation script did not return a value");
+            
+        } else if (result instanceof Boolean) {
+            return ((Boolean)result).booleanValue();
+            
+        } else {
+            throw new RuntimeException("Validation script returned an unexpected value of type " + result.getClass());
+        }
     }
 }

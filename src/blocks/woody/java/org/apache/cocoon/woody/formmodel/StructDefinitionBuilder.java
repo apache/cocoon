@@ -57,7 +57,7 @@ import org.apache.cocoon.woody.util.DomHelper;
 /**
  * Builds {StructDefinition}s.
  *
- * CVS $Id: StructDefinitionBuilder.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: StructDefinitionBuilder.java,v 1.2 2004/02/04 17:25:57 sylvain Exp $
  * @author Timothy Larson
  */
 public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
@@ -67,6 +67,7 @@ public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setLocation(element, definition);
         setId(element, definition);
         setDisplayData(element, definition);
+        setValidators(element, definition);
 
         Element widgetsElement = DomHelper.getChildElement(element, Constants.WD_NS, "widgets", true);
         // All child elements of the widgets element are widgets

@@ -83,6 +83,7 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
         }
 
         setDisplayData(widgetElement, fieldDefinition);
+        setValidators(widgetElement, fieldDefinition);
 
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         fieldDefinition.setRequired(required);

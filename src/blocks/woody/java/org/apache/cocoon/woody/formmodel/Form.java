@@ -50,8 +50,10 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.cocoon.woody.Constants;
@@ -73,7 +75,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.15 2004/01/28 12:47:15 joerg Exp $
+ * @version CVS $Id: Form.java,v 1.16 2004/02/04 17:25:57 sylvain Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -86,6 +88,7 @@ public class Form extends AbstractContainerWidget {
     private ProcessingPhase phase = ProcessingPhase.LOAD_MODEL;
     private boolean isValid = false;
     private ProcessingPhaseListener listener;
+    private Map attributes;
 
     public Form(FormDefinition definition) {
         super(definition);
@@ -310,6 +313,24 @@ public class Form extends AbstractContainerWidget {
 
     public boolean doValidate(FormContext formContext) {
         return super.validate(formContext); 
+    }
+    
+    public Object getAttribute(String name) {
+        return this.attributes == null ? null : this.attributes.get(name);
+    }
+    
+    public void setAttribute(String name, Object value) {
+        if (this.attributes == null) {
+            this.attributes = new HashMap();
+        }
+        
+        this.attributes.put(name, value);
+    }
+    
+    public void removeAttribute(String name) {
+        if (this.attributes != null) {
+            this.attributes.remove(name);
+        }
     }
 
     private static final String FORM_EL = "form";

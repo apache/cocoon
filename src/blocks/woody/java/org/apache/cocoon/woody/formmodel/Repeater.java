@@ -71,11 +71,12 @@ import java.util.*;
  * you can access all of the repeated widget instances.
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
-    private RepeaterDefinition definition;
+    private RepeaterDefinition repeaterDefinition;
     private List rows = new ArrayList();
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
-        this.definition = repeaterDefinition;
+        this.repeaterDefinition = repeaterDefinition;
+        super.setDefinition(repeaterDefinition);
         setLocation(definition.getLocation());
         // setup initial size
         removeRows();
@@ -176,7 +177,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
         rows.clear();
         
         // and reset to initial size
-        for (int i = 0; i < this.definition.getInitialSize(); i++) {
+        for (int i = 0; i < this.repeaterDefinition.getInitialSize(); i++) {
             addRow();
         }
     }
@@ -257,7 +258,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             RepeaterRow row = (RepeaterRow)rowIt.next();
             valid = valid & row.validate(formContext);
         }
-        return valid;
+        return valid ? super.validate(formContext) : false;
     }
 
     private static final String REPEATER_EL = "repeater";
@@ -279,7 +280,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
 
         // heading element -- currently contains the labels of each widget in the repeater
         contentHandler.startElement(Constants.WI_NS, HEADINGS_EL, Constants.WI_PREFIX_COLON + HEADINGS_EL, Constants.EMPTY_ATTRS);
-        Iterator widgetDefinitionIt = definition.getWidgetDefinitions().iterator();
+        Iterator widgetDefinitionIt = repeaterDefinition.getWidgetDefinitions().iterator();
         while (widgetDefinitionIt.hasNext()) {
             WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionIt.next();
             contentHandler.startElement(Constants.WI_NS, HEADING_EL, Constants.WI_PREFIX_COLON + HEADING_EL, Constants.EMPTY_ATTRS);
@@ -305,7 +306,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
      * Generates the label of a certain widget in this repeater.
      */
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
-        WidgetDefinition widgetDefinition = definition.getWidgetDefinition(widgetId);
+        WidgetDefinition widgetDefinition = repeaterDefinition.getWidgetDefinition(widgetId);
         if (widgetDefinition == null)
             throw new SAXException("Repeater \"" + getFullyQualifiedId() + "\" contains no widget with id \"" + widgetId + "\".");
         widgetDefinition.generateLabel(contentHandler);
@@ -324,7 +325,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
 
     public class RepeaterRow extends AbstractContainerWidget {
 
-        public RepeaterRow(WidgetDefinition definition) {
+        public RepeaterRow(AbstractWidgetDefinition definition) {
             super(definition);
             ((ContainerDefinition)definition).createWidgets(this);
         }
@@ -358,6 +359,11 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             throw new RuntimeException("Parent of RepeaterRow is fixed, and cannot be set.");
         }
 
+        public boolean validate(FormContext formContext) {
+            // Validate only child widtgets, as the definition's validators are those of the parent repeater
+            return widgets.validate(formContext);
+        }
+        
         private static final String ROW_EL = "repeater-row";
 
         public void generateLabel(ContentHandler contentHandler) throws SAXException {

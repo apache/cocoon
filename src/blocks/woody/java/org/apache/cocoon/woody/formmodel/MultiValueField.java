@@ -51,7 +51,8 @@
 package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationError;
+import org.apache.cocoon.woody.validation.ValidationErrorAware;
 import org.apache.cocoon.woody.event.WidgetEvent;
 import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.Constants;
@@ -78,15 +79,16 @@ import java.util.Locale;
  * can be used with the Datatype (see {@link org.apache.cocoon.woody.datatype.Datatype Datatype}
  * description for more information).
  */
-public class MultiValueField extends AbstractWidget {
+public class MultiValueField extends AbstractWidget implements ValidationErrorAware {
     private SelectionList selectionList;
-    private MultiValueFieldDefinition definition;
+    private MultiValueFieldDefinition fieldDefinition;
     private String[] enteredValues;
     private Object[] values;
     private ValidationError validationError;
 
     public MultiValueField(MultiValueFieldDefinition definition) {
-        this.definition = definition;
+        super.setDefinition(definition);
+        this.fieldDefinition = definition;
         setLocation(definition.getLocation());
     }
 
@@ -109,7 +111,7 @@ public class MultiValueField extends AbstractWidget {
             Object[] tempValues = new Object[enteredValues.length];
             for (int i = 0; i < enteredValues.length; i++) {
                 String param = enteredValues[i];
-                tempValues[i] = definition.getDatatype().convertFromString(param, formContext.getLocale());
+                tempValues[i] = fieldDefinition.getDatatype().convertFromString(param, formContext.getLocale());
                 if (tempValues[i] == null) {
                     conversionFailed = true;
                     break;
@@ -127,11 +129,12 @@ public class MultiValueField extends AbstractWidget {
 
     public boolean validate(FormContext formContext) {
         if (values != null)
-            validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
+            validationError = fieldDefinition.getDatatype().validate(values, new ExpressionContextImpl(this));
         else
             validationError = new ValidationError(new I18nMessage("multivaluefield.conversionfailed", Constants.I18N_CATALOGUE));
 
-        return validationError == null;
+
+        return validationError == null ? super.validate(formContext) : false;
     }
 
     private static final String MULTIVALUEFIELD_EL = "multivaluefield";
@@ -148,14 +151,14 @@ public class MultiValueField extends AbstractWidget {
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
                 contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
-                String value = definition.getDatatype().getPlainConvertor().convertToString(values[i], locale, null);
+                String value = fieldDefinition.getDatatype().getPlainConvertor().convertToString(values[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
                 contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
             }
         } else if (enteredValues != null) {
             for (int i = 0; i < enteredValues.length; i++) {
                 contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
-                String value = definition.getDatatype().getPlainConvertor().convertToString(enteredValues[i], locale, null);
+                String value = fieldDefinition.getDatatype().getPlainConvertor().convertToString(enteredValues[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
                 contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
             }
@@ -169,7 +172,7 @@ public class MultiValueField extends AbstractWidget {
         if (this.selectionList != null) {
             this.selectionList.generateSaxFragment(contentHandler, locale);
         } else {
-            definition.getSelectionList().generateSaxFragment(contentHandler, locale);
+            fieldDefinition.getSelectionList().generateSaxFragment(contentHandler, locale);
         }
 
         // validation message element
@@ -204,7 +207,7 @@ public class MultiValueField extends AbstractWidget {
     public void setValues(Object[] values) {
         // check that all the objects in the array correspond to the datatype
         for (int i = 0; i < values.length; i++) {
-            if (!definition.getDatatype().getTypeClass().isAssignableFrom(values[i].getClass()))
+            if (!fieldDefinition.getDatatype().getTypeClass().isAssignableFrom(values[i].getClass()))
                 throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + values[i].getClass().getName());
         }
         this.values = values;
@@ -217,7 +220,7 @@ public class MultiValueField extends AbstractWidget {
     public void setSelectionList(SelectionList selectionList) {
         if (selectionList != null &&
             selectionList.getDatatype() != null &&
-            selectionList.getDatatype() != definition.getDatatype()) {
+            selectionList.getDatatype() != fieldDefinition.getDatatype()) {
 
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         }
@@ -234,7 +237,7 @@ public class MultiValueField extends AbstractWidget {
      * @param uri The URI of the source. 
      */
     public void setSelectionList(String uri) {
-        setSelectionList(this.definition.buildSelectionList(uri));
+        setSelectionList(this.fieldDefinition.buildSelectionList(uri));
     }
     
     /**
@@ -254,10 +257,18 @@ public class MultiValueField extends AbstractWidget {
      * to populate the labels of the list's items.
      */
     public void setSelectionList(Object model, String valuePath, String labelPath) {
-        setSelectionList(this.definition.buildSelectionListFromModel(model, valuePath, labelPath));
+        setSelectionList(this.fieldDefinition.buildSelectionListFromModel(model, valuePath, labelPath));
     }
 
     public void broadcastEvent(WidgetEvent event) {
-        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+        this.fieldDefinition.fireValueChangedEvent((ValueChangedEvent)event);
+    }
+
+    public ValidationError getValidationError() {
+        return this.validationError;
+    }
+
+    public void setValidationError(ValidationError error) {
+        this.validationError = error;
     }
 }

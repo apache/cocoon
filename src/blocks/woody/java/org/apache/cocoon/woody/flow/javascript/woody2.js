@@ -52,7 +52,7 @@
  * Implementation of the Woody/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.7 2004/01/28 19:14:23 vgritsenko Exp $
+ * @version CVS $Id: woody2.js,v 1.8 2004/02/04 17:25:57 sylvain Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -196,6 +196,18 @@ Form.prototype.save = function(object) {
     if (this.binding == null)
         throw new Error("Binding not configured for this form.");
     this.binding.saveFormToModel(this.form, object);
+}
+
+Form.prototype.setAttribute = function(name, value) {
+    this.form.setAttribute(name, value);
+}
+
+Form.prototype.getAttribute = function(name) {
+    return this.form.getAttribute(name);
+}
+
+Form.prototype.removeAttribute = function(name) {
+    this.form.removeAttribute(name);
 }
 
 function woody() {

@@ -99,6 +99,11 @@ public class BooleanField extends AbstractWidget {
         }
     }
 
+    /**
+     * Always return <code>true</code> (an action has no validation)
+     * 
+     * @todo is there a use case for boolean fields having validators?
+     */
     public boolean validate(FormContext formContext) {
         // a boolean field is always valid
         return true;

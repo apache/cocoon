@@ -50,10 +50,15 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.woody.event.WidgetEvent;
+import org.apache.cocoon.woody.validation.WidgetValidator;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -66,12 +71,14 @@ public abstract class AbstractWidget implements Widget {
     private String location;
     private Widget parent;
     private Form form;
-    protected WidgetDefinition definition;
+    protected AbstractWidgetDefinition definition;
+    
+    private List validators;
 
     /**
      * Sets the definition of this widget.
      */
-    protected void setDefinition(WidgetDefinition definition) {
+    protected void setDefinition(AbstractWidgetDefinition definition) {
         this.definition = definition;
     }
 
@@ -152,7 +159,55 @@ public abstract class AbstractWidget implements Widget {
     public void broadcastEvent(WidgetEvent event) {
         throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
     }
-
+    
+    /**
+     * Add a validator to this widget instance.
+     * 
+     * @param validator
+     */
+    public void addValidator(WidgetValidator validator) {
+        if (this.validators == null) {
+            this.validators = new ArrayList();
+        }
+        
+        this.validators.add(validator);
+    }
+    
+    /**
+     * Remove a validator from this widget instance
+     * 
+     * @param validator
+     * @return <code>true</code> if the validator was found.
+     */
+    public boolean removeValidator(WidgetValidator validator) {
+        return (this.validators == null)? false : this.validators.remove(validator);
+    }
+    
+    public boolean validate(FormContext context) {
+        // Test validators from the widget definition
+        if (!this.definition.validate(this, context)) {
+            // Failed
+            return false;
+        } else {
+            // Definition sussessful, test local validators
+            if (this.validators == null) {
+                // No local validators
+                return true;
+            } else {
+                // Iterate on local validators
+                Iterator iter = this.validators.iterator();
+                while(iter.hasNext()) {
+                    WidgetValidator validator = (WidgetValidator)iter.next();
+                    if (!validator.validate(this, context)) {
+                        return false;
+                    }
+                }
+                // All local iterators successful
+                return true;
+            }
+        }
+    }
+    
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
         if (definition != null) {
             definition.generateDisplayData("label", contentHandler);

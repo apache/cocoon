@@ -48,45 +48,40 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.validation;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.event.ValueChangedListener;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.formmodel.Widget;
 
 /**
- * Builds {@link MultiValueFieldDefinition}s.
+ * Validates a widget. Validation can mean lots of different things depending on the
+ * actual widget and validator type, e.g. :
+ * <li>
+ * <ul>on fields, a validator will validate the field's value,</ul>
+ * <ul>on repeaters, a validator can perform inter-row validation</ul>
+ * </li>
+ * <p>
+ * A validator returns a boolean result indicating if validation was successful or not.
+ * If not successful, the validator <code>must<code> set a {@link org.apache.cocoon.woody.validation.ValidationError}
+ * on the validated widget or one of its children.
+ * <p>
+ * <em>Note:</em> It is important (although it cannot be explicitely forbidden) that a validator
+ * does not consider widgets that are not the validated widgets itself or its children, as this
+ * may lead to inconsistencies in the form model because of the way form validation occurs (depth-first
+ * traversal of the widget tree).
+ * 
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: WidgetValidator.java,v 1.1 2004/02/04 17:25:58 sylvain Exp $
  */
-public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
-        setDisplayData(widgetElement, definition);
-        setValidators(widgetElement, definition);
-
-        Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
-
-        Datatype datatype = datatypeManager.createDatatype(datatypeElement, true);
-        definition.setDatatype(datatype);
-
-        boolean hasSelectionList = buildSelectionList(widgetElement, definition);
-        if (!hasSelectionList)
-            throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
-
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        definition.setRequired(required);
-
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addValueChangedListener((ValueChangedListener)iter.next());
-        }
-        return definition;
-    }
+public interface WidgetValidator {
+    
+    /**
+     * Validate a widget.
+     * 
+     * @param widget the widget to validate
+     * @param context the form context
+     * @return <code>true</code> if validation was successful. If not, the validator must have set
+     *         a {@link ValidationError} on the widget or one of its children.
+     */
+    boolean validate(Widget widget, FormContext context);
 }

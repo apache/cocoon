@@ -67,6 +67,7 @@ public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setLocation(repeaterElement, repeaterDefinition);
         setId(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
+        setValidators(repeaterElement, repeaterDefinition);
 
         Element widgetsElement = DomHelper.getChildElement(repeaterElement, Constants.WD_NS, "widgets", true);
         // All child elements of the widgets element are widgets

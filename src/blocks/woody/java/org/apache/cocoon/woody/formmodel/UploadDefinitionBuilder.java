@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: UploadDefinitionBuilder.java,v 1.2 2003/12/19 21:28:39 tim Exp $
+ * @version CVS $Id: UploadDefinitionBuilder.java,v 1.3 2004/02/04 17:25:57 sylvain Exp $
  */
 public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
@@ -71,6 +71,7 @@ public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         setId(widgetElement, uploadDefinition);
 
         setDisplayData(widgetElement, uploadDefinition);
+        setValidators(widgetElement, uploadDefinition);
 
         return uploadDefinition;
     }

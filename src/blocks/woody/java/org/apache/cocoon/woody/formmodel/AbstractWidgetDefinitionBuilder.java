@@ -56,22 +56,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.cocoon.woody.event.WidgetListener;
 import org.apache.cocoon.woody.event.WidgetListenerBuilderUtil;
 import org.apache.cocoon.woody.expression.ExpressionManager;
-import org.apache.cocoon.woody.datatype.DatatypeManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.activity.Disposable;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.validation.WidgetValidatorBuilder;
 import org.apache.excalibur.xml.sax.XMLizable;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
@@ -79,15 +80,17 @@ import org.apache.excalibur.xml.sax.XMLizable;
  */
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
     protected ServiceSelector widgetDefinitionBuilderSelector;
+    protected ServiceSelector widgetValidatorBuilderSelector;
     protected DatatypeManager datatypeManager;
     protected ExpressionManager expressionManager;
     protected ServiceManager serviceManager;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
-        widgetDefinitionBuilderSelector = (ServiceSelector)serviceManager.lookup( WidgetDefinitionBuilder.class.getName() + "Selector");
-        datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
-        expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
+        this.widgetDefinitionBuilderSelector = (ServiceSelector)serviceManager.lookup( WidgetDefinitionBuilder.class.getName() + "Selector");
+        this.datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
+        this.expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);
+        this.widgetValidatorBuilderSelector = (ServiceSelector)serviceManager.lookup(WidgetValidatorBuilder.ROLE + "Selector");
     }
 
     protected void setLocation(Element widgetElement, AbstractWidgetDefinition widgetDefinition) {
@@ -96,8 +99,9 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
 
     protected void setId(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         String id = DomHelper.getAttribute(widgetElement, "id");
-        if (id.length() < 1)
+        if (id.length() < 1) {
             throw new Exception("Missing id attribute on element \"" + widgetElement.getTagName() + "\" at " + DomHelper.getLocation(widgetElement));
+        }
         widgetDefinition.setId(id);
     }
 
@@ -147,9 +151,32 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         widgetDefinition.setDisplayData(displayData);
     }
     
+    protected void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+        List result = null;
+        Element validatorElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "validation");
+        if (validatorElement != null) {
+            NodeList list = validatorElement.getChildNodes();
+            for (int i = 0; i < list.getLength(); i++) {
+                if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)list.item(i);
+                    String name = element.getLocalName();
+                    WidgetValidatorBuilder builder;
+                    try {
+                        builder = (WidgetValidatorBuilder)this.widgetValidatorBuilderSelector.select(name);
+                    } catch(ServiceException e) {
+                        throw new CascadingException("Unknow kind of validator '" + name + "' at " + DomHelper.getLocation(element), e);
+                    }
+                    
+                    widgetDefinition.addValidator(builder.build(element, widgetDefinition));
+                }
+            }
+        }
+    }
+    
     public void dispose() {
         serviceManager.release(widgetDefinitionBuilderSelector);
         serviceManager.release(datatypeManager);
         serviceManager.release(expressionManager);
+        serviceManager.release(widgetValidatorBuilderSelector);
     }
 }
