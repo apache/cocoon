@@ -50,10 +50,10 @@
     </init-param>
 
     <!--
-      This parameter indicates the configuration file of the LogKit management
+      This parameter indicates the configuration file of the log management
     -->
     <init-param>
-      <param-name>logkit-config</param-name>
+      <param-name>log-config</param-name>
       <param-value>/WEB-INF/logkit.xconf</param-value>
     </init-param>
 
