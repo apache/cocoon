@@ -72,7 +72,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:crossley@apache.org">David Crossley</a>
- * @version CVS $Id: ResolverImplTestCase.java,v 1.2 2003/03/12 15:02:12 bloritsch Exp $
+ * @version CVS $Id: ResolverImplTestCase.java,v 1.3 2003/03/18 01:01:26 vgritsenko Exp $
  */
 public final class ResolverImplTestCase
          extends ExcaliburTestCase
@@ -254,7 +254,6 @@ public final class ResolverImplTestCase
      */
     public ResolverImplTestCase(String name) {
         super(name);
-
     }
 
 
@@ -444,4 +443,3 @@ public final class ResolverImplTestCase
         context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, commandline_context);
     }
 }
-

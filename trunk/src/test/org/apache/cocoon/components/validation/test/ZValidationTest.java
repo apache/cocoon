@@ -58,86 +58,143 @@ import org.xml.sax.InputSource;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+
+import junit.framework.TestCase;
+import junit.swingui.TestRunner;
 
 /**
  * Test class for the Validation API
  *
- * Takes 2 command line arguments.
+ * <p>Uses file src/test/org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml.
  *
- * First is the location of a Schematron Schema file
- * Second is the validation phase to use
- *
- * @version CVS $Id: ZValidationTest.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
+ * @version CVS $Id: ZValidationTest.java,v 1.3 2003/03/18 01:01:27 vgritsenko Exp $
  */
-public class ZValidationTest {
+public class ZValidationTest extends TestCase {
 
-	/**
-	 * Method main
-	 */
-	public static void main(String args[]) throws Exception {
-		System.out.println("\n=== Java based Schematron validation ===");
+    private static final int count = 100;
 
-		if (args.length < 1) {
-			System.err.println(
-				"Usage: java Schematron <schema.xml> " + "[phase] ");
-			return;
-		}
+    public ZValidationTest(String name) {
+        super(name);
+    }
 
-		// use custom schema
-		File file = new File(args[0]);
-		if (!file.exists())
-			throw new Exception("Error: schema file not found !");
-		InputStream istrm = new FileInputStream(file);
-		InputSource is = new InputSource(istrm);
-		SchemaFactory schf =
-			SchemaFactory.lookup(SchemaFactory.NAMESPACE_SCHEMATRON);
-		Schema sch = schf.compileSchema(is);
-		Validator validator = sch.newValidator();
+    private void testSchema(String schema, String phase, List violations) {
+        // use custom schema
+        File file = new File(schema);
+        if (!file.exists()) {
+            fail("Error: schema file " + schema + " not found");
+        }
 
-		// set preprocessor parameters 
-		if (args.length > 1)
-			validator.setProperty("phase", new String(args[1]));
+        try {
+            InputSource is = new InputSource(new FileInputStream(file));
+            SchemaFactory schf =
+                SchemaFactory.lookup(SchemaFactory.NAMESPACE_SCHEMATRON);
+            Schema sch = schf.compileSchema(is);
+            Validator validator = sch.newValidator();
 
-		ZTestBean tbean = new ZTestBean();
+            // set preprocessor parameters
+            if (phase != null) {
+                validator.setProperty(Validator.PROPERTY_PHASE, phase);
+            }
 
-		// measure validation speed
-		long time = System.currentTimeMillis();
-		int i = 0;
-		List violations = null;
-		for (; i < 100; i++) {
-			// perform validation
-			violations = validator.validate(tbean);
-		}
-		time = System.currentTimeMillis() - time;
-		System.out.println("\nValidation performance:");
-		System.out.println(
-			" validate() executed "
-				+ i
-				+ " times for a total of "
-				+ time
-				+ " ms");
-		System.out.println("Avarage validation time: " + (time / i) + " ms ");
+            ZTestBean tbean = new ZTestBean();
 
-		// everything ok?
-		if (violations == null) {
-			System.out.println("\nValidation ok, no messages generated");
-		} else {
-			System.out.println("Validation encountered errors. Messages :");
-			Iterator viter = violations.iterator();
-			while (viter.hasNext()) {
-				Violation v = (Violation) viter.next();
-				System.out.println(
-					"Validity violation path: "
-						+ v.getPath()
-						+ ", message: "
-						+ v.getMessage());
-			}
-		}
+            // measure validation speed
+            long time = System.currentTimeMillis();
+            List vs = null;
+            for (int i = 0; i < count; i++) {
+                // perform validation
+                vs = validator.validate(tbean);
+            }
+            time = System.currentTimeMillis() - time;
+            System.out.println("Validation performed " + count
+                               + " times for a total of " + time + " ms");
+            System.out.println("Avarage validation time is "
+                               + (time / count) + " ms ");
 
-		System.out.println("\n=== Schematron validation done ===");
-	}
+            if (vs == null) {
+                vs = new ArrayList();
+            }
 
+            // everything ok?
+            assertEquals("Violations count does not match", violations.size(), vs.size());
+            for (Iterator i = violations.iterator(); i.hasNext();) {
+                Violation v = (Violation) i.next();
+                boolean gotit = false;
+                for (Iterator j = vs.iterator(); j.hasNext();) {
+                    Violation w = (Violation) j.next();
+                    if (v.getPath().equals(w.getPath()) && v.getMessage().equals(w.getMessage())) {
+                        gotit = true;
+                        break;
+                    }
+                }
+                assertTrue("Expected violation " + v.getPath() + " '" + v.getMessage() + "' not found", gotit);
+            }
+            for (Iterator i = vs.iterator(); i.hasNext();) {
+                Violation v = (Violation) i.next();
+                boolean gotit = false;
+                for (Iterator j = violations.iterator(); j.hasNext();) {
+                    Violation w = (Violation) j.next();
+                    if (v.getPath().equals(w.getPath()) && v.getMessage().equals(w.getMessage())) {
+                        gotit = true;
+                        break;
+                    }
+                }
+                assertTrue("Unexpected violation " + v.getPath() + " '" + v.getMessage() + "' found", gotit);
+            }
+        } catch (Exception e) {
+            fail("Got an exception " + e);
+        }
+    }
+
+    public void testSchema() {
+        Violation violation;
+        List violations = new ArrayList();
+
+        violation = new Violation();
+        violation.setPath("/scope");
+        violation.setMessage("Scope should be request or session.");
+        violations.add(violation);
+
+        violation = new Violation();
+        violation.setPath("/name");
+        violation.setMessage("Animal name should be at least 4 characters.");
+        violations.add(violation);
+
+        violation = new Violation();
+        violation.setPath("/count");
+        violation.setMessage("The counter should be > 0.");
+        violations.add(violation);
+
+        testSchema("src/test/org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml",
+                   null, violations);
+    }
+
+    public void testSchema_PhaseNew() {
+        Violation violation;
+        List violations = new ArrayList();
+
+        violation = new Violation();
+        violation.setPath("/scope");
+        violation.setMessage("Scope should be request or session.");
+        violations.add(violation);
+
+        violation = new Violation();
+        violation.setPath("/name");
+        violation.setMessage("Animal name should be at least 4 characters.");
+        violations.add(violation);
+
+        testSchema("src/test/org/apache/cocoon/components/validation/test/zxmlform-sch-report-test.xml",
+                   "New", violations);
+    }
+
+    /**
+     * The main program for this test.
+     */
+    public static void main(final String[] args) throws Exception {
+        final String[] testCaseName = { ZValidationTest.class.getName() };
+        TestRunner.main(testCaseName);
+    }
 }

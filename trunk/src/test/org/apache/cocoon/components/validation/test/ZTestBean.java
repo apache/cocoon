@@ -54,7 +54,7 @@ import java.util.ArrayList;
 
 /**
  * just a test bean
- * @version CVS $Id: ZTestBean.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
+ * @version CVS $Id: ZTestBean.java,v 1.3 2003/03/18 01:01:27 vgritsenko Exp $
  */
 public class ZTestBean {
 	private String name = "dog";
@@ -77,6 +77,7 @@ public class ZTestBean {
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String newName) {
 		name = newName;
 	}
@@ -108,5 +109,4 @@ public class ZTestBean {
 	public void incrementCount() {
 		count++;
 	}
-
 }

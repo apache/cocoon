@@ -4,12 +4,10 @@
 
 <!ELEMENT testcase (annotation?,logkit,context?,roles,components)>
 
-<!-- annotation describes the testcase
--->
+<!-- annotation describes the testcase -->
 <!ELEMENT annotation (#PCDATA)>
 
-<!-- logkit define the logkit in use
--->
+<!-- logkit define the logkit in use -->
 <!ELEMENT logkit (factories, targets, categories)>
 <!ELEMENT factories (factory+)>
 
@@ -38,8 +36,7 @@
   id-ref CDATA #REQUIRED
 >
 
-<!-- the context used by the components
--->
+<!-- the context used by the components -->
 <!ELEMENT context (entry*)>
 <!ELEMENT entry EMPTY>
 <!ATTLIST entry
@@ -47,8 +44,7 @@
   value CDATA #REQUIRED
 >
 
-<!-- the roles of the components
--->
+<!-- the roles of the components -->
 <!ELEMENT roles (role+)>
 <!ELEMENT role (hint*)>
 <!ATTLIST role
@@ -63,8 +59,7 @@
   class CDATA #REQUIRED
 >
 
-<!-- define components element, attributes, and its children
--->
+<!-- define components element, attributes, and its children -->
 <!ELEMENT components (resolver)>
 <!ATTLIST components 
   logger CDATA #IMPLIED
@@ -80,8 +75,8 @@
   name CDATA #REQUIRED
   value CDATA #REQUIRED
 >
-
 ]>
+
 
 <testcase>
   <annotation>
@@ -93,7 +88,7 @@
     </factories>
     <targets>
        <file id="root">
-        <filename>resolver-test.log</filename>
+        <filename>cocoon-resolver-test.log</filename>
         <format type="extended">
           %7.7{priority} %5.5{time}   [%8.8{category}] (%{context}): %{message}\n%{throwable}
         </format>
@@ -115,8 +110,7 @@
     </role>
   </roles>
 
-  <!--
-  -->
+  <!-- -->
   <components>
     <entity-resolver>
       <parameter name="verbosity" value="10"/>
@@ -124,4 +118,3 @@
     </entity-resolver>
   </components>
 </testcase>
-
