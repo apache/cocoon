@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-16 22:07:44 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-17 19:55:41 $
  */
 public abstract class AbstractSitemap extends AbstractCompiledComponent implements Sitemap {
     private Context context;
@@ -72,7 +72,7 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
         this.sitemapComponentManager = new SitemapComponentManager (parentSitemapComponentManager);
         this.sitemapComponentManager.contextualize(this.context);
         this.sitemapComponentManager.setLogger(getLogger());
-        this.sitemapComponentManager.addComponentInstance(Roles.URL_FACTORY, this.urlFactory);
+        this.sitemapComponentManager.compose(this.manager);
     }
 
     /**
@@ -140,6 +140,7 @@ public abstract class AbstractSitemap extends AbstractCompiledComponent implemen
             this.sitemapComponentManager = new SitemapComponentManager();
             this.sitemapComponentManager.contextualize(this.context);
             this.sitemapComponentManager.setLogger(getLogger());
+            this.sitemapComponentManager.compose(this.manager);
         }
 
         this.sitemapComponentManager.addSitemapComponent(type, clazz, configuration, mime_type);

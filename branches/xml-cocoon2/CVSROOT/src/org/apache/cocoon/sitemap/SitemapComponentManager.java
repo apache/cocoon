@@ -10,22 +10,25 @@ package org.apache.cocoon.sitemap;
 
 import java.util.HashMap;
 
+import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.ComponentNotFoundException;
 import org.apache.cocoon.DefaultComponentManager;
 
 import org.apache.cocoon.components.url.URLFactory;
 
 /** Default component manager for Cocoon's sitemap components.
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: SitemapComponentManager.java,v 1.1.2.2 2001-02-16 22:07:48 bloritsch Exp $
+ * @version CVS $Id: SitemapComponentManager.java,v 1.1.2.3 2001-02-17 19:55:42 bloritsch Exp $
  */
-public class SitemapComponentManager extends DefaultComponentManager {
+public class SitemapComponentManager extends DefaultComponentManager implements Composer {
     ComponentManager manager;
     HashMap mime_types;
+    ComponentManager sideManager;
 
     /** The conctructors (same as the Avalon DefaultComponentManager)
      */
@@ -39,18 +42,42 @@ public class SitemapComponentManager extends DefaultComponentManager {
         this.manager = parent;
     }
 
-    public Component lookup(String role) throws ComponentManagerException {
-        try {
-            Component comp = super.lookup(role);
-            return comp;
-        } catch (ComponentManagerException cme) {
-            if (this.manager != null) {
-                return this.manager.lookup(role);
-            }
+    public void compose(ComponentManager manager) {
+        this.sideManager = manager;
+    }
 
-            throw cme;
+    /** Return an instance of a component.
+     */
+    public Component lookup( String role )
+    throws ComponentManagerException {
+
+        Component component = null;
+
+        try {
+            // Retrieve the instance of the requested component
+            component = this.sideManager.lookup(role);
+        } catch (ComponentManagerException cme) {/* ignore */}
+
+        if ( component != null ) {
+            return component;
+        }
+
+        try {
+            // Retrieve the instance of the requested component
+            component = super.lookup(role);
+        } catch (ComponentManagerException cme) {/* ignore */}
+
+        if ( component != null ) {
+            return component;
+        }
+
+        if (this.manager != null) {
+            return this.manager.lookup(role);
+        } else {
+            throw new ComponentNotFoundException("I could not locate the component for role " + role);
         }
     }
+
 
     protected String getMimeTypeForRole(String role) {
         return (String) this.mime_types.get(role);
