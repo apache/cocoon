@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
+
 <xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.woody.expression.ExpressionManager']">
 
   <role name="org.apache.cocoon.woody.expression.ExpressionManager"
-    shorthand="woody-expression"
-    default-class="org.apache.cocoon.woody.expression.DefaultExpressionManager"/>
+        shorthand="woody-expression"
+        default-class="org.apache.cocoon.woody.expression.DefaultExpressionManager"/>
 </xroles>

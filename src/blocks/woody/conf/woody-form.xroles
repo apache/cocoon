@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
+
 <xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.woody.FormManager']">
 
   <role name="org.apache.cocoon.woody.FormManager"
-    shorthand="woody-formmanager"
-    default-class="org.apache.cocoon.woody.DefaultFormManager"/>
+        shorthand="woody-formmanager"
+        default-class="org.apache.cocoon.woody.DefaultFormManager"/>
 </xroles>
