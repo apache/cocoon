@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.12 2004/06/18 13:54:00 vgritsenko Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.13 2004/06/18 14:28:56 vgritsenko Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -473,7 +473,7 @@ implements Serviceable, Configurable, Recyclable {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Start serialized XML recording. Format=" + format);
         }
-        this.stack.push((format == null? XMLUtils.createPropertiesForXML(false): format));
+        this.stack.push(format == null? XMLUtils.createPropertiesForXML(false): format);
         startRecording();
     }
 

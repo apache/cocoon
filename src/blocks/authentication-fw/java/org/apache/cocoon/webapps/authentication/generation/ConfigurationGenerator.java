@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.9 2004/03/19 13:59:22 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.10 2004/06/18 14:28:55 vgritsenko Exp $
 */
 public final class ConfigurationGenerator
 extends ServiceableGenerator {
@@ -70,7 +70,7 @@ extends ServiceableGenerator {
 
     /** The XPath Processor */
     protected XPathProcessor xpathProcessor;
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -101,15 +101,15 @@ extends ServiceableGenerator {
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
             state = authManager.getState();
-            
+
         } catch (Exception ignore) {
         }
-        
+
         this.xmlConsumer.startDocument();
         if ( state != null ) {
             try {
                 UserHandler userhandler = state.getHandler();
-                
+
                 Configuration conf = state.getModuleConfiguration("single-role-user-management");
                 if (conf == null) {
                     throw new ProcessingException("Module configuration 'single-role-user-management' for authentication user management generator not found.");
@@ -117,7 +117,7 @@ extends ServiceableGenerator {
                 UserManagementHandler handler = new UserManagementHandler(conf,
                                                                           state.getApplicationName());
                 this.showConfiguration(this.xmlConsumer, this.source, handler, userhandler.getContext());
-            
+
             } catch (ConfigurationException ex) {
                 throw new ProcessingException("ConfigurationException: " + ex, ex);
             }
@@ -147,7 +147,7 @@ extends ServiceableGenerator {
         Request request = ObjectModelHelper.getRequest(this.objectModel);
         Response response = ObjectModelHelper.getResponse(this.objectModel);
         Session session = request.getSession();
-        
+
         boolean isAdmin = (src == null || src.equals("admin"));
 
         // now start producing xml:
@@ -180,7 +180,7 @@ extends ServiceableGenerator {
         }
 
 
-        synchronized (session) { 
+        synchronized (session) {
 
             String state = request.getParameter(REQ_PARAMETER_STATE);
             if (state == null) {
@@ -462,8 +462,8 @@ extends ServiceableGenerator {
 
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNode(frag, XMLUtils.createPropertiesForXML(false))));
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("END getUsers fragment=" + (frag == null? "null": XMLUtils.serializeNode(frag)));
         }
         return frag;
     }
@@ -482,21 +482,22 @@ extends ServiceableGenerator {
         if (this.getLogger().isDebugEnabled() == true) {
             this.getLogger().debug("BEGIN getRoles");
         }
-        Document frag = null;
 
+        Document frag = null;
         if (handler.getLoadRolesResource() != null) {
             final String loadRolesResource = handler.getLoadRolesResource();
             final SourceParameters loadParameters = handler.getLoadRolesResourceParameters();
             SourceParameters parameters = (loadParameters == null) ? new SourceParameters()
                                                                      : (SourceParameters)loadParameters.clone();
-            if (handler.getApplicationName() != null)
+            if (handler.getApplicationName() != null) {
                 parameters.setSingleParameterValue("application", handler.getApplicationName());
+            }
             parameters.setSingleParameterValue("type", "roles");
             frag = this.loadResource(loadRolesResource, parameters);
         }
 
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END getRoles fragment="+frag);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("END getRoles fragment=" + frag);
         }
         return frag;
     }
@@ -671,18 +672,18 @@ extends ServiceableGenerator {
     throws IOException, ProcessingException, SAXException {
         Source source = null;
         try {
-            source = SourceUtil.getSource(resource, 
-                                          null, 
-                                          parameters, 
+            source = SourceUtil.getSource(resource,
+                                          null,
+                                          parameters,
                                           this.resolver);
-            SourceUtil.parse(this.manager, source, new DefaultHandler());                                          
+            SourceUtil.parse(this.manager, source, new DefaultHandler());
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } finally {
             this.resolver.release(source);
         }
     }
-    
+
     /**
      * Load XML resource
      */
@@ -691,9 +692,9 @@ extends ServiceableGenerator {
     throws IOException, ProcessingException, SAXException {
         Source source = null;
         try {
-            source = SourceUtil.getSource(resource, 
-                                          null, 
-                                          parameters, 
+            source = SourceUtil.getSource(resource,
+                                          null,
+                                          parameters,
                                           this.resolver);
             return SourceUtil.toDOM(source);
         } catch (SourceException se) {
@@ -708,11 +709,11 @@ final class UserManagementHandler {
 
     /** The name of the current application */
     private String applicationName;
-    
+
     /** The load-users resource */
     private String loadUsersResource;
     private SourceParameters loadUsersResourceParameters;
-    
+
     /** The load-roles resource */
     private String loadRolesResource;
     private SourceParameters loadRolesResourceParameters;
@@ -744,9 +745,9 @@ final class UserManagementHandler {
                                   String          appName)
     throws ConfigurationException {
         Configuration child;
-        
+
         this.applicationName = appName;
-        
+
         // get load-users resource (optional)
         child = conf.getChild("load-users", false);
         if (child != null) {
@@ -801,7 +802,7 @@ final class UserManagementHandler {
      * Get the name of the current application
      */
     public String getApplicationName() { return this.applicationName; }
-    
+
     /**
      * Get the load users resource
      */

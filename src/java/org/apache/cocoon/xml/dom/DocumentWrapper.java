@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,12 +43,12 @@ import org.xml.sax.SAXException;
  *  like XMLizable and a toString() method.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DocumentWrapper.java,v 1.6 2004/06/11 11:34:32 joerg Exp $
+ * @version CVS $Id: DocumentWrapper.java,v 1.7 2004/06/18 14:28:56 vgritsenko Exp $
 */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
     Document document = null;
-    
+
     /** Creates a new instance of DocmentWrapper */
     public DocumentWrapper(Document doc) {
         this.document = doc;
@@ -65,13 +65,13 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public void toSAX(org.xml.sax.ContentHandler handler) throws SAXException {
 
         DOMStreamer ds = new DOMStreamer(handler);
-        ds.stream(this.document.getDocumentElement());  
-    }    
+        ds.stream(this.document.getDocumentElement());
+    }
 
 
     public String toString() {
         try {
-            return XMLUtils.serializeNode(this.document, XMLUtils.createPropertiesForXML(false));
+            return XMLUtils.serializeNode(this.document);
         } catch (ProcessingException e) {
         }
         return "";
@@ -99,7 +99,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node appendChild(Node newChild) throws DOMException {
         return this.document.appendChild(newChild);
     }
-    
+
     /** Returns a duplicate of this node, i.e., serves as a generic copy
      * constructor for nodes. The duplicate node has no parent; (
      * <code>parentNode</code> is <code>null</code>.).
@@ -127,7 +127,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node cloneNode(boolean deep) {
         return this.document.cloneNode(deep);
     }
-    
+
     /** Creates an <code>Attr</code> of the given name. Note that the
      * <code>Attr</code> instance can then be set on an <code>Element</code>
      * using the <code>setAttributeNode</code> method.
@@ -146,7 +146,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Attr createAttribute(String name) throws DOMException {
         return this.document.createAttribute(name);
     }
-    
+
     /** Creates an attribute of the given qualified name and namespace URI.
      * @param namespaceURI The namespace URI of the attribute to create.
      * @param qualifiedName The qualified name of the attribute to
@@ -212,7 +212,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Attr createAttributeNS(String namespaceURI, String qualifiedName) throws DOMException {
         return this.document.createAttributeNS(namespaceURI, qualifiedName);
     }
-    
+
     /** Creates a <code>CDATASection</code> node whose value is the specified
      * string.
      * @param data The data for the <code>CDATASection</code> contents.
@@ -224,7 +224,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public CDATASection createCDATASection(String data) throws DOMException {
         return this.document.createCDATASection(data);
     }
-    
+
     /** Creates a <code>Comment</code> node given the specified string.
      * @param data The data for the node.
      * @return The new <code>Comment</code> object.
@@ -233,7 +233,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Comment createComment(String data) {
         return this.document.createComment(data);
     }
-    
+
     /** Creates an empty <code>DocumentFragment</code> object.
      * @return A new <code>DocumentFragment</code>.
      *
@@ -241,7 +241,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public DocumentFragment createDocumentFragment() {
         return this.document.createDocumentFragment();
     }
-    
+
     /** Creates an element of the type specified. Note that the instance
      * returned implements the <code>Element</code> interface, so attributes
      * can be specified directly on the returned object.
@@ -266,7 +266,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Element createElement(String tagName) throws DOMException {
         return this.document.createElement(tagName);
     }
-    
+
     /** Creates an element of the given qualified name and namespace URI.
      * @param namespaceURI The namespace URI of the element to create.
      * @param qualifiedName The qualified name of the element type to
@@ -324,7 +324,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException {
         return this.document.createElementNS(namespaceURI, qualifiedName);
     }
-    
+
     /** Creates an <code>EntityReference</code> object. In addition, if the
      * referenced entity is known, the child list of the
      * <code>EntityReference</code> node is made the same as that of the
@@ -345,7 +345,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public EntityReference createEntityReference(String name) throws DOMException {
         return this.document.createEntityReference(name);
     }
-    
+
     /** Creates a <code>ProcessingInstruction</code> node given the specified
      * name and data strings.
      * @param target The target part of the processing instruction.
@@ -360,7 +360,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public ProcessingInstruction createProcessingInstruction(String target, String data) throws DOMException {
         return this.document.createProcessingInstruction(target, data);
     }
-    
+
     /** Creates a <code>Text</code> node given the specified string.
      * @param data The data for the node.
      * @return The new <code>Text</code> object.
@@ -369,7 +369,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Text createTextNode(String data) {
         return this.document.createTextNode(data);
     }
-    
+
     /** A <code>NamedNodeMap</code> containing the attributes of this node (if
      * it is an <code>Element</code>) or <code>null</code> otherwise.
      *
@@ -377,7 +377,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public NamedNodeMap getAttributes() {
         return this.document.getAttributes();
     }
-    
+
     /** A <code>NodeList</code> that contains all children of this node. If
      * there are no children, this is a <code>NodeList</code> containing no
      * nodes.
@@ -386,7 +386,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public NodeList getChildNodes() {
         return this.document.getChildNodes();
     }
-    
+
     /** The Document Type Declaration (see <code>DocumentType</code>)
      * associated with this document. For HTML documents as well as XML
      * documents without a document type declaration this returns
@@ -400,7 +400,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public DocumentType getDoctype() {
         return this.document.getDoctype();
     }
-    
+
     /** This is a convenience attribute that allows direct access to the child
      * node that is the root element of the document. For HTML documents,
      * this is the element with the tagName "HTML".
@@ -409,7 +409,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Element getDocumentElement() {
         return this.document.getDocumentElement();
     }
-    
+
     /** Returns the <code>Element</code> whose <code>ID</code> is given by
      * <code>elementId</code>. If no such element exists, returns
      * <code>null</code>. Behavior is not defined if more than one element
@@ -426,7 +426,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Element getElementById(String elementId) {
         return this.document.getElementById(elementId);
     }
-    
+
     /** Returns a <code>NodeList</code> of all the <code>Elements</code> with a
      * given tag name in the order in which they are encountered in a
      * preorder traversal of the <code>Document</code> tree.
@@ -439,7 +439,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public NodeList getElementsByTagName(String tagname) {
         return this.document.getElementsByTagName(tagname);
     }
-    
+
     /** Returns a <code>NodeList</code> of all the <code>Elements</code> with a
      * given local name and namespace URI in the order in which they are
      * encountered in a preorder traversal of the <code>Document</code> tree.
@@ -455,7 +455,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public NodeList getElementsByTagNameNS(String namespaceURI, String localName) {
         return this.document.getElementsByTagNameNS(namespaceURI, localName);
     }
-    
+
     /** The first child of this node. If there is no such node, this returns
      * <code>null</code>.
      *
@@ -463,7 +463,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node getFirstChild() {
         return this.document.getFirstChild();
     }
-    
+
     /** The <code>DOMImplementation</code> object that handles this document. A
      * DOM application may use objects from multiple implementations.
      *
@@ -471,7 +471,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public DOMImplementation getImplementation() {
         return this.document.getImplementation();
     }
-    
+
     /** The last child of this node. If there is no such node, this returns
      * <code>null</code>.
      *
@@ -479,7 +479,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node getLastChild() {
         return this.document.getLastChild();
     }
-    
+
     /** Returns the local part of the qualified name of this node.
      * <br>For nodes of any type other than <code>ELEMENT_NODE</code> and
      * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1
@@ -491,7 +491,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public String getLocalName() {
         return this.document.getLocalName();
     }
-    
+
     /** The namespace URI of this node, or <code>null</code> if it is
      * unspecified.
      * <br>This is not a computed value that is the result of a namespace
@@ -510,7 +510,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public String getNamespaceURI() {
         return this.document.getNamespaceURI();
     }
-    
+
     /** The node immediately following this node. If there is no such node,
      * this returns <code>null</code>.
      *
@@ -518,21 +518,21 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node getNextSibling() {
         return this.document.getNextSibling();
     }
-    
+
     /** The name of this node, depending on its type; see the table above.
      *
      */
     public String getNodeName() {
         return this.document.getNodeName();
     }
-    
+
     /** A code representing the type of the underlying object, as defined above.
      *
      */
     public short getNodeType() {
         return this.document.getNodeType();
     }
-    
+
     /** The value of this node, depending on its type; see the table above.
      * When it is defined to be <code>null</code>, setting it has no effect.
      * @exception DOMException
@@ -545,7 +545,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public String getNodeValue() throws DOMException {
         return this.document.getNodeValue();
     }
-    
+
     /** The <code>Document</code> object associated with this node. This is
      * also the <code>Document</code> object used to create new nodes. When
      * this node is a <code>Document</code> or a <code>DocumentType</code>
@@ -557,7 +557,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Document getOwnerDocument() {
         return this.document.getOwnerDocument();
     }
-    
+
     /** The parent of this node. All nodes, except <code>Attr</code>,
      * <code>Document</code>, <code>DocumentFragment</code>,
      * <code>Entity</code>, and <code>Notation</code> may have a parent.
@@ -569,7 +569,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node getParentNode() {
         return this.document.getParentNode();
     }
-    
+
     /** The namespace prefix of this node, or <code>null</code> if it is
      * unspecified.
      * <br>Note that setting this attribute, when permitted, changes the
@@ -604,7 +604,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public String getPrefix() {
         return this.document.getPrefix();
     }
-    
+
     /** The node immediately preceding this node. If there is no such node,
      * this returns <code>null</code>.
      *
@@ -612,7 +612,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node getPreviousSibling() {
         return this.document.getPreviousSibling();
     }
-    
+
     /** Returns whether this node (if it is an element) has any attributes.
      * @return <code>true</code> if this node has any attributes,
      *   <code>false</code> otherwise.
@@ -622,7 +622,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public boolean hasAttributes() {
         return this.document.hasAttributes();
     }
-    
+
     /** Returns whether this node has any children.
      * @return <code>true</code> if this node has any children,
      *   <code>false</code> otherwise.
@@ -631,7 +631,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public boolean hasChildNodes() {
         return this.document.hasChildNodes();
     }
-    
+
     /** Imports a node from another document to this document. The returned
      * node has no parent; (<code>parentNode</code> is <code>null</code>).
      * The source node is not altered or removed from the original document;
@@ -733,7 +733,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node importNode(Node importedNode, boolean deep) throws DOMException {
         return this.document.importNode(importedNode, deep);
     }
-    
+
     /** Inserts the node <code>newChild</code> before the existing child node
      * <code>refChild</code>. If <code>refChild</code> is <code>null</code>,
      * insert <code>newChild</code> at the end of the list of children.
@@ -761,7 +761,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node insertBefore(Node newChild, Node refChild) throws DOMException {
         return this.document.insertBefore(newChild, refChild);
     }
-    
+
     /** Tests whether the DOM implementation implements a specific feature and
      * that feature is supported by this node.
      * @param feature The name of the feature to test. This is the same name
@@ -779,7 +779,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public boolean isSupported(String feature, String version) {
         return this.document.isSupported(feature, version);
     }
-    
+
     /** Puts all <code>Text</code> nodes in the full depth of the sub-tree
      * underneath this <code>Node</code>, including attribute nodes, into a
      * "normal" form where only structure (e.g., elements, comments,
@@ -799,7 +799,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public void normalize() {
         this.document.normalize();
     }
-    
+
     /** Removes the child node indicated by <code>oldChild</code> from the list
      * of children, and returns it.
      * @param oldChild The node being removed.
@@ -847,7 +847,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
         return this.document.replaceChild(newChild, oldChild);
     }
-    
+
     /** The value of this node, depending on its type; see the table above.
      * When it is defined to be <code>null</code>, setting it has no effect.
      * @exception DOMException
@@ -860,7 +860,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public void setNodeValue(String nodeValue) throws DOMException {
         this.document.setNodeValue(nodeValue);
     }
-    
+
     /** The namespace prefix of this node, or <code>null</code> if it is
      * unspecified.
      * <br>Note that setting this attribute, when permitted, changes the
@@ -895,5 +895,5 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
     public void setPrefix(String prefix) throws DOMException {
         this.document.setPrefix(prefix);
     }
-    
+
 }
