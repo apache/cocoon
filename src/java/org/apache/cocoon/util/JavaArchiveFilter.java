@@ -22,7 +22,8 @@ import java.io.FileFilter;
  * Implements a filter for java archives.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</A>
- * @version CVS $Id: JavaArchiveFilter.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @deprecated Will be removed in Cocoon 2.2
+ * @version CVS $Id$
  */
 
 public class JavaArchiveFilter implements FileFilter {

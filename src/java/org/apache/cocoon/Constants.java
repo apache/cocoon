@@ -24,7 +24,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.12 2004/03/08 12:07:40 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class Constants {
 
@@ -237,7 +237,7 @@ public final class Constants {
     public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
     /** The namespace URI for the Error/Exception XML */
-    public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/" + CONF_VERSION;
+    public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/2.1";
 
     /** The namespace prefix for the Error/Exception XML */
     public static final String ERROR_NAMESPACE_PREFIX = "error";

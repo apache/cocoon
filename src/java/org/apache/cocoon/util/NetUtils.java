@@ -15,6 +15,11 @@
  */
 package org.apache.cocoon.util;
 
+import org.apache.cocoon.environment.Request;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.excalibur.source.SourceParameters;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -29,11 +34,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import org.apache.cocoon.environment.Request;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
-import org.apache.excalibur.source.SourceParameters;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
