@@ -56,13 +56,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * This class holds the configuration of an external portal application.
  * 
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: PortalApplicationConfig.java,v 1.2 2003/09/18 14:38:46 vgritsenko Exp $
+ * @version CVS $Id: PortalApplicationConfig.java,v 1.3 2003/12/07 13:27:55 cziegeler Exp $
  */
 public class PortalApplicationConfig {
     /**
@@ -165,9 +166,14 @@ public class PortalApplicationConfig {
         for (int i = 0; i < settings.getLength(); i++) {
             Node current = settings.item(i);
             if ( current.getNodeType() == Node.ELEMENT_NODE) {
-               data.put(
-                    ((Element) current).getNodeName(),
-                    ((Element)current).getNodeValue());
+                NodeList content = current.getChildNodes();
+                for (int j = 0; j < content.getLength(); j++) {
+                    Node text = content.item(j);
+                    if (text.getNodeType() == Node.TEXT_NODE) {
+                        data.put(((Element) current).getNodeName(),
+                                 ((Text) text).getNodeValue());
+                    }
+                }
             }
         }
     }
