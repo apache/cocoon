@@ -2327,6 +2327,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         this.globalJexlContext = null;
         this.variables = null;
         this.definitions = null;
+        this.cocoon = null;
         super.recycle();
     }
 
