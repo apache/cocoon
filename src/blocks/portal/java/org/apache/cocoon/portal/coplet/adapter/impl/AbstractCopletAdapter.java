@@ -58,17 +58,13 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.xml.ContentHandlerWrapper;
-import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This is the adapter to use pipelines as coplets
@@ -76,7 +72,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.7 2004/02/12 09:33:30 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.8 2004/03/01 20:34:28 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -124,14 +120,12 @@ public abstract class AbstractCopletAdapter
         
         if ( bool != null && bool.booleanValue() ) {
             boolean read = false;
-            XMLSerializer serializer = null;
-            Object data = null;
+            SaxBuffer buffer = new SaxBuffer();
             try {
-                serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
                 
                 if ( timeout != null ) {
                     final int milli = timeout.intValue() * 1000;
-                    LoaderThread loader = new LoaderThread(this, coplet, serializer);
+                    LoaderThread loader = new LoaderThread(this, coplet, buffer);
                     Thread thread = new Thread(loader);
                     thread.start();
                     try {
@@ -139,38 +133,18 @@ public abstract class AbstractCopletAdapter
                     } catch (InterruptedException ignore) {
                     }
                     if ( loader.finished ) {
-                        data = serializer.getSAXFragment();
                         read = true;
                     }
                 } else {
-                    this.streamContent( coplet, serializer );
-                    data = serializer.getSAXFragment();
+                    this.streamContent( coplet, buffer );
                     read = true;
                 }
-            } catch (ServiceException ce) {
-                throw new SAXException("Unable to lookup xml serializer.", ce);
             } catch (Exception exception ) {
                 this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), exception);
-            } finally {
-                this.manager.release( serializer );
             }
             
             if ( read ) {
-                XMLDeserializer deserializer = null;
-                try {
-                    deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
-                    if ( contentHandler instanceof XMLConsumer ) {
-                        deserializer.setConsumer( (XMLConsumer)contentHandler );
-                    } else {
-                        LexicalHandler lh = (contentHandler instanceof LexicalHandler ? (LexicalHandler)contentHandler : null);
-                        deserializer.setConsumer(  new ContentHandlerWrapper(contentHandler, lh));
-                    }
-                    deserializer.deserialize( data );
-                } catch (ServiceException ce) {
-                    throw new SAXException("Unable to lookup xml deserializer.", ce);
-                } finally {
-                    this.manager.release( deserializer );
-                }
+                buffer.toSAX( contentHandler );
             } else {
                 if ( !this.renderErrorContent(coplet, contentHandler)) {
                     // FIXME - get correct error message
