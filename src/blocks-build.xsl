@@ -413,6 +413,31 @@
       <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xweb"/>
       </xpatch>
+      <!-- generate sitemap entries -->
+      <sitemap-components sitemap="${{build.webapp}}/sitemap.xmap" 
+                          source="${{blocks}}/{$block-name}/java"
+                          block="{$block-name}">
+        <xsl:if test="@status='unstable'">
+          <xsl:attribute name="stable">false</xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@status='deprecated'">
+          <xsl:attribute name="deprecated">true</xsl:attribute>
+        </xsl:if>
+      </sitemap-components>
+
+      <!-- TODO - this is the wrong place for documentation, but currently blocks
+           don't have own docs! -->
+      <!-- generate sitemap components docs -->
+      <sitemap-components docDir="${{build.context}}/xdocs/userdocs" 
+                          source="${{blocks}}/{$block-name}/java"
+                          block="{$block-name}">
+        <xsl:if test="@status='unstable'">
+          <xsl:attribute name="stable">false</xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@status='deprecated'">
+          <xsl:attribute name="deprecated">true</xsl:attribute>
+        </xsl:if>
+      </sitemap-components>
 
     </target>
                                                                                                                                                                                
