@@ -267,41 +267,36 @@ The following goals were identified as engineering constraints:
      "aspect" requested.
      
      Views can be pictured as generator-less pipelines which use, as a generator,
-     the result of another pipeline from the "label" they indicate.
+     the result of another pipeline from the "label" they indicate or from the
+     position (first/last) in the pipeline.
      
-     Labels can be seen as non-standard exit points from the normal pipelines.
+     Labels can be seen as non-standard exit points from the normal pipelines
+     and "first" identifies the position right after the generator while "last
+     indentifies the position right before the serializer.
      
      Both generators and transformers are allowed to attach a default label to 
      them. If no <label> element is explicitly indicated, the sitemap handler
      will scan for default labels attached to the components, starting from the
      serializer and going backward, until it finds a component to start.
      If none is found, the generator is assumed to be the view generator.
-     
   -->
  <map:views>
  
-  <map:view name="content" generate-from="content">
+  <map:view name="content" from-position="first">
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="schema" generate-from="content">
+  <map:view name="schema" from-label="content">
    <map:transform type="schema"/>
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="semantics" generate-from="content">
+  <map:view name="semantics" from-label="content">
    <map:transform type="rdf"/>
    <map:serialize type="xml"/>
   </map:view>
 
-  <!-- 
-      In this case, this view can be generated from both "links" and "content"
-      labels, in this order. This means that if the "hyperlinks" view of a resource
-      is requested, the sitemap will redirect the events from the matching
-      pipeline to this view when the links label is reached... or, if no
-      links label is found, from the content label.
-   -->
-  <map:view name="hyperlinks" generate-from="links,content">
+  <map:view name="hyperlinks" from-position="last">
    <map:transform src="./stylesheets/xlink-filter.xsl"/>
    <map:serialize type="xml"/>
   </map:view>
