@@ -35,7 +35,7 @@
         <p>
             At the sitemap level, Flowscript applications need four things:
             <ul>
-                <li>The flowscript code must be made available to the sitemap</li>
+                <li>The Flowscript code must be made available to the sitemap</li>
                 <li>
                     A <em>map:call function</em> instruction must start
                     the Flowscript function when the "application start"
@@ -46,14 +46,14 @@
                     continuations when their IDs are received in requests
                 </li>
                 <li>
-                    A "view" pipeline must use the (flowscript-aware) JXTemplate generator
+                    A "view" pipeline must use the (Flowscript-aware) JXTemplate generator
                     to insert data provided by Flowscript into pages.
                 </li>
             </ul>
             The corresponding excerpts of our sitemap are shown below.
         </p>
         <h3>Flowscript declaration</h3>
-        <p>Note that this already contains the declaration of the next example's flowscript.</p>
+        <p>Note that this already contains the declaration of the next example's Flowscript.</p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/flow"/>
 
         <h3>map:call function</h3>
@@ -77,7 +77,7 @@
         <h3>View pipeline using JXTemplageGenerator</h3>
         <p>
             To be able to include data provided by Flowscript in our forms and views, we
-            use the flowscript-aware JXTemplateGenerator
+            use the Flowscript-aware JXTemplateGenerator
         </p>
         <p>Here's the pipeline</p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/sitemap.xmap/views"/>
@@ -105,13 +105,13 @@
         <p>
             Here's the page definition for our number-guessing form.
             JXTemplate codes like <em>${continuation.id}</em>, will by replaced
-            by values provided in the FlowScript <em>sendPageAndWait</em> function call.
+            by values provided in the Flowscript <em>sendPageAndWait</em> function call.
         </p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/flow/number-guess/guess.xml/page"/>
 
         <h2>That's it!</h2>
         <p>
-            We have now seen the complete code of our flowscript application:
+            We have now seen the complete code of our Flowscript application:
             <ul>
                 <li>A few sitemap declarations, which will be very similar for other Flowscript-based applications</li>
                 <li>A JXTemplate-based view, a "normal" page with some substitution codes</li>

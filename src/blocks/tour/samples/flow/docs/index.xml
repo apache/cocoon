@@ -25,7 +25,7 @@
         </p>
         <p>
             A <em>continuation</em> saves the state of execution of the currently
-            running flowscript, and allows this state to be "resurrected" later on,
+            running Flowscript, and allows this state to be "resurrected" later on,
             typically when the user submits an HTML form that was sent with the
             <em>cocoon.sendPageAndWait</em> instruction.
         </p>
@@ -36,10 +36,10 @@
             show how little code is used to manage typical interactions.
         </p>
         <p>
-            Having to use javascript to write the Flow scripts might seem strange
+            Having to use JavaScript to write the Flow scripts might seem strange
             at first, but in practice only a few lines of Flow code will be required
             for a typical application, so this doesn't matter much. The reason is that
-            javascript (through a modified version of the mozilla Rhino interpreter)
+            JavaScript (through a modified version of the mozilla Rhino interpreter)
             is currently the only continuations-enabled language that can be
             distributed with Cocoon.
         </p>
