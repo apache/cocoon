@@ -21,7 +21,6 @@
    <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/>
    <map:transformer     name="xinclude"  src="org.apache.cocoon.transformation.XIncludeTransformer"/>
-   <map:transformer     name="link"      src="org.apache.cocoon.sitemap.LinkTranslator"/>
   </map:transformers>
 
   <map:readers default="resource">
@@ -87,7 +86,7 @@
    <map:serialize type="xml"/>
   </map:view>
 
-  <map:view name="links" from-label="content">
+  <map:view name="links" from-position="last">
    <map:serialize type="links"/>
   </map:view>
 
