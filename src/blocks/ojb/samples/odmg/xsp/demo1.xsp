@@ -16,7 +16,7 @@
 -->
 
 <!--
- * Simple demo that insert a row into hsqldb using OJB with JDO
+ * Simple demo that insert a row into hsqldb using OJB with ODMG
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
  * @version CVS $Revision: 1.3 $ $Date: 2004/03/17 11:28:20 $
@@ -24,56 +24,53 @@
 
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
 
-	<xsp:structure>
-		<xsp:include>org.apache.cocoon.ojb.odmg.components.OdmgImplementation</xsp:include>
-		<xsp:include>org.apache.cocoon.ojb.samples.bean.Department</xsp:include>
-		<xsp:include>org.odmg.Implementation</xsp:include>
-		<xsp:include>org.odmg.Transaction</xsp:include>
-		<xsp:include>org.odmg.ODMGException</xsp:include>
-	</xsp:structure>
+  <xsp:structure>
+    <xsp:include>org.apache.cocoon.ojb.odmg.components.ODMG</xsp:include>
+    <xsp:include>org.apache.cocoon.ojb.samples.bean.Department</xsp:include>
+    <xsp:include>org.odmg.Implementation</xsp:include>
+    <xsp:include>org.odmg.Transaction</xsp:include>
+    <xsp:include>org.odmg.ODMGException</xsp:include>
+  </xsp:structure>
 
-	<xsp:init-page>
-		OdmgImplementation odmgImpl = null;
-		Implementation impl = null;
-		Department bean = new Department();
-		String s;
-	</xsp:init-page>
+  <page>
+    <content>
+      <title>Hello</title>
+      <para>This is my first Cocoon page with OJB!</para>
+      <xsp:logic>
+        ODMG odmg = null;
+        try {
+          /* Get the implementation */
+          Implementation impl = null;
+          try {
+            odmg = (ODMG) manager.lookup(ODMG.ROLE);
+            impl = odmg.getInstance("personnel");
+          } catch (ComponentException cme) {
+            getLogger().error("Could not look up the ODMG Implementation", cme);
+          } catch (ODMGException oe) {
+            getLogger().error("Failed to instantiate ODMG Implementation", oe);
+          }
 
-	<page>
-		<content>
-			<title>Hello</title>
-			<para>This is my first Cocoon page with OJB!</para>
-			<xsp:logic>
-			try {
-				/* Get the PersistenceManager */
-				try {
-          odmgImpl = (OdmgImplementation)manager.lookup( OdmgImplementation.ROLE );
-          impl = odmgImpl.getInstance( "personnel" );
-				} catch (ComponentException cme) {
-					getLogger().error("Could not look up the ODMG Implementation", cme);
-				} catch (ODMGException oe) {
-					getLogger().error("Failed to instantiate ODMG Implementation", oe);
-				}
-				<!-- Setting up the Bean -->
-				bean.setId(6);
-				bean.setName("ODMG Development");
-				<!-- 2. Get current transaction -->
-				Transaction tx = impl.newTransaction();
-				<!-- 3. Start a Transaction -->
-				tx.begin();
-				<!-- 4. now perform persistence operations. Store the new Department -->
-				tx.lock(bean, Transaction.WRITE);;
-				<!-- 5. Commit the transaction  -->
-				tx.commit();
-        s = bean.getId() + " : " + bean.getName();
-			</xsp:logic>
-			<p> Inserted data: <xsp:expr>s</xsp:expr> </p>
-			<xsp:logic>
-			}
-			finally {
-				manager.release(odmgImpl);
-			}
-		</xsp:logic>
-		</content>
-	</page>
+          <!-- Setting up the Bean -->
+          Department bean = new Department();
+          bean.setId(6);
+          bean.setName("ODMG Development");
+          <!-- 2. Get current transaction -->
+          Transaction tx = impl.newTransaction();
+          <!-- 3. Start a Transaction -->
+          tx.begin();
+          <!-- 4. now perform persistence operations. Store the new Department -->
+          tx.lock(bean, Transaction.WRITE);;
+          <!-- 5. Commit the transaction  -->
+          tx.commit();
+
+          <p>
+            Inserted data: <xsp:expr>bean.getId() + " : " + bean.getName()</xsp:expr>
+          </p>
+
+        } finally {
+          manager.release(odmg);
+        }
+      </xsp:logic>
+    </content>
+  </page>
 </xsp:page>

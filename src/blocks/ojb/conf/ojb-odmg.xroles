@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.ojb.odmg.components.OdmgImplementation']">
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.ojb.odmg.components.ODMG']">
 
-  <role name="org.apache.cocoon.ojb.odmg.components.OdmgImplementation" shorthand="ojb-odmg" default-class="org.apache.cocoon.ojb.odmg.components.OdmgImplementationImpl"/>
+  <role name="org.apache.cocoon.ojb.odmg.components.ODMG" shorthand="ojb-odmg" default-class="org.apache.cocoon.ojb.odmg.components.ODMGImpl"/>
 </xroles>

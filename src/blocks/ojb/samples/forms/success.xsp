@@ -17,7 +17,7 @@
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
 
   <xsp:structure>
-    <xsp:include>org.apache.cocoon.ojb.jdo.components.JdoPMF</xsp:include>
+    <xsp:include>org.apache.cocoon.ojb.jdo.components.JDO</xsp:include>
     <xsp:include>org.apache.cocoon.ojb.samples.EmployeeDAO</xsp:include>
     <xsp:include>org.apache.cocoon.ojb.samples.bean.Employee</xsp:include>
     <xsp:include>org.apache.cocoon.forms.formmodel.*</xsp:include>
@@ -27,10 +27,10 @@
     <title>Storing employee in database succeeded.</title>
     <content>
       <xsp:logic>
-        Form form = (Form)request.getAttribute("employeeform");
-        Field fid = (Field)form.lookupWidget("id");
-        Field fname = (Field)form.lookupWidget("name");
-        Field fdepartment_id = (Field)form.lookupWidget("department_id");
+        Form form = (Form) request.getAttribute("employeeform");
+        Field fid = (Field) form.lookupWidget("id");
+        Field fname = (Field) form.lookupWidget("name");
+        Field fdepartment_id = (Field) form.lookupWidget("department_id");
       </xsp:logic>
       <p>The values of the form:</p>
       ID: <xsp:expr>fid.getValue()</xsp:expr>
@@ -43,10 +43,10 @@
 
       <p>The values retrieved from the database:</p>
       <xsp:logic>
-        JdoPMF factory = null;
+        JDO factory = null;
         Employee bean = null;
         try {
-            factory = (JdoPMF)manager.lookup(JdoPMF.ROLE);
+            factory = (JDO) manager.lookup(JDO.ROLE);
 
             bean = new Employee();
             EmployeeDAO dao = new EmployeeDAO();

@@ -15,35 +15,36 @@
  */
 package org.apache.cocoon.samples.flow.java;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-
 import org.apache.cocoon.components.flow.java.AbstractContinuable;
 import org.apache.cocoon.components.flow.java.Continuable;
 import org.apache.cocoon.components.flow.java.VarMap;
 import org.apache.cocoon.forms.binding.BindingException;
 import org.apache.cocoon.forms.flow.java.FormInstance;
-import org.apache.cocoon.ojb.broker.components.PBFactory;
 import org.apache.cocoon.ojb.samples.bean.Employee;
+
 import org.apache.ojb.broker.Identity;
 import org.apache.ojb.broker.PersistenceBroker;
+import org.apache.ojb.broker.PersistenceBrokerFactory;
 import org.apache.ojb.broker.query.Criteria;
 import org.apache.ojb.broker.query.QueryByCriteria;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+
+/**
+ * @version $Id$
+ */
 public class PersistenceFlow extends AbstractContinuable {
 
-    private transient PersistenceBroker broker = null;
+    private transient PersistenceBroker broker;
 
     public PersistenceFlow() {
-        PBFactory factory = (PBFactory)getComponent(PBFactory.ROLE);
-        broker = factory.defaultPersistenceBroker();
-        releaseComponent(factory);
+        this.broker = PersistenceBrokerFactory.defaultPersistenceBroker();
     }
 
     public void doInsertEmployee() throws BindingException {
-
         // Create a empty Bean
         Employee employee = new Employee();
         // Fill some initial data to the bean
@@ -65,11 +66,10 @@ public class PersistenceFlow extends AbstractContinuable {
     }
 
     public void doUpdateEmployee() throws BindingException {
-
         // Get id as parameter
         int id = 1;
         if (getRequest().getParameter("id")!=null)
-            id = Integer.parseInt(getRequest().getParameter("id")); 
+            id = Integer.parseInt(getRequest().getParameter("id"));
         else
             throw new IllegalStateException("No parameter 'id'");
 
@@ -98,7 +98,6 @@ public class PersistenceFlow extends AbstractContinuable {
     }
 
     public void doRemoveEmployee() {
-
         // Get id as parameter
         int id = 1;
         if (getRequest().getParameter("id")!=null)
@@ -119,7 +118,6 @@ public class PersistenceFlow extends AbstractContinuable {
     }
 
     public void doShowEmployee() {
-
         // Query all objects
         ArrayList results = new ArrayList();
         QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
@@ -136,7 +134,7 @@ public class PersistenceFlow extends AbstractContinuable {
         public int compare(Object o1, Object o2) {
             return ((Employee)o1).getId()-((Employee)o2).getId();
         }
-      
+
         public boolean equals(Object obj) {
             return true;
         }

@@ -25,18 +25,19 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 /**
- * Implementation of the JdoPMF. Create one PMF and store it for future use
+ * Implementation of the JDO component. Creates one PersistenceManagerFactory
+ * and stores it for the future use.
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version CVS $Id$
 */
-public class JdoPMFImpl extends AbstractLogEnabled
-                        implements JdoPMF, ThreadSafe, Initializable {
+public class JDOImpl extends AbstractLogEnabled
+                     implements JDO, ThreadSafe, Initializable {
 
     protected PersistenceManagerFactory factory;
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.ojb.jdori.components.JdoPMF#getPersistenceManager()
+     * @see org.apache.cocoon.ojb.jdori.components.JDO#getPersistenceManager()
      */
     public PersistenceManager getPersistenceManager() {
         return this.factory.getPersistenceManager();
