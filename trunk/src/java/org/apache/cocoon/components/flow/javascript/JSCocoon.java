@@ -74,17 +74,16 @@ import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.acting.Action;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 /**
  * JavaScript interface to various Cocoon abstractions.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.11 2003/05/08 00:05:04 vgritsenko Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.12 2003/10/16 14:57:36 bloritsch Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -92,7 +91,7 @@ public class JSCocoon extends ScriptableObject
     protected JavaScriptInterpreter interpreter;
     protected NativeArray parameters;
     protected Environment environment;
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     public JSCocoon() {}
 
@@ -112,7 +111,7 @@ public class JSCocoon extends ScriptableObject
         this.interpreter = interpreter;
     }
 
-    public void setContext(ComponentManager manager, Environment environment)
+    public void setContext(ServiceManager manager, Environment environment)
     {
         this.manager = manager;
         this.environment = environment;
@@ -178,7 +177,7 @@ public class JSCocoon extends ScriptableObject
         return ObjectModelHelper.getContext(objectModel);
     }
 
-    public ComponentManager jsGet_componentManager()
+    public ServiceManager jsGet_componentManager()
     {
         return manager;
     }
@@ -290,7 +289,7 @@ public class JSCocoon extends ScriptableObject
     }
 
     public void jsFunction_diplayAllContinuations()
-        throws ComponentException
+        throws ServiceException
     {
         ContinuationsManager continuationsMgr
             = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
@@ -298,14 +297,14 @@ public class JSCocoon extends ScriptableObject
         try {
             continuationsMgr.displayAllContinuations();
         } finally {
-            manager.release((Component)continuationsMgr);
+            manager.release(continuationsMgr);
         }
     }
 
     // All right, this breaks the encapsulation, but I couldn't find any
     // better way to obtain the ComponentManager for a
     // JSWebContinuation.
-    ComponentManager getComponentManager()
+    ServiceManager getComponentManager()
     {
         return manager;
     }
@@ -346,9 +345,9 @@ public class JSCocoon extends ScriptableObject
         Redirector redirector = new SitemapRedirector(this.environment);
         SourceResolver resolver = (SourceResolver)this.environment.getObjectModel()
             .get(OBJECT_SOURCE_RESOLVER);
-        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-        ComponentSelector actionSelector
-            = (ComponentSelector)sitemapManager.lookup(Action.ROLE + "Selector");
+        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceSelector actionSelector
+            = (ServiceSelector)sitemapManager.lookup(Action.ROLE + "Selector");
         Action action = (Action)actionSelector.select(type);
         Map result = null;
         try {
@@ -388,8 +387,8 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-        ComponentSelector inputSelector = (ComponentSelector)sitemapManager
+        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceSelector inputSelector = (ServiceSelector)sitemapManager
             .lookup(InputModule.ROLE + "Selector");
         InputModule input = (InputModule) inputSelector.select(type);
         Object result = null;
@@ -408,8 +407,8 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-        ComponentSelector outputSelector = (ComponentSelector)sitemapManager
+        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceSelector outputSelector = (ServiceSelector)sitemapManager
             .lookup(OutputModule.ROLE + "Selector");
         OutputModule output = (OutputModule) outputSelector.select(type);
         try {
@@ -426,8 +425,8 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-        ComponentSelector outputSelector = (ComponentSelector)sitemapManager
+        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceSelector outputSelector = (ServiceSelector)sitemapManager
             .lookup(OutputModule.ROLE + "Selector");
         OutputModule output = (OutputModule) outputSelector.select(type);
         try {
@@ -442,8 +441,8 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-        ComponentSelector outputSelector = (ComponentSelector)sitemapManager
+        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceSelector outputSelector = (ServiceSelector)sitemapManager
             .lookup(OutputModule.ROLE + "Selector");
         OutputModule output = (OutputModule) outputSelector.select(type);
         try {

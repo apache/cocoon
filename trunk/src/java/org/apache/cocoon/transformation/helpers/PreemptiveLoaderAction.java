@@ -60,12 +60,12 @@ import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * This action starts the preemptive loader and runs forever.
- * 
+ *
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.4 2003/10/15 20:16:44 cziegeler Exp $
+ *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.5 2003/10/16 15:00:37 bloritsch Exp $
  *  @since   2.1
  */
-public class PreemptiveLoaderAction 
+public class PreemptiveLoaderAction
     extends ServiceableAction
     implements ThreadSafe {
 

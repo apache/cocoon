@@ -45,11 +45,6 @@
 */
 package org.apache.cocoon.components.flow;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -57,6 +52,9 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.SingleThreaded;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -79,11 +77,11 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.10 2003/10/15 17:04:50 cziegeler Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.11 2003/10/16 14:57:36 bloritsch Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
-  implements Component, Composable, Contextualizable, Interpreter,
-             SingleThreaded, Configurable, Disposable
+  implements Serviceable, Contextualizable, Interpreter,
+             SingleThreaded, Configurable
 {
     /**
      * List of source locations that need to be resolved.
@@ -91,9 +89,9 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     protected ArrayList needResolve = new ArrayList();
 
     protected org.apache.cocoon.environment.Context context;
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     protected ContinuationsManager continuationsMgr;
-    
+
     /**
      * Whether reloading of scripts should be done. Specified through
      * the "reload-scripts" attribute in <code>flow.xmap</code>.
@@ -111,10 +109,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         checkTime = config.getChild("check-time").getValueAsLong(1000L);
     }
 
-    /**
-     * Composable
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.continuationsMgr = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
     }
@@ -129,7 +124,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release( (Component)this.continuationsMgr );
+            this.manager.release( this.continuationsMgr );
             this.continuationsMgr = null;
             this.manager = null;
         }
@@ -159,7 +154,6 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      *
      * @param source the location of the script
      *
-     * @see org.apache.cocoon.components.source.SourceFactory
      * @see org.apache.cocoon.environment.Environment
      * @see org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper
      */
@@ -211,10 +205,10 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         try {
             // Retrieve a processor instance
             processor = (Processor)this.manager.lookup(Processor.ROLE);
-            
+
             // Enter the environment
             CocoonComponentManager.enterEnvironment(wrapper, this.manager, processor);
-            
+
             // Process the subrequest
             result = processor.process(wrapper);
             wrapper.commitResponse();

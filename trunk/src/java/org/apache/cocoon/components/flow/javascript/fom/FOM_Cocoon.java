@@ -59,9 +59,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
@@ -82,10 +81,10 @@ import org.mozilla.javascript.continuations.Continuation;
 /**
  * Implementation of FOM (Flow Object Model).
  *
- * @since 2.1 
+ * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.13 2003/10/15 17:04:50 cziegeler Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.14 2003/10/16 14:57:36 bloritsch Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -93,7 +92,7 @@ public class FOM_Cocoon extends ScriptableObject {
     private FOM_JavaScriptInterpreter interpreter;
 
     private Environment environment;
-    private ComponentManager componentManager;
+    private ServiceManager serviceManager;
     private Logger logger;
 
     private FOM_Request request;
@@ -122,19 +121,19 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     void setup(FOM_JavaScriptInterpreter interp,
-               Environment env, 
-               ComponentManager manager,
-               Logger logger) {
+                      Environment env,
+                      ServiceManager manager,
+                      Logger logger) {
         this.interpreter = interp;
         this.environment = env;
-        this.componentManager = manager;
+        this.serviceManager = manager;
         this.logger = logger;
     }
 
     void invalidate() {
         // Clear the scope attribute
         this.getRequest().removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
-        
+
         // Cleanup everything
         this.request = null;
         this.response = null;
@@ -142,32 +141,32 @@ public class FOM_Cocoon extends ScriptableObject {
         this.context = null;
         this.log = null;
         this.logger = null;
-        this.componentManager = null;
+        this.serviceManager = null;
         this.environment = null;
         this.interpreter = null;
     }
 
 
     private FOM_WebContinuation forwardTo(String uri, Object bizData,
-                                          Continuation continuation) 
+                                          Continuation continuation)
         throws Exception {
         WebContinuation wk = null;
         if (continuation != null) {
             ContinuationsManager contMgr = (ContinuationsManager)
-                componentManager.lookup(ContinuationsManager.ROLE);
-            wk = lastContinuation = 
+                serviceManager.lookup(ContinuationsManager.ROLE);
+            wk = lastContinuation =
                 contMgr.createWebContinuation(continuation,
                                               lastContinuation,
                                               0,
                                               null);
         }
-        
+
         String redUri = uri;
-        
+
         FOM_WebContinuation fom_wk =
             new FOM_WebContinuation(wk);
         fom_wk.setParentScope(getParentScope());
-        fom_wk.setPrototype(getClassPrototype(getParentScope(), 
+        fom_wk.setPrototype(getClassPrototype(getParentScope(),
                                               fom_wk.getClassName()));
         interpreter.forwardTo(getParentScope(), this, redUri,
                               bizData, fom_wk, environment);
@@ -182,23 +181,23 @@ public class FOM_Cocoon extends ScriptableObject {
         return result;
     }
 
-    public FOM_WebContinuation jsFunction_sendPage(String uri, 
-                                                   Object obj, 
-                                                   Object continuation) 
+    public FOM_WebContinuation jsFunction_sendPage(String uri,
+                                                   Object obj,
+                                                   Object continuation)
         throws Exception {
-        return forwardTo(uri, obj, (Continuation)unwrap(continuation)); 
+        return forwardTo(uri, obj, (Continuation)unwrap(continuation));
     }
-                                    
+
 
     public void jsFunction_processPipelineTo(String uri,
                                              Object map,
-                                             Object outputStream) 
+                                             Object outputStream)
         throws Exception {
         if (!(unwrap(outputStream) instanceof OutputStream)) {
             throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
         }
-        interpreter.process(getParentScope(), this, uri, map, 
-                            (OutputStream)unwrap(outputStream), 
+        interpreter.process(getParentScope(), this, uri, map,
+                            (OutputStream)unwrap(outputStream),
                             environment);
     }
 
@@ -212,39 +211,39 @@ public class FOM_Cocoon extends ScriptableObject {
  designed in the future. It has been postponed because we think
  there are more important things to do at the moment, but these
  are left here to indicate that they are planned.
- 
-    public void jsFunction_addEventListener(String eventName, 
+
+    public void jsFunction_addEventListener(String eventName,
                                             Object function) {
         // what is this?
     }
-    
+
     public void jsFunction_removeEventListener(String eventName,
                                                Object function) {
         // what is this?
     }
-    
+
 */
 
     /**
      * Access components.
-     * 
+     *
      * TODO: Do we want to restrict the access of sitemap components? (RP)
      * TODO: Do we want to raise an error or return null? (RP)
-     */  
-    public Object jsFunction_getComponent(String id) 
-        throws Exception { 
-        return componentManager.lookup(id);
+     */
+    public Object jsFunction_getComponent(String id)
+        throws Exception {
+        return serviceManager.lookup(id);
     }
-    
+
     /**
      * Release pooled components.
-     * 
-     * @param component - an <code>Object</code> that is an instance 
+     *
+     * @param component - an <code>Object</code> that is an instance
      * of <code>org.apache.avalon.framework.component.Component</code>
      */
     public void jsFunction_releaseComponent( Object component ) throws Exception {
         try {
-            this.componentManager.release( (Component) unwrap(component) );
+            this.serviceManager.release( unwrap(component) );
         } catch( ClassCastException cce ) {
             throw new JavaScriptException( "Only components can be released!" );
         }
@@ -257,17 +256,17 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return an <code>Object</code> value
      * @exception JavaScriptException if an error occurs
      */
-    public Object jsFunction_load( String filename ) 
+    public Object jsFunction_load( String filename )
         throws Exception {
-        org.mozilla.javascript.Context cx = 
+        org.mozilla.javascript.Context cx =
             org.mozilla.javascript.Context.getCurrentContext();
         Scriptable scope = getParentScope();
-        Script script = interpreter.compileScript( cx, 
+        Script script = interpreter.compileScript( cx,
                                                    environment,
                                                    filename );
         return script.exec( cx, scope );
-    }    
-        
+    }
+
     public static class FOM_Request extends ScriptableObject {
 
         Request request;
@@ -279,7 +278,7 @@ public class FOM_Cocoon extends ScriptableObject {
         public FOM_Request(Object request) {
             this.request = (Request)unwrap(request);
         }
-		
+
         public String getClassName() {
             return "FOM_Request";
         }
@@ -335,7 +334,7 @@ public class FOM_Cocoon extends ScriptableObject {
             return request.getCharacterEncoding();
         }
 
-        public void jsFunction_setCharacterEncoding(String value) 
+        public void jsFunction_setCharacterEncoding(String value)
             throws Exception {
             request.setCharacterEncoding(value);
         }
@@ -363,47 +362,47 @@ public class FOM_Cocoon extends ScriptableObject {
         public String jsFunction_getAuthType() {
             return request.getAuthType();
         }
-        
+
         public String jsFunction_getProtocol() {
             return request.getProtocol();
         }
-        
+
         public String jsFunction_getServerName() {
             return request.getServerName();
         }
-        
+
         public String jsFunction_getRemoteAddr() {
             return request.getRemoteAddr();
         }
-        
+
         public String jsFunction_getRemoteHost() {
             return request.getRemoteHost();
         }
-        
+
         public int jsFunction_getServerPort() {
             return request.getServerPort();
         }
-        
+
         public String jsFunction_getScheme() {
             return request.getScheme();
         }
-        
+
         public String jsFunction_getMethod() {
             return request.getMethod();
         }
-        
+
         public boolean jsFunction_isSecure() {
             return request.isSecure();
         }
-        
+
         public Locale jsFunction_getLocale() {
             return request.getLocale();
         }
-        
+
         public Enumeration jsFunction_getLocales() {
             return request.getLocales();
         }
-        
+
         public FOM_Cookie[] jsFunction_getCookies() {
             Cookie[] cookies = request.getCookies();
             FOM_Cookie[] FOM_cookies = new FOM_Cookie[cookies!=null ? cookies.length : 0];
@@ -415,11 +414,11 @@ public class FOM_Cocoon extends ScriptableObject {
             }
             return FOM_cookies;
         }
-        
+
         public Scriptable jsGet_cookies() {
             return Context.getCurrentContext().newArray(getParentScope(), jsFunction_getCookies());
         }
-            
+
         public FOM_Cookie jsFunction_getCookie(String name) {
             Object     cookie  = request.getCookieMap().get(name);
             FOM_Cookie fcookie = null;
@@ -430,19 +429,19 @@ public class FOM_Cocoon extends ScriptableObject {
             }
             return fcookie;
         }
-        
+
         public String jsFunction_getHeader(String name) {
             return request.getHeader(name);
         }
-        
+
         public Enumeration jsFunction_getHeaders(String name) {
             return request.getHeaders(name);
         }
-        
+
         public Enumeration jsFunction_getHeaderNames() {
             return request.getHeaderNames();
         }
-        
+
         public Principal jsFunction_getUserPrincipal() {
             return request.getUserPrincipal();
         }
@@ -546,14 +545,14 @@ public class FOM_Cocoon extends ScriptableObject {
         }
 
         public Object jsFunction_createCookie(String name, String value) {
-            FOM_Cookie result = 
+            FOM_Cookie result =
                 new FOM_Cookie(response.createCookie(name, value));
             result.setParentScope(getParentScope());
             result.setPrototype(getClassPrototype(this, result.getClassName()));
             return result;
         }
 
-        public void jsFunction_addCookie(Object cookie) 
+        public void jsFunction_addCookie(Object cookie)
             throws JavaScriptException {
             if (!(cookie instanceof FOM_Cookie)) {
                 throw new JavaScriptException("expected a Cookie instead of " + cookie);
@@ -619,7 +618,7 @@ public class FOM_Cocoon extends ScriptableObject {
         public Object jsFunction_getAttribute(String name) {
             return session.getAttribute(name);
         }
-        
+
         public void jsFunction_setAttribute(String name, Object value) {
             session.setAttribute(name, value);
         }
@@ -721,7 +720,7 @@ public class FOM_Cocoon extends ScriptableObject {
             }
             return value;
         }
-        
+
         /* TODO: Vote on the inclusion of this method
         public String jsFunction_getRealPath(String path) {
         	return context.getRealPath(path);
@@ -743,19 +742,19 @@ public class FOM_Cocoon extends ScriptableObject {
         public String getClassName() {
             return "FOM_Log";
         }
-        
+
         public void jsFunction_debug(String message) {
             logger.debug(message);
         }
-        
+
         public void jsFunction_info(String message) {
             logger.info(message);
         }
-        
+
         public void jsFunction_warn(String message) {
             logger.warn(message);
         }
-        
+
         public void jsFunction_error(String message) {
             logger.error(message);
         }
@@ -801,7 +800,7 @@ public class FOM_Cocoon extends ScriptableObject {
             return null;
         }
         Map objectModel = environment.getObjectModel();
-        response = 
+        response =
             new FOM_Response(ObjectModelHelper.getResponse(objectModel));
         response.setParentScope(getParentScope());
         response.setPrototype(getClassPrototype(this, "FOM_Response"));
@@ -823,7 +822,7 @@ public class FOM_Cocoon extends ScriptableObject {
             return context;
         }
         Map objectModel = environment.getObjectModel();
-        context = 
+        context =
             new FOM_Context(ObjectModelHelper.getContext(objectModel));
         context.setParentScope(getParentScope());
         context.setPrototype(getClassPrototype(this, "FOM_Context"));
@@ -839,7 +838,7 @@ public class FOM_Cocoon extends ScriptableObject {
             return null;
         }
         Map objectModel = environment.getObjectModel();
-        session = 
+        session =
             new FOM_Session(ObjectModelHelper.getRequest(objectModel).getSession(true));
         session.setParentScope(getParentScope());
         session.setPrototype(getClassPrototype(this, "FOM_Session"));
@@ -849,7 +848,7 @@ public class FOM_Cocoon extends ScriptableObject {
     /**
      * Get Sitemap parameters
      *
-     * @return a <code>Scriptable</code> value whose properties represent 
+     * @return a <code>Scriptable</code> value whose properties represent
      * the Sitemap parameters from <map:call>
      */
     public Scriptable jsGet_parameters() {
@@ -920,8 +919,8 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The component manager
      */
 
-    public ComponentManager getComponentManager() {
-        return componentManager;
+    public ServiceManager getServiceManager() {
+        return serviceManager;
     }
 
     /**
@@ -933,10 +932,10 @@ public class FOM_Cocoon extends ScriptableObject {
 
     public void forwardTo(String uri,
                           Object bean,
-                          FOM_WebContinuation fom_wk) 
+                          FOM_WebContinuation fom_wk)
         throws Exception {
         interpreter.forwardTo(getTopLevelScope(this),
-                              this, 
+                              this,
                               uri,
                               bean,
                               fom_wk,
@@ -945,14 +944,14 @@ public class FOM_Cocoon extends ScriptableObject {
 
     /**
      * Perform the behavior of <map:call continuation="blah">
-     * This can be used in cases where the continuation id is not encoded 
+     * This can be used in cases where the continuation id is not encoded
      * in the request in a form convenient to access in the sitemap.
-     * Your script can extract the id from the request and then call 
+     * Your script can extract the id from the request and then call
      * this method to process it as normal.
      * @param kontId The continuation id
      * @param parameters Any parameters you want to pass to the continuation (may be null)
      */
-    public void handleContinuation(String kontId, Scriptable parameters) 
+    public void handleContinuation(String kontId, Scriptable parameters)
         throws Exception {
         List list = null;
         if (parameters == null || parameters == Undefined.instance) {
@@ -979,20 +978,20 @@ public class FOM_Cocoon extends ScriptableObject {
 
     public FOM_WebContinuation makeWebContinuation(Continuation k,
                                                    FOM_WebContinuation parent,
-                                                   int timeToLive) 
+                                                   int timeToLive)
         throws Exception {
         if (k == null) return null;
         WebContinuation wk;
         ContinuationsManager contMgr;
         contMgr = (ContinuationsManager)
-            componentManager.lookup(ContinuationsManager.ROLE);
+            serviceManager.lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
         result.setParentScope(getParentScope());
-        result.setPrototype(getClassPrototype(getParentScope(), 
+        result.setPrototype(getClassPrototype(getParentScope(),
                                               result.getClassName()));
         return result;
     }

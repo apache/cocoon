@@ -50,10 +50,6 @@
 */
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
-import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.logger.LogKitManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
@@ -78,7 +74,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: GeneratorSelector.java,v 1.3 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: GeneratorSelector.java,v 1.4 2003/10/16 14:57:59 bloritsch Exp $
  */
 public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
 

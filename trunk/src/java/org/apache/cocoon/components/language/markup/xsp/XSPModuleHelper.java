@@ -56,8 +56,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * accessed and kept until the page is completely displayed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XSPModuleHelper.java,v 1.5 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: XSPModuleHelper.java,v 1.6 2003/10/16 14:57:59 bloritsch Exp $
  */
 public class XSPModuleHelper {
 
@@ -89,9 +89,9 @@ public class XSPModuleHelper {
     private final static int OP_NAMES = 2;
 
     Map inputModules = null;
-    ComponentManager manager = null;
-    ComponentSelector inputSelector = null;
-    
+    ServiceManager manager = null;
+    ServiceSelector inputSelector = null;
+
 
     /**
      * Capsules use of an InputModule. Does all the lookups and so
@@ -117,7 +117,7 @@ public class XSPModuleHelper {
         Object value = null;
         InputModule input = null;
 
-        if (this.inputModules == null) 
+        if (this.inputModules == null)
             this.inputModules = new HashMap();
         else
             if (this.inputModules.containsKey(name))
@@ -126,10 +126,10 @@ public class XSPModuleHelper {
         try {
 
             if (this.inputSelector == null)
-                this.inputSelector = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
-        
+                this.inputSelector = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+
             if (input == null) {
-                if (this.inputSelector.hasComponent(name)) {
+                if (this.inputSelector.isSelectable(name)) {
                     input = (InputModule) this.inputSelector.select(name);
                     this.inputModules.put(name, input);
                 } else {
@@ -138,7 +138,7 @@ public class XSPModuleHelper {
             }
 
             switch (op) {
-            case OP_GET:    
+            case OP_GET:
                 value = input.getAttribute(attr, conf, objectModel);
                 break;
             case OP_VALUES:
@@ -170,16 +170,12 @@ public class XSPModuleHelper {
      * @param manager a <code>ComponentManager</code> value
      * @exception RuntimeException if an error occurs
      */
-    public void setup(ComponentManager manager) throws RuntimeException {
+    public void setup(ServiceManager manager) throws RuntimeException {
 
         this.inputModules = new HashMap();
         this.manager = manager;
         try {
-            this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (!(this.inputSelector instanceof ThreadSafe)) {
-                this.manager.release(this.inputSelector);
-                this.inputSelector = null;
-            }
+            this.inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not obtain selector for InputModule.",e);
         }
@@ -333,7 +329,7 @@ public class XSPModuleHelper {
         if (this.manager != null && this.inputModules != null) {
             try {
                 if (this.inputSelector == null) {
-                    this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                    this.inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
                 }
                 Iterator iter = this.inputModules.keySet().iterator();
                 while (iter.hasNext()) {

@@ -45,9 +45,9 @@
 */
 package org.apache.cocoon.components.flow.javascript;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -56,7 +56,7 @@ import org.mozilla.javascript.Undefined;
 
 /**
  *
- * @version CVS $Id: JSWebContinuation.java,v 1.3 2003/08/26 09:05:52 mpo Exp $
+ * @version CVS $Id: JSWebContinuation.java,v 1.4 2003/10/16 14:57:36 bloritsch Exp $
  */
 public class JSWebContinuation extends ScriptableObject
 {
@@ -82,12 +82,12 @@ public class JSWebContinuation extends ScriptableObject
   }
 
   public static Scriptable jsConstructor(Context cx, Object[] args,
-                                         Function ctorObj, 
+                                         Function ctorObj,
                                          boolean inNewExpr)
     throws Exception
   {
     JSCocoon cocoon = (JSCocoon)args[0];
-    ComponentManager manager = cocoon.getComponentManager();
+    ServiceManager manager = cocoon.getComponentManager();
 
     ContinuationsManager contMgr
       = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
