@@ -25,7 +25,7 @@ import org.apache.log.Logger;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.13 $ $Date: 2001-04-27 14:46:56 $
+ * @version $Revision: 1.1.2.14 $ $Date: 2001-04-27 15:38:21 $
  * @since 2.0
  */
 
@@ -198,29 +198,28 @@ public class Jikes extends AbstractJavaCompiler {
     private CompilerError parseError(String error) {
         StringTokenizer tokens = new StringTokenizer(error, ":");
         String file = tokens.nextToken();
-        String sl = tokens.nextToken();
-        String sc = tokens.nextToken();
-        String el = tokens.nextToken();
-        String ec = tokens.nextToken();
+        String message = "";
+        String type = "";
         int startline = 0;
         int startcolumn = 0;
         int endline = 0;
         int endcolumn = 0;
 
         try {
-            startline = Integer.parseInt(sl);
-            startcolumn = Integer.parseInt(sc);
-            endline = Integer.parseInt(el);
-            endcolumn = Integer.parseInt(ec);
+            startline = Integer.parseInt(tokens.nextToken());
+            startcolumn = Integer.parseInt(tokens.nextToken());
+            endline = Integer.parseInt(tokens.nextToken());
+            endcolumn = Integer.parseInt(tokens.nextToken());
         } catch (Exception e) {
-            getLogger().debug("Start Line: " + sl, e);
-            getLogger().debug("Start Column: " + sc, e);
-            getLogger().debug("End Line: " + el, e);
-            getLogger().debug("End Column: " + ec, e);
+            message = "Please make sure you have your JDK's rt.jar file in the classpath.  Jikes needs it to opperate.";
+            type="error";
+            getLogger().error(message, e);
         }
 
-        String type = tokens.nextToken().trim().toLowerCase();
-        String message = tokens.nextToken().trim();
+        if (! "".equals(message)) {
+            type = tokens.nextToken().trim().toLowerCase();
+            message = tokens.nextToken().trim();
+        }
 
         return new CompilerError(file, type.equals("error"), startline, startcolumn, endline, endcolumn, message);
     }
