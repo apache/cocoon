@@ -409,8 +409,8 @@
         &lt;/td&gt;
       &lt;/tr&gt;
     }
-  &lt;/table&gt;
-&lt;/xsp:logic&gt;</source>
+  &lt;/xsp:logic&gt;
+&lt;/table&gt;</source>
 
         <p>
           If such nesting was not allowed, the purely programmatic
