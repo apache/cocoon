@@ -59,21 +59,21 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: PatternTransformerTestCase.java,v 1.1 2003/04/09 12:24:35 stephan Exp $
+ * @version CVS $Id: PatternTransformerTestCase.java,v 1.2 2003/04/16 13:47:57 stephan Exp $
  */
 public class PatternTransformerTestCase extends AbstractTransformerTestCase {
 
     public PatternTransformerTestCase(String name) {
         super(name);
+    }
 
-        String transformer = "pattern";
-        HashMap objectmodel = new HashMap();
+    public void testPatternTransformer() {
+
         String src = "resource://org/apache/cocoon/transformation/patterntest-lexicon1.xml";
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/patterntest-input1.xml";
         String result = "resource://org/apache/cocoon/transformation/patterntest-result1.xml";
 
-        addTestStep(transformer, objectmodel, src, parameters, input, result,
-                    EQUAL);
+        assertEqual(load(result), transform("pattern", src, parameters, load(input)));
     }
 }

@@ -59,35 +59,40 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformerTestCase.java,v 1.1 2003/04/09 12:24:35 stephan Exp $
+ * @version CVS $Id: ParserTransformerTestCase.java,v 1.2 2003/04/16 13:47:57 stephan Exp $
  */
 public class ParserTransformerTestCase extends AbstractTransformerTestCase {
 
     public ParserTransformerTestCase(String name) {
         super(name);
+    }
 
-        String transformer = "parser";
-        HashMap objectmodel = new HashMap();
+    public void testParserTransformer1() {
+
         String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/parsertest-input1.xml";
         String result = "resource://org/apache/cocoon/transformation/parsertest-result1.xml";
 
-        addTestStep(transformer, objectmodel, src, parameters, input, result,
-                    EQUAL);
+        assertEqual(load(result), transform("parser", src, parameters, load(input)));
+    }
 
-        transformer = "recovery-parser";
-        src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
-        input = "resource://org/apache/cocoon/transformation/parsertest-input2.xml";
-        result = "resource://org/apache/cocoon/transformation/parsertest-result2.xml";
+    public void testParserTransformer2() {
 
-        addTestStep(transformer, objectmodel, src, parameters, input, result,
-                    EQUAL);
+        String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
+        Parameters parameters = new Parameters();
+        String input = "resource://org/apache/cocoon/transformation/parsertest-input2.xml";
+        String result = "resource://org/apache/cocoon/transformation/parsertest-result2.xml";
 
-        src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
-        input = "resource://org/apache/cocoon/transformation/parsertest-input3.xml";
-        result = "resource://org/apache/cocoon/transformation/parsertest-result3.xml";
+        assertEqual(load(result), transform("recovery-parser", src, parameters, load(input)));
+    }
 
-        // addTestStep(transformer, objectmodel, src, parameters, input, result, EQUAL);
+    public void testParserTransformer3() {
+        String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
+        Parameters parameters = new Parameters();
+        String input = "resource://org/apache/cocoon/transformation/parsertest-input3.xml";
+        String result = "resource://org/apache/cocoon/transformation/parsertest-result3.xml";
+
+        assertEqual(load(result), transform("recovery-parser", src, parameters, load(input)));
     }
 }
