@@ -174,7 +174,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.9 2003/11/15 04:21:30 joerg Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.10 2003/12/06 20:00:10 haul Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -1171,7 +1171,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * so that only the children are skipped.
      * 
      * @param skip
-     * @param children 
+     * @param skipChildrenOnly 
      * @param uri
      * @param name
      * @param raw
@@ -1180,26 +1180,31 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      */
     protected void relayStartElement(
         boolean skip,
-        boolean children,
+        boolean skipChildrenOnly,
         String uri,
         String name,
         String raw,
         Attributes attr)
         throws SAXException {
 
-        if (skip)
-            this.skipChildrenOnly = children;
-        if (skip && !children)
-            this.ignoreEventsCount++;
         try {
-            super.startTransformingElement(uri, name, raw, attr);
+            if (this.ignoreEventsCount > 0) {
+                this.ignoreEventsCount++;
+                super.startTransformingElement(uri, name, raw, attr);
+            } else {
+                if (skip)
+                    this.skipChildrenOnly = skipChildrenOnly;
+                if (skip && !skipChildrenOnly)
+                    this.ignoreEventsCount++;
+                super.startTransformingElement(uri, name, raw, attr);
+                if (skip && skipChildrenOnly)
+                    this.ignoreEventsCount++;
+            }
         } catch (ProcessingException e) {
             throw new SAXException(e);
         } catch (IOException e) {
             throw new SAXException(e);
         }
-        if (skip && children)
-            this.ignoreEventsCount++;
     }
 
     /**
