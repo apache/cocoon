@@ -54,7 +54,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,11 +68,11 @@ import java.util.Map;
  * @see BrowserSelector
  * @see HostSelector
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NamedPatternsSelector.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: NamedPatternsSelector.java,v 1.2 2003/12/29 15:24:35 unico Exp $
  */
 
 public abstract class NamedPatternsSelector extends AbstractLogEnabled
-  implements Configurable, ThreadSafe, Selector {
+  implements Configurable, Selector {
 
     /**
      * Association of names to String[] of values.

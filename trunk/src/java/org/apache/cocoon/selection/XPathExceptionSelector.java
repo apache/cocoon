@@ -86,7 +86,11 @@ import org.apache.commons.jxpath.JXPathContext;
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @since 2.1
- * @version CVS $Id: XPathExceptionSelector.java,v 1.6 2003/08/12 06:01:40 cziegeler Exp $
+ * @version CVS $Id: XPathExceptionSelector.java,v 1.7 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Selector
+ * @x-avalon.lifestyle type=singleton
  */
 public class XPathExceptionSelector extends ExceptionSelector
   implements Configurable {

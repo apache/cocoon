@@ -59,10 +59,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.Attributes;
@@ -102,7 +101,11 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.7 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: ZipArchiveSerializer.java,v 1.8 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Serializer
+ * @x-avalon.lifestyle type=pooled
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -113,7 +116,7 @@ import org.xml.sax.helpers.NamespaceSupport;
 
 public class ZipArchiveSerializer
     extends AbstractSerializer
-    implements Composable, Disposable {
+    implements Serviceable, Disposable {
 
     /**
      * The namespace for elements handled by this serializer,
@@ -126,10 +129,7 @@ public class ZipArchiveSerializer
     private static final int IN_CONTENT_STATE = 2;
 
     /** The component manager */
-    protected ComponentManager manager;
-
-    /** The serializer component selector */
-    protected ComponentSelector selector;
+    protected ServiceManager manager;
 
     /** The Zip stream where entries will be written */
     protected ZipOutputStream zipOutput;
@@ -160,10 +160,12 @@ public class ZipArchiveSerializer
 
     /**
      * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+     * 
+     * @avalon.dependency type=SourceResolver
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
@@ -309,14 +311,8 @@ public class ZipArchiveSerializer
                 this.zipOutput.closeEntry();
 
             } else {
-                // Serialize content
-                if (this.selector == null) {
-                    this.selector =
-                        (ComponentSelector) this.manager.lookup(Serializer.ROLE + "Selector");
-                }
-
                 // Get the serializer
-                this.serializer = (Serializer) this.selector.select(serializerType);
+                this.serializer = (Serializer) this.manager.lookup(Serializer.ROLE + "/" + serializerType);
 
                 // Direct its output to the zip file, filtering calls to close()
                 // (we don't want the archive to be closed by the serializer)
@@ -387,7 +383,7 @@ public class ZipArchiveSerializer
                 }
 
                 super.setConsumer(null);
-                this.selector.release(this.serializer);
+                this.manager.release(this.serializer);
                 this.serializer = null;
 
                 // Go back to listening for entries
@@ -416,10 +412,7 @@ public class ZipArchiveSerializer
     public void recycle() {
         this.exception = null;
         if (this.serializer != null) {
-            this.selector.release(this.serializer);
-        }
-        if (this.selector != null) {
-            this.manager.release(this.selector);
+            this.manager.release(this.serializer);
         }
 
         this.nsSupport.reset();

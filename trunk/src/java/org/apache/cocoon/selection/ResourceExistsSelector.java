@@ -58,7 +58,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
@@ -110,10 +109,14 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ResourceExistsSelector.java,v 1.3 2003/12/12 15:17:12 vgritsenko Exp $
+ * @version CVS $Id: ResourceExistsSelector.java,v 1.4 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Selector
+ * @x-avalon.lifestyle type=singleton
  */
 public class ResourceExistsSelector extends AbstractLogEnabled
-                                    implements ThreadSafe, Serviceable, Disposable, Selector {
+                                    implements Serviceable, Disposable, Selector {
 
     private ServiceManager manager;
     private SourceResolver resolver;

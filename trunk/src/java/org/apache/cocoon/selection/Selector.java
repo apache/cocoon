@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import java.util.Map;
@@ -59,9 +58,9 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:leo.sutic">Leo Sutic</a>
- * @version CVS $Id: Selector.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: Selector.java,v 1.2 2003/12/29 15:24:35 unico Exp $
  */
-public interface Selector extends Component {
+public interface Selector {
 
     String ROLE = Selector.class.getName();
     /**

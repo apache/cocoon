@@ -84,7 +84,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.7 2003/12/06 21:22:08 cziegeler Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.8 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
  */
 public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */

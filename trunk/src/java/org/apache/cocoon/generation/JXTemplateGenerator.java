@@ -356,7 +356,11 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.23 2003/12/10 16:46:26 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.24 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 

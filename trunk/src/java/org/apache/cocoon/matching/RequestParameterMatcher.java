@@ -72,9 +72,13 @@ import java.util.Map;
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RequestParameterMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: RequestParameterMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=singleton
  */
-public class RequestParameterMatcher implements Matcher, ThreadSafe
+public class RequestParameterMatcher implements Matcher
 {
     /**
      * Match method to see if the request parameter exists. If it does

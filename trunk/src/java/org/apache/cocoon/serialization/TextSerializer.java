@@ -73,7 +73,11 @@ import java.io.OutputStream;
  * should wrap all the text inside it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TextSerializer.java,v 1.4 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: TextSerializer.java,v 1.5 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Serializer
+ * @x-avalon.lifestyle type=pooled
  */
 public class TextSerializer extends AbstractTextSerializer {
 

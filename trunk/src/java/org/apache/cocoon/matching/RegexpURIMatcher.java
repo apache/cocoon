@@ -59,7 +59,11 @@ import java.util.Map;
  * Matches the request URIs against a regular expression pattern.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RegexpURIMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: RegexpURIMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=singleton
  */
 public class RegexpURIMatcher extends AbstractRegexpMatcher
 {

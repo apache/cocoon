@@ -67,10 +67,10 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractRegexpMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: AbstractRegexpMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
  */
 
-public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher implements ThreadSafe {
+public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher {
 
     /**
      * Compile the pattern in a <code>org.apache.regexp.REProgram</code>.

@@ -61,10 +61,10 @@ import java.util.Map;
  * Base class for wildcard matchers
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractWildcardMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: AbstractWildcardMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
  */
 
-public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher implements ThreadSafe {
+public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher {
 
     /**
      * Compile the pattern in an <code>int[]</code>.

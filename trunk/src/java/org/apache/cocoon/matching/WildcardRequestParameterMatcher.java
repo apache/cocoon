@@ -71,7 +71,11 @@ import java.util.Map;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardRequestParameterMatcher.java,v 1.1 2003/03/09 00:09:34 pier Exp $
+ * @version CVS $Id: WildcardRequestParameterMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=singleton
  */
 public class WildcardRequestParameterMatcher extends AbstractWildcardMatcher
     implements Configurable

@@ -51,7 +51,6 @@
 package org.apache.cocoon.selection;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.Map;
 
@@ -80,9 +79,13 @@ import java.util.Map;
  *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ParameterSelector.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: ParameterSelector.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Selector
+ * @x-avalon.lifestyle type=singleton
  */
-public class ParameterSelector implements ThreadSafe, Selector {
+public class ParameterSelector implements Selector {
 
     public boolean select(String expression, Map objectModel, Parameters parameters) {
         String compareToString = parameters.getParameter("parameter-selector-test", null);

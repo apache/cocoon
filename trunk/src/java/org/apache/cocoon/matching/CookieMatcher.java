@@ -65,12 +65,11 @@ import java.util.Map;
  * Matches cookies agains given name. Returns value of the matched cookie.
  *
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
- * @version CVS $Id: CookieMatcher.java,v 1.4 2003/10/25 22:11:42 unico Exp $
+ * @version CVS $Id: CookieMatcher.java,v 1.5 2003/12/29 15:24:35 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="Matcher"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="cookie-matcher"
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=singleton
  */
 public class CookieMatcher extends AbstractLogEnabled implements Matcher {
 

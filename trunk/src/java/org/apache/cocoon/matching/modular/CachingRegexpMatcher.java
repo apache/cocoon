@@ -60,11 +60,15 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.modules.input.InputModule;
 
 import org.apache.cocoon.matching.AbstractRegexpMatcher;
+import org.apache.cocoon.matching.Matcher;
 
 import java.util.Map;
 
@@ -81,31 +85,32 @@ import java.util.Map;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CachingRegexpMatcher.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: CachingRegexpMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Matcher
+ * @x-avalon.lifestyle type=singleton
  */
 public class CachingRegexpMatcher extends AbstractRegexpMatcher
-    implements Configurable,  Initializable, Composable, Disposable
+    implements Matcher, Serviceable, Configurable, Initializable, Disposable
 {
 
     /** The component manager instance */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     private String defaultParam;
     private String defaultInput = "request-param"; // default to request parameters
     private Configuration inputConf = null; // will become an empty configuration object
                                             // during configure() so why bother here...
-    String INPUT_MODULE_ROLE = InputModule.ROLE;
-    String INPUT_MODULE_SELECTOR = INPUT_MODULE_ROLE+"Selector";
 
     private boolean initialized = false;
     private InputModule input = null;
-    private ComponentSelector inputSelector = null;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
 
         this.manager=manager;
     }
@@ -125,45 +130,41 @@ public class CachingRegexpMatcher extends AbstractRegexpMatcher
 
         try {
             // obtain input module
-            this.inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (this.defaultInput != null && 
-                this.inputSelector != null && 
-                this.inputSelector.hasComponent(this.defaultInput)
+            if (this.defaultInput != null && this.manager.hasService(InputModule.ROLE + "/" + this.defaultInput)
                 ){
-                this.input = (InputModule) this.inputSelector.select(this.defaultInput);
-                if (!(this.input instanceof ThreadSafe && this.inputSelector instanceof ThreadSafe) ) {
-                    this.inputSelector.release(this.input);
-                    this.manager.release(this.inputSelector);
+                this.input = (InputModule) this.manager.lookup(InputModule.ROLE + "/" + this.defaultInput);
+                if (!(this.input instanceof ThreadSafe) ) {
+                    this.manager.release(this.input);
                     this.input = null;
-                    this.inputSelector = null;
                 }
                 this.initialized = true;
             } else {
-                if (getLogger().isErrorEnabled())
-                    getLogger().error("A problem occurred setting up '" + this.defaultInput 
-                                      + "': Selector is "+(this.inputSelector!=null?"not ":"")
-                                      +"null, Component is "
-                                      +(this.inputSelector!=null&&this.inputSelector.hasComponent(this.defaultInput)?"known":"unknown"));
+                if (getLogger().isErrorEnabled()) {
+                    getLogger().error("A problem occurred setting up '" + 
+                                      this.defaultInput + "'. Component is unknown.");
+                }
             }
         } catch (Exception e) {
-            if (getLogger().isWarnEnabled()) 
-                getLogger().warn("A problem occurred setting up '" + this.defaultInput + "': " + e.getMessage());
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("A problem occurred setting up '" + 
+                                 this.defaultInput + "': " + e.getMessage());
+            }
         }
     }
 
 
 
     public void dispose() {
-
-        if (!this.initialized) 
-            if (getLogger().isErrorEnabled()) 
+        if (!this.initialized) {
+            if (getLogger().isErrorEnabled()) {
                 getLogger().error("Uninitialized Component! FAILING");
-        else 
-            if (this.inputSelector != null) {
-                if (this.input != null)
-                    this.inputSelector.release(this.input);
-                this.manager.release(this.inputSelector);
             }
+        }
+        else {
+            if (this.input != null) {
+                this.manager.release(this.input);
+            }
+        }
     }
 
 
@@ -205,16 +206,13 @@ public class CachingRegexpMatcher extends AbstractRegexpMatcher
         } else {
             // input was not thread safe
             // so acquire it again
-            ComponentSelector iputSelector = null;
-            InputModule iput = null;
+            InputModule module = null;
             try {
-                // obtain input module
-                iputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (inputName != null && iputSelector != null && iputSelector.hasComponent(inputName)){
-                    iput = (InputModule) iputSelector.select(inputName);
+                if (inputName != null && this.manager.hasService(InputModule.ROLE + "/" + inputName)){
+                    module = (InputModule) this.manager.lookup(InputModule.ROLE + "/" + inputName);
                 }
-                if (iput != null) {
-                    result = iput.getAttribute(paramName, this.inputConf, objectModel);
+                if (module != null) {
+                    result = module.getAttribute(paramName, this.inputConf, objectModel);
                 }
             } catch (Exception e) {
                 if (getLogger().isWarnEnabled()) 
@@ -222,10 +220,8 @@ public class CachingRegexpMatcher extends AbstractRegexpMatcher
                                      + "' from '" + inputName + "': " + e.getMessage());
             } finally {
                 // release components
-                if (iputSelector != null) {
-                    if (iput != null)
-                        iputSelector.release(iput);
-                    this.manager.release(iputSelector);
+                if (module != null) {
+                    this.manager.release(module);
                 }
             }
         }

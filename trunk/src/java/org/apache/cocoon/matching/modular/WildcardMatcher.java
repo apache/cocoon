@@ -54,6 +54,9 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -78,14 +81,14 @@ import java.util.Map;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardMatcher.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: WildcardMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
  */
 public class WildcardMatcher extends AbstractWildcardMatcher
-    implements Configurable, Composable
+    implements Serviceable, Configurable
 {
 
     /** The component manager instance */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     private String defaultParam;
     private String defaultInput = "request-param"; // default to request parameters
@@ -98,7 +101,7 @@ public class WildcardMatcher extends AbstractWildcardMatcher
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager=manager;
     }
 

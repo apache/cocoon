@@ -51,7 +51,6 @@
 package org.apache.cocoon.selection;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.Map;
 
@@ -115,9 +114,9 @@ import java.util.Map;
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelector.java,v 1.1 2003/03/09 00:09:36 pier Exp $
+ * @version CVS $Id: SwitchSelector.java,v 1.2 2003/12/29 15:24:35 unico Exp $
  */
-public interface SwitchSelector extends Selector, ThreadSafe {
+public interface SwitchSelector extends Selector {
 
     String ROLE = SwitchSelector.class.getName();
 

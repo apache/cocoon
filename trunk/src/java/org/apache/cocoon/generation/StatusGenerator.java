@@ -98,7 +98,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.3 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.4 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
  */
 public class StatusGenerator extends ServiceableGenerator {
 

@@ -64,11 +64,11 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: BrowserSelector.java,v 1.2 2003/12/28 20:59:12 unico Exp $
+ * @version CVS $Id: BrowserSelector.java,v 1.3 2003/12/29 15:24:35 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=Selector
- * @x-avalon.lifestyle type=pooled
+ * @x-avalon.lifestyle type=singleton
  */
 public class BrowserSelector extends NamedPatternsSelector {
 

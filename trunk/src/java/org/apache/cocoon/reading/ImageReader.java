@@ -92,7 +92,11 @@ import java.util.Map;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageReader.java,v 1.3 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: ImageReader.java,v 1.4 2003/12/29 15:24:35 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Reader
+ * @x-avalon.lifestyle type=pooled
  */
 final public class ImageReader extends ResourceReader {
 
