@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NotAFunctionException;
@@ -28,7 +29,7 @@ import org.mozilla.javascript.ScriptableObject;
 
 /**
  *
- * @version CVS $Id: ScriptableResult.java,v 1.4 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ScriptableResult extends ScriptableObject {
 
@@ -114,7 +115,7 @@ public class ScriptableResult extends ScriptableObject {
             index++;
         }
         put("rowCount", this, new Integer(index));
-        put("isLimitedByMaxRows", this, new Boolean(isLimited));
+        put("isLimitedByMaxRows", this, BooleanUtils.toBooleanObject(isLimited));
     }
 }
 

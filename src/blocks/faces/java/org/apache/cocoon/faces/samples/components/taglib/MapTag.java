@@ -43,6 +43,7 @@ import org.apache.cocoon.faces.FacesUtils;
 import org.apache.cocoon.faces.taglib.UIComponentTag;
 import org.apache.cocoon.faces.samples.components.components.MapComponent;
 import org.apache.cocoon.faces.samples.components.renderkit.Util;
+import org.apache.commons.lang.BooleanUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -165,8 +166,7 @@ public class MapTag extends UIComponentTag {
                     createValueBinding(immediate);
                 map.setValueBinding("immediate", vb);
             } else {
-                boolean _immediate = new Boolean(immediate).booleanValue();
-                map.setImmediate(_immediate);
+                map.setImmediate(BooleanUtils.toBoolean(immediate));
             }
         }
 

@@ -31,6 +31,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.SAXException;
@@ -182,7 +183,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
             this.dateFormatter = DateFormat.getDateInstance(DateFormat.LONG, locale);
         }
         this.padWeeks = par.getParameterAsBoolean("padWeeks", false);
-        this.cacheKeyParList.add(new Boolean(this.padWeeks));
+        this.cacheKeyParList.add(BooleanUtils.toBooleanObject(this.padWeeks));
         this.monthFormatter = new SimpleDateFormat("MMMM", locale);        
         this.attributes = new AttributesImpl();
     }
