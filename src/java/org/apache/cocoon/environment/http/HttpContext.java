@@ -15,20 +15,22 @@
  */
 package org.apache.cocoon.environment.http;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.environment.Context;
-
-import javax.servlet.ServletContext;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.io.InputStream;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.environment.Context;
 
 /**
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
  * @author ?
- * @version CVS $Id: HttpContext.java,v 1.2 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: HttpContext.java,v 1.3 2004/05/07 17:23:42 joerg Exp $
  */
 
 public final class HttpContext implements Context {
@@ -91,5 +93,55 @@ public final class HttpContext implements Context {
 
     public String getInitParameter(String name) {
         return servletContext.getInitParameter(name);
+    }
+
+    /*
+     * These methods are not in Cocoon's Context interface, but in the
+     * ServletContext. To use them you have to downcast Cocoon's Context
+     * to this HttpContext until we decide to add them to the Context
+     * interface too.
+     * 
+     * The following methods are deprecated since Servlet API 2.0 or 2.1
+     * and will not be implemented here:
+     * - public Servlet getServlet(String name)
+     * - public Enumeration getServletNames()
+     * - public Enumeration getServlets()
+     * - public void log(Exception exception, String msg)
+     */
+
+    public ServletContext getContext(String uripath) {
+        return this.servletContext.getContext(uripath);
+    }
+
+    public Enumeration getInitParameterNames() {
+        return this.servletContext.getInitParameterNames();
+    }
+
+    public int getMajorVersion() {
+        return this.servletContext.getMajorVersion();
+    }
+
+    public int getMinorVersion() {
+        return this.servletContext.getMinorVersion();
+    }
+
+    public RequestDispatcher getNamedDispatcher(String name) {
+        return this.servletContext.getNamedDispatcher(name);
+    }
+
+    public RequestDispatcher getRequestDispatcher(String path) {
+        return this.servletContext.getRequestDispatcher(path);
+    }
+
+    public String getServerInfo() {
+        return this.servletContext.getServerInfo();
+    }
+
+    public void log(String msg) {
+        this.servletContext.log(msg);
+    }
+
+    public void log(String msg, Throwable throwable) {
+        this.servletContext.log(msg, throwable);
     }
 }
