@@ -72,6 +72,32 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 </faq>
 
 <faq>
+ <question>how do I specify the encoding for my page?</question>
+ <answer>
+  <p>Please, look at the answer below.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>why <code>xsl:output</code> doesn't work?</question>
+ <answer>
+  <p>The Cocoon project doesn't implement the <code>xsl:output</code> feature for XSLT
+  because we believe it breaks the separation of concerns and doesn't match the
+  internal Cocoon architecture.</p>
+  <p>On the other hand, we do understand the importance for a stylesheet to
+  specify how the content should be presented to the requesting client, for this
+  reason, Cocoon uses the <code>cocoon-format</code> processing instruction to
+  tell the engine which formatter to use to format the transformation output.
+  So, by placing:</p>
+  <source><![CDATA[<?cocoon-format type="text/html/loose"?>]]></source>
+  <p>you indicate the page containing this processing instruction should be
+  encoded and sent using the formatting properties contained in your <code>cocoon.properties</code>
+  file, associated to the type <code>text/html/loose</code>. Please, look at the
+  configuration file to know more about the formatting parameters available.</p>
+ </answer>
+</faq>
+
+<faq>
  <question>what are the other jar files shipped with Cocoon for? do I need to include them into my classpath?</question>
  <answer>
   <p>They are for building Cocoon and creating its docs from XML but they are not used by Cocoon at runtime so, if you
