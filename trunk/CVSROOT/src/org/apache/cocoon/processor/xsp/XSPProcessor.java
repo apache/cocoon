@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.6 2000-01-23 22:52:52 ricardo Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.7 2000-01-23 23:00:00 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,6 +60,7 @@ import org.xml.sax.InputSource;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import org.apache.cocoon.*;
 import org.apache.cocoon.parser.*;
 import org.apache.cocoon.transformer.*;
 import org.apache.cocoon.processor.*;
@@ -71,7 +72,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.6 $ $Date: 2000-01-23 22:52:52 $
+ * @version $Revision: 1.7 $ $Date: 2000-01-23 23:00:00 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -293,12 +294,7 @@ public class XSPProcessor extends AbstractActor
       (HttpServletResponse) parameters.get("response");
 
     // Determine source document's absolute pathname
-    String filename;
-    if (request.getPathInfo() == null) {
-      filename = request.getRealPath(request.getRequestURI()).replace('\\', '/');
-    } else {
-      filename = request.getPathTranslated();
-    }
+    String filename = Utils.getBasename(request, servletContext);
 
     File sourceFile = new File(filename);
     filename = sourceFile.getCanonicalPath();
