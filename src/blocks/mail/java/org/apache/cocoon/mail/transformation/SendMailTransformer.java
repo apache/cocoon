@@ -170,7 +170,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.14 2004/07/22 15:29:46 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.15 2004/07/22 23:21:56 joerg Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
@@ -454,7 +454,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     }
 
     /**
-     * @link http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html
+     * @see <a href="http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html">Sun Javamail Javadoc</a>
      * @throws Exception
      */
     private void sendMail(List newAddresses, Transport trans)
