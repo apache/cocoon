@@ -517,9 +517,12 @@ implements Source, XMLizable {
         }
 
         public int isValid(SourceValidity validity) {
-            return(this.nested_validity != null?
-                   this.nested_validity.isValid(validity):
-                   SourceValidity.INVALID);
+            if (validity instanceof SitemapSourceValidity) {
+                return(this.nested_validity != null?
+                        this.nested_validity.isValid(((SitemapSourceValidity) validity).getNestedValidity()):
+                        SourceValidity.INVALID);
+            }
+            return SourceValidity.INVALID;
         }
 
         public SourceValidity getNestedValidity() {
