@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.101 2000-08-21 17:33:37 balld Exp $
+  $Id: changes.xml,v 1.102 2000-08-22 14:58:50 ricardo Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RR" type="fix" due-to="Jens Lorenz" due-to-email="jens.lorenz@interface-business.de">
+   Fixed a typo in session taglib
+  </action>
+  <action dev="RR" type="fix">
+   Added namespace preservation to Java code-generation taglib
+  </action>
   <action dev="DB" type="fix" due-to="Darren Smith" due-to-email="darrens@acay.com.au">
    Fixed a NPE in XIncludeProcessor on win32 systems
   </action>
