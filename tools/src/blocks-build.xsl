@@ -69,7 +69,7 @@
     <xsl:variable name="cocoon-blocks" select="project[starts-with(@name, 'cocoon-block-')]"/>
 
     <target name="init">
-      <xsl:for-each select="module/project[starts-with(@name, 'cocoon-block-')]">
+      <xsl:for-each select="$cocoon-blocks">
         <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
         <condition property="include.block.{$block-name}">
           <not>
