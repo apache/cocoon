@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.227 2004/01/26 02:11:02 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.228 2004/01/27 08:26:25 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="26450" due-to-email="Ralph_Goers@dslextreme.com " due-to="Ralph Goers">
+     Allow the Authentication Framework to invoke a pipeline during logout
+   </action>
     <action dev="AG" type="update">
      Updated commons-collections to version 3.0
    </action>

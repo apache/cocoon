@@ -81,7 +81,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.9 2003/11/24 04:00:34 antonio Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.10 2004/01/27 08:26:25 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -314,7 +314,28 @@ public class PipelineAuthenticator
      * @see org.apache.cocoon.webapps.authentication.components.Authenticator#logout(org.apache.cocoon.webapps.authentication.user.UserHandler)
      */
     public void logout(UserHandler handler) {
-        // we simply do nothing here
+        if (this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("logout using handler " + handler.getHandlerName());
+        }
+        
+        final HandlerConfiguration configuration = handler.getHandlerConfiguration();
+        final String logoutResourceName = configuration.getLogoutResource();
+        if (logoutResourceName != null) {
+            final SourceParameters parameters = configuration.getAuthenticationResourceParameters();
+        
+            // invoke the source
+            Source source = null;
+            try {
+                // This allows arbitrary business logic to be called. Whatever is returned
+                // is ignored.
+                source = SourceUtil.getSource(logoutResourceName, null, parameters, this.resolver);
+                Document doc = SourceUtil.toDOM(source);
+            } catch (Exception ignore) {
+                this.getLogger().error("logout: " + ignore.getMessage(), ignore);
+            } finally {
+                this.resolver.release(source);
+            }
+        }
     }
 
 }

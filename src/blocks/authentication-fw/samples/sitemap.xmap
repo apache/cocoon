@@ -3,7 +3,7 @@
 <!--+
     | Authentication block samples sitemap.
     |
-    | CVS $Id: sitemap.xmap,v 1.9 2003/11/18 06:37:27 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.10 2004/01/27 08:26:25 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -13,9 +13,27 @@
     <map:component-configurations>
       <authentication-manager>
         <handlers>
+          <!-- A handler is responsible for protecting documents (pipelines).
+          	   The handler requires three configuration values. One of them is
+          	   a unique name that is used as a reference for the handler.
+          	   The other values are documented inline below. 
+           -->
           <handler name="demohandler">
+          	<!-- The redirect-to configuration defines a pipeline that is called
+          		 whenever a not authenticated user tries to access a protected
+          		 document (pipeline) -->
             <redirect-to uri="cocoon:/login"/>
+            <!-- The authentication configuration defines the authentication process.
+            	 In this example, an internal pipeline "authenticate" is called.
+            	 This pipeline gets all necessary information like user name and
+            	 password as parameters and tries to authenticate this user.
+            	 On successful authentication the pipeline delivers a specific
+            	 XML format.
+            --> 	 
             <authentication uri="cocoon:raw:/authenticate"/>
+            <!-- In addition you can specifiy a logout-uri parameter above. Then
+            	 the pipeline denoted by that parameter is called on logout.
+            -->
           </handler>
         </handlers>
       </authentication-manager>
