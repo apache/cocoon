@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.4 2003/03/18 16:48:00 bruno Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.5 2003/03/18 18:24:27 bruno Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -115,7 +115,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 
     /** The component manager */
     protected ComponentManager manager;
-    
+
     /** The attributes */
     private Map attributes = new HashMap();
 
@@ -127,7 +127,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 
     /** The AvalonToCocoonSourceWrapper (this is for the deprecated support) */
     static protected Constructor avalonToCocoonSourceWrapper;
-    
+
     /**
      * Constructs the abstract environment
      */
@@ -352,15 +352,15 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         // get the wrapper class - we don't want to import the wrapper directly
         // to avoid a direct dependency from the core to the deprecation package
         if ( null == avalonToCocoonSourceWrapper ) {
-            synchronized (this) {
+            synchronized (this.getClass()) {
                 try {
                     Class clazz = ClassUtils.loadClass("org.apache.cocoon.components.source.impl.AvalonToCocoonSource");
                     avalonToCocoonSourceWrapper = clazz.getConstructor(new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
                                                                                     ClassUtils.loadClass("org.apache.excalibur.source.SourceResolver"),
                                                                                     ClassUtils.loadClass("org.apache.cocoon.environment.Environment")});
                 } catch (Exception e) {
-                    throw new ProcessingException("The deprecated resolve() method of the environment was called." 
-                                                  +"Please either update your code to use the new resolveURI() method or" 
+                    throw new ProcessingException("The deprecated resolve() method of the environment was called."
+                                                  +"Please either update your code to use the new resolveURI() method or"
                                                   +" install the deprecation support.", e);
                 }
             }
@@ -548,7 +548,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             throw e;
         }
     }
-    
+
 	/**
 	 * Notify that the processing starts.
 	 */
@@ -562,7 +562,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 			throw new CascadingRuntimeException("Unable to lookup component.", ce);
 		}
 	}
-    
+
 	/**
 	 * Notify that the processing is finished
 	 * This can be used to cleanup the environment object
@@ -576,5 +576,5 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 			this.sourceResolver = null;
 		}
 	}
-    
+
 }
