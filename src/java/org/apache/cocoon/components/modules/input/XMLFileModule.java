@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import java.util.Map;
  <grammar>
     <define name="input.module.config.contents" combine="choice">
        <optional><element name="reloadable"><data type="boolean"/></element></optional>
-       <optional><element name="cachable"><data type="boolean"/></element></optional>
+       <optional><element name="cacheable"><data type="boolean"/></element></optional>
        <optional>
           <ref name="org.apache.cocoon.components.modules.input.XMLFileModule:file">
        </optional>
@@ -55,7 +55,7 @@ import java.util.Map;
        <element name="file">
           <attribute name="src"><data type="anyURI"/></attribute>
           <optional><attribute name="reloadable"><data type="boolean"/></attribute></optional>
-          <optional><attribute name="cachable"><data type="boolean"/></attribute></optional>
+          <optional><attribute name="cacheable"><data type="boolean"/></attribute></optional>
        </element>
     </define>
  </grammar>
@@ -83,7 +83,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
