@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.4 2003/03/13 08:57:16 jefft Exp $
+  $Id: changes.xml,v 1.5 2003/03/13 16:06:07 crafterm Exp $
 -->
 
 <changes title="History of Changes">
@@ -42,6 +42,9 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="MC" type="add">
+   Added support for the LogFactor5 graphical log event browser.
+  </action>
   <action dev="JT" type="fix">
    XMLFileModule: rename 'cachable' to 'cacheable' in configation.
   </action>
