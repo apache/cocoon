@@ -20,7 +20,7 @@
   </resources>
   <title>Login</title>
   <content>
-    <jx:if test="errorMsg">
+    <jx:if test="${errorMsg != null}">
       <strong>${errorMsg}</strong>
     </jx:if>
     <form action="continue.${continuation.id}">
