@@ -736,6 +736,7 @@
     <depend project="jakarta-oro"/>
     <depend project="cocoon-block-xsp" type="samples"/>
 
+    <work nested="build/cocoon-@@DATE@@/blocks/forms/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -758,6 +759,7 @@
     <depend project="jakarta-oro"/>
     <depend project="cocoon-block-xsp" type="samples"/>
 
+    <work nested="build/cocoon-@@DATE@@/blocks/woody/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/woody/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
