@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 import org.xml.sax.Attributes;
@@ -63,7 +64,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.5 2004/04/01 12:11:26 antonio Exp $
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -148,10 +149,10 @@ public class StatusGenerator extends ServiceableGenerator {
         // The local host.
         try {
             localHost = InetAddress.getLocalHost().getHostName();
-        } catch ( UnknownHostException e ) {
+        } catch (UnknownHostException e) {
             getLogger().debug("StatusGenerator:UnknownHost", e);
             localHost = "";
-        } catch ( SecurityException e ) {
+        } catch (SecurityException e) {
             getLogger().debug("StatusGenerator:Security", e);
             localHost = "";
         }
@@ -180,27 +181,27 @@ public class StatusGenerator extends ServiceableGenerator {
 
         // BEGIN JRE
         startGroup(ch, "jre");
-        addValue(ch, "version", System.getProperty("java.version"));
+        addValue(ch, "version", SystemUtils.JAVA_VERSION);
         atts.clear();
         // qName = prefix + ':' + localName
         atts.addAttribute(xlinkNamespace, "type", xlinkPrefix + ":type", "CDATA", "simple");
         atts.addAttribute(xlinkNamespace, "href", xlinkPrefix + ":href", "CDATA",
-            System.getProperty("java.vendor.url") );
-        addValue(ch, "java-vendor", System.getProperty("java.vendor"), atts);
+            SystemUtils.JAVA_VENDOR_URL);
+        addValue(ch, "java-vendor", SystemUtils.JAVA_VENDOR, atts);
         endGroup(ch);
         // END JRE
 
         // BEGIN Operating system
         startGroup(ch, "operating-system");
-        addValue(ch, "name", System.getProperty("os.name"));
-        addValue(ch, "architecture", System.getProperty("os.arch"));
-        addValue(ch, "version", System.getProperty("os.version"));
+        addValue(ch, "name", SystemUtils.OS_NAME);
+        addValue(ch, "architecture", SystemUtils.OS_ARCH);
+        addValue(ch, "version", SystemUtils.OS_VERSION);
         endGroup(ch);
         // END operating system
 
-        String classpath = System.getProperty("java.class.path");
+        String classpath = SystemUtils.JAVA_CLASS_PATH;
         List paths = new ArrayList();
-        StringTokenizer tokenizer = new StringTokenizer(classpath, System.getProperty("path.separator"));
+        StringTokenizer tokenizer = new StringTokenizer(classpath, SystemUtils.PATH_SEPARATOR);
         while (tokenizer.hasMoreTokens()) {
             paths.add(tokenizer.nextToken());
         }
@@ -361,7 +362,6 @@ public class StatusGenerator extends ServiceableGenerator {
                 ch.endElement(namespace, "line", "line");
             }
         }
-
         ch.endElement(namespace, "value", "value");
     }
 }
