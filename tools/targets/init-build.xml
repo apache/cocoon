@@ -1,4 +1,4 @@
-<!-- === Initialization Targets ================================================ -->
+<!-- === Initialization Targets ========================================== -->
 
   <target name="init">
 
@@ -50,7 +50,7 @@
     <condition property="unless.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
-    
+
     <condition property="unless.exclude.deprecated">
       <istrue value="${exclude.deprecated}"/>
     </condition>
@@ -66,7 +66,7 @@
     <condition property="exclude.validate.xdocs">
       <isfalse value="${validate.xdocs}"/>
     </condition>
-            
+
     <filter token="Name"                value="${fullname}"/>
     <filter token="name"                value="${fullname}"/>
     <filter token="year"                value="${year}"/>
@@ -121,54 +121,59 @@
            debug="off"
            optimize="on"
            deprecation="on"
-           target="1.3"
+           target="${target.vm}"
            nowarn="on"
            compiler="${compiler}"
            classpathref="tasks.classpath"/>
 
     <!-- A task to patch xml files -->
-    <taskdef name="xpatch" classname="XConfToolTask" classpath="${tools.tasks.dest}"/>
+    <taskdef name="xpatch" classname="XConfToolTask"
+           classpath="${tools.tasks.dest}"/>
 
     <!-- Jing is used in various targets for XML validation with RELAX NG -->
-    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="tasks.classpath"/>
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"
+           classpathref="tasks.classpath"/>
 
-    <!-- compile the loader, used to change classpath especially for the CLI and Jetty -->
+    <!-- compile the loader, used to change classpath especially for
+           the CLI and Jetty -->
     <mkdir dir="${tools.loader.dest}"/>
     <javac srcdir="${tools.loader.src}"
            destdir="${tools.loader.dest}"
            debug="off"
            optimize="on"
            deprecation="on"
-           target="1.3"
+           target="${target.vm}"
            nowarn="on"
            compiler="${compiler}"/>
 
   </target>
-  
-<!-- === Preparation Targets =================================================== -->
+
+<!-- === Preparation Targets ============================================= -->
 
   <!-- Prepare the build directory -->
   <target name="prepare" depends="init-tasks">
-
-    <echo>+-----------------------------------------------------------+</echo>
-    <echo>             ${fullname} ${version} [${year}]</echo>
-    <echo>+-----------------------------------------------------------+</echo>
-    <echo> Building with ${ant.version}</echo>
-    <echo> using build file ${ant.file}</echo>
-    <echo> Compiling with debug ${compiler.debug}, optimize ${compiler.optimize}, deprecation ${compiler.deprecation}</echo>
-    <echo>+--------------------| W A R N I N G |----------------------+</echo>
-    <echo>   This build is targeted for use with JVM ${target.vm}</echo>
-    <echo> Using this build on a virtual machine other than the one</echo>
-    <echo>   it is targeted for may result in runtime errors.</echo>
-    <echo>+-----------------------------------------------------------+</echo>
-
+    <echo>
++------------------------------------------------------------------+
+             ${fullname} ${version} [${year}]
++------------------------------------------------------------------+
+ Building with ${ant.version}
+ using build file ${ant.file}
+ Compiling with debug ${compiler.debug}, optimize ${compiler.optimize}, deprecation ${compiler.deprecation}
++-------------------------| W A R N I N G |------------------------+
+ This build is targeted for use with JVM ${target.vm}
+ Using this build on a virtual machine other than the one
+ it is targeted for may result in runtime errors.
++------------------------------------------------------------------+
+    </echo>
     <mkdir dir="${build}"/>
   </target>
 
-<!-- === Clean Targets ========================================================= -->
+<!-- === Clean Targets =================================================== -->
 
   <!-- Clean -->
-  <target name="clean" depends="clean-cocoon,clean-webapp,clean-standalone-demo" description="Cleans the cocoon build, webapp and standalone-demo"/>
+  <target name="clean"
+         depends="clean-cocoon,clean-webapp,clean-standalone-demo"
+         description="Cleans the cocoon build, webapp and standalone-demo"/>
 
   <!-- Clean the cocoon build directory -->
   <target name="clean-cocoon" depends="init" description="Cleans the cocoon build">
@@ -184,6 +189,3 @@
   <target name="clean-standalone-demo" depends="init" description="Cleans the standalone-demo">
     <delete dir="${build.standalone.demo}"/>
   </target>
-
-
-
