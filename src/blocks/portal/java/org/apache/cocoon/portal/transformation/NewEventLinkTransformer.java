@@ -53,7 +53,7 @@ package org.apache.cocoon.portal.transformation;
 import java.util.Stack;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.portal.LinkService;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.xml.sax.Attributes;
@@ -91,7 +91,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: NewEventLinkTransformer.java,v 1.4 2003/12/10 17:02:04 cziegeler Exp $
+ * @version CVS $Id: NewEventLinkTransformer.java,v 1.5 2004/02/09 09:27:25 cziegeler Exp $
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
     /**
@@ -141,12 +141,11 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      *          or an unknown element within the namespaces in encountered.
      * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startTransformingElement(String, String, String, Attributes)
      */
-    public void startTransformingElement(
-        String uri,
-        String name,
-        String raw,
-        Attributes attributes)
-        throws SAXException {
+    public void startTransformingElement(String uri,
+                                         String name,
+                                         String raw,
+                                         Attributes attributes)
+    throws SAXException {
         if (!EVENT_ELEM.equals(name)) {
             throw new SAXException("Unknown element encountered: " + name);
         }
@@ -177,8 +176,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
         if (attributes instanceof AttributesImpl) {
             newAttributes = (AttributesImpl) attributes;
-        }
-        else {
+        } else {
             newAttributes = new AttributesImpl(attributes);
         }
 
@@ -209,13 +207,12 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
         // if attribute found that contains a link
         if (link != null) {
             CopletInstanceData cid = this.getCopletInstanceData();
-            LinkService linkService = null;
+            PortalService portalService = null;
             try {
-                linkService =
-                    (LinkService) this.manager.lookup(LinkService.ROLE);
+                portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
                 // create event link
                 CopletLinkEvent event = new CopletLinkEvent(cid, link);
-                String eventLink = linkService.getLinkURI(event);
+                String eventLink = portalService.getComponentManager().getLinkService().getLinkURI(event);
 
                 //form elements need hidden inputs to change request parameters
                 if (formSpecialTreatment) {
@@ -247,9 +244,8 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
             }
             catch (ServiceException e) {
                 throw new SAXException(e);
-            }
-            finally {
-                this.manager.release(linkService);
+            } finally {
+                this.manager.release(portalService);
             }
         }
 
